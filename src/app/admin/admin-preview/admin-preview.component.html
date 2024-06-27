@@ -1,0 +1,181 @@
+<div *ngIf="showHtmlContent" class="admin-form-preview" cdkDropList (cdkDropListDropped)="dropSection($event)">
+  <h2 *ngIf="form.formTitle!=''">{{form.formTitle}}</h2>
+  <form [formGroup]="dynamicFormGroup">
+
+    <div *ngFor="let section of form.formSections" cdkDrag >
+      <div *ngIf="(section.hasOwnProperty('isVisible') && section.isVisible === true) || (!section.hasOwnProperty('isVisible'))" style="cursor: pointer;">
+        <div class="admin-card-body" cdkDropList (cdkDropListDropped)="dropControl($event,section)">
+          <div class="admin-card-header" *ngIf="section.visible==true">
+            {{ section.sectionTitle}}
+          </div>
+          <ng-container *ngFor="let control of section.formControls;let i = index">
+            
+            <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(control.type)"
+               class="admin-typecss" cdkDrag>
+              <label *ngIf="control.visibleLabel==true">{{ control.label }} <span *ngIf="control.validators">*</span></label>
+              <input *ngIf="!control.bigFont && !control.disabled" formControlName="{{ control.name }}" [type]="control.type">
+              <input *ngIf="!control.bigFont && control.disabled==true" formControlName="{{ control.name }}" [type]="control.type" style="background-color: rgb(187, 183, 183);" readonly>
+              <input style="border: none;font-weight: 700;" *ngIf="control.bigFont==true && !control.disabled" formControlName="{{ control.name }}" [type]="control.type" readonly>
+              <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                class="text-danger">{{getValidationErrors(control)}}
+              </small>
+            </div>
+
+            <div *ngIf="control.type==='select'"  class="admin-typecss" cdkDrag>
+              <label *ngIf="control.visibleLabel==true">{{ control.label }} <span *ngIf="control.validators">*</span></label>
+              <select *ngIf="!control.disabled" formControlName="{{ control.name }}" aria-label="Default select example">
+                <option selected value="">Choose...</option>
+                <ng-container *ngFor="let opt of control.options">
+                  <option [value]="opt.value">{{ opt.name}}</option>
+                </ng-container>
+              </select>
+              <select *ngIf="control.disabled" formControlName="{{ control.name }}" class="line-border" aria-label="Default select example">
+                <option selected value="">Choose...</option>
+                <ng-container *ngFor="let opt of control.options">
+                  <option [value]="opt.value">{{ opt.name}}</option>
+                </ng-container>
+              </select>
+              <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                class="text-danger">{{getValidationErrors(control)}}
+              </small>
+            </div>
+
+            <div *ngIf="control.type === 'toggle'"  class="admin-typecss" cdkDrag>
+              <div class="form-check admin-form-switch">
+                <label *ngIf="control.visibleLabel==true" [for]="control.name" class="form-check-label">{{ control.label }} <span *ngIf="control.validators">*</span></label>
+                <input formControlName="{{ control.name }}" type="checkbox" class="admin-form-check-input" id="{{ control.name }}">
+              </div>
+            </div>
+
+            <div *ngIf="control.type === 'increment'"  class="admin-increment-typecss" cdkDrag>
+              <label *ngIf="control.visibleLabel==true">{{ control.label }}</label>
+              <button (click)="decrement(control.name,control.text)">-</button>
+              <input formControlName="{{ control.name }}" type="number" value="{{control.value}}">
+              <button (click)="increment(control.name,control.text)">+</button>
+              <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                class="text-danger">{{getValidationErrors(control)}}
+              </small>
+            </div>
+
+            <div *ngIf="control.type === 'tabview'" class="admin-sideselect-css" cdkDrag>
+              <ng-container [formArrayName]="control.name">
+                <p-tabView>
+                  <ng-container *ngFor="let allSubForm of control.dynamicControls;index as i">
+                    <ng-container *ngIf="i>0">
+                      <ng-container [formGroupName]="i-1">
+                        <p-tabPanel [header]="control.label +' '+ (i)">
+                          <ng-container *ngFor="let subControl of allSubForm">
+                            <ng-container *ngIf="subControl.visible!=false">
+                              <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
+                              [class]="subControl.class" class="admin-typecss">
+                              <label class="form.label" *ngIf="subControl.visibleLabel==true">{{ subControl.label }} <span *ngIf="subControl.validators">*</span></label>
+                              <input *ngIf="!subControl.disabled" formControlName="{{ subControl.name }}" class="line-border" [type]="subControl.type">
+                              <input *ngIf="subControl.disabled==true" formControlName="{{ subControl.name }}" [type]="subControl.type" style="background-color: rgb(187, 183, 183);" readonly>
+                              <small *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.touched)"
+                                class="text-danger">{{getValidationErrors(subControl)}}
+                              </small>
+                              </div>
+                              <div *ngIf="subControl.type === 'select'" [class]="subControl.class" class="admin-typecss">
+                                <label *ngIf="subControl.visibleLabel==true">{{ subControl.label }} <span *ngIf="control.validators">*</span></label>
+                                <select *ngIf="!subControl.disabled" [formControlName]="subControl.name" class="line-border" aria-label="Default select example">
+                                  <option selected value="">Choose...</option>
+                                  <ng-container *ngFor="let opt of subControl.options">
+                                    <option [value]="opt.name">{{ opt.name }}</option>
+                                  </ng-container>
+                                </select>
+                                <select *ngIf="subControl.disabled" [formControlName]="subControl.name" class="line-border" aria-label="Default select example" [attr.disabled]="true" style="background-color: rgb(187, 183, 183);pointer-events: none;">
+                                  <option selected value="">Choose...</option>
+                                  <ng-container *ngFor="let opt of subControl.options">
+                                    <option [value]="opt.name">{{ opt.name }}</option>
+                                  </ng-container>
+                                </select>
+                                <small *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.touched)"
+                                  class="text-danger">{{getValidationErrors(subControl)}}
+                                </small>
+                              </div>
+                              <div *ngIf="subControl.type  === 'toggle'" [class]="subControl.class" class="admin-typecss">
+                                <div class="form-check admin-form-switch">
+                                  <label [for]="subControl.name" class="form-check-label">{{ subControl.label }}</label>
+                                  <input formControlName="{{ subControl.name }}" type="checkbox" class="admin-form-check-input" id="{{ subControl.name }}">
+                                </div>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+                        </p-tabPanel>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </p-tabView>
+              </ng-container>
+            </div>
+
+            <div *ngIf="control.type === 'details'"  class="admin-typecss" cdkDrag>
+              <ng-container [formArrayName]="control.name">
+                <ng-container *ngFor="let allSubForm of control.dynamicControls;index as i">
+                  <ng-container *ngIf="i>0">
+                    <ng-container [formGroupName]="i-1">
+                      <ng-container *ngFor="let subControl of allSubForm">
+                         <ng-container *ngIf="subControl.visible!=false">
+                          <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
+                          [class]="subControl.class" class="admin-typecss">
+                          <label class="subControl.label" *ngIf="subControl.visibleLabel==true">{{ subControl.label }} <span *ngIf="subControl.validators">*</span></label>
+                          <input *ngIf="!subControl.disabled" [formControlName]="subControl.name" class="line-border" [type]="subControl.type">
+                          <input style="border: none;font-weight: 700;" *ngIf="subControl.disabled" [formControlName]="subControl.name" class="line-border" [type]="subControl.type" readonly>
+                          <small *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.touched)"
+                            class="text-danger">{{getValidationErrors(subControl)}}
+                          </small>
+                          </div>
+                          <div *ngIf="subControl.type === 'select'" [class]="subControl.class" class="admin-typecss">
+                            <label *ngIf="subControl.visibleLabel==true">{{ subControl.label }} <span *ngIf="subControl.validators">*</span></label>
+                            <select *ngIf="!subControl.disabled" [formControlName]="subControl.name" aria-label="Default select example">
+                              <option selected value="">Choose...</option>
+                              <ng-container *ngFor="let opt of subControl.options">
+                                <option [value]="opt.value">{{ opt.name }}</option>
+                              </ng-container>
+                            </select>
+                            <select *ngIf="subControl.disabled" [formControlName]="subControl.name" aria-label="Default select example">
+                              <option selected value="">Choose...</option>
+                              <ng-container *ngFor="let opt of subControl.options">
+                                <option [value]="opt.name">{{ opt.name }}</option>
+                              </ng-container>
+                            </select>
+                            <small *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.touched)"
+                              class="text-danger">{{getValidationErrors(subControl)}}
+                            </small>
+                          </div>
+                         </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </div>
+
+            <div *ngIf="control.type === 'bulletText'" class="admin-bullet-text {{ control.class }}" cdkDrag>
+              <label>{{ control.label }} <span *ngIf="control.validators">*</span></label>
+              <ul class="bullet">
+                <li *ngFor="let item of control.content">{{ item.value }}</li>
+              </ul>
+            </div>
+
+            <div *ngIf="control.type === 'checkbox'" class="admin-checkboxes {{ control.class }}" cdkDrag>
+              <input type="checkbox" formControlName="{{ control.name }}"/>
+              <label [for]="control.name" [innerHTML]="control.label" class="checkbox-label"></label>
+            </div>
+
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <div class="admin-btn-container admin-card-body" *ngIf="form.prevBtnTitle!='' || form.resetBtnTitle!='' || form.saveBtnTitle!=''">
+      <div class="admin-bottom-buttons" *ngIf="form.prevBtnTitle!='' || form.resetBtnTitle!='' || form.saveBtnTitle!=''">
+        <button class="admin-btn btn-primary nextbtn" *ngIf="form.prevBtnTitle!=''">{{form.prevBtnTitle}}</button>
+        <button class="admin-btn btn-primary nextbtn" *ngIf="form.resetBtnTitle!=''" >{{form.resetBtnTitle}}</button>
+        <button class="admin-btn btn-primary nextbtn" *ngIf="form.saveBtnTitle!=''">{{form.saveBtnTitle}}</button>
+      </div>
+    </div>   
+
+  </form>
+</div>

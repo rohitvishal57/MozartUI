@@ -1,0 +1,132 @@
+<div class="part-1">
+    <div class="main-container">
+        <form [formGroup]="AgentDetailsForm">
+            <div class="card-body rectangle">
+                <div class="card-header">Add Agent Details</div>
+                <div class="col-md-4 typecss">
+                    <label>Agent UserName <span>*</span></label>
+                    <input formControlName="agentUserName" class="line-border" type="text">
+                    <small *ngIf="AgentDetailsForm.controls['agentUserName'].dirty && AgentDetailsForm.hasError('required','agentUserName')" class="text-danger">*
+                        Agent UserName is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Agent Mobile Number <span>*</span></label>
+                    <input formControlName="agentMobileNum" class="line-border" type="text">
+                    <small *ngIf="AgentDetailsForm.controls['agentMobileNum'].dirty && AgentDetailsForm.hasError('required','agentMobileNum')" class="text-danger">*
+                        Agent Mobile Number is required
+                    </small>
+                </div>  
+                <div class="col-md-4 typecss">
+                    <label>Agency <span>*</span></label>
+                    <select formControlName="agencyCode" class="line-border" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allAgency">
+                        <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="AgentDetailsForm.controls['agencyCode'].dirty && AgentDetailsForm.hasError('required','agencyCode')" class="text-danger">*
+                        Agency is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Channel <span>*</span></label>
+                    <select formControlName="verticalCode" class="line-border" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of channel">
+                        <option [value]="opt.verticalCode">{{ opt.channelName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="AgentDetailsForm.controls['verticalCode'].dirty && AgentDetailsForm.hasError('required','verticalCode')" class="text-danger">*
+                        Channel is required
+                    </small>
+                </div>
+
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onSubmit()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="part-2">
+    <h4>All Agent Details</h4>
+    <p-table [value]="allAgentDetails" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10,20,30]">
+        <ng-template pTemplate="header">
+            <tr class="custom-header">
+                <th id="agencyUserNameHeader" pSortableColumn="agentUserName">Agent UserName <p-sortIcon field="agentUserName"></p-sortIcon></th>
+                <th id="agencyMobileNumHeader" pSortableColumn="agentMobileNum">Agent Number <p-sortIcon field="agentMobileNum"></p-sortIcon></th>
+                <th id="agencyNameHeader" pSortableColumn="agencyName">Agency Name <p-sortIcon field="agencyName"></p-sortIcon></th>
+                <th id="agencyStatusHeader" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                <th id="agencyCreateDateHeader" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                <th id="agencyHeader"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+            <tr>
+                <td>{{data.agentUserName}}</td>
+                <td>{{data.agentMobileNum}}</td>
+                <td *ngIf="getName(data.agencyCode)!==undefined">{{ getName(data.agencyCode).agencyName }}</td>
+                <td *ngIf="getName(data.agencyCode) == undefined">None</td>
+                <td>
+                    <ng-container *ngIf="data.agentUserStatus === true; else inactiveBlock">
+                        <span style="color: green;">Active</span>
+                      </ng-container>
+                      <ng-template #inactiveBlock>
+                        <span style="color: red;">Inactive</span>
+                    </ng-template>
+                </td>
+                <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data)"></i></td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+
+<p-dialog header="Edit Agent Details" [modal]="true" [(visible)]="visible" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+    <form [formGroup]="AgentDetailsForm">
+        <div class="card-body rectangle">
+            <div class="col-md-4 typecss">
+                <label>Agent UserName <span>*</span></label>
+                <input formControlName="agentUserName" class="line-border" type="text">
+                <small *ngIf="AgentDetailsForm.controls['agentUserName'].dirty && AgentDetailsForm.hasError('required','agentUserName')" class="text-danger">*
+                    Agent UserName is required
+                </small>
+            </div>
+            <div class="col-md-4 typecss">
+                <label>Agent Mobile Number <span>*</span></label>
+                <input formControlName="agentMobileNum" class="line-border" type="text">
+                <small *ngIf="AgentDetailsForm.controls['agentMobileNum'].dirty && AgentDetailsForm.hasError('required','agentMobileNum')" class="text-danger">*
+                    Agent Mobile Number is required
+                </small>
+            </div>  
+            <div class="col-md-4 typecss">
+                <label>Agency Code <span>*</span></label>
+                <select formControlName="agencyCode" class="line-border" aria-label="Default select example">
+                    <option selected value="">Choose...</option>
+                    <ng-container *ngFor="let opt of allAgency">
+                    <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
+                    </ng-container>
+                </select>
+                <small *ngIf="AgentDetailsForm.controls['agencyCode'].dirty && AgentDetailsForm.hasError('required','agencyCode')" class="text-danger">*
+                    Agency Code is required
+                </small>
+            </div>
+            <div class="col-md-6 typecss">
+                <div style="display: flex;justify-content: space-between;">
+                    <label>Agent Status </label>
+                    <p-inputSwitch formControlName="agentUserStatus"></p-inputSwitch>
+                </div>
+            </div>
+
+            <br>
+            <div class="btn-container card-body">
+                <button class="btn btn-primary nextbtn" (click)="onUpdate()">Save</button>
+            </div>
+        </div>
+    </form>
+</p-dialog>

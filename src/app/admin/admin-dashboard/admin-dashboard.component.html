@@ -1,0 +1,138 @@
+<div class="main-container">
+    <div class="left-nav">
+        <div class="banca-logo">
+            <img src="assets/logo/Bancasure Logo.svg" alt="banca logo" />
+        </div>
+        <div class="link">
+            <ul>
+                <li>
+                    <a routerLink="addChannnel" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-square-rss"></i>
+                        </div>
+                        <div class="nav-text">Add Channel</div>
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="addBank" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-university"></i>
+                        </div>
+                        <div class="nav-text">Add Bank</div>
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="addAgency" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-house"></i>
+                        </div>
+                        <div class="nav-text">Add Agency</div>
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="addInsuranceType" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="nav-text">Add Insurance Type</div>
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="addProduct" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                        <div class="nav-text">Add Product</div>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-brands fa-connectdevelop"></i>
+                        </div>
+                        <div class="nav-text">Product Map</div>
+                        <ul>
+                            <li>
+                                <a routerLink="channelInsuranceMap" routerLinkActive="active-link">
+                                    <div class="nav-icon">
+                                        <i class="fa-brands fa-slack"></i>
+                                    </div>
+                                    <div class="nav-text">Channel Bank Map</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a routerLink="channelInsuranceProductMap" routerLinkActive="active-link">
+                                    <div class="nav-icon">
+                                        <i class="fa-solid fa-building-columns"></i>
+                                    </div>
+                                    <div class="nav-text">Bank Product Map</div>
+                                </a>
+                            </li>       
+                            <li>
+                                <a routerLink="agencyInsuranceMap" routerLinkActive="active-link">
+                                    <div class="nav-icon">
+                                        <i class="fa-brands fa-slack"></i>
+                                    </div>
+                                    <div class="nav-text">Agency Bank Map</div>
+                                </a>
+                            </li>       
+                            <li>
+                                <a routerLink="agencyInsuranceProductMap" routerLinkActive="active-link">
+                                    <div class="nav-icon">
+                                        <i class="fa-solid fa-building-columns"></i>
+                                    </div>
+                                    <div class="nav-text">Agency Product Map</div>
+                                </a>
+                            </li>                          
+                        </ul>
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="formConfiguration" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-align-center"></i>
+                        </div>
+                        <div class="nav-text">Add Form</div>
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="addUserDetails" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="nav-text">Add User</div>
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="addAgentDetails" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="nav-text">Add Agent</div>
+                    </a>
+                </li>
+                <li>
+                    <a (click)="logOut()" routerLinkActive="active-link">
+                        <div class="nav-icon">
+                            <i class="fa-solid fa-power-off"></i>
+                        </div>
+                        <div class="nav-text">Log Out</div>
+                    </a>
+                </li>
+            </ul>            
+        </div>
+    </div>
+    <div class="right-panel">
+      <div class="header">
+        <div class="header-icon">
+          <img src="../../../assets/logo/Admin Portal x.svg" alt="admin-logo">
+        </div>
+        <div class="user-profile">
+          <img src="../../../assets/logo/Admin_Profile_and_name.svg" alt="profile">
+        </div>
+      </div>
+      <div class="body">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+</div>

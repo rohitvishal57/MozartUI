@@ -1,0 +1,176 @@
+<div class="part-1">
+    <div class="main-container">
+        <form [formGroup]="ChannelAgencyProductMapForm">
+            <div class="card-body rectangle">
+                <div class="card-header">Map Channel Agency Insurance Product</div>
+                
+                <div class="col-md-4 typecss">
+                    <label>Channel Name <span>*</span></label>
+                    <select formControlName="verticalCode" class="line-border" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of channelOptions">
+                        <option [value]="opt.verticalCode">{{ opt.channelName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ChannelAgencyProductMapForm.controls['verticalCode'].dirty && ChannelAgencyProductMapForm.hasError('required','verticalCode')" class="text-danger">*
+                        Channel Name is required
+                    </small>
+                </div>
+
+                <div class="col-md-4 typecss">
+                    <label>Agency Name <span>*</span></label>
+                    <select formControlName="agencyCode" class="line-border" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of agencyOptions">
+                        <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ChannelAgencyProductMapForm.controls['agencyCode'].dirty && ChannelAgencyProductMapForm.hasError('required','agencyCode')" class="text-danger">*
+                        Agency Name is required
+                    </small>
+                </div>
+
+                <div class="col-md-4 typecss">
+                    <label>Insurance Type <span>*</span></label>
+                    <select formControlName="insuranceTypeCode" class="line-border" aria-label="Default select example" (ngModelChange)="onselectInsuranceType($event)">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of insuranceTypeOptions">
+                            <option [value]="opt.insuranceTypeCode">{{ opt.insuranceType}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ChannelAgencyProductMapForm.controls['insuranceTypeCode'].dirty && ChannelAgencyProductMapForm.hasError('required','insuranceTypeCode')" class="text-danger">*
+                        Insurance Type is required
+                    </small>
+                </div>
+
+                <div class="col-md-4 typecss">
+                    <label>Product Name <span>*</span></label>
+                    <select formControlName="productId" class="line-border" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of productOptions">
+                            <option [value]="opt.productId">{{ opt.productName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ChannelAgencyProductMapForm.controls['productId'].dirty && ChannelAgencyProductMapForm.hasError('required','productId')" class="text-danger">*
+                        Product Name is required
+                    </small>
+                </div>
+                
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onSubmit()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="part-2">
+    <h4>All Channel Agency Insurance Product Map Details</h4>
+    <p-table [value]="allAgencyInsuranceProductMapData" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10,20,30]">
+        <ng-template pTemplate="header">
+            <tr class="custom-header">
+                <th id="agencyCodeHeader" pSortableColumn="agencyCode">Agency Name <p-sortIcon field="agencyCode"></p-sortIcon></th>
+                <th id="insTypeCodeHeader" pSortableColumn="insuranceTypeCode">Insurance Type <p-sortIcon field="insuranceTypeCode"></p-sortIcon></th>
+                <th id="verticalCodeHeader" pSortableColumn="verticalCode">Channel Name <p-sortIcon field="verticalCode"></p-sortIcon></th>
+                <th id="productIdHeader" pSortableColumn="productId">Product Name <p-sortIcon field="productId"></p-sortIcon></th>
+                <th id="createDateHeader" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                <th id="statusHeader" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                <th id="agencyproductHeader"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+            <tr>
+                <td *ngIf="getAgencyName(data.agencyCode)!==undefined">{{getAgencyName(data.agencyCode).agencyName}}</td>
+                <td *ngIf="getAgencyName(data.agencyCode) == undefined">None</td>
+                <td *ngIf="getInsuranceTypeName(data.insuranceTypeCode)!==undefined">{{getInsuranceTypeName(data.insuranceTypeCode).insuranceType}}</td>
+                <td *ngIf="getInsuranceTypeName(data.insuranceTypeCode) == undefined">None</td>
+                <td *ngIf="getChannelName(data.verticalCode)!==undefined">{{getChannelName(data.verticalCode).channelName}}</td>
+                <td *ngIf="getChannelName(data.verticalCode) == undefined">None</td>
+                <td *ngIf="getProductName(data.productId)!==undefined">{{getProductName(data.productId).productName}}</td>
+                <td *ngIf="getProductName(data.productId) == undefined">None</td>
+                <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                <td>
+                    <ng-container *ngIf="data.status === true; else inactiveBlock">
+                        <span style="color: green;">Active</span>
+                      </ng-container>
+                      <ng-template #inactiveBlock>
+                        <span style="color: red;">Inactive</span>
+                    </ng-template>
+                </td>
+                <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data)"></i></td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<p-confirmDialog [style]="{width: '30vw'}"></p-confirmDialog>
+
+<p-dialog header="Edit Channel Agency Product Mapping" [modal]="true" [(visible)]="visible" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+    <form [formGroup]="ChannelAgencyProductMapForm">
+        <div class="card-body rectangle">            
+            <div class="col-md-4 typecss">
+                <label>Channel Name <span>*</span></label>
+                <select style="background: rgba(211, 209, 209, 0.644);" formControlName="verticalCode" class="line-border" aria-label="Default select example">
+                    <option selected value="">Choose...</option>
+                    <ng-container *ngFor="let opt of allChannel">
+                    <option [value]="opt.verticalCode">{{ opt.channelName}}</option>
+                    </ng-container>
+                </select>
+                <small *ngIf="ChannelAgencyProductMapForm.controls['verticalCode'].dirty && ChannelAgencyProductMapForm.hasError('required','verticalCode')" class="text-danger">*
+                    Channel Name is required
+                </small>
+            </div>
+
+            <div class="col-md-4 typecss">
+                <label>Agency Name <span>*</span></label>
+                <select style="background: rgba(211, 209, 209, 0.644);" formControlName="agencyCode" class="line-border" aria-label="Default select example">
+                    <option selected value="">Choose...</option>
+                    <ng-container *ngFor="let opt of allAgency">
+                    <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
+                    </ng-container>
+                </select>
+                <small *ngIf="ChannelAgencyProductMapForm.controls['agencyCode'].dirty && ChannelAgencyProductMapForm.hasError('required','agencyCode')" class="text-danger">*
+                    Agency Name is required
+                </small>
+            </div>
+
+            <div class="col-md-4 typecss">
+                <label>Insurance Type <span>*</span></label>
+                <select style="background: rgba(211, 209, 209, 0.644);" formControlName="insuranceTypeCode" class="line-border" aria-label="Default select example">
+                    <option selected value="">Choose...</option>
+                    <ng-container *ngFor="let opt of allInsuranceType">
+                        <option [value]="opt.insuranceTypeCode">{{ opt.insuranceType}}</option>
+                    </ng-container>
+                </select>
+                <small *ngIf="ChannelAgencyProductMapForm.controls['insuranceTypeCode'].dirty && ChannelAgencyProductMapForm.hasError('required','insuranceTypeCode')" class="text-danger">*
+                    Insurance Type is required
+                </small>
+            </div>
+
+            <div class="col-md-4 typecss">
+                <label>Product Name <span>*</span></label>
+                <select style="background: rgba(211, 209, 209, 0.644);" formControlName="productId" class="line-border" aria-label="Default select example">
+                    <option selected value="">Choose...</option>
+                    <ng-container *ngFor="let opt of allProduct">
+                        <option [value]="opt.productId">{{ opt.productName}}</option>
+                    </ng-container>
+                </select>
+                <small *ngIf="ChannelAgencyProductMapForm.controls['productId'].dirty && ChannelAgencyProductMapForm.hasError('required','productId')" class="text-danger">*
+                    Product Name is required
+                </small>
+            </div>
+            <div class="col-md-6 typecss">
+                <div style="display: flex;justify-content: space-between;">
+                    <label>Channel Status </label>
+                    <p-inputSwitch formControlName="status"></p-inputSwitch>
+                </div>
+            </div>
+            
+            <br>
+            <div class="btn-container card-body">
+                <button class="btn btn-primary nextbtn" (click)="onUpdate()">Save</button>
+            </div>
+        </div>
+    </form>
+</p-dialog>

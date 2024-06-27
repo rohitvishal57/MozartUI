@@ -1,0 +1,77 @@
+h4{
+    text-align: center;
+    padding: 10px 0px;
+    font-size: 16px;
+    font-weight: bold;
+}
+:host::ng-deep {
+    .p-datatable .p-datatable-thead > tr > th {
+        text-align: left;
+        padding: 1rem 1rem;
+        border: 1px solid #dee2e6;
+        border-width: 0 0 1px 0;
+        font-weight: 700;
+        font-size: 13px;
+        color: #343a40;
+        background: #f8f9fa;
+        transition: box-shadow 0.2s;
+    }
+    .p-datatable .p-datatable-tbody > tr > td {
+        text-align: left;
+        border: 1px solid #dee2e6;
+        border-width: 0 0 1px 0;
+        padding: 1rem 1rem;
+        font-size: 13px;
+        font-weight: 600;
+        a{
+            color:blue;
+            cursor: pointer;
+            border-bottom: 0.5px solid blue;
+        }
+    }
+    .p-paginator .p-paginator-current {
+        background-color: transparent;
+        border: 0 none;
+        color: #6c757d;
+        min-width: 3rem;
+        height: 3rem;
+        margin: 0.143rem;
+        padding: 0 0.5rem;
+        font-size: medium;
+    }
+    .p-paginator .p-dropdown .p-dropdown-label {
+        padding-right: 0;
+        font-size: small;
+    }
+    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+        background: #EFF6FF;
+        border-color: #EFF6FF;
+        color: #1D4ED8;
+    }
+    .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+        margin: 0;
+        padding: 0.75rem 1.25rem;
+        border: 0 none;
+        color: #495057;
+        background: transparent;
+        transition: box-shadow 0.2s;
+        border-radius: 0;
+        font-size: medium;
+    }
+    .p-datatable .p-paginator-bottom {
+        border-width: 0 0 1px 0;
+        border-radius: 0;
+        height: 50px;
+    }
+    .p-paginator .p-dropdown {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        height: 3.7rem;
+    }
+    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+        background: #EFF6FF;
+        border-color: #EFF6FF;
+        color: #1D4ED8;
+        font-size: 14px;
+    }
+}

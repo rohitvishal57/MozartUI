@@ -1,0 +1,197 @@
+.p-dialog .p-dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .p-dialog .p-dialog-header .p-dialog-title {
+    flex-grow: 1;
+  }
+  
+  .center-header .p-dialog-title {
+    text-align: center;
+  }
+  
+  .left-header .p-dialog-title {
+    text-align: left;
+  }
+  
+  
+.close{
+    border: none;
+    background: none;
+  }
+
+  .modal-header{
+    border-bottom: 1px solid rgb(216, 208, 208);
+
+}
+
+  .modal-title{
+    margin-top: 8px;
+    margin-left: 18px;
+    margin-bottom: 8px;
+  }
+
+/* .radio-buttons{
+  display: flex;
+  flex-direction: row;
+}
+
+.radio-button{
+    display: flex;
+    flex-direction: row;
+    padding-left: 10px;
+} */
+
+
+/* input[type="radio"] {
+    width: 20px;
+} */
+input[type="text"] {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  width: 90%;
+}
+
+.payment-text{
+    width:100%;
+}
+
+/* .radio-button label {
+    margin-left: 13px;
+} */
+
+    label {
+        display: block;
+        font-size: 14px;
+        color: #000;
+        font-family: "Roboto", sans-serif;
+        padding-bottom: 4px;
+    }
+
+.center_button{
+  background-color: #EF7300;
+    width: 85px;
+    border-radius: 20px;
+    border: none;
+    height: 30px;
+    font-size: 14px;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: auto;
+  margin-left: calc(50% - 50px);
+}
+.right_button{
+    background-color: #c7222a;
+    color: white;
+    width: 85px;
+    border-radius: 20px;
+    border: none;
+    height: 30px;
+    font-size: 14px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  float: right;
+  margin-right: 10px;
+  
+}
+
+.imageLoopPopup {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  margin: 10px !important;
+}
+
+/* .healthtextfields input[type="text"] {
+    width: 40%;
+    border: 1px solid rgba(184, 184, 184, 0.25);
+    background: rgba(246, 246, 246, 0.55);
+} */
+
+
+.paymentLogoPopup {
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid black;
+    padding: 8px;
+    height: 80px;
+}
+
+.img1Popup {
+  width: 20px;
+  height: 20px;
+}
+
+.imagelabelPopup {
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+
+/* radio button css */
+.radio-option{
+    align-items:flex-end;
+    margin-right: 10px;
+  }
+  
+  .radio-option label{
+    font-size: 13px;
+    
+  }
+  
+  .radio-option input[type="radio"] {
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid black;
+    border-radius: 50%;
+  }
+  
+  .radio-option input[type="radio"]:checked {
+    background-color: #c7222a;
+    color: #c7222a;
+  }
+  .radio-button{
+    display: flex;
+    flex-direction: row;
+    padding-left: 0px;
+    padding-right: 15px;
+}
+.checkboxes-without-border{
+  margin-bottom: 15px;
+  /* border: 1px solid #ddd; */
+  padding: 20px 20px 20px 0px;
+  /* border-radius: 10px; */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  background-color: #fff;
+  /* display: flex; */
+  display: inline-flex;
+} 
+
+/* .checkboxes{
+  display: flex;
+  margin-right: 50px;
+} */
+.popup-checkbox-label{
+  margin: 0px 0px 5px 10px;
+}
+.checkboxes-without-border>input {
+    width: 20px;
+    height: 20px;
+}
+.col-md-6 {
+  flex: 0 0 auto;
+  width: 49%;
+}
+
+.my-btn-class2 {
+  width: 20%;
+
+}

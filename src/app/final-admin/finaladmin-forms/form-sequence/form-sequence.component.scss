@@ -1,0 +1,97 @@
+.main-container {
+    background-color: #F5F5F5;
+    height: 100%;
+    padding: 3% 5%;
+
+    // a {
+    //     cursor: pointer;
+
+    //     i {
+    //         font-size: 22px;
+    //         color: #000000;
+    //     }
+    // }
+
+    p {
+        margin-left: 20px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #000000;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .state {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding: 2% 5%;
+
+        .state-1 {
+            align-items: center;
+            border: 1px solid #B8B8B8;
+            padding: 6px 30px;
+            background-color: #fff;
+            border-radius: 15px 0px 0px 15px;
+        }
+
+        .state-2 {
+            padding: 6px 30px;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #B8B8B8;
+            border-radius: 0px 15px 15px 0px;
+        }
+        .states {
+            padding: 6px 30px;
+            align-items: center;
+            background-color: #87CEEB;
+            border: 1px solid #B8B8B8;
+        }
+    }
+    .right-side{
+        width: 100%;
+        background: #FFF;
+        border-radius: 15px;
+        padding: 10px 10px;
+        box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+        .table{
+            margin-top: 20px;
+        }
+        .table thead th{
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .table thead td{
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .table thead tr th{
+            padding: 10px 0px;
+        }
+        .table tbody tr{
+            cursor: pointer;
+        }
+        .table tbody tr td{
+            font-size: 12px;
+            padding: 10px 0px;
+            font-weight: 400;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+        }
+        .btn {
+            padding: 15px 50px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            background-image: linear-gradient(rgb(73, 72, 71), #8f8888);
+            border: none;
+            border-radius: 50px;
+            margin: 10px;
+        }
+        .btn:hover {
+            background-image: linear-gradient(#5e7c60, #60856e);
+        }
+    }
+}

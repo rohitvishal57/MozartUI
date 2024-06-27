@@ -1,0 +1,74 @@
+.part-1{
+    background: #F5F5F5;
+    .main-container {
+        background-color: #F5F5F5;
+    }
+    .card-body{
+        padding: 2% 30%;
+        display: flex;
+        flex-direction: column;
+    }
+    .card-header{
+        color: grey;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 700;
+        font-family: "Noto Sans", sans-serif;
+        padding: 3% 3%;
+    }
+    .typecss{
+        display: inline-table;
+        padding-right: 30px;
+        padding-top: 40px;
+    }
+    .line-border{
+        border: 1px solid #B8B8B8;
+        border-radius: 4px;
+    }
+    label {
+        display: block;
+        font-size: 14px;
+        color: grey;
+        font-family: "Noto Sans", sans-serif;
+        padding-bottom: 4px;
+    }
+    small {
+        font-size: 14px;
+    }
+    input {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        width: 100%;
+    }
+    select {
+        width: 100%;
+        height: 27px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        border: none;
+        outline: none;
+        color: gray;
+    }
+    .btn-container {
+        display: flex;
+        justify-content: center;
+    }
+    .btn {
+        padding: 15px 50px;
+        font-size: 12px;
+        font-weight: 500;
+        color: rgb(0, 0, 0);
+        background-image: linear-gradient(rgb(255, 255, 255), #ffffff);
+        border: 1px solid #656565;
+        border-radius: 50px;
+        margin: 10px;
+    }
+    .btn:hover {
+        background-image: linear-gradient(#4169E1, #4169E1);
+    }
+    .back-btn{
+        padding: 20px 0px 0px 25px;
+    }
+}

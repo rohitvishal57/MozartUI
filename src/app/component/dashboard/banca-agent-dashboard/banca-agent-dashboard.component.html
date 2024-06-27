@@ -1,0 +1,41 @@
+<div class="product-main-container">
+    <div class="left-panel">
+        <app-dashboard-sidebar></app-dashboard-sidebar>
+    </div>
+    <div class="right-panel">
+        <h4>All Proposal Details</h4>
+        <p-table [value]="allProposals" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="proposalNumHeader" pSortableColumn="proposalNum">Proposal Number<p-sortIcon field="proposalNum"></p-sortIcon></th>
+                    <th id="productIdHeader" pSortableColumn="productId">Product Name<p-sortIcon field="productId"></p-sortIcon></th>
+                    <th id="insTypeCodeHeader" pSortableColumn="insuranceTypeCode">Insurance Type<p-sortIcon field="insuranceTypeCode"></p-sortIcon></th>
+                    <th id="createDateHeader" pSortableColumn="created_Date">Created Date<p-sortIcon field="created_Date"></p-sortIcon></th>
+                    <th id="statusHeader">Status</th>
+                    <th id="bancaAgentHeader"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td><a (click)="onLinkClick(data)">{{data.proposalNum}}</a></td>
+                    <td *ngIf="getProductName(data.productId)!==undefined">{{getProductName(data.productId).productName}}</td>
+                    <td *ngIf="getProductName(data.productId) == undefined">None</td>
+                    <td *ngIf="getInsuranceTypeName(data.insuranceTypeCode)!==undefined">{{getInsuranceTypeName(data.insuranceTypeCode).insuranceType}}</td>
+                    <td *ngIf="getInsuranceTypeName(data.insuranceTypeCode) == undefined">None</td>
+                    <td>{{formatDate(data.formData[data.formData.length-1].created_Date)}}</td>
+                    <td>
+                        <ng-container *ngIf="getProposalStatus(data)==true; else inactiveBlock">
+                            <span style="color: green;">Completed</span>
+                        </ng-container>
+                        <ng-template #inactiveBlock>
+                            <span style="color: red;">Pending</span>
+                        </ng-template>
+                    </td>
+                    <td></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

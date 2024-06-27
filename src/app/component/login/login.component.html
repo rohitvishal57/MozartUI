@@ -1,0 +1,71 @@
+<div class="main-login-container">
+    <div class="main-left-side">
+        <img class="main-image-container" src="../../../assets/logo/mainLoginPage.jpg" alt="Image" />
+        <img class="main-svg-image" src="../../../assets/logo/login_portal_logo.svg" alt="SVG" />
+    </div>
+    <div class="main-right-side">
+        <div class="main-login-text">
+            <div class="main-login-heading">Welcome to</div>
+            <div class="main-login-subheading">Mozart Onboarding Platform</div>
+        </div>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="main-login-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-label">Channel Name</div>
+                        <div class="input-with-icon">
+                            <select class="form-control" formControlName="verticalCode" (change)="subscribeToVerticalCodeChanges($event)">
+                                <option value="" disabled selected>Choose Channel</option>
+                                <option *ngFor="let option of allChannel" [value]="option.verticalCode">{{ option.channelName }}</option>
+                            </select>
+                        </div>
+                        <small *ngIf="loginForm.controls['verticalCode'].dirty && loginForm.hasError('required', 'verticalCode')" class="text-danger">*
+                            Channel is required</small>
+                    </div>
+                    <div class="col-md-6" *ngIf="showBankDropdown">
+                        <div class="input-label">Bank Name</div>
+                        <div class="input-with-icon">
+                            <select class="form-control" formControlName="bankCode">
+                                <option value="" disabled selected>Choose Bank</option>
+                                <option *ngFor="let option of allBank" [value]="option.bankCode">{{option.bankName}}</option>
+                            </select>
+                        </div>
+                        <small *ngIf="loginForm.controls['bankCode'].dirty && loginForm.hasError('required', 'bankCode')" class="text-danger">*
+                            Bank is required</small>
+                    </div>
+                    <div class="col-md-6" *ngIf="!showBankDropdown">
+                        <div class="input-label">Agency Name</div>
+                        <div class="input-with-icon">
+                            <select class="form-control" formControlName="agencyCode">
+                                <option value="" disabled selected>Choose Agency</option>
+                                <option *ngFor="let option of allAgency" [value]="option.agencyCode">{{option.agencyName}}</option>
+                            </select>
+                        </div>
+                        <small *ngIf="loginForm.controls['agencyCode'].dirty && loginForm.hasError('required', 'agencyCode')" class="text-danger">*
+                            Agency is required</small>
+                    </div>
+                </div>
+                <div class="submit-button">
+                    <button type="submit" class="login-button">
+                        <div class="row">
+                            <div class="col-md-6 button-title">Next </div>
+                            <div class="col-md-6">
+                                <svg width="34" height="34" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_0_3)">
+                                    <path d="M25 50C38.8071 50 50 38.8071 50 25C50 11.1929 38.8071 0 25 0C11.1929 0 0 11.1929 0 25C0 38.8071 11.1929 50 25 50Z" fill="white"/>
+                                    <path d="M21.2781 33.7507C21.0203 33.4929 20.8755 33.1432 20.8755 32.7786C20.8755 32.414 21.0203 32.0643 21.2781 31.8065L28.0843 25.0002L21.2781 18.194C21.0276 17.9347 20.889 17.5873 20.8921 17.2268C20.8953 16.8663 21.0399 16.5214 21.2948 16.2665C21.5498 16.0116 21.8946 15.8669 22.2551 15.8638C22.6157 15.8607 22.963 15.9993 23.2223 16.2497L31.0007 24.0281C31.2585 24.286 31.4033 24.6356 31.4033 25.0002C31.4033 25.3648 31.2585 25.7145 31.0007 25.9724L23.2223 33.7507C22.9645 34.0085 22.6148 34.1533 22.2502 34.1533C21.8856 34.1533 21.5359 34.0085 21.2781 33.7507Z" fill="#2A496C"/>
+                                    </g>
+                                    <defs>
+                                    <clipPath id="clip0_0_3">
+                                    <rect width="50" height="50" fill="#2A496C"/>
+                                    </clipPath>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

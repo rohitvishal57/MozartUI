@@ -1,0 +1,124 @@
+<div class="body">
+    <div class="left-side">
+        <h2>Add JSON Form Data</h2>
+        <form [formGroup]="jsonForm">
+            <div class="card-body" >
+                <div class="col-md-6 typecss">
+                    <label>Channel Name *</label>
+                    <select formControlName="verticalCode" class="line-border" aria-label="Default select example" (ngModelChange)="onSelectedChannel($event)">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of channelOptions">
+                            <option [value]="opt.verticalCode">{{ opt.channelName}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-6 typecss" *ngIf="channelcode == 13">
+                    <label>Agency Name *</label>
+                    <select formControlName="agencyCode" class="line-border" aria-label="Default select example" (ngModelChange)="onselectAgency($event)">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of agencyOptions">
+                            <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-6 typecss" *ngIf="channelcode == 12">
+                    <label>Bank Name *</label>
+                    <select formControlName="bankCode" class="line-border" aria-label="Default select example" (ngModelChange)="onSelectedBank($event)">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allBank">
+                            <option [value]="opt.bankCode">{{ opt.bankName}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Insurance Type *</label>
+                    <select formControlName="insuranceTypeCode" class="line-border" aria-label="Default select example" (ngModelChange)="onSelectInsuranceType($event)">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allInsuranceType">
+                            <option [value]="opt.insurancetypecode">{{ opt.insurancetype}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Product Name *</label>
+                    <select formControlName="productId" class="line-border" aria-label="Default select example" (ngModelChange)="onSelectProduct($event)">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allProducts">
+                            <option [value]="opt.productid">{{ opt.productname}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Form Name *</label>
+                    <input formControlName="formName" type="text">
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Form Id *</label>
+                    <input formControlName="formId" type="number">
+                </div>
+                <div class="col-md-12 typecss">
+                    <label>Edit JSON     Form Data</label>
+                    <json-editor [options]="editorOptions" formControlName="jsonFormData"></json-editor>
+                </div><br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onSaveForm()">Save Form</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="right-side" *ngIf="formSequence.length>0">
+        <h2>JSON Form Sequence</h2>
+        <div class="card-body" >
+            <div cdkDropList (cdkDropListDropped)="drop($event)">
+                <table class="table">
+                    <caption>Description of the table</caption>
+                  <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Form Id</th>
+                        <th>Form Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let form of formSequence;index as i;" cdkDrag>
+                      <td (click)="getFormDataFromFormSequence(form)">{{i+1}}</td>
+                      <td (click)="getFormDataFromFormSequence(form)">{{ form.formId }}</td>
+                      <td (click)="getFormDataFromFormSequence(form)">{{ form.formName }}</td>
+                      <td (click)="deleteFormConfiguration(i)"><i style="color: red;font-size: 16px;" class="fa-solid fa-trash-can"></i></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>              
+        </div>
+        <div class="right-side" *ngIf="formSequence.length>0">
+            <h2>JSON Form Sequence</h2>
+            <div class="card-body" *ngIf="selectedBank && selectedInsuranceType">
+                <div cdkDropList (cdkDropListDropped)="drop($event)">
+                    <table class="table">
+                        <caption>Description of the table</caption>
+                      <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Form Id</th>
+                            <th>Form Name</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let form of formSequence;index as i;" cdkDrag>
+                          <td (click)="getFormDataFromFormSequence(form)">{{i+1}}</td>
+                          <td (click)="getFormDataFromFormSequence(form)">{{ form.formId }}</td>
+                          <td (click)="getFormDataFromFormSequence(form)">{{ form.formName }}</td>
+                          <td (click)="deleteFormConfiguration(i)"><i style="color: red;font-size: 16px;" class="fa-solid fa-trash-can"></i></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>              
+            </div>
+            <div class="btn-container card-body">
+                <button class="btn btn-primary nextbtn" (click)="saveFormSequence()">Save Form Sequence</button>
+            </div>
+        </div>
+    </div>
+</div>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '30vw'}"></p-confirmDialog>

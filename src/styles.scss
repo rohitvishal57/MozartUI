@@ -1,0 +1,29 @@
+//* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "~@fortawesome/fontawesome-free/css/all.css";
+@import url("../node_modules/quill/dist/quill.snow.css");
+@import url("../node_modules/quill/dist/quill.core.css");
+@import '~bootstrap/dist/css/bootstrap.min.css'; 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import "../node_modules/jsoneditor/dist/jsoneditor.min.css";
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body { height: 100%;font-size: 10px; }
+body { 
+  margin: 0; font-family: 'Roboto', sans-serif;background: #fff; 
+}
+
+/* Works for Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Works for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

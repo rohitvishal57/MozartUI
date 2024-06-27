@@ -1,0 +1,190 @@
+{
+  "HealthAdvantage": {
+    "Year_1": {
+      "ProductCode": "4193",
+      "subProductCode": "1103",
+      "Plans": [
+        {
+          "PlanCode": "11892",
+          "PlanName": "HAE_Plus_Individual_Child_1Year_A",
+          "Adult": "0",
+          "Child": "1",
+          "NoOfMembers": "1"
+        },
+        {
+          "PlanCode": "11893",
+          "PlanName": "HAE_Individual Adult_1YR_Apex Plus",
+          "Adult": "1",
+          "Child": "0",
+          "NoOfMembers": "1"
+        },
+        {
+          "PlanCode": "11894",
+          "PlanName": "HAE_Plus_2Adults_1Year_A",
+          "Adult": "2",
+          "Child": "0",
+          "NoOfMembers": "2"
+        },
+        {
+          "PlanCode": "11895",
+          "PlanName": "HAE_Plus_1Adult_1Child_1Year_A",
+          "Adult": "1",
+          "Child": "1",
+          "NoOfMembers": "2"
+        },
+        {
+          "PlanCode": "11896",
+          "PlanName": "HAE_Plus_1Adult_2Child_1Year_A",
+          "Adult": "1",
+          "Child": "2",
+          "NoOfMembers": "3"
+        },
+        {
+          "PlanCode": "11897",
+          "PlanName": "HAE_Plus_2Adult_1Child_1Year_A",
+          "Adult": "2",
+          "Child": "1",
+          "NoOfMembers": "3"
+        },
+        {
+          "PlanCode": "11898",
+          "PlanName": "HAE_2Adult_2Child_1YR_Apex Plus",
+          "Adult": "2",
+          "Child": "2",
+          "NoOfMembers": "4"
+        },
+        {
+          "PlanCode": "11899",
+          "PlanName": "HAE_Plus_2Adult_3Child_1Year_A",
+          "Adult": "2",
+          "Child": "3",
+          "NoOfMembers": "5"
+        }
+      ]
+    },
+    "Year_2": {
+      "ProductCode": "4193",
+      "subProductCode": "1103",
+      "Plans": [
+        {
+          "PlanCode": "11900",
+          "PlanName": "HAE_Plus_Individual_Child_2Years_A",
+          "Adult": "0",
+          "Child": "1",
+          "NoOfMembers": "1"
+        },
+        {
+          "PlanCode": "11901",
+          "PlanName": "HAE_Plus_Individual_Adult_2Years_A",
+          "Adult": "1",
+          "Child": "0",
+          "NoOfMembers": "1"
+        },
+        {
+          "PlanCode": "11902",
+          "PlanName": "HAE_Plus_2Adults_2Years_A",
+          "Adult": "2",
+          "Child": "0",
+          "NoOfMembers": "2"
+        },
+        {
+          "PlanCode": "11903",
+          "PlanName": "HAE_Plus_1Adult_1Child_2Years_A",
+          "Adult": "1",
+          "Child": "1",
+          "NoOfMembers": "2"
+        },
+        {
+          "PlanCode": "11904",
+          "PlanName": "HAE_Plus_1Adult_2Child_2Years_A",
+          "Adult": "1",
+          "Child": "2",
+          "NoOfMembers": "3"
+        },
+        {
+          "PlanCode": "11905",
+          "PlanName": "HAE_Plus_2Adult_1Child_2Years_A",
+          "Adult": "2",
+          "Child": "1",
+          "NoOfMembers": "3"
+        },
+        {
+          "PlanCode": "11906",
+          "PlanName": "HAE_Plus_2Adult_2Child_2Years_A",
+          "Adult": "2",
+          "Child": "2",
+          "NoOfMembers": "4"
+        },
+        {
+          "PlanCode": "11907",
+          "PlanName": "HAE_Plus_2Adult_3Child_2Years_A",
+          "Adult": "2",
+          "Child": "3",
+          "NoOfMembers": "5"
+        }
+      ]
+    },
+    "Year_3": {
+      "ProductCode": "4193",
+      "subProductCode": "1103",
+      "Plans": [
+        {
+          "PlanCode": "11908",
+          "PlanName": "HAE_Plus_Individual_Child_3Years_A",
+          "Adult": "0",
+          "Child": "1",
+          "NoOfMembers": "1"
+        },
+        {
+          "PlanCode": "11909",
+          "PlanName": "HAE_Plus_Individual_Adult_3Years_A",
+          "Adult": "1",
+          "Child": "0",
+          "NoOfMembers": "1"
+        },
+        {
+          "PlanCode": "11910",
+          "PlanName": "HAE_Plus_2Adults_3Years_A",
+          "Adult": "2",
+          "Child": "0",
+          "NoOfMembers": "2"
+        },
+        {
+          "PlanCode": "11911",
+          "PlanName": "HAE_Plus_1Adult_1Child_3Years_A",
+          "Adult": "1",
+          "Child": "1",
+          "NoOfMembers": "2"
+        },
+        {
+          "PlanCode": "11912",
+          "PlanName": "HAE_Plus_1Adult_2Child_3Years_A",
+          "Adult": "1",
+          "Child": "2",
+          "NoOfMembers": "3"
+        },
+        {
+          "PlanCode": "11913",
+          "PlanName": "HAE_Plus_2Adult_1Child_3Years_",
+          "Adult": "2",
+          "Child": "1",
+          "NoOfMembers": "3"
+        },
+        {
+          "PlanCode": "11914",
+          "PlanName": "HAE_Plus_2Adult_2Child_3Years_A",
+          "Adult": "2",
+          "Child": "2",
+          "NoOfMembers": "4"
+        },
+        {
+          "PlanCode": "11915",
+          "PlanName": "HAE_Plus_2Adult_3Child_3Years_A",
+          "Adult": "2",
+          "Child": "3",
+          "NoOfMembers": "5"
+        }
+      ]
+    }
+  }
+}
