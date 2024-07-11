@@ -77,7 +77,7 @@ export class ViewproductsComponent implements OnInit {
       };
       console.log(productData)
       if (this.formSequence != null && this.formSequence.length > 0) {
-        this.router.navigate(['portal/agent/agentForm'], {
+        this.router.navigate(['portal/abhi/forms'], {
           state: { productData: productData, formSequence: this.formSequence }
         });
       }
@@ -97,7 +97,7 @@ export class ViewproductsComponent implements OnInit {
 
       if (this.formSequence != null && this.formSequence.length > 0) {
         this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
-        sessionStorage.setItem("allJsonFormData", this.encryptionService.encrypt(this.allJsonFormData));
+        sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
       }
       console.log(this.allJsonFormData);
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));

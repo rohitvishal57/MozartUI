@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/app/authorize/auth.guard';
 import { PortalComponent } from './portal.component';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -28,7 +28,11 @@ const routes: Routes = [
         path: 'agent',
         loadChildren: () => import('../component/bancassure/bancassure.module').then((m) => m.BancassureModule),
         canActivate: [AuthGuard]
-      }
+      }, 
+      {
+        path: "abhi",
+        loadChildren: () => import('../component/abhi-up/abhi-up.module').then((m) => m.AbhiupModule)
+      },
     ]
   }
 ]

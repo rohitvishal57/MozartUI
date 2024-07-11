@@ -11,15 +11,16 @@ export interface IForm {
 }
 export interface IFormSections {
   sectionTitle: string;
-  visible: boolean;
+  visible?: boolean;
   apiEndpoint?: any;
   controlTypeName?: any;
   method?: any;
-  formControls: IFormControl[];
   isVisible?: boolean;
+  formControls: IFormControl[];
+  visibleLabel?: boolean;
   sectionButton?: ISectionButton;
   class?: string;
-  button?: any;
+  toolTipText?: string;
 }
 export interface ISectionButton {
   label?: string;
@@ -47,7 +48,7 @@ export interface IFormControl {
   idProperty?: any;
   nameProperty?: any;
   class?: string;
-  cssClass?:string;
+  cssClass?: string;
   showBorder?: boolean;
   type?: any;
   subType?: any;
@@ -71,8 +72,13 @@ export interface IFormControl {
   popUpFormId?: any;
   showDoneButton?: boolean;
   dependentControls?: string[];
-  isToolTipVisible?: boolean;
   toolTipText?: string;
+  isToolTipVisible?: boolean;
+  imagesrc?: string;
+  tabs?: ITab[];
+  bigFontValue?: string;
+  details?: any;
+  button?:any;
 }
 export interface ISubControl {
   name: string;
@@ -92,6 +98,12 @@ export interface ISubControl {
   bigFont?: boolean;
 }
 
+export interface ITab {
+  name: string;
+  label: string;
+  content: any;
+}
+
 export interface IConditionalVisibility {
   dependsOn: string; // Name of the control on which this control's visibility depends
   values: any[]; // Array of values for which this control should be visible
@@ -105,8 +117,10 @@ export interface IRadioOption {
 }
 
 export interface ISelectCheckboxOption {
-   label: string;
-   value: string;
+  label: string;
+  value: string;
+  button?: boolean;
+  imagePath?: string;
 }
 
 export interface IImage {
@@ -149,7 +163,7 @@ export interface IDynamicControl {
   type?: any;
   value?: any;
   apiEndpoint?: any;
-  disabled?: boolean; 
+  disabled?: boolean;
   class?: string;
   methodName?: any;
   visible?: boolean;
@@ -174,4 +188,5 @@ export interface IOptions {
   name?: string;
   other?: any;
   value?: any;
+  class?: string;
 }

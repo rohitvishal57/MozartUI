@@ -52,6 +52,19 @@ export class CommonService {
     return this.http.post<any>(`${this.baseUrl}Banca/Forms/GetAllFormDataViaVerticalCode`, reqData);
   }
 
+  insertOrUpdateJourneyDetailsViaVerticalCode(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateJourneyDetailsViaVerticalCode`, reqData);
+  }
+  getJourneyDetailsByProposalNum(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl}Banca/Forms/GetJourneyDetailsByProposalNum`, reqData);
+  }
+  getJourneyDetailsViaVerticalCode(verticalCode:any,code:any,agentCode:any){
+    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetJourneyDetailsViaVerticalCode?verticalCode=${verticalCode}&Code=${code}&AgentCode=${agentCode}`);
+  }
+  resumeJourneyViaFormName(reqData: any){
+    return this.http.post<any>(`${this.baseUrl}Banca/Forms/ResumeJourneyViaFormName`,reqData);
+  }
+
   //For ABHI
 
   //Agent Forms Api's
