@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http'
   providedIn: 'root',
 })
 export class CommonService {
-  private baseUrl: string = 'https://localhost:7070/';
+  private baseUrl: string = 'https://usp.monocept.ai/api/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
   private apiUrl = './assets/health-plans.json';
