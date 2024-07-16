@@ -172,6 +172,10 @@ export class CommonService {
     return this.http.get<any>(`${this.baseUrl}Agent/getProposerOccupation`);
   }
 
+  getProposerRelationships(reqData: any){
+    return this.http.post<any>(`${this.baseUrl}Agent/getProposerRelationships`,reqData);
+  }
+  
   getNatureOfOccupation(){
     return this.http.get<any>(`${this.baseUrl}Agent/GetNatureOfWork`);
   }

@@ -641,55 +641,6 @@
             border-radius: 15px;
         }
 
-        //custom radio
-        .radio-card-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .radio-card {
-            display: none;
-        }
-
-        .radio-card-label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 120px;
-            /* Adjust width if necessary */
-            height: 80px;
-            /* Adjust height to fit content */
-            padding: 10px;
-            /* Adjust padding */
-            background-color: #f0f0f0;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 12px;
-            /* Adjust font size */
-            text-align: center;
-            /* Center align text */
-            box-sizing: border-box;
-            /* Include padding in width/height */
-            word-wrap: break-word;
-            /* Allow text to wrap */
-            overflow-wrap: break-word;
-            /* Break long words */
-            white-space: normal;
-            /* Allow text to wrap */
-        }
-
-        .radio-card-label:hover {
-            background-color: #e0e0e0;
-        }
-
-        .radio-card:checked+.radio-card-label {
-            background-color: #d0d0ff;
-            border: 2px solid #c72229;
-            color: #c72229;
-        }
-
         .text-danger {
             --bs-text-opacity: 1;
             color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important;
@@ -821,6 +772,166 @@
             color: #c72229;
         }
 
+        //custom radio
+        .radio-card-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .radio-card {
+            display: none;
+        }
+
+        .radio-card-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 200px;
+            /* Adjust width if necessary */
+            height: 110px;
+            /* Adjust height to fit content */
+            padding: 10px;
+            /* Adjust padding */
+            background-color: #f0f0f0;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            /* Adjust font size */
+            text-align: center;
+            /* Center align text */
+            box-sizing: border-box;
+            /* Include padding in width/height */
+            word-wrap: break-word;
+            /* Allow text to wrap */
+            overflow-wrap: break-word;
+            /* Break long words */
+            white-space: normal;
+            /* Allow text to wrap */
+        }
+
+        .radio-card-label:hover {
+            background-color: #e0e0e0;
+        }
+
+        .radio-card:checked+.radio-card-label {
+            background-color: #FFF;
+            border: 2px solid #c72229;
+            color: #c72229;
+        }
+
+        .radio-card-label .year {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .radio-card-label .price {
+            font-size: 20px;
+            font-weight: 900;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .radio-card-label .discount {
+            font-size: 15px;
+            /* Adjust font size */
+            color: green;
+            font-family: fantasy;
+            /* Adjust color */
+        }
+
+        //addOn CSS
+        .ah-opcovers {
+            // overflow: hidden;
+            padding: 30px 0px 5px !important;
+            min-height: 100px;
+        }
+
+        .checkboxes {
+            display: flex;
+            margin-right: 4px;
+        }
+
+        .checkboxes>input {
+            width: 20px;
+            height: 20px;
+            margin-left: 20px;
+        }
+
+        .checkboxes>label {
+            padding-left: 15px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 0px;
+        }
+
+        .multi-premium-opt-cov-chk-txt {
+            font-family: PF-Handbook-Pro-Bold, sans-serif;
+            font-size: 15px !important;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: normal;
+            letter-spacing: 0.2px;
+            text-align: left;
+            color: #000000;
+            text-indent: 0;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        .multi-premium-add-member-btn,
+        .multi-wearable-add-member-btn {
+            width: 126.5px;
+            height: 40px;
+            border-radius: 2px;
+            background-color: #f7a500;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12);
+            border: solid 0.5px #eb9d00;
+            padding: 11px 3px;
+        }
+
+        .typecss {
+            display: inline-table;
+            padding-right: 30px;
+            padding-bottom: 30px;
+            padding-left: 10px;
+        }
+
+        .right-side {
+            float: right;
+        }
+
+        .btn {
+            /* padding: 10px 20px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            background: rgb(179, 59, 59);
+            border: none;
+            border-radius: 1px;
+            margin: 10px; */
+            width: 150px;
+            height: 45px;
+            font-size: 18px;
+            border-radius: 2px;
+            background-color: #c7222a;
+            color: #fff;
+            border: transparent;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12), 0 3px 1px -2px rgba(0, 0, 0, .2);
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: #c7222a;
+            color: #fff;
+        }
+
+        .col-md-6 {
+            width: 47%;
+        }
 
     }
 }

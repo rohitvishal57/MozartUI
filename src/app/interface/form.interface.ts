@@ -114,6 +114,8 @@ export interface IRadioOption {
   label: string;
   value: string;
   selected?: boolean;
+  year?: string;
+  discount?: string;
 }
 
 export interface ISelectCheckboxOption {
@@ -121,6 +123,7 @@ export interface ISelectCheckboxOption {
   value: string;
   button?: boolean;
   imagePath?: string;
+  isIncrement?: boolean;
 }
 
 export interface IImage {
