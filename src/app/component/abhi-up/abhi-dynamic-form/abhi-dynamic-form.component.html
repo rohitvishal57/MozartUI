@@ -15,7 +15,7 @@
       <div *ngIf="i < getFormIndexValue()" class="line-container">
         <div class="line"></div>
       </div>
-      <div *ngIf="i == getFormIndexValue()" class="line-container">
+      <div *ngIf="i == getFormIndexValue() && i != formSequence.length-1" class="line-container">
         <div class="line1"></div>
       </div>
       <div *ngIf="i > getFormIndexValue() && i != formSequence.length-1" class="line-container">
