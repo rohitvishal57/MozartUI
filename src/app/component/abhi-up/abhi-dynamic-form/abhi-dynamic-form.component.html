@@ -121,7 +121,8 @@
               </div>
             </div>
 
-            <div *ngIf="control.type === 'tabview'" class="sideselect-css">
+          <!-- To be implemented later(PED) -->
+            <!-- <div *ngIf="control.type === 'tabview'">
               <ul class="nav nav-tabs custom-tab" role="tablist">
                 <li class="nav-item" *ngFor="let tab of control.tabs; let i = index">
                   <a class="nav-link" [class.active]="activeTab === tab.name" (click)="selectTab(tab.name)">{{ tab.label
@@ -147,7 +148,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
 
             <div *ngIf="control.type === 'multiSelectCheckbox'">
               <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label }}</label>
@@ -260,7 +261,7 @@
                 </ng-container>
               </ng-container>
             </div>
-            <div *ngIf="control.type === 'tabview'" [class]="control.class" class="sideselect-css">
+            <div *ngIf="control.type === 'tabview'" [class]="control.class">
               <ng-container [formArrayName]="control.name">
                 <p-tabView [(activeIndex)]="activeMemberTabIndex">
                   <ng-container *ngFor="let allSubForm of control.dynamicControls;index as i">

@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-abhi-dynamic-form',
   templateUrl: './abhi-dynamic-form.component.html',
-  styleUrls: ['./abhi-dynamic-form.component.scss']
+  // styleUrls: ['./abhi-dynamic-form.component.scss']
 })
 export class AbhiDynamicFormComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -282,6 +282,7 @@ export class AbhiDynamicFormComponent {
         });
       });
       //dynamic css
+      this.dynamciallyLoadCSS(this.form);
       this.showHtmlContent = true;
       this.spinner.hide();
       this.flattenObject(this.formData);
@@ -888,9 +889,8 @@ export class AbhiDynamicFormComponent {
         this.form.formSections.forEach((section: any) => {
           section.formControls.forEach((formControl: any) => {
             if (formControl.name == 'insuredMembers') {
-              // if (formControl.selectCheckboxOptions.length == 0) {
               this.getProposerRelationship(formControl);
-              // }
+              section.visible = true;
             }
           });
         });
@@ -2246,6 +2246,20 @@ export class AbhiDynamicFormComponent {
         }
 
       })
+
+      if(this.dynamicFormGroup.get('proposerState')?.value == ""){
+        this.service.getPinCodeByCity(this.dynamicFormGroup.get('proposerPincode')?.value).subscribe({
+          next: (res) => {
+            console.log(res)
+            this.dynamicFormGroup.get('proposerCity')?.setValue(res.strcity);
+            this.dynamicFormGroup.get('proposerState')?.setValue(res.strstate);
+          },
+          error: (err) => {
+            console.error(err)
+          }
+        });
+        
+      }
     }
     else if (this.formData.memberPolicyType == 'Family Floater') {
 
