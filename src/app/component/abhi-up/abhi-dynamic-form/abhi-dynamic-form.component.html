@@ -1,4 +1,4 @@
-<div class="main-container">
+<div class="main-container" *ngIf="showHtmlContent==true">
   <div class="left-nav">
     <div class="details" *ngFor="let case of formSequence;index as i;">
       <div style="cursor: pointer;" (click)="addNavbar(i)">
@@ -39,8 +39,11 @@
             <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(control.type)" [class]="control.class"
               class="typecss" [hidden]="!control.visible">
               <label *ngIf="control.visibleLabel==true">{{ control.label }}</label>
-              <input class="inputField_Text" formControlName="{{ control.name }}" [type]="control.type"
+              <input *ngIf="!control.disabled"class="inputField_Text" formControlName="{{ control.name }}" [type]="control.type"
                 [placeholder]="control.label" (change)="onInputChange($event, control)">
+                <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}" [type]="control.type"
+                [placeholder]="control.label" (change)="onInputChange($event, control)" readonly> 
+
               <small
                 *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
                 class="text-danger">{{getValidationErrors(control)}}
@@ -267,7 +270,7 @@
                   <ng-container *ngFor="let allSubForm of control.dynamicControls;index as i">
                     <ng-container *ngIf="i>0">
                       <ng-container [formGroupName]="i-1">
-                        <p-tabPanel [header]="control.label +' '+ (i)">
+                        <p-tabPanel [header]="allSubForm[1].value">
                           <ng-container *ngFor="let subControl of allSubForm">
                             <ng-container *ngIf="subControl.visible!=false">
 
@@ -330,8 +333,8 @@
                                   [innerHTML]="subControl.label"> <span *ngIf="subControl.validators">*</span></label>
                                 <div class="radio-button">
                                   <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
-                                    <input type="radio" formControlName="{{subControl.name}}" [value]="option.value"
-                                      style="margin-right: 10px;" [(ngModel)]="option.selected">
+                                    <input type="radio" [formControlName]="subControl.name" [value]="option.value"
+                                      style="margin-right: 10px;" >
                                     <label [innerHTML]="option.label">
                                     </label>
                                   </div>
@@ -404,8 +407,10 @@
 
             <div *ngIf="control.type == 'boldtext'" [class]="control.class" class="typecss" [hidden]="!control.visible">
               <label *ngIf="control.visibleLabel==true" class="boldtext-label">{{ control.label }}</label>
-              <input class="boldtext_input colorbold" formControlName="{{ control.name }}" [type]="control.type"
+              <input *ngIf="!control.disabled" class="boldtext_input colorbold" formControlName="{{ control.name }}" [type]="control.type"
                 [placeholder]="control.label" (change)="onInputChange($event, control)">
+                <input *ngIf="control.disabled" class="boldtext_input colorbold no-border" formControlName="{{ control.name }}" [type]="control.type"
+                [placeholder]="control.label" (change)="onInputChange($event, control)" readonly>
               <span style="font-size: 12px;">{{control.text}}</span>
             </div>
 

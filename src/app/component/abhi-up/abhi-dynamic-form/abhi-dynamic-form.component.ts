@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, Renderer2, ViewChild, inject } from '@angular/core';
+import { ChangeDetectorRef, ViewEncapsulation, Component, ElementRef, Inject, Renderer2, ViewChild, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IDynamicControl, IForm, IFormControl, IFormSections, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
   selector: 'app-abhi-dynamic-form',
   templateUrl: './abhi-dynamic-form.component.html',
   // styleUrls: ['./abhi-dynamic-form.component.scss']
+  encapsulation: ViewEncapsulation.None,
 })
 export class AbhiDynamicFormComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -40,7 +41,7 @@ export class AbhiDynamicFormComponent {
   bankName: any;
   bankCity: any;
   formControls: IFormControl[] = [];
-
+  
   activeMemberTabIndex: number = 0;
   selectedIndex: number = -1;
   insuredMemberDetails: any = {};
@@ -139,6 +140,7 @@ export class AbhiDynamicFormComponent {
   }
   getFormDataFromFormSequence(formId: any) {
     this.initializeRequiredData();
+    this.showHtmlContent = false;
     if (this.dynamicStyle) {
       this.renderer.removeChild(this.document.head, this.dynamicStyle)
       this.showHtmlContent = false;
@@ -162,6 +164,9 @@ export class AbhiDynamicFormComponent {
   }
 
   initializeForm() {
+    console.log(this.formData);
+    this.showHtmlContent = false;
+    this.dynamciallyLoadCSS(this.form);
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((control: any) => {
         if (control.dynamicControls && control.visible == true && this.formData[control.name]) {
@@ -174,6 +179,18 @@ export class AbhiDynamicFormComponent {
               control.dynamicControls.push(tempDynamicControl)
             }
           }
+
+          console.log(this.formData[control.name]);
+          
+          
+          this.formData[control.name].forEach((member: any,index : number)=>{
+            control.dynamicControls[index+1].forEach((innerControl: any)=>{
+              if(innerControl.name == 'relation'){
+                innerControl.value = member.relation
+              }
+            })
+          })
+          
         }
         else {
           if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
@@ -282,8 +299,7 @@ export class AbhiDynamicFormComponent {
         });
       });
       //dynamic css
-      this.dynamciallyLoadCSS(this.form);
-      this.showHtmlContent = true;
+      // this.showHtmlContent = true;
       this.spinner.hide();
       this.flattenObject(this.formData);
     }
@@ -376,7 +392,8 @@ export class AbhiDynamicFormComponent {
     this.renderer.setAttribute(this.dynamicStyle, 'rel', 'stylesheet');
     this.renderer.setAttribute(this.dynamicStyle, 'type', 'text/css');
     this.renderer.setAttribute(this.dynamicStyle, 'href', 'assets/styles/dynamicForm/' + tf)
-    this.renderer.appendChild(this.document.head, this.dynamicStyle)
+    this.renderer.appendChild(this.document.head, this.dynamicStyle);
+    this.showHtmlContent = true;
   }
   ngOnDestroy(): void {
     if (this.dynamicStyle) {
@@ -972,6 +989,7 @@ export class AbhiDynamicFormComponent {
   }
 
   getProposerRelationship(control: IFormControl) {
+    this.spinner.show();
     const reqData = {
       agencyCode: this.Code,
       insuranceTypeCode: this.insurancetypecode,
@@ -998,10 +1016,11 @@ export class AbhiDynamicFormComponent {
 
         control.selectCheckboxOptions = res.relationShip;
         console.log(control);
-
+        this.spinner.hide();
       },
       error: (err) => {
         console.error(err);
+        this.spinner.hide();
       }
     });
   }
@@ -1162,7 +1181,9 @@ export class AbhiDynamicFormComponent {
 
       this.service.insertOrUpdateFormDataViaVertical(reqData).subscribe({
         next: (res) => {
-          this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
+          // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
+          console.log(res);
+          
         },
         error: (err) => {
           console.error(err);

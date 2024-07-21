@@ -175,6 +175,10 @@
     padding: 0 5px;
 }
 
+.main-container .right-panel .boldtext_input:focus{
+    border: none;
+}
+
 .main-container .right-panel .inputField_Text:focus+label,
 .main-container .right-panel .inputField_Text:valid+label,
 .main-container .right-panel .inputField_Select:focus+label,
@@ -910,7 +914,7 @@
     width: 47%;
 }
 
-:host::ng-deep .p-tabview .p-tabview-nav {
+/* :host::ng-deep .p-tabview .p-tabview-nav {
     li .p-tabview-nav-link {
         background: #f2f3f6;
         border: none;
@@ -938,4 +942,59 @@
             color: rgb(187 23 52);
         }
     }
+} */
+
+/* .p-tabview .p-tabview-nav li .p-tabview-nav-link{
+    border: 2px solid rgb(187, 23, 52);
+    margin: 10px;
+} */
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    background: #f2f3f6 !important;
+    border: none !important;
+    border-radius: 16px !important;
+    margin: 10px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-width: 100px;
+    
 }
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link span,
+.p-tabview .p-tabview-nav li .p-tabview-nav-link a {
+    color: black !important;
+    text-decoration: none !important;
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #ffdfdf !important;
+    border: 2px solid rgb(187, 23, 52) !important;
+    border-radius: 16px !important;
+    margin: 10px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    min-width: 100px;
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link a
+{
+    color: rgb(187, 23, 52) !important;
+    text-decoration: none !important;
+    font-size: 14px;
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link span {
+    color: rgb(187, 23, 52) !important;
+    text-decoration: none !important;
+    font-size: 14px;
+}
+
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link .p-tabview a {
+    color: rgb(187, 23, 52) !important;
+    text-decoration: none !important;
+}
+
+
