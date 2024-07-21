@@ -49,32 +49,45 @@
         </div>
     </div> -->
     <div class="right-panel">
-        <div class="header">
+        <!-- <div class="header">
             <div class="header-icon">
                 <img src="../../../assets/logo/ABHI.jpg" alt="abhi-logo">
             </div>
             <div class="user-profile">
-                <!-- <img src="../../../assets/logo/Admin_Profile_and_name.svg" alt="profile"> -->
+                <img src="../../../assets/logo/Admin_Profile_and_name.svg" alt="profile">
+            </div>
+        </div> -->
+        <div class="main">
+            <div class="sub-main">
+                <div class="logo">
+                    <img src="../../../../assets/logo/ABHI_Logo.svg" alt="abhi-logo">
+                </div>
+                <div class="header">
+                </div>
+            </div>
+            <div class="sub-main">
+                <p class="abhifont">Aditya Birla Health Insurance</p>
+                <div class="header2">
+                    <!-- <h3>HEALTH INSURANCE</h3> -->
+                        <a routerLink="viewdashboard" routerLinkActive="active-link">
+                            <div class="nav-text">Dashboard</div>
+                        </a>
+                        <a routerLink="viewProposals" routerLinkActive="active-link">
+                            <div class="nav-text">Proposals</div>
+                        </a>
+                        <a routerLink="viewproducts" routerLinkActive="active-link">
+                            <div class="nav-text">Products</div>
+                        </a>
+                        <a (click)="logOut()" routerLinkActive="active-link">
+                            <div class="nav-text">LogOut</div>
+                        </a>
+                    </div>
             </div>
         </div>
-        <div class="header2">
-            <h3>HEALTH INSURANCE</h3>
-                <a routerLink="viewdashboard" routerLinkActive="active-link">
-                    <div class="nav-text">Dashboard</div>
-                </a>
-                <a routerLink="viewProposals" routerLinkActive="active-link">
-                    <div class="nav-text">Proposals</div>
-                </a>
-                <a routerLink="viewproducts" routerLinkActive="active-link">
-                    <div class="nav-text">Products</div>
-                </a>
-                <a (click)="logOut()" routerLinkActive="active-link">
-                    <div class="nav-text">LogOut</div>
-                </a>
-            </div>
-        <div class="header3">
+        
+        <!-- <div class="header3">
             <h3>Aditya Birla Health Insurance Co. Limited</h3>
-        </div>
+        </div> -->
         <div class="body">
             <router-outlet></router-outlet>
         </div>

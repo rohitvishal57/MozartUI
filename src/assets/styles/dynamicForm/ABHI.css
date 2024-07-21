@@ -25,7 +25,7 @@
     border: none;
     border-radius: 12px;
     color: white;
-    padding: 0 9px;
+    width: 37px;
 }
 
 .main-container .left-nav .details .nav-last {
@@ -33,7 +33,7 @@
     border: none;
     border-radius: 12px;
     color: white;
-    padding: 0 9px;
+    width: 37px;
 }
 
 .main-container .left-nav .details .nav-bottom {
@@ -41,7 +41,7 @@
     border: none;
     border-radius: 12px;
     color: white;
-    padding: 0 9px;
+    width: 37px;
 }
 
 .main-container .left-nav .details .line-container {
@@ -52,7 +52,7 @@
 .main-container .left-nav .details .line {
     position: absolute;
     top: 18px;
-    left: -12px;
+    left: -17px;
     width: 2px;
     background-color: green;
     height: 47px;
@@ -62,7 +62,7 @@
 .main-container .left-nav .details .line1 {
     position: absolute;
     top: 18px;
-    left: -12px;
+    left: -17px;
     width: 2px;
     background-color: #c7222a;
     height: 47px;
@@ -72,7 +72,7 @@
 .main-container .left-nav .details .line2 {
     position: absolute;
     top: 18px;
-    left: -12px;
+    left: -17px;
     width: 2px;
     background-color: #e2e2e2;
     height: 47px;

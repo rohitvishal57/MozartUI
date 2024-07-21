@@ -387,6 +387,52 @@ export class EditFormComponent {
       "type": "button",
       "label": "Button Label",
       "class": "col-md-3 my-btn-class1"
+    },
+    {
+      "name": "boldText",
+      "label": "Bold Text Name",
+      "visibleLabel": true,
+      "visible": true,
+      "type": "boldtext",
+      "class": "col-md-3",
+      "value": "",
+      "text": ""
+    },
+    {
+      "name": "paragraph",
+      "label": "Paragraph",
+      "visible": true,
+      "visibleLabel": true,
+      "type": "paragraph",
+      "value": "",
+      "class": "col-md-6"
+    },
+    {
+      "name": "multiSelectCheckbox",
+      "label": "Multi-Select Checkbox",
+      "visibleLabel": true,
+      "visible": true,
+      "type": "multiSelectCheckbox",
+      "methodName": "getProposerRelationship",
+      "class": "",
+      "idProperty": "insuredMemberDetails",
+      "value": "",
+      "selectCheckboxOptions": [
+        {
+          "id": 1,
+          "name": "Option 1",
+          "value": "Value1",
+          "isIncrement":"",
+          "imagePath":""
+        },
+        {
+          "id": 2,
+          "name": "Option 2",
+          "value": "Value2",
+          "isIncrement":"",
+          "imagePath":""
+        }
+      ]
     }
   ]
   // "button":"bigFont","banner":"expandable","checkbox-group":"bigLabel","image":
@@ -405,6 +451,9 @@ export class EditFormComponent {
     { "iconClass": "fa pull-left fa-plus" },
     { "iconClass": "fa pull-left fa-link" },
     { "iconClass": "fa pull-left fa-stop" },
+    { "iconClass": "fa-solid fa-bold"},
+    { "iconClass": "fa-solid fa-paragraph"},
+    { "iconClass": "fa fa-thin fa-xmark"},
     { "iconClass": "fa pull-left fa-bars" },
     { "iconClass": "fa pull-left fa-phone" }
 ]

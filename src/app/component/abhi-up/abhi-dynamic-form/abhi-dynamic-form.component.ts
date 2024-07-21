@@ -611,14 +611,21 @@ export class AbhiDynamicFormComponent {
   }
 
   getAllBankDetails(control: any) {
-    this.service.getAllBankDetails().subscribe({
-      next: (res) => {
-        control.options = res.allBanksData;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+    console.log(control);
+    if(control.options.length <= 0){
+
+    // }
+    // else{
+
+      this.service.getAllBankDetails().subscribe({
+        next: (res) => {
+          control.options = res.allBanksData;
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
   }
 
 
@@ -1321,6 +1328,7 @@ export class AbhiDynamicFormComponent {
   }
 
   async getPremiumAmount(control: IFormControl) {
+    this.spinner.show();
     console.log("getPremiumAmount is getting called", this.formData);
     this.tenure1Total = 0;
     this.tenure2Total = 0;
@@ -1743,6 +1751,7 @@ export class AbhiDynamicFormComponent {
         }
 
       });
+      console.log(this.quoteNo);
       this.toast.success({ detail: "SUCCESS", summary: `Half Quotation Generated Successfully.${this.quoteNo}`, duration: 3000 });
       sessionStorage.setItem("mainData", this.encryptionService.encrypt(JSON.stringify(this.mainData)));
       this.spinner.hide();

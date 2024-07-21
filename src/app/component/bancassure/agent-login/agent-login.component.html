@@ -1,117 +1,101 @@
 <div class="login-container">
-    <div class="right-panel">
+  <div class="right-panel">
+    <div class="main">
+      <div class="sub-main">
+        <div class="logo">
+          <img src="../../../../assets/logo/ABHI_Logo.svg" alt="abhi-logo">
+        </div>
         <div class="header">
-            <div class="header-icon">
-                <img src="../../../assets/logo/ABHI.jpg" alt="icici-logo">
-                <!-- <h3>HEALTH INSURANCE</h3> -->
-            </div>
-            
-            <div class="user-profile">
-                <!-- <img src="../../../assets/logo/Admin_Profile_and_name.svg" alt="profile"> -->
-            </div>
         </div>
-        <div class="header2">
-            <h3>HEALTH INSURANCE</h3>
-        </div>
-        <div class="header3">
-            <h3>Aditya Birla Health Insurance Co. Limited</h3>
-        </div>
-        <div class="body">
-            <router-outlet></router-outlet>
-        </div>
-   
+      </div>
+      <p class="abhifont">Aditya Birla Health Insurance</p>
+    </div>
+    <div class="body">
+      <router-outlet></router-outlet>
+    </div>
+
     <div class="right-side">
-        <div class="box1">
-            <p>Dear All,</p>
-            <p>H-app-Y is now “ABHI Connect” with all new functionalities. Please use below link now to access the same:</p>
-            <a href="https://abhiconnect.adityabirlacapital.com/login" target="_blank">https://abhiconnect.adityabirlacapital.com/login</a>
-        </div>
-        <!-- <div class="box2">
+      <div class="box1">
+        <p>Dear All,</p>
+        <p>H-app-Y is now “ABHI Connect” with all new functionalities. Please use below link now to access the same:</p>
+        <a href="https://abhiconnect.adityabirlacapital.com/login"
+          target="_blank">https://abhiconnect.adityabirlacapital.com/login</a>
+      </div>
+      <!-- <div class="box2">
             <p>Dear All,</p>
             <p>Please note that as we have launched new system ” ABHI Connect ”, H-app-Y link will be disbaled from 10th June and will not be active. Request all to start using new link from today</p>
             <a href="https://abhiconnect.adityabirlacapital.com/login" target="_blank">https://abhiconnect.adityabirlacapital.com/login</a>
         </div> -->
-        <div class="login-form">
-            <p>Login</p>
-            <form [formGroup]="loginForm">
-                <div class="login-form-section">
-                    <div class="input-item">
-                        <div class="input-label">Agent/Employee/Branch Code*</div>
-                        <div class="input-with-icon">
-                            <input type="text" class="form-control user-icon" formControlName="agentUserName">
-                        </div>
-                        <small *ngIf="loginForm.controls['agentUserName'].dirty && loginForm.hasError('required', 'agentUserName')" class="text-danger">*
-                            UserName is required</small>
-                    </div>
-                    <div class="input-item">
-                        <div class="input-label">Password*</div>
-                        <div class="input-with-icon">
-                            <input type="password" class="form-control password-icon" formControlName="agentPassword">
-                        </div>
-                        <small *ngIf="loginForm.controls['agentUserName'].dirty && loginForm.hasError('required', 'agentPassword')" class="text-danger">*
-                            Password is required</small>
-                    </div>
-                    <div class="submit-button">
-                        <button type="submit" class="login-button" (click)="onSubmit()">
-                            <span>Login </span>
-                            <img src="../../../../assets/logo/arrow.png" alt="" class="arrow">
-                        </button>
-                    </div>
-                    <br><br>
-                    <div class="social-login">
-                        <a
-                          (click)="triggerAzureAdLogin()"
-                          class="social-login-button social-login-button-microsoft"
-                        >
-                          <svg
-                            height="30"
-                            style="overflow: visible; enable-background: new 0 0 30 30"
-                            viewBox="0 0 30 30"
-                            width="30"
-                            xml:space="preserve"
-                            xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink"
-                          >
-                            <g>
-                              <g id="Microsoft_1_">
-                                <g id="Microsoft">
-                                  <g id="Blue_x5F_Square">
-                                    <rect height="15" style="fill: #51aed9" width="15" y="17" />
-                                  </g>
-                                  <g id="Yellow_x5F_Square">
-                                    <rect
-                                      height="15"
-                                      style="fill: #fec327"
-                                      width="15"
-                                      x="17"
-                                      y="17"
-                                    />
-                                  </g>
-                                  <g id="Green_x5F_Square">
-                                    <rect height="15" style="fill: #34b67a" width="15" x="17" />
-                                  </g>
-                                  <g id="Orange_x5F_Square">
-                                    <rect height="15" style="fill: #f15723" width="15" />
-                                  </g>
-                                </g>
-                              </g>
-                            </g>
-                          </svg>
-                          <span>Microsoft Login</span>
-                        </a>
-                        <div id="google-button"></div>
-                      </div>
-                    <!-- <div class="paragraph">
+      <div class="login-form">
+        <p>Login</p>
+        <form [formGroup]="loginForm">
+          <div class="login-form-section">
+            <div class="input-item">
+              <div class="input-label">Agent/Employee/Branch Code*</div>
+              <div class="input-with-icon">
+                <input type="text" class="form-control user-icon" formControlName="agentUserName">
+              </div>
+              <small
+                *ngIf="loginForm.controls['agentUserName'].dirty && loginForm.hasError('required', 'agentUserName')"
+                class="text-danger">*
+                UserName is required</small>
+            </div>
+            <div class="input-item">
+              <div class="input-label">Password*</div>
+              <div class="input-with-icon">
+                <input type="password" class="form-control password-icon" formControlName="agentPassword">
+              </div>
+              <small
+                *ngIf="loginForm.controls['agentUserName'].dirty && loginForm.hasError('required', 'agentPassword')"
+                class="text-danger">*
+                Password is required</small>
+            </div>
+            <div class="submit-button">
+              <button type="submit" class="login-button" (click)="onSubmit()">
+                <span>Login </span>
+                <img src="../../../../assets/logo/arrow.png" alt="" class="arrow">
+              </button>
+            </div>
+            <br><br>
+            <!-- <div class="social-login">
+              <a (click)="triggerAzureAdLogin()" class="social-login-button social-login-button-microsoft">
+                <svg height="30" style="overflow: visible; enable-background: new 0 0 30 30" viewBox="0 0 30 30"
+                  width="30" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <g>
+                    <g id="Microsoft_1_">
+                      <g id="Microsoft">
+                        <g id="Blue_x5F_Square">
+                          <rect height="15" style="fill: #51aed9" width="15" y="17" />
+                        </g>
+                        <g id="Yellow_x5F_Square">
+                          <rect height="15" style="fill: #fec327" width="15" x="17" y="17" />
+                        </g>
+                        <g id="Green_x5F_Square">
+                          <rect height="15" style="fill: #34b67a" width="15" x="17" />
+                        </g>
+                        <g id="Orange_x5F_Square">
+                          <rect height="15" style="fill: #f15723" width="15" />
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </svg>
+                <span>Microsoft Login</span>
+              </a>
+              <div id="google-button"></div>
+            </div> -->
+            <!-- <div class="paragraph">
                         <p>Activ Health App presents Mental Health Coach for our customers with Activ Health Plans.So,they can focus on their mental well-being in these testing times.
                             <br><br>Activ Health App Present Homeopathy consulations.Our customers with Activ Health Platinum Enhanced and Premier Plans can now avail unlimited tele-consulations at their finger-tips.</p>
                     </div> -->
-                    
-                </div>
-            </form>
-            
-        </div>
-        
+
+          </div>
+        </form>
+
+      </div>
+
     </div>
-    
-</div>
+
+  </div>
 </div>

@@ -603,7 +603,34 @@
                               </ng-container>
                             </div>
                           </div> -->
-
+                          <ng-container *ngIf="control.type == 'boldtext'" [class]="control.class">
+                            <label *ngIf="control.visibleLabel==true">{{ control.label }}</label>
+                            <input class="boldtext_input colorbold" [(ngModel)]="control.value" [type]="control.type"/>
+                            <span style="font-size: 12px;">{{control.text}}</span>
+                          </ng-container>
+                          <ng-container *ngIf="control.type === 'paragraph'">
+                              <p [innerHTML]="control.label"></p>
+                              <p *ngIf="control.value" [innerHTML]="control.value"></p>
+                          </ng-container>
+                          <ng-container *ngIf="control.type === 'multiSelectCheckbox'">
+                              <label *ngIf="control.visibleLabel">{{ control.label }}</label>
+                              <!-- <div [(ngModel)]="control.value" class="checkbox-container" *ngIf="dynamicFormGroup.get(control.name)">
+                                <div *ngFor="let option of control.selectCheckboxOptions" class="checkbox-wrapper col-md-3">
+                                  <div *ngIf="dynamicFormGroup.get(control.name)?.get(option.value)">
+                                    <input type="checkbox" [value]="option.value" id="{{option.value}}">
+                                    <label for="{{option.value}}" class="custom-checkbox">
+                                      <span>{{option.value}}</span>
+                                    </label>
+                                    <button *ngIf="option.isIncrement" class="incrementbtn">+</button>
+                                  </div>
+                                </div>
+                              </div> -->
+                              <select [(ngModel)]="control.value" name="{{ control.name }}" multiple>
+                                <option selected value="">Choose...</option>
+                                <option *ngFor="let option of control.selectCheckboxOptions" [value]="option.value">{{ option.name }}
+                                </option>
+                              </select>
+                          </ng-container>
                         </div>
                       </div>
 
@@ -993,7 +1020,16 @@
                   <option [ngValue]="false">False</option>
                 </select>
               </div>
-
+              <div *ngIf="Control.text || Control.text==false">
+                <label>Text</label>
+                <input class="form-control" type="text" [(ngModel)]="Control.text"
+                  [ngModelOptions]="{standalone: true}" />
+              </div>
+              <div *ngIf="Control.idProperty || Control.idProperty==false">
+                <label>IdProperty</label>
+                <input class="form-control" type="text" [(ngModel)]="Control.idProperty"
+                  [ngModelOptions]="{standalone: true}" />
+              </div>
               <br>
               <hr>
               <div class="row" *ngIf="Control.options">
@@ -1029,6 +1065,68 @@
                     <div class="col-md-9 options-data">
                       <input class="form-control" type="text" [(ngModel)]="opt.name"
                         [ngModelOptions]="{standalone: true}" />
+                    </div>
+                  </div>
+                  <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-md-3 options">
+                      <label>Value</label>
+                    </div>
+                    <div class="col-md-9 options-data">
+                      <input class="form-control" type="text" [(ngModel)]="opt.value"
+                        [ngModelOptions]="{standalone: true}" />
+                    </div>
+                  </div>
+                  <div class="row" style="padding: 5px 13px;">
+                    <ng-container *ngIf="k == Control.options.length - 1">
+                      <a class="col-md-2" (click)="deleteOptions(indexI,indexJ,k)" style="color: red;"><i
+                          class="fa-solid fa-trash"></i></a>
+                      <a class="col-md-2" (click)="addOptions(indexI,indexJ,k)"
+                        style="color: blue;margin-left: 10px;"><i class="fa-solid fa-plus"></i></a>
+                    </ng-container>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="row" *ngIf="Control.selectCheckboxOptions">
+                <h3>Add Options</h3>
+                <div *ngFor="let opt of Control.selectCheckboxOptions;let k=index">
+                  <div class="row">
+                    <div class="col-md-3 options">
+                      <label>ID</label>
+                    </div>
+                    <div class="col-md-9 options-data">
+                      <input class="form-control" type="text" [(ngModel)]="opt.id" [ngModelOptions]="{standalone: true}"
+                        readonly />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3 options">
+                      <label>Name</label>
+                    </div>
+                    <div class="col-md-9 options-data">
+                      <input class="form-control" type="text" [(ngModel)]="opt.name"
+                        [ngModelOptions]="{standalone: true}" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3 options">
+                      <label>imagePath</label>
+                    </div>
+                    <div class="col-md-9 options-data">
+                      <input class="form-control" type="text" [(ngModel)]="opt.imagePath"
+                        [ngModelOptions]="{standalone: true}" />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-3 options">
+                      <label>isIncrement</label>
+                    </div>
+                    <div class="col-md-9 options-data">
+                        <select class="form-control" [(ngModel)]="Control.isIncrement" [ngModelOptions]="{standalone: false}">
+                          <option [ngValue]="true">True</option>
+                          <option [ngValue]="false">False</option>
+                        </select>
                     </div>
                   </div>
                   <div class="row" style="margin-bottom: 10px;">

@@ -36,7 +36,7 @@ export class AgentLoginComponent implements OnInit{
       agentUserName: ['',Validators.required],
       agentPassword: ['',Validators.required]
     })
-    this.verticalCode = history.state.verticalCode;
+    this.verticalCode = 13;
     console.log(this.verticalCode);
     
     this.msalAuthService.handleRedirectObservable().subscribe();
@@ -209,7 +209,7 @@ export class AgentLoginComponent implements OnInit{
             localStorage.setItem('agentCode', res.agentCode);
             localStorage.setItem('verticalCode', this.verticalCode);
             this.toast.success({ detail: "SUCCESS", summary: "Agent Login Successfull", duration: 2000 })
-            this.router.navigate(['portal/agent/viewdashboard']);
+            this.router.navigate(['portal/agent/viewproducts']);
           },
           error: (err => {
             this.toast.error({ detail: "ERROR", summary:"Some Error Occured!", sticky: true });

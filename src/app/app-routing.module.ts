@@ -9,9 +9,9 @@ import { BrowserUtils } from '@azure/msal-browser';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes=[
-  {path:"",component:LoginComponent},
+  // {path:"",component:LoginComponent},
   {path:"admin",component:AdminLoginComponent},
-  {path:"agent",component:AgentLoginComponent},
+  {path:"",component:AgentLoginComponent},
   {path:"banca",component:BancassureComponent},
   {path:"login/:bankname",component:BankLoginComponent},
   {
