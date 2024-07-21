@@ -369,9 +369,11 @@
             <div *ngIf="control.type==='phonenumber'" [class]="control.class" class="typecss">
               <label [class]="control.class" *ngIf="control.visibleLabel==true"><span
                   *ngIf="control.validators">*</span></label>
-              <input class="inputField_Text" [placeholder]="control.label" formControlName="{{ control.name }}"
-                type="number" maxlength="10" (input)="onPhoneNumberInputChange($event, control)"
-                pattern="^[0-9]{0,10}$" />
+                  <input *ngIf="!control.disabled" class="inputField_Text" [placeholder]="control.label" formControlName="{{ control.name }}"
+                  type="number" maxlength="10" (input)="onPhoneNumberInputChange($event, control)"
+                  pattern="^[0-9]{0,10}$" />
+                  <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}" [type]="control.type"
+                  [placeholder]="control.label" (change)="onInputChange($event, control)" readonly>
               <small
                 *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
                 class="text-danger">{{getValidationErrors(control)}}
