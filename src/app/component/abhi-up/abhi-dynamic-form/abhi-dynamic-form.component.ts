@@ -194,12 +194,12 @@ export class AbhiDynamicFormComponent {
         }
         else {
           if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
-            const value = this.formData[control.name];
+            // const value = this.formData[control.name];
 
-            if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
-              control.value = JSON.parse(this.formData[control.name]).value;
-            }
-            else
+            // if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
+            //   control.value = JSON.parse(this.formData[control.name]).value;
+            // }
+            // else
               control.value = this.formData[control.name];
           }
         }
@@ -257,6 +257,8 @@ export class AbhiDynamicFormComponent {
               this.callMethod(control.methodName, control, section);
             }
             if (control.type == 'select' && control.methodName && control.options?.length == 0) {
+              console.log("inside if condition for bank");
+              
               this.callMethod(control.methodName, control);
             }
 
@@ -300,8 +302,8 @@ export class AbhiDynamicFormComponent {
       });
       //dynamic css
       // this.showHtmlContent = true;
-      this.spinner.hide();
       this.flattenObject(this.formData);
+      this.spinner.hide();
     }
 
   }
@@ -611,6 +613,8 @@ export class AbhiDynamicFormComponent {
   }
 
   getAllBankDetails(control: any) {
+    console.log("all bank details is getting called");
+    
     console.log(control);
     if(control.options.length <= 0){
 
@@ -630,40 +634,52 @@ export class AbhiDynamicFormComponent {
 
 
   getBankCity(event: any, otherControl: any) {
+    console.log("Bank city is getting called");
+    otherControl.value = "";
+    otherControl.options = []; // Reset options to an empty array
+    
     console.log(event.target.value);
     const data = JSON.parse(event.target.value);
     this.bankName = data.id as string;
     const reqData = {
-      "bankName": this.bankName
-    }
+        "bankName": this.bankName
+    };
+    
     this.service.getBankCity(reqData).subscribe({
-      next: (res) => {
-        otherControl.options = res.AllBankCity;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
-  }
+        next: (res) => {
+            otherControl.options = [...res.AllBankCity]; // Create a new array to trigger change detection
+        },
+        error: (err) => {
+            console.error(err);
+        }
+    });
+}
 
-  getBranchDetails(event: any, otherControl: any) {
+getBranchDetails(event: any, otherControl: any) {
+    console.log("Branch details is getting called");
+    otherControl.value = "";
+    otherControl.options = []; // Reset options to an empty array
+    
     const data = JSON.parse(event.target.value);
     this.bankCity = data.id as string;
     const reqData = {
-      "bankName": this.bankName,
-      "city": this.bankCity
-    }
+        "bankName": this.bankName,
+        "city": this.bankCity
+    };
+    
     this.service.getBranchDetails(reqData).subscribe({
-      next: (res) => {
-        otherControl.options = res.BranchDetails;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
-  }
+        next: (res) => {
+            otherControl.options = [...res.BranchDetails]; // Create a new array to trigger change detection
+        },
+        error: (err) => {
+            console.error(err);
+        }
+    });
+}
+
 
   setIfscCode(event: any, otherControl: any) {
+    console.log("IfscCode is getting called");
     const data = JSON.parse(event.target.value);
     this.dynamicFormGroup.get('ifscCode')?.setValue(data.id);
     this.dynamicFormGroup.get('micrCode')?.setValue(data.value);
@@ -1222,7 +1238,7 @@ export class AbhiDynamicFormComponent {
       }
     }
     else {
-      console.log('Form is invalid');
+      console.log('Form is invalid',this.dynamicFormGroup);
       Object.keys(this.dynamicFormGroup.controls).forEach(field => {
         const control = this.dynamicFormGroup.get(field);
         control?.markAsTouched({ onlySelf: true });
@@ -1328,7 +1344,6 @@ export class AbhiDynamicFormComponent {
   }
 
   async getPremiumAmount(control: IFormControl) {
-    this.spinner.show();
     console.log("getPremiumAmount is getting called", this.formData);
     this.tenure1Total = 0;
     this.tenure2Total = 0;
@@ -1413,7 +1428,6 @@ export class AbhiDynamicFormComponent {
         productId: this.productid,
         configuration_Json: JSON.stringify(modifiedInsuredMemberDetails)
       };
-
       console.log("object", reqData);
 
       try {
@@ -1713,7 +1727,7 @@ export class AbhiDynamicFormComponent {
     reqData['leadId'] = this.leadId;
     reqData['pinCode'] = reqData.insuredMemberDetails[0].pincode;
     reqData['preIssuranceTime'] = new Date().toISOString().split('T')[1].split('.')[0];
-    console.log(reqData);
+    console.log(reqData,this.formData);
     this.mainData = reqData
     var reqData1 = {
       code: this.Code,
@@ -1752,6 +1766,8 @@ export class AbhiDynamicFormComponent {
 
       });
       console.log(this.quoteNo);
+      console.log(this.formData);
+      
       this.toast.success({ detail: "SUCCESS", summary: `Half Quotation Generated Successfully.${this.quoteNo}`, duration: 3000 });
       sessionStorage.setItem("mainData", this.encryptionService.encrypt(JSON.stringify(this.mainData)));
       this.spinner.hide();
@@ -1763,6 +1779,8 @@ export class AbhiDynamicFormComponent {
 
   async fullQuotation() {
     this.spinner.show();
+    console.log(this.formData);
+    
 
     this.mainData = { ...this.mainData, ...this.dynamicFormGroup.value };
     this.mainData['quotationNumber'] = 'QSP' + this.quoteNo;
@@ -2309,6 +2327,17 @@ export class AbhiDynamicFormComponent {
         }
       })
     }
+  }
+
+  getDependentControlValue(control: any){
+    const value = this.formData[control.dependentControls[0]];
+    console.log(value);
+    
+    if(value && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))){
+        control.value = JSON.parse(value).value;
+    }
+    else
+      control.value = value;
   }
 
 }
