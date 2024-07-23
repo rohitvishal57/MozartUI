@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
+import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class BancassureComponent {
     constructor(private loginService:LoginService,private toast:NgToastService,
-        private router:Router
+        private router:Router,public common:CommonService
         ) { }
       ngOnInit(){
       }

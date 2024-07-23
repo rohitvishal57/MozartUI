@@ -8,6 +8,8 @@ export class CommonService {
   private baseUrl: string = 'https://usp.monocept.ai/api/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
+  public baseCssUrl= 	'https://usp.monocept.ai/ABHI/' 
+
   private apiUrl = './assets/health-plans.json';
   private apiUrl1 = './assets/occupations.json';
 

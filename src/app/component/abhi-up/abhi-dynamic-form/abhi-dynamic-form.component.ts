@@ -79,7 +79,7 @@ export class AbhiDynamicFormComponent {
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
-    private service: CommonService, private loginService: LoginService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
+    public service: CommonService, private loginService: LoginService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
     private toast: NgToastService, private datePipe: DatePipe, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document) { }
 
@@ -146,10 +146,37 @@ export class AbhiDynamicFormComponent {
       this.showHtmlContent = false;
     }
     if (Object.keys(this.allJsonForm[this.getFormIndexValue()]).length > 0) {
-      this.form = this.allJsonForm[this.getFormIndexValue()];
-      console.log(this.form);
-      this.initializeForm();
+      // this.form = this.allJsonForm[this.getFormIndexValue()];
+      let reqdata = {
+        "verticalCode": this.verticalCode,
+        "proposalNum": this.proposalNum,
+        "code": this.agencyCode,
+        "agentCode": this.agentCode,
+        "productId": this.productid,
+        "formData": "string",
+        "formWithFormData": "string",
+        "formName": "string",
+        "formId": formId,
+        "formConfig": "string"
+      }
+       console.log(reqdata);
+      this.service.getAllFormDataViaVerticalCode(reqdata).subscribe({
+        next:(res)=>{
+          console.log(res);
+          this.form = JSON.parse(res.formWithFormData);
+          // this.formData = JSON.parse(res.formData);
+          console.log(this.form,this.formData);
+          this.initializeForm();
+        },
+        error:(err)=>{
+          console.error(err)
+        }
+      })
+
+      // }
+      
     }
+    
     else {
       this.service.getJSONFormViaVerticalCode(this.verticalCode, this.Code, this.insurancetypecode, this.productid, formId).subscribe({
         next: (res) => {
@@ -416,7 +443,7 @@ export class AbhiDynamicFormComponent {
 
   checkValidations(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean {
     const myFormControl = parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name) : this.dynamicFormGroup.get(control.name)
-    return myFormControl?.invalid as boolean && myFormControl?.dirty as unknown as boolean;
+    return myFormControl?.invalid as boolean &&  myFormControl?.touched as unknown as boolean;
   }
 
   triggerFileInput(controlName: string) {
@@ -1186,7 +1213,46 @@ getBranchDetails(event: any, otherControl: any) {
           }
         }
       }
-      console.log(this.formData);
+
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((control: any) => {
+          if (control.dynamicControls && control.visible == true && this.formData[control.name]) {
+            if (this.formData[control.name]) {
+              control.value = this.formData[control.name].length;
+            }
+            for (let i = 1; i <= control.value; i++) {
+              if (!control.dynamicControls[i]) {
+                let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
+                control.dynamicControls.push(tempDynamicControl)
+              }
+            }
+  
+            console.log(this.formData[control.name]);
+  
+  
+            this.formData[control.name].forEach((member: any, index: number) => {
+              control.dynamicControls[index + 1].forEach((innerControl: any) => {
+                if (innerControl.name == 'relation') {
+                  innerControl.value = member.relation
+                }
+              })
+            })
+  
+          }
+          else {
+            if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
+              const value = this.formData[control.name];
+  
+              if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
+                control.value = JSON.parse(this.formData[control.name]).value;
+              }
+              else
+                control.value = this.formData[control.name];
+            }
+          }
+        });
+      });
+      console.log(this.form,this.formData);
       //   // for Store Form Data in Database
       let reqData = {
         "proposalNum": this.proposalNum,
@@ -1198,7 +1264,9 @@ getBranchDetails(event: any, otherControl: any) {
         "formData": JSON.stringify(this.dynamicFormGroup.value),
         "formName": this.formSequence[this.getFormIndexValue()].formName,
         "formConfig": JSON.stringify(this.formSequence),
-        "productId": this.productid
+        "productId": this.productid,
+        "formId":this.formSequence[this.getFormIndexValue()].formId,
+        "formWithFormData":JSON.stringify(this.form)
       };
       console.log(reqData);
 
@@ -1239,9 +1307,25 @@ getBranchDetails(event: any, otherControl: any) {
     }
     else {
       console.log('Form is invalid',this.dynamicFormGroup);
+      console.log('Form is invalid',this.dynamicFormGroup);
       Object.keys(this.dynamicFormGroup.controls).forEach(field => {
         const control = this.dynamicFormGroup.get(field);
-        control?.markAsTouched({ onlySelf: true });
+        if (control instanceof FormArray) {
+          control.controls.forEach(arrayControl => {
+            if (arrayControl instanceof FormGroup) {
+              Object.keys(arrayControl.controls).forEach(nestedField => {
+                const nestedControl = arrayControl.get(nestedField);
+                console.log(nestedControl);
+                nestedControl?.markAsTouched({ onlySelf: true });
+              });
+            } else {
+              arrayControl?.markAsTouched({ onlySelf: true });
+            }
+          });
+        }
+        else{
+          control?.markAsTouched({ onlySelf: true });
+        }
       });
       this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
     }

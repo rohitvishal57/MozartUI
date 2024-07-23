@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-abhi-header',
@@ -6,5 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./abhi-header.component.scss']
 })
 export class AbhiHeaderComponent {
+  constructor(public common:CommonService){
+
+  }
 
 }

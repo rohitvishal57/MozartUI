@@ -340,6 +340,17 @@
                                   </div>
                                 </div>
                               </div>
+                              <div *ngIf="subControl.type==='phonenumber'" [class]="subControl.class" class="typecss">
+                                <label [class]="subControl.class" *ngIf="subControl.visibleLabel==true"><span
+                                    *ngIf="subControl.validators">*</span></label>
+                                    <input *ngIf="!subControl.disabled" class="inputField_Text" [placeholder]="subControl.label" formControlName="{{ subControl.name }}"
+                                    type="number" maxlength="10" (input)="onPhoneNumberInputChange($event, subControl)"/>
+                                    <input *ngIf="subControl.disabled" class="inputField_Text" formControlName="{{ subControl.name }}" [type]="subControl.type"
+                                    [placeholder]="subControl.label" (change)="onInputChange($event, subControl)" readonly>
+                                  <small *ngIf="checkValidations(subControl,control,i-1)"
+                                    class="text-danger">{{getValidationErrors(subControl,control,i-1)}}
+                                  </small>
+                              </div>
 
                             </ng-container>
                           </ng-container>
@@ -370,8 +381,7 @@
               <label [class]="control.class" *ngIf="control.visibleLabel==true"><span
                   *ngIf="control.validators">*</span></label>
                   <input *ngIf="!control.disabled" class="inputField_Text" [placeholder]="control.label" formControlName="{{ control.name }}"
-                  type="number" maxlength="10" (input)="onPhoneNumberInputChange($event, control)"
-                  pattern="^[0-9]{0,10}$" />
+                  type="number" maxlength="10" (input)="onPhoneNumberInputChange($event, control)"/>
                   <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}" [type]="control.type"
                   [placeholder]="control.label" (change)="onInputChange($event, control)" readonly>
               <small
@@ -402,7 +412,7 @@
 
             <div *ngIf="control.type == 'image'">
               <div *ngFor="let image of control.images" class="{{control.class}}">
-                <img class="img1Popup" src="{{image.src}}" alt="{{image.alt}}" width="{{image.width}}"
+                <img class="img1Popup" [src]="service.baseCssUrl + image.src" alt="{{image.alt}}" width="{{image.width}}"
                   height="{{image.height}}">
               </div>
             </div>

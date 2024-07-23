@@ -22,12 +22,12 @@
         <div class="scroll-arrow left-arrow" (click)="scrollLeft()">&#9664;</div>
         <div class="top-container" #topContainer>
             <div class="top" [ngClass]="{'active': selectedTab === 'Channels'}" (click)="selectTab('Channels')">Channels</div>
-            <div class="top" [ngClass]="{'active': selectedTab === 'Banks'}" (click)="selectTab('Banks')">Banks</div>
+            <!-- <div class="top" [ngClass]="{'active': selectedTab === 'Banks'}" (click)="selectTab('Banks')">Banks</div> -->
             <div class="top" [ngClass]="{'active': selectedTab === 'Insurance Type'}" (click)="selectTab('Insurance Type')">Insurance Type</div>
             <div class="top" [ngClass]="{'active': selectedTab === 'Products'}" (click)="selectTab('Products')">Products</div>
-            <div class="top" [ngClass]="{'active': selectedTab === 'Products Map'}" (click)="selectTab('Products Map')">Banca Products Map</div>
+            <!-- <div class="top" [ngClass]="{'active': selectedTab === 'Products Map'}" (click)="selectTab('Products Map')">Banca Products Map</div> -->
             <div class="top" [ngClass]="{'active': selectedTab === 'Agency Products Map'}" (click)="selectTab('Agency Products Map')">Agency Products Map</div>
-            <div class="top" [ngClass]="{'active': selectedTab === 'Users'}" (click)="selectTab('Users')">Users</div>
+            <!-- <div class="top" [ngClass]="{'active': selectedTab === 'Users'}" (click)="selectTab('Users')">Users</div> -->
             <div class="top" [ngClass]="{'active': selectedTab === 'Agency'}" (click)="selectTab('Agency')">Agency</div>
             <div class="top" [ngClass]="{'active': selectedTab === 'Agents'}" (click)="selectTab('Agents')">Agents</div>
         </div>
@@ -66,7 +66,7 @@
             </ng-template>
         </p-table>
     </div>
-    <div class="table" *ngIf="selectedTab == 'Banks'" >
+    <!-- <div class="table" *ngIf="selectedTab == 'Banks'" >
         <p class="table-name">All Bank Details</p>
         <p-table [value]="allBank" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
             [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -97,7 +97,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </div>
+    </div> -->
     <div class="table" *ngIf="selectedTab == 'Insurance Type'">
         <p class="table-name">All Insurance Type Details</p>
         <p-table [value]="allInsuranceType" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
@@ -168,7 +168,7 @@
             </ng-template>
         </p-table>
     </div>
-    <div class="table" *ngIf="selectedTab == 'Products Map'">
+    <!-- <div class="table" *ngIf="selectedTab == 'Products Map'">
         <p class="table-name">All Channel Bank Insurance Product Map Details</p>
         <p-table [value]="allBankInsuranceProductMapData" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
             [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -207,7 +207,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </div>
+    </div> -->
     <div class="table" *ngIf="selectedTab == 'Agency Products Map'">
         <p class="table-name">All Channel Agency Product Map Details</p>
         <p-table [value]="allAgencyInsuranceProductMapData" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
@@ -248,7 +248,7 @@
             </ng-template>
         </p-table>
     </div>
-    <div class="table" *ngIf="selectedTab == 'Users'">
+    <!-- <div class="table" *ngIf="selectedTab == 'Users'">
         <p class="table-name">All User Details</p>
         <p-table [value]="allUserDetails" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
             [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -282,7 +282,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    </div>
+    </div> -->
 
     <div class="table" *ngIf="selectedTab == 'Agency'">
         <p class="table-name">All Agency Details</p>
@@ -391,7 +391,7 @@
         </form>
     </p-dialog>
 
-    <p-dialog header="Edit Bank Details" [modal]="true" [(visible)]="visible1" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+    <!-- <p-dialog header="Edit Bank Details" [modal]="true" [(visible)]="visible1" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
         <form [formGroup]="BankForm">
             <div class="card-body rectangle">
                 <div class="col-md-6 typecss">
@@ -433,7 +433,7 @@
                 </div>
             </div>
         </form>
-    </p-dialog>
+    </p-dialog> -->
 
     <p-dialog header="Edit Insurance Details" [modal]="true" [(visible)]="visible2" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
         <form [formGroup]="InsuranceForm">
@@ -676,7 +676,7 @@
         </form>
     </p-dialog>
     
-    <p-dialog header="Edit User Details" [modal]="true" [(visible)]="visible6" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+    <!-- <p-dialog header="Edit User Details" [modal]="true" [(visible)]="visible6" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
     <form [formGroup]="UserDetailsForm">
         <div class="card-body rectangle">
             <div class="col-md-6 typecss">
@@ -725,7 +725,7 @@
             </div>
         </div>
     </form>
-    </p-dialog>
+    </p-dialog> -->
 
     <p-dialog header="Edit Agency Details" [modal]="true" [(visible)]="visible7" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
         <form [formGroup]="AgencyDetailsForm">

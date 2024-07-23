@@ -269,6 +269,8 @@
     font-weight: 450;
     font-family: "Noto Sans", sans-serif;
     margin-bottom: 25px;
+    position: static;
+    width: auto;
 }
 
 .main-container .right-panel .multi-select-label {

@@ -37,7 +37,7 @@ export class ViewproductsComponent implements OnInit {
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
     private loginService: LoginService, private router: Router, private toast: NgToastService,
-    private service: CommonService, private encryptionService: EncryptionService) { }
+    private service: CommonService, private encryptionService: EncryptionService,public common:CommonService,) { }
 
   ngOnInit(): void {
     sessionStorage.clear()

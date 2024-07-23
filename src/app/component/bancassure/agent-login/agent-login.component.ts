@@ -5,6 +5,7 @@ import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalSe
 import { AuthenticationResult, EventMessage, EventType, InteractionStatus, PopupRequest, RedirectRequest } from '@azure/msal-browser';
 import { NgToastService } from 'ng-angular-popup';
 import { Subject, filter, takeUntil } from 'rxjs';
+import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
 import ValidateForm from 'src/app/validation/validateForm';
 
@@ -27,7 +28,7 @@ export class AgentLoginComponent implements OnInit{
   constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,
     private toast: NgToastService,@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private msalAuthService: MsalService,
-    private msalBroadcastService: MsalBroadcastService){
+    private msalBroadcastService: MsalBroadcastService,public common:CommonService){
   }
   ngOnInit(){
     localStorage.clear()
@@ -208,7 +209,7 @@ export class AgentLoginComponent implements OnInit{
             localStorage.setItem('code', res.agencyCode);
             localStorage.setItem('agentCode', res.agentCode);
             localStorage.setItem('verticalCode', this.verticalCode);
-            this.toast.success({ detail: "SUCCESS", summary: "Agent Login Successfull", duration: 2000 })
+            this.toast.success({ detail: "SUCCESS", summary: "Agent Login Successfull", duration: 5000 })
             this.router.navigate(['portal/agent/viewproducts']);
           },
           error: (err => {

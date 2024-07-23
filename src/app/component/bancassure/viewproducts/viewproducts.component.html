@@ -9,7 +9,7 @@
             <div class="toggle-list" *ngFor="let prod of products"
                 [ngClass]="{'blue': prod.insuranceType === selectedToggle, 'gray': prod.insuranceType !== selectedToggle}"
                 (click)="getPoductList(prod)">
-                <img *ngIf="prod.insurancetype === 'Health'" src="../../../../assets/images/health_black_icon.svg" alt="{{prod.insurancetype}} Icon">
+                <img *ngIf="prod.insurancetype === 'Health'" [src]="common.baseCssUrl+'assets/images/health_black_icon.svg'" alt="{{prod.insurancetype}} Icon">
                 <img *ngIf="prod.insurancetype === 'Motor'" src="../../../../assets/images/car_black_icon18.svg" alt="{{prod.insurancetype}} Icon">
                 {{prod.insurancetype}}
             </div>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { AdminService } from 'src/app/services/admin.service';
+import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class FinaladminDashboardComponent {
 
-  constructor(private loginService:LoginService,private toast:NgToastService,
+  constructor(private loginService:LoginService,private toast:NgToastService,public common:CommonService,
     private router:Router, private adminService:AdminService
     ) { }
   ngOnInit(){

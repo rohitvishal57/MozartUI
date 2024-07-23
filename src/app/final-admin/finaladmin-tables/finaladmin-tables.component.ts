@@ -23,12 +23,12 @@ export class FinaladminTablesComponent implements OnInit{
   selectedOption: any;
 
   visible: boolean = false;
-  visible1: boolean = false;
+  // visible1: boolean = false;
   visible2: boolean = false;
   visible3: boolean = false;
-  visible4: boolean = false;
+  // visible4: boolean = false;
   visible5: boolean = false;
-  visible6: boolean = false;
+  // visible6: boolean = false;
   visible7: boolean = false;
   visible8: boolean = false;
   visible9: boolean = false;
@@ -44,13 +44,13 @@ export class FinaladminTablesComponent implements OnInit{
 
   dropdownOptions: any[] = [
     { name: 'Channel' },
-    { name: 'Bank' },
+    // { name: 'Bank' },
     { name: 'Insurance Type' },
     { name: 'Product' },
-    { name: 'User' },
+    // { name: 'User' },
     { name: 'Add Agents' },
     { name: 'Add Agency' },
-    { name: 'Add Form'},
+    // { name: 'Add Form'},
     { name: 'Add Agency Form'}
   ];
   allBank: any[] = []
@@ -353,15 +353,15 @@ export class FinaladminTablesComponent implements OnInit{
       this.ChannelForm.get('channelName')?.setValue(data.channelName);
       this.ChannelForm.get('channelStatus')?.setValue(data.channelStatus);
     }
-    if(table == 'Banks'){
-      this.visible1 = true;
-      var loginConfiguration = JSON.parse(data.loginConfiguration);  
-      this.BankForm.get('bankCode')?.setValue(data.bankCode);
-      this.BankForm.get('bankName')?.setValue(data.bankName);
-      this.BankForm.get('status')?.setValue(data.status);
-      this.BankForm.get('userId')?.setValue(loginConfiguration['USERID']);
-      this.BankForm.get('Otp')?.setValue(loginConfiguration['OTP']);
-    }
+    // if(table == 'Banks'){
+    //   this.visible1 = true;
+    //   var loginConfiguration = JSON.parse(data.loginConfiguration);  
+    //   this.BankForm.get('bankCode')?.setValue(data.bankCode);
+    //   this.BankForm.get('bankName')?.setValue(data.bankName);
+    //   this.BankForm.get('status')?.setValue(data.status);
+    //   this.BankForm.get('userId')?.setValue(loginConfiguration['USERID']);
+    //   this.BankForm.get('Otp')?.setValue(loginConfiguration['OTP']);
+    // }
     if(table == 'Insurance Type'){
       this.visible2 = true;
       this.InsuranceForm.get('insuranceTypeCode')?.setValue(data.insuranceTypeCode);
@@ -395,15 +395,15 @@ export class FinaladminTablesComponent implements OnInit{
       this.AgencyInsuranceProductMapForm.get('productId')?.setValue(data.productId);
       this.AgencyInsuranceProductMapForm.get('status')?.setValue(data.status);
     }
-    if(table == 'Users'){
-      this.visible6 = true;
-      this.UserDetailsForm.addControl('bancaUserDetailsSeq',this.fb.control(data.bancaUserDetailsSeq));
-      this.UserDetailsForm.get('bancaUserName')?.setValue(data.bancaUserName);
-      this.UserDetailsForm.get('bancaMobileNum')?.setValue(data.bancaMobileNum);
-      this.UserDetailsForm.get('bankCode')?.setValue(data.bankCode);
-      this.UserDetailsForm.get('rmid')?.setValue(data.rmid);
-      this.UserDetailsForm.get('bancaUserStatus')?.setValue(data.bancaUserStatus);
-    }
+    // if(table == 'Users'){
+    //   this.visible6 = true;
+    //   this.UserDetailsForm.addControl('bancaUserDetailsSeq',this.fb.control(data.bancaUserDetailsSeq));
+    //   this.UserDetailsForm.get('bancaUserName')?.setValue(data.bancaUserName);
+    //   this.UserDetailsForm.get('bancaMobileNum')?.setValue(data.bancaMobileNum);
+    //   this.UserDetailsForm.get('bankCode')?.setValue(data.bankCode);
+    //   this.UserDetailsForm.get('rmid')?.setValue(data.rmid);
+    //   this.UserDetailsForm.get('bancaUserStatus')?.setValue(data.bancaUserStatus);
+    // }
     if(table == 'Agency'){
       this.visible7 = true;
       this.AgencyDetailsForm.get('agencyName')?.setValue(data.agencyName);
@@ -443,34 +443,34 @@ export class FinaladminTablesComponent implements OnInit{
       }
     }
 
-    if(form == this.BankForm){
-      if(this.BankForm.valid){
-        const bankConfiguration={
-          loginConfiguration: JSON.stringify({
-              "OTP": this.BankForm.value.Otp,
-              "USERID": this.BankForm.value.userId
-          })
-        };
-        const updatedBankConfiguration = {
-          ...this.BankForm.value,...bankConfiguration
-        };
-        this.adminService.updateBank(updatedBankConfiguration).subscribe({
-          next: (res)=>{
-            this.toast.success({ detail: "SUCCESS", summary: "Bank Updated Successfully.", duration: 4000 })
-            this.initializeForm();
-            this.getAllBank();
-          },
-          error: (err => {
-            this.toast.warning({ detail: "WARNING", summary:"Bank Already Added.!", duration: 4000 });
-          })
-        });
-        this.visible1=false;
-      }
-      else{
-        ValidateForm.validateAllFormFields(this.BankForm);
-        this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
-      }
-    }
+    // if(form == this.BankForm){
+    //   if(this.BankForm.valid){
+    //     const bankConfiguration={
+    //       loginConfiguration: JSON.stringify({
+    //           "OTP": this.BankForm.value.Otp,
+    //           "USERID": this.BankForm.value.userId
+    //       })
+    //     };
+    //     const updatedBankConfiguration = {
+    //       ...this.BankForm.value,...bankConfiguration
+    //     };
+    //     this.adminService.updateBank(updatedBankConfiguration).subscribe({
+    //       next: (res)=>{
+    //         this.toast.success({ detail: "SUCCESS", summary: "Bank Updated Successfully.", duration: 4000 })
+    //         this.initializeForm();
+    //         this.getAllBank();
+    //       },
+    //       error: (err => {
+    //         this.toast.warning({ detail: "WARNING", summary:"Bank Already Added.!", duration: 4000 });
+    //       })
+    //     });
+    //     this.visible1=false;
+    //   }
+    //   else{
+    //     ValidateForm.validateAllFormFields(this.BankForm);
+    //     this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
+    //   }
+    // }
 
     if(form == this.InsuranceForm){
       if(this.InsuranceForm.valid){
@@ -590,26 +590,26 @@ export class FinaladminTablesComponent implements OnInit{
       }
     }
 
-    if(form == this.UserDetailsForm){
-      if(this.UserDetailsForm.valid){
-        this.adminService.updateUser(this.UserDetailsForm.value).subscribe({
-          next: (res)=>{
-            this.toast.success({ detail: "SUCCESS", summary: "User Updated Successfully.", duration: 4000 })
-            this.getAllUserDetails();
-            this.initializeForm();  
-          },
-          error: (err => {
-            this.toast.warning({ detail: "WARNING", summary:"User Already Added.!", duration: 4000 });
-          })
-        });
-        this.UserDetailsForm.removeControl('bancaUserDetailsSeq');
-        this.visible6=false;
-      }
-      else{
-        ValidateForm.validateAllFormFields(this.UserDetailsForm);
-        this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
-      }
-    }
+    // if(form == this.UserDetailsForm){
+    //   if(this.UserDetailsForm.valid){
+    //     this.adminService.updateUser(this.UserDetailsForm.value).subscribe({
+    //       next: (res)=>{
+    //         this.toast.success({ detail: "SUCCESS", summary: "User Updated Successfully.", duration: 4000 })
+    //         this.getAllUserDetails();
+    //         this.initializeForm();  
+    //       },
+    //       error: (err => {
+    //         this.toast.warning({ detail: "WARNING", summary:"User Already Added.!", duration: 4000 });
+    //       })
+    //     });
+    //     this.UserDetailsForm.removeControl('bancaUserDetailsSeq');
+    //     this.visible6=false;
+    //   }
+    //   else{
+    //     ValidateForm.validateAllFormFields(this.UserDetailsForm);
+    //     this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
+    //   }
+    // }
     if(form == this.AgencyDetailsForm){
       if(this.AgencyDetailsForm.valid){
         this.adminService.updateAgency(this.AgencyDetailsForm.value).subscribe({
