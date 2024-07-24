@@ -3,7 +3,7 @@
     <div class="main">
       <div class="sub-main">
         <div class="logo">
-          <img [src]="common.baseCssUrl+'assets/logo/ABHI_Logo.svg'" alt="abhi-logo">
+          <img src="../../../../assets/logo/ABHI_Logo.svg" alt="abhi-logo">
         </div>
         <div class="header">
         </div>
@@ -15,46 +15,34 @@
     </div>
 
     <div class="right-side">
-      <div class="box1">
-        <p>Dear All,</p>
-        <p>H-app-Y is now “ABHI Connect” with all new functionalities. Please use below link now to access the same:</p>
-        <a href="https://abhiconnect.adityabirlacapital.com/login"
-          target="_blank">https://abhiconnect.adityabirlacapital.com/login</a>
-      </div>
-      <!-- <div class="box2">
-            <p>Dear All,</p>
-            <p>Please note that as we have launched new system ” ABHI Connect ”, H-app-Y link will be disbaled from 10th June and will not be active. Request all to start using new link from today</p>
-            <a href="https://abhiconnect.adityabirlacapital.com/login" target="_blank">https://abhiconnect.adityabirlacapital.com/login</a>
-        </div> -->
       <div class="login-form">
-        <p>Login</p>
+        <p>Welcome to Aditya Birla Health Insurance</p>
         <form [formGroup]="loginForm">
           <div class="login-form-section">
             <div class="input-item">
-              <div class="input-label">Agent/Employee/Branch Code*</div>
+              <!-- <div class="input-label">Agent/Employee/Branch Code*</div> -->
               <div class="input-with-icon">
-                <input type="text" class="form-control user-icon" formControlName="agentUserName">
+                <input type="text" placeholder="Username" formControlName="agentUserName">
               </div>
               <small
                 *ngIf="loginForm.controls['agentUserName'].dirty && loginForm.hasError('required', 'agentUserName')"
-                class="text-danger">*
-                UserName is required</small>
+                class="text-danger">UserName is required</small>
             </div>
             <div class="input-item">
-              <div class="input-label">Password*</div>
               <div class="input-with-icon">
-                <input type="password" class="form-control password-icon" formControlName="agentPassword">
+                <input [type]="passwordFieldType" placeholder="Password" formControlName="agentPassword">
+                <i class="fa eye-icon" [ngClass]="{'fa-eye': passwordFieldType === 'password', 'fa-eye-slash': passwordFieldType === 'text'}" (click)="togglePasswordVisibility()" aria-hidden="true">
+                  <!-- <img [src]="passwordFieldType === 'password' ? '../../../../assets/logo/hidePassword.jpg' : '../../../../assets/logo/hidePassword.jpg'" alt="toggle visibility" /> -->
+                </i>
               </div>
               <small
                 *ngIf="loginForm.controls['agentUserName'].dirty && loginForm.hasError('required', 'agentPassword')"
-                class="text-danger">*
-                Password is required</small>
+                class="text-danger">Password is required</small>
             </div>
             <div class="submit-button">
               <button type="submit" class="login-button" (click)="onSubmit()">
                 <span>Login </span>
-                <img src="../../../../assets/logo/arrow.png" alt="" class="arrow">
-              </button>
+                </button>
             </div>
             <br><br>
             <!-- <div class="social-login">

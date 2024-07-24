@@ -24,6 +24,7 @@ export class AgentLoginComponent implements OnInit{
   isIframe = false;
   loginDisplay = false;
   private readonly _destroying$ = new Subject<void>();
+  passwordFieldType: string='password';
 
   constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,
     private toast: NgToastService,@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
@@ -130,6 +131,11 @@ export class AgentLoginComponent implements OnInit{
         });
       },
     });
+  }
+
+  togglePasswordVisibility(): void {
+    console.log("hello hide here");
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
   // For Microsoft MSAL
