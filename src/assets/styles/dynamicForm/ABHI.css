@@ -917,7 +917,7 @@
 
 .main-container .right-panel .checkboxes {
     display: flex;
-    margin-right: 4px;
+    margin-right: 6px;
 }
 
 .main-container .right-panel .checkboxes>input {

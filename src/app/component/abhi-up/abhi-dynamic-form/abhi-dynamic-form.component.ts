@@ -2428,4 +2428,8 @@ getBranchDetails(event: any, otherControl: any) {
       control.value = value;
   }
 
+  lastPageRedirect() {
+    this.router.navigate(['/portal/agent/viewproducts']);
+  }
+
 }

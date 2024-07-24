@@ -25,6 +25,7 @@ export class AgentLoginComponent implements OnInit{
   loginDisplay = false;
   private readonly _destroying$ = new Subject<void>();
   passwordFieldType: string='password';
+  backgroundImageUrl: string | undefined;
 
   constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,
     private toast: NgToastService,@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
@@ -32,6 +33,7 @@ export class AgentLoginComponent implements OnInit{
     private msalBroadcastService: MsalBroadcastService,public common:CommonService){
   }
   ngOnInit(){
+    this.backgroundImageUrl = "common.baseCssUrl + 'assets/logo/Backgroundimage_ABHI.jpg'"; 
     localStorage.clear()
     sessionStorage.clear()
     this.loginForm = this.fb.group({

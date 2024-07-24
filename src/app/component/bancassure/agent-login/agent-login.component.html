@@ -1,9 +1,10 @@
 <div class="login-container">
   <div class="right-panel">
+    <img [src]="common.baseCssUrl+'assets/logo/Backgroundimage_ABHI.jpg'" class="background-image">
     <div class="main">
       <div class="sub-main">
         <div class="logo">
-          <img src="../../../../assets/logo/ABHI_Logo.svg" alt="abhi-logo">
+          <img [src]="common.baseCssUrl+'assets/logo/ABHI_Logo.svg'" alt="abhi-logo">
         </div>
         <div class="header">
         </div>
@@ -32,7 +33,6 @@
               <div class="input-with-icon">
                 <input [type]="passwordFieldType" placeholder="Password" formControlName="agentPassword">
                 <i class="fa eye-icon" [ngClass]="{'fa-eye': passwordFieldType === 'password', 'fa-eye-slash': passwordFieldType === 'text'}" (click)="togglePasswordVisibility()" aria-hidden="true">
-                  <!-- <img [src]="passwordFieldType === 'password' ? '../../../../assets/logo/hidePassword.jpg' : '../../../../assets/logo/hidePassword.jpg'" alt="toggle visibility" /> -->
                 </i>
               </div>
               <small

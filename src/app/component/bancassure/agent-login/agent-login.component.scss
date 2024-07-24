@@ -154,7 +154,7 @@
     }
 
     .right-panel {
-        background: url(../../../../assets/logo/Backgroundimage_ABHI.jpg);
+        // background-image: {common.baseCssUrl};
         display: block;
         height: 100vh;
         background-size: cover;
@@ -162,6 +162,16 @@
         width: 100%;
         background-color: #fff;
         margin-top: 20px;
+
+        .background-image {
+            position: absolute;
+            top: 12%;
+            left: 0;
+            width: 100%;
+            height: 92%;
+            object-fit: scale-down;
+            display: flex;
+        }
 
         .main {
             .sub-main {
