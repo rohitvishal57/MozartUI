@@ -7,6 +7,7 @@ import { JsonEditorComponent, JsonEditorOptions } from 'ang-jsoneditor';
 import { NgToastService } from 'ng-angular-popup';
 import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 import { IDynamicControl, IFormControl, IFormSections, IValidator } from 'src/app/interface/form.interface';
+import { AdminService } from 'src/app/services/admin.service';
 import { CommonService } from 'src/app/services/common.service';
 
 
@@ -54,6 +55,10 @@ export class EditFormComponent {
   jsonForm: any;
   classList: string[] = [''];
   selectedClass: string = '';
+
+  masterFormList:any=[]
+  formName:any;
+  formId:any;
 
   formJson: any = null
   formModels: any[] = [
@@ -422,16 +427,37 @@ export class EditFormComponent {
           "id": 1,
           "name": "Option 1",
           "value": "Value1",
-          "isIncrement":"",
+          "isIncrement":true,
           "imagePath":""
         },
         {
           "id": 2,
           "name": "Option 2",
           "value": "Value2",
-          "isIncrement":"",
+          "isIncrement":true,
           "imagePath":""
         }
+      ]
+    },
+    {
+      "name": "MobileNo",
+      "label": "Mobile Number",
+      "visibleLabel": true,
+      "visible": true,
+      "type": "phonenumber",
+      "value": "",
+      "class": "col-md-6",
+      "validators": [
+          {
+              "validatorName": "required",
+              "required": true,
+              "message": "Mobile No is required field."
+          },
+          {
+              "validatorName": "pattern",
+              "pattern": "^[6-9]\\d{0,10}$",
+              "message": "Mobile No is not valid"
+          }
       ]
     }
   ]
@@ -454,6 +480,7 @@ export class EditFormComponent {
     { "iconClass": "fa-solid fa-bold"},
     { "iconClass": "fa-solid fa-paragraph"},
     { "iconClass": "fa fa-thin fa-xmark"},
+    { "iconClass": "fa pull-left fa-phone" },
     { "iconClass": "fa pull-left fa-bars" },
     { "iconClass": "fa pull-left fa-phone" }
 ]
@@ -461,7 +488,7 @@ export class EditFormComponent {
 
   constructor(private fb: FormBuilder, private confirmationService: ConfirmationService, private toast: NgToastService,
     private messageService: MessageService, private commonService: CommonService, private router: Router,
-    private http: HttpClient) {
+    private http: HttpClient,private adminService:AdminService) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.modes = ['code', 'text', 'tree', 'view'];
     this.editorOptions.mode = 'code';
@@ -481,13 +508,8 @@ export class EditFormComponent {
     this.verticalCode = history.state.verticalCode;
     this.insuranceTypeCode = history.state.insuranceTypeCode;
     this.productId = history.state.productId;
-
-    // if (history.state.jsonFormData) {
-    //   this.formJson = JSON.parse(history.state.jsonFormData);
-    // }
-    // else {
-      // this.formJson = null;
-    // }
+    console.log(history.state);
+    
     this.jsonForm = this.fb.group({
       Code: [this.bankCode, Validators.required],
       insuranceTypeCode: [this.insuranceTypeCode, Validators.required],
@@ -496,7 +518,20 @@ export class EditFormComponent {
       formId: ['', Validators.required],
       jsonFormData: ['', Validators.required],
     });
-    this.formJson = this.jsonForm.jsonFormData;
+    if (history.state.form) {
+      console.log('anekant');
+      this.formJson = history.state.form;        
+      this.jsonForm.get('formName')?.setValue(history.state.formName);
+      this.jsonForm.get('formId')?.setValue(history.state.formId);
+      this.formName = history.state.formName;
+      this.formId = history.state.formId;
+    }
+    else{
+      this.formJson = this.jsonForm.jsonFormData;
+    }
+    this.masterFormSequence();
+    // this.formJson = this.jsonForm.jsonFormData;
+    console.log(this.formJson);
     this.initializeJsonEditorForm();
     this.getFormSequence();
     const cssUrl = 'assets/styles/dynamicForm/yesBank.css';
@@ -531,6 +566,7 @@ export class EditFormComponent {
 
   }
   initializeVisibility() {
+    console.log(this.formJson);
     this.visibleSection = [];
     this.visibleControl = [[]];
     this.visibleDynamicControl = [[[]]];
@@ -545,6 +581,7 @@ export class EditFormComponent {
         });
       });
     });
+    console.log(this.visibleSection,this.visibleControl,this.visibleDynamicControl);
   }
 
   initializeForm() {
@@ -1065,17 +1102,20 @@ export class EditFormComponent {
     });
   }
   async getPreview(form: any) {
-    try {
-      console.log(form);
-      await this.getFormDataFromFormSequence(form);
-      console.log(this.jsonForm.value.jsonFormData);
+    console.log(form,this.formJson);
+    // try {
+    //   console.log(form);
+    //   await this.getFormDataFromFormSequence(form);
+    //   console.log(this.jsonForm.value.jsonFormData);
       // const jsonFormData = JSON.stringify(this.jsonForm.value.jsonFormData);
       // const url = `/portal/finaladminDashboard/finalAdminPreview?form=${jsonFormData}?bankCode=${this.bankCode}?verticalCode=${this.verticalCode}?insuranceTypeCode=${this.insuranceTypeCode}?productId=${this.productId}`;
       // window.open(url, '_blank');
       this.router.navigate(['/portal/finaladminDashboard/formPreview'],
         {
           state: {
-            form: this.jsonForm.value.jsonFormData,
+            form: this.formJson,
+            formName:this.formName,
+            formId:this.formId,
             bankCode: history.state.bankCode,
             verticalCode: history.state.verticalCode,
             insuranceTypeCode: history.state.insuranceTypeCode,
@@ -1083,9 +1123,9 @@ export class EditFormComponent {
           }
         });
 
-    } catch (error) {
-      console.error(error);
-    }
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
 
   getEditForm(form: any) {
@@ -1168,5 +1208,34 @@ export class EditFormComponent {
   concatenateClasses(event: any) {
     console.log(event.target.value);
     this.selectedClass = event.target.value;
+  }
+  async masterFormSequence(){
+    return await this.adminService.GetMasterFormNames().subscribe({
+      next:(res)=>{
+        this.masterFormList = res
+        console.log(this.masterFormList);
+      },
+      error:(err)=>{
+        console.error(err)
+      }
+    })
+  }
+  async GetMasterFormByFormName(event:any){
+    console.log(event.target.value);
+    return await this.adminService.GetMasterFormByFormName(event.target.value).subscribe({
+      next : (res)=>{
+        console.log(res);
+        console.log(res.formName,res.formId);
+        this.jsonForm.get('formName')?.setValue(res.formName);
+        this.jsonForm.get('formId')?.setValue(res.formId);
+        this.formName = res.formName;
+        this.formId = res.formId;
+        this.formJson = JSON.parse(res.jsonFormData)
+        this.initializeForm();
+      },
+      error:(err)=>{
+        console.error(err)
+      }
+    })
   }
 }

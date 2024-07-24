@@ -17,14 +17,14 @@ export class FinaladminTablesComponent implements OnInit{
   @ViewChild('topContainer') topContainer!: ElementRef;
 
   allChannel: any[] = []
-  selectedTab: string = 'Channels';
+  selectedTab: string = 'Partner';
 
   dropdownVisible: boolean = false;
   selectedOption: any;
 
-  visible: boolean = false;
+  // visible: boolean = false;
   // visible1: boolean = false;
-  visible2: boolean = false;
+  // visible2: boolean = false;
   visible3: boolean = false;
   // visible4: boolean = false;
   visible5: boolean = false;
@@ -43,15 +43,15 @@ export class FinaladminTablesComponent implements OnInit{
   AgencyInsuranceProductMapForm:any;
 
   dropdownOptions: any[] = [
-    { name: 'Channel' },
+    // { name: 'Channel' },
     // { name: 'Bank' },
-    { name: 'Insurance Type' },
+    // { name: 'Insurance Type' },
+    { name: 'Add Partner' },
     { name: 'Product' },
     // { name: 'User' },
-    { name: 'Add Agents' },
-    { name: 'Add Agency' },
+    // { name: 'Add Agents' },
     // { name: 'Add Form'},
-    { name: 'Add Agency Form'}
+    { name: 'Configure Journey'}
   ];
   allBank: any[] = []
   allInsuranceType: any[] = [];
@@ -102,10 +102,10 @@ export class FinaladminTablesComponent implements OnInit{
     this.ProductForm=this.fb.group({
       productId:['',Validators.required],
       productName:['',Validators.required],
-      insuranceType:['',Validators.required],
+      insuranceType:[''],
       productStartDate:['',Validators.required],
       productEndDate:['',Validators.required],
-      productFamily:['',Validators.required],
+      productFamily:[''],
       familyPlan:['',Validators.required],
       status:[true,Validators.required]
     });
@@ -331,13 +331,13 @@ export class FinaladminTablesComponent implements OnInit{
         console.log(option);
         this.router.navigate(['portal/finaladminDashboard/addAgent'])
       }
-      else if (option.name == 'Add Agency') {
+      else if (option.name == 'Add Partner') {
         console.log(option);
         this.router.navigate(['portal/finaladminDashboard/addAgency'],{
           state: { isAgencyDetails: true }
         });
       }
-      else if (option.name == 'Add Agency Form') {
+      else if (option.name == 'Configure Journey') {
         console.log(option);
         this.router.navigate(['portal/finaladminDashboard/addAgency'],{
           state: { isAgencyDetails: false }
@@ -347,12 +347,12 @@ export class FinaladminTablesComponent implements OnInit{
   }
   showDialog(data:any,table:any) {
     console.log(data,table);
-    if(table == 'Channels'){
-      this.visible = true;
-      this.ChannelForm.get('verticalCode')?.setValue(data.verticalCode);
-      this.ChannelForm.get('channelName')?.setValue(data.channelName);
-      this.ChannelForm.get('channelStatus')?.setValue(data.channelStatus);
-    }
+    // if(table == 'Channels'){
+    //   this.visible = true;
+    //   this.ChannelForm.get('verticalCode')?.setValue(data.verticalCode);
+    //   this.ChannelForm.get('channelName')?.setValue(data.channelName);
+    //   this.ChannelForm.get('channelStatus')?.setValue(data.channelStatus);
+    // }
     // if(table == 'Banks'){
     //   this.visible1 = true;
     //   var loginConfiguration = JSON.parse(data.loginConfiguration);  
@@ -362,12 +362,12 @@ export class FinaladminTablesComponent implements OnInit{
     //   this.BankForm.get('userId')?.setValue(loginConfiguration['USERID']);
     //   this.BankForm.get('Otp')?.setValue(loginConfiguration['OTP']);
     // }
-    if(table == 'Insurance Type'){
-      this.visible2 = true;
-      this.InsuranceForm.get('insuranceTypeCode')?.setValue(data.insuranceTypeCode);
-      this.InsuranceForm.get('insuranceType')?.setValue(data.insuranceType);
-      this.InsuranceForm.get('status')?.setValue(data.status);
-    }
+    // if(table == 'Insurance Type'){
+    //   this.visible2 = true;
+    //   this.InsuranceForm.get('insuranceTypeCode')?.setValue(data.insuranceTypeCode);
+    //   this.InsuranceForm.get('insuranceType')?.setValue(data.insuranceType);
+    //   this.InsuranceForm.get('status')?.setValue(data.status);
+    // }
     if(table == 'Products'){
       this.visible3 = true;
       this.ProductForm.get('productId')?.setValue(data.productId);
@@ -387,7 +387,7 @@ export class FinaladminTablesComponent implements OnInit{
       this.ChannelBankProductMapForm.get('productId')?.setValue(data.productId);
       this.ChannelBankProductMapForm.get('status')?.setValue(data.status);
     }
-    if(table == 'Agency Products Map'){
+    if(table == 'Partner Product Map'){
       this.visible9 = true;
       this.AgencyInsuranceProductMapForm.get('agencyCode')?.setValue(data.agencyCode);
       this.AgencyInsuranceProductMapForm.get('verticalCode')?.setValue(data.verticalCode);
@@ -404,7 +404,7 @@ export class FinaladminTablesComponent implements OnInit{
     //   this.UserDetailsForm.get('rmid')?.setValue(data.rmid);
     //   this.UserDetailsForm.get('bancaUserStatus')?.setValue(data.bancaUserStatus);
     // }
-    if(table == 'Agency'){
+    if(table == 'Partner'){
       this.visible7 = true;
       this.AgencyDetailsForm.get('agencyName')?.setValue(data.agencyName);
       this.AgencyDetailsForm.get('agencyCode')?.setValue(data.agencyCode);
@@ -422,26 +422,26 @@ export class FinaladminTablesComponent implements OnInit{
   }
   
   onUpdate(form:any){
-    if(form == this.ChannelForm){
-      if(this.ChannelForm.valid){
-        this.adminService.updateChannel(this.ChannelForm.value)
-        .subscribe({  
-          next: (res)=>{
-            this.toast.success({ detail: "SUCCESS", summary: "Channel Updated Successfully.", duration: 4000 })
-            this.initializeForm();
-            this.getAllChannel();
-          },
-          error: (err => {
-            this.toast.warning({ detail: "WARNING", summary:"Channel Already Updated.!", duration: 4000 });
-          })
-        })
-        this.visible=false;
-      }
-      else{
-        ValidateForm.validateAllFormFields(this.ChannelForm);
-        this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
-      }
-    }
+    // if(form == this.ChannelForm){
+    //   if(this.ChannelForm.valid){
+    //     this.adminService.updateChannel(this.ChannelForm.value)
+    //     .subscribe({  
+    //       next: (res)=>{
+    //         this.toast.success({ detail: "SUCCESS", summary: "Channel Updated Successfully.", duration: 4000 })
+    //         this.initializeForm();
+    //         this.getAllChannel();
+    //       },
+    //       error: (err => {
+    //         this.toast.warning({ detail: "WARNING", summary:"Channel Already Updated.!", duration: 4000 });
+    //       })
+    //     })
+    //     this.visible=false;
+    //   }
+    //   else{
+    //     ValidateForm.validateAllFormFields(this.ChannelForm);
+    //     this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
+    //   }
+    // }
 
     // if(form == this.BankForm){
     //   if(this.BankForm.valid){
@@ -472,25 +472,25 @@ export class FinaladminTablesComponent implements OnInit{
     //   }
     // }
 
-    if(form == this.InsuranceForm){
-      if(this.InsuranceForm.valid){
-        this.adminService.updateInsuranceType(this.InsuranceForm.value).subscribe({
-          next: (res)=>{
-            this.toast.success({ detail: "SUCCESS", summary: "Insurance Type Updated Successfully.", duration: 4000 })
-            this.getAllInsuranceType();
-            this.initializeForm();
-          },
-          error: (err => {
-            this.toast.warning({ detail: "WARNING", summary:"Insurance Type Already Added.!", duration: 4000 });
-          })
-        });
-        this.visible2=false;
-      }
-      else{
-        ValidateForm.validateAllFormFields(this.InsuranceForm);
-        this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
-      }
-    }
+    // if(form == this.InsuranceForm){
+    //   if(this.InsuranceForm.valid){
+    //     this.adminService.updateInsuranceType(this.InsuranceForm.value).subscribe({
+    //       next: (res)=>{
+    //         this.toast.success({ detail: "SUCCESS", summary: "Insurance Type Updated Successfully.", duration: 4000 })
+    //         this.getAllInsuranceType();
+    //         this.initializeForm();
+    //       },
+    //       error: (err => {
+    //         this.toast.warning({ detail: "WARNING", summary:"Insurance Type Already Added.!", duration: 4000 });
+    //       })
+    //     });
+    //     this.visible2=false;
+    //   }
+    //   else{
+    //     ValidateForm.validateAllFormFields(this.InsuranceForm);
+    //     this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
+    //   }
+    // }
 
     if(form == this.ProductForm){
       if(this.ProductForm.valid){

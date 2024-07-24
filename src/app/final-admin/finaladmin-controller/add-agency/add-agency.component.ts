@@ -51,7 +51,7 @@ export class AddAgencyComponent {
     console.log(this.isAgencyDetails);
     console.log(this.agencyOptions,this.channelOptions,this.insuranceTypeOptions);
     console.log(this.allAgencyInsuranceMapData,this.allAgency,this.allChannel,this.allInsuranceType);
-    
+    // this.onselectAgency(101);
   }
 
   initializeForm() {
@@ -61,9 +61,9 @@ export class AddAgencyComponent {
       status:[true,Validators.required]
     });
     this.AgencyInsuranceMapForm=this.fb.group({
-      verticalCode:['',Validators.required],
+      // verticalCode:['',Validators.required],
       agencyCode:[this.AgentForm.get('agencyCode').value, Validators.required],
-      insuranceTypeCode:['',Validators.required],
+      // insuranceTypeCode:['',Validators.required],
       productId: ['', Validators.required],
       status:[true,Validators.required]
     });
@@ -73,8 +73,8 @@ export class AddAgencyComponent {
       });
     });
   }
-  getAllAgencyInsuranceProductMapDetails() {
-    return this.adminService.getAllAgencyChannelInsuranceProductMap().subscribe({
+  async getAllAgencyInsuranceProductMapDetails() {
+    return await this.adminService.getAllAgencyChannelInsuranceProductMap().subscribe({
       next: (res) => {
         this.allAgencyInsuranceProductMapData = res;
         console.log(this.allAgencyInsuranceProductMapData);
@@ -84,8 +84,8 @@ export class AddAgencyComponent {
       },
     });
   }
-  getAllAgencyInsuranceMapDetails() {
-    return this.adminService.getAgencyChannelInsuranceMap().subscribe({
+  async getAllAgencyInsuranceMapDetails() {
+    return await this.adminService.getAgencyChannelInsuranceMap().subscribe({
       next: (res) => {
         this.allAgencyInsuranceMapData = res;
         
@@ -95,8 +95,8 @@ export class AddAgencyComponent {
       },
     });
   }
-  getAllAgency(){
-    this.adminService.getAllAgencyDetails()
+  async getAllAgency(){
+    await this.adminService.getAllAgencyDetails()
       .subscribe({  
         next: (res)=>{
           this.allAgency=res.filter((agency:any)=>agency.status==true);
@@ -107,8 +107,8 @@ export class AddAgencyComponent {
         })
       })
   }
-  getAllChannel(){ 
-    this.adminService.getAllChannelList()
+  async getAllChannel(){ 
+    await this.adminService.getAllChannelList()
       .subscribe({  
         next: (res)=>{
           this.allChannel=res.filter((channel:any)=>channel.channelStatus==true);
@@ -119,20 +119,21 @@ export class AddAgencyComponent {
         })
       }) 
   }
-  getAllInsuranceType(){
-    this.adminService.getAllInsuranceTypeList()
+  async getAllInsuranceType(){
+    await this.adminService.getAllInsuranceTypeList()
       .subscribe({  
         next: (res)=>{
           this.allInsuranceType=res.filter((insurance:any)=>insurance.status==true);
           this.insuranceTypeOptions = this.allInsuranceType;
+          this.onselectAgency(101);
         },
         error: (err => {
           console.error(err); 
         })
       })
   }
-  getAllProduct() {
-    this.adminService.getAllProductList()
+  async getAllProduct() {
+    await this.adminService.getAllProductList()
       .subscribe({
         next: (res) => {
           this.allProduct = res.filter((product: any) => product.status == true);
@@ -248,12 +249,17 @@ export class AddAgencyComponent {
         return verticalCodeMatch && bankCodeMatch && insuranceTypeCodeMatch;
       })
       .map(filteredMap => filteredMap.productId);
+      console.log(excludedProduct);
+    // let filteredProduct = this.allProduct.filter(product => {
+    //   const insuranceTypeName = this.allInsuranceType.filter(insurance => insurance.insuranceTypeCode == event)[0].insuranceType;
+    //   return !excludedProduct.includes(product.productId) && product.insuranceType == insuranceTypeName;
+    // });
+    let mappedProductIds = new Set(this.allAgencyInsuranceProductMapData.map(product => product.productId));
 
-    let filteredProduct = this.allProduct.filter(product => {
-      const insuranceTypeName = this.allInsuranceType.filter(insurance => insurance.insuranceTypeCode == event)[0].insuranceType;
-      return !excludedProduct.includes(product.productId) && product.insuranceType == insuranceTypeName;
-    });
-    this.productOptions = filteredProduct;
+// Filter allproducts to include only those not in agencymappedproducts
+  let filteredProducts = this.allProduct.filter(product => !mappedProductIds.has(product.productId));
+    this.productOptions = filteredProducts;
+    console.log(this.productOptions,filteredProducts);
   }
   
 

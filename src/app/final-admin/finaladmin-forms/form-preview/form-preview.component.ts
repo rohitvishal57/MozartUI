@@ -1,4 +1,4 @@
-import { Component,inject,Renderer2,Inject, ElementRef, OnDestroy, Input, ViewEncapsulation, Output,EventEmitter } from '@angular/core';
+import { Component,inject,Renderer2,Inject, ElementRef, OnDestroy, Input, ViewEncapsulation, Output,EventEmitter, Host } from '@angular/core';
 import { FormArray, FormBuilder,FormControl,FormGroup, Validators } from '@angular/forms';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IValidator } from 'src/app/interface/form.interface';
 import { DOCUMENT } from '@angular/common';
@@ -10,11 +10,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-form-preview',
   templateUrl: './form-preview.component.html',
-  styleUrls: ['./form-preview.component.scss']
+  styleUrls: ['./form-preview.component.css']
 })
 export class FormPreviewComponent {
   showHtmlContent:any;
   form : any;
+  formId:any;
+  formName:any;
   bankCode: any;
   verticalCode: any;
   insuranceTypeCode: any;
@@ -36,11 +38,13 @@ export class FormPreviewComponent {
     //   this.productId = params['productId'];
     // });
     this.form = history.state.form;
+    this.formId = history.state.formId;
+    this.formName = history.state.formName
     this.bankCode = history.state.bankCode;
     this.verticalCode = history.state.verticalCode;
     this.insuranceTypeCode = history.state.insuranceTypeCode;
     this.productId = history.state.productId;
-    console.log(this.form);
+    console.log(this.form,history.state);
     this.spinner.show();
     this.showHtmlContent = false;
     this.initializeForm();
@@ -184,7 +188,10 @@ export class FormPreviewComponent {
 
   getFormSequence(){
     this.router.navigate(['portal/finaladminDashboard/editForm'],
-    {state:{bankCode : history.state.bankCode,
+    {state:{form: history.state.form,
+      formName:this.formName,
+      formId:this.formId,
+      bankCode : history.state.bankCode,
     verticalCode : history.state.verticalCode,
     insuranceTypeCode : history.state.insuranceTypeCode,
     productId : history.state.productId}});

@@ -76,6 +76,7 @@ export class AddAgentComponent {
           this.toast.success({ detail: "SUCCESS", summary: "Agent Added Successfully.", duration: 4000 })
           this.AgentDetailsForm.reset();
           this.getAllAgentDetails();
+          this.route.navigate(['/portal/finaladminDashboard']);
         },
         error: (err => {
           this.toast.warning({ detail: "WARNING", summary:"Agent Already Added.!", duration: 4000 });
@@ -86,6 +87,5 @@ export class AddAgentComponent {
       ValidateForm.validateAllFormFields(this.AgentDetailsForm);
       this.toast.warning({ detail: "WARNING", summary:"Please Fill All Required Fields.!", duration: 4000 });
     }
-    this.route.navigate(['/portal/finaladminDashboard']);
   }
 }

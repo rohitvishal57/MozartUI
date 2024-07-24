@@ -143,4 +143,10 @@ export class AdminService {
   InsertAgencyChannelInsuranceMap(mapDetails: any) {
     return this.http.post<any>(`${this.baseUrl}InsertAgencyChannelInsuranceMap`, mapDetails);
   }
+  GetMasterFormByFormName(formName:any){
+    return this.http.get<any>(`${this.baseUrl}GetMasterFormByFormName?formName=${formName}`)
+  }
+  GetMasterFormNames(){
+    return this.http.get<any>(`${this.baseUrl}GetMasterFormNames`)
+  }
 }

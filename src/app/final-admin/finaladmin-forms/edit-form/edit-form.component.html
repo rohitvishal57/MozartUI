@@ -1,17 +1,30 @@
 <div class="main-container">
   <div style="display: flex;">
-    <a (click)="navigateBack(this.verticalCode)">
-      <i class="fa-solid fa-arrow-left"></i>
-    </a>
-    <p>Create New Insurance Template</p>
+    <div style="display: flex;">
+      <a (click)="navigateBack(this.verticalCode)" style="cursor: pointer;"><i class="fa-solid fa-arrow-left"
+          style=" font-size: 22px; color: #000000;"></i></a>
+    </div>
+    <!-- <a  style="cursor: pointer;" (click)="navigateBack(this.verticalCode)">
+      <i  class="fa-solid fa-arrow-left"></i>
+    </a> -->
+    <p>Create or Edit Journey</p>
     <div class="btn-container card-body">
+      <div style="padding:0px 5px">
+        <!-- <p-dropdown [options]="masterFormList" (onChange)="GetMasterFormByFormName($event)" placeholder="Select a form" /> -->
+        <select (change)="GetMasterFormByFormName($event)" style="padding:5px">
+          <option value="" disabled selected>Select a form</option>
+          <option *ngFor="let form of masterFormList" [value]="form">
+            {{form}}
+          </option>
+        </select>       
+      </div>
       <button class="btn btn-primary nextbtn" (click)="onSaveForm()">Save Form</button>
     </div>
   </div>
   <div class="state">
     <div class="state-1" (click)="gotoFormSequence()">Edit Form</div>
     <!-- <div class="states" (click)="gotoFormSequence()">Form Sequence</div> -->
-    <div class="state-2">Form Preview</div>
+    <div class="state-2" (click)="getPreview(form)">Form Preview</div>
   </div>
   <form [formGroup]="jsonForm">
     <div class="rectangle">
@@ -74,7 +87,7 @@
           </div>
           <ng-container *ngFor="let section of formJson.formSections;let i=index">
             <ng-container>
-              <div [ngClass]="section.class" class="section">
+              <div [class]="section.class" class="section">
                 <div class="section-body" dndDropzone (dndDragover)="onDragover($event)"
                   (dndDrop)="onDropControl($event,i)" cdkDrag>
                   <div class="edit-section">
@@ -605,31 +618,44 @@
                           </div> -->
                           <ng-container *ngIf="control.type == 'boldtext'" [class]="control.class">
                             <label *ngIf="control.visibleLabel==true">{{ control.label }}</label>
-                            <input class="boldtext_input colorbold" [(ngModel)]="control.value" [type]="control.type"/>
+                            <input class="boldtext_input colorbold" [(ngModel)]="control.value" [type]="control.type" />
                             <span style="font-size: 12px;">{{control.text}}</span>
                           </ng-container>
                           <ng-container *ngIf="control.type === 'paragraph'">
-                              <p [innerHTML]="control.label"></p>
-                              <p *ngIf="control.value" [innerHTML]="control.value"></p>
+                            <p [innerHTML]="control.label"></p>
+                            <p *ngIf="control.value" [innerHTML]="control.value"></p>
                           </ng-container>
                           <ng-container *ngIf="control.type === 'multiSelectCheckbox'">
-                              <label *ngIf="control.visibleLabel">{{ control.label }}</label>
-                              <!-- <div [(ngModel)]="control.value" class="checkbox-container" *ngIf="dynamicFormGroup.get(control.name)">
-                                <div *ngFor="let option of control.selectCheckboxOptions" class="checkbox-wrapper col-md-3">
-                                  <div *ngIf="dynamicFormGroup.get(control.name)?.get(option.value)">
-                                    <input type="checkbox" [value]="option.value" id="{{option.value}}">
-                                    <label for="{{option.value}}" class="custom-checkbox">
-                                      <span>{{option.value}}</span>
-                                    </label>
-                                    <button *ngIf="option.isIncrement" class="incrementbtn">+</button>
-                                  </div>
-                                </div>
-                              </div> -->
-                              <select [(ngModel)]="control.value" name="{{ control.name }}" multiple>
-                                <option selected value="">Choose...</option>
-                                <option *ngFor="let option of control.selectCheckboxOptions" [value]="option.value">{{ option.name }}
-                                </option>
-                              </select>
+                            <label *ngIf="control.visibleLabel">{{ control.label }}</label>
+                            <select [(ngModel)]="control.value" name="{{ control.name }}" multiple>
+                              <option selected value="">Choose...</option>
+                              <option *ngFor="let option of control.selectCheckboxOptions" [value]="option.value">{{
+                                option.name }}
+                              </option>
+                            </select>
+                          </ng-container>
+                          <ng-container *ngIf="control.type==='phonenumber'">
+                            <label *ngIf="control.visibleLabel">{{ control.label }} <span
+                                *ngIf="control.validators">*</span></label>
+
+                            <ng-container *ngIf="control.validators !== undefined">
+                              <input [(ngModel)]="control.value" type="number" name="{{ control.name }}"
+                                #numberField="ngModel"
+                                [ngClass]="{ 'is-invalid': f.submitted && numberField.invalid && numberField.touched }"
+                                [required]="control.validators[0]?.required"
+                                [minlength]="control.validators[1]?.minlength"
+                                [maxlength]="control.validators[2]?.maxlength"
+                                [pattern]="control.validators[3]?.pattern">
+                              <div *ngIf="f.submitted && numberField.invalid" class="invalid-feedback">
+                                {{ getErrorMessage(numberField.errors, control) }}
+                              </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="control.validators === undefined">
+                              <input [(ngModel)]="control.value" [type]="control.type" name="{{ control.name }}"
+                                #numberField="ngModel"
+                                [ngClass]="{ 'is-invalid': f.submitted && numberField.invalid && numberField.touched }">
+                            </ng-container>
                           </ng-container>
                         </div>
                       </div>
@@ -641,7 +667,7 @@
             </ng-container>
 
           </ng-container>
-          <div class="btn-container"
+          <!-- <div class="btn-container"
             *ngIf="formJson.cancelBtnTitle!='' || formJson.saveBtnTitle!='' || formJson.resetBtnTitle!='' || formJson.calculateBtnTitle!=''">
             <ng-container *ngIf="formJson.resetBtnTitle!=''">
               <button class="btn btn-primary nextbtn">{{formJson.resetBtnTitle}}</button>
@@ -655,7 +681,7 @@
             <ng-container *ngIf="formJson.saveBtnTitle!=''">
               <button class="btn btn-primary nextbtn">{{formJson.saveBtnTitle}}</button>
             </ng-container>
-          </div>
+          </div> -->
         </form>
       </div>
     </div>
@@ -1123,10 +1149,10 @@
                       <label>isIncrement</label>
                     </div>
                     <div class="col-md-9 options-data">
-                        <select class="form-control" [(ngModel)]="Control.isIncrement" [ngModelOptions]="{standalone: false}">
-                          <option [ngValue]="true">True</option>
-                          <option [ngValue]="false">False</option>
-                        </select>
+                      <select class="form-control" [(ngModel)]="opt.isIncrement" [ngModelOptions]="{standalone: false}">
+                        <option [ngValue]="true">True</option>
+                        <option [ngValue]="false">False</option>
+                      </select>
                     </div>
                   </div>
                   <div class="row" style="margin-bottom: 10px;">
@@ -1139,7 +1165,7 @@
                     </div>
                   </div>
                   <div class="row" style="padding: 5px 13px;">
-                    <ng-container *ngIf="k == Control.options.length - 1">
+                    <ng-container *ngIf="k == Control.selectCheckboxOptions.length - 1">
                       <a class="col-md-2" (click)="deleteOptions(indexI,indexJ,k)" style="color: red;"><i
                           class="fa-solid fa-trash"></i></a>
                       <a class="col-md-2" (click)="addOptions(indexI,indexJ,k)"
@@ -1243,18 +1269,18 @@
                 <div>
                   <label>Section Class</label>
                   <select class="form-control" [(ngModel)]="Section.class" [ngModelOptions]="{standalone: true}">
-                    <option [value]="'col-md-1'">col-md-1</option>
-                    <option [value]="'col-md-2'">col-md-2</option>
-                    <option [value]="'col-md-3'">col-md-3</option>
-                    <option [value]="'col-md-4'">col-md-4</option>
-                    <option [value]="'col-md-5'">col-md-5</option>
-                    <option [value]="'col-md-6'">col-md-6</option>
-                    <option [value]="'col-md-7'">col-md-7</option>
-                    <option [value]="'col-md-8'">col-md-8</option>
-                    <option [value]="'col-md-9'">col-md-9</option>
-                    <option [value]="'col-md-10'">col-md-10</option>
-                    <option [value]="'col-md-11'">col-md-11</option>
-                    <option [value]="'col-md-12'">col-md-12</option>
+                    <option [ngValue]="'col-md-1'">col-md-1</option>
+                    <option [ngValue]="'col-md-2'">col-md-2</option>
+                    <option [ngValue]="'col-md-3'">col-md-3</option>
+                    <option [ngValue]="'col-md-4'">col-md-4</option>
+                    <option [ngValue]="'col-md-5'">col-md-5</option>
+                    <option [ngValue]="'col-md-6'">col-md-6</option>
+                    <option [ngValue]="'col-md-7'">col-md-7</option>
+                    <option [ngValue]="'col-md-8'">col-md-8</option>
+                    <option [ngValue]="'col-md-9'">col-md-9</option>
+                    <option [ngValue]="'col-md-10'">col-md-10</option>
+                    <option [ngValue]="'col-md-11'">col-md-11</option>
+                    <option [ngValue]="'col-md-12'">col-md-12</option>
                   </select>
                 </div>
               </div>
