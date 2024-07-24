@@ -446,6 +446,10 @@ export class AbhiDynamicFormComponent {
     return myFormControl?.invalid as boolean &&  myFormControl?.touched as unknown as boolean;
   }
 
+  hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean{
+      return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
+  }
+
   triggerFileInput(controlName: string) {
     const fileInputControl = this.document.getElementById(controlName);
     fileInputControl?.click();

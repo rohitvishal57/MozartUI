@@ -141,7 +141,7 @@
     font-size: 17px;
 }
 
-.main-container .right-panel .inputField_Text,
+/* .main-container .right-panel .inputField_Text,
 .main-container .right-panel .inputField_Select {
     font-weight: 400;
     font-family: "Noto Sans", sans-serif;
@@ -195,7 +195,82 @@
 .main-container .right-panel .inputField_Text:focus,
 .main-container .right-panel .inputField_Select:focus {
     outline: none;
+} */
+
+
+.main-container .right-panel .inputField_Text,
+.main-container .right-panel .inputField_Select {
+    font-weight: 400;
+    font-family: "Noto Sans", sans-serif;
+    height: 51px;
+    border-radius: 18px;
+    border: 0;
+    width: 100%;
+    background-color: #f2f3f6;
+    padding: 6px 12px;
+    box-sizing: border-box;
+    position: relative;
 }
+
+.main-container .right-panel .inputField_Select {
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    appearance: menulist;
+}
+
+.main-container .right-panel .input-container label {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    font-size: 14px;
+    font-family: "Noto Sans", sans-serif;
+    color: #aaa;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    background-color: #f2f3f6;
+    padding: 0 5px;
+}
+
+.main-container .right-panel .boldtext_input:focus{
+    border: none;
+}
+
+
+.main-container .right-panel .inputField_Text:focus+label,
+.main-container .right-panel .inputField_Text.has-value+label,
+.main-container .right-panel .inputField_Select:focus+label,
+.main-container .right-panel .inputField_Select.has-value+label {
+    top: 3px;
+    left: 12px;
+    font-size: 12px;
+    color: #666;
+    background-color: rgba(255, 255, 255, 0.4);
+    padding: 0 3px;
+    border-radius: 2px;
+}
+
+.main-container .right-panel .inputField_Text.disabled-has-value+label,
+.main-container .right-panel .inputField_Select.disabled-has-value+label{
+    top: 3px;
+    left: 12px;
+    font-size: 12px;
+    color: #666;
+    background-color: rgba(255, 255, 255,0.8);
+    padding: 0 3px;
+    border-radius: 2px;
+}
+
+/* .main-container .right-panel .inputField_Text[readonly]+label,
+.main-container .right-panel .inputField_Select[disabled]+label {
+    background-color: rgba(255, 255, 255,0.8);
+} */
+
+.main-container .right-panel .inputField_Text:focus,
+.main-container .right-panel .inputField_Select:focus {
+    outline: none;
+}
+
 
 .main-container .right-panel .checkbox-container {
     display: flex;
