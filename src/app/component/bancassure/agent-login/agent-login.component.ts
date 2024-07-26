@@ -217,11 +217,12 @@ export class AgentLoginComponent implements OnInit{
             localStorage.setItem('code', res.agencyCode);
             localStorage.setItem('agentCode', res.agentCode);
             localStorage.setItem('verticalCode', this.verticalCode);
-            this.toast.success({ detail: "SUCCESS", summary: "Agent Login Successfull", duration: 5000 })
+            this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 5000 })
             this.router.navigate(['portal/agent/viewproducts']);
           },
           error: (err => {
-            this.toast.error({ detail: "ERROR", summary:"Some Error Occured!", sticky: true });
+            console.log(err);
+            this.toast.error({ detail: "ERROR", summary:err, sticky: true });
           })
         })
     }

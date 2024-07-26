@@ -32,12 +32,13 @@ export class AdminLoginComponent {
       this.loginService.sendAdminLoginRequest(this.loginForm.value)
         .subscribe({  
           next: (res)=>{
+            console.log(res);
             this.loginService.storeToken(res.token);
-            this.toast.success({ detail: "SUCCESS", summary: "Admin Login Successfull", duration: 2000 })
+            this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 2000 })
             this.router.navigate(['portal/finaladminDashboard']);
           },
           error: (err => {
-            this.toast.error({ detail: "ERROR", summary:"Some Error Occured!", sticky: true });
+            this.toast.error({ detail: "ERROR", summary:err, sticky: true });
           })
         })
     }

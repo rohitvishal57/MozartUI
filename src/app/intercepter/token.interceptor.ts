@@ -39,6 +39,7 @@ export class TokenInterceptor implements HttpInterceptor {
           if (err.status === 401) {
             this.loginService.signOut();
           }
+          return throwError(() => err.error.message || 'Some Other Error Happened!!');
         }
         return throwError(() => new Error('Some Other Error Happen!!'));
       })

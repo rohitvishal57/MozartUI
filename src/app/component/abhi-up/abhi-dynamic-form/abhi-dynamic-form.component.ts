@@ -776,25 +776,30 @@ getBranchDetails(event: any, otherControl: any) {
     if (control.type == 'date' && control.dependentControls != null) {
       const dob = event.target.value;
       const dobArray = dob.split('-');
-
-      if (parentControl != null && index != null) {
-
-        if (dobArray[0] as number >= 1800) {
-          const ageControl = this.dynamicFormGroup.get(parentControl.name);
-          if (ageControl) {
-            ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
-            this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
-
+      const today = new Date;
+      if(parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) > today.getFullYear() || dobArray[0] == '')
+      {
+        this.dynamicFormGroup.get(control.dependentControls[0])?.reset();
+      }
+      else{
+        if (parentControl != null && index != null) {
+          if (dobArray[0] as number >= 1800) {
+            const ageControl = this.dynamicFormGroup.get(parentControl.name);
+            if (ageControl) {
+              ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
+              this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
+  
+            }
           }
         }
-      }
-      else {
-        if (dobArray[0] as number >= 1800) {
-          const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
-
-          if (dob && ageControl) {
-            const age = this.calculateAge(dob);
-            ageControl.setValue(age);
+        else {
+          if (dobArray[0] as number >= 1800) {
+            const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
+  
+            if (dob && ageControl) {
+              const age = this.calculateAge(dob);
+              ageControl.setValue(age);
+            }
           }
         }
       }
@@ -1292,7 +1297,8 @@ getBranchDetails(event: any, otherControl: any) {
         "insuranceTypeCode": this.insurancetypecode,
         "productId": this.productid,
         "formName": this.formSequence[this.getFormIndexValue()].formName,
-        "formData": JSON.stringify(this.formData)
+        "formData": JSON.stringify(this.formData),
+        "formId": this.formSequence[this.getFormIndexValue()].formId  
       }
       this.service.insertOrUpdateJourneyDetailsViaVerticalCode(reqdata).subscribe({
         next: (response) => {
