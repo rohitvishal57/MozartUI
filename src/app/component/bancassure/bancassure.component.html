@@ -64,6 +64,7 @@
                 </div>
                 <div class="header">
                     <div class="header2">
+                        <div class="header-left-cnt">
                         <a routerLink="viewdashboard" routerLinkActive="active-link">
                             <div class="nav-text">Dashboard</div>
                         </a>
@@ -73,9 +74,21 @@
                         <a routerLink="viewproducts" routerLinkActive="active-link">
                             <div class="nav-text">Products</div>
                         </a>
-                        <a (click)="logOut()" style="margin-left: 310px;" routerLinkActive="active-link">
-                            <div class="nav-text">LogOut</div>
-                        </a>
+                        </div>
+                        <div class="header-right-cnt">
+                            <div class="dropdown" style="margin-left: auto;">
+                                <button class="dropbtn">{{ currentLanguage.toUpperCase() }} <i class="arrow down"></i></button>
+                                <div class="dropdown-content">
+                                    <div (click)="setLanguage('en')">English</div>
+                                    <div (click)="setLanguage('hi')">Hindi</div>
+                                    <div (click)="setLanguage('te')">Telugu</div>
+                                </div>
+                            </div>
+                            
+                            <a (click)="logOut()" routerLinkActive="active-link">
+                                <div class="nav-text">LogOut</div>
+                            </a>
+                       </div>
                     </div>
                 </div>
             </div>

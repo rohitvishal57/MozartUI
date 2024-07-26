@@ -23,7 +23,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AbhiHeaderComponent,
     AbhiNavbarComponent,
     AbhiDynamicFormComponent,
-    AbhiDashboardComponent
+    AbhiDashboardComponent,
   ],
   imports: [
     CommonModule,

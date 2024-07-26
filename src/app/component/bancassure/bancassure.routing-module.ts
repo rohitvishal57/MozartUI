@@ -8,6 +8,7 @@ import { TransactionComponent } from './transaction/transaction.component';
 import { ReportsComponent } from './reports/reports.component';
 import { AgentDynamicFormComponent } from './agent-dynamic-form/agent-dynamic-form.component';
 import { ProposalsComponent } from './proposals/proposals.component';
+import { QuotesComponent } from '../renewals/quotes/quotes.component';
 
 const routes: Routes = [
     {
@@ -19,7 +20,9 @@ const routes: Routes = [
         {path: "viewProposals", component: ProposalsComponent, canActivate: [AuthGuard]},
         {path: "viewtransaction", component: TransactionComponent, canActivate: [AuthGuard]},
         {path: "viewreports", component: ReportsComponent, canActivate: [AuthGuard]},
-        {path: "agentForm",component:AgentDynamicFormComponent,canActivate:[AuthGuard]}
+        {path: "agentForm",component:AgentDynamicFormComponent,canActivate:[AuthGuard]},
+        {path: "allQuotes", component:QuotesComponent}
+
       ]
     }
   ]

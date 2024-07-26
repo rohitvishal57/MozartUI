@@ -11,6 +11,10 @@ import { ReportsComponent } from './reports/reports.component';
 import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { AgentDynamicFormComponent } from './agent-dynamic-form/agent-dynamic-form.component';
 import { ProposalsComponent } from './proposals/proposals.component';
+import { QuotesComponent } from '../renewals/quotes/quotes.component';
+import { NgxPaginationModule } from 'ngx-pagination'; 
+
+
 
 @NgModule({
   declarations: [
@@ -18,7 +22,8 @@ import { ProposalsComponent } from './proposals/proposals.component';
     DashboardComponent,
     TransactionComponent,
     ReportsComponent,  
-    AgentDynamicFormComponent, ProposalsComponent  
+    AgentDynamicFormComponent, ProposalsComponent  ,
+    QuotesComponent
   ],
   imports: [
     CommonModule,
@@ -26,6 +31,7 @@ import { ProposalsComponent } from './proposals/proposals.component';
     NgxSpinnerModule,
     ReactiveFormsModule,
     BancassureRoutingModule,
+    NgxPaginationModule
   ]
 })
 export class BancassureModule { }

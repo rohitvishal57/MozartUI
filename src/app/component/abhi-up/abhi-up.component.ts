@@ -8,8 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AbhiupComponent {
   constructor(private translateService: TranslateService){
-    const userlang = navigator.language;
-    console.log("userlang",userlang)
+    const userlang=localStorage.getItem('preferredLanguage') || 'en'; 
+    console.log("userlang",userlang);
     // const languagecode = userlang.split('-')[0];
     this.translateService.setDefaultLang(userlang);
     this.translateService.use(userlang).subscribe({

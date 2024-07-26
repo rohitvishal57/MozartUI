@@ -30,11 +30,13 @@
                     border-top-left-radius: 0px;
                     border-bottom-left-radius: 17px;
                     margin-right: 0px;
+                    // border: 1px solid green;
 
                     .header-icon {
                         margin-left: 10px;
                         margin-top: 5px;
                         cursor: pointer;
+                        // border: 1px solid green;
 
                     }
 
@@ -88,14 +90,29 @@
         //     }
         // }
         .header2 {
-            display: ruby;
+            display: flex;
             flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            margin: 0px 0px 4px 2%;
-            height: revert;
+            // justify-content: space-between;
+            // align-items: center;
+            margin: 0% % 0% 2%;
+            // height: revert;
             width: 100%;
             padding-left: 0px;
+
+            .header-left-cnt{
+                display: flex;
+                width: 70%;
+                gap: 15%;
+                a{
+                    text-decoration: none;
+                }
+            }
+            .header-right-cnt{
+                display: flex;
+                gap: 9%;
+                width: 25%;
+
+            }
 
             // width: calc(100% - 20px);
             h3 {
@@ -104,6 +121,7 @@
                 font-size: x-large;
                 padding-left: 100px;
                 margin-top: 10px;
+                
             }
 
             .nav-text {
@@ -112,7 +130,7 @@
                 display: flex;
                 align-items: center;
                 cursor: pointer;
-                margin-right: 142px;
+                // margin-right: 142px;
                 margin-top: 10px;
             }
 
@@ -242,6 +260,82 @@
         }
 
     }
+    /* Add this in your bancassure.component.scss */
+.dropbtn {
+    background: hsla(0, 0%, 100%, 0.227);
+    color: #fff;
+    padding: 16px;
+    padding-left: 36px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    height: 26px;
+    width: 100%;
+    border-radius: 20px;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    gap: 5%;
+    margin: 5px 0px;    
+  }
+  
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 40px;
+    gap: 3px;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  .dropdown-content div {
+    color: black;
+    padding: 6px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  
+  .dropdown-content div:hover {
+    background-color: #ddd;
+    cursor: pointer;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  .dropdown:hover .dropbtn {
+    background-color: #dee0de;
+    color: black;
+    .arrow{
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 3px;
+    }
+  }
+  
+  .arrow {
+    margin-left: 5px;
+    border: solid #fff;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+  }
+  
+  .down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+  }
+  
 
 
 
