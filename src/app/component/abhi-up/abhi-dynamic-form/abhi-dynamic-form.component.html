@@ -1,7 +1,8 @@
 <div class="main-container" *ngIf="showHtmlContent==true">
   <div class="left-nav">
+    <!--     style="cursor: pointer;"-->
     <div class="details" *ngFor="let case of formSequence;index as i;">
-      <div style="cursor: pointer;" (click)="addNavbar(i)">
+      <div (click)="addNavbar(i)">
         <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
           {{ i + 1 }}
         </button>
@@ -36,7 +37,25 @@
             <h3 [innerHTML]="section.sectionTitle" [class]="section.class"></h3>
           </div>
           <ng-container *ngFor="let control of section.formControls">
-            <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(control.type)" [class]="control.class"
+            <div *ngIf="['text', 'email', 'password', 'number'].includes(control.type)" [class]="control.class"
+              class="typecss" [hidden]="!control.visible">
+              <div class="input-container">
+                <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
+                  [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}"
+                  (change)="onInputChange($event, control)">
+                <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
+                  [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}"
+                  (change)="onInputChange($event, control)" readonly>
+                <label *ngIf="control.visibleLabel">{{ control.label?(control.label|translate):''}}</label>
+              </div>
+              <!-- <label *ngIf="control.visibleLabel==true">{{ control.label }}</label> -->
+              <small
+                *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) : ''}}
+              </small>
+            </div>
+
+            <div *ngIf="control.type==='date'" [class]="control.class"
               class="typecss" [hidden]="!control.visible">
               <div class="input-container">
                 <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"

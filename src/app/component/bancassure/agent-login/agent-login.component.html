@@ -26,7 +26,7 @@
                 <input type="text" placeholder="Username" formControlName="agentUserName">
               </div>
               <small
-                *ngIf="loginForm.controls['agentUserName'].dirty && loginForm.hasError('required', 'agentUserName')"
+                *ngIf="loginForm.controls['agentUserName'].touched && loginForm.hasError('required', 'agentUserName')"
                 class="text-danger">UserName is required</small>
             </div>
             <div class="input-item">
@@ -36,7 +36,7 @@
                 </i>
               </div>
               <small
-                *ngIf="loginForm.controls['agentUserName'].dirty && loginForm.hasError('required', 'agentPassword')"
+                *ngIf="loginForm.controls['agentPassword'].touched && loginForm.hasError('required', 'agentPassword')"
                 class="text-danger">Password is required</small>
             </div>
             <div class="submit-button">

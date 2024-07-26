@@ -76,6 +76,7 @@ export class AbhiDynamicFormComponent {
   isAHPAAdded: boolean = false;
   AHPARiskValue: any;
 
+  displayTaxList : any;
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -777,7 +778,8 @@ getBranchDetails(event: any, otherControl: any) {
       const dob = event.target.value;
       const dobArray = dob.split('-');
       const today = new Date;
-      if(parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) > today.getFullYear() || dobArray[0] == '')
+      // if(parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) > today.getFullYear() || dobArray[0] == '')
+      if(parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) >= today.getFullYear() || dobArray[0] == '')
       {
         this.dynamicFormGroup.get(control.dependentControls[0])?.reset();
       }
@@ -1176,7 +1178,8 @@ getBranchDetails(event: any, otherControl: any) {
     }
   }
   async onSubmit(control: any) {
-    if (this.dynamicFormGroup.valid) {
+    if (this.dynamicFormGroup.valid &&
+      (!this.dynamicFormGroup.get('nationality') || JSON.parse(this.dynamicFormGroup.get('nationality')?.value as any).value === 'Indian')) {
 
       //   // Flatten the form data
       if (this.dynamicFormGroup.get('insuredMemberDetails')) {
@@ -1317,7 +1320,6 @@ getBranchDetails(event: any, otherControl: any) {
     }
     else {
       console.log('Form is invalid',this.dynamicFormGroup);
-      console.log('Form is invalid',this.dynamicFormGroup);
       Object.keys(this.dynamicFormGroup.controls).forEach(field => {
         const control = this.dynamicFormGroup.get(field);
         if (control instanceof FormArray) {
@@ -1337,6 +1339,9 @@ getBranchDetails(event: any, otherControl: any) {
           control?.markAsTouched({ onlySelf: true });
         }
       });
+      if(this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
+        this.toast.warning({ detail: "WARNING", summary:"Indian residency is required",duration: 3000})
+      else
       this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
     }
 
@@ -1438,6 +1443,7 @@ getBranchDetails(event: any, otherControl: any) {
   }
 
   async getPremiumAmount(control: IFormControl) {
+    this.spinner.show();
     console.log("getPremiumAmount is getting called", this.formData);
     this.tenure1Total = 0;
     this.tenure2Total = 0;
@@ -1661,43 +1667,8 @@ getBranchDetails(event: any, otherControl: any) {
         this.addOnPremiumValueList = addOnPremiumResponse.totalPremiumValue;
 
         const roundedDiscountValues = addOnPremiumResponse.discountValueList.map((value: number) => Math.round(value));
-        const displayTaxList = addOnPremiumResponse.taxList.map((value: number) => Math.round(value));
-        console.log(displayTaxList);
-
-        this.form.formSections.forEach((section: any) => {
-          section.formControls.forEach((formControl: any) => {
-            if (formControl.name == 'totalPremium') {
-              if (formControl.radioOptions) {
-                formControl.radioOptions.forEach((option: any, index: number) => {
-                  if (index === 0) {
-                    // this.totalPremium = this.tenure1Total;
-                    option.label = `<b>Rs - ${this.tenure1Total}</b>`;
-                    formControl.value = this.tenure1Total;
-                    option.year = "1 year"
-                    section.toolTipText = `Tax: Rs ${displayTaxList[0]}`;
-                    option.value = this.tenure1Total;
-                    this.dynamicFormGroup.value.totalPremium = this.tenure1Total;
-                    this.selectedIndex = index;
-                  } else if (index === 1) {
-                    console.log("index 1 of radio changed");
-                    option.label = `<b>Rs - ${this.tenure2Total}</b>`;
-                    section.toolTipText = `Tax: Rs ${displayTaxList[0]}`;
-                    option.value = this.tenure2Total;
-                    option.year = "2 years"
-                    option.discount = "7.5% off"
-                  } else if (index === 2) {
-                    console.log("index 3 of radio changed");
-                    option.label = `<b>Rs - ${this.tenure3Total}</b>`;
-                    section.toolTipText = `Tax: Rs ${displayTaxList[0]}`;
-                    option.value = this.tenure3Total;
-                    option.year = "3 years"
-                    option.discount = "13% off"
-                  }
-                });
-              }
-            }
-          });
-        });
+        this.displayTaxList = addOnPremiumResponse.taxList.map((value: number) => Math.round(value));
+        console.log(this.displayTaxList);
 
         // this.dynamicFormGroup.get('premiumAmount')?.setValue(this.tenure1Total);
         this.changeDetectorRef.detectChanges();
@@ -2436,6 +2407,43 @@ getBranchDetails(event: any, otherControl: any) {
 
   lastPageRedirect() {
     this.router.navigate(['/portal/agent/viewproducts']);
+  }
+
+  setPremiumAmount(){
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name == 'totalPremium') {
+          if (formControl.radioOptions) {
+            formControl.radioOptions.forEach((option: any, index: number) => {
+              if (index === 0) {
+                // this.totalPremium = this.tenure1Total;
+                option.label = `<b>Rs - ${this.tenure1Total}</b>`;
+                formControl.value = this.tenure1Total;
+                option.year = "1 year"
+                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
+                option.value = this.tenure1Total;
+                this.dynamicFormGroup.value.totalPremium = this.tenure1Total;
+                this.selectedIndex = index;
+              } else if (index === 1) {
+                console.log("index 1 of radio changed");
+                option.label = `<b>Rs - ${this.tenure2Total}</b>`;
+                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
+                option.value = this.tenure2Total;
+                option.year = "2 years"
+                option.discount = "7.5% off"
+              } else if (index === 2) {
+                console.log("index 3 of radio changed");
+                option.label = `<b>Rs - ${this.tenure3Total}</b>`;
+                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
+                option.value = this.tenure3Total;
+                option.year = "3 years"
+                option.discount = "13% off"
+              }
+            });
+          }
+        }
+      });
+    });
   }
 
 }
