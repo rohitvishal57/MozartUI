@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, ViewEncapsulation, Component, ElementRef, Inject, Renderer2, ViewChild, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { IDynamicControl, IForm, IFormControl, IFormSections, ISubControl, IValidator } from 'src/app/interface/form.interface';
+import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
 import { DOCUMENT, DatePipe } from '@angular/common';
@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { Router } from '@angular/router';
+import { insured_member } from 'src/assets/styles/config/insured_member';
 
 @Component({
   selector: 'app-abhi-dynamic-form',
@@ -41,7 +42,7 @@ export class AbhiDynamicFormComponent {
   bankName: any;
   bankCity: any;
   formControls: IFormControl[] = [];
-  
+
   activeMemberTabIndex: number = 0;
   selectedIndex: number = -1;
   insuredMemberDetails: any = {};
@@ -76,7 +77,7 @@ export class AbhiDynamicFormComponent {
   isAHPAAdded: boolean = false;
   AHPARiskValue: any;
 
-  displayTaxList : any;
+  displayTaxList: any;
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -160,34 +161,36 @@ export class AbhiDynamicFormComponent {
         "formId": formId,
         "formConfig": "string"
       }
-       console.log(reqdata);
+      console.log(reqdata);
       this.service.getAllFormDataViaVerticalCode(reqdata).subscribe({
-        next:(res)=>{
+        next: (res) => {
           console.log(res);
           this.form = JSON.parse(res.formWithFormData);
           // this.formData = JSON.parse(res.formData);
-          console.log(this.form,this.formData);
+          console.log(this.form, this.formData);
           this.initializeForm();
         },
-        error:(err)=>{
+        error: (err) => {
           console.error(err)
         }
       })
 
       // }
-      
+
     }
-    
+
     else {
       this.service.getJSONFormViaVerticalCode(this.verticalCode, this.Code, this.insurancetypecode, this.productid, formId).subscribe({
         next: (res) => {
           this.form = JSON.parse(res.jsonformdata);
+          // this.form = insured_member;
           this.initializeForm();
         },
         error: (err) => {
           console.error(err);
         }
       })
+
     }
   }
 
@@ -209,16 +212,16 @@ export class AbhiDynamicFormComponent {
           }
 
           console.log(this.formData[control.name]);
-          
-          
-          this.formData[control.name].forEach((member: any,index : number)=>{
-            control.dynamicControls[index+1].forEach((innerControl: any)=>{
-              if(innerControl.name == 'relation'){
+
+
+          this.formData[control.name].forEach((member: any, index: number) => {
+            control.dynamicControls[index + 1].forEach((innerControl: any) => {
+              if (innerControl.name == 'relation') {
                 innerControl.value = member.relation
               }
             })
           })
-          
+
         }
         else {
           if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
@@ -228,7 +231,7 @@ export class AbhiDynamicFormComponent {
             //   control.value = JSON.parse(this.formData[control.name]).value;
             // }
             // else
-              control.value = this.formData[control.name];
+            control.value = this.formData[control.name];
           }
         }
       });
@@ -284,11 +287,22 @@ export class AbhiDynamicFormComponent {
             if (['text', 'email', 'password', 'number', 'date'].includes(control.type) && control.methodName) {
               this.callMethod(control.methodName, control, section);
             }
-            if (control.type == 'select' && control.methodName && control.options?.length == 0) {
-              console.log("inside if condition for bank");
+            if (control.type == 'select' && control.options) {
+
               
-              this.callMethod(control.methodName, control);
+              if (control.methodName && control.options?.length == 0)
+                this.callMethod(control.methodName, control);
+
+              if (control.options.length > 0) {
+                control.options.forEach((option: IOptions) => {
+                  if (option.selected) {
+                    control.value = option.id ? this.stringifyObject(option) : option.value;
+                  }
+                })
+              }
             }
+            console.log(control);
+            
 
             if (control.type == 'radio' && control.method) {
               this.callMethod(control.methodName, control);
@@ -444,11 +458,11 @@ export class AbhiDynamicFormComponent {
 
   checkValidations(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean {
     const myFormControl = parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name) : this.dynamicFormGroup.get(control.name)
-    return myFormControl?.invalid as boolean &&  myFormControl?.touched as unknown as boolean;
+    return myFormControl?.invalid as boolean && myFormControl?.touched as unknown as boolean;
   }
 
-  hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean{
-      return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
+  hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean {
+    return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
   }
 
   triggerFileInput(controlName: string) {
@@ -646,12 +660,12 @@ export class AbhiDynamicFormComponent {
 
   getAllBankDetails(control: any) {
     console.log("all bank details is getting called");
-    
-    console.log(control);
-    if(control.options.length <= 0){
 
-    // }
-    // else{
+    console.log(control);
+    if (control.options.length <= 0) {
+
+      // }
+      // else{
 
       this.service.getAllBankDetails().subscribe({
         next: (res) => {
@@ -669,45 +683,45 @@ export class AbhiDynamicFormComponent {
     console.log("Bank city is getting called");
     otherControl.value = "";
     otherControl.options = []; // Reset options to an empty array
-    
+
     console.log(event.target.value);
     const data = JSON.parse(event.target.value);
     this.bankName = data.id as string;
     const reqData = {
-        "bankName": this.bankName
+      "bankName": this.bankName
     };
-    
-    this.service.getBankCity(reqData).subscribe({
-        next: (res) => {
-            otherControl.options = [...res.AllBankCity]; // Create a new array to trigger change detection
-        },
-        error: (err) => {
-            console.error(err);
-        }
-    });
-}
 
-getBranchDetails(event: any, otherControl: any) {
+    this.service.getBankCity(reqData).subscribe({
+      next: (res) => {
+        otherControl.options = [...res.AllBankCity]; // Create a new array to trigger change detection
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  getBranchDetails(event: any, otherControl: any) {
     console.log("Branch details is getting called");
     otherControl.value = "";
     otherControl.options = []; // Reset options to an empty array
-    
+
     const data = JSON.parse(event.target.value);
     this.bankCity = data.id as string;
     const reqData = {
-        "bankName": this.bankName,
-        "city": this.bankCity
+      "bankName": this.bankName,
+      "city": this.bankCity
     };
-    
+
     this.service.getBranchDetails(reqData).subscribe({
-        next: (res) => {
-            otherControl.options = [...res.BranchDetails]; // Create a new array to trigger change detection
-        },
-        error: (err) => {
-            console.error(err);
-        }
+      next: (res) => {
+        otherControl.options = [...res.BranchDetails]; // Create a new array to trigger change detection
+      },
+      error: (err) => {
+        console.error(err);
+      }
     });
-}
+  }
 
 
   setIfscCode(event: any, otherControl: any) {
@@ -779,25 +793,24 @@ getBranchDetails(event: any, otherControl: any) {
       const dobArray = dob.split('-');
       const today = new Date;
       // if(parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) > today.getFullYear() || dobArray[0] == '')
-      if(parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) >= today.getFullYear() || dobArray[0] == '')
-      {
+      if (parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) >= today.getFullYear() || dobArray[0] == '') {
         this.dynamicFormGroup.get(control.dependentControls[0])?.reset();
       }
-      else{
+      else {
         if (parentControl != null && index != null) {
           if (dobArray[0] as number >= 1800) {
             const ageControl = this.dynamicFormGroup.get(parentControl.name);
             if (ageControl) {
               ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
               this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
-  
+
             }
           }
         }
         else {
           if (dobArray[0] as number >= 1800) {
             const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
-  
+
             if (dob && ageControl) {
               const age = this.calculateAge(dob);
               ageControl.setValue(age);
@@ -1178,6 +1191,8 @@ getBranchDetails(event: any, otherControl: any) {
     }
   }
   async onSubmit(control: any) {
+    console.log(this.dynamicFormGroup.value);
+    
     if (this.dynamicFormGroup.valid &&
       (!this.dynamicFormGroup.get('nationality') || JSON.parse(this.dynamicFormGroup.get('nationality')?.value as any).value === 'Indian')) {
 
@@ -1238,10 +1253,10 @@ getBranchDetails(event: any, otherControl: any) {
                 control.dynamicControls.push(tempDynamicControl)
               }
             }
-  
+
             console.log(this.formData[control.name]);
-  
-  
+
+
             this.formData[control.name].forEach((member: any, index: number) => {
               control.dynamicControls[index + 1].forEach((innerControl: any) => {
                 if (innerControl.name == 'relation') {
@@ -1249,12 +1264,12 @@ getBranchDetails(event: any, otherControl: any) {
                 }
               })
             })
-  
+
           }
           else {
             if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
               const value = this.formData[control.name];
-  
+
               if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
                 control.value = JSON.parse(this.formData[control.name]).value;
               }
@@ -1264,7 +1279,7 @@ getBranchDetails(event: any, otherControl: any) {
           }
         });
       });
-      console.log(this.form,this.formData);
+      console.log(this.form, this.formData);
       //   // for Store Form Data in Database
       let reqData = {
         "proposalNum": this.proposalNum,
@@ -1277,8 +1292,8 @@ getBranchDetails(event: any, otherControl: any) {
         "formName": this.formSequence[this.getFormIndexValue()].formName,
         "formConfig": JSON.stringify(this.formSequence),
         "productId": this.productid,
-        "formId":this.formSequence[this.getFormIndexValue()].formId,
-        "formWithFormData":JSON.stringify(this.form)
+        "formId": this.formSequence[this.getFormIndexValue()].formId,
+        "formWithFormData": JSON.stringify(this.form)
       };
       console.log(reqData);
 
@@ -1286,7 +1301,7 @@ getBranchDetails(event: any, otherControl: any) {
         next: (res) => {
           // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
           console.log(res);
-          
+
         },
         error: (err) => {
           console.error(err);
@@ -1301,7 +1316,7 @@ getBranchDetails(event: any, otherControl: any) {
         "productId": this.productid,
         "formName": this.formSequence[this.getFormIndexValue()].formName,
         "formData": JSON.stringify(this.formData),
-        "formId": this.formSequence[this.getFormIndexValue()].formId  
+        "formId": this.formSequence[this.getFormIndexValue()].formId
       }
       this.service.insertOrUpdateJourneyDetailsViaVerticalCode(reqdata).subscribe({
         next: (response) => {
@@ -1319,7 +1334,7 @@ getBranchDetails(event: any, otherControl: any) {
       }
     }
     else {
-      console.log('Form is invalid',this.dynamicFormGroup);
+      console.log('Form is invalid', this.dynamicFormGroup);
       Object.keys(this.dynamicFormGroup.controls).forEach(field => {
         const control = this.dynamicFormGroup.get(field);
         if (control instanceof FormArray) {
@@ -1335,14 +1350,14 @@ getBranchDetails(event: any, otherControl: any) {
             }
           });
         }
-        else{
+        else {
           control?.markAsTouched({ onlySelf: true });
         }
       });
-      if(this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-        this.toast.warning({ detail: "WARNING", summary:"Indian residency is required",duration: 3000})
+      if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
+        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
       else
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
     }
 
   }
@@ -1792,7 +1807,7 @@ getBranchDetails(event: any, otherControl: any) {
     reqData['leadId'] = this.leadId;
     reqData['pinCode'] = reqData.insuredMemberDetails[0].pincode;
     reqData['preIssuranceTime'] = new Date().toISOString().split('T')[1].split('.')[0];
-    console.log(reqData,this.formData);
+    console.log(reqData, this.formData);
     this.mainData = reqData
     var reqData1 = {
       code: this.Code,
@@ -1832,7 +1847,7 @@ getBranchDetails(event: any, otherControl: any) {
       });
       console.log(this.quoteNo);
       console.log(this.formData);
-      
+
       this.toast.success({ detail: "SUCCESS", summary: `Half Quotation Generated Successfully.${this.quoteNo}`, duration: 3000 });
       sessionStorage.setItem("mainData", this.encryptionService.encrypt(JSON.stringify(this.mainData)));
       this.spinner.hide();
@@ -1845,7 +1860,7 @@ getBranchDetails(event: any, otherControl: any) {
   async fullQuotation() {
     this.spinner.show();
     console.log(this.formData);
-    
+
 
     this.mainData = { ...this.mainData, ...this.dynamicFormGroup.value };
     this.mainData['quotationNumber'] = 'QSP' + this.quoteNo;
@@ -2360,7 +2375,7 @@ getBranchDetails(event: any, otherControl: any) {
 
       })
 
-      if(this.dynamicFormGroup.get('proposerState')?.value == ""){
+      if (this.dynamicFormGroup.get('proposerState')?.value == "") {
         this.service.getPinCodeByCity(this.dynamicFormGroup.get('proposerPincode')?.value).subscribe({
           next: (res) => {
             console.log(res)
@@ -2371,7 +2386,7 @@ getBranchDetails(event: any, otherControl: any) {
             console.error(err)
           }
         });
-        
+
       }
     }
     else if (this.formData.memberPolicyType == 'Family Floater') {
@@ -2394,12 +2409,12 @@ getBranchDetails(event: any, otherControl: any) {
     }
   }
 
-  getDependentControlValue(control: any){
+  getDependentControlValue(control: any) {
     const value = this.formData[control.dependentControls[0]];
     console.log(value);
-    
-    if(value && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))){
-        control.value = JSON.parse(value).value;
+
+    if (value && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
+      control.value = JSON.parse(value).value;
     }
     else
       control.value = value;
@@ -2409,7 +2424,7 @@ getBranchDetails(event: any, otherControl: any) {
     this.router.navigate(['/portal/agent/viewproducts']);
   }
 
-  setPremiumAmount(){
+  setPremiumAmount() {
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         if (formControl.name == 'totalPremium') {

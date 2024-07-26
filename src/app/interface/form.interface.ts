@@ -192,4 +192,5 @@ export interface IOptions {
   other?: any;
   value?: any;
   class?: string;
+  selected?: boolean;
 }
