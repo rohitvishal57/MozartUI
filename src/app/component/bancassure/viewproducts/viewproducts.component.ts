@@ -92,7 +92,7 @@ export class ViewproductsComponent implements OnInit {
       sessionStorage.clear();
       const res = await firstValueFrom(this.service.getFormConfigViaVerticalCode(item.verticalcode, item.agencycode, item.insurancetypecode, item.productid));
       console.log(res);
-      this.formSequence = JSON.parse(res.insureformconfiguration);
+      this.formSequence = JSON.parse(res.insureFormConfiguration);
       console.log(this.formSequence);
 
       if (this.formSequence != null && this.formSequence.length > 0) {

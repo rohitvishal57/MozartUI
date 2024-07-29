@@ -182,7 +182,7 @@ export class AbhiDynamicFormComponent {
     else {
       this.service.getJSONFormViaVerticalCode(this.verticalCode, this.Code, this.insurancetypecode, this.productid, formId).subscribe({
         next: (res) => {
-          this.form = JSON.parse(res.jsonformdata);
+          this.form = JSON.parse(res.jsonFormData);
           // this.form = insured_member;
           this.initializeForm();
         },
@@ -1817,6 +1817,7 @@ export class AbhiDynamicFormComponent {
       halfQuote: true,
       productType: reqData.productType
     };
+    console.log(reqData1);
 
     this.spinner.show();
 
