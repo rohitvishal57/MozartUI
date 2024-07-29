@@ -64,9 +64,10 @@
     }
 
     .product-list-container {
-        border-color: #B8B8B8;
-        border-width: 1px 1px 1px 1px;
-        border-style: solid;
+        // border-color: #B8B8B8;
+        // border-width: 1px 1px 1px 1px;
+        // border-style: solid;
+        border: none;
         padding: 14px;
         margin-top: 0px;
     }
@@ -110,27 +111,28 @@
 
     .product-list {
         display: flex;
-        justify-content: space-between;
+        flex-direction: row;
         }
 
-    .product-item {
-        display: inline-block;
-        font-size: 14px;
-        font-weight: 500;
-        color: rgb(21, 21, 99);
-        margin: 2%;
-    }
+    // .product-item {
+    //     display: inline-block;
+    //     font-size: 14px;
+    //     font-weight: 500;
+    //     color: rgb(21, 21, 99);
+    //     margin: 2%;
+    // }
     .product-class{
         height: 500px;
-        overflow-y: auto;
+        width: 10%;
+        padding: 1%;
     }
-    .get {
-        color: #C7222A;
-        border: 1px solid #C7222A;
-        border-radius: 18px;
-        padding: 0px 9px;
-        margin: 5px 15px;
-    }
+    // .get {
+    //     color: #C7222A;
+    //     border: 1px solid #C7222A;
+    //     border-radius: 18px;
+    //     padding: 0px 9px;
+    //     margin: 5px 15px;
+    // }
 
     .horizontal-line {
         width: 100%;
@@ -138,5 +140,42 @@
         background-color: #ccc;
         margin: 8px 0;
     }
+    .container {
+        // overflow-y: auto;
+        height: 100%;
+
+        .box {
+            padding: 1% 1%;
+            margin: 1% 4%;
+            // border: 1px solid #000000;
+            border-radius: 20px;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+    box-shadow: 0 2px 3px 0 rgba(73, 73, 73, 0.2), 0 3px 10px 0 rgba(73, 73, 73, 0.19);
+    transition: border-color 0.3s ease;
+            .product-item {
+                display: inline-block;
+                font-size: 16px;
+                font-weight: 700;
+                color: rgb(21, 21, 99);
+                margin: 2%;
+            }
+            p {
+                font-size: 12px;
+                margin: 2%;
+            }
+            .product-button{
+                float: right;
+                .get {
+                    color: #C7222A;
+                    border: 1px solid #C7222A;
+                    border-radius: 18px;
+                    padding: 7px 15px;
+                    margin: 5px 10px
+                }
+            }
+        }
+    }
+    
 }
 }

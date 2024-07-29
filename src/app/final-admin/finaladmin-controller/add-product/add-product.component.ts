@@ -40,7 +40,8 @@ export class AddProductComponent {
       productEndDate: ['', Validators.required],
       productFamily: [''],
       familyPlan: ['', Validators.required],
-      status: [true, Validators.required]
+      status: [true, Validators.required],
+      productdescription:['',Validators.required]
     });
   }
 
