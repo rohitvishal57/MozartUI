@@ -16,6 +16,7 @@
     padding: 6px 30px;
     background-color: #f7f7f7;
     border-radius: 15px 0px 0px 15px;
+    cursor: pointer;
 }
 
 .main-container .state-2 {
@@ -24,6 +25,7 @@
     background-color: #87CEEB;
     border: 1px solid #B8B8B8;
     border-radius: 0px 15px 15px 0px;
+    cursor: pointer;
 }
 
 .main-container .states {

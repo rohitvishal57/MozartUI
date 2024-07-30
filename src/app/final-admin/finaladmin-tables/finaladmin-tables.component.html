@@ -15,7 +15,7 @@
             <option *ngFor="let data of dropdownOptions" [value]="data.name">{{data.name}}</option>
         </select> -->
         <div class="custom-dropdown">
-            <p-dropdown id="customer" [options]="dropdownOptions" [(ngModel)]="selectedOption" optionLabel="name" (ngModelChange)="selectitem($event)" placeholder="Add"></p-dropdown>
+            <p-dropdown id="customer" [options]="dropdownOptions" [(ngModel)]="selectedOption" optionLabel="name" (ngModelChange)="selectitem($event)" placeholder="Choose"></p-dropdown>
         </div>
     </div> 
     <div class="top-box">
@@ -534,6 +534,13 @@
                         <p-inputSwitch formControlName="status"></p-inputSwitch>
                     </div>
                 </div>
+                <div class="col-md-12 typecss">
+                    <label>Product Description <span>*</span></label>
+                    <textarea formControlName="productdescription" class="line-border" rows="3"></textarea>
+                    <small *ngIf="ProductForm.controls['productdescription'].dirty && ProductForm.hasError('required', 'productdescription')" class="text-danger">
+                        * Product description is required
+                    </small>
+                </div> 
     
                 <br>
                 <div class="btn-container card-body">

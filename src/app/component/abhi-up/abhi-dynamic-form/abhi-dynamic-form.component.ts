@@ -2349,7 +2349,7 @@ export class AbhiDynamicFormComponent {
   }
 
   setProposerPincode() {
-    if (this.formData.memberPolicyType == 'Multi Individual') {
+    if (this.formData.memberPolicyType == 'Multi Individual' || this.formData.memberPolicyType=='Individual') {
       this.formData.insuredMemberDetails.forEach((member: any) => {
         console.log(member);
 

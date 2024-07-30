@@ -916,7 +916,7 @@ export class EditFormComponent {
         next: (res) => {
           console.log(res);
           
-          this.formSequence = JSON.parse(res.insureformconfiguration);
+          this.formSequence = JSON.parse(res.insureFormConfiguration);
         },
         error: (err) => {
           this.formSequence = [];
@@ -1141,8 +1141,8 @@ export class EditFormComponent {
     ).subscribe({
       next: (res) => {
         console.log(res);
-        this.jsonForm.get('jsonFormData').setValue(res.jsonformdata);
-        this.formJson = JSON.parse(res.jsonformdata);
+        this.jsonForm.get('jsonFormData').setValue(res.jsonFormData);
+        this.formJson = JSON.parse(res.jsonFormData);
         this.jsonForm.get('formName').setValue(form.formName);
         this.jsonForm.get('formId').setValue(form.formId);
         this.initializeJsonEditorForm();

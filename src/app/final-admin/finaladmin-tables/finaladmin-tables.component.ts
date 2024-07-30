@@ -47,7 +47,7 @@ export class FinaladminTablesComponent implements OnInit{
     // { name: 'Bank' },
     // { name: 'Insurance Type' },
     { name: 'Add Partner' },
-    { name: 'Product' },
+    { name: 'Add Product' },
     // { name: 'User' },
     // { name: 'Add Agents' },
     // { name: 'Add Form'},
@@ -107,7 +107,8 @@ export class FinaladminTablesComponent implements OnInit{
       productEndDate:['',Validators.required],
       productFamily:[''],
       familyPlan:['',Validators.required],
-      status:[true,Validators.required]
+      status:[true,Validators.required],
+      productdescription:['',Validators.required]
     });
     this.ChannelBankProductMapForm=this.fb.group({
       verticalCode:['',Validators.required],
@@ -313,7 +314,7 @@ export class FinaladminTablesComponent implements OnInit{
         console.log(option);
         this.router.navigate(['portal/finaladminDashboard/addInsuranceType'])
       }
-      else if (option.name == 'Product') {
+      else if (option.name == 'Add Product') {
         console.log(option);
         this.router.navigate(['portal/finaladminDashboard/addProduct'])
       }
@@ -378,6 +379,7 @@ export class FinaladminTablesComponent implements OnInit{
       this.ProductForm.get('productFamily')?.setValue(data.productFamily);
       this.ProductForm.get('familyPlan')?.setValue(data.familyPlan);
       this.ProductForm.get('status')?.setValue(data.status);
+      this.ProductForm.get('productdescription')?.setValue(data.productDescription);
     }
     if(table == 'Products Map'){
       this.visible5 = true;

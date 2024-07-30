@@ -93,11 +93,11 @@
                     </div>
                     <div class="col-md-6 typecss">
                         <label>Product Description <span>*</span></label>
-                        <input formControlName="productdescription" class="line-border" type="text">
-                        <small *ngIf="ProductForm.controls['productdescription'].dirty && ProductForm.hasError('required','productdescription')" class="text-danger">*
-                            Product description is required
+                        <textarea formControlName="productdescription" class="line-border" rows="3"></textarea>
+                        <small *ngIf="ProductForm.controls['productdescription'].dirty && ProductForm.hasError('required', 'productdescription')" class="text-danger">
+                            * Product description is required
                         </small>
-                    </div>
+                    </div>                    
                 </div>
 
                 <br>

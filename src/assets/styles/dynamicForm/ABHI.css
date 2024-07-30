@@ -1005,7 +1005,9 @@
     color: #fff;
 }
 
-
+/* .main-container .right-panel .col-md-6 {
+    width: 47%;
+} */
 
 /* :host::ng-deep .p-tabview .p-tabview-nav {
     li .p-tabview-nav-link {
