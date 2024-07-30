@@ -190,7 +190,7 @@
             <div *ngIf="control.type === 'multiSelectCheckbox'">
               <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label }}</label>
               <div [formGroupName]="control.name" class="checkbox-container" *ngIf="dynamicFormGroup.get(control.name)">
-                <div *ngFor="let option of control.selectCheckboxOptions" class="checkbox-wrapper col-md-3">
+                <div *ngFor="let option of control.selectCheckboxOptions" class="checkbox-wrapper col-12 col-md-6 col-lg-3">
                   <div *ngIf="dynamicFormGroup.get(control.name)?.get(option.value)">
                     <input type="checkbox" [formControlName]="option.value" id="{{option.value}}"
                       (change)="logSelection($event, option, control)">
