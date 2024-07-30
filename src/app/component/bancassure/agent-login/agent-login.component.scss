@@ -366,5 +366,7 @@
     }
     .login-container .login-form {
         width: 90%;
+        -webkit-backdrop-filter: blur(0px);
+        backdrop-filter: blur(0px);
     }
 }
