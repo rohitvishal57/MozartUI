@@ -1,13 +1,13 @@
 <div class="main-container" *ngIf="showHtmlContent==true">
   <!--MOBILE: Form Step Process Start-->
-  <!--<div class="left-nav-mobileMain">
+  <div class="left-nav-mobileMain">
       <div class="left-nav-mobileSubMain">
         <div class="stepTitle">Insured Details</div>
         <div class="stepCountMain">Step: <span class="stepCount">1 / 11</span></div>
       </div>
-  </div>-->
+  </div>
   <!--MOBILE: Form Step Process End-->
-  <div class="left-nav "> 
+  <div class="left-nav left-nav-hideMobile"> 
     <!--     style="cursor: pointer;"-->
     <div class="details" *ngFor="let case of formSequence;index as i;">
       <div class="step-count" (click)="addNavbar(i)">

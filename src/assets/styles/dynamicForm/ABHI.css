@@ -1140,6 +1140,14 @@
 .main-container .right-panel .thankYou .img1Popup {
     margin: 0;
 }
+.main-container .right-panel .inputField_Text:focus+label, 
+.main-container .right-panel .inputField_Text.has-value+label, 
+.main-container .right-panel .inputField_Select:focus+label, 
+.main-container .right-panel .inputField_Select.has-value+label
+{
+    background: rgb(255,255,255);
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(242,243,246,1) 100%);
+}
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
         width: 100%;
