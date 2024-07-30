@@ -102,7 +102,7 @@
             .header-left-cnt{
                 display: flex;
                 width: 70%;
-                gap: 15%;
+                gap: 15px;
                 a{
                     text-decoration: none;
                 }
@@ -339,4 +339,9 @@
 
 
 
+}
+@media (max-width:539px) {
+    .main-container .right-panel .main .sub-main img {
+        width: 100px;
+    }
 }

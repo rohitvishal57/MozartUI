@@ -185,3 +185,13 @@
         font: 600 1.6rem "Noto Sans", sans-serif;
         color: #EF7300;
         padding: 2rem 0 1.3rem 0; }
+
+  @media (max-width:767px) {
+    .card_Main {
+      flex-direction: column;
+    }
+    .card_Main .cardItem1,
+    .card_Main .cardItem2 .card_Main .card_innerItem:nth-child(1) {
+      max-width: 100%;
+    }
+  }      

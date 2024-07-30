@@ -964,7 +964,7 @@
 
 .main-container .right-panel .typecss {
     display: inline-table;
-    padding-right: 30px;
+    padding-right: 10px;
     padding-bottom: 30px;
     padding-left: 10px;
 }
@@ -1077,5 +1077,46 @@
     color: rgb(187, 23, 52) !important;
     text-decoration: none !important;
 }
-
+.main-container .left-nav {
+    width: 300px;
+}
+.main-container .right-panel {
+    width: 100%;
+}
+@media (max-width:912px) {
+    .main-container .left-nav {
+        width: 350px;
+    }
+}
+@media (max-width:767px) {
+    .main-container {
+        flex-direction: column;
+    }
+    .main-container .left-nav, .main-container .right-panel {
+        width: 90%;
+        margin: 15px auto;
+    }
+    .main-container .left-nav {
+        display: flex;
+        flex-direction: row;
+        overflow-y: auto;
+    }
+    .line-container {
+        display: none;
+    }
+    .main-container .left-nav .details {
+        min-height: initial;
+        padding: 5% 0 0 33px;
+        flex: 0 0 auto;
+    }
+    .main-container .left-nav .details:last-child {
+        padding: 5% 33px 0 33px;
+    }
+    .main-container .left-nav .details .step-count {
+        width: 37px;
+    }
+    .main-container .left-nav .details .step-label {
+        flex: 0 0 auto;
+    }
+}
 

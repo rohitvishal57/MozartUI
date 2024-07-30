@@ -1,8 +1,8 @@
 <div class="main-container" *ngIf="showHtmlContent==true">
-  <div class="left-nav">
+  <div class="left-nav"> 
     <!--     style="cursor: pointer;"-->
     <div class="details" *ngFor="let case of formSequence;index as i;">
-      <div (click)="addNavbar(i)">
+      <div class="step-count" (click)="addNavbar(i)">
         <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
           {{ i + 1 }}
         </button>
@@ -22,7 +22,7 @@
       <div *ngIf="i > getFormIndexValue() && i != formSequence.length-1" class="line-container">
         <div class="line2"></div>
       </div>
-      <div style="padding-left: 4%;">{{case.formName}}</div>
+      <div class="step-label" style="padding-left: 4%;">{{case.formName}}</div>
     </div>
   </div>
   <div class="right-panel">
@@ -380,7 +380,7 @@
                                     formControlName="{{ subControl.name }}" [type]="subControl.type"
                                     [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                     (change)="onInputChange($event, subControl)" readonly>
-                                  <label *ngIf="control.visibleLabel">{{ subControl.label ? (subControl.label | translate) : '' }}<span *ngIf="subControl.validators"></span></label>
+                                  <label *ngIf="control.visibleLabel">{{ subControl.label ? (subControl.label | translate) : '' }}<span *ngIf="subControl.validators">*</span></label>
                                 </div>
                                 <small *ngIf="checkValidations(subControl,control,i-1)"
                                   class="text-danger">{{ getValidationErrors(subControl,control,i-1)? (getValidationErrors(subControl,control,i-1)| translate) : ''}}

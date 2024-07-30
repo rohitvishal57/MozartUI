@@ -30,11 +30,11 @@
                 <div class="horizontal-line"></div>
             </div>
         </div> -->
-        <div  class="container" >
-            <div class="row">
+        <div  class="card_ProductList" >
+            <div class="cardRow">
 
                 <ng-container *ngFor="let item of ProductList">
-                    <div class="col-md-3 box">
+                    <div class="cardItem box">
                         <!-- {{ item | json}}  -->
                         <div class="product-item">{{item.productname}}</div>
                         <p>{{item.productdescription}}</p>
