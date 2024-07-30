@@ -318,9 +318,9 @@
     border-color: #ff0000;
 }
 
-.main-container .right-panel input[type="checkbox"]:checked+.custom-checkbox img {
+/* .main-container .right-panel input[type="checkbox"]:checked+.custom-checkbox img {
     filter: brightness(0) saturate(100%) invert(21%) sepia(80%) saturate(7477%) hue-rotate(342deg) brightness(93%) contrast(104%);
-}
+} */
 
 .main-container .right-panel .checkbox-container .col-md-3 {
     width: 23%;
