@@ -1148,6 +1148,9 @@
     background: rgb(255,255,255);
     background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(242,243,246,1) 100%);
 }
+.main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
+    padding: 10px 21px;
+}
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
         width: 100%;
