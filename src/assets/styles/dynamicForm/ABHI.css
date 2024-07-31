@@ -1170,6 +1170,14 @@
     .main-container .right-panel .big-button .select-button .bigbutton {
         width: 20%;
     }
+    .main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
+        margin: 6px 8px;
+    }
+}
+@media (max-width:768px) {
+    .main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
+        margin: 6px 3px;
+    }
 }
 @media (max-width:767px) {
     .main-container {
@@ -1220,6 +1228,16 @@
     }
     .main-container .right-panel .radio-button .radio-button {
         padding: 6px 30px 20px 4px;
+    }
+    .main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
+        float: none;
+        position: relative;
+    }
+    .main-container .right-panel .next-btn {
+        left: 115px;
+    }
+    .main-container .right-panel .back-btn {
+        left: -97px;
     }
 }
 
