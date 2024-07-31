@@ -262,7 +262,7 @@ export class AbhiDynamicFormComponent {
           }
           else {
             let controlValidators: any = [];
-            if (control.validators && control.visible == true) {
+            if (control.validators && control.visible == true && !control.disabled) {
               control.validators.forEach((val: IValidator) => {
                 if (val.validatorName === 'required') controlValidators.push(Validators.required);
                 if (val.validatorName === 'email') controlValidators.push(Validators.email);

@@ -138,8 +138,9 @@
     font-family: "Noto Sans", sans-serif;
 }
 
-.main-container .right-panel .inputField_Text {
-    font-size: 17px;
+.main-container .right-panel .inputField_Text,
+.main-container .right-panel .inputField_Text_disabled {
+    font-size: 15px;
 }
 
 /* .main-container .right-panel .inputField_Text,
@@ -200,7 +201,9 @@
 
 
 .main-container .right-panel .inputField_Text,
-.main-container .right-panel .inputField_Select {
+.main-container .right-panel .inputField_Select,
+.main-container .right-panel .inputField_Text_disabled
+ {
     font-weight: 400;
     font-family: "Noto Sans", sans-serif;
     height: 51px;
@@ -239,6 +242,18 @@
     border: none;
 }
 
+/*for disabled*/
+.main-container .right-panel .inputField_Text_disabled.disabled-has-value+label{
+    top: 3px;
+    left: 12px;
+    font-size: 12px;
+    color: #666;
+    background-color: #fff;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(242, 243, 246, 1) 100%);
+    z-index: 1;
+    padding: 0 3px;
+    border-radius: 2px;
+}
 
 .main-container .right-panel .inputField_Text:focus+label,
 .main-container .right-panel .inputField_Text.has-value+label,
@@ -271,7 +286,8 @@
 } */
 
 .main-container .right-panel .inputField_Text:focus,
-.main-container .right-panel .inputField_Select:focus {
+.main-container .right-panel .inputField_Select:focus,
+.main-container .right-panel .inputField_Text_disabled:focus {
     outline: none;
 }
 
