@@ -200,8 +200,7 @@
                       <img [src]="option.imagePath" alt="{{option.label}}">
                       <span>{{option.value?(option.value|translate):''}}</span>
                     </label>
-                    <button *ngIf="option.isIncrement" class="incrementbtn"
-                      (click)="incrementMember($event, control, option)">+</button>
+                    <input *ngIf="option.isIncrement" type="button" class="incrementbtn" value="+" />
                   </div>
                 </div>
               </div>
@@ -499,9 +498,8 @@
             </div>
 
             <!-- <div *ngIf="control.type==='button'"> -->
-              <button *ngIf="control.type==='button' && control.visible == true"
-                (click)="callMethod(control.methodName,control)" [class]="control.class">{{ control.label ?
-                (control.label | translate) : '' }}</button>
+              <input *ngIf="control.type==='button' && control.visible == true" type="button"
+              (click)="callMethod(control.methodName,control)" [class]="control.class" value="{{ control.label ? (control.label | translate) : '' }}">
 
             <div *ngIf="control.type === 'custom-radio'">
               <div class="radio-card-container">
