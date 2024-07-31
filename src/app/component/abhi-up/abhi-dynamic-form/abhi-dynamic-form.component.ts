@@ -1354,10 +1354,10 @@ export class AbhiDynamicFormComponent {
           control?.markAsTouched({ onlySelf: true });
         }
       });
-      if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
-        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
-      else
+      if(this.dynamicFormGroup.invalid)
         this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
+        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
     }
 
   }
@@ -1389,6 +1389,19 @@ export class AbhiDynamicFormComponent {
 
             } else if (control.name == dependentName) {
               control.visible = visibility;
+              if (visibility) {
+                let controlValidators: any = [];
+                control.validators?.forEach((val: IValidator) => {
+                  if (val.validatorName === 'required') controlValidators.push(Validators.required);
+                  if (val.validatorName === 'email') controlValidators.push(Validators.email);
+                  if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+                  if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+                  if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+                })
+                this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
+              }
+              else
+                this.dynamicFormGroup.get(control.name)?.clearValidators();
             }
           });
         });
