@@ -359,10 +359,14 @@
     }
 }
 @media (max-width:767px) {
-    .login-container .right-panel .background-image {
+    .login-container {
         height: 100%;
-        bottom: auto;
-        top: 30%;
+        position: relative;
+    }
+    .login-container .right-panel .background-image {
+        height: auto;
+        bottom: 0;
+        top: auto;
     }
     .login-container .login-form {
         width: 90%;

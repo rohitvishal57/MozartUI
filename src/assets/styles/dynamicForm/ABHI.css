@@ -1197,6 +1197,10 @@
     .main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
         margin: 6px 3px;
     }
+    .main-container .right-panel .typecss {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
 }
 @media (max-width:767px) {
     .main-container {
