@@ -197,7 +197,7 @@
                     <input type="checkbox" [formControlName]="option.value" id="{{option.value}}"
                       (change)="logSelection($event, option, control)">
                     <label for="{{option.value}}" class="custom-checkbox">
-                      <img [src]="option.imagePath" alt="{{option.label}}">
+                      <img [src]="service.baseCssUrl + option.imagePath" alt="{{option.label}}">
                       <span>{{option.value?(option.value|translate):''}}</span>
                     </label>
                     <input *ngIf="option.isIncrement" type="button" class="incrementbtn" value="+" />

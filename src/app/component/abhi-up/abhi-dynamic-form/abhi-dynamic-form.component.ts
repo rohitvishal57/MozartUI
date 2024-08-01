@@ -3,12 +3,12 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
-import { DOCUMENT, DatePipe } from '@angular/common';
+import { DOCUMENT, DatePipe, Location } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
-import { Router } from '@angular/router';
+import {Router } from '@angular/router';
 import { insured_member } from 'src/assets/styles/config/insured_member';
 
 @Component({
@@ -79,7 +79,6 @@ export class AbhiDynamicFormComponent {
 
   displayTaxList: any;
 
-
   constructor(private renderer: Renderer2, private el: ElementRef,
     public service: CommonService, private loginService: LoginService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
     private toast: NgToastService, private datePipe: DatePipe, private changeDetectorRef: ChangeDetectorRef,
@@ -109,6 +108,7 @@ export class AbhiDynamicFormComponent {
     this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
   }
+
   initializeRequiredData() {
 
     if (sessionStorage.getItem('insuredMemberDetails') != null)
@@ -1508,6 +1508,15 @@ export class AbhiDynamicFormComponent {
         member.relationshipType = relationshipValue.value;
         member['relationShip'] = relationShip;
         member['prodCd'] = ''
+        if (this.formData.memberPolicyType == 'Family Floater') {
+          member['sumInsured'] = this.formData.memberSumInsured;
+          member['zone'] = this.formData.zone;
+          member['city'] = this.formData.city;
+          member.prodCd = this.formData.memberPlan;
+          member.memberAge = maxAge;
+          member['pincode'] = this.formData.pincode;
+          // member['preExistingDisease'] = "no";
+        }
       });
 
 

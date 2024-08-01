@@ -28,9 +28,9 @@ export class EditFormComponent {
   showFormJson: boolean = false;
 
   Control: any;
-  indexI: any=0;
-  indexJ: any=0;
-  indexK: any=0;
+  indexI: any = 0;
+  indexJ: any = 0;
+  indexK: any = 0;
   Section: any;
   DynamicControl: any;
   jsonFormData: any;
@@ -56,9 +56,9 @@ export class EditFormComponent {
   classList: string[] = [''];
   selectedClass: string = '';
 
-  masterFormList:any=[]
-  formName:any;
-  formId:any;
+  masterFormList: any = []
+  formName: any;
+  formId: any;
 
   formJson: any = null
   formModels: any[] = [
@@ -106,9 +106,9 @@ export class EditFormComponent {
       "value": "",
       "class": "col-md-4 control",
       "disabled": false,
-      "otherControlName":"",
+      "otherControlName": "",
       "subType": "",
-      "methodName":"",
+      "methodName": "",
       "controlName": "",
       "bigFont": false,
       "placeholder": "",
@@ -337,7 +337,7 @@ export class EditFormComponent {
       "visibleLabel": true,
       "type": "select",
       "class": "col-md-4 control",
-      "value": "Active",
+      "value": "",
       "methodName": "",
       "subType": "",
       "otherControlName": "",
@@ -427,15 +427,15 @@ export class EditFormComponent {
           "id": 1,
           "name": "Option 1",
           "value": "Value1",
-          "isIncrement":true,
-          "imagePath":""
+          "isIncrement": true,
+          "imagePath": ""
         },
         {
           "id": 2,
           "name": "Option 2",
           "value": "Value2",
-          "isIncrement":true,
-          "imagePath":""
+          "isIncrement": true,
+          "imagePath": ""
         }
       ]
     },
@@ -448,16 +448,16 @@ export class EditFormComponent {
       "value": "",
       "class": "col-md-6",
       "validators": [
-          {
-              "validatorName": "required",
-              "required": true,
-              "message": "Mobile No is required field."
-          },
-          {
-              "validatorName": "pattern",
-              "pattern": "^[6-9]\\d{0,10}$",
-              "message": "Mobile No is not valid"
-          }
+        {
+          "validatorName": "required",
+          "required": true,
+          "message": "Mobile No is required field."
+        },
+        {
+          "validatorName": "pattern",
+          "pattern": "^[6-9]\\d{0,10}$",
+          "message": "Mobile No is not valid"
+        }
       ]
     }
   ]
@@ -477,18 +477,18 @@ export class EditFormComponent {
     { "iconClass": "fa pull-left fa-plus" },
     { "iconClass": "fa pull-left fa-link" },
     { "iconClass": "fa pull-left fa-stop" },
-    { "iconClass": "fa-solid fa-bold"},
-    { "iconClass": "fa-solid fa-paragraph"},
-    { "iconClass": "fa fa-thin fa-xmark"},
+    { "iconClass": "fa-solid fa-bold" },
+    { "iconClass": "fa-solid fa-paragraph" },
+    { "iconClass": "fa fa-thin fa-xmark" },
     { "iconClass": "fa pull-left fa-phone" },
     { "iconClass": "fa pull-left fa-bars" },
     { "iconClass": "fa pull-left fa-phone" }
-]
+  ]
 
 
   constructor(private fb: FormBuilder, private confirmationService: ConfirmationService, private toast: NgToastService,
     private messageService: MessageService, private commonService: CommonService, private router: Router,
-    private http: HttpClient,private adminService:AdminService) {
+    private http: HttpClient, private adminService: AdminService) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.modes = ['code', 'text', 'tree', 'view'];
     this.editorOptions.mode = 'code';
@@ -509,7 +509,7 @@ export class EditFormComponent {
     this.insuranceTypeCode = history.state.insuranceTypeCode;
     this.productId = history.state.productId;
     console.log(history.state);
-    
+
     this.jsonForm = this.fb.group({
       Code: [this.bankCode, Validators.required],
       insuranceTypeCode: [this.insuranceTypeCode, Validators.required],
@@ -520,13 +520,13 @@ export class EditFormComponent {
     });
     if (history.state.form) {
       console.log('anekant');
-      this.formJson = history.state.form;        
+      this.formJson = history.state.form;
       this.jsonForm.get('formName')?.setValue(history.state.formName);
       this.jsonForm.get('formId')?.setValue(history.state.formId);
       this.formName = history.state.formName;
       this.formId = history.state.formId;
     }
-    else{
+    else {
       this.formJson = this.jsonForm.jsonFormData;
     }
     this.masterFormSequence();
@@ -539,7 +539,7 @@ export class EditFormComponent {
     console.log(this.classList);
   }
   navigateBack(verticalCode: any) {
-    if(verticalCode == 12){
+    if (verticalCode == 12) {
       this.router.navigate(['/portal/finaladminDashboard/addBank']);
     } else if (verticalCode == 13) {
       this.router.navigate(['/portal/finaladminDashboard/addAgency']);
@@ -573,7 +573,7 @@ export class EditFormComponent {
     this.formJson.formSections.forEach((section: any, i: number) => {
       this.visibleSection.push(false);
       this.visibleControl.push([]);
-      section.formControls.forEach((control: any,j:number) => {
+      section.formControls.forEach((control: any, j: number) => {
         this.visibleControl[i].push(false);
         this.visibleDynamicControl[i].push([]);
         control.dynamicControls.forEach((dynamicControl: any, k: number) => {
@@ -581,7 +581,7 @@ export class EditFormComponent {
         });
       });
     });
-    console.log(this.visibleSection,this.visibleControl,this.visibleDynamicControl);
+    console.log(this.visibleSection, this.visibleControl, this.visibleDynamicControl);
   }
 
   initializeForm() {
@@ -613,8 +613,8 @@ export class EditFormComponent {
       section.formControls.forEach((control: any, j: number) => {
         this.visibleControl[i].push(false);
         this.visibleDynamicControl[i].push([]);
-        if(control.dynamicControls){
-          for(let k=1;k<=control.dynamicControls.length;k++){
+        if (control.dynamicControls) {
+          for (let k = 1; k <= control.dynamicControls.length; k++) {
             console.log(control.dynamicControls);
             this.visibleDynamicControl[i][j].push(false);
           }
@@ -625,30 +625,30 @@ export class EditFormComponent {
     console.log(this.visibleSection);
     console.log(this.visibleControl);
     console.log(this.visibleDynamicControl);
-    if(this.formJson?.formSections){
-      this.dynamicFormGroup=this.fb.group({});
-      this.formJson.formSections.forEach((section:IFormSections) => {
+    if (this.formJson?.formSections) {
+      this.dynamicFormGroup = this.fb.group({});
+      this.formJson.formSections.forEach((section: IFormSections) => {
         section.formControls.forEach((control: IFormControl) => {
-          if(control.dynamicControls){
-            let tempFormArray= this.fb.array([]);
-            for(let i=1;i<control.dynamicControls.length;i++){
+          if (control.dynamicControls) {
+            let tempFormArray = this.fb.array([]);
+            for (let i = 1; i < control.dynamicControls.length; i++) {
               tempFormArray.push(this.initializeDynamicFormControls(control.dynamicControls[i]))
             }
             this.dynamicFormGroup.addControl(control.name, tempFormArray);
           }
-          else{
-            let controlValidators : any = [];
-            if(control.validators){
-              control.validators.forEach((val:IValidator)=> {
-                if(val.validatorName === 'required') controlValidators.push(Validators.required);
-                if(val.validatorName === 'email') controlValidators.push(Validators.email);
-                if(val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
-                if(val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
-                if(val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+          else {
+            let controlValidators: any = [];
+            if (control.validators) {
+              control.validators.forEach((val: IValidator) => {
+                if (val.validatorName === 'required') controlValidators.push(Validators.required);
+                if (val.validatorName === 'email') controlValidators.push(Validators.email);
+                if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+                if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+                if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
               })
             }
-            
-            this.dynamicFormGroup.addControl(control.name, new FormControl(control.value,controlValidators));
+
+            this.dynamicFormGroup.addControl(control.name, new FormControl(control.value, controlValidators));
           }
         });
       });
@@ -713,7 +713,7 @@ export class EditFormComponent {
     console.log("dragover");
   }
   onDrop(event: any) {
-    console.log(event,this.draggedFieldIndex);
+    console.log(event, this.draggedFieldIndex);
     if (this.formJson == null && this.draggedFieldIndex == 0 && (event.dropEffect === "copy" || event.dropEffect === "move")) {
       if (event.dropEffect === "copy") {
         this.formJson = event.data;
@@ -729,7 +729,7 @@ export class EditFormComponent {
     }
   }
   onDropControl(event: any, index: number) {
-    console.log(event, index,this.draggedFieldIndex);
+    console.log(event, index, this.draggedFieldIndex);
     if (this.draggedFieldIndex == 1 && (event.dropEffect === "copy" || event.dropEffect === "move")) {
       if (event.dropEffect === "copy") {
         this.formJson.formSections.push(event.data);
@@ -746,8 +746,8 @@ export class EditFormComponent {
       }
     }
   }
-  onDropDynamicControl(event: any, i: number,j:number) {
-    console.log(event, i,j,this.draggedFieldIndex);
+  onDropDynamicControl(event: any, i: number, j: number) {
+    console.log(event, i, j, this.draggedFieldIndex);
     if ((this.draggedFieldIndex == 2 || this.draggedFieldIndex == 3) && (event.dropEffect === "copy" || event.dropEffect === "move")) {
       if (event.dropEffect === "copy") {
         this.formJson.formSections[i].formControls.push(event.data);
@@ -792,7 +792,7 @@ export class EditFormComponent {
     this.visibleDynamicControl[this.indexI][this.indexJ][this.indexK] = false;
   }
   onDynamicControlEdit(i: number, j: number, k: number, control: any) {
-    console.log(i,j,k,control,this.visibleDynamicControl);
+    console.log(i, j, k, control, this.visibleDynamicControl);
     this.visibleDynamicControl[i][j][k] = true;
     this.DynamicControl = control;
     this.indexI = i;
@@ -803,39 +803,140 @@ export class EditFormComponent {
     this.visibleControl[this.indexI][this.indexJ] = false;
   }
   removeForm() {
-    this.formJson = null;
-    this.Section = null;
-    this.Control = null;
-    this.DynamicControl = null;
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to delete?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.formJson = null;
+        this.Section = null;
+        this.Control = null;
+        this.DynamicControl = null;
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Rejected',
+              detail: 'You have rejected',
+            });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Cancelled',
+              detail: 'You have cancelled',
+            });
+            break;
+        }
+      },
+    });
+
   }
   removeSection(i: number, section: any) {
-    this.formJson.formSections.splice(i, 1);
-    this.visibleSection.splice(i, 1);
-    this.visibleControl.splice(i, 1);
-    this.visibleDynamicControl.splice(i, 1);
-    this.Section = section;
-    this.Control = null;
-    this.DynamicControl = null;
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to delete?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.formJson.formSections.splice(i, 1);
+        this.visibleSection.splice(i, 1);
+        this.visibleControl.splice(i, 1);
+        this.visibleDynamicControl.splice(i, 1);
+        this.Section = section;
+        this.Control = null;
+        this.DynamicControl = null;
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Rejected',
+              detail: 'You have rejected',
+            });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Cancelled',
+              detail: 'You have cancelled',
+            });
+            break;
+        }
+      },
+    });
     console.log(this.visibleFormEdit);
     console.log(this.visibleSection);
     console.log(this.visibleControl);
     console.log(this.visibleDynamicControl);
   }
   removeControl(i: number, j: number, control: any) {
-    this.formJson.formSections[i].formControls.splice(j, 1);
-    this.visibleControl[i].splice(j, 1);
-    this.visibleDynamicControl[i].splice(j, 1);
-    this.Control = control;
-    this.DynamicControl = null;
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to delete?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.formJson.formSections[i].formControls.splice(j, 1);
+        this.visibleControl[i].splice(j, 1);
+        this.visibleDynamicControl[i].splice(j, 1);
+        this.Control = control;
+        this.DynamicControl = null;
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Rejected',
+              detail: 'You have rejected',
+            });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Cancelled',
+              detail: 'You have cancelled',
+            });
+            break;
+        }
+      },
+    });
     console.log(this.visibleFormEdit);
     console.log(this.visibleSection);
     console.log(this.visibleControl);
     console.log(this.visibleDynamicControl);
   }
   removeDynamicControl(i: number, j: number, k: number, control: any) {
-    this.formJson.formSections[i].formControls[j].dynamicControls[0].splice(k, 1);
-    this.visibleDynamicControl[i][j].splice(k, 1);
-    this.DynamicControl = control;
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to delete?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.formJson.formSections[i].formControls[j].dynamicControls[0].splice(k, 1);
+        this.visibleDynamicControl[i][j].splice(k, 1);
+        this.DynamicControl = control;
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Rejected',
+              detail: 'You have rejected',
+            });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({
+              severity: 'warn',
+              summary: 'Cancelled',
+              detail: 'You have cancelled',
+            });
+            break;
+        }
+      },
+    });
     console.log(this.visibleFormEdit);
     console.log(this.visibleSection);
     console.log(this.visibleControl);
@@ -915,7 +1016,7 @@ export class EditFormComponent {
       .subscribe({
         next: (res) => {
           console.log(res);
-          
+
           this.formSequence = JSON.parse(res.insureFormConfiguration);
         },
         error: (err) => {
@@ -1023,7 +1124,7 @@ export class EditFormComponent {
       insuranceTypeCode: this.insuranceTypeCode,
       productId: this.productId,
       insureFormConfiguration: JSON.stringify(this.formSequence),
-      verticalCode : this.verticalCode
+      verticalCode: this.verticalCode
     };
     this.commonService.insertFormConfig(req).subscribe({
       next: (res) => {
@@ -1040,32 +1141,32 @@ export class EditFormComponent {
     // this.getFormSequence();
   }
 
-  selectradio(inputcontrol: any,event:any) {
-    console.log(inputcontrol,this.indexI,this.indexJ,this.indexK);
+  selectradio(inputcontrol: any, event: any) {
+    console.log(inputcontrol, this.indexI, this.indexJ, this.indexK);
     let index = this.formModels.findIndex((control) => control.type === inputcontrol.type);
     console.log(index);
-    if(event.target.value === 'hide'){
+    if (event.target.value === 'hide') {
       console.log('hide');
       delete this.formJson.formSections[this.indexI].formControls[this.indexJ].dynamicControls[0][this.indexK].validators;
       console.log(this.formJson.formSections[this.indexI].formControls[this.indexJ].dynamicControls[0][this.indexK]);
     }
-    else if(event.target.value === 'view'){
+    else if (event.target.value === 'view') {
       console.log('show');
       this.formJson.formSections[this.indexI].formControls[this.indexJ].dynamicControls[0][this.indexK].validators = this.formModels[index].validators;
       console.log(this.formJson.formSections[this.indexI].formControls[this.indexJ].dynamicControls[0][this.indexK]);
 
     }
   }
-  selectcontrolradio(inputcontrol: any,event:any) {
-    console.log(inputcontrol,this.indexI,this.indexJ,this.indexK);
+  selectcontrolradio(inputcontrol: any, event: any) {
+    console.log(inputcontrol, this.indexI, this.indexJ, this.indexK);
     let index = this.formModels.findIndex((control) => control.type === inputcontrol.type);
     console.log(index);
-    if(event.target.value === 'hide'){
+    if (event.target.value === 'hide') {
       console.log('hide');
       delete this.formJson.formSections[this.indexI].formControls[this.indexJ].validators;
       console.log(this.formJson.formSections[this.indexI].formControls[this.indexJ]);
     }
-    else if(event.target.value === 'view'){
+    else if (event.target.value === 'view') {
       console.log('show');
       this.formJson.formSections[this.indexI].formControls[this.indexJ].validators = this.formModels[index].validators;
       console.log(this.formJson.formSections[this.indexI].formControls[this.indexJ]);
@@ -1102,26 +1203,35 @@ export class EditFormComponent {
     });
   }
   async getPreview(form: any) {
-    console.log(form,this.formJson);
+    console.log(form, this.formJson);
     // try {
     //   console.log(form);
     //   await this.getFormDataFromFormSequence(form);
     //   console.log(this.jsonForm.value.jsonFormData);
-      // const jsonFormData = JSON.stringify(this.jsonForm.value.jsonFormData);
-      // const url = `/portal/finaladminDashboard/finalAdminPreview?form=${jsonFormData}?bankCode=${this.bankCode}?verticalCode=${this.verticalCode}?insuranceTypeCode=${this.insuranceTypeCode}?productId=${this.productId}`;
-      // window.open(url, '_blank');
+    // const jsonFormData = JSON.stringify(this.jsonForm.value.jsonFormData);
+    // const url = `/portal/finaladminDashboard/finalAdminPreview?form=${jsonFormData}?bankCode=${this.bankCode}?verticalCode=${this.verticalCode}?insuranceTypeCode=${this.insuranceTypeCode}?productId=${this.productId}`;
+    // window.open(url, '_blank');
+    if (this.formJson) {
       this.router.navigate(['/portal/finaladminDashboard/formPreview'],
         {
           state: {
             form: this.formJson,
-            formName:this.formName,
-            formId:this.formId,
+            formName: this.jsonForm.get('formName').value,
+            formId: this.jsonForm.get('formId').value,
             bankCode: history.state.bankCode,
             verticalCode: history.state.verticalCode,
             insuranceTypeCode: history.state.insuranceTypeCode,
             productId: history.state.productId
           }
         });
+    }
+    else {
+      this.toast.warning({
+        detail: 'WARNING',
+        summary: 'Select The Form',
+        duration: 4000,
+      });
+    }
 
     // } catch (error) {
     //   console.error(error);
@@ -1134,9 +1244,9 @@ export class EditFormComponent {
     console.log(form.formId, form.formName);
     this.commonService.getJSONFormViaVerticalCode(
       this.verticalCode,
-        this.bankCode,
-        this.insuranceTypeCode,
-        this.productId,
+      this.bankCode,
+      this.insuranceTypeCode,
+      this.productId,
       form.formId
     ).subscribe({
       next: (res) => {
@@ -1209,23 +1319,23 @@ export class EditFormComponent {
     console.log(event.target.value);
     this.selectedClass = event.target.value;
   }
-  async masterFormSequence(){
+  async masterFormSequence() {
     return await this.adminService.GetMasterFormNames().subscribe({
-      next:(res)=>{
+      next: (res) => {
         this.masterFormList = res
         console.log(this.masterFormList);
       },
-      error:(err)=>{
+      error: (err) => {
         console.error(err)
       }
     })
   }
-  async GetMasterFormByFormName(event:any){
+  async GetMasterFormByFormName(event: any) {
     console.log(event.target.value);
     return await this.adminService.GetMasterFormByFormName(event.target.value).subscribe({
-      next : (res)=>{
+      next: (res) => {
         console.log(res);
-        console.log(res.formName,res.formId);
+        console.log(res.formName, res.formId);
         this.jsonForm.get('formName')?.setValue(res.formName);
         this.jsonForm.get('formId')?.setValue(res.formId);
         this.formName = res.formName;
@@ -1233,7 +1343,7 @@ export class EditFormComponent {
         this.formJson = JSON.parse(res.jsonFormData)
         this.initializeForm();
       },
-      error:(err)=>{
+      error: (err) => {
         console.error(err)
       }
     })

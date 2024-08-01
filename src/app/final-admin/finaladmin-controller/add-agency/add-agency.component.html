@@ -75,7 +75,7 @@
 
                 <div class="typecss" *ngIf="selectedOption == 'option2'">
                     <label>Partner Name <span>*</span></label>
-                    <select formControlName="agencyCode" class="line-border" aria-label="Default select example" >
+                    <select formControlName="agencyCode" class="line-border" aria-label="Default select example" (change)="onselectAgency($event)">
                         <option selected value="">Choose...</option>
                         <ng-container *ngFor="let opt of agencyOptions">
                         <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
@@ -101,7 +101,7 @@
 
                 <div class="typecss" *ngIf="selectedOption == 'option2'">
                     <label>Product Name <span>*</span></label>
-                    <select formControlName="productId" class="line-border" aria-label="Default select example">
+                    <select formControlName="productId" class="line-border" aria-label="Default select example" >
                         <option selected value="">Choose...</option>
                         <ng-container *ngFor="let opt of productOptions">
                             <option [value]="opt.productId">{{ opt.productName}}</option>

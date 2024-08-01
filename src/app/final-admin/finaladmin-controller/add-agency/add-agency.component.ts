@@ -125,7 +125,7 @@ export class AddAgencyComponent {
         next: (res)=>{
           this.allInsuranceType=res.filter((insurance:any)=>insurance.status==true);
           this.insuranceTypeOptions = this.allInsuranceType;
-          this.onselectAgency(101);
+          // this.onselectAgency(101);
         },
         error: (err => {
           console.error(err); 
@@ -224,7 +224,7 @@ export class AddAgencyComponent {
   }
 
   onselectAgency(event:any){
-    console.log(event);
+    console.log(event.target.value);
     
     // const excludedInsuranceTypeCodes = this.allAgencyInsuranceMapData
     // .filter(map => {
@@ -241,25 +241,27 @@ export class AddAgencyComponent {
     console.log(this.allAgencyInsuranceMapData,this.allAgency,this.allChannel,this.allInsuranceType);
     console.log(this.allAgencyInsuranceProductMapData,this.allProduct);
  
-    const excludedProduct = this.allAgencyInsuranceProductMapData
-      .filter(map => {
-        const verticalCodeMatch = map.verticalCode == this.AgencyInsuranceMapForm.get('verticalCode')?.value;
-        const bankCodeMatch = map.bankCode == this.AgencyInsuranceMapForm.get('agencyCode')?.value;
-        const insuranceTypeCodeMatch = map.insuranceTypeCode == this.AgencyInsuranceMapForm.get('insuranceTypeCode')?.value;
-        return verticalCodeMatch && bankCodeMatch && insuranceTypeCodeMatch;
-      })
-      .map(filteredMap => filteredMap.productId);
-      console.log(excludedProduct);
+    // const excludedProduct = this.allAgencyInsuranceProductMapData
+    //   .filter(map => {
+    //     const verticalCodeMatch = map.verticalCode == this.AgencyInsuranceMapForm.get('verticalCode')?.value;
+    //     const bankCodeMatch = map.bankCode == this.AgencyInsuranceMapForm.get('agencyCode')?.value;
+    //     const insuranceTypeCodeMatch = map.insuranceTypeCode == this.AgencyInsuranceMapForm.get('insuranceTypeCode')?.value;
+    //     return verticalCodeMatch && bankCodeMatch && insuranceTypeCodeMatch;
+    //   })
+    //   .map(filteredMap => filteredMap.productId);
+    //   console.log(excludedProduct);
     // let filteredProduct = this.allProduct.filter(product => {
     //   const insuranceTypeName = this.allInsuranceType.filter(insurance => insurance.insuranceTypeCode == event)[0].insuranceType;
     //   return !excludedProduct.includes(product.productId) && product.insuranceType == insuranceTypeName;
     // });
-    let mappedProductIds = new Set(this.allAgencyInsuranceProductMapData.map(product => product.productId));
+    let agencyCode = event.target.value;
+    let mappedProductIds = new Set(this.allAgencyInsuranceProductMapData.filter(product => product.agencyCode == agencyCode)
+    .map(product => product.productId));
 
 // Filter allproducts to include only those not in agencymappedproducts
   let filteredProducts = this.allProduct.filter(product => !mappedProductIds.has(product.productId));
     this.productOptions = filteredProducts;
-    console.log(this.productOptions,filteredProducts);
+    console.log(this.productOptions,filteredProducts,mappedProductIds);
   }
   
 
