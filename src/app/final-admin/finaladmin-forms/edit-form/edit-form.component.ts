@@ -534,7 +534,7 @@ export class EditFormComponent {
     console.log(this.formJson);
     this.initializeJsonEditorForm();
     this.getFormSequence();
-    const cssUrl = 'assets/styles/dynamicForm/yesBank.css';
+    const cssUrl = 'assets/styles/dynamicForm/ABHI.css';
     this.loadCssFile(cssUrl);
     console.log(this.classList);
   }
