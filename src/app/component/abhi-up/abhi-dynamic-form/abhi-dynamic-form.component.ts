@@ -165,7 +165,7 @@ export class AbhiDynamicFormComponent {
       this.service.getAllFormDataViaVerticalCode(reqdata).subscribe({
         next: (res) => {
           console.log(res);
-          this.form = JSON.parse(res.formWithFormData);
+          this.form = JSON.parse(res.jsonForm);
           // this.formData = JSON.parse(res.formData);
           console.log(this.form, this.formData);
           this.initializeForm();
@@ -1241,44 +1241,44 @@ export class AbhiDynamicFormComponent {
         }
       }
 
-      this.form.formSections.forEach((section: any) => {
-        section.formControls.forEach((control: any) => {
-          if (control.dynamicControls && control.visible == true && this.formData[control.name]) {
-            if (this.formData[control.name]) {
-              control.value = this.formData[control.name].length;
-            }
-            for (let i = 1; i <= control.value; i++) {
-              if (!control.dynamicControls[i]) {
-                let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
-                control.dynamicControls.push(tempDynamicControl)
-              }
-            }
+      // this.form.formSections.forEach((section: any) => {
+      //   section.formControls.forEach((control: any) => {
+      //     if (control.dynamicControls && control.visible == true && this.formData[control.name]) {
+      //       if (this.formData[control.name]) {
+      //         control.value = this.formData[control.name].length;
+      //       }
+      //       for (let i = 1; i <= control.value; i++) {
+      //         if (!control.dynamicControls[i]) {
+      //           let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
+      //           control.dynamicControls.push(tempDynamicControl)
+      //         }
+      //       }
 
-            console.log(this.formData[control.name]);
+      //       console.log(this.formData[control.name]);
 
 
-            this.formData[control.name].forEach((member: any, index: number) => {
-              control.dynamicControls[index + 1].forEach((innerControl: any) => {
-                if (innerControl.name == 'relation') {
-                  innerControl.value = member.relation
-                }
-              })
-            })
+      //       this.formData[control.name].forEach((member: any, index: number) => {
+      //         control.dynamicControls[index + 1].forEach((innerControl: any) => {
+      //           if (innerControl.name == 'relation') {
+      //             innerControl.value = member.relation
+      //           }
+      //         })
+      //       })
 
-          }
-          else {
-            if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
-              const value = this.formData[control.name];
+      //     }
+      //     else {
+      //       if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
+      //         const value = this.formData[control.name];
 
-              if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
-                control.value = JSON.parse(this.formData[control.name]).value;
-              }
-              else
-                control.value = this.formData[control.name];
-            }
-          }
-        });
-      });
+      //         if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
+      //           control.value = JSON.parse(this.formData[control.name]).value;
+      //         }
+      //         else
+      //           control.value = this.formData[control.name];
+      //       }
+      //     }
+      //   });
+      // });
       console.log(this.form, this.formData);
       //   // for Store Form Data in Database
       let reqData = {
@@ -1293,7 +1293,8 @@ export class AbhiDynamicFormComponent {
         "formConfig": JSON.stringify(this.formSequence),
         "productId": this.productid,
         "formId": this.formSequence[this.getFormIndexValue()].formId,
-        "formWithFormData": JSON.stringify(this.form)
+        "jsonForm": JSON.stringify(this.form),
+        "formSequence":this.getFormIndexValue()
       };
       console.log(reqData);
 
@@ -1316,7 +1317,8 @@ export class AbhiDynamicFormComponent {
         "productId": this.productid,
         "formName": this.formSequence[this.getFormIndexValue()].formName,
         "formData": JSON.stringify(this.formData),
-        "formId": this.formSequence[this.getFormIndexValue()].formId
+        "formId": this.formSequence[this.getFormIndexValue()].formId,
+        "formSequence": this.getFormIndexValue()
       }
       this.service.insertOrUpdateJourneyDetailsViaVerticalCode(reqdata).subscribe({
         next: (response) => {
