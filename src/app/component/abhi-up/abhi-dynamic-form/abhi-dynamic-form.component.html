@@ -68,10 +68,10 @@
               <div class="input-container">
                 <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
                   [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}"
-                  (change)="onInputChange($event, control)">
+                  [max]="currentDate" (change)="onInputChange($event, control)">
                 <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
                   [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}"
-                  (change)="onInputChange($event, control)" readonly>
+                  [max]="currentDate" (change)="onInputChange($event, control)" readonly>
                 <label *ngIf="control.visibleLabel">{{ control.label?(control.label|translate):''}}</label>
               </div>
               <!-- <label *ngIf="control.visibleLabel==true">{{ control.label }}</label> -->
@@ -118,7 +118,7 @@
                     (click)="triggerFileInput(control.name)">Click here to Upload</button>
                   <input *ngIf="!control.disabled" [id]="control.name" formControlName="{{ control.name }}" type="file"
                     style="display: none;" (change)="onFileSelected(control.name,$event)" />
-                  <input *ngIf="control.disabled == true" formControlName="{{ control.name }}" type="file" readonly />
+                  <input *ngIf="control.disabled == true" formControlName="{{ control.name }}" type="file" readonly/>
                 </div>
               </div>
               <div *ngIf="this.dynamicFormGroup.value[control.name]" style="margin-top: 5px;">
@@ -128,6 +128,8 @@
               <small
                 *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
                 class="text-danger">
+                <!-- {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG, JPG, JPEG, PDF are allowed.' : '' }}
+                {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }} -->
               </small>
             </div>
 

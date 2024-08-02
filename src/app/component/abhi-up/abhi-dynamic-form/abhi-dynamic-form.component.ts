@@ -78,6 +78,7 @@ export class AbhiDynamicFormComponent {
   AHPARiskValue: any;
 
   displayTaxList: any;
+  currentDate = new Date().toISOString().split('T')[0];
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public service: CommonService, private loginService: LoginService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
@@ -262,7 +263,7 @@ export class AbhiDynamicFormComponent {
           }
           else {
             let controlValidators: any = [];
-            if (control.validators && control.visible == true && !control.disabled) {
+            if (control.validators && control.visible == true) {
               control.validators.forEach((val: IValidator) => {
                 if (val.validatorName === 'required') controlValidators.push(Validators.required);
                 if (val.validatorName === 'email') controlValidators.push(Validators.email);
@@ -347,6 +348,7 @@ export class AbhiDynamicFormComponent {
       this.flattenObject(this.formData);
       this.spinner.hide();
     }
+    console.log(this.dynamicFormGroup);
 
   }
 
@@ -471,7 +473,34 @@ export class AbhiDynamicFormComponent {
   }
 
   onFileSelected(inputName: string, event: any) {
-    this.selectedFile = event.target.files[0];
+    const file = event.target.files[0];
+    const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+    const control = this.dynamicFormGroup.get(inputName);
+  
+    if (file) {
+      // Clear previous errors
+      control?.setErrors(null);
+  
+      // Validate file type
+      if (!allowedFileTypes.includes(file.type)) {
+        control?.setErrors({ fileType: true });
+      }
+  
+      // Validate file size
+      if (file.size > maxSizeInBytes) {
+        control?.setErrors({ fileSize: true });
+      }
+  
+      // If no errors, proceed to set the selected file
+      if (!control?.errors) {
+        this.selectedFile = file;
+        control?.setValue(file.name); // Set the file name in the form control
+      } else {
+        control?.reset(); // Reset the control if there are errors
+        this.selectedFile = null; // Clear the selected file if validation fails
+      }
+    }
   }
 
   toggleContent(index: number): void {

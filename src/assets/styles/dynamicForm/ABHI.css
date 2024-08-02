@@ -207,7 +207,7 @@
     font-weight: 500;
     font-family: "Anek Latin", sans-serif;
     font-size: 15px;
-    height: 51px;
+    height: 48px;
     border-radius: 18px;
     border: 0;
     width: 100%;
@@ -690,21 +690,21 @@
     font-size: 30px;
     margin-left: 11%;
     color: #000;
-    font-family: PF-Handbook-Pro-Bold, PF-Encore-Sans-Pro-Bold;
+    font-family: "Anek Latin", sans-serif;
 }
 
 .main-container .right-panel .name {
     font-size: 30px;
     margin-left: 7%;
     color: #000;
-    font-family: PF-Handbook-Pro-Bold, PF-Encore-Sans-Pro-Bold;
+    font-family: "Anek Latin", sans-serif;
 }
 
 .main-container .right-panel .forChoosing {
     font-size: 14px;
     color: #6c7174;
     line-height: 18px;
-    font-family: PFEncoreSansPro-Light;
+    font-family: "Anek Latin", sans-serif;
     font-weight: 400;
 }
 
@@ -884,7 +884,7 @@
     font-size: 15px;
     /* Adjust font size */
     color: green;
-    font-family: fantasy;
+    font-family: "Anek Latin", sans-serif;
     /* Adjust color */
 }
 .main-container .right-panel .ah-opcovers {
@@ -970,7 +970,7 @@
 }
 
 .main-container .right-panel .multi-premium-opt-cov-chk-txt {
-    font-family: PF-Handbook-Pro-Bold, sans-serif;
+    font-family: "Anek Latin", sans-serif;
     font-size: 15px !important;
     font-style: normal;
     font-stretch: normal;
