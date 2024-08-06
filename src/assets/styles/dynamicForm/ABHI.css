@@ -769,7 +769,7 @@
 
 .main-container .right-panel .boldtext_input {
     font-size: 19px;
-    font-weight: 400;
+    width: 220px;
     border: none;
 }
 

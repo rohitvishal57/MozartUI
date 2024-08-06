@@ -108,6 +108,38 @@
               <p *ngIf="control.value" [innerHTML]="control.value"></p>
             </div>
 
+          
+            <div *ngIf="control.type === 'idnumber'" [class]="control.class" class="typecss">
+              <div class="input-container">
+                <input *ngIf="!control.disabled" class="inputField_Text" [ngClass]="{'has-value': hasAnyValue(control)}" 
+                formControlName="{{ control.name }}" type="text"/>
+                <label *ngIf="control.visibleLabel">{{ control.label ? (control.label |
+                  translate) : '' }} <span *ngIf="control.validators">*</span></label>
+              <!-- <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)" class="text-danger">
+                {{getValidationErrors(control)}}
+              </small> -->
+              </div>
+              <div *ngIf="dynamicFormGroup.get('idNo')?.errors?.['pattern'] || dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)" class="text-danger">
+                <ng-container [ngSwitch]="idProofType">
+                  <div *ngSwitchCase="'Aadhar Card'">
+                    Please enter the last 4 digits of your Aadhar ID.
+                  </div>
+                  <div *ngSwitchCase="'Passport'">
+                    Please specify Passport Number in the format: First character from (A-Z), followed by 2 numbers, an optional space, and 5 numbers.
+                  </div>
+                  <div *ngSwitchCase="'Voter ID'">
+                    Please enter a valid Voter ID, e.g., WED1234567.
+                  </div>
+                  <div *ngSwitchCase="'Driving License'">
+                    The first two characters should be upper-case alphabets representing the state code, followed by two digits representing the RTO code, four digits for the year, and seven digits.
+                  </div>
+                  <div *ngSwitchCase="'10th (SSC) Mark sheet'">
+                    Please enter a valid SSC Marksheet number with 7 digits.
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
 
             <div *ngIf="control.type === 'fileupload'" [class]="control.class" class="typecss">
               <div class="custom-file-upload">
@@ -128,8 +160,9 @@
               <small
                 *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name))?.touched"
                 class="text-danger">
-                <!-- {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG, JPG, JPEG, PDF are allowed.' : '' }}
-                {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }} -->
+                {{ dynamicFormGroup.get(control.name)?.errors?.['fileType'] ? 'Invalid file type. Only PNG, JPG, JPEG, PDF are allowed.' : '' }}
+                {{ dynamicFormGroup.get(control.name)?.errors?.['fileSize'] ? 'File size exceeds 3MB.' : '' }}
+                {{ getValidationErrors(control)}}
               </small>
             </div>
 
@@ -202,7 +235,7 @@
                       <img [src]="service.baseCssUrl + option.imagePath" alt="{{option.label}}">
                       <span>{{option.value?(option.value|translate):''}}</span>
                     </label>
-                    <input *ngIf="option.isIncrement" type="button" class="incrementbtn" value="+" />
+                    <input *ngIf="option.isIncrement" type="button" (click)="incrementMember($event,control,option)" class="incrementbtn" value="+" />
                   </div>
                 </div>
               </div>
@@ -452,7 +485,7 @@
                   [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}"
                   (change)="onInputChange($event, control)" readonly>
                 <label [class]="control.class" *ngIf="control.visibleLabel">{{ control.label ? (control.label |
-                  translate) : '' }}<span *ngIf="control.validators"> *</span></label>
+                  translate) : '' }}<span *ngIf="control.validators">*</span></label>
               </div>
               <small
                 *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"

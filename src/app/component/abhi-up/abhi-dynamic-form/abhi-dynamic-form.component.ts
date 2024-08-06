@@ -30,6 +30,7 @@ export class AbhiDynamicFormComponent {
   Code: any;
   proposalNum: any;
 
+  idProofType:string='';
 
   private allJsonForm: any[] = [];
   private formData: any = {}
@@ -477,6 +478,7 @@ export class AbhiDynamicFormComponent {
     const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
     const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
     const control = this.dynamicFormGroup.get(inputName);
+    console.log(control);
   
     if (file) {
       // Clear previous errors
@@ -484,6 +486,7 @@ export class AbhiDynamicFormComponent {
   
       // Validate file type
       if (!allowedFileTypes.includes(file.type)) {
+        console.log(allowedFileTypes);
         control?.setErrors({ fileType: true });
       }
   
@@ -495,10 +498,10 @@ export class AbhiDynamicFormComponent {
       // If no errors, proceed to set the selected file
       if (!control?.errors) {
         this.selectedFile = file;
-        control?.setValue(file.name); // Set the file name in the form control
+        control?.setValue(file.name);
       } else {
-        control?.reset(); // Reset the control if there are errors
-        this.selectedFile = null; // Clear the selected file if validation fails
+        control?.markAsTouched();
+        this.selectedFile = null;
       }
     }
   }
@@ -530,10 +533,11 @@ export class AbhiDynamicFormComponent {
   onPhoneNumberInputChange(event: any, control: any) {
     const input = event.target;
     let value = input.value.replace(/\D/g, '');
+    console.log(value);
     if (value.length > 10) {
-      value = value.slice(0, 10);
+      value = value.slice(0, 11);
+      input.value = value;
     }
-    input.value = value;
     this.dynamicFormGroup.get(control.name)?.setValue(value);
   }
 
@@ -810,9 +814,56 @@ export class AbhiDynamicFormComponent {
       }
     }
 
-    // if (control.name == "memberPolicyType") {
-    // this.handlePolicyTypeChange(event.target.value, control);
-    // }
+    if(control.name === 'idProof') {
+      const idProof = JSON.parse(event.target.value);
+      console.log("id proof",idProof);
+      this.idProofType = idProof.value;
+
+      const idNumberControl = this.dynamicFormGroup.get('idNo');
+      
+      switch (this.idProofType) {
+        case 'Aadhar Card':
+          idNumberControl?.setValidators([
+            Validators.required,
+            Validators.pattern('[0-9]{4}')
+          ]);
+          break;
+
+        case 'Passport':
+          idNumberControl?.setValidators([
+            Validators.required,
+            Validators.pattern('^[A-Z][0-9]{2}(?:\\s?[0-9]{5})?$')
+          ]);
+          break;
+
+        case 'Voter ID':
+          idNumberControl?.setValidators([
+            Validators.required,
+            Validators.pattern('^[A-Z]{3}[0-9]{7}$')
+          ]);
+          break;
+
+        case 'Driving License':
+          idNumberControl?.setValidators([
+            Validators.required,
+            Validators.pattern('^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$')
+          ]);
+          break;
+
+        case '10th (SSC) Mark sheet':
+          idNumberControl?.setValidators([
+            Validators.required,
+            Validators.pattern('^[0-9]{7}$')
+          ]);
+          break;
+
+        default:
+          idNumberControl?.clearValidators();
+      }
+
+      idNumberControl?.updateValueAndValidity();
+    }
+
     if (control.methodName) {
       this.resolveMethod(control.methodName, event.target.value, control);
     }
@@ -923,6 +974,10 @@ export class AbhiDynamicFormComponent {
   calculateAge(dob: string): number {
     const today = new Date();
     const birthDate = new Date(dob);
+    if (isNaN(birthDate.getTime())) {
+      console.error('Invalid date format');
+      return 0; // Or handle it according to your application's needs
+  }
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
@@ -1219,7 +1274,7 @@ export class AbhiDynamicFormComponent {
       this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     }
   }
-  async onSubmit(control: any) {
+  async onSubmit() {
     console.log(this.dynamicFormGroup.value);
     
     if (this.dynamicFormGroup.valid &&
@@ -1270,44 +1325,6 @@ export class AbhiDynamicFormComponent {
         }
       }
 
-      // this.form.formSections.forEach((section: any) => {
-      //   section.formControls.forEach((control: any) => {
-      //     if (control.dynamicControls && control.visible == true && this.formData[control.name]) {
-      //       if (this.formData[control.name]) {
-      //         control.value = this.formData[control.name].length;
-      //       }
-      //       for (let i = 1; i <= control.value; i++) {
-      //         if (!control.dynamicControls[i]) {
-      //           let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
-      //           control.dynamicControls.push(tempDynamicControl)
-      //         }
-      //       }
-
-      //       console.log(this.formData[control.name]);
-
-
-      //       this.formData[control.name].forEach((member: any, index: number) => {
-      //         control.dynamicControls[index + 1].forEach((innerControl: any) => {
-      //           if (innerControl.name == 'relation') {
-      //             innerControl.value = member.relation
-      //           }
-      //         })
-      //       })
-
-      //     }
-      //     else {
-      //       if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
-      //         const value = this.formData[control.name];
-
-      //         if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
-      //           control.value = JSON.parse(this.formData[control.name]).value;
-      //         }
-      //         else
-      //           control.value = this.formData[control.name];
-      //       }
-      //     }
-      //   });
-      // });
       console.log(this.form, this.formData);
       //   // for Store Form Data in Database
       let reqData = {
@@ -2475,6 +2492,7 @@ export class AbhiDynamicFormComponent {
   }
 
   lastPageRedirect() {
+    this.onSubmit();
     this.router.navigate(['/portal/agent/viewproducts']);
   }
 
