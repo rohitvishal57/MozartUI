@@ -1157,6 +1157,17 @@ export class EditFormComponent {
 
     }
   }
+  updateValidators() {
+    if (this.Control.visible == false || this.Control.disabled == true) {
+      // Automatically select "hide" validation
+      this.Control.validators = false;
+      this.selectcontrolradio(this.Control, { target: { value: 'hide' } });
+    } else {
+      // Automatically select "view" validation
+      this.Control.validators = true;
+      this.selectcontrolradio(this.Control, { target: { value: 'view' } });
+    }
+  }
   selectcontrolradio(inputcontrol: any, event: any) {
     console.log(inputcontrol, this.indexI, this.indexJ, this.indexK);
     let index = this.formModels.findIndex((control) => control.type === inputcontrol.type);

@@ -1015,14 +1015,14 @@
               </div>
               <div *ngIf="Control.disabled || Control.disabled==false">
                 <label>Disabled Label</label>
-                <select class="form-control" [(ngModel)]="Control.disabled" [ngModelOptions]="{standalone: false}">
+                <select class="form-control" [(ngModel)]="Control.disabled" [ngModelOptions]="{standalone: false}" (change)="updateValidators()">
                   <option [ngValue]="true">True</option>
                   <option [ngValue]="false">False</option>
                 </select>
               </div>
               <div>
                 <label>Visible</label>
-                <select class="form-control" [(ngModel)]="Control.visible">
+                <select class="form-control" [(ngModel)]="Control.visible" (change)="updateValidators()">
                   <option [ngValue]="true">True</option>
                   <option [ngValue]="false">False</option>
                 </select>
@@ -1184,12 +1184,12 @@
                 </div>
                 <div class="radio-container col-md-6">
                   <div class="radio-options">
-                    <input type="radio" id="view" name="validator" value="view" [checked]="Control.validators"
+                    <input type="radio" id="view" name="validator" value="view" [checked]="Control.validators && !(Control.visible == false || Control.disabled == true)"
                       (click)="selectcontrolradio(Control,$event)">
                     <label class="radio-label" for="view">Add Validation</label>
                   </div>
                   <div class="radio-options">
-                    <input type="radio" id="hide" name="validator" value="hide" [checked]="!Control.validators"
+                    <input type="radio" id="hide" name="validator" value="hide" [checked]="!Control.validators && (Control.visible == false || Control.disabled === true)"
                       (click)="selectcontrolradio(Control,$event)">
                     <label class="radio-label" for="hide">Hide Validation</label>
                   </div>

@@ -535,7 +535,6 @@
             <!-- <div *ngIf="control.type==='button'"> -->
               <input *ngIf="control.type==='button' && control.visible == true" type="button"
               (click)="callMethod(control.methodName,control)" [class]="control.class" value="{{ control.label ? (control.label | translate) : '' }}">
-
             <div *ngIf="control.type === 'custom-radio'">
               <div class="radio-card-container">
                 <ng-container *ngFor="let option of control.radioOptions">
@@ -658,3 +657,15 @@
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
   <p style="color: white;font-size: 14px;"> Loading... </p>
 </ngx-spinner>
+<!-- app.component.html -->
+<!-- <ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  [fullScreen]="true"
+>
+  <div class="simple-loader">
+    <img src="../../../../assets/Loader.gif" alt="Loading..." style="width: 700px; height: 500px;" />
+    <p>Loading...</p>
+  </div>
+</ngx-spinner> -->
