@@ -227,7 +227,7 @@
               <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label }}</label>
               <div [formGroupName]="control.name" class="checkbox-container" *ngIf="dynamicFormGroup.get(control.name)">
                 <div *ngFor="let option of control.selectCheckboxOptions"
-                  class="checkbox-wrapper col-12 col-md-6 col-lg-3">
+                  class="checkbox-wrapper col-6 col-md-6 col-lg-3">
                   <div *ngIf="dynamicFormGroup.get(control.name)?.get(option.value)">
                     <input type="checkbox" [formControlName]="option.value" id="{{option.value}}"
                       (change)="logSelection($event, option, control)">
@@ -239,6 +239,10 @@
                   </div>
                 </div>
               </div>
+              <small *ngIf="checkValidations(control)" class="text-danger">{{
+                getValidationErrors(control)?
+                (getValidationErrors(control)| translate) : ''}}
+              </small>
             </div>
 
 
