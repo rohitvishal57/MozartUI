@@ -488,7 +488,7 @@
                 <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
                   [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}"
                   (change)="onInputChange($event, control)" readonly>
-                <label [class]="control.class" *ngIf="control.visibleLabel">{{ control.label ? (control.label |
+                <label *ngIf="control.visibleLabel">{{ control.label ? (control.label |
                   translate) : '' }}<span *ngIf="control.validators">*</span></label>
               </div>
               <small

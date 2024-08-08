@@ -30,7 +30,7 @@ export class AbhiDynamicFormComponent {
   Code: any;
   proposalNum: any;
 
-  idProofType:string='';
+  idProofType: string = '';
 
   private allJsonForm: any[] = [];
   private formData: any = {}
@@ -274,7 +274,12 @@ export class AbhiDynamicFormComponent {
 
             }
             if (['text', 'email', 'password', 'number', 'date'].includes(control.type) && control.methodName) {
-              this.callMethod(control.methodName, control, section);
+              if (control.otherControlName) {
+                this.callMethod(control.methodName, control, section)
+              }
+              else {
+                this.resolveMethod(control.methodName, control)
+              }
             }
             if (control.type == 'select' && control.options) {
 
@@ -464,8 +469,8 @@ export class AbhiDynamicFormComponent {
     }
 
     if (myControl instanceof FormControl) {
-      console.log(myControl,control.name);
-      
+      console.log(myControl, control.name);
+
       return myControl.invalid && myControl.touched;
     } else if (myControl instanceof FormGroup) {
       console.log(myControl);
@@ -812,13 +817,13 @@ export class AbhiDynamicFormComponent {
       }
     }
 
-    if(control.name === 'idProof') {
+    if (control.name === 'idProof') {
       const idProof = JSON.parse(event.target.value);
-      console.log("id proof",idProof);
+      console.log("id proof", idProof);
       this.idProofType = idProof.value;
 
       const idNumberControl = this.dynamicFormGroup.get('idNo');
-      
+
       switch (this.idProofType) {
         case 'Aadhar Card':
           idNumberControl?.setValidators([
@@ -862,8 +867,8 @@ export class AbhiDynamicFormComponent {
       idNumberControl?.updateValueAndValidity();
     }
 
-    if (control.methodName) {
-      this.resolveMethod(control.methodName, event.target.value, control);
+    if (control.method) {
+      this.resolveMethod(control.method, control, event.target.value);
     }
 
     if (control.type == 'date' && control.dependentControls != null) {
@@ -972,7 +977,7 @@ export class AbhiDynamicFormComponent {
     if (isNaN(birthDate.getTime())) {
       console.error('Invalid date format');
       return 0; // Or handle it according to your application's needs
-  }
+    }
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
@@ -999,78 +1004,84 @@ export class AbhiDynamicFormComponent {
     }
   }
 
-  handlePolicyTypeChange(memberPolicyType: string, control: any): void {
-    const sumInsuredControl = this.dynamicFormGroup.get('memberSumInsured');
-    const pincodeControl = this.dynamicFormGroup.get('pincode');
-    if (sumInsuredControl || pincodeControl) {
-      setTimeout(() => {
-        this.dynamicFormGroup.removeControl('insuredMemberDetails');
-        if (memberPolicyType === 'Multi Individual' || memberPolicyType === 'Individual') {
+  handlePolicyTypeChange(control: any, memberPolicyType: string | null = null): void {
+    // const sumInsuredControl = this.dynamicFormGroup.get('memberSumInsured');
+    // const pincodeControl = this.dynamicFormGroup.get('pincode');
+    // if (sumInsuredControl || pincodeControl) {
+    if (memberPolicyType == null)
+      memberPolicyType = control.value;
+    this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(0);
+    console.log(control);
+    setTimeout(() => {
+      this.dynamicFormGroup.removeControl('insuredMemberDetails');
+      if (memberPolicyType === 'Multi Individual' || memberPolicyType === 'Individual') {
 
-          if (control.method)
-            this.resolveMethod(control.method, control.dependentControls, false, control.name);
+        if (control.dependentControls)
+          this.changeMainFormDependentControls(control.dependentControls, false, control.name);
 
 
-          this.form.formSections.forEach((section: any) => {
-            if (section.sectionTitle == "Insured Member Details") {
-              section.formControls[0].visible = true;
-              section.formControls[1].visible = false;
-              while (section.formControls[1].dynamicControls.length > 1) {
-                section.formControls[1].dynamicControls.pop();
-              }
-              section.visible = false;
-            }
-          });
-        }
-        else if (memberPolicyType === 'Family Floater') {
-          if (control.method)
-            this.resolveMethod(control.method, control.dependentControls, true, control.name);
-
-          this.form.formSections.forEach((section: any) => {
-            if (section.sectionTitle == "Insured Member Details") {
-              section.formControls[0].visible = false;
-              section.formControls[1].visible = true;
-              while (section.formControls[0].dynamicControls.length > 1) {
-                section.formControls[0].dynamicControls.pop();
-              }
-              section.visible = false;
-            }
-          });
-        }
-        else {
-          if (control.method)
-            this.resolveMethod(control.method, control.dependentControls, false, control.name);
-          this.form.formSections.forEach((section: any) => {
-            if (section.sectionTitle == "Insured Member Details") {
-              section.formControls[0].visible = false;
-              section.formControls[1].visible = false;
-
-              while (section.formControls[0].dynamicControls.length > 1) {
-                section.formControls[0].dynamicControls.pop();
-              }
-
-              while (section.formControls[1].dynamicControls.length > 1) {
-                section.formControls[1].dynamicControls.pop();
-              }
-
-            }
-          });
-        }
         this.form.formSections.forEach((section: any) => {
-          section.formControls.forEach((formControl: any) => {
-            if (formControl.name == 'insuredMembers') {
-              this.getProposerRelationship(formControl);
-              section.visible = true;
+          if (section.sectionTitle == "Insured Member Details") {
+            section.formControls[0].visible = true;
+            if (section.formControls[1]) {
+              section.formControls[1].visible = false;
+              while (section.formControls[1].dynamicControls.length > 1) {
+                section.formControls[1].dynamicControls.pop();
+              }
             }
-          });
+            section.visible = false;
+          }
         });
-      }, 0);
+      }
+      else if (memberPolicyType === 'Family Floater') {
+        if (control.dependentControls)
+          this.changeMainFormDependentControls(control.dependentControls, true, control.name);
+
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle == "Insured Member Details") {
+            section.formControls[0].visible = false;
+            section.formControls[1].visible = true;
+            while (section.formControls[0].dynamicControls.length > 1) {
+              section.formControls[0].dynamicControls.pop();
+            }
+            section.visible = false;
+          }
+        });
+      }
+      else {
+        if (control.dependentControls)
+          this.changeMainFormDependentControls(control.dependentControls, false, control.name);
+        this.form.formSections.forEach((section: any) => {
+          if (section.sectionTitle == "Insured Member Details") {
+            section.formControls[0].visible = false;
+            section.formControls[1].visible = false;
+
+            while (section.formControls[0].dynamicControls.length > 1) {
+              section.formControls[0].dynamicControls.pop();
+            }
+
+            while (section.formControls[1].dynamicControls.length > 1) {
+              section.formControls[1].dynamicControls.pop();
+            }
+
+          }
+        });
+      }
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == 'insuredMembers') {
+            this.getProposerRelationship(formControl);
+            section.visible = true;
+          }
+        });
+      });
+    }, 0);
 
 
-    }
-    else {
-      console.error('Sum Insured Control or Pincode Control not found in dynamicFormGroup.');
-    }
+    // }
+    // else {
+    //   console.error('Sum Insured Control or Pincode Control not found in dynamicFormGroup.');
+    // }
 
   }
 
@@ -1279,7 +1290,7 @@ export class AbhiDynamicFormComponent {
 
             this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value - 1);
           }
-          
+
         }
       });
     })
@@ -1386,24 +1397,24 @@ export class AbhiDynamicFormComponent {
           }
         }
 
-      console.log(this.form, this.formData);
-      //   // for Store Form Data in Database
-      let reqData = {
-        "proposalNum": this.proposalNum,
-        "agentCode": this.agentCode,
-        "code": this.Code,
-        "verticalCode": this.verticalCode,
-        "insuranceTypeCode": this.insurancetypecode,
-        "formType": this.formSequence[this.getFormIndexValue()].formName,
-        "formData": JSON.stringify(this.dynamicFormGroup.value),
-        "formName": this.formSequence[this.getFormIndexValue()].formName,
-        "formConfig": JSON.stringify(this.formSequence),
-        "productId": this.productid,
-        "formId": this.formSequence[this.getFormIndexValue()].formId,
-        "jsonForm": JSON.stringify(this.form),
-        "formSequence":this.getFormIndexValue()
-      };
-      console.log(reqData);
+        console.log(this.form, this.formData);
+        //   // for Store Form Data in Database
+        let reqData = {
+          "proposalNum": this.proposalNum,
+          "agentCode": this.agentCode,
+          "code": this.Code,
+          "verticalCode": this.verticalCode,
+          "insuranceTypeCode": this.insurancetypecode,
+          "formType": this.formSequence[this.getFormIndexValue()].formName,
+          "formData": JSON.stringify(this.dynamicFormGroup.value),
+          "formName": this.formSequence[this.getFormIndexValue()].formName,
+          "formConfig": JSON.stringify(this.formSequence),
+          "productId": this.productid,
+          "formId": this.formSequence[this.getFormIndexValue()].formId,
+          "jsonForm": JSON.stringify(this.form),
+          "formSequence": this.getFormIndexValue()
+        };
+        console.log(reqData);
 
         this.service.insertOrUpdateFormDataViaVertical(reqData).subscribe({
           next: (res) => {
@@ -2494,7 +2505,12 @@ export class AbhiDynamicFormComponent {
   }
 
   getDependentControlValue(control: any) {
+    console.log(control);
+
     const value = this.formData[control.dependentControls[0]];
+
+    console.log(value);
+
 
     if (value && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
       control.value = JSON.parse(value).value;
