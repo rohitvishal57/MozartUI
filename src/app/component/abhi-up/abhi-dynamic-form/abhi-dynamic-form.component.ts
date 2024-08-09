@@ -52,9 +52,10 @@ export class AbhiDynamicFormComponent {
   quoteId: any;
   quoteNo: any;
 
-  tenure1Total: number = 0;
-  tenure2Total: number = 0;
-  tenure3Total: number = 0;
+  // tenure1Total: number = 0;
+  // tenure2Total: number = 0;
+  // tenure3Total: number = 0;
+  tenureAmount: any[] = [0,0,0];
   premiumAmountDetails: number[][] = [];
   addOnList: any[] = [];
 
@@ -78,7 +79,7 @@ export class AbhiDynamicFormComponent {
   isAHPAAdded: boolean = false;
   AHPARiskValue: any;
 
-  displayTaxList: any;
+  displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -140,6 +141,14 @@ export class AbhiDynamicFormComponent {
 
     if (sessionStorage.getItem('quoteNo') != null) {
       this.quoteNo = this.encryptionService.decrypt(sessionStorage.getItem('quoteNo') as string);
+    }
+
+    if(sessionStorage.getItem('displayTaxList') != null){
+      this.displayTaxList = this.encryptionService.decrypt(sessionStorage.getItem('displayTaxList') as string);
+    }
+
+    if(sessionStorage.getItem('tenureAmount')){
+      this.tenureAmount = this.encryptionService.decrypt(sessionStorage.getItem('tenureAmount') as string)
     }
   }
   getFormDataFromFormSequence(formId: any) {
@@ -1346,8 +1355,6 @@ export class AbhiDynamicFormComponent {
   }
   async onSubmit() {
 
-    console.log(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value, this.dynamicFormGroup.get('memberPolicyType')?.value);
-
     if (this.dynamicFormGroup.get('numberOfInsuredMembers')?.value < 2 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
       this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Floater policy", duration: 3000 });
       return;
@@ -1396,8 +1403,6 @@ export class AbhiDynamicFormComponent {
             }
           }
         }
-
-        console.log(this.form, this.formData);
         //   // for Store Form Data in Database
         let reqData = {
           "proposalNum": this.proposalNum,
@@ -1414,7 +1419,6 @@ export class AbhiDynamicFormComponent {
           "jsonForm": JSON.stringify(this.form),
           "formSequence": this.getFormIndexValue()
         };
-        console.log(reqData);
 
         this.service.insertOrUpdateFormDataViaVertical(reqData).subscribe({
           next: (res) => {
@@ -1591,9 +1595,9 @@ export class AbhiDynamicFormComponent {
 
   async getPremiumAmount(control: IFormControl) {
     this.spinner.show();
-    this.tenure1Total = 0;
-    this.tenure2Total = 0;
-    this.tenure3Total = 0;
+    this.tenureAmount.forEach(element=>{
+      element = 0;
+    })
 
     this.premiumDetails = [];
     this.premiumAmountDetails = [];
@@ -1682,6 +1686,9 @@ export class AbhiDynamicFormComponent {
         configuration_Json: JSON.stringify(modifiedInsuredMemberDetails)
       };
 
+      console.log(reqData);
+      
+
       try {
 
         let quoteResponse: any;
@@ -1712,31 +1719,28 @@ export class AbhiDynamicFormComponent {
             element.prmMemDtlSecureEntity.forEach((member: any) => {
               let tempArray: number[] = [];
               member.premium.forEach((premium: any) => {
-                if (premium.tenure === 1) {
-                  this.tenure1Total += premium.premium || 0;
-                } else if (premium.tenure === 2) {
-                  this.tenure2Total += premium.premium || 0;
-                } else if (premium.tenure === 3) {
-                  this.tenure3Total += premium.premium || 0;
-                }
+                // if (premium.tenure === 1) {
+                //   this.tenureAmount[premium.te] += premium.premium || 0;
+                // } else if (premium.tenure === 2) {
+                //   this.tenure2Total += premium.premium || 0;
+                // } else if (premium.tenure === 3) {
+                //   this.tenure3Total += premium.premium || 0;
+                // }
+                this.tenureAmount[premium.tenure - 1] += premium.premium || 0;
                 tempArray.push(premium.premium);
               });
               this.premiumDetails.push(member.premium);
               this.premiumAmountDetails.push(tempArray);
             });
           });
+          console.log(this.premiumAmountDetails);
+          
         }
         else {
           quoteResponse.forEach((element: any) => {
             let tempArray: number[] = [];
             element.prmMemDtlSecureEntity[0].premium.forEach((premium: any) => {
-              if (premium.tenure === 1) {
-                this.tenure1Total = premium.premium || 0;
-              } else if (premium.tenure === 2) {
-                this.tenure2Total = premium.premium || 0;
-              } else if (premium.tenure === 3) {
-                this.tenure3Total = premium.premium || 0;
-              }
+              this.tenureAmount[premium.tenure - 1] += premium.premium || 0;
               tempArray.push(premium.premium);
             });
 
@@ -1750,7 +1754,10 @@ export class AbhiDynamicFormComponent {
 
 
 
-        console.log(this.tenure1Total, this.tenure2Total, this.tenure3Total);
+        this.tenureAmount.forEach(member=>{
+          console.log(member);
+          
+        })
         console.log(this.premiumAmountDetails);
         console.log(this.premiumDetails);
 
@@ -1781,7 +1788,7 @@ export class AbhiDynamicFormComponent {
           totalPremium: this.premiumAmountDetails,
           valueUnit: valueUnit,
           yearlyDiscount: [0, 7.5, 10],
-          zoneDiscount: this.formData.productType == 'AF' || this.formData.productType == 'AA' || this.formData.productType == 'AO' || this.formData.productType == 'AC' || this.formData.productType == 'GHS' || this.formData.productType == 'AGS' || this.formData.productType == 'STUB' ? 0 : 9,
+          zoneDiscount: this.formData.productType == 'AF' || this.formData.productType == 'AA' || this.formData.productType == 'AO' || this.formData.productType == 'AC' || this.formData.productType == 'AGS' || this.formData.productType == 'STUB' ? 0 : 9,
           memberDiscount: 0,
           addOnList: this.addOnList
         };
@@ -1791,6 +1798,9 @@ export class AbhiDynamicFormComponent {
         }
         this.spinner.show();
 
+        console.log(reqData2);
+        
+
         const addOnPremiumResponse: any = await new Promise((resolve, reject) => {
           this.service.getAddOnPremium(reqData2).subscribe({
             next: (response) => resolve(response),
@@ -1798,10 +1808,12 @@ export class AbhiDynamicFormComponent {
           });
         });
 
-        this.tenure1Total = Math.round(addOnPremiumResponse.calculatedValuesList[0]);
-        this.tenure2Total = Math.round(addOnPremiumResponse.calculatedValuesList[1]);
-        this.tenure3Total = Math.round(addOnPremiumResponse.calculatedValuesList[2]);
+        addOnPremiumResponse.calculatedValuesList.forEach((member : number,index : number)=>{
+          this.tenureAmount[index] = Math.round(member)
+        })
 
+        console.log(this.tenureAmount);
+        
         this.taxList = addOnPremiumResponse.taxList;
         this.netPremiumList = addOnPremiumResponse.netPremiumList;
         this.totalPremiumList = addOnPremiumResponse.totalPremiumList;
@@ -1812,6 +1824,9 @@ export class AbhiDynamicFormComponent {
         this.displayTaxList = addOnPremiumResponse.taxList.map((value: number) => Math.round(value));
 
         // this.dynamicFormGroup.get('premiumAmount')?.setValue(this.tenure1Total);
+
+        sessionStorage.setItem('displayTaxList',this.encryptionService.encrypt(this.displayTaxList))
+        sessionStorage.setItem('tenureAmount',this.encryptionService.encrypt(this.tenureAmount))
         this.changeDetectorRef.detectChanges();
         this.spinner.hide();
       } catch (err) {
@@ -2155,9 +2170,9 @@ export class AbhiDynamicFormComponent {
 
     this.service.getAddOnPremium(reqData).subscribe({
       next: (response) => {
-        this.tenure1Total = Math.round(response.calculatedValuesList[0]);
-        this.tenure2Total = Math.round(response.calculatedValuesList[1]);
-        this.tenure3Total = Math.round(response.calculatedValuesList[2]);
+        this.tenureAmount.forEach((member,index)=>{
+          member = Math.round(response.calculatedValuesList[index]);
+        })
 
         this.taxList = response.taxList;
         this.netPremiumList = response.netPremiumList;
@@ -2174,24 +2189,24 @@ export class AbhiDynamicFormComponent {
                 formControl.radioOptions.forEach((option: any, index: number) => {
                   if (index === 0) {
                     // this.totalPremium = this.tenure1Total;
-                    option.label = `<b>Rs - ${this.tenure1Total}</b>`;
-                    formControl.value = this.tenure1Total;
+                    option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
+                    formControl.value = this.tenureAmount[index];
                     option.year = "1 year"
-                    option.value = this.tenure1Total;
+                    option.value = this.tenureAmount[index];
                     if (index === this.selectedIndex)
-                      this.dynamicFormGroup.value.totalPremium = this.tenure1Total;
+                      this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   } else if (index === 1) {
-                    option.label = `<b>Rs - ${this.tenure2Total}</b>`;
-                    option.value = this.tenure2Total;
+                    option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
+                    option.value = this.tenureAmount[index];
                     if (index === this.selectedIndex)
-                      this.dynamicFormGroup.value.totalPremium = this.tenure2Total;
+                      this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                     option.year = "2 years"
                     option.discount = "7.5% off"
                   } else if (index === 2) {
-                    option.label = `<b>Rs - ${this.tenure3Total}</b>`;
+                    option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                     if (index === this.selectedIndex)
-                      this.dynamicFormGroup.value.totalPremium = this.tenure3Total;
-                    option.value = this.tenure3Total;
+                      this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
+                    option.value = this.tenureAmount[index];
                     option.year = "3 years"
                     option.discount = "13% off"
                   }
@@ -2312,10 +2327,9 @@ export class AbhiDynamicFormComponent {
 
     this.service.getAddOnPremium(reqData).subscribe({
       next: (response) => {
-        this.tenure1Total = Math.round(response.calculatedValuesList[0]);
-        this.tenure2Total = Math.round(response.calculatedValuesList[1]);
-        this.tenure3Total = Math.round(response.calculatedValuesList[2]);
-
+        this.tenureAmount.forEach((member,index)=>{
+          member = Math.round(response.calculatedValuesList[index]);
+        })
         this.taxList = response.taxList;
         this.netPremiumList = response.netPremiumList;
         this.totalPremiumList = response.totalPremiumList;
@@ -2331,24 +2345,24 @@ export class AbhiDynamicFormComponent {
                 formControl.radioOptions.forEach((option: any, index: number) => {
                   if (index === 0) {
                     // this.totalPremium = this.tenure1Total;
-                    option.label = `<b>Rs - ${this.tenure1Total}</b>`;
-                    formControl.value = this.tenure1Total;
+                    option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
+                    formControl.value = this.tenureAmount[index];
                     option.year = "1 year"
-                    option.value = this.tenure1Total;
+                    option.value = this.tenureAmount[index];
                     if (index === this.selectedIndex)
-                      this.dynamicFormGroup.value.totalPremium = this.tenure1Total;
+                      this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   } else if (index === 1) {
-                    option.label = `<b>Rs - ${this.tenure2Total}</b>`;
-                    option.value = this.tenure2Total;
+                    option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
+                    option.value = this.tenureAmount[index];
                     if (index === this.selectedIndex)
-                      this.dynamicFormGroup.value.totalPremium = this.tenure2Total;
+                      this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                     option.year = "2 years"
                     option.discount = "7.5% off"
                   } else if (index === 2) {
-                    option.label = `<b>Rs - ${this.tenure3Total}</b>`;
+                    option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                     if (index === this.selectedIndex)
-                      this.dynamicFormGroup.value.totalPremium = this.tenure3Total;
-                    option.value = this.tenure3Total;
+                      this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
+                    option.value = this.tenureAmount[index];
                     option.year = "3 years"
                     option.discount = "13% off"
                   }
@@ -2525,6 +2539,12 @@ export class AbhiDynamicFormComponent {
   }
 
   setPremiumAmount() {
+    console.log(this.displayTaxList);
+    this.tenureAmount.forEach(member=>{
+      console.log(member);
+      
+    })
+    
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         if (formControl.name == 'totalPremium') {
@@ -2532,23 +2552,23 @@ export class AbhiDynamicFormComponent {
             formControl.radioOptions.forEach((option: any, index: number) => {
               if (index === 0) {
                 // this.totalPremium = this.tenure1Total;
-                option.label = `<b>Rs - ${this.tenure1Total}</b>`;
-                formControl.value = this.tenure1Total;
+                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
+                formControl.value = this.tenureAmount[index];
                 option.year = "1 year"
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
-                option.value = this.tenure1Total;
-                this.dynamicFormGroup.value.totalPremium = this.tenure1Total;
+                option.value = this.tenureAmount[index];
+                this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                 this.selectedIndex = index;
               } else if (index === 1) {
-                option.label = `<b>Rs - ${this.tenure2Total}</b>`;
+                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
-                option.value = this.tenure2Total;
+                option.value = this.tenureAmount[index];
                 option.year = "2 years"
                 option.discount = "7.5% off"
               } else if (index === 2) {
-                option.label = `<b>Rs - ${this.tenure3Total}</b>`;
+                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
-                option.value = this.tenure3Total;
+                option.value = this.tenureAmount[index];
                 option.year = "3 years"
                 option.discount = "13% off"
               }
