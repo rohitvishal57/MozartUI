@@ -478,8 +478,6 @@ export class AbhiDynamicFormComponent {
     }
 
     if (myControl instanceof FormControl) {
-      console.log(myControl, control.name);
-
       return myControl.invalid && myControl.touched;
     } else if (myControl instanceof FormGroup) {
       console.log(myControl);

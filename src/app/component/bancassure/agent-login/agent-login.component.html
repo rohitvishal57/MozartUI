@@ -26,7 +26,7 @@
                 <input type="text" placeholder="Username" formControlName="agentUserName">
               </div>
               <small
-                *ngIf="loginForm.controls['agentUserName'].touched && loginForm.hasError('required', 'agentUserName')"
+                *ngIf="loginForm.controls['agentUserName'].touched && loginForm.hasError('required', 'agentUserName')" 
                 class="text-danger">UserName is required</small>
             </div>
             <div class="input-item">

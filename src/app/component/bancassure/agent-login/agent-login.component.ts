@@ -226,8 +226,24 @@ export class AgentLoginComponent implements OnInit{
           })
         })
     }
+    // else {
+    //   ValidateForm.validateAllFormFields(this.loginForm);
+    // }
     else {
-      ValidateForm.validateAllFormFields(this.loginForm);
+      console.log('Form is invalid', this.loginForm);
+      Object.keys(this.loginForm.controls).forEach(field => {
+        const control = this.loginForm.get(field);
+        if (control instanceof FormGroup) {
+          control?.markAsDirty({ onlySelf: true });
+        }
+        else {
+          control?.markAsTouched({ onlySelf: true });
+        }
+      });
+      if (this.loginForm.invalid)
+        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      else if (this.loginForm.get('nationality') && this.loginForm.get('nationality')?.value !== 'Indian')
+        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
     }
   }
 }
