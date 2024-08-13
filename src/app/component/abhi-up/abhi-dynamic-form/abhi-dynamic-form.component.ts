@@ -9,7 +9,6 @@ import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { Router } from '@angular/router';
-import { insured_member } from 'src/assets/styles/config/insured_member';
 
 @Component({
   selector: 'app-abhi-dynamic-form',
@@ -55,11 +54,11 @@ export class AbhiDynamicFormComponent {
   // tenure1Total: number = 0;
   // tenure2Total: number = 0;
   // tenure3Total: number = 0;
-  tenureAmount: any[] = [0,0,0];
+  tenureAmount: any[] = [0, 0, 0];
   premiumAmountDetails: number[][] = [];
   addOnList: any[] = [];
 
-  agencyCode: any = 1002;
+  agencyCode: any;
   premiumDetails: any[][] = [];
   taxList: number[] = [];
   netPremiumList: number[] = [];
@@ -94,8 +93,6 @@ export class AbhiDynamicFormComponent {
     console.log(this.formSequence);
     this.Code = localStorage.getItem('code');
     this.verticalCode = localStorage.getItem('verticalCode');
-    this.insurancetypecode = localStorage.getItem('insurancetypecode');
-    this.productid = localStorage.getItem('productid');
     this.insurancetypecode = history.state.productData.insurancetypecode;
     this.productid = history.state.productData.productid;
     this.productName = history.state.productData.productName;
@@ -143,11 +140,11 @@ export class AbhiDynamicFormComponent {
       this.quoteNo = this.encryptionService.decrypt(sessionStorage.getItem('quoteNo') as string);
     }
 
-    if(sessionStorage.getItem('displayTaxList') != null){
+    if (sessionStorage.getItem('displayTaxList') != null) {
       this.displayTaxList = this.encryptionService.decrypt(sessionStorage.getItem('displayTaxList') as string);
     }
 
-    if(sessionStorage.getItem('tenureAmount')){
+    if (sessionStorage.getItem('tenureAmount')) {
       this.tenureAmount = this.encryptionService.decrypt(sessionStorage.getItem('tenureAmount') as string)
     }
   }
@@ -879,12 +876,18 @@ export class AbhiDynamicFormComponent {
     }
 
     if (control.type == 'date' && control.dependentControls != null) {
+
       const dob = event.target.value;
       const dobArray = dob.split('-');
       const today = new Date;
+
       // if(parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) > today.getFullYear() || dobArray[0] == '')
       if (parseInt(dobArray[0]) < 1800 || parseInt(dobArray[0]) >= today.getFullYear() || dobArray[0] == '') {
-        this.dynamicFormGroup.get(control.dependentControls[0])?.reset();
+        if (parentControl == null)
+          this.dynamicFormGroup.get(control.dependentControls[0])?.reset();
+        else {
+          (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.dependentControls[0])?.reset();
+        }
       }
       else {
         if (parentControl != null && index != null) {
@@ -1015,69 +1018,23 @@ export class AbhiDynamicFormComponent {
     // const sumInsuredControl = this.dynamicFormGroup.get('memberSumInsured');
     // const pincodeControl = this.dynamicFormGroup.get('pincode');
     // if (sumInsuredControl || pincodeControl) {
+    console.log(memberPolicyType, control);
+
     if (memberPolicyType == null)
       memberPolicyType = control.value;
-    this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(0);
     console.log(control);
     setTimeout(() => {
-      this.dynamicFormGroup.removeControl('insuredMemberDetails');
-      if (memberPolicyType === 'Multi Individual' || memberPolicyType === 'Individual') {
 
-        if (control.dependentControls)
-          this.changeMainFormDependentControls(control.dependentControls, false, control.name);
-
-
-        this.form.formSections.forEach((section: any) => {
-          if (section.sectionTitle == "Insured Member Details") {
-            section.formControls[0].visible = true;
-            if (section.formControls[1]) {
-              section.formControls[1].visible = false;
-              while (section.formControls[1].dynamicControls.length > 1) {
-                section.formControls[1].dynamicControls.pop();
-              }
-            }
-            section.visible = false;
-          }
-        });
-      }
-      else if (memberPolicyType === 'Family Floater') {
-        if (control.dependentControls)
-          this.changeMainFormDependentControls(control.dependentControls, true, control.name);
-
-        this.form.formSections.forEach((section: any) => {
-          if (section.sectionTitle == "Insured Member Details") {
-            section.formControls[0].visible = false;
-            section.formControls[1].visible = true;
-            while (section.formControls[0].dynamicControls.length > 1) {
-              section.formControls[0].dynamicControls.pop();
-            }
-            section.visible = false;
-          }
-        });
-      }
-      else {
-        if (control.dependentControls)
-          this.changeMainFormDependentControls(control.dependentControls, false, control.name);
-        this.form.formSections.forEach((section: any) => {
-          if (section.sectionTitle == "Insured Member Details") {
-            section.formControls[0].visible = false;
-            section.formControls[1].visible = false;
-
-            while (section.formControls[0].dynamicControls.length > 1) {
-              section.formControls[0].dynamicControls.pop();
-            }
-
-            while (section.formControls[1].dynamicControls.length > 1) {
-              section.formControls[1].dynamicControls.pop();
-            }
-
-          }
-        });
-      }
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((formControl: any) => {
           if (formControl.name == 'insuredMembers') {
-            this.getProposerRelationship(formControl);
+            console.log(this.formData);
+
+            if ((this.formData.productType == 'GHS' && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS')) {
+
+              this.resetInsuredMembers(control, memberPolicyType);
+              this.getProposerRelationship(formControl);
+            }
             section.visible = true;
           }
         });
@@ -1090,6 +1047,66 @@ export class AbhiDynamicFormComponent {
     //   console.error('Sum Insured Control or Pincode Control not found in dynamicFormGroup.');
     // }
 
+  }
+
+  resetInsuredMembers(control: any, memberPolicyType: any) {
+    console.log(control);
+
+    this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(0);
+    this.dynamicFormGroup.removeControl('insuredMemberDetails');
+    if (memberPolicyType === 'Multi Individual' || memberPolicyType === 'Individual') {
+
+      if (control.dependentControls)
+        this.changeMainFormDependentControls(control.dependentControls, false, control.name);
+
+
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = true;
+          if (section.formControls[1]) {
+            section.formControls[1].visible = false;
+            while (section.formControls[1].dynamicControls.length > 1) {
+              section.formControls[1].dynamicControls.pop();
+            }
+          }
+          section.visible = false;
+        }
+      });
+    }
+    else if (memberPolicyType === 'Family Floater') {
+      if (control.dependentControls)
+        this.changeMainFormDependentControls(control.dependentControls, true, control.name);
+
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = false;
+          section.formControls[1].visible = true;
+          while (section.formControls[0].dynamicControls.length > 1) {
+            section.formControls[0].dynamicControls.pop();
+          }
+          section.visible = false;
+        }
+      });
+    }
+    else {
+      if (control.dependentControls)
+        this.changeMainFormDependentControls(control.dependentControls, false, control.name);
+      this.form.formSections.forEach((section: any) => {
+        if (section.sectionTitle == "Insured Member Details") {
+          section.formControls[0].visible = false;
+          section.formControls[1].visible = false;
+
+          while (section.formControls[0].dynamicControls.length > 1) {
+            section.formControls[0].dynamicControls.pop();
+          }
+
+          while (section.formControls[1].dynamicControls.length > 1) {
+            section.formControls[1].dynamicControls.pop();
+          }
+
+        }
+      });
+    }
   }
 
   increment(controlName: any, childControlName: any) {
@@ -1353,6 +1370,8 @@ export class AbhiDynamicFormComponent {
   }
   async onSubmit() {
 
+    console.log(this.dynamicFormGroup.value);
+
     if (this.dynamicFormGroup.get('numberOfInsuredMembers')?.value < 2 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
       this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Floater policy", duration: 3000 });
       return;
@@ -1370,6 +1389,8 @@ export class AbhiDynamicFormComponent {
         }
         this.flattenObjectInsert(this.dynamicFormGroup.value);
         this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+        console.log(this.formData);
+
 
         this.allJsonForm[this.getFormIndexValue()] = this.form;
 
@@ -1486,6 +1507,8 @@ export class AbhiDynamicFormComponent {
     }
   }
   changeMainFormDependentControls(dependentControlNames: string[], visibility: boolean, controlName: string | null = null, parentControlName: string | null = null, controlIndex: number | null = null) {
+    console.log(dependentControlNames);
+
     const tempIndex = this.activeMemberTabIndex;
     setTimeout(() => {
 
@@ -1593,7 +1616,7 @@ export class AbhiDynamicFormComponent {
 
   async getPremiumAmount(control: IFormControl) {
     this.spinner.show();
-    this.tenureAmount.forEach(element=>{
+    this.tenureAmount.forEach((element) => {
       element = 0;
     })
 
@@ -1685,7 +1708,7 @@ export class AbhiDynamicFormComponent {
       };
 
       console.log(reqData);
-      
+
 
       try {
 
@@ -1732,7 +1755,7 @@ export class AbhiDynamicFormComponent {
             });
           });
           console.log(this.premiumAmountDetails);
-          
+
         }
         else {
           quoteResponse.forEach((element: any) => {
@@ -1752,9 +1775,9 @@ export class AbhiDynamicFormComponent {
 
 
 
-        this.tenureAmount.forEach(member=>{
+        this.tenureAmount.forEach(member => {
           console.log(member);
-          
+
         })
         console.log(this.premiumAmountDetails);
         console.log(this.premiumDetails);
@@ -1786,7 +1809,7 @@ export class AbhiDynamicFormComponent {
           totalPremium: this.premiumAmountDetails,
           valueUnit: valueUnit,
           yearlyDiscount: [0, 7.5, 10],
-          zoneDiscount: this.formData.productType == 'AF' || this.formData.productType == 'AA' || this.formData.productType == 'AO' || this.formData.productType == 'AC' || this.formData.productType == 'AGS' || this.formData.productType == 'STUB' ? 0 : 9,
+          zoneDiscount: this.formData.productType == 'AF' || this.formData.productType == 'AA' || this.formData.productType == 'AO' || this.formData.productType == 'AC' || this.formData.productType == 'AGS' || this.formData.productType == 'STUB' || this.formData.productType == 'GHS'? 0 : 9,
           memberDiscount: 0,
           addOnList: this.addOnList
         };
@@ -1797,7 +1820,7 @@ export class AbhiDynamicFormComponent {
         this.spinner.show();
 
         console.log(reqData2);
-        
+
 
         const addOnPremiumResponse: any = await new Promise((resolve, reject) => {
           this.service.getAddOnPremium(reqData2).subscribe({
@@ -1806,12 +1829,12 @@ export class AbhiDynamicFormComponent {
           });
         });
 
-        addOnPremiumResponse.calculatedValuesList.forEach((member : number,index : number)=>{
+        addOnPremiumResponse.calculatedValuesList.forEach((member: number, index: number) => {
           this.tenureAmount[index] = Math.round(member)
         })
 
         console.log(this.tenureAmount);
-        
+
         this.taxList = addOnPremiumResponse.taxList;
         this.netPremiumList = addOnPremiumResponse.netPremiumList;
         this.totalPremiumList = addOnPremiumResponse.totalPremiumList;
@@ -1823,8 +1846,8 @@ export class AbhiDynamicFormComponent {
 
         // this.dynamicFormGroup.get('premiumAmount')?.setValue(this.tenure1Total);
 
-        sessionStorage.setItem('displayTaxList',this.encryptionService.encrypt(this.displayTaxList))
-        sessionStorage.setItem('tenureAmount',this.encryptionService.encrypt(this.tenureAmount))
+        sessionStorage.setItem('displayTaxList', this.encryptionService.encrypt(this.displayTaxList))
+        sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount))
         this.changeDetectorRef.detectChanges();
         this.spinner.hide();
       } catch (err) {
@@ -2168,7 +2191,7 @@ export class AbhiDynamicFormComponent {
 
     this.service.getAddOnPremium(reqData).subscribe({
       next: (response) => {
-        this.tenureAmount.forEach((member,index)=>{
+        this.tenureAmount.forEach((member, index) => {
           member = Math.round(response.calculatedValuesList[index]);
         })
 
@@ -2325,7 +2348,7 @@ export class AbhiDynamicFormComponent {
 
     this.service.getAddOnPremium(reqData).subscribe({
       next: (response) => {
-        this.tenureAmount.forEach((member,index)=>{
+        this.tenureAmount.forEach((member, index) => {
           member = Math.round(response.calculatedValuesList[index]);
         })
         this.taxList = response.taxList;
@@ -2538,11 +2561,11 @@ export class AbhiDynamicFormComponent {
 
   setPremiumAmount() {
     console.log(this.displayTaxList);
-    this.tenureAmount.forEach(member=>{
+    this.tenureAmount.forEach(member => {
       console.log(member);
-      
+
     })
-    
+
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         if (formControl.name == 'totalPremium') {
