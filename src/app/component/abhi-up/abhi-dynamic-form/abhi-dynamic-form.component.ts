@@ -194,6 +194,8 @@ export class AbhiDynamicFormComponent {
       })
 
     }
+    console.log(this.form);
+    
   }
 
   initializeForm() {
@@ -1028,10 +1030,11 @@ export class AbhiDynamicFormComponent {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((formControl: any) => {
           if (formControl.name == 'insuredMembers') {
-            console.log(this.formData);
+            console.log(this.formData,this.form);
 
-            if ((this.formData.productType == 'GHS' && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS')) {
-
+            if (((this.formData.productType == 'GHS' || this.formData.productType == 'AS') && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS' && this.formData.productType != 'AS')) {
+              console.log("why am I getting successful");
+              
               this.resetInsuredMembers(control, memberPolicyType);
               this.getProposerRelationship(formControl);
             }
