@@ -102,7 +102,7 @@ export class QuotesComponent {
     }
   
     fetchData(): void {
-      this.http.get<any[]>('/assets/jsonValue/quotesValue.json').subscribe(data => {
+      this.http.get<any[]>('/assets/jsonValue/renewalList.json').subscribe(data => {
         this.data = data;
         console.log("data",this.data);
         this.filterQuotes(this.activeFilter); 
