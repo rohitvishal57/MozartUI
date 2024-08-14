@@ -176,6 +176,8 @@ export interface IDynamicControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   bigFont?: boolean;
   subControls?: ISubControl[][];
+  image:IImage;
+  tabs:ITab[];
 }
 export interface IValidator {
   validatorName?: string;
