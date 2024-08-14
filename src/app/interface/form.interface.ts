@@ -102,6 +102,10 @@ export interface ITab {
   name: string;
   label: string;
   content: any;
+  selectCheckboxOptions?: ISelectCheckboxOption[];
+  type:string;
+  class:string;
+  visibleLabel:boolean;
 }
 
 export interface IConditionalVisibility {
@@ -119,11 +123,13 @@ export interface IRadioOption {
 }
 
 export interface ISelectCheckboxOption {
-  label: string;
+  label?: string;
   value: string;
   button?: boolean;
   imagePath?: string;
   isIncrement?: boolean;
+  name?:string;
+  
 }
 
 export interface IImage {

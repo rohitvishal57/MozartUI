@@ -391,15 +391,15 @@
 
                               <div *ngIf="subControl.type==='select'" [class]="subControl.class" class="typecss">
                                 <div class="input-container">
-                                  <select class="inputField_Select" formControlName="{{ subControl.name }}"
-                                    aria-label="Default select example" (change)="onInputChange($event, subControl)"
+                                  <select class="inputField_Select" [formControlName]="subControl.name"
+                                    aria-label="Default select example" (change)="onInputChange($event, subControl,control,i-1)"
                                     [attr.disabled]="subControl.disabled ? 'disabled' : null"
                                     [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}">
                                     <!-- <option value="" disabled selected>Select {{
                                   subControl.label }}</option> -->
                                     <ng-container *ngFor="let opt of subControl.options">
-                                      <option [value]="opt.id ? stringifyObject(opt) : opt.value">
-                                        {{ opt.name }}</option>
+                                      <option [value]="opt.value">{{ opt.name }}
+                                      </option>
                                     </ng-container>
                                   </select>
                                   <select class="inputField_Select" *ngIf="subControl.disabled"
@@ -475,7 +475,7 @@
                                     placeholder="Search conditions">
                                 </div>
                               </div>
-                              <div *ngIf="subControl.type === 'tabview'" class="sideselect-css">
+                              <div *ngIf="subControl.type === 'subtabview'" class="sideselect-css">
                                 <ul class="nav nav-tabs custom-tab" role="tablist">
                                   <li class="nav-item" *ngFor="let tab of subControl.tabs; let i = index">
                                     <a class="nav-link" [class.active]="activeTab === tab.name" (click)="selectTab(tab.name)">{{ tab.label
@@ -485,20 +485,18 @@
                                 <div class="tab-content">
                                   <div class="tab-pane fade show" *ngFor="let tab of subControl.tabs" [class.show]="activeTab === tab.name"
                                     [class.active]="activeTab === tab.name" [id]="tab.name" role="tabpanel">
-                                    <div *ngFor="let item of tab.content" class="{{ item.class }}">
-                                      <div *ngIf="item.type === 'expandable'" class="typecss">
-                                        <div class="expandable-border">
-                                          <div (click)="toggleContent(item.name)" [class]="subControl.class"
-                                            style="display: flex; flex-direction: row;">
-                                            <img src="{{item.image?.src}}" alt="{{item.image?.alt}}" class="expandable-image">
-                                            <label class="expandable-label">{{item.label}}</label>
-                                          </div>
-                                          <div *ngIf="expandedItem === item.name">
-                                            <p>Details about {{item.label}}</p>
-                                          </div>
-                                        </div>
+                                    <ng-container *ngIf="tab.selectCheckboxOptions" [formGroupName]="tab.name">
+                                      <div *ngFor="let option of tab.selectCheckboxOptions"
+                                      class="checkbox-wrapper col-6 col-md-6 col-lg-6">
+                                      <div>
+                                        <input type="checkbox" [formControlName]="option.value" id="{{option.value}}">
+                                        <label for="{{option.value}}" class="custom-checkbox">
+                                          <img src="{{ option.imagePath }}" alt="{{option.label}}">
+                                          <span>{{option.value?(option.value|translate):''}}</span>
+                                        </label>
                                       </div>
                                     </div>
+                                    </ng-container>
                                   </div>
                                 </div>
                               </div>
@@ -510,6 +508,26 @@
                                     class="checkboxes"></label>
                                 </div>
                               </div>
+                              <div *ngIf="subControl.type === 'multiSelectCheckbox'">
+                                <label *ngIf="subControl.visibleLabel" class="multi-select-label">{{ subControl.label }}</label>
+                                <div [formGroupName]="subControl.name" class="checkbox-container">
+                                  <div *ngFor="let option of subControl.selectCheckboxOptions"
+                                    class="checkbox-wrapper col-6 col-md-6 col-lg-3">
+                                    <div>
+                                      <input type="checkbox" [formControlName]="option.value" id="{{option.value}}"
+                                        >
+                                      <label for="{{option.value}}" class="custom-checkbox">
+                                        <img src="{{ option.imagePath }}" alt="{{option.label}}">
+                                        <span>{{option.value?(option.value|translate):''}}</span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <small *ngIf="checkValidations(subControl)" class="text-danger">{{
+                                  getValidationErrors(subControl)?
+                                  (getValidationErrors(subControl)| translate) : ''}}
+                                </small>
+                              </div>
                             </ng-container>
                           </ng-container>
                         </p-tabPanel>
@@ -520,19 +538,30 @@
               </ng-container>
             </div>
 
-            <div *ngIf="control.type === 'banner'" [class]="control.class" class="typecss">
-              <div class="banner-border">
-                <h2 class="cardnames">{{ control.name }}</h2>
-                <div class="details-row">
-                  <span>Height: <br>{{ control.details.height }}</span>
-                  <span>Weight: <br>{{ control.details.weight }}</span>
-                  <span>DOB: <br>{{ control.details.dob }}</span>
-                </div>
-                <div class="details-row">
-                  <span>Pan Card: <br>{{ control.details.panCard }}</span>
-                  <span>Health Conditions: <br>{{ control.details.healthConditions }}</span>
-                </div>
-              </div>
+            <div *ngIf="control.type === 'banner'" [class]="control.class" class="banner-container">
+              <ng-container [formArrayName]="control.name">
+                <ng-container *ngFor="let allSubForm of control.dynamicControls; index as i">
+                  <ng-container *ngIf="i > 0">
+                    <ng-container [formGroupName]="i - 1">
+                      <div class="col-md-4 banner-card">
+                        <ng-container *ngFor="let subControl of allSubForm">
+                          <ng-container *ngIf="subControl.visible !== false">
+                            <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)" 
+                                 [class]="subControl.class" class="display-container" [hidden]="!subControl.visible">
+                              <label class="display_label" *ngIf="subControl.visibleLabel === true">
+                                {{ subControl.label }} 
+                                <span *ngIf="subControl.validators">*</span>
+                              </label>
+                              <input *ngIf="subControl.disabled" class="view_Text" formControlName="{{ subControl.name }}" 
+                                     [type]="subControl.type" readonly>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
             </div>
 
             <div *ngIf="control.type==='phonenumber'" [class]="control.class" class="typecss">

@@ -199,6 +199,7 @@ export class AbhiDynamicFormComponent {
   }
 
   initializeForm() {
+    console.log(this.form,this.formData);
     this.showHtmlContent = false;
     this.dynamciallyLoadCSS(this.form);
     this.form.formSections.forEach((section: any) => {
@@ -345,6 +346,7 @@ export class AbhiDynamicFormComponent {
       // this.showHtmlContent = true;
       this.flattenObject(this.formData);
       this.spinner.hide();
+      console.log(this.dynamicFormGroup.value);
     }
   }
 
@@ -402,6 +404,30 @@ export class AbhiDynamicFormComponent {
             if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
             if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
           })
+        }
+
+        if (control.type === 'multiSelectCheckbox' && control.selectCheckboxOptions) {
+
+          // this.callMethod(control.methodName, control);
+          const controlGroup = this.fb.group({});
+          control.selectCheckboxOptions.forEach(option => {
+            controlGroup.addControl(option.value, new FormControl(false));
+          });
+          formGroup.addControl(control.name, controlGroup);
+
+        }
+        if (control.type === 'subtabview') {
+          control.tabs.forEach(element => {
+            
+            
+            // this.callMethod(control.methodName, control);
+            const controlGroup = this.fb.group({});
+            element.selectCheckboxOptions?.forEach(option => {
+              controlGroup.addControl(option.value, new FormControl(false));
+            });
+            formGroup.addControl(element.name, controlGroup);
+          });
+
         }
         if (control.type == 'select' && control.methodName) {
           if (control.options?.length == 0) {
@@ -999,6 +1025,7 @@ export class AbhiDynamicFormComponent {
   }
 
   async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
+    console.log(methodName);
     let filteredArgs = args.filter(arg => arg !== undefined && arg !== null);
 
     if (methodName == 'addOrRemoveAdditionalInsuredMember') {
@@ -2601,6 +2628,15 @@ export class AbhiDynamicFormComponent {
         }
       });
     });
+  }
+
+  mergeMember(control:any){
+    console.log("anekant",this.formData.insuredMembers);
+    const a = Object.keys(this.formData.insuredMembers).filter(
+      key => this.formData.insuredMembers[key] === true
+    );
+    control.value = a;
+    console.log(control,this.formData,a);
   }
 
 }

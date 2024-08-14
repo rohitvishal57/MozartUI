@@ -202,8 +202,7 @@
 
 .main-container .right-panel .inputField_Text,
 .main-container .right-panel .inputField_Select,
-.main-container .right-panel .inputField_Text_disabled
- {
+.main-container .right-panel .inputField_Text_disabled {
     font-weight: 500;
     font-family: "Anek Latin", sans-serif;
     font-size: 15px;
@@ -240,12 +239,12 @@
     padding-right: 35px;
 }
 
-.main-container .right-panel .boldtext_input:focus{
+.main-container .right-panel .boldtext_input:focus {
     border: none;
 }
 
 /*for disabled*/
-.main-container .right-panel .inputField_Text_disabled.disabled-has-value+label{
+.main-container .right-panel .inputField_Text_disabled.disabled-has-value+label {
     top: 3px;
     left: 12px;
     font-size: 12px;
@@ -272,12 +271,12 @@
 }
 
 .main-container .right-panel .inputField_Text.disabled-has-value+label,
-.main-container .right-panel .inputField_Select.disabled-has-value+label{
+.main-container .right-panel .inputField_Select.disabled-has-value+label {
     top: 3px;
     left: 12px;
     font-size: 12px;
     color: #666;
-    background-color: rgba(255, 255, 255,0.8);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 0 3px;
     border-radius: 2px;
 }
@@ -452,16 +451,19 @@
     display: flex !important;
     align-items: flex-start;
 }
+
 .main-container .right-panel .acceptTermsCheck .checkboxes {
     padding: 0 6px;
     width: 100%;
     margin-bottom: 0px;
     margin-top: 0;
 }
+
 .main-container .right-panel .acceptTermsCheck .checkbox-label {
     margin-top: 5px;
     margin-bottom: 0;
 }
+
 .main-container .right-panel .acceptTermsCheck input[type="checkbox"] {
     display: block;
     height: auto;
@@ -789,6 +791,7 @@
     cursor: pointer;
     color: black;
 }
+
 .main-container .right-panel .next-btn {
     background-color: #c72229;
     padding: 10px 31px;
@@ -887,10 +890,12 @@
     font-family: "Anek Latin", sans-serif;
     /* Adjust color */
 }
+
 .main-container .right-panel .ah-opcovers {
     padding: 30px 0px 5px !important;
     min-height: 100px;
 }
+
 .main-container .right-panel .boldtext-label {
     font-size: 12px;
 }
@@ -900,24 +905,29 @@
     font-weight: 400;
     border: none;
 }
+
 .main-container .right-panel .colorbold {
     color: #c72229;
 }
+
 .main-container .right-panel .radio-option-label {
     font-size: 13px;
     margin-left: 7px;
     margin-top: 10px;
 }
+
 .main-container .right-panel .radio-button {
     display: flex;
     flex-direction: row;
     padding: 6px 30px 20px 4px;
 }
+
 .main-container .right-panel .select-button {
     display: flex;
     justify-content: center;
     padding: 16px;
 }
+
 .main-container .right-panel .bigbutton {
     width: 12%;
     display: flex;
@@ -929,6 +939,7 @@
     outline: none;
     border-radius: 10px;
 }
+
 .main-container .right-panel .acceptTermsCheck {
     border: 0px solid #ccc;
     cursor: pointer;
@@ -939,11 +950,13 @@
     padding: 4px;
 
 }
+
 .main-container .right-panel .acceptTermsCheck input[type="checkbox"] {
     display: block;
     height: auto;
     width: 17px;
 }
+
 .main-container .right-panel .checkbox-label {
     font-weight: 500px;
     margin-top: 2px;
@@ -1023,6 +1036,38 @@
     color: #fff;
 }
 
+.main-container .right-panel .banner-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* // gap: 20px; */
+}
+
+.main-container .right-panel .banner-container .banner-card {
+    background-color: #F9FAFB;
+    border: none;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.main-container .right-panel .banner-container .banner-card .display-container {
+    display: inline-table;
+    margin-bottom: 15px;
+}
+
+.main-container .right-panel .banner-container .banner-card .display-container .display_label {
+    font-size: 12px;
+    color: #797979
+}
+
+.main-container .right-panel .banner-container .banner-card .display-container .view_Text {
+    width: 100%;
+    border: none;
+    background-color: #F9FAFB;
+}
+
+
 /* .main-container .right-panel .col-md-6 {
     width: 47%;
 } */
@@ -1072,7 +1117,7 @@
     justify-content: center;
     height: 40px;
     min-width: 100px;
-    
+
 }
 
 .p-tabview .p-tabview-nav li .p-tabview-nav-link span,
@@ -1093,12 +1138,12 @@
     min-width: 100px;
 }
 
-.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link a
-{
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link a {
     color: rgb(187, 23, 52) !important;
     text-decoration: none !important;
     font-size: 14px;
 }
+
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link span {
     color: rgb(187, 23, 52) !important;
     text-decoration: none !important;
@@ -1109,32 +1154,38 @@
     color: rgb(187, 23, 52) !important;
     text-decoration: none !important;
 }
+
 .main-container .left-nav {
     width: 300px;
 }
+
 .main-container .right-panel {
     width: 100%;
 }
+
 .left-nav-mobileMain {
     display: none;
     width: 90%;
-    margin:15px auto;
+    margin: 15px auto;
     padding: 20px 30px;
     background-color: #FFF;
     border-radius: 20px;
-    box-shadow:0 2px 6px 0 rgba(0, 0, 0, 0.05), 0 2px 6px 0 rgba(0, 0, 0, 0.05);   
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.05), 0 2px 6px 0 rgba(0, 0, 0, 0.05);
 }
+
 .left-nav-mobileMain .left-nav-mobileSubMain {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.left-nav-mobileMain .left-nav-mobileSubMain .stepTitle{
+
+.left-nav-mobileMain .left-nav-mobileSubMain .stepTitle {
     font-size: 16px;
     font-weight: 600;
     font-family: "Anek Latin", sans-serif;
     color: #282828;
 }
+
 .left-nav-mobileMain .left-nav-mobileSubMain .stepCountMain {
     font-size: 14px;
     font-weight: 600;
@@ -1142,10 +1193,12 @@
     color: #C91429;
     text-transform: uppercase;
 }
+
 .left-nav-mobileMain .left-nav-mobileSubMain .stepCountMain .stepCount {
     color: #282828;
     font-weight: 400;
 }
+
 .main-container .right-panel .thankYou,
 .main-container .right-panel .qqthankyou,
 .main-container .right-panel .button-container,
@@ -1155,71 +1208,92 @@
     margin-left: 0;
     justify-content: center;
 }
+
 .main-container .right-panel .thankYou .img1Popup {
     margin: 0;
 }
-.main-container .right-panel .inputField_Text:focus+label, 
-.main-container .right-panel .inputField_Text.has-value+label, 
-.main-container .right-panel .inputField_Select:focus+label, 
-.main-container .right-panel .inputField_Select.has-value+label
-{
-    background: rgb(255,255,255);
-    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(242,243,246,1) 100%);
+
+.main-container .right-panel .inputField_Text:focus+label,
+.main-container .right-panel .inputField_Text.has-value+label,
+.main-container .right-panel .inputField_Select:focus+label,
+.main-container .right-panel .inputField_Select.has-value+label {
+    background: rgb(255, 255, 255);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(242, 243, 246, 1) 100%);
 }
-.main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
+
+.main-container .right-panel .next-btn,
+.main-container .right-panel .back-btn {
     padding: 10px 21px;
 }
+
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
         width: 100%;
         text-align: center;
         margin: 0;
     }
-    .main-container .right-panel .buttonTotal-Premium, .main-container .right-panel .custID {
+
+    .main-container .right-panel .buttonTotal-Premium,
+    .main-container .right-panel .custID {
         margin-left: 0;
         width: 100%;
         justify-content: center;
     }
 }
+
 @media (max-width:912px) {
     .main-container .left-nav {
         width: 350px;
     }
+
     .main-container .right-panel .radio-card-label {
         width: 33%;
     }
+
     .main-container .right-panel .big-button .select-button .bigbutton {
         width: 20%;
     }
-    .main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
+
+    .main-container .right-panel .next-btn,
+    .main-container .right-panel .back-btn {
         margin: 6px 8px;
     }
 }
+
 @media (max-width:768px) {
-    .main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
+
+    .main-container .right-panel .next-btn,
+    .main-container .right-panel .back-btn {
         margin: 6px 3px;
     }
+
     .main-container .right-panel .typecss {
         padding-left: 6px;
         padding-right: 6px;
     }
 }
+
 @media (max-width:767px) {
     .main-container {
         flex-direction: column;
     }
-    .main-container .left-nav, .main-container .right-panel {
+
+    .main-container .left-nav,
+    .main-container .right-panel {
         width: 90%;
         margin: 15px auto;
     }
+
     .main-container .left-nav {
         display: flex;
         flex-direction: row;
         overflow-y: auto;
     }
+
     .line-container {
         display: none;
     }
+
     .main-container .left-nav .details {
         min-height: initial;
         padding: 5% 0 0 33px;
@@ -1227,42 +1301,54 @@
         justify-content: center;
         align-items: center;
     }
+
     .main-container .left-nav .details:last-child {
         padding: 5% 33px 0 33px;
     }
+
     .main-container .left-nav .details .step-count {
         width: 37px;
     }
+
     .main-container .left-nav .details .step-label {
         flex: 0 0 auto;
     }
+
     .left-nav-hideMobile {
         display: none !important;
     }
+
     .left-nav-mobileMain {
         display: block;
     }
+
     .main-container .right-panel .radio-card-container {
         flex-direction: column;
     }
+
     .main-container .right-panel .radio-card-label {
         width: 100%;
     }
+
     .main-container .right-panel .big-button .select-button .bigbutton {
         width: 50%;
     }
+
     .main-container .right-panel .radio-button .radio-button {
         padding: 6px 30px 20px 4px;
     }
-    .main-container .right-panel .next-btn, .main-container .right-panel .back-btn {
+
+    .main-container .right-panel .next-btn,
+    .main-container .right-panel .back-btn {
         float: none;
         position: relative;
     }
+
     .main-container .right-panel .next-btn {
         left: 115px;
     }
+
     .main-container .right-panel .back-btn {
         left: -97px;
     }
 }
-
