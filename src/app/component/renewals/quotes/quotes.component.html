@@ -1,232 +1,412 @@
 <div class="main-container">
-    <div class="all-quotes">
+    <div class="all-quotes" *ngIf="!showSubQuotes && !showComparison">
         <div class="header-val">All Quotes</div>
         <div class="main-quotes-cnt">
             <!--  -->
             <div class="quotes-header">
                 <div class="list-of-filter">
-                    <div class="left-header"  #filterSection>
+                    <div class="left-header" #filterSection>
                         <div class="left-value1">Quick filters</div>
                         <div class="filter-types">
-                            <div><p>All Policies (30)</p></div>
-                            <div><p>< 30 Days (7)</p></div>
-                            <div><p>30-60 Days (7)</p></div>
-                            <div><p>60-90 Days (7)</p></div>
-                            <div><p>Expired (7)</p></div>                     
+                            <div [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">
+                                <p>All Policies ({{ filterCounts.all }})</p>
+                            </div>
+                            <div [ngClass]="{'active': activeFilter === '30days'}" (click)="filterQuotes('30days')">
+                                <p>< 30 Days ({{ filterCounts['30days'] }})</p>
+                            </div>
+                            <div [ngClass]="{'active': activeFilter === '30-60days'}" (click)="filterQuotes('30-60days')">
+                                <p>30-60 Days ({{ filterCounts['30-60days'] }})</p>
+                            </div>
+                            <div [ngClass]="{'active': activeFilter === '60-90days'}" (click)="filterQuotes('60-90days')">
+                                <p>60-90 Days ({{ filterCounts['60-90days'] }})</p>
+                            </div>
+                            <div [ngClass]="{'active': activeFilter === 'expired'}" (click)="filterQuotes('expired')">
+                                <p>Expired ({{ filterCounts.expired }})</p>
+                            </div>
                         </div>
                     </div>
                     <div class="right-header" *ngIf="!showSearch">
                         <div class="quotes-icon">
                             <i class="fa-solid fa-download"></i>
                         </div>
-                        <div class="quotes-icon"  (click)="toggleSearch()" *ngIf="!showSearch">
+                        <div class="quotes-icon" (click)="toggleSearch()" *ngIf="!showSearch">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                         <div class="filter-icon" (click)="toggleFilterDropdown()">
-                            <div><i class="fa-solid fa-filter"></i></div> 
-                             <p>FIlter(2)</p>
+                            <div><i class="fa-solid fa-filter"></i></div>
+                            <p>FIlter({{appliedFiltersCount}})</p>
                         </div>
-                        <div class="quotes-list-icon" (click)="quotesViews()">
+                        <div class="quotes-list-icon" [ngClass]="{'active': selectedView === 'list'}" (click)="quotesViews('list')">
                             <i class="fa-solid fa-list"></i>
                         </div>
-                        <div class="quotes-list-icon" (click)="quotesViews()">
+                        <div class="quotes-list-icon" [ngClass]="{'active': selectedView === 'grid'}" (click)="quotesViews('grid')">
                             <i class="fa-solid fa-table-cells-large"></i>
                         </div>
                     </div>
                     <div class="search-field" *ngIf="showSearch">
                         <div class="search-container">
-                          <i class="fa-solid fa-magnifying-glass"></i>
-                          <input type="text" placeholder="Search for any leads here" />
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input [(ngModel)]="searchString" (input)="handleSearchString()" type="text" placeholder="Search for any leads here" (keydown.enter)="handleEnter()" (blur)="handleBlur($event)" />
                         </div>
-                        <button (click)="toggleSearch()">
-                          <i class="fa-solid fa-xmark"></i>
-                        </button>
                     </div>
-                </div>             
+                </div>
             </div>
             <!--  -->
             <!-- Filter Dropdown -->
-            <div class="filter-dropdown" #filterDropdown>
-                <div class="filter-content">
-                    <h3>Filter</h3>
-                    <div class="filter-options">
-                        <label>Products</label>
-                        <div>
-                            <input type="checkbox" id="product1">
-                            <label for="product1">Active Fit</label>
+            <div class="filter-dropdown" *ngIf="toggeledropdown===true">
+                <div class="filters-types-cnt">
+                    <div class="filters-title">Filter</div>
+                    <div class="products-filter">
+                        <div class="products-filter-title">Products</div>
+                        <div class="products-list">
+                            <ng-container *ngFor="let product of productsList; let i = index">
+                                <div class="product-item" *ngIf="i % 2 === 0">
+                                    <input [(ngModel)]="product.selected" type="checkbox" id="product{{i}}" (change)="calculateAppliedFiltersCount()" class="product-checkbox" />
+                                    <label for="product{{i}}">{{productsList[i].productname}}</label>
+                                </div>
+                                <div class="product-item" *ngIf="i % 2 !== 0">
+                                    <input [(ngModel)]="product.selected" type="checkbox" id="product{{i}}" (change)="calculateAppliedFiltersCount()" />
+                                    <label for="product{{i}}">{{productsList[i].productname}}</label>
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
-                    <div class="filter-options">
-                        <label>Policy Type</label>
-                        <div>
-                            <input type="checkbox" id="product1">
-                            <label for="product1">Active Fit</label>
+                    <div class="policy-types-filter">
+                        <div class="policy-types-filter-title">Policy</div>
+                        <div class="policy-types-list">
+                            <ng-container *ngFor="let policyType of policyTypes; let i = index">
+                                <div class="policy-type" *ngIf="i % 2 === 0">
+                                    <input [(ngModel)]="policyType.selected" type="checkbox" id="policyType{{i}}" (change)="calculateAppliedFiltersCount()" class="policy-type-checkbox" />
+                                    <label for="policyType{{i}}">{{policyType.name}}</label>
+                                </div>
+                                <div class="policy-type" *ngIf="i % 2 !== 0">
+                                    <input [(ngModel)]="policyType.selected" type="checkbox" id="policyType{{i}}" (change)="calculateAppliedFiltersCount()" />
+                                    <label for="policyType{{i}}">{{policyType.name}}</label>
+                                </div>
+                            </ng-container>
                         </div>
                     </div>
-                    <div class="filter-options">
-                        <label>Date Range</label>
-                        <div class="filter-options-list">
-                            <input type="date" id="date1" placeholder="Select Start Date">
-                            <input type="date" id="date1" placeholder="Select End Date">
+  
+                    <div class="date-filter">
+                        <div class="date-filter-title">Date Range</div>
+                        <div class="date-ranges">
+                            <!-- <div class="typecss"> -->
+                            <div class="from-date-input">
+                                <!-- <input [(ngModel)]="fromDate" type="date" id="date1" (change)="calculateAppliedFiltersCount()" placeholder="Select Start Date" onfocus="this.type='date' " onblur="this.type='text' "> -->
+                                <!-- <label for="date1" class="placeholder">Select Start Date</label> -->
+                                <!-- <input class="inputField_Text"  [zngClass="has-value">                          
+                          <label>Select Start Date</label> -->
+                                <!-- </div> -->
+                                <div class="flex-auto">
+                                    <p-calendar [(ngModel)]="fromDate" [showIcon]="true" inputId="icondisplay" placeholder="select start date" />
+                                </div>
+                            </div>
+                            <div class="to-date-input">
+                                <!-- <input [(ngModel)]="toDate" type="date" id="date2" (change)="calculateAppliedFiltersCount()" placeholder="Select End Date"> -->
+                                <!-- <label for="date2" class="placeholder">Select End Date</label> -->
+                                <div class="flex-auto">
+                                    <p-calendar [(ngModel)]="toDate" [showIcon]="true" inputId="icondisplay" placeholder="select end date" />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="filter-actions">
-                        <button (click)="cancel()">Cancel</button>
-                        <button class="apply-btn" (click)="applyFilters()">Apply</button>
-                    </div>
+                </div>
+                <div class="filters-buttons">
+                    <div class="cancel-button" (click)="cancel()">Cancel</div>
+                    <div class="apply-button" [ngClass]="getApplyButtonClass()" (click)="applyFilter()">Apply</div>
                 </div>
             </div>
-            
             <!--cards  -->
             <div class="card-cnt">
-                <div class="card-outer-cnt" *ngIf="quotesView">
-                <div class="card" *ngFor="let item of data | paginate: { itemsPerPage: 9, currentPage: p } ; let i = index">
-                    <div class="top-section">
-                      <div class="card-header-cnt">
-                        <div class="name-and-rating">
-                        <span class="name">{{ item.Name }}</span>
-                        <div class="rating">
-                          <span class="star"><i class="fa-solid fa-star"></i></span>
-                          <span class="rating-value">{{ item.Rating }}</span>
+                <!-- <div *ngIf="quotesView"> -->
+                <div class="card-outer-cnt" *ngIf="selectedView == 'grid'">
+                    <div class="card" *ngFor="let item of filteredData | searchQuotes : searchString | paginate: { itemsPerPage: 9, currentPage: p } ; let i = index" (click)="renewalJoureney()">
+                        <div class="top-section">
+                            <div class="card-header-cnt">
+                                <div class="name-and-rating">
+                                    <span class="name">{{ item.Name }}</span>
+                                    <div class="rating">
+                                        <span class="star" [ngClass]="getStarClass(item.Rating)"><i class="fa-solid fa-star"></i></span>
+                                        <span class="rating-value">{{ item.Rating }}</span>
+                                    </div>
+                                </div>
+                                <div>{{ item.Plan }}</div>
+                            </div>
+                            <div class="icons">
+                                <div class="icon">
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </div>
+                                <div class="icon" (click)="$event.stopPropagation()"><i class="fa-solid fa-shield-heart"></i></div>
+                                <div class="icon" (click)="$event.stopPropagation()" (click)="toggleEllipsisDropdown(i)">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </div>
+                            </div>
                         </div>
-                       </div>
-                       <div>{{ item.Plan }}</div>
-                      </div>
-                      <div class="icons">
-                        <div class="icon"><i class="fa-regular fa-pen-to-square"></i></div>
-                        <div class="icon"><i class="fa-solid fa-shield-heart"></i></div>
-                        <div class="icon" (click)="toggleEllipsisDropdown(i)"><i class="fa-solid fa-ellipsis-vertical"></i></div>
-                      </div>
-                    </div>
-                    <div class="details-section">
-                     <div class="policy-detail">
-                      <div class="detail">
-                        <span class="label">Policy Type</span>
-                        <span class="value">{{ item['Policy Type'] }}</span>
-                      </div>
-                      <div class="detail">
-                        <span class="label">Policy No.</span>
-                        <span class="value">{{ item['Policy No.'] }}</span>
-                      </div>
-                      <div class="detail">
-                        <span class="label">Status</span>
-                        <span class="value">{{ item.Status }}</span>
-                      </div>
-                    </div>
-                    <div class="policy-detail">
-
-                      <div class="detail">
-                        <span class="label">Mobile No.</span>
-                        <span class="value">{{ item['Mobile No.'] }}</span>
-                      </div>
-                      <div class="detail">
-                        <span class="label">Date of Renewal</span>
-                        <span class="value">{{ item['Date of Renewal'] }}</span>
-                      </div>
-                    </div>
-
-                    <div class="policy-detail2">
-                      <div class="detail widths">
-                        <span class="label">Renewal Premium</span>
-                        <div class="value">
-                          <div class="sub-detail">
-                            <div>Total Premium</div>
-                            <div> {{ item['Total Premium'] }}</div></div>
-                          <div class="sub-detail benifit">
-                            <div>HR benefits</div>
-                            <div> {{ item['HR benefits'] }}</div></div>
-                          <div class="sub-detail">
-                            <div>Renewal Premium </div>
-                            <div>{{ item['Renewal Premium Amount'] }}</div></div>
+                        <div class="details-section">
+                            <div class="policy-detail">
+                                <div class="detail">
+                                    <span class="label">Policy Type</span>
+                                    <span class="value">{{ item['PolicyType'] }}</span>
+                                </div>
+                                <div class="detail">
+                                    <span class="label">Policy No.</span>
+                                    <span class="value">{{ item['PolicyNo.'] }}</span>
+                                </div>
+                                <div class="detail">
+                                    <span class="label">Status</span>
+                                    <span class="value">{{ item.Status }}</span>
+                                </div>
+                            </div>
+                            <div class="policy-detail">
+                                <div class="detail">
+                                    <span class="label">MobileNo</span>
+                                    <span class="value">{{ item.MobileNo}}</span>
+                                </div>
+                                <div class="detail">
+                                    <span class="label">Date of Renewal</span>
+                                    <span class="value">{{ item['DateOfRenewal'] }}</span>
+                                </div>
+                            </div>
+                            <div class="policy-detail2">
+                                <div class="detail widths">
+                                    <span class="label">Renewal Premium</span>
+                                    <div class="value">
+                                        <div class="sub-detail">
+                                            <div>Total Premium</div>
+                                            <div>{{ item['TotalPremium'] }}</div>
+                                        </div>
+                                        <div class="sub-detail benifit">
+                                            <div>HR benefits</div>
+                                            <div>{{ item['HRbenefits'] }}</div>
+                                        </div>
+                                        <div class="sub-detail">
+                                            <div>Renewal Premium</div>
+                                            <div>{{ item['RenewalPremiumAmount'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detail widths">
+                                    <span class="label">Modification</span>
+                                    <span class="value1">{{ item.Modification }}</span>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      <div class="detail widths">
-                        <span class="label">Modification</span>
-                        <span class="value1">{{ item.Modification }}</span>
-                      </div>
+                        <div class="ellipsis-dropdown" *ngIf="showEllipsisDropdown === i">
+                            <div (click)="$event.stopPropagation()" (click)="download(item)"><i class="fa-solid fa-download"></i> Download</div>
+                            <div (click)="$event.stopPropagation()" (click)="delete(item)"><i class="fa-solid fa-trash"></i> Delete</div>
+                            <div (click)="$event.stopPropagation()" (click)="shareViaEmail(item)"><i class="fa-regular fa-envelope"></i> Share via email</div>
+                            <div (click)="$event.stopPropagation()" (click)="sendRenewalNotice(item)">Send Renewal Notice</div>
+                            <div (click)="$event.stopPropagation()" (click)="createAutoDebitLink(item)">
+                                Create Auto-Debit Registration Link
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                    <div class="ellipsis-dropdown" *ngIf="showEllipsisDropdown === i">
-                        <div (click)="download(item)"> <i class="fa-solid fa-download"></i>   Download</div>
-                        <div (click)="delete(item)"> <i class="fa-solid fa-trash"></i>   Delete</div>
-                        <div (click)="shareViaEmail(item)"> <i class="fa-regular fa-envelope"></i>   Share via email</div>
-                        <div (click)="sendRenewalNotice(item)">Send Renewal Notice</div>
-                        <div (click)="createAutoDebitLink(item)">Create Auto-Debit Registration Link</div>
-                    </div>
-                  </div>
                 </div>
-
+                <!-- </div> -->
                 <!-- tabel -->
-
-                <div *ngIf="!quotesView">
-                    <div class="table-format-cnt table-responsive">
-                      <table class="table table-striped table-borderless">
-                        <thead>
-                          <tr class="table-headings-row">
-                            <th scope="col" class="col-proposer">Proposer</th>
-                            <th scope="col" class="col-ratings">Ratings</th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Policy Type & No</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Renewal Premium</th>
-                            <th scope="col">Mobile No</th>
-                            <th scope="col">Date Of Renewal</th>
-                            <th scope="col">Modification</th>
-                            <th scope="col">Notice</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let row of data | paginate: { itemsPerPage: 7, currentPage: p }; let i = index" class="values">
-                            <td>{{ row.Name }}</td>
-                            <td><i class="fa-solid fa-star star-icon"></i> {{ row.Rating }}</td>
-                            <td>{{ row.Plan }}</td>
-                            <td class="policy-type-no">
-                              <p>{{ row['Policy Type'] }}</p>
-                              <p>{{ row['Policy No.'] }}</p>
-                            </td>
-                            <td>{{ row.Status }}</td>
-                            <td class="renewal">
-                              <div class="total-premium">
-                                <p>Total Premium</p>
-                                <p>{{ row['Total Premium'] }}</p>
-                              </div>
-                              <div class="hr-benefits">
-                                <p>HR Benefits</p>
-                                <p>{{ row['HR benefits'] }}</p>
-                              </div>
-                              <div class="renewal-premium">
-                                <p>Renewal Premium</p>
-                                <p>{{ row['Renewal Premium Amount'] }}</p>
-                              </div>
-                            </td>
-                            <td>{{ row['Mobile No.'] }}</td>
-                            <td>{{ row['Date of Renewal'] }}</td>
-                            <td class="modification">{{ row.Modification }}</td>
-                            <td class="icons">
-                              <div class="icon"><i class="fa-regular fa-pen-to-square"></i></div>
-                              <div class="icon"><i class="fa-solid fa-shield-heart"></i></div>
-                              <div class="icon" (click)="toggleEllipsisDropdown(i)"><i class="fa-solid fa-ellipsis-vertical"></i></div>  
-                            </td>
-                            <td>
-                                <div class="ellipsis-dropdown2" *ngIf="showEllipsisDropdown === i">
-                                    <div class="dropdown-item" (click)="download(row)"><i class="fa-solid fa-download"></i> Download</div>
-                                    <div class="dropdown-item" (click)="delete(row)"><i class="fa-solid fa-trash"></i> Delete</div>
-                                    <div class="dropdown-item" (click)="shareViaEmail(row)"><i class="fa-regular fa-envelope"></i> Share via email</div>
-                                    <div class="dropdown-item" (click)="sendRenewalNotice(row)">Send Renewal Notice</div>
-                                    <div class="dropdown-item" (click)="createAutoDebitLink(row)">Create Auto-Debit Registration Link</div>
-                                  </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                <div class="table-format-cnt table-responsive" *ngIf="selectedView == 'list'">
+                    <div>
+                        <table class="table table-striped table-borderless">
+                            <thead>
+                                <tr class="table-headings-row">
+                                    <th scope="col" class="col-proposer">Proposer</th>
+                                    <th scope="col" class="col-ratings">Ratings</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Policy Type & No</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Renewal Premium</th>
+                                    <th scope="col">Mobile No</th>
+                                    <th scope="col">Date Of Renewal</th>
+                                    <th scope="col">Modification</th>
+                                    <th scope="col">Notice</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of filteredData | searchQuotes : searchString | paginate: { itemsPerPage: 6, currentPage: p }; let i = index" class="values" (click)="renewalJoureney()">
+                                    <td>{{ row.Name }}</td>
+                                    <td>
+                                        <div class="rating">
+                                            <span class="star" [ngClass]="getStarClass(row.Rating)"><i class="fa-solid fa-star"></i></span>
+                                            <span class="rating-value">{{ row.Rating }}</span>
+                                        </div>
+                                    </td>
+                                    <td>{{ row.Plan }}</td>
+                                    <td class="policy-type-no">
+                                        <div>{{ row['PolicyType'] }}</div>
+                                        <div>{{ row['PolicyNumber'] }}</div>
+                                    </td>
+                                    <td>{{ row.Status }}</td>
+                                    <td class="renewal">
+                                        <div class="total-premium">
+                                            <p>Total Premium</p>
+                                            <p>{{ row['TotalPremium'] }}</p>
+                                        </div>
+                                        <div class="hr-benefits">
+                                            <p>HR Benefits</p>
+                                            <p>{{ row['HRbenefits'] }}</p>
+                                        </div>
+                                        <div class="renewal-premium">
+                                            <p>Renewal Premium</p>
+                                            <p>{{ row['RenewalPremiumAmount'] }}</p>
+                                        </div>
+                                    </td>
+                                    <td>{{row.MobileNo}}</td>
+                                    <td>{{ row['DateOfRenewal'] }}</td>
+                                    <td class="modification">{{ row.Modification }}</td>
+                                    <td>
+                                        <div class="notice-icons">
+                                            <div class="icon">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </div>
+                                            <div class="icon" (click)="$event.stopPropagation()">
+                                                <i class="fa-solid fa-shield-heart"></i>
+                                            </div>
+                                            <div class="icon" (click)="$event.stopPropagation()" (click)="toggleEllipsisDropdown(i)">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- <td> -->
+                                        <div class="ellipsis-dropdown2" *ngIf="showEllipsisDropdown === i">
+                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="download(row)"><i class="fa-solid fa-download"></i> Download</div>
+                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="delete(row)"><i class="fa-solid fa-trash"></i> Delete</div>
+                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="shareViaEmail(row)"><i class="fa-regular fa-envelope"></i> Share via email</div>
+                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="sendRenewalNotice(row)">
+                                                Send Renewal Notice
+                                            </div>
+                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="createAutoDebitLink(row)">
+                                                Create Auto-Debit Registration Link
+                                            </div>
+                                        </div>
+                                    <!-- </td> -->
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                  </div>
-                  
-                 <!-- tabel end -->
                 </div>
-        <!--  -->
-                 <div class="pagination">
-                   <pagination-controls (pageChange)="p = $event"></pagination-controls>
-                 </div>
+                <!-- tabel end -->
+                <!-- image no data -->
+                <div class="no-data" *ngIf="(filteredData | searchQuotes: searchString).length === 0">
+                    <img src="assets/images/noDataFound.png" alt="No Data Found">
+                </div>
+                <!--  -->
+            </div>
+            <!--  -->
+            <div class="pagination">
+                <div class="no-data-bottom-section-cnt" *ngIf="(filteredData | searchQuotes: searchString).length === 0 ; else safe">
+                    <div class="no-data-bottom">
+                        <div class="left-cnt">
+                            <div class="text-message1">
+                                Hi Ajay, let's get started with new leads
+                            </div>
+                            <div class="text-message2">
+                                <div class="lightbulb-icon">
+                                    <img src="assets/images/Lightbulb Icon.png" alt="No Data Found" />
+                                </div>
+                                <div class="message">
+                                    You need 5 leads to hit your goal this month
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-cnt">
+                            <div class="plus-symbol">+</div>
+                            <div>Create new quote</div>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #safe>
+                    <div class="pages">
+                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
     </div>
-</div>
+    <!-- <div class="sub-quotes-main-cnt">
+      <div class="sub-quotes-header-cnt">
+           <div class="left-header">
+              <p class="customer-photo"><img src="assets/renewalLogos/profile-photo.jpg" alt="no image" width="33px" height="33px"></p>
+              <p class="customer-name">Ishwar vidhyarthi</p>
+           </div>
+           <div class="right-header">
+              <div class="download-icon"><i class="fa-solid fa-download"></i></div>
+               <div class="grid-list-views">
+                  <div class="grid-view"><i class="fa-solid fa-table-cells-large"></i><span class="grid-view-title">Grid View</span></div>
+                  <div class="list-view"><i class="fa-solid fa-list"></i> <span class="list-view-title">List View</span></div>
+               </div>
+           </div>
+      </div>
+      <div class="sub-quotes-cnt">
+          <div class="sub-quotes">
+              <div class="quote-type-cnt">
+                <div class="quote-type-title">Quote Type</div>
+                <div class="quote-type-list">
+                <div class="quote-type-names" *ngFor="let member of members" [ngClass]="{'base-quote-row': member.quote.startsWith('Base Quote')}">
+                  <input type="checkbox"><span>{{member.quote}}</span>
+                </div>
+                </div>
+              </div>
+              <div class="quote-details-cnt">
+                <div class="quote-details-headings">
+                  <div class="proposer-title title">Proposer</div>
+                  <div class="product-title title">Product</div>
+                  <div class="policyno-title title">Policy No.</div>
+                  <div class="renewal-premium-title title">Renewal Premium</div>
+                  <div class="mobileno-title title">Mobile No</div>
+                  <div class="renewal-date-title title">Date Of Renewal</div>
+                  <div class="modification-title title">Modification</div>
+                  <div class="notice-title title">Notice</div>
+                </div>
+                
+                <div class="quote-details">
+                  <div class="quote-details-data" *ngFor="let member of members;let i=index" [ngClass]="{'base-quote-row': member.quote.startsWith('Base Quote')}">
+                  <div class="proposer-value data">{{ member.proposer }}</div>
+                  <div class="product-value data">{{ member.product }}</div>
+                  <div class="policyno-value data">{{ member.policyNo }}</div>
+                  <div class="renewal data">
+                    <div>{{ member.renewalPremium.amount }}</div>
+                    <div>{{ member.renewalPremium.benefits }}</div>
+                  </div>
+                  <div class="mobileno-value data">{{ member.mobileNo }}</div>
+                  <div class="renewal-date-value data">{{ member.dateOfRenewal }}</div>
+                  <div class="modification data">{{ member.modification }}</div>
+                  <div class="notice-icons data">
+                    <div class="icon">
+                      <i class="fa-regular fa-pen-to-square"></i>
+                    </div>
+                    <div class="icon">
+                      <i class="fa-solid fa-shield-heart"></i>
+                    </div>
+                    <div class="dropdown">
+                      <div class="icon" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                      </div>
+                      <ul class="dropdown-menu dropdown-menu-start custom-dropdown-menu">
+                        <li>
+                          <a class="dropdown-item">
+                            <i class="fa-solid fa-download" style="font-size: 12px;color:#979CAE ;"></i> <span class="quotes-dropdown-names">Download</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item">
+                            <i class="fa-solid fa-trash" style="font-size: 12px;color:#979CAE ;"></i> <span class=quotes-dropdown-names>Delete</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>                       
+                  </div>
+                  </div>
+                </div>
+              </div>        
+          </div>   
+         <div class="comparision-cnt">
+          <button class="compare-button" (click)="compareSelectedQuotes()">Compare Selected</button>
+         </div>
+      </div>
+    </div> -->
+    <div class="quotes-comparision-main-cnt" *ngIf="showSubQuotes">
+      <div class="quotes-comparision-header">
+          <p>Active Assure Diamond - Quote Comparison</p>
+      </div>
+    </div>
+  </div>

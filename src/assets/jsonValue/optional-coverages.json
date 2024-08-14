@@ -1,0 +1,33 @@
+[
+    {
+      "id": "personal-accident-cover-1",
+      "name": "Personal Accident Cover1",
+      "description": "Personal accident cover",
+      "image": "assets/images/noDataFound.png",
+      "premium":1000
+    },
+    {
+      "id": "personal-accident-cover-2",
+      "name": "Personal Accident Cover2",
+      "description": "Personal accident cover personal accident cover personal accident cover",
+      "image": "assets/images/noDataFound.png",
+      "premium":1100
+  
+    },
+    {
+      "id": "personal-accident-cover-3",
+      "name": "Personal Accident Cover3",
+      "description": "Personal accident cover personal accident cover",
+      "image": "assets/images/noDataFound.png",
+      "premium":2500
+  
+    },
+    {
+      "id": "personal-accident-cover-4",
+      "name": "Personal Accident Cover4",
+      "description": "Personal accident cover personal accident cover personal accident cover",
+      "image": "assets/images/noDataFound.png",
+      "premium":1500
+  
+    }
+  ]

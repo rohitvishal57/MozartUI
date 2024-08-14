@@ -1,0 +1,25 @@
+[
+    {
+      "id": "plan1",
+      "type": "Delux",
+      "price": "₹ 900",
+      "premium": "₹ 6,863"
+    },
+    {
+      "id": "plan2",
+      "type": "Delux AC",
+      "price": "₹ 1100",
+      "premium": "₹ 7,063"
+    },
+    {
+      "id": "plan3",
+      "type": "Super Delux AC",
+      "price": "₹ 1500",
+      "premium": "₹ 7,463"
+    },
+    {
+      "id": "plan4",
+      "type": "No Upgrade",
+      "label": "No, I don't want to upgrade my room"
+    }
+  ]

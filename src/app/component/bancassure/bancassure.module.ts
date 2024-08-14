@@ -13,6 +13,8 @@ import { AgentDynamicFormComponent } from './agent-dynamic-form/agent-dynamic-fo
 import { ProposalsComponent } from './proposals/proposals.component';
 import { QuotesComponent } from '../renewals/quotes/quotes.component';
 import { NgxPaginationModule } from 'ngx-pagination'; 
+import { RenewalDynamicFormComponent } from '../renewals/renewal-dynamic-form/renewal-dynamic-form.component';
+import { SearchQuotesPipe } from 'src/app/pipe/search-quotes/search-quotes.pipe';
 
 
 
@@ -22,8 +24,11 @@ import { NgxPaginationModule } from 'ngx-pagination';
     DashboardComponent,
     TransactionComponent,
     ReportsComponent,  
-    AgentDynamicFormComponent, ProposalsComponent  ,
-    QuotesComponent
+    AgentDynamicFormComponent, 
+    ProposalsComponent,
+    QuotesComponent,
+    SearchQuotesPipe,
+    RenewalDynamicFormComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,83 @@
+{
+    "formTitle": "Edit Address",
+    "buttonTitle": "Save Updates",
+    "formSections": [
+      {
+        "sectionTitle": "",
+        "visible": true,
+        "class": "address-details",
+        "formControls": [
+          {
+            "name": "addressLine1",
+            "label": "Address Line 1",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "B102, Raghav Heritage, Behind Hotel Saffron",
+            "class": "col-md-6",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "Address Line 1 is required"
+              }
+            ]
+          },
+          {
+            "name": "addressLine2",
+            "label": "Address Line 2",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "Thane (E), Mumbai, Maharashtra",
+            "class": "col-md-6"
+          },
+          {
+            "name": "city",
+            "label": "City",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "Mumbai",
+            "class": "col-md-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "City is required"
+              }
+            ]
+          },
+          {
+            "name": "state",
+            "label": "State",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "Maharashtra",
+            "class": "col-md-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "State is required"
+              }
+            ]
+          },
+          {
+            "name": "pinCode",
+            "label": "PIN Code",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "410 002",
+            "class": "col-md-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "PIN Code is required"
+              },
+              {
+                "validatorName": "pattern",
+                "pattern": "^[0-9]{6}$",
+                "message": "PIN Code should be a valid 6-digit number"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  
