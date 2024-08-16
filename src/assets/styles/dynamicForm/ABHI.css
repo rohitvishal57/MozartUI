@@ -207,8 +207,8 @@
     font-family: "Anek Latin", sans-serif;
     font-size: 15px;
     height: 48px;
-    border-radius: 18px;
-    border: 0;
+    border-radius: 12px;
+    border: 1px;
     width: 100%;
     background-color: #f2f3f6;
     padding: 6px 12px;
@@ -414,11 +414,14 @@
 }
 
 .main-container .right-panel .file-upload-btn {
-    width: 95%;
-    text-align-last: left;
-    height: 45px;
-    border: groove 2px;
-    border-radius: 6px;
+    width: 315px;
+    text-align-last: center;
+    font-family: 'Anek Latin';
+    font-weight: 500;
+    line-height: 20px;
+    height: 44px;
+    border: 1px dotted;
+    border-radius: 5px;
     padding: 5px 3px 3px 3px;
     font-size: 14px;
     color: #5d5d5d;
@@ -441,20 +444,17 @@
 .main-container .right-panel .acceptTermsCheck {
     border: 0px solid #ccc;
     cursor: pointer;
-    margin-top: 30px;
+    margin-top: 19px;
+    margin-bottom: 38px;
     background-color: #f2f3f6;
     border-radius: 20px;
     height: 102px;
     padding: 4px;
-    height: auto !important;
-    padding: 15px !important;
-    display: flex !important;
-    align-items: flex-start;
 }
 
 .main-container .right-panel .acceptTermsCheck .checkboxes {
-    padding: 0 6px;
-    width: 100%;
+    padding: 9px 5px;
+    width: 95%;
     margin-bottom: 0px;
     margin-top: 0;
 }
@@ -692,6 +692,22 @@
     font-size: 30px;
     margin-left: 11%;
     color: #000;
+    font-family: "Anek Latin", sans-serif;
+    margin-top: 8%;
+}
+
+.main-container .right-panel .section-paragraph1 {
+    font-weight: 600;
+    font-size: larger;
+    color: #000;
+    margin-top: -22px;
+    font-family: "Anek Latin", sans-serif;
+}
+
+.main-container .right-panel .section-paragraph2 {
+    font-weight: 500;
+    color: #000;
+    margin-top: 10px;
     font-family: "Anek Latin", sans-serif;
 }
 
@@ -1210,7 +1226,7 @@
 }
 
 .main-container .right-panel .thankYou .img1Popup {
-    margin: 0;
+    margin: -40px;
 }
 
 .main-container .right-panel .inputField_Text:focus+label,
