@@ -1,24 +1,32 @@
 .main {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    .sub-mainNav {
+        height: 32px;
+    }
     .sub-main {
         display: flex;
         flex-direction: row;
-
+        border-bottom: 1px solid #EBEBEC;
         .logo {
-            margin: 15px;
+            width: 110px;
+            padding: 0 13px 0 21px;
+            img{
+                width: 100%;
+            }
         }
-
         .header {
             display: block;
-            margin: 15px;
-            width: 90%;
-            background-image: linear-gradient(#C91429, #C91429);
+            width: 100%;
+            background: #C91429;
             height: 40px;
             margin-left: auto;
             position: relative;
             border-top-left-radius: 0px;
             border-bottom-left-radius: 17px;
             margin-right: 0px;
-
+            padding: 0 28px 0 14px;
             .header-icon {
                 margin-left: 10px;
                 margin-top: 5px;
@@ -27,22 +35,18 @@
             }
 
         }
-
-        img {
-            margin-top: 0px;
-            margin-left: 12px;
-            width: 100%;
-        }
     }
 
     .abhifont {
         color: #C91429;
-        /* font-family: Anek Latin !important; */
-        /* font-weight: 700; */
+        font-family: Anek Latin !important;
+        font-weight: 400;
         margin-bottom: 0px;
         margin-top: 0px;
         margin-left: 5px;
         font-size: 10px;
+        line-height: 12px;
+        padding: 6px 28px;
     }
     .header2{
         display: flex;
@@ -93,4 +97,44 @@
             }
         }
     }
+}
+.parent-container {
+    position: relative;
+}
+.sideNavMain {
+    position: absolute;
+    left: 0;
+    top: 9.7rem;
+    height: 100vh;
+}
+.sideNavSub {
+    width: 76px;
+    height: 100%;
+    background: #fff;
+}
+.navMain {
+    width: 26px;
+    display: flex;
+    flex-direction: column;
+    gap:22px;
+    margin: auto;
+    padding: 32px 0;
+}
+.navMain a {
+    width: 26px;
+    height: 26px;
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.navMain a img {
+    
+}
+.navMain a:hover, .navMain a.active {
+    background: #C7222A;
+}
+.navMain a:hover img, .navMain a.active img {
+    filter:brightness(0) invert(1);
 }
