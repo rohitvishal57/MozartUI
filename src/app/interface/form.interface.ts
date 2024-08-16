@@ -79,6 +79,7 @@ export interface IFormControl {
   bigFontValue?: string;
   details?: any;
   button?:any;
+  icon?:string;
 }
 export interface ISubControl {
   name: string;

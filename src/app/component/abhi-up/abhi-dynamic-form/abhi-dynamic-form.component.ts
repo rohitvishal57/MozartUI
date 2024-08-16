@@ -2639,4 +2639,15 @@ export class AbhiDynamicFormComponent {
     console.log(control,this.formData,a);
   }
 
+  selectEditField(control:any){
+    this.form.formSections.forEach((section:any)=>{
+      section.formControls.forEach((controls:any) => {
+        if(controls.name == control.name){
+          controls.disabled = false
+          console.log(controls);
+        }
+      });
+    });
+  }
+
 }

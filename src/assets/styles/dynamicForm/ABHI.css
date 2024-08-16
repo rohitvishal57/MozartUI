@@ -818,6 +818,15 @@
     color: #ffe2dc;
     float: right;
 }
+.main-container .right-panel .send-btn {
+    background-color: #c72229;
+    padding: 10px 31px;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+    margin: 0px 24px;
+    color: #ffe2dc;
+}
 
 .main-container .right-panel .back-btn {
     background-color: #ffe6e7;
