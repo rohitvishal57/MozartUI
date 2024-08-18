@@ -451,7 +451,7 @@ body {
     margin-bottom: 38px;
     background-color: #f2f3f6;
     border-radius: 20px;
-    height: 102px;
+    /* height: 102px; */
     padding: 4px;
 }
 
@@ -968,7 +968,7 @@ body {
     border-radius: 10px;
 }
 
-.main-container .right-panel .acceptTermsCheck {
+/* .main-container .right-panel .acceptTermsCheck {
     border: 0px solid #ccc;
     cursor: pointer;
     margin-top: 30px;
@@ -983,7 +983,7 @@ body {
     display: block;
     height: auto;
     width: 17px;
-}
+} */
 
 .main-container .right-panel .checkbox-label {
     font-weight: 500px;
@@ -1095,6 +1095,9 @@ body {
     background-color: #F9FAFB;
 }
 
+.main-container .right-panel .edit-icon{
+    padding: 2% 1%;
+}
 
 /* .main-container .right-panel .col-md-6 {
     width: 47%;
