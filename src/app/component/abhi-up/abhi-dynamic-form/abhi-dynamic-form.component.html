@@ -121,6 +121,10 @@
                 <img *ngIf="control.imagesrc" [src]="control.imagesrc" alt="captcha" [class]="control.class">
               </div>
 
+              <div *ngIf="control.type === 'line' && control.visible === true" [class]="control.class">
+                <hr />
+              </div>
+
               <div *ngIf="control.type === 'paragraph'" class="paragraphs" [class]="control.class">
                 <p [innerHTML]="control.label ? (control.label | translate) : ''"></p>
                 <p *ngIf="control.value" [innerHTML]="control.value"></p>

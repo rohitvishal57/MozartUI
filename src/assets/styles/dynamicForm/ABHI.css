@@ -839,6 +839,11 @@ body {
     color: #ffe2dc;
 }
 
+.main-container .right-panel .custom-line hr {
+    border: 1px solid lightgray; 
+    margin: 20px 0;
+  }
+
 .main-container .right-panel .back-btn {
     background-color: #ffe6e7;
     padding: 10px 31px;
