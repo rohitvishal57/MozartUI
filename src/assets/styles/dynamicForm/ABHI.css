@@ -1665,6 +1665,7 @@ body {
     margin-bottom: 20px;
 }
 .main-container .right-panel .custom-tab {
+    margin-top: 16px;
     border-width: 0;
     display: flex;
     gap: 24px;
@@ -1693,6 +1694,18 @@ body {
 }
 a:not([href]) {
     cursor: pointer;
+}
+.main-container .right-panel .tab-content {
+    padding: 16px 16px 16px 0;
+}
+.main-container .right-panel .send-btn.send-link-btn {
+    border-radius: 12px;
+    padding: 9px 46px;
+    font-family: Anek Latin;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 19.8px;
+    color: #fff;
 }
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
