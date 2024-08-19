@@ -1664,6 +1664,36 @@ body {
     margin-top: 10px;
     margin-bottom: 20px;
 }
+.main-container .right-panel .custom-tab {
+    border-width: 0;
+    display: flex;
+    gap: 24px;
+}
+.nav-tabs.custom-tab .nav-link {
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    text-align: left;
+    color: #797979;
+    padding: 5px 0;
+    border-width: 0 !important;
+    border-bottom: 2px solid transparent !important;
+}
+.nav-tabs.custom-tab .nav-link.active, .nav-tabs.custom-tab .nav-link:hover {
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    text-align: left;
+    color:#4C4C4C;
+    border-width: 0 !important;
+    background: transparent !important;
+    border-bottom: 2px solid #c7222a !important;
+}
+a:not([href]) {
+    cursor: pointer;
+}
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
