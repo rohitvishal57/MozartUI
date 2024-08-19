@@ -851,6 +851,16 @@ body {
     float: right;
 }
 
+.main-container .right-panel .paymentBtn{
+    background-color: #ffe6e7;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+    margin: 0px 24px;
+    color: #902a38;
+    font-size: 16px;
+}
+
 .main-container .right-panel .details-element {
     border: 1px solid grey;
     margin: 10px 0px;
@@ -1656,13 +1666,24 @@ body {
     color: #4c4c4c;
 }
 .main-container .right-panel .thankYou .img1Popup {
-    width: 170px !important;
-    height: 170px !important;
+    width: 110px !important;
+    height: 110px !important;
     margin: 0 !important;
 }
 .main-container .right-panel .thankYou {
     margin-top: 10px;
     margin-bottom: 20px;
+}
+
+.main-container .right-panel .active-button {
+    background-color: green;
+    color: white;
+  }
+
+.main-container .right-panel .orlabel{
+    margin-top: 30px;
+    margin-bottom: 20px;
+    color: darkgray;
 }
 .main-container .right-panel .custom-tab {
     margin-top: 16px;

@@ -80,6 +80,7 @@ export class AbhiDynamicFormComponent {
 
   displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
+  selectedButton: string | null = null;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public service: CommonService, private loginService: LoginService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
@@ -1398,6 +1399,15 @@ export class AbhiDynamicFormComponent {
       this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     }
   }
+  onButtonClick(control: any) {
+    console.log("Cicked");
+    this.selectedButton = control.name;
+  }
+  
+  // In your template, you can bind the class dynamically
+  getButtonClass(control: any): string {
+    return this.selectedButton === control.name ? 'active-button' : '';
+  }
   async onSubmit() {
 
     console.log(this.dynamicFormGroup.value);
@@ -2259,7 +2269,7 @@ export class AbhiDynamicFormComponent {
                       this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                     option.value = this.tenureAmount[index];
                     option.year = "3 years"
-                    option.discount = "13% off"
+                    option.discount = "10% off"
                   }
                 });
               }
@@ -2415,7 +2425,7 @@ export class AbhiDynamicFormComponent {
                       this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                     option.value = this.tenureAmount[index];
                     option.year = "3 years"
-                    option.discount = "13% off"
+                    option.discount = "10% off"
                   }
                 });
               }
@@ -2621,7 +2631,7 @@ export class AbhiDynamicFormComponent {
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
                 option.year = "3 years"
-                option.discount = "13% off"
+                option.discount = "10% off"
               }
             });
           }

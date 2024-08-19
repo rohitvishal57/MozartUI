@@ -671,7 +671,7 @@
 
               <!-- <div *ngIf="control.type==='button'"> -->
                 <input *ngIf="control.type==='button' && control.visible == true" type="button"
-                (click)="callMethod(control.methodName,control)" [class]="control.class" value="{{ control.label ? (control.label | translate) : '' }}">
+                (click)="callMethod(control.methodName,control)" [ngClass]="[control.class, getButtonClass(control)]" value="{{ control.label ? (control.label | translate) : '' }}">
               <div *ngIf="control.type === 'custom-radio'">
                 <div class="radio-card-container">
                   <ng-container *ngFor="let option of control.radioOptions">
