@@ -81,6 +81,7 @@ export class AbhiDynamicFormComponent {
   displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
   selectedButton: string | null = null;
+  collapsedSections: { [key: string]: boolean } = {};
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public service: CommonService, private loginService: LoginService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
@@ -1061,8 +1062,6 @@ export class AbhiDynamicFormComponent {
             console.log(this.formData,this.form);
 
             if (((this.formData.productType == 'GHS' || this.formData.productType == 'AS') && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS' && this.formData.productType != 'AS')) {
-              console.log("why am I getting successful");
-              
               this.resetInsuredMembers(control, memberPolicyType);
               this.getProposerRelationship(formControl);
             }
@@ -1400,7 +1399,6 @@ export class AbhiDynamicFormComponent {
     }
   }
   onButtonClick(control: any) {
-    console.log("Cicked");
     this.selectedButton = control.name;
   }
   
@@ -2641,7 +2639,6 @@ export class AbhiDynamicFormComponent {
   }
 
   mergeMember(control:any){
-    console.log("anekant",this.formData.insuredMembers);
     const a = Object.keys(this.formData.insuredMembers).filter(
       key => this.formData.insuredMembers[key] === true
     );
@@ -2658,6 +2655,14 @@ export class AbhiDynamicFormComponent {
         }
       });
     });
+  }
+
+  toggleSection(sectionTitle: string) {
+    this.collapsedSections[sectionTitle] = !this.collapsedSections[sectionTitle];
+  }
+
+  isSectionCollapsed(sectionTitle: string): boolean {
+    return !!this.collapsedSections[sectionTitle];
   }
 
 }

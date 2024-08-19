@@ -55,14 +55,14 @@
         <!-- <h2 *ngIf="form.formTitle!=''">{{form.formTitle}}</h2> -->
         <!-- <div class="card-body"> -->
         <ng-container *ngFor="let section of form.formSections">
-          <div *ngIf="section.visible" class="card-body accordionCard" [class]="section.class">
+          <div *ngIf="section.visible" class="card-body accordionCard" [class.collapsed]="isSectionCollapsed(section.sectionTitle)" [class]="section.class">
 
-            <div class="line" style="display: none;"></div>
-            <div class="accordionCardHeader" *ngIf="section.visibleLabel == true">
+            <!-- <div class="line" style="display: none;"></div> -->
+            <div class="accordionCardHeader" *ngIf="section.visibleLabel == true" (click)="toggleSection(section.sectionTitle)">
               <h3 [innerHTML]="section.sectionTitle" [class]="section.class"></h3>
-              <span class="accordionArrow"></span>
+              <span class="accordionArrow" [class.rotated]="isSectionCollapsed(section.sectionTitle)"></span>
             </div>
-            <div class="accordionCardBody">
+            <div class="accordionCardBody" *ngIf="!isSectionCollapsed(section.sectionTitle)">
             <ng-container *ngFor="let control of section.formControls">
               <div *ngIf="['text', 'email', 'password', 'number'].includes(control.type)" [class]="control.class"
                 class="typecss" [hidden]="!control.visible">
