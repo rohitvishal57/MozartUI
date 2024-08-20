@@ -1879,6 +1879,7 @@ a:not([href]) {
     border-radius: 20px;
     /* height: 102px; */
     padding: 0px;
+    position: relative;
 }
 
 .main-container .right-panel .nomineeCheck .checkboxes {
@@ -1886,17 +1887,65 @@ a:not([href]) {
     width: 95%;
     margin-bottom: 0px;
     margin-top: 4px;
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: left;
+    color: #000;
 }
-
 .main-container .right-panel .nomineeCheck .checkbox-label {
-    margin-top: 5px;
-    margin-bottom: 0;
-}
-
-.main-container .right-panel .nomineeCheck input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
     display: block;
-    height: auto;
-    width: 17px;
+    margin: 0;
+}
+.main-container .right-panel .nomineeCheck .checkbox-label + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    text-align: left;
+    color: #000;
+}
+.main-container .right-panel .nomineeCheck .checkbox-label + label:before {
+    content: "";
+    margin-right: 1rem;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #AFB3C0;
+    border: 1px solid #AFB3C0;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    -ms-border-radius: 1px;
+    border-radius: 1px;
+}
+.main-container .right-panel .nomineeCheck .checkbox-label:checked + label:before {
+    border: 1px solid #c7222a;
+    background: #c7222a;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    -ms-border-radius: 1px;
+    border-radius: 1px;
+}
+.main-container .right-panel .nomineeCheck .checkbox-label:checked + label:after {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(38deg);
+    -ms-transform: rotate(38deg);
+    transform: rotate(38deg);
+    position: absolute;
+    top: 2px;
+    left: 6px;
 }
 .addMember {
     margin-bottom: 0 !important;
@@ -1930,6 +1979,10 @@ a:not([href]) {
     border-radius: 16px 16px 0 0;
     padding: 8px;
 }
+input[type=checkbox]:checked {
+    background-color: #c7222a !important;
+    color: #ffffff !important;
+  }
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
