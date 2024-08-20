@@ -198,7 +198,7 @@
 
               <div *ngIf="control.type === 'checkbox'">
                 <div [class]="control.class" style="display: -webkit-box;">
-                  <input type="checkbox" formControlName="{{ control.name }}" id="{{control.label}}"
+                  <input type="checkbox" formControlName="{{ control.name }}" id="{{control.name}}"
                     class="checkbox-label" />
                   <label [for]="control.name" [innerHTML]="control.label ? (control.label | translate) : ''"
                     class="checkboxes"></label>
