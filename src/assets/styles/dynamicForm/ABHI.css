@@ -843,9 +843,12 @@ body {
 }
 
 .main-container .right-panel .custom-line hr {
-    border: 1px solid #E6E6E6;
+    border: 0px solid #E6E6E6;
     margin: 20px 0;
-    opacity: 0.5;
+    opacity: 1;
+    width: 100%;
+    background: #E6E6E6;
+    height: 1px;
 }
 
 .main-container .right-panel .back-btn {
@@ -1535,7 +1538,7 @@ body {
     box-shadow: 0px -4px 36px 0px #0000000D;
     display: flex;
     justify-content: space-between;
-    border-radius: 15px 15px 0 0;
+    border-radius: 15px;
 }
 
 .accordionCard .accordionCardHeader h3 {
@@ -1554,6 +1557,7 @@ body {
     height: 24px;
     background: url(../../../assets/images/icon_select_downarrow.svg) no-repeat center;
     background-size: 12px;
+    cursor: pointer;
 }
 
 .accordionCard .accordionCardBody {
@@ -1894,7 +1898,38 @@ a:not([href]) {
     height: auto;
     width: 17px;
 }
-
+.addMember {
+    margin-bottom: 0 !important;
+}
+.addMember p, .insureMember p {
+    font-family: Anek Latin;
+    color: #000;
+}
+.addMember p {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: left;
+    margin: 0 0 16px;
+}
+.insureMember p {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 15.4px;
+    text-align: left;
+    margin: 0 0 20px;
+}
+.main-container .right-panel .bottom-section {
+    width: 100%;
+    max-width: 808px;
+    position: fixed;
+    left: auto;
+    bottom: 0;
+    margin-bottom: 0 !important;
+    box-shadow: 0px -4px 36px 0px #0000000D;
+    border-radius: 16px 16px 0 0;
+    padding: 8px;
+}
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
