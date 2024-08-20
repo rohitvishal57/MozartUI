@@ -2007,12 +2007,71 @@ a:not([href]) {
     margin-bottom: 0 !important;
     box-shadow: 0px -4px 36px 0px #0000000D;
     border-radius: 16px 16px 0 0;
-    padding: 8px;
+    padding: 8px 0 0;
 }
 input[type=checkbox]:checked {
     background-color: #c7222a !important;
     color: #ffffff !important;
   }
+.bottom-section .accordionCardBody > .typecss {
+    padding: 0;
+}
+.bottom-section .label-value-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    text-align: center;
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 12px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    color: #2e2e2e;
+    position: relative;
+}
+.bottom-section .label-value-container .label-text {
+    text-transform: uppercase;
+    color: #2e2e2e;
+    font-size: 12px;
+    font-weight: 600;
+}
+.bottom-section .label-value-container .value-text {
+    width: 32px;
+    height: 5px;
+    background: url(../../../assets/images/icon_plan_details_arrow.svg) no-repeat;
+    position: absolute;
+    top: -20px;
+    left: 48%;
+}
+.main-container .right-panel .bottom-product .boldtext_input {
+    font-family: Anek Latin;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 19.8px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: left;
+    color: #000;
+}
+.main-container .right-panel .bottom-product .boldtext_input + span, 
+.main-container .right-panel .bottom-total-premium .boldtext-label {
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 13.2px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: left;
+    color: #2e2e2e;
+}
+.main-container .right-panel .bottom-total-premium .boldtext_input {
+    font-family: Anek Latin;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 24.2px;
+    letter-spacing: 0.20000000298023224px;
+    text-align: left;
+    color: #c7222a;    
+}
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
