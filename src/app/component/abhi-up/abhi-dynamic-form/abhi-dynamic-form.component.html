@@ -132,7 +132,7 @@
                 <hr />
               </div>
 
-              <div *ngIf="control.type === 'paragraph'" class="paragraphs" [class]="control.class">
+              <div *ngIf="control.type === 'paragraph'" [class]="control.class">
                 <p [innerHTML]="control.label ? (control.label | translate) : ''"></p>
                 <p *ngIf="control.value" [innerHTML]="control.value"></p>
               </div>

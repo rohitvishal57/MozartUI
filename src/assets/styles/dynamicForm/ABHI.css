@@ -289,6 +289,99 @@ body {
     font-size: large;
 }
 
+.mobileScreen{
+    width: 0%;
+    display: flex;
+    padding-left: 8%;
+}
+
+.downloadScanner{
+    width: 100%;
+}
+.autoDebitLabel1{
+    font-size: larger;
+    font-weight: 600;
+    font-family: "Anek Latin", sans-serif;
+    padding-left: 28px;
+    padding-top: 20px;
+}
+
+.autoDebitLabel2{
+    font-size: medium;
+    font-weight: 400;
+    font-family: "Anek Latin", sans-serif;
+    padding-left: 28px;
+    padding-top: 5px;
+}
+
+.autoDebitLabel3{
+    font-size: medium;
+    font-weight: 400;
+    font-family: "Anek Latin", sans-serif;
+    padding-left: 28px;
+    padding-top: 20px;
+}
+.imageautodebit{
+    padding-left: 5%;
+    padding-right: 11%;
+    padding-top: 4%;
+    padding-bottom: 5%;
+}
+
+.debitButton{
+    background-color: #c72229;
+    padding: 10px 31px;
+    border: none;
+    border-radius: 6px;
+    width: auto;
+    margin: 0px 24px;
+    color: #ffe2dc;
+}
+
+.abhaLabel1{
+    font-family: "Anek Latin", sans-serif;
+    color: #c72229;
+    padding-left: 15px;
+}
+
+.abhaLabel2{
+    font-size: x-large;
+    font-weight: 600;
+    padding-left: 15px;
+    font-family: "Anek Latin", sans-serif;
+}
+.autoDebitLabel1{
+    font-size: large;
+    font-weight: 300;
+    padding-top: 3px;
+    font-family: "Anek Latin", sans-serif;
+    padding-left: 15px;
+}
+.abhaIDImage{
+   padding-left: 48%;
+    margin-top: -19%;
+}
+
+.abhaquestion{
+    font-size: large;
+    font-weight: 400;
+    font-family: "Anek Latin", sans-serif;
+    padding-left: 15px;
+    margin-top: -15%;
+}
+.abhaButton{
+    background-color: #c72229;
+    padding: 10px 31px;
+    border: none;
+    border-radius: 6px;
+    width: auto;
+    margin: 4px 14px;
+    color: #ffe2dc;
+}
+
+
+
+
 /* For Summary */
 
 .label-value-container {
@@ -817,7 +910,8 @@ body {
 }
 
 .main-container .right-panel .img1Popup {
-    margin-left: 75%;
+    margin-left: 42%;
+    margin-top: -38%;
 }
 
 .main-container .right-panel .boldtext-label {
