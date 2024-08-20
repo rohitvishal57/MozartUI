@@ -285,6 +285,32 @@ body {
     border-radius: 2px;
 }
 
+.proposalDetails{
+    font-size: large;
+}
+
+/* For Summary */
+
+.label-value-container {
+    display: flex;
+    flex-direction: column; /* Align label on top of value */
+    margin-bottom: 16px; /* Adjust spacing as needed */
+  }
+  
+  .label-value-container .label-text {
+    font-weight: 500;
+    font-family: "Anek Latin", sans-serif;
+    font-size: 14px;
+    color: #4C4C4C;
+  }
+  
+  .label-value-container .value-text {
+    font-weight: 600;
+    font-family: "Anek Latin", sans-serif;
+    font-size: 16px;
+    color: #000;
+  }
+
 /* .main-container .right-panel .inputField_Text[readonly]+label,
 .main-container .right-panel .inputField_Select[disabled]+label {
     background-color: rgba(255, 255, 255,0.8);
@@ -1501,6 +1527,10 @@ body {
 .main-container .right-panel .typecss {
     position: relative;
     padding-bottom: 25px;
+}
+
+.main-container .right-panel .bottom-planDetails{
+    color: #000;
 }
 
 .main-container .right-panel .text-danger {

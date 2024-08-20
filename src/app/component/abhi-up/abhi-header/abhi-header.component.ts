@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 
 @Component({
@@ -7,8 +8,12 @@ import { CommonService } from 'src/app/services/common.service';
   styleUrls: ['./abhi-header.component.scss']
 })
 export class AbhiHeaderComponent {
-  constructor(public common:CommonService){
+  constructor(public common:CommonService,private router:Router){
 
+  }
+
+  redirect(){
+    this.router.navigate(["portal/agent/viewproducts"]);
   }
 
 }
