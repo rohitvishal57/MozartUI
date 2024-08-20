@@ -2167,6 +2167,143 @@ input[type=checkbox]:checked {
     text-align: left;
     color: #c7222a;    
 }
+.proposalDetails h3.proposalDetails{
+    font-family: Anek Latin;
+    font-size: 22px !important;
+    font-weight: 600 !important;
+    line-height: 24.2px !important;
+    text-align: left;
+    color: #000;
+    padding-left: 8px;
+}
+.proposalDetails .accordionCardBody .typecss {
+    padding-bottom: 0px;
+}
+.proposalDetails .accordionCardBody .label-value-container {
+    margin-bottom: 6px;
+}
+.proposalDetails .accordionCardBody .label-value-container .label-text {
+    font-family: Anek Latin;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 15.4px;
+    text-align: left;
+    color: #000;
+    margin-bottom: 10px;
+}
+.proposalDetails .accordionCardBody .label-value-container .value-text {
+    font-family: Anek Latin;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 19.8px;
+    text-align: left;
+    color: #000;
+}
+.advertisementSection .mobileScreen {
+    width: 100%;
+    padding: 0;
+}
+.advertisementSection .mobileScreen  .img1Popup {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+}
+.autoDebitSection.accordionCard .accordionCardBody {
+    padding:25px 25px 25px !important ;
+}
+.autoDebitLabel1 p {
+    font-family: Anek Latin;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 28.6px;
+    text-align: left;
+    color: #000;
+    margin: 0;
+}
+.autoDebitLabel2 p {
+    font-family: Anek Latin;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 17.6px;
+    text-align: left;
+    color: #000;
+}
+.autoDebitLabel2, .autoDebitLabel1 {
+    padding-left: 0;
+}
+.autoDebitLabel3 {
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Anek Latin", sans-serif;
+     padding-left: 0; 
+    padding-top: 10px;
+    line-height: 20px;
+}
+.autoDebitLabel3 p {
+    margin: 0;
+}
+.imageautodebit {
+    padding: 0;
+    margin: 16px 0 26px;
+    width: 100% !important;
+}
+.imageautodebit .img1Popup{
+    margin: 0 !important;
+}
+.debitButton, .abhaButton {
+    margin: 0;
+    font-family: Anek Latin;
+font-size: 16px;
+font-weight: 400;
+line-height: 17.6px;
+text-align: left;
+color: #fff;
+}
+.debitButton:hover, .abhaButton:hover {
+    background-color: #FFE7E5;
+    color: #c72229;
+}
+.abhaButton{
+    margin-left: 11px;
+}
+.abhaquestion p {
+    font-family: Anek Latin;
+font-size: 12px;
+font-weight: 500;
+line-height: 18px;
+text-align: left;
+color: #000;
+}
+.abhaLabel2 {
+    width: 30%;
+    font-family: Anek Latin;
+font-size: 22px;
+font-weight: 600;
+line-height: 24.2px;
+text-align: left;
+color: #000;
+padding-left: 11px;
+}
+.abhaIDImage {
+    margin-top: -18%;
+}
+.simpleEasyStyle p {
+    padding-left: 11px;
+    font-family: Anek Latin;
+font-size: 16px;
+font-weight: 400;
+line-height: 36px;
+text-align: left;
+color: #2e2e2e;
+margin: 0;
+}
+.abhaLabel1{
+    padding-top: 5px;
+    padding-left: 11px;
+}
+.abhaquestion {
+    padding-left: 11px;
+}
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
