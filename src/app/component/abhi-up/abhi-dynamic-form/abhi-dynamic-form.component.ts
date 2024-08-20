@@ -284,7 +284,7 @@ export class AbhiDynamicFormComponent {
               this.dynamicFormGroup.addControl(control.name, controlGroup);
 
             }
-            if (['text', 'email', 'password', 'number', 'date'].includes(control.type) && control.methodName) {
+            if (['text', 'email', 'password', 'number', 'date','summary'].includes(control.type) && control.methodName) {
               if (control.otherControlName) {
                 this.callMethod(control.methodName, control, section)
               }
@@ -1321,6 +1321,12 @@ export class AbhiDynamicFormComponent {
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
             }
             console.log(typeof this.dynamicFormGroup.get('numberOfInsuredMembers')?.value, this.dynamicFormGroup.get('numberOfInsuredMembers')?.value);
 
@@ -2664,5 +2670,11 @@ export class AbhiDynamicFormComponent {
   isSectionCollapsed(sectionTitle: string): boolean {
     return !!this.collapsedSections[sectionTitle];
   }
+  generateHeader(allSubForm:any,i:any) {
+    const imagePath = JSON.parse(allSubForm?.[0]?.options?.[i-1]?.name)?.imagePath;
+    console.log(i,imagePath);
+    return imagePath;
+  }
+  
 
 }

@@ -383,7 +383,11 @@
                     <ng-container *ngFor="let allSubForm of control.dynamicControls;index as i">
                       <ng-container *ngIf="i>0">
                         <ng-container [formGroupName]="i-1">
-                          <p-tabPanel [header]="allSubForm[1].value">
+                        <p-tabPanel>
+                          <ng-template pTemplate="header" class="custom-checkbox">
+                            <img [src]="generateHeader(allSubForm,i)" />
+                            <span>{{ allSubForm?.[1]?.value ?? '' }}</span>
+                          </ng-template>
                             <ng-container *ngFor="let subControl of allSubForm">
                               <ng-container *ngIf="subControl.visible!=false">
 
