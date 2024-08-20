@@ -174,7 +174,7 @@
                       style="display: none;" (change)="onFileSelected(control.name,$event)" />
                     <input *ngIf="control.disabled == true" formControlName="{{ control.name }}" type="file" readonly/>
                   </div>
-                  <div class="fileUploadInfo">File size: max 2mb. In case of bank statement, it must be of last 3 months</div>
+                  <div class="fileUploadInfo">File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed</div>
                 </div>
                 <div *ngIf="this.dynamicFormGroup.value[control.name]" style="margin-top: 5px;">
                   <!-- selected file: {{ selectedFile.name }} -->

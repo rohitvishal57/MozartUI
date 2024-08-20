@@ -1811,6 +1811,35 @@ a:not([href]) {
     color: #fff;
 }
 
+.main-container .right-panel .nomineeCheck{
+    border: 0px solid #ccc; 
+    cursor: pointer;
+    margin-top: 0px;
+    margin-bottom: 18px;
+    /* background-color: #f2f3f6; */
+    border-radius: 20px;
+    /* height: 102px; */
+    padding: 0px;
+}
+
+.main-container .right-panel .nomineeCheck .checkboxes {
+    padding: 6px 6px;
+    width: 95%;
+    margin-bottom: 0px;
+    margin-top: 4px;
+}
+
+.main-container .right-panel .nomineeCheck .checkbox-label {
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.main-container .right-panel .nomineeCheck input[type="checkbox"] {
+    display: block;
+    height: auto;
+    width: 17px;
+}
+
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
