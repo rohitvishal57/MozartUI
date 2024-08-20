@@ -843,8 +843,9 @@ body {
 }
 
 .main-container .right-panel .custom-line hr {
-    border: 1px solid lightgray;
+    border: 1px solid #E6E6E6;
     margin: 20px 0;
+    opacity: 0.5;
 }
 
 .main-container .right-panel .back-btn {
@@ -1808,6 +1809,60 @@ a:not([href]) {
     font-size: 18px;
     font-weight: 700;
     line-height: 19.8px;
+    color: #fff;
+    margin: 0 24px 0 0;
+}
+.main-container .right-panel .custom-line {
+    position: relative;
+    font-family: Anek Latin;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 19.8px;
+    color: #797979;
+    margin: 30px 0;
+} 
+.main-container .right-panel .custom-line.custom-line-or:before{
+    content: "OR";
+    position: absolute;
+    left: 45%;
+    top: -19px;
+    background: #fff;
+    padding: 10px;
+    z-index: 1;
+}  
+.main-container .right-panel .paymentBtn {
+    background-color: #fff;
+    border: 1px solid #d5d7de;
+    border-radius: 16px;
+    min-width: 230px;
+    margin: 0px 24px 0 0;
+    padding: 16px 20px;
+    color: #902a38;
+    font-size: 16px;
+    box-shadow: 0px 6px 16px 0px #00000014;
+    font-family: Anek Latin;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: left;
+    color: #000;
+    position: relative;
+}
+.main-container .right-panel .paymentBtn.btn-ENach,
+.main-container .right-panel .paymentBtn.btn-EMandate {
+    background: #fff url(../../../assets/images/img_faster_process.svg) no-repeat 90%;
+}
+.main-container .right-panel .paymentBtn.active-button {
+    color: #000;
+    border-color: #C7222A;
+}
+.main-container .right-panel .send-btn.send-link-btn:hover, 
+.main-container .right-panel .next-btn:hover {
+    background-color: #FFE7E5;
+    color: #C7222A;
+}
+.main-container .right-panel .back-btn:hover {
+    background-color: #c72229;
     color: #fff;
 }
 
