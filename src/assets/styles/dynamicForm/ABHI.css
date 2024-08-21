@@ -2361,6 +2361,29 @@ margin: 0;
     height: 40px;
     min-width: 100px;
 }
+.search-bar .form-control {
+    padding:0 6px 0 16px !important;
+    height: 40px !important;
+    border-radius: 12px !important;
+    border: 1px solid #f1f3f6 !important;
+    background-color: #f1f3f6 !important;
+    font-family: Anek Latin;
+    font-size: 12px !important;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0.3199999928474426px;
+    text-align: left;
+    color: #2e2e2e;
+    position: relative;
+}
+
+.search-bar .form-control::-ms-input-placeholder { /* Edge 12-18 */
+    color: #979CAE;
+  }
+  
+  .search-bar .form-control::placeholder {
+    color: #979CAE;
+  }
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
