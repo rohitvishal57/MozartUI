@@ -2304,6 +2304,12 @@ margin: 0;
 .abhaquestion {
     padding-left: 11px;
 }
+.proposalDetails h3.proposalDetails + .accordionArrow {
+    display: none;
+}
+.proposalDetails .accordionCardHeader {
+    pointer-events: none;
+}
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
