@@ -25,11 +25,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="right-header" *ngIf="!showSearch">
+                    <div class="right-header">
                         <div class="quotes-icon">
                             <i class="fa-solid fa-download"></i>
                         </div>
-                        <div class="quotes-icon" (click)="toggleSearch()" *ngIf="!showSearch">
+                        <div class="quotes-icon" (click)="toggleSearchDropdown()">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </div>
                         <div class="filter-icon" (click)="toggleFilterDropdown()">
@@ -43,12 +43,12 @@
                             <i class="fa-solid fa-table-cells-large"></i>
                         </div>
                     </div>
-                    <div class="search-field" *ngIf="showSearch">
+                    <!-- <div class="search-field">
                         <div class="search-container">
                             <i class="fa-solid fa-magnifying-glass"></i>
                             <input [(ngModel)]="searchString" (input)="handleSearchString()" type="text" placeholder="Search for any leads here" (keydown.enter)="handleEnter()" (blur)="handleBlur($event)" />
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!--  -->
@@ -116,11 +116,39 @@
                     <div class="apply-button" [ngClass]="getApplyButtonClass()" (click)="applyFilter()">Apply</div>
                 </div>
             </div>
+            <!--Search DropDown-->
+            <div class="search-dropdown-cnt" *ngIf="toggeleSearchdropdown === true">
+              <div class="search-title">Search</div>
+              <div class="search-dropdown">
+                <mat-form-field class="select-boxes" color="accent" appearance="outline">
+                  <mat-label>Select search type</mat-label>
+                  <mat-select [(ngModel)]="selected" (selectionChange)="onSelectChanges()">
+                    <mat-option value="none">None</mat-option>
+                    <mat-option value="mobileNo">Mobile Number</mat-option>
+                    <mat-option value="name">Proposer Name</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="search-input">
+                  <input matInput 
+                         type="text" 
+                         *ngIf="selected !== 'none' && selected !== ''" 
+                         [formControl]="searchInputControl"
+                         [placeholder]="getPlaceholder()">
+                  <mat-error *ngIf="searchInputControl.invalid && searchInputControl.touched">
+                    {{ getErrorMessage() }}
+                  </mat-error>
+                </div>
+              </div>
+              <div class="search-buttons">
+                <div class="cancel-button" (click)="cancelSearch()">Cancel</div>
+                <div class="apply-button" [class.active]="selected!='none' && searchInputControl.valid" (click)="applySearch()">Apply</div>
+              </div>
+            </div>
             <!--cards  -->
             <div class="card-cnt">
                 <!-- <div *ngIf="quotesView"> -->
                 <div class="card-outer-cnt" *ngIf="selectedView == 'grid'">
-                    <div class="card" *ngFor="let item of filteredData | searchQuotes : searchString | paginate: { itemsPerPage: 9, currentPage: p } ; let i = index" (click)="renewalJoureney()">
+                    <div class="card" *ngFor="let item of filteredData | searchQuotes : searchString | paginate: { itemsPerPage: 9, currentPage: p } ; let i = index">
                         <div class="top-section">
                             <div class="card-header-cnt">
                                 <div class="name-and-rating">
@@ -133,7 +161,7 @@
                                 <div>{{ item.Plan }}</div>
                             </div>
                             <div class="icons">
-                                <div class="icon">
+                                <div class="icon" (click)="renewalJoureney()">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </div>
                                 <div class="icon" (click)="$event.stopPropagation()"><i class="fa-solid fa-shield-heart"></i></div>
@@ -150,7 +178,7 @@
                                 </div>
                                 <div class="detail">
                                     <span class="label">Policy No.</span>
-                                    <span class="value">{{ item['PolicyNo.'] }}</span>
+                                    <span class="value">{{ item['PolicyNo'] }}</span>
                                 </div>
                                 <div class="detail">
                                     <span class="label">Status</span>
@@ -205,8 +233,8 @@
                 <!-- </div> -->
                 <!-- tabel -->
                 <div class="table-format-cnt table-responsive" *ngIf="selectedView == 'list'">
-                    <div>
-                        <table class="table table-striped table-borderless">
+                    <div class="table-inner-cnt">
+                        <table class="table tableRenewalList table-borderless">
                             <thead>
                                 <tr class="table-headings-row">
                                     <th scope="col" class="col-proposer">Proposer</th>
@@ -222,8 +250,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let row of filteredData | searchQuotes : searchString | paginate: { itemsPerPage: 6, currentPage: p }; let i = index" class="values" (click)="renewalJoureney()">
-                                    <td>{{ row.Name }}</td>
+                                <tr *ngFor="let row of filteredData | searchQuotes : searchString | paginate: { itemsPerPage: 6, currentPage: p }; let i = index" class="table-values">
+                                    <td class="pro-name">{{ row.Name }}</td>
                                     <td>
                                         <div class="rating">
                                             <span class="star" [ngClass]="getStarClass(row.Rating)"><i class="fa-solid fa-star"></i></span>
@@ -233,7 +261,7 @@
                                     <td>{{ row.Plan }}</td>
                                     <td class="policy-type-no">
                                         <div>{{ row['PolicyType'] }}</div>
-                                        <div>{{ row['PolicyNumber'] }}</div>
+                                        <div>{{ row['PolicyNo'] }}</div>
                                     </td>
                                     <td>{{ row.Status }}</td>
                                     <td class="renewal">
@@ -255,7 +283,7 @@
                                     <td class="modification">{{ row.Modification }}</td>
                                     <td>
                                         <div class="notice-icons">
-                                            <div class="icon">
+                                            <div class="icon" (click)="renewalJoureney()">
                                                 <i class="fa-regular fa-pen-to-square"></i>
                                             </div>
                                             <div class="icon" (click)="$event.stopPropagation()">
@@ -287,7 +315,7 @@
                 <!-- tabel end -->
                 <!-- image no data -->
                 <div class="no-data" *ngIf="(filteredData | searchQuotes: searchString).length === 0">
-                    <img src="assets/images/noDataFound.png" alt="No Data Found">
+                    <img src="assets/images/noDataFound.png" alt="No Data Found" />
                 </div>
                 <!--  -->
             </div>
@@ -322,7 +350,7 @@
             </div>
         </div>
     </div>
-    <!-- <div class="sub-quotes-main-cnt">
+    <div class="sub-quotes-main-cnt" *ngIf="showSubQuotes && !showComparison">
       <div class="sub-quotes-header-cnt">
            <div class="left-header">
               <p class="customer-photo"><img src="assets/renewalLogos/profile-photo.jpg" alt="no image" width="33px" height="33px"></p>
@@ -331,82 +359,118 @@
            <div class="right-header">
               <div class="download-icon"><i class="fa-solid fa-download"></i></div>
                <div class="grid-list-views">
-                  <div class="grid-view"><i class="fa-solid fa-table-cells-large"></i><span class="grid-view-title">Grid View</span></div>
-                  <div class="list-view"><i class="fa-solid fa-list"></i> <span class="list-view-title">List View</span></div>
+                  <div class="grid-view" [ngClass]="{'active': selectedQuotesView === 'quotesGrid'}" (click)="subQuotesViews('quotesGrid')"><i class="fa-solid fa-table-cells-large"></i><span class="grid-view-title">Grid View</span></div>
+                  <div class="list-view" [ngClass]="{'active': selectedQuotesView === 'quotesList'}" (click)="subQuotesViews('quotesList')"><i class="fa-solid fa-list"></i> <span class="list-view-title">List View</span></div>
                </div>
            </div>
       </div>
       <div class="sub-quotes-cnt">
-          <div class="sub-quotes">
-              <div class="quote-type-cnt">
-                <div class="quote-type-title">Quote Type</div>
-                <div class="quote-type-list">
-                <div class="quote-type-names" *ngFor="let member of members" [ngClass]="{'base-quote-row': member.quote.startsWith('Base Quote')}">
-                  <input type="checkbox"><span>{{member.quote}}</span>
-                </div>
-                </div>
-              </div>
-              <div class="quote-details-cnt">
-                <div class="quote-details-headings">
-                  <div class="proposer-title title">Proposer</div>
-                  <div class="product-title title">Product</div>
-                  <div class="policyno-title title">Policy No.</div>
-                  <div class="renewal-premium-title title">Renewal Premium</div>
-                  <div class="mobileno-title title">Mobile No</div>
-                  <div class="renewal-date-title title">Date Of Renewal</div>
-                  <div class="modification-title title">Modification</div>
-                  <div class="notice-title title">Notice</div>
-                </div>
-                
-                <div class="quote-details">
-                  <div class="quote-details-data" *ngFor="let member of members;let i=index" [ngClass]="{'base-quote-row': member.quote.startsWith('Base Quote')}">
-                  <div class="proposer-value data">{{ member.proposer }}</div>
-                  <div class="product-value data">{{ member.product }}</div>
-                  <div class="policyno-value data">{{ member.policyNo }}</div>
-                  <div class="renewal data">
-                    <div>{{ member.renewalPremium.amount }}</div>
-                    <div>{{ member.renewalPremium.benefits }}</div>
+          <div class="list-sub-quotes" *ngIf="selectedQuotesView=='quotesList' ">
+              <div class="sub-quotes">
+                  <div class="quote-type-cnt">
+                    <div class="quote-type-title">Quote Type</div>
+                    <div class="quote-type-list">
+                    <div class="quote-type-names" *ngFor="let member of members" [ngClass]="{'base-quote-row': member.quote.startsWith('Base Quote')}">
+                      <input type="checkbox"><span>{{member.quote}}</span>
+                    </div>
+                    </div>
                   </div>
-                  <div class="mobileno-value data">{{ member.mobileNo }}</div>
-                  <div class="renewal-date-value data">{{ member.dateOfRenewal }}</div>
-                  <div class="modification data">{{ member.modification }}</div>
-                  <div class="notice-icons data">
-                    <div class="icon">
-                      <i class="fa-regular fa-pen-to-square"></i>
+                  <div class="quote-details-cnt">
+                    <div class="quote-details-headings">
+                      <div class="proposer-title title">Proposer</div>
+                      <div class="product-title title">Product</div>
+                      <div class="policyno-title title">Policy No.</div>
+                      <div class="renewal-premium-title title">Renewal Premium</div>
+                      <div class="mobileno-title title">Mobile No</div>
+                      <div class="renewal-date-title title">Date Of Renewal</div>
+                      <div class="modification-title title">Modification</div>
+                      <div class="notice-title title">Notice</div>
                     </div>
-                    <div class="icon">
-                      <i class="fa-solid fa-shield-heart"></i>
-                    </div>
-                    <div class="dropdown">
-                      <div class="icon" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                    
+                    <div class="quote-details">
+                      <div class="quote-details-data" *ngFor="let member of members;let i=index" [ngClass]="{'base-quote-row': member.quote.startsWith('Base Quote')}">
+                      <div class="proposer-value data">{{ member.proposer }}</div>
+                      <div class="product-value data">{{ member.product }}</div>
+                      <div class="policyno-value data">{{ member.policyNo }}</div>
+                      <div class="renewal data">
+                        <div>{{ member.renewalPremium.amount }}</div>
+                        <div>{{ member.renewalPremium.benefits }}</div>
                       </div>
-                      <ul class="dropdown-menu dropdown-menu-start custom-dropdown-menu">
-                        <li>
-                          <a class="dropdown-item">
-                            <i class="fa-solid fa-download" style="font-size: 12px;color:#979CAE ;"></i> <span class="quotes-dropdown-names">Download</span>
-                          </a>
-                        </li>
-                        <li>
-                          <a class="dropdown-item">
-                            <i class="fa-solid fa-trash" style="font-size: 12px;color:#979CAE ;"></i> <span class=quotes-dropdown-names>Delete</span>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>                       
-                  </div>
-                  </div>
-                </div>
-              </div>        
-          </div>   
-         <div class="comparision-cnt">
-          <button class="compare-button" (click)="compareSelectedQuotes()">Compare Selected</button>
-         </div>
+                      <div class="mobileno-value data">{{ member.mobileNo }}</div>
+                      <div class="renewal-date-value data">{{ member.dateOfRenewal }}</div>
+                      <div class="modification data">{{ member.modification }}</div>
+                      <div class="notice-icons data">
+                        <div class="icon">
+                          <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="icon">
+                          <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <div class="dropdown">
+                          <div class="icon" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                          </div>
+                          <ul class="dropdown-menu dropdown-menu-start custom-dropdown-menu">
+                            <li>
+                              <a class="dropdown-item">
+                                <i class="fa-solid fa-download" style="font-size: 12px;color:#979CAE ;"></i> <span class="quotes-dropdown-names">Download</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a class="dropdown-item">
+                                <i class="fa-solid fa-trash" style="font-size: 12px;color:#979CAE ;"></i> <span class=quotes-dropdown-names>Delete</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>                       
+                      </div>
+                      </div>
+                    </div>
+                  </div>        
+              </div>   
+              <div class="comparision-cnt">
+              <button class="compare-button" (click)="compareSelectedQuotes()">Compare Selected</button>
+              </div>
+          </div>
+          <div class="card-sub-quotes" *ngIf="selectedQuotesView=='quotesList' "></div>
       </div>
-    </div> -->
-    <div class="quotes-comparision-main-cnt" *ngIf="showSubQuotes">
+    </div>
+    <div class="quotes-comparision-main-cnt" *ngIf="showComparison && !showSubQuotes">
       <div class="quotes-comparision-header">
           <p>Active Assure Diamond - Quote Comparison</p>
       </div>
+      <div class="quotes-comparision-cnt">
+          <div class="comparision-titles-cnt">
+              <div class="quote-type-premium-details-title"><p>Quote  Comparison</p></div>
+              <div class="upgrade-recommendation-title"><p>Upgrade Recommendations</p></div>
+              <div class="policy-details">
+                  <div class="members-title"><p>Members</p></div>
+                  <div class="nominee-title"><p>Nominee</p></div>
+                  <div class="covers-title"><p>Optional Covers</p></div>
+                  <div class="room-title"><p>Room</p></div>
+              </div>
+          </div>
+          <div class="comparision-quotes-details-cnt">
+            <div class="quote-details-cnt">
+              <div class="quote-type-premium-details">
+                  <div class="quote-type-and-premium">
+                      <p class="quote-type">Base Quote</p>
+                      <p class="Premium">₹6,863*/year</p>
+                  </div>
+                  <div class="buy-plan-button">
+                      <button>Buy Plan</button>
+                  </div>
+              </div>
+              <div class="upgrade-recommendation-details"><p>10% off on 2 years tenure</p></div>
+              <div class="policy-details">
+                  <div class="members-details"><p>You,Spouse,Father</p></div>
+                  <div class="nominee-details"><p>Rakesh</p></div>
+                  <div class="covers-details"><p>Cancer Secure Covers</p></div>
+                  <div class="room-details"><p>Private AC</p></div>
+              </div>
+            </div>
+          </div>
+      </div>
     </div>
   </div>
+  
