@@ -385,7 +385,7 @@
                         <ng-container [formGroupName]="i-1">
                         <p-tabPanel>
                           <ng-template pTemplate="header" class="custom-checkbox">
-                            <img [src]="generateHeader(allSubForm,i)" />
+                            <img [src]="generateHeader(control,i)" />
                             <span>{{ allSubForm?.[1]?.value ?? '' }}</span>
                           </ng-template>
                             <ng-container *ngFor="let subControl of allSubForm">

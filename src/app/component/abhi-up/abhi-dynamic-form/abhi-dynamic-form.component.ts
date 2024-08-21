@@ -2691,8 +2691,9 @@ export class AbhiDynamicFormComponent {
   isSectionCollapsed(sectionTitle: string): boolean {
     return !!this.collapsedSections[sectionTitle];
   }
-  generateHeader(allSubForm:any,i:any) {
-    const imagePath = JSON.parse(allSubForm?.[0]?.options?.[i-1]?.name)?.imagePath;
+  generateHeader(control:any,i:any) {
+    console.log(this.formData[control.name][i-1].relationshipType,control,i);
+    const imagePath = JSON.parse(this.formData[control.name][i-1].relationshipType)?.imagePath;
     console.log(i,imagePath);
     return imagePath;
   }
