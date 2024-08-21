@@ -947,6 +947,8 @@ export class AbhiDynamicFormComponent {
 
     if (parentControl == null && control.name == 'pincode') {
       let reqData = event.target.value;
+      console.log(event.target.value.length);
+      
       this.service.getPinCodeByCity(reqData).subscribe({
         next: (res) => {
           console.log(res)
@@ -956,6 +958,9 @@ export class AbhiDynamicFormComponent {
         },
         error: (err) => {
           console.error(err)
+          this.dynamicFormGroup.get('city')?.setValue('');
+          this.dynamicFormGroup.get('state')?.setValue('');
+          this.dynamicFormGroup.get('zone')?.setValue('');
         }
       });
     }
@@ -990,6 +995,22 @@ export class AbhiDynamicFormComponent {
               },
               error: (err) => {
                 console.error(err);
+                const patchObject: { [key: string]: any } = {};
+
+                patchObject['city' as string] = '';
+                patchObject['zone' as string] = '';
+                patchObject['zoneValue' as string] = '';
+                patchObject['state' as string] = '';
+
+                let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
+
+                for (let i = 0; i < formArray.length; i++) {
+                  if (i == index)
+                    formArray[i] = { ...formArray[i], ...patchObject }
+                }
+
+
+                this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
                 this.spinner.hide();
               }
             });
