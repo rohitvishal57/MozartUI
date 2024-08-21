@@ -2310,6 +2310,57 @@ margin: 0;
 .proposalDetails .accordionCardHeader {
     pointer-events: none;
 }
+.p-tabview .p-tabview-nav {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0;
+}
+.p-tabview-nav{
+    padding: 0;
+}
+.p-tabview .p-tabview-nav li {
+    margin-right: 10px;
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link span, 
+.p-tabview .p-tabview-nav li .p-tabview-nav-link span {
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 24px;
+    text-align: left;
+    color:#4c4c4c !important;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+    background: #fff !important;
+    border: 1px solid #fff !important;
+    border-radius: 16px !important;
+    margin: 10px 0 10px !important;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
+    height: 40px;
+    min-width: 100px;
+    padding: 8px 16px 8px 8px;
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 24px;
+    text-align: left;
+    color:#4c4c4c;
+    text-decoration: none;
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #FFE7E5 !important;
+    border: 1px solid #c7222a !important;
+    border-radius: 16px !important;
+    margin: 10px 0 10px !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 40px;
+    min-width: 100px;
+}
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
