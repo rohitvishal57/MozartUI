@@ -263,60 +263,13 @@
   height: 52px;
   gap: 8px;
   justify-content: space-between;
+  padding: 10px;
 }
-.main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss {
-  display: inline-table;
-  padding-bottom: 30px;
-  width: 231px;
+
+.custom-datepicker {
+  width: 80%; 
 }
-.main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container label {
-  position: absolute;
-  top: 50%;
-  left: 12px;
-  transform: translateY(-50%);
-  font-size: 14px;
-  font-family: "Anek Latin", sans-serif;
-  color: #aaa;
-  transition: all 0.2s ease;
-  pointer-events: none;
-  background-color: #f2f3f6;
-  padding: 0 5px;
-  padding-right: 35px;
-}
-.main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container {
-  position: relative;
-}
-.main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Text, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Select, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Text_disabled {
-  font-weight: 400;
-  height: 40px;
-  width: 100%;
-  background-color: #f1f3f6;
-  color: #979cae;
-  padding: 8px 6px 8px 16px;
-  border-radius: 12px;
-  border: 1px;
-  font-family: "Anek Latin", sans-serif;
-  box-sizing: border-box;
-  position: relative;
-  z-index: 0;
-}
-.main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Text:focus + label, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Text.has-value + label, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Select:focus + label, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Select.has-value + label {
-  top: 3px;
-  left: 12px;
-  font-size: 12px;
-  color: #666;
-  background-color: #fff;
-  z-index: 1;
-  padding: 0 3px;
-  border-radius: 2px;
-}
-.main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Text:focus, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Select:focus, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Text_disabled:focus {
-  outline: none;
-}
-.main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Text:focus + label, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Text.has-value + label, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Select:focus + label, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-types-cnt .date-filter .date-ranges .typecss .input-container .inputField_Select.has-value + label {
-  background: #fff;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(242, 243, 246, 1) 100%);
-}
+
 .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-buttons {
   display: flex;
   flex-direction: row;

@@ -1,337 +1,335 @@
-import { Component, ViewChild, ElementRef, Renderer2, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Subscription } from 'rxjs';
-import { CommonService } from 'src/app/services/common.service';
-import { LoginService } from 'src/app/services/login.service';
-import { IDynamicControl, IFormControl } from 'src/app/interface/form.interface';
-import { FormArray, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component,OnInit,} from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { CommonService } from "src/app/services/common.service";
+import { LoginService } from "src/app/services/login.service";
+import { FormControl, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import { DatePipe } from "@angular/common";
+import { RenewalServiceService } from "src/app/services/renewal/renewal-service.service";
+import { RenewalList } from "src/app/interface/renewal-list.interface";
 
 @Component({
-  selector: 'app-quotes',
-  templateUrl: './quotes.component.html',
-  styleUrls: ['./quotes.component.scss']
+  selector: "app-quotes",
+  templateUrl: "./quotes.component.html",
+  styleUrls: ["./quotes.component.scss"],
 })
 export class QuotesComponent implements OnInit {
-  data: any[] = [];
-  tableData:any={}
-  filteredData: any[] = [];
-  filterCounts = {
-    all: 0,
-    '30days': 0,
-    '30-60days': 0,
-    '60-90days': 0,
-    expired: 0
-  };
-  activeFilter: string = 'all'; 
-
+  renewalsList: RenewalList[] = [];
+  countsList: any = [];
+  renewedDate: any;
+  activeFilter: string = "all";
   p: number = 1;
-  selectedView: string = 'list';
-  selectedQuotesView: string = 'quotesList';
+  selectedView: string = "list";
+  selectedQuotesView: string = "quotesList";
   showEllipsisDropdown: number | null = null;
-  
-  subscription!: Subscription;
-  searchString: string = '';
-
-  productsList:any[]=[];
-  policyTypes:any[]=[];
-  fromDate: string = '';
-  toDate: string = '';
+  productsList: any[] = [];
+  policyTypes: any[] = [];
+  startDate: any;
+  endDate: any;
   appliedFiltersCount: number = 0;
-
-  toggeledropdown:boolean=false;
-  toggeleSearchdropdown:boolean=false;
-
+  toggeledropdown: boolean = false;
+  toggeleSearchdropdown: boolean = false;
   showSubQuotes: boolean = false;
   showComparison: boolean = false;
+  selected: string = "";
+  searchInputControl = new FormControl("");
 
-  selected:string = '' ;
-  searchInputControl = new FormControl('');
-
-  
   members = [
     {
-      quote:'Base Quote',
-      proposer: 'Kridhnan',
-      product: 'Active User',
-      policyNo: '23-22-0175217-00',
+      quote: "Base Quote",
+      proposer: "Kridhnan",
+      product: "Active User",
+      policyNo: "23-22-0175217-00",
       renewalPremium: {
-        amount: '₹25558',
-        benefits: 'HR benefits of ₹786 added'
+        amount: "₹25558",
+        benefits: "HR benefits of ₹786 added",
       },
-      mobileNo: '7123456789',
-      dateOfRenewal: '2023-03-15',
-      modification: 'Member added tenure 1 year'
+      mobileNo: "7123456789",
+      dateOfRenewal: "2023-03-15",
+      modification: "Member added tenure 1 year",
     },
     {
-      quote:'Sub Quote',
-      proposer: 'John Doe',
-      product: 'Premium User',
-      policyNo: '45-67-0123456-00',
+      quote: "Sub Quote",
+      proposer: "John Doe",
+      product: "Premium User",
+      policyNo: "45-67-0123456-00",
       renewalPremium: {
-        amount: '₹35000',
-        benefits: 'HR benefits of ₹900 added'
+        amount: "₹35000",
+        benefits: "HR benefits of ₹900 added",
       },
-      mobileNo: '7890123456',
-      dateOfRenewal: '2023-04-20',
-      modification: 'Coverage increased tenure 2 years'
+      mobileNo: "7890123456",
+      dateOfRenewal: "2023-04-20",
+      modification: "Coverage increased tenure 2 years",
     },
     {
-      quote:'Base Quote1',
-      proposer: 'krishnavamsi bhavani',
-      product: 'Active User',
-      policyNo: '23-22-0175217-00',
+      quote: "Base Quote1",
+      proposer: "krishnavamsi bhavani",
+      product: "Active User",
+      policyNo: "23-22-0175217-00",
       renewalPremium: {
-        amount: '₹25558',
-        benefits: 'HR benefits of ₹786 added'
+        amount: "₹25558",
+        benefits: "HR benefits of ₹786 added",
       },
-      mobileNo: '7123456789',
-      dateOfRenewal: '2023-03-15',
-      modification: 'Member added tenure 1 year'
+      mobileNo: "7123456789",
+      dateOfRenewal: "2023-03-15",
+      modification: "Member added tenure 1 year",
     },
-    // Add 3 more members with their details
   ];
 
-  @ViewChild('filterSection', { static: false }) filterSection!: ElementRef;
-
-  constructor(private http: HttpClient, private renderer: Renderer2, private eRef: ElementRef, private commonService: CommonService,private loginService:LoginService,private router:Router,private route: ActivatedRoute) {}
+  constructor(
+    private http: HttpClient,
+    private commonService: CommonService,
+    private renewalService: RenewalServiceService,
+    private loginService: LoginService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private datePipe: DatePipe
+  ) {}
 
   ngOnInit(): void {
-    this.fetchData();
+    this.getRenewalsList();
     this.getProducts();
-
-    this.route.queryParams.subscribe(params => {
-      this.showSubQuotes = params['showSubQuotes'] === 'true';
+    this.route.queryParams.subscribe((params) => {
+      this.showSubQuotes = params["showSubQuotes"] === "true";
     });
   }
 
-  fetchData(): void {
-    this.http.get<any[]>('/assets/jsonValue/renewalList.json').subscribe(data => {
-      this.data = data;
-      console.log("data",this.data);
-      this.filterQuotes(this.activeFilter); 
-    });
-    this.subscription = this.commonService.currSearchString.subscribe(res => this.searchString = res);
+  renewalLisRequestBody = {
+    agentCode: "5100003",
+    proposer: "",
+    productName: "",
+    policyType: "",
+    pageNumber: 1,
+    pageSize: 10,
+    mobileNumber: "",
+    filterType: "",
+    startDate: null as string | null,
+    endDate: null as string | null,
+  };
+
+  getRenewalsList() {
+    this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
+      (response) => {
+        if (response.success) {
+          this.renewalsList = response.data.renewalsList.map((item: any) => ({
+            ...item,
+            renewedDate: this.formatRenewedDate(item.renewedDate), 
+          }));
+          this.countsList = response.data;
+        } else {
+          console.error("API request was not successful.");
+        }
+      },
+      (error) => {
+        console.error("Error from API:", error);
+      }
+    );
   }
 
+  formatRenewedDate(datetime: string): string {
+    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
+  }
 
   filterQuotes(filter: string) {
+    this.renewalLisRequestBody.filterType = filter;
+    this.getRenewalsList();
     this.activeFilter = filter;
-  
-    const currentDate = new Date();
-    console.log("from date",currentDate)
-    console.log("from date",this.fromDate)
-    const fromDate = this.fromDate ? new Date(this.fromDate) : null;
-    console.log("from date",fromDate)
-    const toDate = this.toDate ? new Date(this.toDate) : null;
-  
-    const selectedProducts = this.productsList
-      .filter(product => product.selected)
-      .map(product => product.productname);
-    
-    const selectedPolicyTypes = this.policyTypes
-      .filter(policyType => policyType.selected)
-      .map(policyType => policyType.name);
-  
-    // Reset counts
-    this.filterCounts = {
-      all: 0,
-      '30days': 0,
-      '30-60days': 0,
-      '60-90days': 0,
-      expired: 0
-    };
-  
-    // Filter data and update counts
-    this.filteredData = this.data.filter((item) => {
-      const renewalDate = new Date(item.DateOfRenewal);
-      const dateDiff = Math.ceil((renewalDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
-  
-      // Check if renewalDate is within the selected date range
-      const dateInRange = (!fromDate || renewalDate >= fromDate) && (!toDate || renewalDate <= toDate);
-  
-      // Apply the selected product and policy type filters
-      const productFilter = selectedProducts.length > 0 ? selectedProducts.includes(item.Plan) : true;
-      const policyTypeFilter = selectedPolicyTypes.length > 0 ? selectedPolicyTypes.includes(item.PolicyType) : true;
-  
-      const passesAllFilters = productFilter && policyTypeFilter && dateInRange;
-  
-      // Increment counts based on the renewal date and if the item passes all filters
-      if (passesAllFilters) {
-        this.filterCounts['all']++;
-  
-        if (dateDiff >= 0 && dateDiff <= 30) {
-          this.filterCounts['30days']++;
-        } else if (dateDiff > 30 && dateDiff <= 60) {
-          this.filterCounts['30-60days']++;
-        } else if (dateDiff > 60 && dateDiff <= 90) {
-          this.filterCounts['60-90days']++;
-        } else if (dateDiff < 0) {
-          this.filterCounts['expired']++;
-        }
-      }
-  
-      // Apply the final filter to return the appropriate items for the active filter
-      switch (filter) {
-        case 'all':
-          return passesAllFilters;
-        case '30days':
-          return dateDiff >= 0 && dateDiff <= 30 && passesAllFilters;
-        case '30-60days':
-          return dateDiff > 30 && dateDiff <= 60 && passesAllFilters;
-        case '60-90days':
-          return dateDiff > 60 && dateDiff <= 90 && passesAllFilters;
-        case 'expired':
-          return dateDiff < 0 && passesAllFilters;
-        default:
-          return passesAllFilters;
-      }
-    });
+  }
+
+  formatDate(dateType: "startDate" | "endDate") {
+    if (dateType === "startDate" && this.startDate) {
+      this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
+    } else if (dateType === "endDate" && this.endDate) {
+      this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
+    }
   }
   
+  getStarClass(rating: number): string {
+    if (rating >= 8) {
+      return "green-star";
+    } else if (rating >= 4 && rating <= 7) {
+      return "yellow-star";
+    } else if (rating >= 1 && rating <= 3) {
+      return "red-star";
+    } else {
+      return "";
+    }
+  }
+
   getProducts() {
     this.loginService.getAllProductList(13, 2001, 101).subscribe({
       next: (res) => {
         this.productsList = res;
-  
-        // Extract unique familyplan values and transform them into objects with a 'selected' property
-        const uniquePolicyTypes = Array.from(new Set(this.productsList.map(product => product.familyplan)))
-          .map(policyType => ({ name: policyType, selected: false }));
-  
+        const uniquePolicyTypes = Array.from(
+          new Set(this.productsList.map((product) => product.familyplan))
+        ).map((policyType) => ({ name: policyType, selected: false }));
+
         this.policyTypes = uniquePolicyTypes;
       },
-      error: (err) => { console.log("error", err); }
+      error: (err) => {
+        console.log("error", err);
+      },
     });
   }
-  
-   // Method to calculate the number of applied filters
-   calculateAppliedFiltersCount():number {
-    const selectedProductsCount = this.productsList.filter(product => product.selected).length;
-    const selectedPolicyTypesCount = this.policyTypes.filter(policyType => policyType.selected).length;
-  
-    // Initialize count with the selected products and policy types
+
+  toggleFilterDropdown() {
+    if(this.toggeleSearchdropdown==true)
+    {
+       this.toggeleSearchdropdown=false;
+    }
+    this.toggeledropdown = !this.toggeledropdown;
+  }
+
+  calculateAppliedFiltersCount(): number {
+    const selectedProductsCount = this.productsList.filter(
+      (product) => product.selected
+    ).length;
+    const selectedPolicyTypesCount = this.policyTypes.filter(
+      (policyType) => policyType.selected
+    ).length;
     let count = selectedProductsCount + selectedPolicyTypesCount;
-  
-    // Check if date range filters are applied (either fromDate or toDate)
-    if (this.fromDate  && this.toDate) {
+    if (this.startDate && this.endDate) {
       count++;
     }
-  
-    this.appliedFiltersCount = count;
-    return  this.appliedFiltersCount
-  }
-  
 
-  toggleFilterDropdown()
-  {
-    this.toggeledropdown=!this.toggeledropdown;
+    this.appliedFiltersCount = count;
+    return this.appliedFiltersCount;
   }
+
   applyFilter() {
     this.calculateAppliedFiltersCount();
-    this.filterQuotes(this.activeFilter);
-    this.toggeledropdown=false;
-    this.fromDate = ''; 
-    this.toDate = '';   
-  }
-  getApplyButtonClass(): string {
-    return this.calculateAppliedFiltersCount() > 0 ? 'apply-btn-red' : '';
-  }
-  // Call this method whenever a filter is canceled
-  cancel() {
-    this.productsList.forEach(product => product.selected = false);
-    this.policyTypes.forEach(policyType => policyType.selected = false);
-    this.calculateAppliedFiltersCount();
-    this.filterQuotes(this.activeFilter);
-    this.toggeledropdown=false;
-    this.fromDate = ''; 
-    this.toDate = '';   
+    this.formatDate("startDate");
+    this.formatDate("endDate");
+    console.log("startDate",this.startDate,"endDate",this.endDate);
+    
+    this.renewalLisRequestBody.startDate=this.startDate;
+    console.log("start date taken by request body",this.renewalLisRequestBody.startDate);
+    this.renewalLisRequestBody.endDate=this.endDate;
+    console.log("end date taken by request body",this.renewalLisRequestBody.endDate);
+    const selectedProducts = this.productsList
+      .filter((product) => product.selected)
+      .map((product) => product.productname);
+      console.log("selectedProducts",selectedProducts);
+      
+    this.renewalLisRequestBody.productName = selectedProducts.join(", ");
+     console.log("product names which are taking by request body",this.renewalLisRequestBody.productName);
+     
+    const selectedPolicyTypes = this.policyTypes
+      .filter((policyType) => policyType.selected)
+      .map((policyType) => policyType.name);
+      console.log("selecteed policy types",selectedPolicyTypes);
+      
+    this.renewalLisRequestBody.policyType = selectedPolicyTypes.join(", ");
+    console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType);
+    
+    this.getRenewalsList();
+    this.toggeledropdown = false;
   }
 
-  getStarClass(rating: number): string {
-    console.log("star class method is working")
-    if (rating >= 8) {
-      return 'green-star';
-    } else if (rating >= 4 && rating <= 7) {
-      return 'yellow-star';
-    } else if (rating >= 1 && rating <= 3) {
-      return 'red-star';
-    } else {
-      return ''; // Default class or no class
-    }
+  cancel() {
+    this.productsList.forEach((product) => (product.selected = false));
+    this.policyTypes.forEach((policyType) => (policyType.selected = false));
+    this.startDate = null;
+    this.endDate = null;
+    this.appliedFiltersCount = 0;
+    this.renewalLisRequestBody.productName = "";
+    this.renewalLisRequestBody.policyType = "";
+    this.renewalLisRequestBody.startDate = null;
+    this.renewalLisRequestBody.endDate = null;
+    this.toggeledropdown = false;
+    this.getRenewalsList();
   }
   
-  toggleSearchDropdown(){
-    this.toggeleSearchdropdown=!this.toggeleSearchdropdown;
+  
+  getApplyButtonClass(): string {
+    return this.calculateAppliedFiltersCount() > 0 ? "apply-btn-red" : "";
   }
+
+  toggleSearchDropdown() {
+    if(this.toggeledropdown==true)
+    {
+      this.toggeledropdown=false;
+    }
+    this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
+  }
+
   onSelectChanges(): void {
-    this.selected !== 'none';
+    this.selected !== "none";
     console.log("selected value", this.selected);
-  
-    // Clear input field value
-    this.searchInputControl.setValue('');
-  
-    // Clear previous validators
+    this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
-  
-    // Apply new validators based on selected value
-    if (this.selected === 'mobileNo') { // Mobile Number
+    if (this.selected === "mobileNo") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern('^[6-9][0-9]{9}$') // 10 digits starting with 6, 7, 8, or 9
+        Validators.pattern("^[6-9][0-9]{9}$"),
       ]);
-    } else if (this.selected === 'name') { // Proposer Name
+    } else if (this.selected === "name") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern('^[a-zA-Z0-9@#$%^&*!]*$') // Alphabets, numbers, and special characters
+        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
       ]);
     }
-      this.searchInputControl.updateValueAndValidity();
-    // this.searchInputControl.markAsPristine(); // Reset form control state
-    this.searchInputControl.markAsUntouched(); // Reset form control state
+    this.searchInputControl.updateValueAndValidity();
+    this.searchInputControl.markAsUntouched();
   }
-  
-  
+
   getPlaceholder(): string {
-    if(this.selected==='mobileNo')
-    {return 'Enter Mobile Number'}
-    else if(this.selected === 'name')
-    {return 'Enter Proposer Name'}
-    else{return ''}
+    if (this.selected === "mobileNo") {
+      return "Enter Mobile Number";
+    } else if (this.selected === "name") {
+      return "Enter Proposer Name";
+    } else {
+      return "";
+    }
   }
   getErrorMessage(): string {
-    if (this.searchInputControl.hasError('required')) {
-      return 'This field is required';
+    if (this.searchInputControl.hasError("required")) {
+      return "This field is required";
+    } else if (this.searchInputControl.hasError("pattern")) {
+      if (this.selected === "mobileNo") {
+        return "Invalid Mobile Number";
+      } else if (this.selected === "name") {
+        return "Invalid Proposer Name";
+      }
+    }
+    return "";
+  }
+  cancelSearch() {
+    this.toggeleSearchdropdown = false;
+    this.selected = "";
+    this.renewalLisRequestBody.mobileNumber=""
+    this.renewalLisRequestBody.proposer=""
+    this.getRenewalsList()
+  }
+
+  applySearch() {
+    if (this.searchInputControl.valid) {
+      if (this.selected === "mobileNo") {
+        this.renewalLisRequestBody.mobileNumber =
+          this.searchInputControl.value!;
+        console.log(this.renewalLisRequestBody.mobileNumber);
+      } 
+      else if (this.selected === "name") {
+        this.renewalLisRequestBody.proposer = this.searchInputControl.value!;
+      }
+      this.getRenewalsList();
+      this.toggeleSearchdropdown = false;
     } 
-    else if (this.searchInputControl.hasError('pattern')) {
-      if(this.selected==='mobileNo')
-        {return 'Invalid Mobile Number'}
-        else if(this.selected === 'name')
-        {return 'Invalid Proposer Name'}
+    else {
+      this.toggeleSearchdropdown = true;
     }
-    return '';
   }
-  cancelSearch(){
-      this.toggeleSearchdropdown=false;
-      this.selected='';
-  }
-  applySearch()
-  {
-    if(this.searchInputControl.valid)
-    {
-      this.toggeleSearchdropdown=false
-      this.selected='';
-    }
-    else{this.toggeleSearchdropdown=true}
-  }
+  
   quotesViews(view: string) {
-    this.selectedView = view; 
+    this.selectedView = view;
   }
   subQuotesViews(view: string) {
-    this.selectedQuotesView = view; 
+    this.selectedQuotesView = view;
   }
 
   toggleEllipsisDropdown(index: number): void {
-    this.showEllipsisDropdown = this.showEllipsisDropdown === index ? null : index;
+    this.showEllipsisDropdown =
+      this.showEllipsisDropdown === index ? null : index;
   }
 
   download(item: any): void {
@@ -354,16 +352,10 @@ export class QuotesComponent implements OnInit {
     this.toggleEllipsisDropdown(null as unknown as number);
   }
 
+  renewalJoureney() {
+    this.router.navigate(["/portal/agent/renewalDynamicForm"]);
+  }
 
-  handleSearchString() {
-    this.commonService.updateSearchString(this.searchString);
-  }
- 
-  renewalJoureney()
-  {
-    this.router.navigate(['/portal/agent/renewalDynamicForm'])
-  }
-  
   compareSelectedQuotes() {
     this.showSubQuotes = false;
     this.showComparison = true;

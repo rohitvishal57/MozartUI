@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -224,11 +223,4 @@ export class CommonService {
     return this.http.get<any>(`${this.baseUrl}Agent/GetInsurerData`);
   }
   
-  // search Container
-  private searchString = new BehaviorSubject('');
-  currSearchString = this.searchString.asObservable();
-
-  updateSearchString(state:string){
-    this.searchString.next(state)
-   }
 }

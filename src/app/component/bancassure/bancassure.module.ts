@@ -14,9 +14,9 @@ import { ProposalsComponent } from './proposals/proposals.component';
 import { QuotesComponent } from '../renewals/quotes/quotes.component';
 import { NgxPaginationModule } from 'ngx-pagination'; 
 import { RenewalDynamicFormComponent } from '../renewals/renewal-dynamic-form/renewal-dynamic-form.component';
-import { SearchQuotesPipe } from 'src/app/pipe/search-quotes/search-quotes.pipe';
 import {MatSelectModule} from '@angular/material/select';
-
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,6 @@ import {MatSelectModule} from '@angular/material/select';
     AgentDynamicFormComponent, 
     ProposalsComponent,
     QuotesComponent,
-    SearchQuotesPipe,
     RenewalDynamicFormComponent
   ],
   imports: [
@@ -37,7 +36,9 @@ import {MatSelectModule} from '@angular/material/select';
     ReactiveFormsModule,
     BancassureRoutingModule,
     NgxPaginationModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatInputModule,
   ]
 })
 export class BancassureModule { }

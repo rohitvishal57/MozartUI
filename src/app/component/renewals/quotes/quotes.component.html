@@ -9,19 +9,19 @@
                         <div class="left-value1">Quick filters</div>
                         <div class="filter-types">
                             <div [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">
-                                <p>All Policies ({{ filterCounts.all }})</p>
+                                <p>All Policies({{countsList.totalRecords}})</p>
                             </div>
-                            <div [ngClass]="{'active': activeFilter === '30days'}" (click)="filterQuotes('30days')">
-                                <p>< 30 Days ({{ filterCounts['30days'] }})</p>
+                            <div [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired')">
+                                <p>< 30 Days({{countsList.expiringInLessThan30DaysCount}})</p>
                             </div>
-                            <div [ngClass]="{'active': activeFilter === '30-60days'}" (click)="filterQuotes('30-60days')">
-                                <p>30-60 Days ({{ filterCounts['30-60days'] }})</p>
+                            <div [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days')">
+                                <p>30-60 Days ({{countsList.expiringIn30To60DaysCount}})</p>
                             </div>
-                            <div [ngClass]="{'active': activeFilter === '60-90days'}" (click)="filterQuotes('60-90days')">
-                                <p>60-90 Days ({{ filterCounts['60-90days'] }})</p>
+                            <div [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days')">
+                                <p>60-90 Days ({{countsList.expiringIn60To90DaysCount}})</p>
                             </div>
-                            <div [ngClass]="{'active': activeFilter === 'expired'}" (click)="filterQuotes('expired')">
-                                <p>Expired ({{ filterCounts.expired }})</p>
+                            <div [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies')">
+                                <p>Expired ({{countsList.expiredCount}})</p>
                             </div>
                         </div>
                     </div>
@@ -43,15 +43,8 @@
                             <i class="fa-solid fa-table-cells-large"></i>
                         </div>
                     </div>
-                    <!-- <div class="search-field">
-                        <div class="search-container">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input [(ngModel)]="searchString" (input)="handleSearchString()" type="text" placeholder="Search for any leads here" (keydown.enter)="handleEnter()" (blur)="handleBlur($event)" />
-                        </div>
-                    </div> -->
                 </div>
             </div>
-            <!--  -->
             <!-- Filter Dropdown -->
             <div class="filter-dropdown" *ngIf="toggeledropdown===true">
                 <div class="filters-types-cnt">
@@ -65,7 +58,7 @@
                                     <label for="product{{i}}">{{productsList[i].productname}}</label>
                                 </div>
                                 <div class="product-item" *ngIf="i % 2 !== 0">
-                                    <input [(ngModel)]="product.selected" type="checkbox" id="product{{i}}" (change)="calculateAppliedFiltersCount()" />
+                                    <input [(ngModel)]="product.selected" type="checkbox" id="product{{i}}" (change)="calculateAppliedFiltersCount()" class="product-checkbox" />
                                     <label for="product{{i}}">{{productsList[i].productname}}</label>
                                 </div>
                             </ng-container>
@@ -88,27 +81,26 @@
                     </div>
   
                     <div class="date-filter">
-                        <div class="date-filter-title">Date Range</div>
+                        <div class="date-filter-title">Date Range (MM/DD/YYYY)</div>
                         <div class="date-ranges">
-                            <!-- <div class="typecss"> -->
                             <div class="from-date-input">
-                                <!-- <input [(ngModel)]="fromDate" type="date" id="date1" (change)="calculateAppliedFiltersCount()" placeholder="Select Start Date" onfocus="this.type='date' " onblur="this.type='text' "> -->
-                                <!-- <label for="date1" class="placeholder">Select Start Date</label> -->
-                                <!-- <input class="inputField_Text"  [zngClass="has-value">                          
-                          <label>Select Start Date</label> -->
-                                <!-- </div> -->
-                                <div class="flex-auto">
-                                    <p-calendar [(ngModel)]="fromDate" [showIcon]="true" inputId="icondisplay" placeholder="select start date" />
-                                </div>
+                                <mat-form-field class="custom-datepicker" appearance="outline">
+                                    <mat-label>Select Start Date</mat-label>
+                                    <input matInput [matDatepicker]="dp1" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')" />
+                                    <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp1></mat-datepicker>
+                                </mat-form-field>
                             </div>
                             <div class="to-date-input">
-                                <!-- <input [(ngModel)]="toDate" type="date" id="date2" (change)="calculateAppliedFiltersCount()" placeholder="Select End Date"> -->
-                                <!-- <label for="date2" class="placeholder">Select End Date</label> -->
-                                <div class="flex-auto">
-                                    <p-calendar [(ngModel)]="toDate" [showIcon]="true" inputId="icondisplay" placeholder="select end date" />
-                                </div>
+                                <mat-form-field class="custom-datepicker" appearance="outline">
+                                  <mat-label>Select End Date</mat-label>
+                                  <input matInput [matDatepicker]="dp2" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')" />
+                                  <mat-datepicker-toggle matIconSuffix [for]="dp2"></mat-datepicker-toggle>
+                                  <mat-datepicker #dp2></mat-datepicker>
+                                </mat-form-field>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
                 <div class="filters-buttons">
@@ -123,7 +115,7 @@
                 <mat-form-field class="select-boxes" color="accent" appearance="outline">
                   <mat-label>Select search type</mat-label>
                   <mat-select [(ngModel)]="selected" (selectionChange)="onSelectChanges()">
-                    <mat-option value="none">None</mat-option>
+                    <mat-option value="none">Select</mat-option>
                     <mat-option value="mobileNo">Mobile Number</mat-option>
                     <mat-option value="name">Proposer Name</mat-option>
                   </mat-select>
@@ -144,21 +136,21 @@
                 <div class="apply-button" [class.active]="selected!='none' && searchInputControl.valid" (click)="applySearch()">Apply</div>
               </div>
             </div>
-            <!--cards  -->
+            <!--Display Data-->
             <div class="card-cnt">
-                <!-- <div *ngIf="quotesView"> -->
+                <!--Card View-->
                 <div class="card-outer-cnt" *ngIf="selectedView == 'grid'">
-                    <div class="card" *ngFor="let item of filteredData | searchQuotes : searchString | paginate: { itemsPerPage: 9, currentPage: p } ; let i = index">
+                    <div class="card" *ngFor="let row of renewalsList | paginate: { itemsPerPage: 9, currentPage: p } ; let i = index">
                         <div class="top-section">
                             <div class="card-header-cnt">
                                 <div class="name-and-rating">
-                                    <span class="name">{{ item.Name }}</span>
+                                    <span class="name">{{ row.proposerFirstName }} {{ row.proposerLastName }}</span>
                                     <div class="rating">
-                                        <span class="star" [ngClass]="getStarClass(item.Rating)"><i class="fa-solid fa-star"></i></span>
-                                        <span class="rating-value">{{ item.Rating }}</span>
+                                        <span class="star" [ngClass]="getStarClass(row.rating)"><i class="fa-solid fa-star"></i></span>
+                                        <span class="rating-value">{{ row.rating }}</span>
                                     </div>
                                 </div>
-                                <div>{{ item.Plan }}</div>
+                                <div>{{ row.productName }}</div>
                             </div>
                             <div class="icons">
                                 <div class="icon" (click)="renewalJoureney()">
@@ -174,25 +166,25 @@
                             <div class="policy-detail">
                                 <div class="detail">
                                     <span class="label">Policy Type</span>
-                                    <span class="value">{{ item['PolicyType'] }}</span>
+                                    <span class="value">{{ row.policyType }}</span>
                                 </div>
                                 <div class="detail">
                                     <span class="label">Policy No.</span>
-                                    <span class="value">{{ item['PolicyNo'] }}</span>
+                                    <span class="value">{{  row.policyNumber }}</span>
                                 </div>
                                 <div class="detail">
                                     <span class="label">Status</span>
-                                    <span class="value">{{ item.Status }}</span>
+                                    <span class="value">{{ row.status }}</span>
                                 </div>
                             </div>
                             <div class="policy-detail">
                                 <div class="detail">
                                     <span class="label">MobileNo</span>
-                                    <span class="value">{{ item.MobileNo}}</span>
+                                    <span class="value">{{ row.proposerMobileNumber}}</span>
                                 </div>
                                 <div class="detail">
                                     <span class="label">Date of Renewal</span>
-                                    <span class="value">{{ item['DateOfRenewal'] }}</span>
+                                    <span class="value">{{ row.renewedDate }}</span>
                                 </div>
                             </div>
                             <div class="policy-detail2">
@@ -201,37 +193,36 @@
                                     <div class="value">
                                         <div class="sub-detail">
                                             <div>Total Premium</div>
-                                            <div>{{ item['TotalPremium'] }}</div>
+                                            <div>{{  row.renewalPremiumAmount }}</div>
                                         </div>
                                         <div class="sub-detail benifit">
                                             <div>HR benefits</div>
-                                            <div>{{ item['HRbenefits'] }}</div>
+                                            <div>{{ row.healthReturn }}</div>
                                         </div>
                                         <div class="sub-detail">
                                             <div>Renewal Premium</div>
-                                            <div>{{ item['RenewalPremiumAmount'] }}</div>
+                                            <div>{{ row.renewalPremiumAmount - row.healthReturn }}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="detail widths">
                                     <span class="label">Modification</span>
-                                    <span class="value1">{{ item.Modification }}</span>
+                                    <span class="value1">{{ row.modification }}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="ellipsis-dropdown" *ngIf="showEllipsisDropdown === i">
-                            <div (click)="$event.stopPropagation()" (click)="download(item)"><i class="fa-solid fa-download"></i> Download</div>
-                            <div (click)="$event.stopPropagation()" (click)="delete(item)"><i class="fa-solid fa-trash"></i> Delete</div>
-                            <div (click)="$event.stopPropagation()" (click)="shareViaEmail(item)"><i class="fa-regular fa-envelope"></i> Share via email</div>
-                            <div (click)="$event.stopPropagation()" (click)="sendRenewalNotice(item)">Send Renewal Notice</div>
-                            <div (click)="$event.stopPropagation()" (click)="createAutoDebitLink(item)">
+                            <div (click)="$event.stopPropagation()" (click)="download(row)"><i class="fa-solid fa-download"></i> Download</div>
+                            <div (click)="$event.stopPropagation()" (click)="delete(row)"><i class="fa-solid fa-trash"></i> Delete</div>
+                            <div (click)="$event.stopPropagation()" (click)="shareViaEmail(row)"><i class="fa-regular fa-envelope"></i> Share via email</div>
+                            <div (click)="$event.stopPropagation()" (click)="sendRenewalNotice(row)">Send Renewal Notice</div>
+                            <div (click)="$event.stopPropagation()" (click)="createAutoDebitLink(row)">
                                 Create Auto-Debit Registration Link
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- </div> -->
-                <!-- tabel -->
+                <!-- table View -->
                 <div class="table-format-cnt table-responsive" *ngIf="selectedView == 'list'">
                     <div class="table-inner-cnt">
                         <table class="table tableRenewalList table-borderless">
@@ -250,37 +241,37 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let row of filteredData | searchQuotes : searchString | paginate: { itemsPerPage: 6, currentPage: p }; let i = index" class="table-values">
-                                    <td class="pro-name">{{ row.Name }}</td>
+                                <tr *ngFor="let row of renewalsList| paginate: { itemsPerPage: 6, currentPage: p }; let i = index" class="table-values">
+                                    <td class="pro-name">{{ row.proposerFirstName }} {{row.proposerLastName}}</td>
                                     <td>
                                         <div class="rating">
-                                            <span class="star" [ngClass]="getStarClass(row.Rating)"><i class="fa-solid fa-star"></i></span>
-                                            <span class="rating-value">{{ row.Rating }}</span>
+                                            <span class="star" [ngClass]="getStarClass(row.rating)"><i class="fa-solid fa-star"></i></span>
+                                            <span class="rating-value">{{ row.rating }}</span>
                                         </div>
                                     </td>
-                                    <td>{{ row.Plan }}</td>
+                                    <td>{{ row.productName }}</td>
                                     <td class="policy-type-no">
-                                        <div>{{ row['PolicyType'] }}</div>
-                                        <div>{{ row['PolicyNo'] }}</div>
+                                        <div>{{ row.policyType }}</div>
+                                        <div>{{ row.policyNumber }}</div>
                                     </td>
-                                    <td>{{ row.Status }}</td>
+                                    <td>{{ row.status }}</td>
                                     <td class="renewal">
                                         <div class="total-premium">
                                             <p>Total Premium</p>
-                                            <p>{{ row['TotalPremium'] }}</p>
+                                            <p>{{ row.renewalPremiumAmount }}</p>
                                         </div>
                                         <div class="hr-benefits">
                                             <p>HR Benefits</p>
-                                            <p>{{ row['HRbenefits'] }}</p>
+                                            <p>{{ row.healthReturn }}</p>
                                         </div>
                                         <div class="renewal-premium">
                                             <p>Renewal Premium</p>
-                                            <p>{{ row['RenewalPremiumAmount'] }}</p>
+                                            <p>{{ row.renewalPremiumAmount - row.healthReturn }}</p>
                                         </div>
                                     </td>
-                                    <td>{{row.MobileNo}}</td>
-                                    <td>{{ row['DateOfRenewal'] }}</td>
-                                    <td class="modification">{{ row.Modification }}</td>
+                                    <td>{{row.proposerMobileNumber}}</td>
+                                    <td>{{ row.renewedDate }}</td>
+                                    <td class="modification">{{ row.modification }}</td>
                                     <td>
                                         <div class="notice-icons">
                                             <div class="icon" (click)="renewalJoureney()">
@@ -294,7 +285,6 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <!-- <td> -->
                                         <div class="ellipsis-dropdown2" *ngIf="showEllipsisDropdown === i">
                                             <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="download(row)"><i class="fa-solid fa-download"></i> Download</div>
                                             <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="delete(row)"><i class="fa-solid fa-trash"></i> Delete</div>
@@ -306,22 +296,19 @@
                                                 Create Auto-Debit Registration Link
                                             </div>
                                         </div>
-                                    <!-- </td> -->
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <!-- tabel end -->
                 <!-- image no data -->
-                <div class="no-data" *ngIf="(filteredData | searchQuotes: searchString).length === 0">
+                <div class="no-data" *ngIf="renewalsList.length === 0">
                     <img src="assets/images/noDataFound.png" alt="No Data Found" />
                 </div>
-                <!--  -->
             </div>
-            <!--  -->
+            <!--Pagination-->
             <div class="pagination">
-                <div class="no-data-bottom-section-cnt" *ngIf="(filteredData | searchQuotes: searchString).length === 0 ; else safe">
+                <div class="no-data-bottom-section-cnt" *ngIf="renewalsList.length === 0 ; else safe">
                     <div class="no-data-bottom">
                         <div class="left-cnt">
                             <div class="text-message1">
