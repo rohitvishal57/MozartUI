@@ -22,7 +22,7 @@ const routes: Routes = [
         {path: "viewtransaction", component: TransactionComponent, canActivate: [AuthGuard]},
         {path: "viewreports", component: ReportsComponent, canActivate: [AuthGuard]},
         {path: "agentForm",component:AgentDynamicFormComponent,canActivate:[AuthGuard]},
-        {path: "allQuotes", component: QuotesComponent},
+        {path: "renewalList", component: QuotesComponent},
         {path: "renewalDynamicForm", component: RenewalDynamicFormComponent}
       ]
     }

@@ -322,7 +322,7 @@ applyRoomUpgrade()
 
 getSubquotes()
 {
-  this.router.navigate(['portal/agent/allQuotes'],{ queryParams: { showSubQuotes: true } })
+  this.router.navigate(['portal/agent/renewalList'],{ queryParams: { showSubQuotes: true } })
 }
 
 }

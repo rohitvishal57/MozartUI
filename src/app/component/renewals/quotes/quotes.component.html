@@ -1,6 +1,6 @@
 <div class="main-container">
     <div class="all-quotes" *ngIf="!showSubQuotes && !showComparison">
-        <div class="header-val">All Quotes</div>
+        <div class="header-val">Renewal List</div>
         <div class="main-quotes-cnt">
             <!--  -->
             <div class="quotes-header">
@@ -55,11 +55,11 @@
                             <ng-container *ngFor="let product of productsList; let i = index">
                                 <div class="product-item" *ngIf="i % 2 === 0">
                                     <input [(ngModel)]="product.selected" type="checkbox" id="product{{i}}" (change)="calculateAppliedFiltersCount()" class="product-checkbox" />
-                                    <label for="product{{i}}">{{productsList[i].productname}}</label>
+                                    <label for="product{{i}}">{{product.productName}}</label>
                                 </div>
                                 <div class="product-item" *ngIf="i % 2 !== 0">
                                     <input [(ngModel)]="product.selected" type="checkbox" id="product{{i}}" (change)="calculateAppliedFiltersCount()" class="product-checkbox" />
-                                    <label for="product{{i}}">{{productsList[i].productname}}</label>
+                                    <label for="product{{i}}">{{product.productName}}</label>
                                 </div>
                             </ng-container>
                         </div>
@@ -118,6 +118,7 @@
                     <mat-option value="none">Select</mat-option>
                     <mat-option value="mobileNo">Mobile Number</mat-option>
                     <mat-option value="name">Proposer Name</mat-option>
+                    <mat-option value="policyNumber">Policy Number</mat-option>
                   </mat-select>
                 </mat-form-field>
                 <div class="search-input">
@@ -140,7 +141,7 @@
             <div class="card-cnt">
                 <!--Card View-->
                 <div class="card-outer-cnt" *ngIf="selectedView == 'grid'">
-                    <div class="card" *ngFor="let row of renewalsList | paginate: { itemsPerPage: 9, currentPage: p } ; let i = index">
+                    <div class="card" *ngFor="let row of renewalsList | paginate: { itemsPerPage: rows, currentPage: page } ; let i = index">
                         <div class="top-section">
                             <div class="card-header-cnt">
                                 <div class="name-and-rating">
@@ -153,10 +154,13 @@
                                 <div>{{ row.productName }}</div>
                             </div>
                             <div class="icons">
+                                <div class="icon" (click)="$event.stopPropagation()">
+                                    <i class="fa-brands fa-whatsapp" style="color: #3cb224;"></i>                                </div>
+                                <div class="icon" (click)="$event.stopPropagation()">
+                                    <i class="fa-solid fa-comment-sms" style="color: #827e8b;"></i>                                </div>
                                 <div class="icon" (click)="renewalJoureney()">
                                     <i class="fa-regular fa-pen-to-square"></i>
                                 </div>
-                                <div class="icon" (click)="$event.stopPropagation()"><i class="fa-solid fa-shield-heart"></i></div>
                                 <div class="icon" (click)="$event.stopPropagation()" (click)="toggleEllipsisDropdown(i)">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </div>
@@ -241,7 +245,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let row of renewalsList| paginate: { itemsPerPage: 6, currentPage: p }; let i = index" class="table-values">
+                                <tr *ngFor="let row of renewalsList| paginate: { itemsPerPage: rows, currentPage: page }; let i = index" class="table-values">
                                     <td class="pro-name">{{ row.proposerFirstName }} {{row.proposerLastName}}</td>
                                     <td>
                                         <div class="rating">
@@ -251,7 +255,7 @@
                                     </td>
                                     <td>{{ row.productName }}</td>
                                     <td class="policy-type-no">
-                                        <div>{{ row.policyType }}</div>
+                                        <div>{{ row.policyType }}</div><br>
                                         <div>{{ row.policyNumber }}</div>
                                     </td>
                                     <td>{{ row.status }}</td>
@@ -274,11 +278,12 @@
                                     <td class="modification">{{ row.modification }}</td>
                                     <td>
                                         <div class="notice-icons">
+                                            <div class="icon" (click)="$event.stopPropagation()">
+                                                <i class="fa-brands fa-whatsapp" style="color: #3cb224;"></i>                                            </div>
+                                            <div class="icon" (click)="$event.stopPropagation()">
+                                                <i class="fa-solid fa-comment-sms" style="color: #827e8b;"></i>                                            </div>
                                             <div class="icon" (click)="renewalJoureney()">
                                                 <i class="fa-regular fa-pen-to-square"></i>
-                                            </div>
-                                            <div class="icon" (click)="$event.stopPropagation()">
-                                                <i class="fa-solid fa-shield-heart"></i>
                                             </div>
                                             <div class="icon" (click)="$event.stopPropagation()" (click)="toggleEllipsisDropdown(i)">
                                                 <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -308,7 +313,7 @@
             </div>
             <!--Pagination-->
             <div class="pagination">
-                <div class="no-data-bottom-section-cnt" *ngIf="renewalsList.length === 0 ; else safe">
+                <div class="no-data-bottom-section-cnt" *ngIf="renewalsList.length === 0 ; else pagination">
                     <div class="no-data-bottom">
                         <div class="left-cnt">
                             <div class="text-message1">
@@ -329,11 +334,16 @@
                         </div>
                     </div>
                 </div>
-                <ng-template #safe>
-                    <div class="pages">
-                        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+                <ng-template #pagination>
+                    <div class="pages custom-paginator-background">
+                    <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" 
+                      [rowsPerPageOptions]="[6,9,12,15]" (onPageChange)="onPageChange($event)"class="custom-paginator">
+                    </p-paginator>
+                    <div class="pagination-info">
+                        Showing {{first + 1}} to {{first + rows > totalRecords ? totalRecords : first + rows}} of {{totalRecords}} entries
                     </div>
-                </ng-template>
+                    </div>
+                    </ng-template>
             </div>
         </div>
     </div>
@@ -419,7 +429,34 @@
               <button class="compare-button" (click)="compareSelectedQuotes()">Compare Selected</button>
               </div>
           </div>
-          <div class="card-sub-quotes" *ngIf="selectedQuotesView=='quotesList' "></div>
+          <div class="card-sub-quotes" *ngIf="selectedQuotesView=='quotesGrid' ">
+            <div class="card-outer-cnt">
+                <div class="card-header-cnt">
+                    <div class="quote-names">
+                        <div class="base-quote-name">Base Quote1</div>
+                        <div class="sub-quote-name">Sub Quote1</div>
+                    </div>
+                    <div class="notice-icons">
+                        <div class="icon" (click)="$event.stopPropagation()">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div class="icon" (click)="$event.stopPropagation()">
+                            <i class="fa-solid fa-comment-sms"></i>
+                        </div>
+                        <div class="icon" (click)="renewalJoureney()">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="icon">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-inner-cnt">
+                    <div class="card-information"></div>
+                    <div class="modification"></div>
+                </div>
+            </div>
+          </div>
       </div>
     </div>
     <div class="quotes-comparision-main-cnt" *ngIf="showComparison && !showSubQuotes">

@@ -8,7 +8,6 @@ import { ViewproductsComponent } from './viewproducts/viewproducts.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { TransactionComponent } from './transaction/transaction.component';
 import { ReportsComponent } from './reports/reports.component';
-import { NgJsonEditorModule } from 'ang-jsoneditor';
 import { AgentDynamicFormComponent } from './agent-dynamic-form/agent-dynamic-form.component';
 import { ProposalsComponent } from './proposals/proposals.component';
 import { QuotesComponent } from '../renewals/quotes/quotes.component';

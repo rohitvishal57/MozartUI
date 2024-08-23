@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { RenewalServiceService } from "src/app/services/renewal/renewal-service.service";
 import { RenewalList } from "src/app/interface/renewal-list.interface";
+import { AdminService } from "src/app/services/admin.service";
 
 @Component({
   selector: "app-quotes",
@@ -18,7 +19,10 @@ export class QuotesComponent implements OnInit {
   countsList: any = [];
   renewedDate: any;
   activeFilter: string = "all";
-  p: number = 1;
+  page: number = 1;
+  first: number = 0;
+  rows: number = 6;
+  totalRecords: number = 0;
   selectedView: string = "list";
   selectedQuotesView: string = "quotesList";
   showEllipsisDropdown: number | null = null;
@@ -78,12 +82,11 @@ export class QuotesComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private commonService: CommonService,
     private renewalService: RenewalServiceService,
-    private loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private adminService:AdminService
   ) {}
 
   ngOnInit(): void {
@@ -94,6 +97,13 @@ export class QuotesComponent implements OnInit {
     });
   }
 
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows; 
+    this.page = Math.floor(this.first / this.rows) + 1;
+    console.log('First index:', this.first, 'Rows:', this.rows, 'Page:', this.page);
+  }
+
   renewalLisRequestBody = {
     agentCode: "5100003",
     proposer: "",
@@ -102,6 +112,7 @@ export class QuotesComponent implements OnInit {
     pageNumber: 1,
     pageSize: 10,
     mobileNumber: "",
+    policyNumber:"",
     filterType: "",
     startDate: null as string | null,
     endDate: null as string | null,
@@ -116,6 +127,7 @@ export class QuotesComponent implements OnInit {
             renewedDate: this.formatRenewedDate(item.renewedDate), 
           }));
           this.countsList = response.data;
+          this.totalRecords=this.renewalsList.length;
         } else {
           console.error("API request was not successful.");
         }
@@ -157,11 +169,11 @@ export class QuotesComponent implements OnInit {
   }
 
   getProducts() {
-    this.loginService.getAllProductList(13, 2001, 101).subscribe({
+    this.adminService.getAllProductList().subscribe({
       next: (res) => {
         this.productsList = res;
         const uniquePolicyTypes = Array.from(
-          new Set(this.productsList.map((product) => product.familyplan))
+          new Set(this.productsList.map((product) => product.familyPlan))
         ).map((policyType) => ({ name: policyType, selected: false }));
 
         this.policyTypes = uniquePolicyTypes;
@@ -263,12 +275,19 @@ export class QuotesComponent implements OnInit {
         Validators.required,
         Validators.pattern("^[6-9][0-9]{9}$"),
       ]);
-    } else if (this.selected === "name") {
+    } 
+    else if (this.selected === "name") {
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
       ]);
     }
+    // else if (this.selected === "policyNumber") {
+    //   this.searchInputControl.setValidators([
+    //     Validators.required,
+    //     Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
+    //   ]);
+    // }
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched();
   }
@@ -278,14 +297,18 @@ export class QuotesComponent implements OnInit {
       return "Enter Mobile Number";
     } else if (this.selected === "name") {
       return "Enter Proposer Name";
-    } else {
+    } else if (this.selected === "policyNumber") {
+      return "Enter Policy Number";
+    } 
+    else {
       return "";
     }
   }
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";
-    } else if (this.searchInputControl.hasError("pattern")) {
+    } 
+    else if (this.searchInputControl.hasError("pattern")) {
       if (this.selected === "mobileNo") {
         return "Invalid Mobile Number";
       } else if (this.selected === "name") {
@@ -299,18 +322,21 @@ export class QuotesComponent implements OnInit {
     this.selected = "";
     this.renewalLisRequestBody.mobileNumber=""
     this.renewalLisRequestBody.proposer=""
+    this.renewalLisRequestBody.policyNumber=""
     this.getRenewalsList()
   }
 
   applySearch() {
     if (this.searchInputControl.valid) {
       if (this.selected === "mobileNo") {
-        this.renewalLisRequestBody.mobileNumber =
-          this.searchInputControl.value!;
+        this.renewalLisRequestBody.mobileNumber =this.searchInputControl.value!;
         console.log(this.renewalLisRequestBody.mobileNumber);
       } 
       else if (this.selected === "name") {
         this.renewalLisRequestBody.proposer = this.searchInputControl.value!;
+      }
+      else if (this.selected === "policyNumber") {
+        this.renewalLisRequestBody.policyNumber = this.searchInputControl.value!;
       }
       this.getRenewalsList();
       this.toggeleSearchdropdown = false;
