@@ -24,7 +24,7 @@ export class QuotesComponent implements OnInit {
   rows: number = 6;
   totalRecords: number = 0;
   selectedView: string = "list";
-  selectedQuotesView: string = "quotesList";
+  selectedQuotesView: string = "quotesGrid";
   showEllipsisDropdown: number | null = null;
   productsList: any[] = [];
   policyTypes: any[] = [];
@@ -104,19 +104,19 @@ export class QuotesComponent implements OnInit {
     console.log('First index:', this.first, 'Rows:', this.rows, 'Page:', this.page);
   }
 
-  renewalLisRequestBody = {
-    agentCode: "5100003",
-    proposer: "",
-    productName: "",
-    policyType: "",
-    pageNumber: 1,
-    pageSize: 10,
-    mobileNumber: "",
-    policyNumber:"",
-    filterType: "",
-    startDate: null as string | null,
-    endDate: null as string | null,
-  };
+  renewalLisRequestBody={
+    "agentCode": "5100003",
+    "proposer": "",
+    "productName": "",
+    "policyNumber": "",
+    "policyType": "",
+    "startDate": null as string | null,
+    "endDate": null as string | null,
+    "pageNumber": 1,
+    "pageSize": 10,
+    "mobileNumber": "",
+    "filterType": ""
+  }
 
   getRenewalsList() {
     this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
@@ -220,7 +220,8 @@ export class QuotesComponent implements OnInit {
     console.log("end date taken by request body",this.renewalLisRequestBody.endDate);
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
-      .map((product) => product.productname);
+      .map((product) => product.productName);
+      console.log("profuct list",this.productsList)
       console.log("selectedProducts",selectedProducts);
       
     this.renewalLisRequestBody.productName = selectedProducts.join(", ");
