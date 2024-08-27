@@ -1,4 +1,4 @@
-import {Component,OnInit,} from "@angular/core";
+import {Component,ElementRef,HostListener,OnInit,} from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { CommonService } from "src/app/services/common.service";
 import { LoginService } from "src/app/services/login.service";
@@ -21,7 +21,7 @@ export class QuotesComponent implements OnInit {
   activeFilter: string = "all";
   page: number = 1;
   first: number = 0;
-  rows: number = 6;
+  rows: number = 5;
   totalRecords: number = 0;
   selectedView: string = "list";
   selectedQuotesView: string = "quotesGrid";
@@ -86,7 +86,7 @@ export class QuotesComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
-    private adminService:AdminService
+    private adminService:AdminService,private eRef: ElementRef
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +101,7 @@ export class QuotesComponent implements OnInit {
     this.first = event.first;
     this.rows = event.rows; 
     this.page = Math.floor(this.first / this.rows) + 1;
-    console.log('First index:', this.first, 'Rows:', this.rows, 'Page:', this.page);
+    // console.log('First index:', this.first, 'Rows:', this.rows, 'Page:', this.page);
   }
 
   renewalLisRequestBody={
@@ -120,12 +120,10 @@ export class QuotesComponent implements OnInit {
 
   getRenewalsList() {
     this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
-      (response) => {
+      (response) => {        
         if (response.success) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
-            ...item,
-            renewedDate: this.formatRenewedDate(item.renewedDate), 
-          }));
+            ...item,renewedDate: this.formatRenewedDate(item.renewedDate)}));
           this.countsList = response.data;
           this.totalRecords=this.renewalsList.length;
         } else {
@@ -171,11 +169,10 @@ export class QuotesComponent implements OnInit {
   getProducts() {
     this.adminService.getAllProductList().subscribe({
       next: (res) => {
-        this.productsList = res;
-        const uniquePolicyTypes = Array.from(
-          new Set(this.productsList.map((product) => product.familyPlan))
-        ).map((policyType) => ({ name: policyType, selected: false }));
-
+        this.productsList = res;        
+        const uniquePolicyTypes = Array.from(new Set(this.productsList
+        .map((product) => product.familyPlan)))
+        .map((policyType) => ({ name: policyType, selected: false }));
         this.policyTypes = uniquePolicyTypes;
       },
       error: (err) => {
@@ -221,7 +218,6 @@ export class QuotesComponent implements OnInit {
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
-      console.log("profuct list",this.productsList)
       console.log("selectedProducts",selectedProducts);
       
     this.renewalLisRequestBody.productName = selectedProducts.join(", ");
@@ -354,32 +350,27 @@ export class QuotesComponent implements OnInit {
     this.selectedQuotesView = view;
   }
 
-  toggleEllipsisDropdown(index: number): void {
-    this.showEllipsisDropdown =
-      this.showEllipsisDropdown === index ? null : index;
+  handleAction(item: RenewalList, event: string) {
+    switch (event) {
+      case 'renew':
+        break;
+      case 'modify':
+        this.renewalJourney(item);
+        break;
+      case 'download':
+        break;
+      case 'copyPayLink':
+        break;
+      case 'registerNow':
+        break;
+      case 'delete':
+        break;
+      default:
+        console.warn('Unknown action:', event);
+    }
   }
-
-  download(item: any): void {
-    this.toggleEllipsisDropdown(null as unknown as number);
-  }
-
-  delete(item: any): void {
-    this.toggleEllipsisDropdown(null as unknown as number);
-  }
-
-  shareViaEmail(item: any): void {
-    this.toggleEllipsisDropdown(null as unknown as number);
-  }
-
-  sendRenewalNotice(item: any): void {
-    this.toggleEllipsisDropdown(null as unknown as number);
-  }
-
-  createAutoDebitLink(item: any): void {
-    this.toggleEllipsisDropdown(null as unknown as number);
-  }
-
-  renewalJoureney() {
+  
+  renewalJourney(proposerDetail : RenewalList) {
     this.router.navigate(["/portal/agent/renewalDynamicForm"]);
   }
 

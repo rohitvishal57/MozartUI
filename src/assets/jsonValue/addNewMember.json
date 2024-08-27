@@ -63,21 +63,12 @@
             "visibleLabel":true
           },
           {
-            "name": "heightFt",
-            "label": "Enter height ft",
+            "name": "heightFt&in",
+            "label": "Enter height ft ! Enter height in ",
             "type": "text",
             "placeholder": "Enter height",
             "value": "",
-            "class": "col-md-2",
-            "visibleLabel":true
-          },
-          {
-            "name": "heightIn",
-            "label": "Enter height in",
-            "type": "text",
-            "placeholder": "Enter height",
-            "value": "",
-            "class": "col-md-2",
+            "class": "col-md-3",
             "visibleLabel":true
           },
           {

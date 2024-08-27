@@ -19,7 +19,6 @@ export class RenewalDynamicFormComponent implements OnInit {
   emailSaved: boolean = false;
   email = 'sujitp1@gmail.com';
   selectedButton: string = 'primary'; 
-
   selectedTenure: string = "tenure3";
   tenureDetails:any[]=[]; 
   coverages:any[]=[]
@@ -27,13 +26,10 @@ export class RenewalDynamicFormComponent implements OnInit {
   healthAddOns: any[] = [];
   selectedAddOns: any[] = []; 
   roomUpgradeBenefits: any[] = [];
-  
   isRadioSelected = false;
-
   selectedPaymentType: string = '';
   selectedPaymentTypeLabel: string = '';
   isDropdownOpen: boolean = false;
-
   policySummarys : boolean=false
   planDetail : boolean = false
 

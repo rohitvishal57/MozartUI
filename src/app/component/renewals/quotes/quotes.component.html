@@ -153,17 +153,43 @@
                                 </div>
                                 <div>{{ row.productName }}</div>
                             </div>
-                            <div class="icons">
-                                <div class="icon" (click)="$event.stopPropagation()">
-                                    <i class="fa-brands fa-whatsapp" style="color: #3cb224;"></i>                                </div>
-                                <div class="icon" (click)="$event.stopPropagation()">
-                                    <i class="fa-solid fa-comment-sms" style="color: #827e8b;"></i>                                </div>
-                                <div class="icon" (click)="renewalJoureney()">
-                                    <i class="fa-regular fa-pen-to-square"></i>
-                                </div>
-                                <div class="icon" (click)="$event.stopPropagation()" (click)="toggleEllipsisDropdown(i)">
-                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </div>
+                            <div class="icons" (click)="$event.stopPropagation()">
+                                <div class="icon" ><i class="fa-brands fa-whatsapp" style="color: #3cb224;"></i> </div>
+                                <div class="icon" ><i class="fa-solid fa-comment-sms" style="color: #827e8b;"></i> </div>
+                                <div class="icon" ><i class="fa-regular fa-envelope"></i></div>
+                                <div class="icon" [matMenuTriggerFor]="menu">
+                                    <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                    <mat-menu #menu="matMenu" class="more-values">
+                                      <div class="dropdown-item" (click)="handleAction(row, 'renew')">
+                                        <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                        <span>Renew</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'modify')">
+                                        <div class="icon-wrapper"><i class="fa-regular fa-pen-to-square" style="color: #979CAE;"></i></div>
+                                        <span>Modify</span>
+                                      </div>
+                                      <div class="dropdown-item" [class.disabled]="true">
+                                        <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                        <span>Migrate</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'download')">
+                                        <div class="icon-wrapper"><i class="fa-solid fa-download" style="color: #979CAE;"></i></div>
+                                        <span>Download Renewal Notice</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'copyPayLink')">
+                                        <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                        <span>Copy Pay Link</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'registerNow')">
+                                        <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                        <span>Register Now</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'delete')">
+                                        <div class="icon-wrapper"><i class="fa-solid fa-trash" style="color: #979CAE;"></i></div>
+                                        <span>Delete</span>
+                                      </div>
+                                    </mat-menu>
+                                  </div>
                             </div>
                         </div>
                         <div class="details-section">
@@ -215,15 +241,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ellipsis-dropdown" *ngIf="showEllipsisDropdown === i">
-                            <div (click)="$event.stopPropagation()" (click)="download(row)"><i class="fa-solid fa-download"></i> Download</div>
-                            <div (click)="$event.stopPropagation()" (click)="delete(row)"><i class="fa-solid fa-trash"></i> Delete</div>
-                            <div (click)="$event.stopPropagation()" (click)="shareViaEmail(row)"><i class="fa-regular fa-envelope"></i> Share via email</div>
-                            <div (click)="$event.stopPropagation()" (click)="sendRenewalNotice(row)">Send Renewal Notice</div>
-                            <div (click)="$event.stopPropagation()" (click)="createAutoDebitLink(row)">
-                                Create Auto-Debit Registration Link
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <!-- table View -->
@@ -245,7 +262,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let row of renewalsList| paginate: { itemsPerPage: rows, currentPage: page }; let i = index" class="table-values">
+                                <tr *ngFor="let row of renewalsList | paginate: { itemsPerPage: rows, currentPage: page }; let i = index" class="table-values">
                                     <td class="pro-name">{{ row.proposerFirstName }} {{row.proposerLastName}}</td>
                                     <td>
                                         <div class="rating">
@@ -282,25 +299,46 @@
                                                 <i class="fa-brands fa-whatsapp" style="color: #3cb224;"></i>                                            </div>
                                             <div class="icon" (click)="$event.stopPropagation()">
                                                 <i class="fa-solid fa-comment-sms" style="color: #827e8b;"></i>                                            </div>
-                                            <div class="icon" (click)="renewalJoureney()">
-                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            <div class="icon">
+                                                <i class="fa-regular fa-envelope"></i>
                                             </div>
-                                            <div class="icon" (click)="$event.stopPropagation()" (click)="toggleEllipsisDropdown(i)">
-                                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                                            </div>
+                                            <div class="icon" [matMenuTriggerFor]="menu">
+                                                <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                                <mat-menu #menu="matMenu" class="more-values">
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'renew')">
+                                                    <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                                    <span>Renew</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'modify')">
+                                                    <div class="icon-wrapper"><i class="fa-regular fa-pen-to-square" style="color: #979CAE;"></i></div>
+                                                    <span>Modify</span>
+                                                  </div>
+                                                  <div class="dropdown-item" [class.disabled]="true">
+                                                    <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                                    <span>Migrate</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'download')">
+                                                    <div class="icon-wrapper"><i class="fa-solid fa-download" style="color: #979CAE;"></i></div>
+                                                    <span>Download Renewal Notice</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'copyPayLink')">
+                                                    <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                                    <span>Copy Pay Link</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'registerNow')">
+                                                    <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                                    <span>Register Now</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'delete')">
+                                                    <div class="icon-wrapper"><i class="fa-solid fa-trash" style="color: #979CAE;"></i></div>
+                                                    <span>Delete</span>
+                                                  </div>
+                                                </mat-menu>
+                                              </div>
+                                              
+                                                 
                                         </div>
-                                    </td>
-                                        <div class="ellipsis-dropdown2" *ngIf="showEllipsisDropdown === i">
-                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="download(row)"><i class="fa-solid fa-download"></i> Download</div>
-                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="delete(row)"><i class="fa-solid fa-trash"></i> Delete</div>
-                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="shareViaEmail(row)"><i class="fa-regular fa-envelope"></i> Share via email</div>
-                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="sendRenewalNotice(row)">
-                                                Send Renewal Notice
-                                            </div>
-                                            <div class="dropdown-item" (click)="$event.stopPropagation()" (click)="createAutoDebitLink(row)">
-                                                Create Auto-Debit Registration Link
-                                            </div>
-                                        </div>
+                                    </td>                                   
                                 </tr>
                             </tbody>
                         </table>
@@ -337,13 +375,13 @@
                 <ng-template #pagination>
                     <div class="pages custom-paginator-background">
                     <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" 
-                      [rowsPerPageOptions]="[6,9,12,15]" (onPageChange)="onPageChange($event)"class="custom-paginator">
+                      [rowsPerPageOptions]="[5,10,15]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                     </p-paginator>
                     <div class="pagination-info">
                         Showing {{first + 1}} to {{first + rows > totalRecords ? totalRecords : first + rows}} of {{totalRecords}} entries
                     </div>
                     </div>
-                    </ng-template>
+                </ng-template>
             </div>
         </div>
     </div>
@@ -443,9 +481,9 @@
                         <div class="icon" (click)="$event.stopPropagation()">
                             <i class="fa-solid fa-comment-sms"></i>
                         </div>
-                        <div class="icon" (click)="renewalJoureney()">
+                        <!-- <div class="icon" (click)="renewalJourney()">
                             <i class="fa-regular fa-pen-to-square"></i>
-                        </div>
+                        </div> -->
                         <div class="icon">
                             <i class="fa-solid fa-ellipsis-vertical"></i>
                         </div>

@@ -16,6 +16,21 @@ import { RenewalDynamicFormComponent } from '../renewals/renewal-dynamic-form/re
 import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+
+@NgModule({
+  declarations: [
+    // Your components
+  ],
+  imports: [
+    // Other Angular modules
+    MatMenuModule, // Add this line
+  ],
+  providers: [],
+  bootstrap: [/* Your bootstrap component */]
+})
+export class AppModule { }
+
 
 @NgModule({
   declarations: [
@@ -38,6 +53,7 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatDatepickerModule,
     MatInputModule,
+    MatMenuModule
   ]
 })
 export class BancassureModule { }
