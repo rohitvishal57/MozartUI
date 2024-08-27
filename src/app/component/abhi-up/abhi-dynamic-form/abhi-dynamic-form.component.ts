@@ -32,7 +32,7 @@ export class AbhiDynamicFormComponent {
   idProofType: string = '';
 
   private allJsonForm: any[] = [];
-  private formData: any = {}
+  formData: any = {}
   selectedFile: any;
   expandedCardIndex: number | null = null;
   i!: number;
@@ -348,7 +348,7 @@ export class AbhiDynamicFormComponent {
       // this.showHtmlContent = true;
       this.flattenObject(this.formData);
       this.spinner.hide();
-      console.log(this.dynamicFormGroup.value);
+      console.log(this.dynamicFormGroup);
     }
   }
 

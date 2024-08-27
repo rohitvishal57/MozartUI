@@ -384,8 +384,8 @@
                       <ng-container *ngIf="i>0">
                         <ng-container [formGroupName]="i-1">
                         <p-tabPanel>
-                          <ng-template pTemplate="header" class="custom-checkbox">
-                            <img [src]="generateHeader(control,i)" />
+                          <ng-template pTemplate="header" class="custom-checkbox" *ngIf="allSubForm && i">
+                            <img src="{{generateHeader(control,i)}}" />
                             <span>{{ allSubForm?.[1]?.value ?? '' }}</span>
                           </ng-template>
                             <ng-container *ngFor="let subControl of allSubForm">
@@ -524,8 +524,8 @@
                                         <div *ngFor="let option of tab.selectCheckboxOptions"
                                         class="checkbox-wrapper col-6 col-md-6 col-lg-6">
                                         <div>
-                                          <input type="checkbox" [formControlName]="option.value" id="{{option.value}}">
-                                          <label for="{{option.value}}" class="custom-checkbox">
+                                          <input type="checkbox" [formControlName]="option.value" id="{{option.value}}_{{tab.name}}_{{i}}" [value]="option.value">
+                                          <label for="{{option.value}}_{{tab.name}}_{{i}}" class="custom-checkbox">
                                             <img src="{{ option.imagePath }}" alt="{{option.label}}">
                                             <span>{{option.value?(option.value|translate):''}}</span>
                                           </label>
@@ -538,9 +538,9 @@
                                 </div>
                                 <div *ngIf="subControl.type === 'checkbox'">
                                   <div [class]="subControl.class" style="display: -webkit-box;">
-                                    <input type="checkbox" formControlName="{{ subControl.name }}" id="{{subControl.name}}"
+                                    <input type="checkbox" [formControlName]="subControl.name" id="{{subControl.name}}_{{i}}" [value]="subControl.value"
                                       class="checkbox-label" />
-                                    <label [for]="subControl.name" [innerHTML]="subControl.label ? (subControl.label | translate) : ''"
+                                    <label for="{{subControl.name}}_{{i}}" [innerHTML]="subControl.label ? (subControl.label | translate) : ''"
                                       class="checkboxes"></label>
                                   </div>
                                 </div>
@@ -550,9 +550,9 @@
                                     <div *ngFor="let option of subControl.selectCheckboxOptions"
                                       class="checkbox-wrapper col-6 col-md-6 col-lg-3">
                                       <div>
-                                        <input type="checkbox" [formControlName]="option.value" id="{{option.value}}"
+                                        <input type="checkbox" [formControlName]="option.value" id="{{option.value}}_{{i}}"  [value]="option.value"
                                           >
-                                        <label for="{{option.value}}" class="custom-checkbox">
+                                        <label for="{{option.value}}_{{i}}" class="custom-checkbox">
                                           <img src="{{ option.imagePath }}" alt="{{option.label}}">
                                           <span>{{option.value?(option.value|translate):''}}</span>
                                         </label>
