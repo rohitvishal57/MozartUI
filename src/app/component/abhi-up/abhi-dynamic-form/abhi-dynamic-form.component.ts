@@ -197,7 +197,6 @@ export class AbhiDynamicFormComponent {
 
     }
     console.log(this.form);
-    
   }
 
   initializeForm() {
@@ -210,20 +209,27 @@ export class AbhiDynamicFormComponent {
           if (this.formData[control.name]) {
             control.value = this.formData[control.name].length;
           }
-          for (let i = 1; i <= control.value; i++) {
-            if (!control.dynamicControls[i]) {
-              let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
-              control.dynamicControls.push(tempDynamicControl)
-            }
-          }
+          console.log(control.value);
+          // for (let i = 1; i <= control.value; i++) {
+          //   console.log(i,control.dynamicControls);
+          //   // if (!control.dynamicControls[i]) {
+          //     control.dynamicControls = control.dynamicControls.slice(0, 1)
+          //     let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
+          //     console.log(tempDynamicControl);
+          //     control.dynamicControls.push(tempDynamicControl)
+          //   // }
+          // }
+          control.dynamicControls = control.dynamicControls.slice(0, 1)
           this.formData[control.name].forEach((member: any, index: number) => {
+            let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
+            console.log(tempDynamicControl);
+            control.dynamicControls.push(tempDynamicControl)
             control.dynamicControls[index + 1].forEach((innerControl: any) => {
               if (innerControl.name == 'relation') {
                 innerControl.value = member.relation
               }
             })
           })
-
         }
         else {
           if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
@@ -284,7 +290,7 @@ export class AbhiDynamicFormComponent {
               this.dynamicFormGroup.addControl(control.name, controlGroup);
 
             }
-            if (['text', 'email', 'password', 'number', 'date','summary'].includes(control.type) && control.methodName) {
+            if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
               if (control.otherControlName) {
                 this.callMethod(control.methodName, control, section)
               }
@@ -420,8 +426,6 @@ export class AbhiDynamicFormComponent {
         }
         if (control.type === 'subtabview') {
           control.tabs.forEach(element => {
-            
-            
             // this.callMethod(control.methodName, control);
             const controlGroup = this.fb.group({});
             element.selectCheckboxOptions?.forEach(option => {
@@ -948,7 +952,6 @@ export class AbhiDynamicFormComponent {
     if (parentControl == null && control.name == 'pincode') {
       let reqData = event.target.value;
       console.log(event.target.value.length);
-      
       this.service.getPinCodeByCity(reqData).subscribe({
         next: (res) => {
           console.log(res)
@@ -1359,7 +1362,6 @@ export class AbhiDynamicFormComponent {
           if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
             let index = formControl.dynamicControls?.findIndex((element: any) =>
               element[1].value == option.value);
-
             if (index !== undefined && index !== -1) {
               formControl.dynamicControls?.splice(index, 1);
               let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
@@ -1367,8 +1369,13 @@ export class AbhiDynamicFormComponent {
               if (formArr.length == 0) {
                 formsection.visible = false;
               }
+              Object.keys(this.formData).forEach(key => {
+                if (key.startsWith(`${controls.idProperty}.${index-1}.`)) {
+                  delete this.formData[key];
+                }
+              });
             }
-
+            console.log(this.formData);
             this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value - 1);
           }
 
@@ -1428,7 +1435,6 @@ export class AbhiDynamicFormComponent {
   onButtonClick(control: any) {
     this.selectedButton = control.name;
   }
-  
   // In your template, you can bind the class dynamically
   getButtonClass(control: any): string {
     return this.selectedButton === control.name ? 'active-button' : '';
@@ -2697,6 +2703,5 @@ export class AbhiDynamicFormComponent {
     console.log(i,imagePath);
     return imagePath;
   }
-  
 
 }
