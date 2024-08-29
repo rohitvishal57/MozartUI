@@ -248,7 +248,7 @@ export class AbhiDynamicFormComponent {
       this.form.formSections.forEach((section) => {
         section.formControls.forEach((control: IFormControl) => {
           if (control.dynamicControls) {
-            if ((control.type == 'details' && control.visible == true) || (control.type != 'details')) {
+            if (control.visible == true) {
               let tempFormArray = this.fb.array([]);
               for (let i = 1; i < control.dynamicControls.length; i++) {
                 tempFormArray.push(this.initializeDynamicFormControls(control.dynamicControls[i], i));
@@ -328,13 +328,14 @@ export class AbhiDynamicFormComponent {
                   section.formControls.forEach((formControl: any) => {
                     if (formControl.name == 'totalPremium' && formControl.type == 'custom-radio') {
                       this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
-
+                      console.log(this.selectedIndex); 
                     }
                   });
                 });
               })
             }
 
+            this.dynamicFormGroup.addControl(control.name, new FormControl(control.value, controlValidators));
             if (control.type == 'custom-radio' && this.formData[control.name]) {
               const radioControl = this.dynamicFormGroup.get(control.name);
               if (radioControl) {
@@ -346,7 +347,6 @@ export class AbhiDynamicFormComponent {
                 });
               }
             }
-            this.dynamicFormGroup.addControl(control.name, new FormControl(control.value, controlValidators));
           }
         });
       });
@@ -1451,6 +1451,11 @@ export class AbhiDynamicFormComponent {
 
                     let parsedValue = JSON.parse(element[0].value);
                     if (parsedValue.value === option.value) {
+                      element.forEach((control:any)=>{
+                        if(control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName'){
+                          control.disabled = true
+                        }
+                      })
                       index = i;
                       break;
                     }
@@ -1609,6 +1614,8 @@ export class AbhiDynamicFormComponent {
               this.formData.insuredMemberDetails[i].lastName = this.dynamicFormGroup.get('leadLastName')?.value;
               this.formData.insuredMemberDetails[i].mobileNumber = this.dynamicFormGroup.get('leadMobileNo')?.value;
               this.formData.insuredMemberDetails[i].emailId = this.dynamicFormGroup.get('leadEmailId')?.value;
+              console.log(this.form,this.formData);
+              
 
             }
           }
@@ -2178,7 +2185,8 @@ export class AbhiDynamicFormComponent {
       });
 
       const response = res as any;
-
+      console.log(response);
+      
       Object.keys(response).forEach(key => {
 
         if (key === 'ns0:SuperHealthTopUpRes') {

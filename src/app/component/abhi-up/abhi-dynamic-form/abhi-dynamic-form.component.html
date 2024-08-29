@@ -345,43 +345,42 @@
                                       (change)="onInputChange($event, subControl,control,i-1)">
                                       <!-- <option value="" disabled selected>Select {{
                                     subControl.label }}</option> -->
-                                      <ng-container *ngFor="let opt of subControl.options">
-                                        <option [value]="opt.value">{{ opt.name }}
-                                        </option>
-                                      </ng-container>
-                                    </select>
-                                    <select class="inputField_Select" *ngIf="subControl.disabled"
-                                      [formControlName]="subControl.name"
-                                      [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
-                                      aria-label="Default select example">
-                                      <!-- <option value="" disabled selected>Select {{
+                                    <ng-container *ngFor="let opt of subControl.options">
+                                      <option [value]="opt.value">{{ opt.name }}
+                                      </option>
+                                    </ng-container>
+                                  </select>
+                                  <select class="inputField_Select" *ngIf="subControl.disabled"
+                                    [formControlName]="subControl.name"
+                                    [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
+                                    aria-label="Default select example">
+                                    <!-- <option value="" disabled selected>Select {{
                                     subControl.label }}</option> -->
-                                      <ng-container *ngFor="let opt of subControl.options">
-                                        <option [value]="opt.name">{{ opt.name }}
-                                        </option>
-                                      </ng-container>
-                                    </select>
-                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
-                                      translate) : '' }} <span *ngIf="subControl.validators"></span></label>
-                                  </div>
-                                  <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
-                                    getValidationErrors(subControl,control,i-1)?
-                                    (getValidationErrors(subControl,control,i-1)| translate) : ''}}
-                                  </small>
-                                  <div *ngIf="subControl.type ==='radio'" class="typecss col-md-2">
-                                    <label *ngIf="subControl.visibleLabel==true">{{ subControl.label ? (subControl.label
-                                      |
-                                      translate) : '' }}<span *ngIf="subControl.validators"></span></label>
-                                    <div class="radio-button">
-                                      <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
-                                        <input type="radio" formControlName="{{subControl.name}}" [value]="option.value"
-                                          style="margin-right: 10px;">
-                                        <label>
-                                          {{ option.label }}
-                                        </label>
-                                      </div>
+                                    <ng-container *ngFor="let opt of subControl.options">
+                                      <option [value]="opt.value">{{ opt.name }}
+                                      </option>
+                                    </ng-container>
+                                  </select>
+                                  <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
+                                    translate) : '' }} <span *ngIf="subControl.validators"></span></label>
+                                </div>
+                                <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
+                                  getValidationErrors(subControl,control,i-1)?
+                                  (getValidationErrors(subControl,control,i-1)| translate) : ''}}
+                                </small>
+                                <div *ngIf="subControl.type ==='radio'" class="typecss col-md-2">
+                                  <label *ngIf="subControl.visibleLabel==true">{{ subControl.label ? (subControl.label |
+                                    translate) : '' }}<span *ngIf="subControl.validators"></span></label>
+                                  <div class="radio-button">
+                                    <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
+                                      <input type="radio" formControlName="{{subControl.name}}" [value]="option.value"
+                                        style="margin-right: 10px;">
+                                      <label>
+                                        {{ option.label }}
+                                      </label>
                                     </div>
                                   </div>
+                                </div>
 
                                   <div *ngIf="subControl.type === 'checkbox'"
                                     class="typecss checkboxes-without-border {{ subControl.class }} ">
