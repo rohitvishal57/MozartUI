@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { Router } from '@angular/router';
+import { Nullable } from 'primeng/ts-helpers';
 
 @Component({
   selector: 'app-abhi-dynamic-form',
@@ -511,14 +512,20 @@ export class AbhiDynamicFormComponent {
     if (myControl instanceof FormControl) {
       return myControl.invalid && myControl.touched;
     } else if (myControl instanceof FormGroup) {
-      console.log(myControl);
-
       return myControl.invalid && !myControl.pristine;
     }
 
     return false;
   }
 
+  onCheckboxSelect(controlName: string) {
+    const control = this.dynamicFormGroup.get(controlName);
+    console.log(control);
+    if (control) {
+      control.markAsTouched();
+      control.updateValueAndValidity();
+    }
+  }  
 
   hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean {
     return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
@@ -585,15 +592,22 @@ export class AbhiDynamicFormComponent {
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
   }
 
-  onPhoneNumberInputChange(event: any, control: any) {
+  onPhoneNumberInputChange(event: any, control: any,subControl?:any,i?:any) {
     const input = event.target;
     let value = input.value.replace(/\D/g, '');
     console.log(value);
+
     if (value.length > 10) {
-      value = value.slice(0, 11);
-      input.value = value;
+      value = value.slice(0, 10);
     }
-    this.dynamicFormGroup.get(control.name)?.setValue(value);
+
+    input.value = value;
+    console.log(value,subControl,control,i);
+    if(subControl){
+      this.dynamicFormGroup.get(`${control.name}.${i}.${subControl.name}`)?.setValue(value);
+    }else{
+      this.dynamicFormGroup.get(control.name)?.setValue(value);
+    }
   }
 
   async callMethod(methodName: string, control: IFormControl, section?: any) {
@@ -1104,7 +1118,7 @@ export class AbhiDynamicFormComponent {
   }
 
   resetInsuredMembers(control: any, memberPolicyType: any) {
-    console.log(control);
+    console.log(control,memberPolicyType);
 
     this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(0);
     this.dynamicFormGroup.removeControl('insuredMemberDetails');
@@ -1347,7 +1361,9 @@ export class AbhiDynamicFormComponent {
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
@@ -2651,6 +2667,7 @@ export class AbhiDynamicFormComponent {
                 option.value = this.tenureAmount[index];
                 this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                 this.selectedIndex = index;
+                console.log(this.selectedIndex);
               } else if (index === 1) {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
@@ -2698,9 +2715,9 @@ export class AbhiDynamicFormComponent {
     return !!this.collapsedSections[sectionTitle];
   }
   generateHeader(control:any,i:any) {
-    console.log(this.formData[control.name][i-1].relationshipType,control,i);
+    // console.log(this.formData[control.name][i-1].relationshipType,control,i);
     const imagePath = JSON.parse(this.formData[control.name][i-1].relationshipType)?.imagePath;
-    console.log(i,imagePath);
+    // console.log(i,imagePath);
     return imagePath;
   }
 

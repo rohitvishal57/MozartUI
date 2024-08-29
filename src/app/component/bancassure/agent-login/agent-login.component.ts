@@ -37,8 +37,8 @@ export class AgentLoginComponent implements OnInit{
     localStorage.clear()
     sessionStorage.clear()
     this.loginForm = this.fb.group({
-      agentUserName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(30)]],
-      agentPassword: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(20)]]
+      agentUserName: ['', [Validators.required]],
+      agentPassword: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(20),Validators.minLength(5)]]
     })
     this.verticalCode = 13;
     console.log(this.verticalCode);
