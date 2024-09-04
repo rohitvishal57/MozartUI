@@ -23,14 +23,15 @@
               <input type="text" placeholder="Username" formControlName="agentUserName">
             </div>
             <small
-              *ngIf="loginForm.controls['agentUserName'].touched && loginForm.controls['agentUserName'].hasError('required')"
+              *ngIf="loginForm.controls['agentUserName'].touched && !loginForm.controls['agentUserName'].hasError('maxlength') && loginForm.controls['agentUserName'].hasError('required')"
               class="text-danger">Username is required</small>
-            <small
-              *ngIf="loginForm.controls['agentUserName'].touched && loginForm.controls['agentUserName'].hasError('pattern')"
-              class="text-danger">Username contains letters, numbers and special characters</small>
+            <!-- <small
+              *ngIf="loginForm.controls['agentUserName'].touched && !loginForm.controls['agentUserName'].hasError('maxlength') && loginForm.controls['agentUserName'].hasError('pattern')"
+              class="text-danger">Username contains letters, numbers and special characters allowed are
+              (&#64;,.)</small>
             <small
               *ngIf="loginForm.controls['agentUserName'].touched && loginForm.controls['agentUserName'].hasError('maxlength')"
-              class="text-danger">Username cannot be more than 30 characters long</small>
+              class="text-danger">Username cannot be more than 30 characters</small> -->
           </div>
           <div class="input-item">
             <div class="input-with-icon">
@@ -41,14 +42,21 @@
               </i>
             </div>
             <small
-              *ngIf="loginForm.controls['agentPassword'].touched && loginForm.controls['agentPassword'].hasError('required')"
-              class="text-danger">Password is required</small>
-            <small
-              *ngIf="loginForm.controls['agentPassword'].touched && loginForm.controls['agentPassword'].hasError('pattern')"
-              class="text-danger">Password contains letters, numbers, and special character </small>
-            <small
               *ngIf="loginForm.controls['agentPassword'].touched && loginForm.controls['agentPassword'].hasError('maxlength')"
               class="text-danger">Password cannot be more than 20 characters long</small>
+
+            <small
+              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && loginForm.controls['agentPassword'].hasError('minlength')"
+              class="text-danger">Password cannot be less than 5 characters</small>
+
+            <small
+              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && !loginForm.controls['agentPassword'].hasError('minlength') && loginForm.controls['agentPassword'].hasError('required')"
+              class="text-danger">Password is required</small>
+
+            <small
+              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && !loginForm.controls['agentPassword'].hasError('minlength') && !loginForm.controls['agentPassword'].hasError('required') && loginForm.controls['agentPassword'].hasError('pattern')"
+              class="text-danger">Password contains letters, numbers, and allowed special characters (&#64;, &amp;,
+              $)</small>
           </div>
           <div class="submit-button">
             <button type="submit" class="login-button" (click)="onSubmit()">

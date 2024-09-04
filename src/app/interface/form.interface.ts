@@ -54,6 +54,7 @@ export interface IFormControl {
   subType?: any;
   variableName?: string;
   validators?: IValidator[];
+  validationRules?: any[];
   disabled?: boolean;
   dynamicControls?: IDynamicControl[][];
   bannerText?: string;
@@ -67,6 +68,8 @@ export interface IFormControl {
   otherControlName?: any;
   subControls?: ISubControl[][];
   methodName?: any;
+  getAllOption?: any;
+  onChangeMethod?: any;
   visible?: boolean;
   conditionalVisibility?: IConditionalVisibility;
   popUpFormId?: any;
@@ -97,6 +100,7 @@ export interface ISubControl {
   method?: string;
   innerSubControls?: ISubControl[];
   bigFont?: boolean;
+  getAllOption?: string;
 }
 
 export interface ITab {
@@ -185,6 +189,7 @@ export interface IDynamicControl {
   subControls?: ISubControl[][];
   image:IImage;
   tabs:ITab[];
+  getAllOption?: string;
 }
 export interface IValidator {
   validatorName?: string;
