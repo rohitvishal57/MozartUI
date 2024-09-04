@@ -22,8 +22,8 @@ const routes: Routes = [
         {path: "viewtransaction", component: TransactionComponent, canActivate: [AuthGuard]},
         {path: "viewreports", component: ReportsComponent, canActivate: [AuthGuard]},
         {path: "agentForm",component:AgentDynamicFormComponent,canActivate:[AuthGuard]},
-        {path: "renewalList", component: QuotesComponent},
-        {path: "renewalDynamicForm", component: RenewalDynamicFormComponent}
+        {path: "renewalList", component: QuotesComponent,canActivate:[AuthGuard]},
+        {path: "renewalDynamicForm", component: RenewalDynamicFormComponent,canActivate:[AuthGuard]}
       ]
     }
   ]
