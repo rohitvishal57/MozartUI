@@ -342,6 +342,7 @@ export class QuotesComponent implements OnInit {
       this.toggeleSearchdropdown = true;
     }
   }
+
   
   quotesViews(view: string) {
     this.selectedView = view;
