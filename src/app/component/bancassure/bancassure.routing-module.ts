@@ -10,6 +10,8 @@ import { AgentDynamicFormComponent } from './agent-dynamic-form/agent-dynamic-fo
 import { ProposalsComponent } from './proposals/proposals.component';
 import { QuotesComponent } from '../renewals/quotes/quotes.component';
 import { RenewalDynamicFormComponent } from '../renewals/renewal-dynamic-form/renewal-dynamic-form.component';
+import { ClaimsComponent } from './claims/claims.component';
+import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
 
 const routes: Routes = [
     {
@@ -23,7 +25,9 @@ const routes: Routes = [
         {path: "viewreports", component: ReportsComponent, canActivate: [AuthGuard]},
         {path: "agentForm",component:AgentDynamicFormComponent,canActivate:[AuthGuard]},
         {path: "renewalList", component: QuotesComponent},
-        {path: "renewalDynamicForm", component: RenewalDynamicFormComponent}
+        {path: "renewalDynamicForm", component: RenewalDynamicFormComponent},
+        {path: "viewClaims", component: ClaimsComponent},
+        {path: "list", component:ClaimsViewComponent}
       ]
     }
   ]

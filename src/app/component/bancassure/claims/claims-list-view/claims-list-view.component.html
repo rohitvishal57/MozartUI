@@ -1,0 +1,88 @@
+
+<div class="main-container" >
+    <div class="all-claims">
+        <div class="header">
+            <div class="header-value">Claims</div>
+            <div class="plus-icon">
+                <i class="fa-solid fa-plus" (click)="nav()">
+                    <label class="label" >New Requests</label>
+                </i>
+            </div>
+      
+        </div>
+        <div class="main-claims">
+            <div class="claims-header">
+                <div class="filter-list">
+                    <div class="left-header">
+                        <div class="left-value">Claim Status</div>
+                        <div class="filter-types">
+                            <div>
+                                <p (click)="filterClaims('all')"  [ngClass]="{'active-button': selectedStatus === 'all'}">All</p>
+                            </div>
+                            <div>
+                                <p (click)="filterClaims('active')" [ngClass]="{'active-button': selectedStatus === 'active'}">Active</p>
+                            </div>
+                            <div>
+                                <p (click)="filterClaims('Resolved')" [ngClass]="{'active-button': selectedStatus === 'resolved'}">Resolved</p>
+                            </div>
+                            <div>
+                                <p (click)="filterClaims('Cancelled')" [ngClass]="{'active-button': selectedStatus === 'cancelled'}">Cancelled</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-header">
+                        <div class="claims-icon">
+                            <i class="fa-solid fa-download"></i>
+                        </div>
+                        <div class="claims-icon" >
+                            <i class="fa-solid fa-magnifying-glass" ></i>
+                        </div>
+                        <div class="claims-list-icon" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')">
+                            <i class="fa-solid fa-list"></i>
+                        </div>
+                        <div class="claims-list-icon" >
+                            <i class="fa-solid fa-table-cells-large" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')"></i>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+
+               <!--Search DropDown-->
+              
+            <!-- <div class="viewCaims" *ngIf="viewClaims">
+                <app-claims-view></app-claims-view>
+            </div> -->
+         <div class="card-container" >
+           <!------------ grid-view ------------------>
+         
+          
+            <!------------ list-view ------------------>
+
+               <br/>
+           
+                <div class="pages custom-paginator-background">
+                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                  [rowsPerPageOptions]="[5,10]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                </p-paginator>
+                <div class="pagination-info">
+                     {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}} of {{totalRecords}}
+                </div>
+                </div>
+                <!-- <p-paginator 
+    (onPageChange)="onPageChange($event)" 
+    [first]="first"
+    [rows]="rows" 
+    [totalRecords]="totalRecords" 
+    [rowsPerPageOptions]="[10, 20, 30]" />
+         </div>  -->
+         
+   
+        </div>
+
+
+    </div>
+
+</div>

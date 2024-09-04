@@ -17,7 +17,10 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-
+import { MyMaterialModule } from 'src/app/material.module';
+import { ClaimsComponent } from './claims/claims.component';
+import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
+import { ClaimsListViewComponent } from './claims/claims-list-view/claims-list-view.component';
 @NgModule({
   declarations: [
     // Your components
@@ -41,7 +44,12 @@ export class AppModule { }
     AgentDynamicFormComponent, 
     ProposalsComponent,
     QuotesComponent,
-    RenewalDynamicFormComponent
+    RenewalDynamicFormComponent,
+    ClaimsComponent,
+    ClaimsViewComponent,
+    ClaimsListViewComponent
+
+
   ],
   imports: [
     CommonModule,
@@ -53,7 +61,9 @@ export class AppModule { }
     MatSelectModule,
     MatDatepickerModule,
     MatInputModule,
-    MatMenuModule
+    MatMenuModule,
+    MyMaterialModule
+
   ]
 })
 export class BancassureModule { }
