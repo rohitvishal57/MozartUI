@@ -3,7 +3,7 @@
     <div class="header">
         <div class="header-value">Claims</div>
         <div class="plus-icon">
-            <i class="fa-solid fa-plus" (click)="nav()">
+            <i class="fa-solid fa-plus" (click)="navigateToMyClaim()">
                 <label class="label" >New Requests</label>
             </i>
         </div>
@@ -15,17 +15,17 @@
                 <div class="left-header">
                     <div class="left-value">Claim Status</div>
                     <div class="filter-types">
-                        <div>
-                            <p (click)="filterClaims('all')"  [ngClass]="{'active-button': selectedStatus === 'all'}">All</p>
+                        <div  [ngClass]="{'active': selectedStatus === 'all'}" (click)="filterClaims('all')">
+                            <p>All</p>
                         </div>
-                        <div>
-                            <p (click)="filterClaims('active')" [ngClass]="{'active-button': selectedStatus === 'active'}">Active</p>
+                        <div (click)="filterClaims('active')" [ngClass]="{'active': selectedStatus === 'active'}">
+                            <p>Active</p>
                         </div>
-                        <div>
-                            <p (click)="filterClaims('Resolved')" [ngClass]="{'active-button': selectedStatus === 'resolved'}">Resolved</p>
+                        <div (click)="filterClaims('Resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">
+                            <p>Resolved</p>
                         </div>
-                        <div>
-                            <p (click)="filterClaims('Cancelled')" [ngClass]="{'active-button': selectedStatus === 'cancelled'}">Cancelled</p>
+                        <div (click)="filterClaims('Cancelled')" [ngClass]="{'active': selectedStatus === 'cancelled'}">
+                            <p>Cancelled</p>
                         </div>
                     </div>
                 </div>
@@ -39,8 +39,8 @@
                     <div class="claims-list-icon" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')">
                         <i class="fa-solid fa-list"></i>
                     </div>
-                    <div class="claims-list-icon" >
-                        <i class="fa-solid fa-table-cells-large" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')"></i>
+                    <div class="claims-list-icon" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')">
+                        <i class="fa-solid fa-table-cells-large" ></i>
                         
                     </div>
                     
@@ -96,7 +96,7 @@
                             </div>
                             <div class="detail">
                                 <span class="label">Raised Date</span>
-                                <span class="value">{{ gridClaims.raisedDate  }}</span>
+                                <span class="value">{{ gridClaims.raisedDate | datepipe }}</span>
                             </div>
                         </div>
                         
@@ -107,7 +107,7 @@
           
             <!------------ list-view ------------------>
 
-               <br/>
+            <br/>
             <div class="listView" *ngIf="selectedView === 'list' ">
                             <div class="list-view-container">
                                 <table mat-table  [dataSource]="claims" class="mat-elevation-z8">
@@ -151,7 +151,7 @@
                             
                                 <ng-container matColumnDef="raisedDate">
                                     <th mat-header-cell *matHeaderCellDef> Raised Date </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.raisedDate   }} </td>
+                                    <td mat-cell *matCellDef="let element"> {{element.raisedDate | datepipe }} </td>
                                 </ng-container>
                             
                                 <ng-container matColumnDef="download">
@@ -174,11 +174,14 @@
             <br/>
                    
             </div>
-                <div class="pages custom-paginator-background">
+                  
+            
+            <div class="pages custom-paginator-background">
                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
                   [rowsPerPageOptions]="[5,10]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                 </p-paginator>
                 <div class="pagination-info">
+                    
                      {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}} of {{totalRecords}}
                 </div>
                 </div>

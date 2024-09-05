@@ -89,16 +89,14 @@
 .main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types p{
   font-size: 11px;
 }
-.main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div .active-button{
-  background: #c7222a;
+.main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div.active{
+  background-color: #c7222a;
   color: #fff;
-// Text color when active //
-border: 1px solid #c7222a;
 }
 .main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div:hover{
-background: #ffe7e5;
-border: 1px solid #c7222a;
-color: #c7222a;
+  background: #ffe7e5;
+  border: 1px solid #c7222a;
+  color: #c7222a;
 }
 .main-container .all-claims .main-claims .claims-header .filter-list .right-header{
   display: flex;
@@ -125,7 +123,7 @@ color: #c7222a;
   border-radius: 8px;
   opacity: 0px;
 }
-.main-container .all-claims .main-claims .claims-header .filter-list .right-header .claims-list-icon.active {
+.main-container .all-claims .main-claims .claims-header .filter-list .claims-list-icon.active {
   background-color: #c7222a;
   color: white;
 }
@@ -244,9 +242,8 @@ color: #c7222a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 4px 8px;
   background: #f0eeee !important;
-  padding: 12px;
+  padding: 5px;
   font-family: Anek Latin;
   font-size: 12px;
   font-weight: 600;
@@ -325,6 +322,15 @@ white-space: nowrap;
   gap: 20px;
   justify-content: center;
 }
+.main-container .all-claims .main-claims .card-container .card-outer-container .icon{
+    background-color: #c7222a;
+    color: white;
+    border-radius: 5px;
+    padding: 0px 5px 5px 5px;
+    width: 30px;
+    height: 30px;
+}
+
 ::ng-deep .p-paginator{
   background-color: transparent;
 }

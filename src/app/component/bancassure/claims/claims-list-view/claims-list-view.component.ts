@@ -34,20 +34,19 @@ export class ClaimsListViewComponent implements OnInit {
   gridClaimsData: any[] = [];
   first:number = 0;
   totalRecords:number = 0;
-  rows: number = 3;
+  rows: number = 5;
   page: number = 1;
-  selectedStatus = 'All';
+  selectedStatus = 'all';
   filteredData: any[] = [];
   statuses: string[] = ['All'];
   selectedGrid: boolean = false;
- 
+   
 
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe){
   }
  
   ngOnInit(){
     this.fetchData();   
-    this.updateTable();
   }
 
 
@@ -55,8 +54,8 @@ export class ClaimsListViewComponent implements OnInit {
     this.selectedView = view;
   }
 
-  //-------navigate to claims-view ----------
-  nav(){
+  //-------navigate to My-claims-view ----------
+  navigateToMyClaim(){
     this.viewClaims = true;
     this.router.navigate(['/portal/agent/list']);
   }
@@ -68,15 +67,17 @@ onPageChange(event:any) {
   console.log("page");
     this.first = event.first;
     this.rows = event.rows;
-   this.page = Math.floor(this.first/this.rows)+1
-   this.updateTable();
-
+    this.page = Math.floor(this.first/this.rows)+1
+    console.log("this.first",this.first);
+    console.log("this.ros",this.rows);
+    this.updateTable();
 }
 
 private updateTable() {
   const startIndex = this.first;
   const endIndex = this.first + this.rows;
   this.claims.data = this.allData.slice(startIndex, endIndex);
+  console.log("this.claims.data ",this.claims.data )
   this.totalRecords = this.allData.length;
 }
 
@@ -84,21 +85,22 @@ private updateTable() {
 //---------API Call-------//
 payload = {
   "sellerId": 5100003,
-  "policyNumber": "24-22-8716273-01",
-  "productName": "Activ Care V2",
+  "policyNumber": "",
+  "productName": "",
   "sortColumn": "RaisedDate",
-  "sortdirection": "DESC",
   "searchType": "string",
-  "status": "Active",
+  "sortdirection": "DESC",
+  "status": "All",
   "searchString": "string",
   "pageNumber": 1,
   "pageSize": 10
 }
+
 fetchData(): void {
    
 
   this.commonService.getClaimsList(this.payload).subscribe(res => {
-    // this.claims = res.data;
+    //this.claims = res.data;
 
     this.gridClaims = res.data;    
     this.claims.data = this.gridClaims;
@@ -107,35 +109,17 @@ fetchData(): void {
 
     this.gridClaimsData = this.claims.data;
     console.log('chedk',this.claims.data);
+    this.updateTable();
+
     
   });
 }
-
-  // showListView(view:string){
-  //   this.selectedListView = view;
-  // }
-  //-------filters-------------//
-  // filterClaims(status:string){    
-    
-  //   if(status === 'all'){
-  //     this.claims.data = this.gridClaims
-  //   }
-  //   else if(status === 'resolved'){
-  //     this.claims.data = this.gridClaims.filter(claim=> claim.claimStatus === 'Settled' || 'Approved');
-  //   }
-  //   else if(status === 'active'){
-  //     this.claims.data = this.gridClaims.filter(claim=> claim.claimStatus === 'payment Rejected');
-  //   }
-  //   else{
-  //     this.claims.data = this.gridClaims.filter(claim=> claim.claimStatus === status )
-  //   }
-  // }
 
   //-----------search dropdown----------//
 
 
 
-
+//-------------filters--------------//
   filterClaims(status: string) {
     this.selectedGrid = true;
     console.log('check')
@@ -144,42 +128,42 @@ fetchData(): void {
     if (lowerCaseStatus === 'all') {
       this.claims.data = this.gridClaims;
       this.gridClaimsData = this.gridClaims;
+      this.updateTable();
+      this.selectedStatus = 'all';
     }  
     else if (lowerCaseStatus === 'resolved') {
       this.claims.data = this.gridClaims.filter(claim =>
         claim.claimStatus === 'Intimated' || claim.claimStatus === 'approved'
       );
-
+      this.selectedStatus = 'resolved';
+      
       this.gridClaimsData = this.gridClaims.filter(gridClaim =>
         gridClaim.claimStatus === 'Intimated' || gridClaim.claimStatus === 'approved'
       );
-      console.log('grid',this.gridClaimsData);
-
-
+      this.selectedStatus = 'resolved';
     } 
     else if (lowerCaseStatus === 'active') {
       this.claims.data = this.gridClaims.filter(claim =>
         claim.claimStatus === 'Payment Rejected' || claim.claimStatus === 'Pending Approval'
        );
+       this.selectedStatus = 'active';
 
        this.gridClaimsData = this.gridClaims.filter(gridClaim =>
         gridClaim.claimStatus === 'Payment Rejected' || gridClaim.claimStatus === 'Pending Approval'
         );
-        console.log('grid',this.gridClaimsData);
-
+        this.selectedStatus = 'active';
       
     } else {
       this.claims.data = this.gridClaims.filter(claim =>
         claim.claimStatus === status
       );
+      this.selectedStatus = 'cancelled';
+
       this.gridClaimsData = this.gridClaims.filter(gridClaim => 
         gridClaim.claimStatus === status
       );
-      console.log('grid',this.gridClaimsData);
-
-      
+      this.selectedStatus = 'cancelled';      
     }
   }
-  
- 
+   
 }
