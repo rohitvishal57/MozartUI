@@ -1,0 +1,174 @@
+.endorements-new-request-wrap{
+   
+.main-container {
+    display: flex;
+    justify-content: center;
+    margin-left: 6%;
+    background-color: #f3f3f3;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    padding-bottom: 30px;
+    margin-bottom: 40px;
+}
+.main-container .all-claims {
+    width: 75%;
+}
+
+.main-container .all-claims .header{
+    display:flex;
+    justify-content: space-between;
+}
+
+.main-container .all-claims .header-value {
+    color: #000;
+    font-size: 24px;
+    font-weight: 500;
+    margin: 3% 0% 0% -9%;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.main-container .main-claims{
+    display: flex;
+    justify-content: flex-start;
+    background-color: white;
+    height: 45px;
+    margin: 3% 0% 0% -9%;
+    border-radius: 12px;
+    padding: 1%;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.main-container .main-claims .request-header{
+    height: 24px;
+    font-size: 17px;
+    font-weight: 500;
+    color: #c91429;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.main-container .all-claims .details-section{
+    background: white;
+    margin: 26px 0px 0px -84px;
+    height: 100%;
+}
+.main-container .all-claims .details-section .dropdowns{
+    display: flex;
+    padding: 1.5rem;
+    justify-content: space-between;
+}
+.main-container .all-claims .details-section .dropdowns .dropdown-filed{
+    display: flex;
+    flex-direction: column;
+}
+::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+    color: #090a0c;
+    width: 206px;
+    background-color: #f3f3f3;
+}
+::ng-deep [role=button] {
+    cursor: pointer;
+    background-color: #f3f3f3;
+}
+.main-container .all-claims .details-section .dropdowns .dropdown-field .label{
+    color:#999494;   
+     
+}
+.main-container .all-claims .details-section .dropdowns2{
+    display: flex;
+    padding: 1.5rem;
+    justify-content: space-between;
+}
+.main-container .all-claims .details-section .dropdowns2 .dropdown-field{
+    display: flex;
+    flex-direction: column;
+}
+.main-container .all-claims .details-section .dropdowns2 .dropdown-field .input-field{
+    border:#999494;    
+    background-color: #f3f3f3;
+    width: 206px;
+    border-radius:8px;
+}
+.main-container .all-claims .details-section .dropdowns2 .dropdown-field .dropdownp .p-dropdown {
+    width: 20px; 
+    background-color: #e0e0e0; 
+}
+
+.main-container .all-claims .details-section .text-area{
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.main-container .all-claims .details-section .text-area .label{
+    color:#999494;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.main-container .all-claims .details-section .Documents{
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.main-container .all-claims .details-section .Documents .label{
+    font-weight: 600;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}   
+.main-container .all-claims .details-section .doc-label{
+    display:flex;
+    justify-content: space-evenly;
+    padding-right: 53rem;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+} 
+.main-container .all-claims .details-section .doc-label2{
+    display:flex;
+    justify-content: space-evenly;
+    padding-right: 38rem;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+} 
+.main-container .all-claims .details-section .doc-label3{
+    display:flex;
+    justify-content: space-evenly;
+    padding-right: 75rem;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+} 
+.main-container .all-claims .details-section .form-group{
+    background-color: #e0e0e0;
+    padding: 2rem;
+    width: 95%;
+    margin-left: 2rem;
+    margin-top: 2rem;
+    border-radius: 26px;
+    border: 3px dotted #c9c4c4;
+    display: flex;
+    justify-content: space-between;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.main-container .all-claims .upload-icon {
+    font-size: 15px;
+    cursor: pointer;
+    color: white; 
+    background-color: #c91429; 
+    border-radius: 50%; 
+    padding: 15px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.main-container .all-claims .submit-button{
+  width: 190px;
+  height: 44px;
+  padding: 10px 24px;
+  gap: 8px;
+  border-radius: 12px;
+  opacity: 0px;
+  background: #C7222A;
+  color: #FFFFFF;
+  font-family: Anek Latin;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+  border: none;
+  margin-top: 3rem;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+}

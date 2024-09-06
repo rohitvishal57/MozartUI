@@ -1,74 +1,15 @@
 <div class="main-container hsb">
-    <!-- <div class="left-nav">
-        <div class="banca-logo">
-            <img src="../../../assets/logo/NewAgentLogo.svg" alt="banca logo" />
-        </div>
-        <div class="link">
-            <ul>
-                <li>
-                    <a routerLink="viewdashboard" routerLinkActive="active-link">
-                        <div class="nav-icon">
-                            <i class="fa-solid fa-house"></i>
-                        </div>
-                        <div class="nav-text">Dashboard</div>
-                    </a>
-                </li>
-                <li>
-                    <a routerLink="viewproducts" routerLinkActive="active-link">
-                        <div class="nav-icon">
-                            <i class="fa-solid fa-database"></i>
-                        </div>
-                        <div class="nav-text">Products</div>
-                    </a>
-                </li>
-                <li>
-                    <a routerLink="viewtransaction" routerLinkActive="active-link">
-                        <div class="nav-icon">
-                            <i class="fa-brands fa-slack"></i>
-                        </div>
-                        <div class="nav-text">My Transaction</div>
-                    </a>
-                </li>
-                <li>
-                    <a routerLink="viewreports" routerLinkActive="active-link">
-                        <div class="nav-icon">
-                            <i class="fa-solid fa-layer-group"></i>
-                        </div>
-                        <div class="nav-text">Reports</div>
-                    </a>
-                </li>
-                <li>
-                    <a (click)="logOut()" routerLinkActive="active-link">
-                        <div class="nav-icon">
-                            <i class="fa-solid fa-power-off"></i>
-                        </div>
-                        <div class="nav-text">Log Out</div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div> -->
     <div class="right-panel">
-        <!-- <div class="header">
-            <div class="header-icon">
-                <img src="../../../assets/logo/ABHI.jpg" alt="abhi-logo">
-            </div>
-            <div class="user-profile">
-                <img src="../../../assets/logo/Admin_Profile_and_name.svg" alt="profile">
-            </div>
-        </div> -->
         <div class="main">
             <div class="sub-main">
                 <div *ngIf="isDesktopView" class="logo">
                     <img [src]="common.baseCssUrl+'assets/logo/ABHI_Logo.svg'" alt="abhi-logo">
                 </div>
                 <div class="header">
-
                     <div class="header2">
                         <div class="header-left-cnt">
                             <div class="toolbar">
                                 <button *ngIf="!isDesktopView" class="menu-button" (click)="toggleSidenav()">☰</button>
-                                <!-- <span class="title">Responsive Navigation</span> -->
                                 <div *ngIf="isDesktopView" class="menu">
                                     <a routerLink="viewdashboard" routerLinkActive="active-link">Dashboard</a>
                                     <a routerLink="viewProposals" routerLinkActive="active-link">Proposals</a>
@@ -77,34 +18,9 @@
                                         <div class="nav-text">Renewals</div>
                                     </a>
                                     <a routerLink="viewClaims" routerLinkActive="active-link">Claims</a>
-
-                                </div>
-                                
+                                    <a routerLink="requests" routerLinkActive="active-link">Endorsements</a>
+                                </div>    
                             </div>
-                            <!-- <a routerLink="viewdashboard" routerLinkActive="active-link">
-                            <div class="nav-text">Dashboard</div>
-                        </a>
-                        <a routerLink="viewProposals" routerLinkActive="active-link">
-                            <div class="nav-text">Proposals</div>
-                        </a>
-                        <a routerLink="viewproducts" routerLinkActive="active-link">
-                            <div class="nav-text">Products</div>
-                        </a> -->
-                            <!-- </div>
-                        <div class="header-right-cnt">
-                            <div class="dropdown" style="margin-left: auto;">
-                                <button class="dropbtn">{{ currentLanguage.toUpperCase() }} <i class="arrow down"></i></button>
-                                <div class="dropdown-content">
-                                    <div (click)="setLanguage('en')">English</div>
-                                    <div (click)="setLanguage('hi')">Hindi</div>
-                                    <div (click)="setLanguage('te')">Telugu</div>
-                                </div>
-                            </div>
-                            
-                            <a (click)="logOut()" routerLinkActive="active-link">
-                                <div class="nav-text">LogOut</div>
-                            </a>
-                       </div> -->
                         </div>
                         <div class="header-right-cnt">
                             <div class="language-selector">
@@ -113,44 +29,16 @@
                                   <option value="hi">Hindi</option>
                                   <option value="te">Telugu</option>
                                 </select>
-                              </div>
-                              
+                            </div>  
                             <button class="logout-button" (click)="logOut()">Log Out</button>
                         </div>
-                        <!-- <div class="toolbar">
-                      <button *ngIf="!isDesktopView" class="menu-button" (click)="toggleSidenav()">☰</button>
-                      <span class="title">Responsive Navigation</span>
-                      <div *ngIf="isDesktopView" class="menu">
-                        <a routerLink="viewdashboard" routerLinkActive="active-link">Dashboard</a>
-                        <a routerLink="viewProposals" routerLinkActive="active-link">Proposals</a>
-                        <a routerLink="viewproducts" routerLinkActive="active-link">Products</a>
-                      </div>
-                      <div class="header-right-cnt">
-                        <div class="dropdown">
-                          <button class="dropbtn">
-                            {{ currentLanguage.toUpperCase() }} <i class="arrow down"></i>
-                          </button>
-                          <div class="dropdown-content">
-                            <div (click)="setLanguage('en')">English</div>
-                            <div (click)="setLanguage('hi')">Hindi</div>
-                            <div (click)="setLanguage('te')">Telugu</div>
-                          </div>
-                        </div>
-                        <button class="logout-button" (click)="logOut()">Log Out</button>
-                      </div>
-                    </div> -->
-
                         <div class="sidenav" [class.active]="isSidenavOpen">
-                            <!-- <a href="" (click)="toggleSidenav()">Close</a> -->
                             <a routerLink="viewdashboard" (click)="toggleSidenav()">Dashboard</a>
                             <a routerLink="viewProposals" (click)="toggleSidenav()">Proposals</a>
                             <a routerLink="viewproducts" (click)="toggleSidenav()">Products</a>
                         </div>
                     </div>
                 </div>
-                <!-- <div class="sub-main"> -->
-
-                <!-- </div> -->
             </div>
             <p class="abhifont">Aditya Birla Health Insurance</p>
         </div>
@@ -158,5 +46,4 @@
             <router-outlet></router-outlet>
         </div>
     </div>
-
 </div>

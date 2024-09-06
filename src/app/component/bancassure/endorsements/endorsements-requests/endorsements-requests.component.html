@@ -1,0 +1,214 @@
+<div class="endoresments-list-wrap">
+    <div class="main-container">
+        <div class="all-quotes" >
+            <div class="d-flex justify-content-between">
+                <div class="header-val">All Requests</div>
+                <button class="btn new_request_btn_Wrap" routerLink="new-request">+ New Request</button>
+            </div>
+            <div class="main-quotes-cnt">
+                <div class="quotes-header">
+                    <div class="list-of-filter">
+                        <div class="left-header" #filterSection>
+                            <div class="filter-types" *ngIf="!isDesktopView">
+                                <div [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('all')">
+                                    <p>All</p>
+                                </div>
+                                <div [ngClass]="{'active': activeFilter === 'Active'}"
+                                    (click)="statusFilter('Active')">
+                                    <p>Active</p>
+                                </div>
+                                <div [ngClass]="{'active': activeFilter === 'Resolved'}"
+                                    (click)="statusFilter('Resolved')">
+                                    <p>Resolved</p>
+                                </div>
+                                <div [ngClass]="{'active': activeFilter === 'Cancelled'}"
+                                    (click)="statusFilter('Cancelled')">
+                                    <p>Cancelled</p>
+                                </div>
+
+                            </div>
+                            <div class="mobile-filter" *ngIf="isDesktopView">
+                                <mat-form-field class="aaa" appearance="outline">
+                                    <mat-label>Filter Policies</mat-label>
+                                    <mat-select [(ngModel)]="activeFilter"
+                                        (selectionChange)="statusFilter($event.value)">
+                                        <mat-option value="all">All</mat-option>
+                                        <mat-option value="active">Active</mat-option>
+                                        <mat-option value="resolved">Resolved</mat-option>
+                                        <mat-option value="cancelled">Cancelled</mat-option>
+
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="right-header">
+                            <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown()">
+                                <i class="fa-solid fa-magnifying-glass" data-bs-toggle="dropdown"
+                                    aria-expanded="false"></i>
+                                <mat-menu #searchMenu="matMenu" [overlapTrigger]="false" hasBackdrop="true"
+                                   >
+                                    <div class="search-dropdown-cnt">
+                                        <div class="search-title">Search</div>
+                                        <div class="search-dropdown">
+                                            <mat-form-field class="select-boxes" color="accent" appearance="outline"
+                                                (click)="$event.stopPropagation()">
+                                                <mat-label>Select search type</mat-label>
+                                                <mat-select [(ngModel)]="selected"
+                                                    (selectionChange)="onSelectChanges($event)">
+                                                    <mat-option value="none">Select</mat-option>
+                                                    <mat-option value="requestId">Request ID</mat-option>
+                                                    <mat-option value="memberName">Member Name</mat-option>
+                                                    <mat-option value="policyNumber">Policy Number</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <div class="search-input">
+                                                <input matInput type="text"
+                                                    *ngIf="selected !== 'none' && selected !== ''"
+                                                    [formControl]="searchInputControl" [placeholder]="getPlaceholder()"
+                                                    (click)="$event.stopPropagation()"> <!-- Stop propagation here -->
+                                                <mat-error
+                                                    *ngIf="searchInputControl.invalid && searchInputControl.touched">
+                                                    {{ getErrorMessage() }}
+                                                </mat-error>
+                                            </div>
+                                        </div>
+                                        <div class="search-buttons">
+                                            <div class="cancel-button" (click)="cancelSearch()">Cancel</div>
+                                            <div class="apply-button"
+                                                [class.active]="selected!='none' && searchInputControl.valid"
+                                                (click)="applySearch()">Apply</div>
+                                        </div>
+                                    </div>
+                                </mat-menu>
+                            </div>
+                            <div class="quotes-list-icon" [ngClass]="{'active': selectedView === 'list'}"
+                                (click)="quotesViews('list')">
+                                <i class="fa-solid fa-list"></i>
+                            </div>
+                            <div class="quotes-list-icon" [ngClass]="{'active': selectedView === 'grid'}"
+                                (click)="quotesViews('grid')">
+                                <i class="fa-solid fa-table-cells-large"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-cnt">
+                    <div class="card-outer-cnt" *ngIf="selectedView == 'grid'">
+                        <div class="row">
+                            <div class="col-4"  *ngFor="let row of endorsementDetails | paginate: { itemsPerPage: rows, currentPage: page } ; let i = index">
+                                <div class="card">
+                                    <div class="top-section d-flex justify-content-between">
+                                        <div class="card-header-cnt">
+                                            <div class="name-and-rating">
+                                                <span class="name">{{ row?.memberName }}</span>
+                                            </div>
+                                            <div class="requestName">{{ row?.caseId }}</div>
+                                        </div>
+                                        <div >
+                                            <div class="icon" (click)="downloadRequest(row)">
+                                                <i class="fa fa-download" style="color: #c7222a;"></i> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="details-section">
+                                        <div class="policy-detail">
+                                            <div class="detail">
+                                                <span class="label">Policy No.</span>
+                                                <span class="value">{{ row?.policyNumber }}</span>
+                                            </div>
+                                            <div class="detail">
+                                                <span class="label">Product Name</span>
+                                                <span class="value">{{ row?.productName }}</span>
+                                            </div>
+                                            <div class="detail">
+                                                <span class="label">Member Name</span>
+                                                <span class="value">{{ row?.memberName }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="policy-detail">
+                                            <div class="detail">
+                                                <span class="label">Member Relation</span>
+                                                <span class="value">{{ row?.memberRelation}}</span>
+                                            </div>
+                                            <div class="detail">
+                                                <span class="label">Request Type</span>
+                                                <span class="value">{{ row?.requestType }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="policy-detail">
+                                            <div class="detail">
+                                                <span class="label">Status</span>
+                                                <span class="value">{{ row?.status}}</span>
+                                            </div>
+                                            <div class="detail">
+                                                <span class="label">Raised Date</span>
+                                                <span class="value">{{ row?.raisedOn }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-format-cnt table-responsive" *ngIf="selectedView == 'list'">
+                        <div class="table-inner-cnt">
+                            <table class="table tableRenewalList table-borderless">
+                                <thead>
+                                    <tr class="table-headings-row">
+                                        <th scope="col">Request</th>
+                                        <th scope="col">Policy No.</th>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Member Name</th>
+                                        <th scope="col">Member Relation</th>
+                                        <th scope="col">Request Type</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Raised Date</th>
+                                        <th scope="col">Download</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let row of endorsementDetails | paginate: { itemsPerPage: rows, currentPage: page }; let i = index"
+                                        class="table-values">
+                                        <td class="pro-name">{{ row?.caseId }}</td>
+                                        <td class="pro-name">{{ row?.policyNumber }}</td>
+                                        <td class="pro-name">{{ row?.productName }}</td>
+                                        <td class="pro-name">{{ row?.memberName }}</td>
+                                        <td class="pro-name">{{ row?.memberRelation }}</td>
+                                        <td class="pro-name">{{ row?.requestType }}</td>
+                                        <td class="pro-name">{{ row?.status }}</td>
+                                        <td class="modification">{{ row?.raisedOn }}</td>
+                                        <td>
+                                            <div class="icon" (click)="downloadRequest(row)">
+                                                <i class="fa fa-download" aria-hidden="true"></i>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="no-data" *ngIf="endorsementDetails.length === 0">
+                        <img src="assets/images/noDataFound.png" alt="No Data Found" />
+                    </div>
+                </div>
+                <div class="pagination">
+                    <div class="no-data-bottom-section-cnt" *ngIf="endorsementDetails.length === 0 ; else pagination">
+
+                    </div>
+                    <ng-template #pagination>
+                        <div class="pages custom-paginator-background">
+                            <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                                [rowsPerPageOptions]="[5,10,15]" (onPageChange)="onPageChange($event)"
+                                class="custom-paginator my-paginator">
+                            </p-paginator>
+                            <div class="pagination-info">
+                                Showing {{first + 1}} to {{first + rows > totalRecords ? totalRecords : first + rows}}
+                                of {{totalRecords}} entries
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
