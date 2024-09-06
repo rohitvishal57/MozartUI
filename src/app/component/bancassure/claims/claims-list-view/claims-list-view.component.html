@@ -33,8 +33,43 @@
                     <div class="claims-icon">
                         <i class="fa-solid fa-download"></i>
                     </div>
+                                   
+                    <!--Search DropDown-->
                     <div class="claims-icon" >
-                        <i class="fa-solid fa-magnifying-glass" ></i>
+                        <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown()">
+
+                        <i class="fa-solid fa-magnifying-glass" (click)="toggleSearchDropdown()"></i>
+                        <mat-menu #searchMenu="matMenu"  [overlapTrigger]="false" hasBackdrop="true" (closed)="menuClosed()">
+                            <div class="search-dropdown-cnt">
+                          <div class="search-title">Search</div>
+                          <div class="search-dropdown">
+                            <mat-form-field class="select-boxes" color="accent" appearance="outline" (click)="$event.stopPropagation()">
+                              <mat-label>Select search type</mat-label>
+                              <mat-select [(ngModel)]="selected" (selectionChange)="onSelectChanges($event)" >
+                                <mat-option value="none">Select</mat-option>
+                                <mat-option value="mobileNo">Policy Number</mat-option>
+                                <mat-option value="name">Product Name</mat-option>
+                                <mat-option value="policyNumber">Member Name</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                            <div class="search-input">
+                              <input matInput 
+                                     type="text" 
+                                     *ngIf="selected !== 'none' && selected !== ''" 
+                                     [formControl]="searchInputControl"
+                                     [placeholder]="getPlaceholder()"
+                                     (click)="$event.stopPropagation()"> 
+                              <mat-error *ngIf="searchInputControl.invalid && searchInputControl.touched">
+                              </mat-error>
+                            </div>
+                          </div>
+                          <div class="search-buttons">
+                            <div class="cancel-button" (click)="cancelSearch()">Cancel</div>
+                            <div class="apply-button" [class.active]="selected!='none' && searchInputControl.valid" (click)="applySearch()">Apply</div>
+                          </div>
+                        </div>
+                        </mat-menu>
+                      </div>
                     </div>
                     <div class="claims-list-icon" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')">
                         <i class="fa-solid fa-list"></i>
@@ -49,8 +84,7 @@
 
         </div>
 
-               <!--Search DropDown-->
-              
+               
          
          <div class="card-container" >
            <!------------ grid-view ------------------>
@@ -105,78 +139,47 @@
                   </mat-card> 
             </div>
           
-            <!------------ list-view ------------------>
+            <!------------ list-view ------------------>        
+          <br/>        
+<div class="table" *ngIf="selectedView == 'list'">
+    <p-table [value]="claims" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+       currentPageReportTemplate=" {first} - {last} of {totalRecords}"
+        [rowsPerPageOptions]="[5,10,20,30]" class="custom-paginator my-paginator">
+        <ng-template pTemplate="header">
+            <tr class="custom-header">
+                <th >Request </th>
+                <th>Policy No.</th>
+                <th>Product Name</th>
+                <th>Member Name</th>
+                <th>Member Relation</th>
+                <th>Request Type</th>
+                <th>Status</th>
+                <th>Raised Date</th>
 
-            <br/>
-            <div class="listView" *ngIf="selectedView === 'list' ">
-                            <div class="list-view-container">
-                                <table mat-table  [dataSource]="claims" class="mat-elevation-z8">
-                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> 
-                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <th>Download</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+            <tr>
+                <td>{{data.id}}</td>
+                <td>{{data.policyNumber}}</td>
+                <td>{{data.productName}}</td>
+                <td>{{data.memberName}}</td>
+                <td>{{data.memberRelation}}</td>
+                <td>{{data.requestType}}</td>
+                <td>{{data.claimStatus}}</td>
 
-                                <ng-container matColumnDef="request">
-                                    <th mat-header-cell *matHeaderCellDef> Request </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="policyNo">
-                                    <th mat-header-cell *matHeaderCellDef> Policy No. </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.policyNumber}} </td>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="productName">
-                                    <th mat-header-cell *matHeaderCellDef> Product Name </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="memberName">
-                                    <th mat-header-cell *matHeaderCellDef> Member Name </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.memberName}} </td>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="memberRelation">
-                                    <th mat-header-cell *matHeaderCellDef> Member Relation </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.memberRelation}} </td>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="requestType">
-                                    <th mat-header-cell *matHeaderCellDef> Request Type </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.requestType}} </td>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="status">
-                                    <th mat-header-cell *matHeaderCellDef> Status </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.claimStatus}} </td>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="raisedDate">
-                                    <th mat-header-cell *matHeaderCellDef> Raised Date </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.raisedDate | datepipe }} </td>
-                                </ng-container>
-                            
-                                <ng-container matColumnDef="download">
-                                    <th mat-header-cell *matHeaderCellDef> Download </th>
-                                    <td mat-cell *matCellDef="let element">
-                                    <button mat-icon-button>
-                                        <mat-icon><i class="fa-solid fa-download"></i>
-                                        </mat-icon>
-                                    </button>
-                                    </td>
-                                </ng-container>
-                            
+                <td>{{data.raisedDate | date:'yyyy-MM-dd'}}</td>
 
-                                </table>
-                            
-                            
-                            </div>
-
-
-            <br/>
-                   
-            </div>
-                  
+                <td>
+                    <mat-icon>download</mat-icon>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>  
             
-            <div class="pages custom-paginator-background">
+            <div class="pages custom-paginator-background" *ngIf="selectedView=='grid'">
                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
                   [rowsPerPageOptions]="[5,10]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                 </p-paginator>
