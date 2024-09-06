@@ -27,7 +27,11 @@ const routes: Routes = [
         {path: "renewalList", component: QuotesComponent},
         {path: "renewalDynamicForm", component: RenewalDynamicFormComponent},
         {path: "viewClaims", component: ClaimsComponent},
-        {path: "list", component:ClaimsViewComponent}
+        {path: "list", component:ClaimsViewComponent},
+        {
+          path: "requests",
+          loadChildren: () => import('../bancassure/endorsements/endorsements.module').then((m) => m.EndorsementsModule)
+        },
       ]
     }
   ]
