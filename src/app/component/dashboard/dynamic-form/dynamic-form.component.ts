@@ -199,9 +199,9 @@ export class DynamicFormComponent implements OnDestroy{
           if(val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
         })
       }
-      if(control.type=='select' && control.methodName && control.options?.length==0){
-        this.callMethod(control.methodName,control);
-      }
+      // if(control.type=='select' && control.methodName && control.options?.length==0){
+      //   this.callMethod(control.methodName,control);
+      // }
       formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
     })
     return formGroup;

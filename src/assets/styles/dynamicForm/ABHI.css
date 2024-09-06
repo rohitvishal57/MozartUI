@@ -1078,6 +1078,7 @@ body {
 .main-container .right-panel .ah-opcovers {
     padding: 30px 0px 5px !important;
     min-height: 100px;
+    min-width: 380px;
 }
 
 .main-container .right-panel .boldtext-label {
@@ -2519,4 +2520,54 @@ margin: 0;
     .main-container .right-panel .back-btn {
         left: -97px;
     }
+
+    /*Overlay CSS*/
+ 
+  
 }
+.main-container .right-panel /* Backdrop to cover the whole screen */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent gray */
+  z-index: 10; /* Ensure it's behind the popup */
+  pointer-events: all;
+  backdrop-filter: blur(5px);
+}
+
+/* Popup overlay styling */
+.main-container .right-panel .popup-overlay {
+  width: 500px;
+  height: 500px;
+  position: fixed; /* Fixed positioning to overlay over the backdrop */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the overlay */
+  background-color: #ebf1e1;
+  border-radius: 40px;
+  text-align: center;
+  z-index: 11; /* Ensure it's above the backdrop */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.text-right {
+    text-align: right;
+}
+.subButton{
+    background-color: #c72229;
+    padding: 4px 7px;
+    border: none;
+    border-radius: 12px;
+    width: auto;
+    margin: 0px 0 0 14px;
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    color: #fff;
+}
+  

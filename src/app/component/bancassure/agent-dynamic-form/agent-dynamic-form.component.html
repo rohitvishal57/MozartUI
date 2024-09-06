@@ -136,14 +136,14 @@
                                   </div>
                                 </div>
 
-                                <div *ngIf="subControl.type === 'combinedCheckbox'" [class]="subControl.class"
+                                <!-- <div *ngIf="subControl.type === 'combinedCheckbox'" [class]="subControl.class"
                                   class="typecss combined_checkbox col-md-6 multi-premium-optional-cover-gry-box ah-opcovers"
                                   style="position: relative;">
                                   <ng-container [formArrayName]="subControl.name">
                                     <ng-container *ngFor="let allSubControlForm of subControl.subControls;index as j">
                                       <ng-container [formGroupName]="j">
                                         <ng-container *ngFor="let innerSubControl of allSubControlForm,index as k">
-                                          <!-- <ng-container *ngIf="k>0"> -->
+                                         <ng-container *ngIf="k>0"> 
                                           <ng-container *ngIf="innerSubControl.visible!=false">
                                             <div
                                               *ngIf="['text', 'email', 'password', 'number', 'date'].includes(innerSubControl.type)"
@@ -207,12 +207,12 @@
                                       </ng-container>
                                   </ng-container>
                                   </ng-container>
-                                  <!-- <div *ngIf="control.showDoneButton === true">
+                                   <div *ngIf="control.showDoneButton === true">
                                     <button class="right-side btn"
                                       style="width: 80px; height: 40px; margin-right: 10px;"
                                       (click)="addOnAdded($event,control)">Done</button>
-                                  </div> -->
-                                </div>
+                                  </div> 
+                                </div> -->
 
                               </ng-container>
                             </ng-container>
@@ -311,7 +311,7 @@
                 </small>
               </div>
 
-              <div *ngIf="control.type === 'combinedCheckbox'" [class]="control.class"
+              <!-- <div *ngIf="control.type === 'combinedCheckbox'" [class]="control.class"
                 class="typecss checkboxes col-md-6 multi-premium-optional-cover-gry-box ah-opcovers"
                 style="position: relative;">
                 <ng-container [formArrayName]="control.name">
@@ -401,7 +401,7 @@
                   <button class="right-side btn" style="width: 80px; height: 40px; margin-right: 10px;"
                     (click)="addOnAdded($event,control)">Done</button>
                 </div>
-              </div>
+              </div> -->
 
               <div *ngIf="control.type === 'fileupload'" [class]="control.class" class="typecss">
                 <div class="custom-file-upload">
