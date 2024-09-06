@@ -1,0 +1,828 @@
+<div class="main">
+    <div class="new">
+        <!-- <p-dropdown
+        [options]='dropdownOptions' 
+        [editable]="true"
+        placeholder="Create New"
+        optionLabel="name"
+        [showClear]="true"
+        [style]="{ 'background-color': '#FCE303', 'border-radius': '25px' }"
+        [(ngModel)]="selectedOption"
+        (onClick)="selectitem(selectedOption)">
+        </p-dropdown>    -->
+        <!-- <select [(ngModel)]="selectedOption" (change)="selectitem(selectedOption)">
+            <option value="" hidden selected>Select an option</option>
+            <option *ngFor="let data of dropdownOptions" [value]="data.name">{{data.name}}</option>
+        </select> -->
+        <div class="custom-dropdown">
+            <p-dropdown id="customer" [options]="dropdownOptions" [(ngModel)]="selectedOption" optionLabel="name" (ngModelChange)="selectitem($event)" placeholder="Choose"></p-dropdown>
+        </div>
+    </div> 
+    <div class="top-box">
+        <!-- <div class="scroll-arrow left-arrow" (click)="scrollLeft()">&#9664;</div> -->
+        <div class="top-container" #topContainer>
+            <!-- <div class="top" [ngClass]="{'active': selectedTab === 'Channels'}" (click)="selectTab('Channels')">Channels</div> -->
+            <!-- <div class="top" [ngClass]="{'active': selectedTab === 'Banks'}" (click)="selectTab('Banks')">Banks</div> -->
+            <!-- <div class="top" [ngClass]="{'active': selectedTab === 'Insurance Type'}" (click)="selectTab('Insurance Type')">Insurance Type</div> -->
+            <div class="top" [ngClass]="{'active': selectedTab === 'Partner'}" (click)="selectTab('Partner')">Partner</div>
+            <div class="top" [ngClass]="{'active': selectedTab === 'Products'}" (click)="selectTab('Products')">Products</div>
+            <!-- <div class="top" [ngClass]="{'active': selectedTab === 'Products Map'}" (click)="selectTab('Products Map')">Banca Products Map</div> -->
+            <div class="top" [ngClass]="{'active': selectedTab === 'Partner Product Map'}" (click)="selectTab('Partner Product Map')">Partner Product Map</div>
+            <!-- <div class="top" [ngClass]="{'active': selectedTab === 'Users'}" (click)="selectTab('Users')">Users</div> -->
+            <div class="top" [ngClass]="{'active': selectedTab === 'Agents'}" (click)="selectTab('Agents')">Agents</div>
+        </div>
+        <!-- <div class="scroll-arrow right-arrow" (click)="scrollRight()">&#9654;</div> -->
+        </div>
+    
+    <!-- <div class="table" *ngIf="selectedTab == 'Channels'">
+        <p class="table-name">All Channel Details</p>
+        <p-table [value]="allChannel" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="agencyVerticalCode" pSortableColumn="verticalCode">Channel Code <p-sortIcon field="verticalCode"></p-sortIcon></th>
+                    <th id="agencyChannelName" pSortableColumn="channelName">Channel Name <p-sortIcon field="channelName"></p-sortIcon></th>
+                    <th id="agencyChannelStatus" pSortableColumn="channelStatus">Status <p-sortIcon field="channelStatus"></p-sortIcon></th>
+                    <th id="agencyCreatedDate" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                    <th id="agencyCustomHeader"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td>{{data.verticalCode}}</td>
+                    <td>{{data.channelName}}</td>
+                    <td>
+                        <ng-container *ngIf="data.channelStatus === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div> -->
+    <!-- <div class="table" *ngIf="selectedTab == 'Banks'" >
+        <p class="table-name">All Bank Details</p>
+        <p-table [value]="allBank" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="agencyBankCodeHeader" pSortableColumn="bankCode">Bank Code <p-sortIcon field="bankCode"></p-sortIcon></th>
+                    <th id="agencyBankNameHeader" pSortableColumn="bankName">Bank Name <p-sortIcon field="bankName"></p-sortIcon></th>
+                    <th id="agencyStatusHeader" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th id="agencyDateHeader" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                    <th id="agencyBanksHeader"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td>{{data.bankCode}}</td>
+                    <td>{{data.bankName}}</td>
+                    <td>
+                        <ng-container *ngIf="data.status === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div> -->
+    <!-- <div class="table" *ngIf="selectedTab == 'Insurance Type'">
+        <p class="table-name">All Insurance Type Details</p>
+        <p-table [value]="allInsuranceType" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="agencyTypeCode" pSortableColumn="insuranceTypeCode">Insurance Type Code <p-sortIcon field="insuranceTypeCode"></p-sortIcon></th>
+                    <th id="agencyInsType" pSortableColumn="insuranceType">Insurance Type <p-sortIcon field="insuranceType"></p-sortIcon></th>
+                    <th id="agencyStatus" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th id="agencyCreatedDate" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                    <th id="agencyAllInsDetails"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td>{{data.insuranceTypeCode}}</td>
+                    <td>{{data.insuranceType}}</td>
+                    <td>
+                        <ng-container *ngIf="data.status === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div> -->
+    <div class="table" *ngIf="selectedTab == 'Products'">
+        <p class="table-name">Product List</p>
+        <p-table [value]="allProduct" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="productDetailId" pSortableColumn="productId">Product Code <p-sortIcon field="productId"></p-sortIcon></th>
+                    <th id="productDetailName" pSortableColumn="productName">Product Name <p-sortIcon field="productName"></p-sortIcon></th>
+                    <th id="productDetailInsuranceType" pSortableColumn="insuranceType">Insurance Type <p-sortIcon field="insuranceType"></p-sortIcon></th>
+                    <!-- <th id="productDetailStartDate" pSortableColumn="productStartDate">Product Start Date <p-sortIcon field="productStartDate"></p-sortIcon></th>
+                    <th id="productDetailFamily" pSortableColumn="productFamily">Product Family <p-sortIcon field="productFamily"></p-sortIcon></th> -->
+                    <th id="productDetailFamilyPlan" pSortableColumn="familyPlan">Product Plan <p-sortIcon field="familyPlan"></p-sortIcon></th>
+                    <th id="productStatus" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th id="productDetail"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td>{{data.productId}}</td>
+                    <td>{{data.productName}}</td>
+                    <td>{{data.insuranceType}}</td>
+                    <!-- <td>{{data.productStartDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{data.productFamily}}</td> -->
+                    <td>{{data.familyPlan}}</td>
+                    <td>
+                        <ng-container *ngIf="data.status === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <!-- <div class="table" *ngIf="selectedTab == 'Products Map'">
+        <p class="table-name">All Channel Bank Insurance Product Map Details</p>
+        <p-table [value]="allBankInsuranceProductMapData" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="allChannelBankCode" pSortableColumn="bankCode">Bank Name <p-sortIcon field="bankCode"></p-sortIcon></th>
+                    <th id="allChannelInsTypeCode" pSortableColumn="insuranceTypeCode">Insurance Type <p-sortIcon field="insuranceTypeCode"></p-sortIcon></th>
+                    <th id="allChannelVerticalCode" pSortableColumn="verticalCode">Channel Name <p-sortIcon field="verticalCode"></p-sortIcon></th>
+                    <th id="allChannelProductId" pSortableColumn="productId">Product Name <p-sortIcon field="productId"></p-sortIcon></th>
+                    <th id="allChannelCreatedDate" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                    <th id="allChannelStatus" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th id="allChannelBankIns"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td *ngIf="getBankName(data.bankCode)!==undefined">{{getBankName(data.bankCode).bankName}}</td>
+                    <td *ngIf="getBankName(data.bankCode) == undefined">None</td>
+                    <td *ngIf="getInsuranceTypeName(data.insuranceTypeCode)!==undefined">{{getInsuranceTypeName(data.insuranceTypeCode).insuranceType}}</td>
+                    <td *ngIf="getInsuranceTypeName(data.insuranceTypeCode) == undefined">None</td>
+                    <td *ngIf="getChannelName(data.verticalCode)!==undefined">{{getChannelName(data.verticalCode).channelName}}</td>
+                    <td *ngIf="getChannelName(data.verticalCode) == undefined">None</td>
+                    <td *ngIf="getProductName(data.productId)!==undefined">{{getProductName(data.productId).productName}}</td>
+                    <td *ngIf="getProductName(data.productId) == undefined">None</td>
+                    <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>
+                        <ng-container *ngIf="data.status === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div> -->
+    <div class="table" *ngIf="selectedTab == 'Partner Product Map'">
+        <p class="table-name">Partner Product Map List</p>
+        <p-table [value]="allAgencyInsuranceProductMapData" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="allChannelBankCode" pSortableColumn="bankCode">Partner Name <p-sortIcon field="bankCode"></p-sortIcon></th>
+                    <!-- <th id="allChannelInsTypeCode" pSortableColumn="insuranceTypeCode">Insurance Type <p-sortIcon field="insuranceTypeCode"></p-sortIcon></th> -->
+                    <!-- <th id="allChannelVerticalCode" pSortableColumn="verticalCode">Channel Name <p-sortIcon field="verticalCode"></p-sortIcon></th> -->
+                    <th id="allChannelProductId" pSortableColumn="productId">Product Name <p-sortIcon field="productId"></p-sortIcon></th>
+                    <!-- <th id="allChannelCreatedDate" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th> -->
+                    <th id="allChannelStatus" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th id="allChannelBankIns"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td *ngIf="getName(data.agencyCode)!==undefined">{{getName(data.agencyCode).agencyName}}</td>
+                    <td *ngIf="getName(data.agencyCode) == undefined">None</td>
+                    <!-- <td *ngIf="getInsuranceTypeName(data.insuranceTypeCode)!==undefined">{{getInsuranceTypeName(data.insuranceTypeCode).insuranceType}}</td> -->
+                    <!-- <td *ngIf="getInsuranceTypeName(data.insuranceTypeCode) == undefined">None</td> -->
+                    <!-- <td *ngIf="getChannelName(data.verticalCode)!==undefined">{{getChannelName(data.verticalCode).channelName}}</td> -->
+                    <!-- <td *ngIf="getChannelName(data.verticalCode) == undefined">None</td> -->
+                    <td *ngIf="getProductName(data.productId)!==undefined">{{getProductName(data.productId).productName}}</td>
+                    <td *ngIf="getProductName(data.productId) == undefined">None</td>
+                    <!-- <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td> -->
+                    <td>
+                        <ng-container *ngIf="data.status === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <!-- <div class="table" *ngIf="selectedTab == 'Users'">
+        <p class="table-name">All User Details</p>
+        <p-table [value]="allUserDetails" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="allUserBancaUserName" pSortableColumn="bancaUserName">Banca UserName <p-sortIcon field="bancaUserName"></p-sortIcon></th>
+                    <th id="allUserBancaMobileNum" pSortableColumn="bancaMobileNum">Mobile Number <p-sortIcon field="bancaMobileNum"></p-sortIcon></th>
+                    <th id="allUserBankCode" pSortableColumn="bankCode">Bank Code <p-sortIcon field="bankCode"></p-sortIcon></th>
+                    <th id="allUserBancaStatus" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th id="allUserBancaCreatedDate" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                    <th id="allUserBanca"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td>{{data.bancaUserName}}</td>
+                    <td>{{data.bancaMobileNum}}</td>
+                    <td *ngIf="getBankName(data.bankCode)!==undefined">{{ getBankName(data.bankCode).bankName }}</td>
+                    <td *ngIf="getBankName(data.bankCode) == undefined">None</td>
+                    <td>
+                        <ng-container *ngIf="data.bancaUserStatus === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div> -->
+
+    <div class="table" *ngIf="selectedTab == 'Partner'">
+        <p class="table-name">Partner List</p>
+        <p-table [value]="allAgency" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="agencyNameHeader" pSortableColumn="agencyName">Partner Name <p-sortIcon field="agencyName"></p-sortIcon></th>
+                    <th id="agencyCodeHeader" pSortableColumn="agencyCode">Partner Code <p-sortIcon field="agencyCode"></p-sortIcon></th>
+                    <th id="agencyStatusHeader" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th id="agencyCreatedDateHeader" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                    <th id="agencyHeader"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td>{{data.agencyName}}</td>
+                    <td>{{data.agencyCode}}</td>
+                    <td *ngIf="getBankName(data.agencyCode)!==undefined">{{ getBankName(data.agencyCode).agencyName }}</td>
+                    <td>
+                        <ng-container *ngIf="data.status === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <div class="table" *ngIf="selectedTab == 'Agents'">
+        <p class="table-name">Agent List</p>
+        <p-table [value]="allAgentDetails" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10,20,30]">
+            <ng-template pTemplate="header">
+                <tr class="custom-header">
+                    <th id="allAgentsUserName" pSortableColumn="agentUserName">Agent Id <p-sortIcon field="agentUserName"></p-sortIcon></th>
+                    <th id="allAgentsMobileNum" pSortableColumn="agentMobileNum">Mobile Number <p-sortIcon field="agentMobileNum"></p-sortIcon></th>
+                    <th id="allAgentsName" pSortableColumn="agencyName">Partner Name <p-sortIcon field="agencyName"></p-sortIcon></th>
+                    <th id="allAgentsCode" pSortableColumn="agentCode">Agent Code <p-sortIcon field="agentCode"></p-sortIcon></th>
+                    <th id="allAgentsUserStatus" pSortableColumn="agentUserStatus">Status <p-sortIcon field="agentUserStatus"></p-sortIcon></th>
+                    <th id="allAgentsCreatedDate" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                    <th id="allAgentsDetails"></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data>
+                <tr>
+                    <td>{{data.agentUserName}}</td>
+                    <td>{{data.agentMobileNum}}</td>
+                    <td *ngIf="getName(data.agencyCode)!==undefined">{{ getName(data.agencyCode).agencyName }}</td>
+                    <td *ngIf="getName(data.agencyCode) == undefined">None</td>
+                    <td>{{data.agentCode}}</td>
+                    <td>
+                        <ng-container *ngIf="data.agentUserStatus === true; else inactiveBlock">
+                            <span style="color: green;">Active</span>
+                          </ng-container>
+                          <ng-template #inactiveBlock>
+                            <span style="color: red;">Inactive</span>
+                        </ng-template>
+                    </td>
+                    <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data,selectedTab)"></i></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <p-confirmDialog [style]="{width: '30vw'}"></p-confirmDialog>
+
+
+    <!-- <p-dialog header="Edit Channel Details" [modal]="true" [(visible)]="visible" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+        <form [formGroup]="ChannelForm">
+            <div class="card-body rectangle">
+                <div class="col-md-6 typecss">
+                    <label>Vertical Code <span>*</span></label>
+                    <input style="background: rgba(211, 209, 209, 0.644);" formControlName="verticalCode" class="line-border input" type="number" readonly>
+                    <small *ngIf="ChannelForm.controls['verticalCode'].dirty && ChannelForm.hasError('required','verticalCode')" class="text-danger">*
+                        Vertical Code is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Channel Name <span>*</span></label>
+                    <input formControlName="channelName" class="line-border input" type="text">
+                    <small *ngIf="ChannelForm.controls['channelName'].dirty && ChannelForm.hasError('required','channelName')" class="text-danger">*
+                        Channel Name is required
+                    </small>
+                </div>   
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Channel Status </label>
+                        <p-inputSwitch formControlName="channelStatus"></p-inputSwitch>
+                    </div>
+                </div>
+    
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onUpdate(ChannelForm)">Save</button>
+                </div>
+            </div>
+        </form>
+    </p-dialog> -->
+
+    <!-- <p-dialog header="Edit Bank Details" [modal]="true" [(visible)]="visible1" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+        <form [formGroup]="BankForm">
+            <div class="card-body rectangle">
+                <div class="col-md-6 typecss">
+                    <label>Bank Code <span>*</span></label>
+                    <input style="background: rgba(211, 209, 209, 0.644);" formControlName="bankCode" class="line-border input" type="number" readonly>
+                    <small *ngIf="BankForm.controls['bankCode'].dirty && BankForm.hasError('required','bankCode')" class="text-danger">*
+                        BankCode is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Bank Name <span>*</span></label>
+                    <input formControlName="bankName" class="line-border input" type="text">
+                    <small *ngIf="BankForm.controls['bankName'].dirty && BankForm.hasError('required','bankName')" class="text-danger">*
+                        BankName is required
+                    </small>
+                </div>
+                
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Login by UserId </label>
+                        <p-inputSwitch formControlName="userId"></p-inputSwitch>
+                    </div>
+                </div>
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Login by Otp </label>
+                        <p-inputSwitch formControlName="Otp"></p-inputSwitch>
+                    </div>
+                </div>     
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Bank Status </label>
+                        <p-inputSwitch formControlName="status"></p-inputSwitch>
+                    </div>
+                </div> 
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onUpdate(BankForm)">Save</button>
+                </div>
+            </div>
+        </form>
+    </p-dialog> -->
+
+    <!-- <p-dialog header="Edit Insurance Details" [modal]="true" [(visible)]="visible2" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+        <form [formGroup]="InsuranceForm">
+            <div class="card-body rectangle">
+                <div class="col-md-6 typecss">
+                    <label>InsuranceType Code <span>*</span></label>
+                    <input formControlName="insuranceTypeCode" style="background: rgba(211, 209, 209, 0.644);" class="line-border input" type="number" readonly>
+                    <small *ngIf="InsuranceForm.controls['insuranceTypeCode'].dirty && InsuranceForm.hasError('required','insuranceTypeCode')" class="text-danger">*
+                        InsuranceTypeCode is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Insurance Type <span>*</span></label>
+                    <input formControlName="insuranceType" class="line-border input" type="text">
+                    <small *ngIf="InsuranceForm.controls['insuranceType'].dirty && InsuranceForm.hasError('required','insuranceType')" class="text-danger">*
+                        InsuranceType is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Insurance Status </label>
+                        <p-inputSwitch formControlName="status"></p-inputSwitch>
+                    </div>
+                </div>   
+    
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onUpdate(InsuranceForm)">Save</button>
+                </div>
+            </div>
+        </form>
+    </p-dialog> -->
+
+    <p-dialog header="Edit Product Details" [modal]="true" [(visible)]="visible3" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+        <form [formGroup]="ProductForm">
+            <div class="card-body rectangle">
+                <div class="col-md-6 typecss">
+                    <label>Product Code <span>*</span></label>
+                    <input style="background: rgba(211, 209, 209, 0.644);" formControlName="productId" class="line-border input" type="text" readonly>
+                    <small *ngIf="ProductForm.controls['productId'].dirty && ProductForm.hasError('required','productId')" class="text-danger">*
+                        Product Code is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Product Name <span>*</span></label>
+                    <input formControlName="productName" class="line-border input" type="text">
+                    <small *ngIf="ProductForm.controls['productName'].dirty && ProductForm.hasError('required','productName')" class="text-danger">*
+                        Product Name is required
+                    </small>
+                </div>  
+                <!-- <div class="col-md-4 typecss">
+                    <label>Insurance Type <span>*</span></label>
+                    <select formControlName="insuranceType" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allInsuranceType">
+                            <option [value]="opt.insuranceType">{{ opt.insuranceType}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ProductForm.controls['insuranceType'].dirty && ProductForm.hasError('required','insuranceType')" class="text-danger">*
+                        Insurance Type is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Product Start Date <span>*</span></label>
+                    <input formControlName="productStartDate" class="line-border input" type="date">
+                    <small *ngIf="ProductForm.controls['productStartDate'].dirty && ProductForm.hasError('required','productStartDate')" class="text-danger">*
+                        Product Start Date is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Product End Date <span>*</span></label>
+                    <input formControlName="productEndDate" class="line-border input" type="date">
+                    <small *ngIf="ProductForm.controls['productEndDate'].dirty && ProductForm.hasError('required','productEndDate')" class="text-danger">*
+                        Product End Date is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Product Family <span>*</span></label>
+                    <input formControlName="productFamily" class="line-border input" type="text">
+                    <small *ngIf="ProductForm.controls['productFamily'].dirty && ProductForm.hasError('required','productFamily')" class="text-danger">*
+                        Product Family is required
+                    </small>
+                </div> -->
+                <div class="col-md-6 typecss">
+                    <label>Product Plan (Retail / RUG)<span>*</span></label>
+                    <!-- <input formControlName="familyPlan" class="line-border input" type="text"> -->
+                    <select formControlName="familyPlan" class="line-border select">
+                        <option value="Retail">Retail</option>
+                        <option value="RUG">RUG</option>
+                    </select>
+                    <small *ngIf="ProductForm.controls['familyPlan'].dirty && ProductForm.hasError('required','familyPlan')" class="text-danger">*
+                        Product Plan is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Product Status </label>
+                        <p-inputSwitch formControlName="status"></p-inputSwitch>
+                    </div>
+                </div>
+                <div class="col-md-12 typecss">
+                    <label>Product Description <span>*</span></label>
+                    <textarea formControlName="productdescription" class="line-border" rows="3"></textarea>
+                    <small *ngIf="ProductForm.controls['productdescription'].dirty && ProductForm.hasError('required', 'productdescription')" class="text-danger">
+                        * Product description is required
+                    </small>
+                </div> 
+    
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onUpdate(ProductForm)">Save</button>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+
+    <p-dialog header="Edit Channel Bank Product Mapping" [modal]="true" [(visible)]="visible5" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+        <form [formGroup]="ChannelBankProductMapForm">
+            <div class="card-body rectangle">            
+                <div class="col-md-4 typecss">
+                    <label>Channel Name <span>*</span></label>
+                    <select formControlName="verticalCode" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allChannel">
+                        <option [value]="opt.verticalCode">{{ opt.channelName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ChannelBankProductMapForm.controls['verticalCode'].dirty && ChannelBankProductMapForm.hasError('required','verticalCode')" class="text-danger">*
+                        Channel Name is required
+                    </small>
+                </div>
+    
+                <div class="col-md-4 typecss">
+                    <label>Bank Name <span>*</span></label>
+                    <select formControlName="bankCode" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allBank">
+                        <option [value]="opt.bankCode">{{ opt.bankName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ChannelBankProductMapForm.controls['bankCode'].dirty && ChannelBankProductMapForm.hasError('required','bankCode')" class="text-danger">*
+                        Bank Name is required
+                    </small>
+                </div>
+    
+                <div class="col-md-4 typecss">
+                    <label>Insurance Type <span>*</span></label>
+                    <select  formControlName="insuranceTypeCode" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allInsuranceType">
+                            <option [value]="opt.insuranceTypeCode">{{ opt.insuranceType}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ChannelBankProductMapForm.controls['insuranceTypeCode'].dirty && ChannelBankProductMapForm.hasError('required','insuranceTypeCode')" class="text-danger">*
+                        Insurance Type is required
+                    </small>
+                </div>
+    
+                <div class="col-md-4 typecss">
+                    <label>Product Name <span>*</span></label>
+                    <select formControlName="productId" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allProduct">
+                            <option [value]="opt.productId">{{ opt.productName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ChannelBankProductMapForm.controls['productId'].dirty && ChannelBankProductMapForm.hasError('required','productId')" class="text-danger">*
+                        Product Name is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Channel Status </label>
+                        <p-inputSwitch formControlName="status"></p-inputSwitch>
+                    </div>
+                </div>
+                
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onUpdate(ChannelBankProductMapForm)">Save</button>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+    <p-dialog header="Edit Partner Product Mapping" [modal]="true" [(visible)]="visible9" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+        <form [formGroup]="AgencyInsuranceProductMapForm">
+            <div class="card-body rectangle">            
+                <!-- <div class="col-md-4 typecss">
+                    <label>Channel Name <span>*</span></label>
+                    <select formControlName="verticalCode" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allChannel">
+                        <option [value]="opt.verticalCode">{{ opt.channelName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="AgencyInsuranceProductMapForm.controls['verticalCode'].dirty && AgencyInsuranceProductMapForm.hasError('required','verticalCode')" class="text-danger">*
+                        Channel Name is required
+                    </small>
+                </div> -->
+    
+                <div class="col-md-6 typecss">
+                    <label>Partner Name <span>*</span></label>
+                    <select formControlName="agencyCode" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allAgency">
+                        <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="AgencyInsuranceProductMapForm.controls['agencyCode'].dirty && AgencyInsuranceProductMapForm.hasError('required','agencyCode')" class="text-danger">*
+                        Partner Name is required
+                    </small>
+                </div>
+    
+                <!-- <div class="col-md-4 typecss">
+                    <label>Insurance Type <span>*</span></label>
+                    <select  formControlName="insuranceTypeCode" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allInsuranceType">
+                            <option [value]="opt.insuranceTypeCode">{{ opt.insuranceType}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="AgencyInsuranceProductMapForm.controls['insuranceTypeCode'].dirty && AgencyInsuranceProductMapForm.hasError('required','insuranceTypeCode')" class="text-danger">*
+                        Insurance Type is required
+                    </small>
+                </div> -->
+    
+                <div class="col-md-6 typecss">
+                    <label>Product Name <span>*</span></label>
+                    <select formControlName="productId" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allProduct">
+                            <option [value]="opt.productId">{{ opt.productName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="AgencyInsuranceProductMapForm.controls['productId'].dirty && AgencyInsuranceProductMapForm.hasError('required','productId')" class="text-danger">*
+                        Product Name is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Product Status </label>
+                        <p-inputSwitch formControlName="status"></p-inputSwitch>
+                    </div>
+                </div>
+                
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onUpdate(AgencyInsuranceProductMapForm)">Save</button>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+    
+    <!-- <p-dialog header="Edit User Details" [modal]="true" [(visible)]="visible6" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+    <form [formGroup]="UserDetailsForm">
+        <div class="card-body rectangle">
+            <div class="col-md-6 typecss">
+                <label>Banca UserName <span>*</span></label>
+                <input formControlName="bancaUserName" class="line-border input" type="text">
+                <small *ngIf="UserDetailsForm.controls['bancaUserName'].dirty && UserDetailsForm.hasError('required','bancaUserName')" class="text-danger">*
+                    Banca UserName is required
+                </small>
+            </div>
+            <div class="col-md-6 typecss">
+                <label>Banca Mobile Number <span>*</span></label>
+                <input formControlName="bancaMobileNum" class="line-border input" type="text">
+                <small *ngIf="UserDetailsForm.controls['bancaMobileNum'].dirty && UserDetailsForm.hasError('required','bancaMobileNum')" class="text-danger">*
+                    Banca Mobile Number is required
+                </small>
+            </div>  
+            <div class="col-md-6 typecss">
+                <label>Bank Code <span>*</span></label>
+                <select formControlName="bankCode" class="line-select" aria-label="Default select example">
+                    <option selected value="">Choose...</option>
+                    <ng-container *ngFor="let opt of allBank">
+                    <option [value]="opt.bankCode">{{ opt.bankName}}</option>
+                    </ng-container>
+                </select>
+                <small *ngIf="UserDetailsForm.controls['bankCode'].dirty && UserDetailsForm.hasError('required','bankCode')" class="text-danger">*
+                    Bank Code is required
+                </small>
+            </div>
+            <div class="col-md-6 typecss">
+                <label>RMID <span>*</span></label>
+                <input formControlName="rmid" class="line-border input" type="text">
+                <small *ngIf="UserDetailsForm.controls['rmid'].dirty && UserDetailsForm.hasError('required','rmid')" class="text-danger">*
+                    RMID is required
+                </small>
+            </div>
+            <div class="col-md-6 typecss">
+                <div style="display: flex;justify-content: space-between;">
+                    <label>User Status </label>
+                    <p-inputSwitch formControlName="bancaUserStatus"></p-inputSwitch>
+                </div>
+            </div>
+
+            <br>
+            <div class="btn-container card-body">
+                <button class="btn btn-primary nextbtn" (click)="onUpdate(UserDetailsForm)">Save</button>
+            </div>
+        </div>
+    </form>
+    </p-dialog> -->
+
+    <p-dialog header="Edit Partner Details" [modal]="true" [(visible)]="visible7" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+        <form [formGroup]="AgencyDetailsForm">
+            <div class="card-body rectangle">
+                <div class="col-md-6 typecss">
+                    <label>Partner Name <span>*</span></label>
+                    <input formControlName="agencyName" class="line-border input" type="text">
+                    <small *ngIf="AgencyDetailsForm.controls['agencyName'].dirty && AgencyDetailsForm.hasError('required','agencyName')" class="text-danger">*
+                        Partner Name is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Partner Code <span>*</span></label>
+                    <select formControlName="agencyCode" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allAgency">
+                        <option [value]="opt.agencyCode">{{ opt.agencyCode }}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="AgencyDetailsForm.controls['agencyCode'].dirty && AgencyDetailsForm.hasError('required','agencyCode')" class="text-danger">*
+                        Partner Code is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Partner Status </label>
+                        <p-inputSwitch formControlName="status"></p-inputSwitch>
+                    </div>
+                </div>
+    
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onUpdate(AgencyDetailsForm)">Save</button>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+    
+    <p-dialog header="Edit Agent Details" [modal]="true" [(visible)]="visible8" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+        <form [formGroup]="AgentsDetailsForm">
+            <div class="card-body rectangle">
+                <div class="col-md-6 typecss">
+                    <label>Agent Id <span>*</span></label>
+                    <input formControlName="agentUserName" class="line-border input" type="text">
+                    <small *ngIf="AgentsDetailsForm.controls['agentUserName'].dirty && AgentsDetailsForm.hasError('required','agentUserName')" class="text-danger">*
+                        Agent Id is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Agent Mobile Number <span>*</span></label>
+                    <input formControlName="agentMobileNum" class="line-border input" type="text">
+                    <small *ngIf="AgentsDetailsForm.controls['agentMobileNum'].dirty && AgentsDetailsForm.hasError('required','agentMobileNum')" class="text-danger">*
+                        Agent Mobile Number is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Agent Code <span>*</span></label>
+                    <input style="background: rgba(211, 209, 209, 0.644);" formControlName="agentCode" class="line-border input" type="text" readonly>
+                    <small *ngIf="AgentsDetailsForm.controls['agentCode'].dirty && AgentsDetailsForm.hasError('required','agentCode')" class="text-danger">*
+                        Agent Code is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Partner Name <span>*</span></label>
+                    <select formControlName="agencyCode" class="line-select" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allAgency">
+                        <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="AgentsDetailsForm.controls['agencyCode'].dirty && AgentsDetailsForm.hasError('required','agencyCode')" class="text-danger">*
+                        Partner Name is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <div style="display: flex;justify-content: space-between;">
+                        <label>Agent Status </label>
+                        <p-inputSwitch formControlName="agentUserStatus"></p-inputSwitch>
+                    </div>
+                </div>
+    
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onUpdate(AgentsDetailsForm)">Save</button>
+                </div>
+            </div>
+        </form>
+    </p-dialog>
+</div>

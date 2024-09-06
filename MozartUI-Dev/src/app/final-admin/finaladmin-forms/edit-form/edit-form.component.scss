@@ -1,0 +1,473 @@
+.main-container {
+    background-color: #F5F5F5;
+    height: 100%;
+    padding: 3% 5%;
+
+    // a {
+    //     cursor: pointer;
+
+    //     i {
+    //         font-size: 22px;
+    //         color: #000000;
+    //     }
+    // }
+
+    p {
+        margin-left: 20px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #000000;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .card-body {
+        display: flex;
+        justify-content: flex-end;
+        
+    }
+
+    .state {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        padding: 2% 5%;
+
+        .state-1 {
+            align-items: center;
+            border: 1px solid #B8B8B8;
+            padding: 6px 30px;
+            background-color: #87CEEB;
+            border-radius: 15px 0px 0px 15px;
+            cursor: pointer;
+        }
+
+        .state-2 {
+            padding: 6px 30px;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #B8B8B8;
+            border-radius: 0px 15px 15px 0px;
+            cursor: pointer;
+        }
+
+        .states {
+            padding: 6px 30px;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #B8B8B8;
+        }
+    }
+
+    .typecss {
+        display: inline-table;
+        padding: 5px 20px 0px 20px;
+    }
+
+    .input-select {
+        font-family: Arial, sans-serif;
+        // font-size: 16px;
+        outline: none;
+        width: 100%;
+        border: 1px solid #B8B8B8;
+    }
+
+    .form-creation {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        padding-top: 3%;
+
+        .form-creation-sidebar {
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            min-height: 88vh;
+            max-height: 88vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 0px 10px 0px 0px;
+            border-top: 10px solid blue;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+
+            .label-item {
+                padding: 10px;
+            }
+        }
+
+        .form-creation-body {
+            flex: 1 1 auto;
+            background-color: #fff;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            padding: 10px;
+            min-height: 88vh;
+            max-height: 88vh;
+            overflow-y: auto;
+            margin: 0px 10px 0px 0px;
+            border: 1px dotted #B8B8B8;
+        }
+
+
+        // Form Showing Part
+        .form-data {
+            cursor: pointer;
+            border: 1px dashed rgb(177, 176, 176);
+            padding: 20px;
+            background: #fff;
+        }
+
+        // .form-data:hover .edit {
+        //     display: flex;
+        // }
+        .edit {
+            padding-top: 3px;
+            padding-right: 3px;
+            position: relative;
+            justify-content: right;
+            display: flex;
+            font-size: 14px;
+
+            a {
+                cursor: pointer;
+            }
+        }
+
+
+        .section {
+            background: #fff;
+            cursor: pointer;
+            display: inline-table;
+        }
+
+        .section-body {
+            margin: 10px;
+            border: #e4e5e9 2px solid;
+        }
+
+        // .section:hover .edit-section {
+        //     display: flex;
+        // }
+        .edit-section {
+            padding-top: 3px;
+            padding-right: 3px;
+            position: relative;
+            justify-content: right;
+            display: flex;
+            font-size: 14px;
+
+            a {
+                cursor: pointer;
+            }
+        }
+
+        .section .card-header {
+            position: relative;
+            top: -0.8em;
+            margin-left: 1em;
+            display: inline;
+            font-size: 15px;
+            font-weight: 600;
+            width: auto;
+            color: rgb(56, 54, 54);
+            font-family: "Roboto", sans-serif;
+            background: white;
+        }
+
+        .section .card-header1 {
+            display: none;
+        }
+
+
+        .control-field {
+            margin: 0px 15px;
+            cursor: pointer;
+        }
+
+        .control {
+            padding-right: 15px;
+            padding-bottom: 15px;
+            display: inline-table;
+        }
+
+        // .control:hover .edit-control {
+        //     display: block;
+        // }
+        .edit-control {
+            padding-top: 3px;
+            padding-right: 3px;
+            display: block;
+            font-size: 14px;
+            float: right;
+
+            a {
+                cursor: pointer;
+            }
+        }
+
+        .dynamiccontrol-field {
+            margin: 22px 15px;
+            cursor: pointer;
+            padding: 14px;
+            border: 1px solid rgb(177, 176, 176);
+        }
+
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: black;
+            font-family: "Roboto", sans-serif;
+            padding-bottom: 4px;
+
+            span {
+                color: red;
+            }
+        }
+
+        input {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            outline: none;
+            width: 100%;
+            border: 1px solid rgb(216, 215, 215);
+            height: 35px;
+            background: #F6F6F6;
+        }
+
+        .checkbox-field {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-top: 5px;
+
+            label {
+                flex: 0 0 auto;
+                width: 90%;
+            }
+
+            input[type="checkbox"] {
+                width: 15px;
+                height: 15px;
+                cursor: pointer;
+                margin: 0;
+                padding: 0;
+                border: 1px solid #ccc;
+                outline: none;
+                background: #fff;
+                border-radius: 3px;
+                margin-right: 5px;
+            }
+        }
+
+        .toggle-field {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-top: 5px;
+        }
+
+        .radio-control-options {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+
+            label {
+                flex: 0 0 auto;
+            }
+
+            input[type="radio"] {
+                width: 15px;
+                height: 15px;
+                cursor: pointer;
+                margin: 0;
+                padding: 0;
+                border: 1px solid #ccc;
+                outline: none;
+                background: #fff;
+                border-radius: 3px;
+                margin-right: 5px;
+            }
+        }
+
+        .is-invalid {
+            border-color: #dc3545;
+            padding-right: calc(1.5em + .75rem);
+            background-image: url('data:image/png;base64,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');
+            background-repeat: no-repeat;
+            background-position: right calc(.375em + .1875rem) center;
+            background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            // font-size: 80%;
+            margin-top: .25rem;
+            font-size: 13px;
+            font-family: "Roboto", sans-serif;
+            font-weight: 400;
+        }
+
+        select {
+            width: 100%;
+            height: 35px;
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            border: 1px solid rgb(216, 215, 215);
+            outline: none;
+            background: #F6F6F6;
+        }
+
+        textarea {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            outline: none;
+            width: 100%;
+            border: 1px solid rgb(216, 215, 215);
+            min-height: 50px;
+            max-height: auto;
+            background: #F6F6F6;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 55px;
+            background: #EFF8FA;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            width: max-content;
+            font-size: 12px;
+            font-weight: 500;
+            color: #0a748f;
+            background: white;
+            border: 1px solid #0a748f;
+            border-radius: 3px;
+            margin: 10px 54px;
+        }
+
+        button:hover {
+            background: #0a748f;
+            color: white;
+        }
+
+        .form-creation-prop {
+            flex: 1 1 auto;
+            background-color: #fff;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            // padding: 10px;
+            min-height: 88vh;
+            max-height: 88vh;
+            overflow-y: auto;
+            // margin: 0px 10px 0px 0px;
+        }
+
+        .panel-container {
+            max-height: 420px;
+            overflow-y: auto;
+        }
+
+        .prop-body {
+            padding: 10px;
+        }
+
+        .prop {
+            background-color: #656565;
+            color: white;
+            padding: 7px;
+        }
+
+        .increment-typecss {
+            display: inline-table;
+            padding-right: 30px;
+        }
+
+        .increment-typecss>input {
+            text-align: center;
+            width: 40px;
+            color: #002EDC;
+            border: none;
+            font-weight: 600;
+        }
+
+        .increment-typecss>button {
+            border: none;
+            background: #fff;
+            color: black;
+            width: 30px;
+            font-size: 14px;
+            font-weight: 400;
+            height: 30px;
+            border-radius: 50%;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        }
+
+        .radio-container {
+            display: flex;
+        }
+
+        .edit-validators,
+        .radio-options {
+            flex: 1;
+        }
+
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        .radio-options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(0.5);
+        }
+
+        .radio-label {
+            // margin-right: 20px;
+            font-size: 10px;
+            font-weight: 400;
+            color: #000000;
+            text-align: center;
+            // font-family: 'Roboto', sans-serif;
+        }
+        .colorbold {
+            color: #c72229;
+        }
+        .boldtext_input {
+            font-size: 19px;
+            font-weight: 400;
+            border: none;
+        }
+
+    }
+
+}
+
+.item>i {
+    font-size: x-large;
+}
+
+.item .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: rgb(103, 98, 98);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 10px 15px;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -1px;
+    left: 105%;
+}
+
+.item:hover .tooltiptext {
+    visibility: visible;
+}

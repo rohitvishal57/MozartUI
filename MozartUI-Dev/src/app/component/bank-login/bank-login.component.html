@@ -1,0 +1,185 @@
+<div class="header">
+  <div class="logo"></div>
+  <div class="nav-links">
+    <div class="banccalogo"></div>
+  </div>
+</div>
+<div class="login-container" *ngIf="showHtml">
+  <div class="row">
+    <div class="login-heading">Welcome to</div>
+    <div class="login-subheading">{{ bankDetails.bankName }}</div>
+  </div>
+  <div class="login-form">
+    <form [formGroup]="loginForm">
+      <div class="row">
+        <div class="col-md-6" *ngIf="loginConfiguration['USERID']">
+          <div class="input-with-icon">
+            <p-radioButton
+              value="USERID"
+              formControlName="loginBy"
+            ></p-radioButton>
+            <label for="loginBy" class="ml-2" style="padding-left: 10px"
+              >BY USERID</label
+            >
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="loginConfiguration['OTP']">
+          <div class="input-with-icon">
+            <p-radioButton
+              value="OTP"
+              formControlName="loginBy"
+            ></p-radioButton>
+            <label for="loginBy" class="ml-2" style="padding-left: 10px"
+              >BY OTP</label
+            >
+          </div>
+        </div>
+      </div>
+      <div *ngIf="loginForm.controls['loginBy'].value == 'USERID'">
+        <div
+          class="email"
+          [class.error]="
+            loginForm.controls['bancaUserName'].dirty &&
+            loginForm.hasError('required', 'bancaUserName')
+          "
+        >
+          <div class="input-with-icon">
+            <input
+              type="email"
+              class="form-control"
+              formControlName="bancaUserName"
+              placeholder="Enter Username"
+              [class.is-invalid]="
+                loginForm.controls['bancaUserName'].dirty &&
+                loginForm.hasError('required', 'bancaUserName')
+              "
+            />
+          </div>
+        </div>
+        <div
+          class="password"
+          [class.error]="
+            loginForm.controls['bancaPassword'].dirty &&
+            loginForm.hasError('required', 'bancaPassword')
+          "
+        >
+          <div class="input-with-icon">
+            <input
+              type="password"
+              class="form-control"
+              formControlName="bancaPassword"
+              placeholder="Enter Password"
+            />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="loginForm.controls['loginBy'].value == 'OTP'">
+        <div class="input-with-icon">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="rmid"
+            placeholder="Enter RMID"
+          />
+        </div>
+        <div *ngIf="validateOtp == true" class="row otp-section">
+          <div class="col-md-6">
+            <div class="input-with-icon">
+              <input
+                type="text"
+                class="form-control"
+                formControlName="mobileNumber"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="otp-verification">
+              <div class="input-with-icon input-otp">
+                <input
+                  type="text"
+                  class="form-control"
+                  [placeholder]="'Enter OTP (' + otpTimer + ' s )'"
+                  formControlName="otp"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="button">
+        <button
+          *ngIf="loginForm.controls['loginBy'].value == 'USERID'"
+          (click)="onSubmit()"
+          type="submit"
+          class="login-button"
+        >
+          LOGIN
+        </button>
+        <button
+          *ngIf="loginForm.controls['loginBy'].value == 'OTP' && !validateOtp"
+          (click)="sendOtp()"
+          type="submit"
+          class="login-button"
+        >
+          Send OTP
+        </button>
+        <button
+          *ngIf="
+            loginForm.controls['loginBy'].value == 'OTP' && validateOtp == true
+          "
+          (click)="submitOtp()"
+          type="submit"
+          class="login-button"
+        >
+          Submit
+        </button>
+      </div>
+    </form>
+    <hr>
+    <div class="social-login">
+      <a
+        (click)="triggerAzureAdLogin()"
+        class="social-login-button social-login-button-microsoft"
+      >
+        <svg
+          height="30"
+          style="overflow: visible; enable-background: new 0 0 30 30"
+          viewBox="0 0 30 30"
+          width="30"
+          xml:space="preserve"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+          <g>
+            <g id="Microsoft_1_">
+              <g id="Microsoft">
+                <g id="Blue_x5F_Square">
+                  <rect height="15" style="fill: #51aed9" width="15" y="17" />
+                </g>
+                <g id="Yellow_x5F_Square">
+                  <rect
+                    height="15"
+                    style="fill: #fec327"
+                    width="15"
+                    x="17"
+                    y="17"
+                  />
+                </g>
+                <g id="Green_x5F_Square">
+                  <rect height="15" style="fill: #34b67a" width="15" x="17" />
+                </g>
+                <g id="Orange_x5F_Square">
+                  <rect height="15" style="fill: #f15723" width="15" />
+                </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+        <span>Microsoft Login</span>
+      </a>
+      <div id="google-button"></div>
+    </div>
+  </div>
+</div>

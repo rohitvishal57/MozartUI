@@ -1,0 +1,71 @@
+<div class="part-1">
+    <div class="back-btn">
+        <svg  style="cursor: pointer;" routerLink="/portal/finaladminDashboard" xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+            viewBox="0 0 50 50" fill="none">
+            <path
+                d="M36.5156 20.5C36.5156 21.0097 36.3131 21.4985 35.9527 21.859C35.5923 22.2194 35.1035 22.4219 34.5937 22.4219H11.0508L19.302 30.6715C19.6631 31.0326 19.8659 31.5222 19.8659 32.0328C19.8659 32.5434 19.6631 33.0331 19.302 33.3942C18.941 33.7552 18.4513 33.9581 17.9407 33.9581C17.4301 33.9581 16.9404 33.7552 16.5794 33.3942L5.04811 21.8629C4.86894 21.6844 4.72678 21.4722 4.62978 21.2386C4.53278 21.005 4.48285 20.7545 4.48285 20.5016C4.48285 20.2486 4.53278 19.9982 4.62978 19.7646C4.72678 19.531 4.86894 19.3188 5.04811 19.1403L16.5794 7.60902C16.7581 7.43024 16.9704 7.28843 17.2039 7.19168C17.4375 7.09493 17.6879 7.04514 17.9407 7.04514C18.1935 7.04514 18.4439 7.09493 18.6774 7.19168C18.911 7.28843 19.1232 7.43024 19.302 7.60902C19.4808 7.78779 19.6226 8.00002 19.7194 8.2336C19.8161 8.46718 19.8659 8.71752 19.8659 8.97034C19.8659 9.22317 19.8161 9.47351 19.7194 9.70709C19.6226 9.94067 19.4808 10.1529 19.302 10.3317L11.0508 18.5781H34.5937C35.1035 18.5781 35.5923 18.7806 35.9527 19.141C36.3131 19.5014 36.5156 19.9903 36.5156 20.5Z"
+                fill="#2A496C" />
+        </svg>
+    </div>
+    <div class="main-container">
+        <form [formGroup]="AgentDetailsForm">
+            <div class="card-body rectangle">
+                <div class="card-header">Add Agent Details</div>
+                <div class="row">
+                    <div class="col-md-6 typecss">
+                        <label>User Name <span>*</span></label>
+                        <input formControlName="agentUserName" class="line-border" type="text">
+                        <small
+                            *ngIf="AgentDetailsForm.controls['agentUserName'].dirty && AgentDetailsForm.hasError('required','agentUserName')"
+                            class="text-danger">*
+                            User Name is required
+                        </small>
+                    </div>
+                    <div class="col-md-6 typecss">
+                        <label>Agent Mobile Number <span>*</span></label>
+                        <input formControlName="agentMobileNum" class="line-border" type="text">
+                        <small
+                            *ngIf="AgentDetailsForm.controls['agentMobileNum'].dirty && AgentDetailsForm.hasError('required','agentMobileNum')"
+                            class="text-danger">*
+                            Agent Mobile Number is required
+                        </small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 typecss">
+                        <label>Partner <span>*</span></label>
+                        <select formControlName="agencyCode" class="line-border" aria-label="Default select example">
+                            <option selected value="">Choose...</option>
+                            <ng-container *ngFor="let opt of allAgency">
+                                <option [value]="opt.agencyCode">{{ opt.agencyName}}</option>
+                            </ng-container>
+                        </select>
+                        <small
+                            *ngIf="AgentDetailsForm.controls['agencyCode'].dirty && AgentDetailsForm.hasError('required','agencyCode')"
+                            class="text-danger">*
+                            Partner is required
+                        </small>
+                    </div>
+                    <!-- <div class="col-md-6 typecss">
+                        <label>Channel <span>*</span></label>
+                        <select formControlName="verticalCode" class="line-border" aria-label="Default select example">
+                            <option selected value="">Choose...</option>
+                            <ng-container *ngFor="let opt of channel">
+                                <option [value]="opt.verticalCode">{{ opt.channelName}}</option>
+                            </ng-container>
+                        </select>
+                        <small
+                            *ngIf="AgentDetailsForm.controls['verticalCode'].dirty && AgentDetailsForm.hasError('required','verticalCode')"
+                            class="text-danger">*
+                            Channel is required
+                        </small>
+                    </div> -->
+                </div>
+                <br>
+                <div class="btn-container">
+                    <button class="btn btn-primary nextbtn" (click)="onSubmit()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

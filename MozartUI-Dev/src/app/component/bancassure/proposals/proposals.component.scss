@@ -1,0 +1,128 @@
+// .main{
+//     padding-left: 10px;
+// }
+// #custom-search-form .search-query {
+//     padding-right: 5px;
+//     padding-left: 10px;
+//     margin-bottom: 0;
+//     -webkit-border-radius: 3px;
+//     -moz-border-radius: 3px;
+//     border-radius: 3px;
+// }
+// .search-query {
+//     font-size: 10px;
+//     color: #000000;
+//     font-weight: bold;
+//     font-family: "PFHandbookPro-Regular";
+//     padding-top: 6px !important;
+//     padding-bottom: 6px !important;
+//     vertical-align: middle;
+// }
+// .search-box-outer {
+//     border-radius: 2px;
+//     background-color: #ffffff;
+//     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
+//     border: solid 0.5px #d7d7d7;
+//     padding-top: 8px;
+//     padding-bottom: 10px;
+//     width: 90%;
+//     margin-right: -20px;
+// }
+.main {
+    padding: 2rem 20rem;
+
+    .container {
+        overflow-y: auto;
+        height: 300px;
+
+        .box {
+            padding-left: 0px;
+            padding-right: 0px;
+            margin-bottom: 5px;
+            border-right: 5px solid #fff;
+
+            .inbox {
+                padding: 10px;
+                background-color: #f5f5f5;
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.24);
+
+                .space {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+
+                    .proposer-name {
+                        flex-grow: 1;
+                        font-family: PF-Encore-Sans-Pro-Med;
+                        font-size: 12px;
+                        font-weight: 500;
+                        font-style: normal;
+                        font-stretch: normal;
+                        line-height: normal;
+                        letter-spacing: inherit;
+                        text-align: left;
+                        color: #646464;
+                    }
+
+                    .form-status {
+                        white-space: nowrap;
+                        font-family: PF-Encore-Sans-Pro-Med;
+                        font-size: 12px;
+                        font-weight: 500;
+                        font-style: normal;
+                        font-stretch: normal;
+                        line-height: normal;
+                        letter-spacing: inherit;
+                        text-align: left;
+                        color: #646464;
+                    }
+
+                    .bold-status {
+                        flex-grow: 1;
+                        font-family: PFEncoreSansPro;
+                        font-size: 14px;
+                        font-weight: 500;
+                        font-style: normal;
+                        font-stretch: normal;
+                        line-height: normal;
+                        letter-spacing: inherit;
+                        text-align: left;
+                        color: #000000;
+                    }
+                }
+
+
+            }
+        }
+    }
+}
+
+#custom-search-form .search-query {
+    padding-right: 5px;
+    padding-left: 10px;
+    margin-bottom: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.search-query {
+    font-size: 10px;
+    color: #000000;
+    font-weight: bold;
+    font-family: "PFHandbookPro-Regular";
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    vertical-align: middle;
+}
+
+.search-box-outer {
+    border-radius: 2px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.08);
+    border: solid 0.5px #d7d7d7;
+    padding-top: 8px;
+    padding-bottom: 10px;
+    width: 90%;
+    margin-right: -20px;
+}

@@ -1,0 +1,134 @@
+<div class="part-1">
+    <div class="main-container">
+        <form [formGroup]="UserDetailsForm">
+            <div class="card-body rectangle">
+                <div class="card-header">Add Bank Details</div>
+                <div class="col-md-4 typecss">
+                    <label>Banca UserName <span>*</span></label>
+                    <input formControlName="bancaUserName" class="line-border" type="text">
+                    <small *ngIf="UserDetailsForm.controls['bancaUserName'].dirty && UserDetailsForm.hasError('required','bancaUserName')" class="text-danger">*
+                        Banca UserName is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Banca Mobile Number <span>*</span></label>
+                    <input formControlName="bancaMobileNum" class="line-border" type="text">
+                    <small *ngIf="UserDetailsForm.controls['bancaMobileNum'].dirty && UserDetailsForm.hasError('required','bancaMobileNum')" class="text-danger">*
+                        Banca Mobile Number is required
+                    </small>
+                </div>  
+                <div class="col-md-4 typecss">
+                    <label>Bank Code <span>*</span></label>
+                    <select formControlName="bankCode" class="line-border" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allBank">
+                        <option [value]="opt.bankCode">{{ opt.bankName}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="UserDetailsForm.controls['bankCode'].dirty && UserDetailsForm.hasError('required','bankCode')" class="text-danger">*
+                        Bank Code is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>RMID <span>*</span></label>
+                    <input formControlName="rmid" class="line-border" type="text">
+                    <small *ngIf="UserDetailsForm.controls['rmid'].dirty && UserDetailsForm.hasError('required','rmid')" class="text-danger">*
+                        RMID is required
+                    </small>
+                </div>
+
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onSubmit()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="part-2">
+    <h4>All User Details</h4>
+    <p-table [value]="allUserDetails" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10,20,30]">
+        <ng-template pTemplate="header">
+            <tr class="custom-header">
+                <th id="bancaUsernameHeader" pSortableColumn="bancaUserName">Banca UserName <p-sortIcon field="bancaUserName"></p-sortIcon></th>
+                <th id="bancaMobileNumHeader" pSortableColumn="bancaMobileNum">Mobile Number <p-sortIcon field="bancaMobileNum"></p-sortIcon></th>
+                <th id="bancaCodeHeader" pSortableColumn="bankCode">Bank Code <p-sortIcon field="bankCode"></p-sortIcon></th>
+                <th id="bancaStatusHeader" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                <th id="bancaCreateDateHeader" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                <th id="bancaHeader"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+            <tr>
+                <td>{{data.bancaUserName}}</td>
+                <td>{{data.bancaMobileNum}}</td>
+                <td *ngIf="getName(data.bankCode)!==undefined">{{ getName(data.bankCode).bankName }}</td>
+                <td *ngIf="getName(data.bankCode) == undefined">None</td>
+                <td>
+                    <ng-container *ngIf="data.bancaUserStatus === true; else inactiveBlock">
+                        <span style="color: green;">Active</span>
+                      </ng-container>
+                      <ng-template #inactiveBlock>
+                        <span style="color: red;">Inactive</span>
+                    </ng-template>
+                </td>
+                <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data)"></i></td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+
+<p-dialog header="Edit User Details" [modal]="true" [(visible)]="visible" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+    <form [formGroup]="UserDetailsForm">
+        <div class="card-body rectangle">
+            <div class="col-md-4 typecss">
+                <label>Banca UserName <span>*</span></label>
+                <input formControlName="bancaUserName" class="line-border" type="text">
+                <small *ngIf="UserDetailsForm.controls['bancaUserName'].dirty && UserDetailsForm.hasError('required','bancaUserName')" class="text-danger">*
+                    Banca UserName is required
+                </small>
+            </div>
+            <div class="col-md-4 typecss">
+                <label>Banca Mobile Number <span>*</span></label>
+                <input formControlName="bancaMobileNum" class="line-border" type="text">
+                <small *ngIf="UserDetailsForm.controls['bancaMobileNum'].dirty && UserDetailsForm.hasError('required','bancaMobileNum')" class="text-danger">*
+                    Banca Mobile Number is required
+                </small>
+            </div>  
+            <div class="col-md-4 typecss">
+                <label>Bank Code <span>*</span></label>
+                <select formControlName="bankCode" class="line-border" aria-label="Default select example">
+                    <option selected value="">Choose...</option>
+                    <ng-container *ngFor="let opt of allBank">
+                    <option [value]="opt.bankCode">{{ opt.bankName}}</option>
+                    </ng-container>
+                </select>
+                <small *ngIf="UserDetailsForm.controls['bankCode'].dirty && UserDetailsForm.hasError('required','bankCode')" class="text-danger">*
+                    Bank Code is required
+                </small>
+            </div>
+            <div class="col-md-4 typecss">
+                <label>RMID <span>*</span></label>
+                <input formControlName="rmid" class="line-border" type="text">
+                <small *ngIf="UserDetailsForm.controls['rmid'].dirty && UserDetailsForm.hasError('required','rmid')" class="text-danger">*
+                    RMID is required
+                </small>
+            </div>
+            <div class="col-md-6 typecss">
+                <div style="display: flex;justify-content: space-between;">
+                    <label>User Status </label>
+                    <p-inputSwitch formControlName="bancaUserStatus"></p-inputSwitch>
+                </div>
+            </div>
+
+            <br>
+            <div class="btn-container card-body">
+                <button class="btn btn-primary nextbtn" (click)="onUpdate()">Save</button>
+            </div>
+        </div>
+    </form>
+</p-dialog>
