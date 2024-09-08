@@ -824,6 +824,12 @@ body {
     margin-top: 8%;
 }
 
+.main-container .right-panel .declaration-paragraph{
+    font-size: 14px;
+    color: #292929;
+    font-family: "Anek Latin", sans-serif;
+}
+
 .main-container .right-panel .section-paragraph1 {
     font-weight: 600;
     font-size: 20px;

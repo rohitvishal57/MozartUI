@@ -21,6 +21,9 @@ export interface IFormSections {
   sectionButton?: ISectionButton;
   class?: string;
   toolTipText?: string;
+  urlDependentControls?:any;
+  urlPath?:any;
+  productFeaturesUrl?:any
 }
 export interface ISectionButton {
   label?: string;

@@ -322,10 +322,11 @@ export class AbhiDynamicFormComponent {
               }
             }
             if (control.type === 'select' && control.options) {
+              // Call the method to get all options if defined and options array is empty
               if (control.getAllOption && control.options.length === 0) {
                 this.callMethod(control.getAllOption, control);
               }
-
+            
               // If the control's value is empty, set it based on the selected options
               if (control.value === "") {
                 // Set control value if any option is selected
@@ -336,7 +337,7 @@ export class AbhiDynamicFormComponent {
                     }
                   });
                 }
-
+            
                 // Call the methodName method after setting the value if defined
                 if (control.methodName) {
                   this.resolveMethod(control.methodName, control);
@@ -712,6 +713,17 @@ export class AbhiDynamicFormComponent {
     });
   }
 
+  getAllOccupationRisk(control: any) {
+    this.service.getNatureOfOccupation().subscribe({
+      next: (res: any) => {
+        control.options = res.NatureOfDuty;
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
   getAllInsureData(control: any) {
     this.spinner.show();
     this.service.getInsurerData().subscribe({
@@ -735,17 +747,6 @@ export class AbhiDynamicFormComponent {
         control.options = res.Occupation;
       },
       error: (err) => {
-        console.error(err);
-      }
-    });
-  }
-
-  getAllOccupationRisk(control: any) {
-    this.service.getNatureOfOccupation().subscribe({
-      next: (res: any) => {
-        control.options = res.NatureOfDuty;
-      },
-      error: (err: any) => {
         console.error(err);
       }
     });
@@ -1519,6 +1520,7 @@ export class AbhiDynamicFormComponent {
             }
 
 
+           
             if (checkbox.checked == true && option.value == 'Self') {
               // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
               let index = -1;
@@ -1555,7 +1557,18 @@ export class AbhiDynamicFormComponent {
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+              
             }
+            console.log(this.dynamicFormGroup.get('memberPolicyType')?.value);
+            
+          if(this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater'){
+            console.log((this.dynamicFormGroup.get(controls.idProperty) as FormArray));
+            
+            (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control:any)=>{
+              control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+            })
+          }
             console.log(typeof this.dynamicFormGroup.get('numberOfInsuredMembers')?.value, this.dynamicFormGroup.get('numberOfInsuredMembers')?.value);
 
             this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
