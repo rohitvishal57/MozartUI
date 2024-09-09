@@ -33,7 +33,7 @@ jobs:
         echo "Current working directory is:"
         pwd  # Print the current working directory
         echo "Listing the contents of the current directory:"
-        s -la  # List the contents of the current working directory
+        ls -la  # List the contents of the current working directory
   
     - name: List MozartUI-Dev directory contents
       run: |
