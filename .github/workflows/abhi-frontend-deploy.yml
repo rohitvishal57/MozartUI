@@ -33,6 +33,7 @@ jobs:
       with:
         path: |
           ~/.npm
+          ~/.cache
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
@@ -67,12 +68,13 @@ jobs:
         pwd
         ls -la 
         ls -la MozartUI-Dev
+        ls -la MozartUI-Dev/dist
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: angular-artifacts
-        path: dist/
+        path: ./MozartUI-Dev/dist/
 
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v3.0.0
@@ -125,7 +127,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: angular-artifacts
-        path: ./dist
+        path: ./MozartUI-Dev/dist/
 
     - name: Upload artifact to VM
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
