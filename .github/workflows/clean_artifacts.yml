@@ -1,0 +1,27 @@
+name: Cleanup Artifacts
+
+on:
+  schedule:
+    # Runs the workflow every day at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allows manual triggering from the GitHub UI
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Remove old artifacts
+        uses: c-hive/gha-remove-artifacts@v1.2.0
+        with:
+          # Artifacts older than this will be deleted (e.g., "2 months", "1 day").
+          age: "1 day"
+          # Access token for the repository, available under the same name in secrets.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # true/false. If enabled, tag build artifacts (e.g., release artifacts) will be kept.
+          skip-tags: false
+          # Keep the specified number of artifacts even if they are older than the age.
+          skip-recent: 1
