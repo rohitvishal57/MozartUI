@@ -50,6 +50,16 @@ jobs:
         cd MozartUI-Dev
         npm run build --prod
 
+    - name: List Build Artifacts
+      run: ls -la dist/frontend
+
+    - name: List contents in the current directory
+      run: |
+        ls -la dist/frontend
+        ls -la dist/
+        pwd
+        ls -la pwd
+      
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -62,7 +72,7 @@ jobs:
         projectBaseDir: .
         args: |
           -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
-          -Dsonar.sources=src
+          -Dsonar.sources=./MozartUI-Dev/src
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
