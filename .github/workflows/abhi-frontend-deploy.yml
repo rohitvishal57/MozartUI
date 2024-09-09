@@ -28,6 +28,15 @@ jobs:
       with:
         node-version: '18.20.3'
 
+    - name: Cache Node modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
     - name: Print working directory and list its contents
       run: |
         echo "Current working directory is:"
@@ -50,15 +59,16 @@ jobs:
         cd MozartUI-Dev
         npm run build --prod
 
-    - name: List Build Artifacts
-      run: ls -la dist/frontend
+    # - name: List Build Artifacts
+    #   run: ls -la dist/frontend
 
     - name: List contents in the current directory
       run: |
-        ls -la dist/frontend
+        ls -la pwd
         ls -la dist/
         pwd
-        ls -la pwd
+        ls -la dist/
+        ls -la dist/frontend
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
