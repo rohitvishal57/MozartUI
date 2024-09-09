@@ -18,7 +18,7 @@ jobs:
         uses: c-hive/gha-remove-artifacts@v1.2.0
         with:
           # Artifacts older than this will be deleted (e.g., "2 months", "1 day").
-          age: "1 day"
+          #age: "1 day"
           # Access token for the repository, available under the same name in secrets.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # true/false. If enabled, tag build artifacts (e.g., release artifacts) will be kept.
