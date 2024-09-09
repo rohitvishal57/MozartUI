@@ -40,12 +40,15 @@ jobs:
         echo "Listing the contents of MozartUI-Dev directory:"
         ls -la MozartUI-Dev  # List the contents of the MozartUI-Dev directory (if it exists)
 
-    - name: Install Dependencies
-      working-directory: MozartUI-Dev
-      run: npm install --legacy-peer-deps
-
-    - name: Build Angular Project
-      run: npm run build --prod
+    - name: Install dependencies
+      run: |
+        cd MozartUI-Dev
+        npm install
+      
+    - name: Build the project
+      run: |
+        cd MozartUI-Dev
+        npm run build --prod
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
