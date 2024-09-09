@@ -1,0 +1,32 @@
+<div class="product-main-container" *ngIf="finelcss == true">
+    <div class="left-panel">
+       <app-dashboard-sidebar></app-dashboard-sidebar>
+    </div>
+    <div class="right-panel">
+        <div class="r-p-header">
+            <div class="product-heading">Products</div>
+            <div class="prod-head-desc">Discover our products to insure your health and property
+            </div>
+        </div>
+        <div class="toggle-list" *ngFor="let prod of products">
+            <div [ngClass]="{'blue': prod.insurancetype === selectedToggle, 'gray': prod.insurancetype !== selectedToggle}" (click)="getPoductList(prod)">
+                {{prod.insurancetype}}
+            </div>
+        </div>
+        <div *ngIf="ProductList.length > 0; else noProducts">
+            <div *ngFor="let item of ProductList">
+                <div class="product-list">
+                    <div class="product-item">{{item.productname}}</div>
+                    <div class="product-list">
+                        <button class="get" (click)="getQuote(item)">Get Quote</button>
+                        <button class="get" (click)="insurenow(item)">Insure Now</button>
+                    </div>
+                </div>
+                <div class="horizontal-line"></div>
+            </div>
+        </div>
+        <ng-template #noProducts>
+            <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected type.</div>
+        </ng-template>
+    </div>
+</div>

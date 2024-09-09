@@ -1,0 +1,28 @@
+<div class="l-panel-upper">
+    <div class="profile-icon">
+        <img class="profile-pic" src="../../../assets/profile_pic.jpg" alt="User Profile">
+    </div>
+    <div class="r-div-profile">
+        <div class="welcome-text">Welcome !</div>
+        <div class="username">{{userName}}</div>
+    </div>
+</div>
+<div class="l-panel-lower">
+    <div class="options">
+        <div class="option-item" routerLink="/portal/banca/dashboard" routerLinkActive="option-item-selected">
+            <i class="fa-solid fa-house"></i>
+            Dashboard
+        </div>
+        <div class="option-item" routerLink="/portal/banca/products" routerLinkActive="option-item-selected">
+            <i class="fa-solid fa-layer-group"></i>
+            Products
+        </div>
+        <div class="option-item" routerLinkActive="option-item-selected">
+            <i class="fa-regular fa-circle-question"></i>
+            Support
+        </div>
+    </div>
+</div>
+<div class="logout-button">
+    <button class="button" (click)="logOut()"><i class="fa-solid fa-power-off"></i>Logout</button>
+</div>

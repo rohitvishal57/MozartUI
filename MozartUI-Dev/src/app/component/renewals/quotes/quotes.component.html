@@ -1,0 +1,600 @@
+<div class="main-container">
+    <div class="all-quotes" *ngIf="!showSubQuotes && !showComparison">
+        <div class="header-val">Renewal List</div>
+        <div class="main-quotes-cnt">
+            <!--  -->
+            <div class="quotes-header">
+                <div class="list-of-filter">
+                    <div class="left-header" #filterSection>
+                        <div class="left-value1">Quick filters</div>
+                        <div class="filter-types" *ngIf="!isDesktopView">
+                            <div [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">
+                                <p>All Policies({{countsList.totalRecords}})</p>
+                            </div>
+                            <div [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired')">
+                                <p>< 30 Days({{countsList.expiringInLessThan30DaysCount}})</p>
+                            </div>
+                            <div [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days')">
+                                <p>30-60 Days ({{countsList.expiringIn30To60DaysCount}})</p>
+                            </div>
+                            <div [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days')">
+                                <p>60-90 Days ({{countsList.expiringIn60To90DaysCount}})</p>
+                            </div>
+                            <div [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies')">
+                                <p>Expired ({{countsList.expiredCount}})</p>
+                            </div>
+                        </div>
+                        <div class="mobile-filter" *ngIf="isDesktopView">
+                            <mat-form-field  class="aaa"  appearance="outline">
+                                <mat-label>Filter Policies</mat-label>
+                                <mat-select [(ngModel)]="activeFilter" (selectionChange)="filterQuotes($event.value)">
+                                    <mat-option value="all">All Policies ({{countsList.totalRecords}})</mat-option>
+                                    <mat-option value="<30DaysExpired">< 30 Days ({{countsList.expiringInLessThan30DaysCount}})</mat-option>
+                                    <mat-option value="30-60Days">30-60 Days ({{countsList.expiringIn30To60DaysCount}})</mat-option>
+                                    <mat-option value="60-90Days">60-90 Days ({{countsList.expiringIn60To90DaysCount}})</mat-option>
+                                    <mat-option value="ExpiredPolicies">Expired ({{countsList.expiredCount}})</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="right-header">
+                        <div class="quotes-icon">
+                            <i class="fa-solid fa-download"></i>
+                        </div>
+
+
+                        <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown()">
+                            <i class="fa-solid fa-magnifying-glass" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <mat-menu #searchMenu="matMenu"  [overlapTrigger]="false" hasBackdrop="true" (closed)="menuClosed()">
+                                <div class="search-dropdown-cnt">
+                              <div class="search-title">Search</div>
+                              <div class="search-dropdown">
+                                <mat-form-field class="select-boxes" color="accent" appearance="outline" (click)="$event.stopPropagation()">
+                                  <mat-label>Select search type</mat-label>
+                                  <mat-select [(ngModel)]="selected" (selectionChange)="onSelectChanges($event)" >
+                                    <mat-option value="none">Select</mat-option>
+                                    <mat-option value="mobileNo">Mobile Number</mat-option>
+                                    <mat-option value="name">Proposer Name</mat-option>
+                                    <mat-option value="policyNumber">Policy Number</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                                <div class="search-input">
+                                  <input matInput 
+                                         type="text" 
+                                         *ngIf="selected !== 'none' && selected !== ''" 
+                                         [formControl]="searchInputControl"
+                                         [placeholder]="getPlaceholder()"
+                                         (click)="$event.stopPropagation()"> <!-- Stop propagation here -->
+                                  <mat-error *ngIf="searchInputControl.invalid && searchInputControl.touched">
+                                    {{ getErrorMessage() }}
+                                  </mat-error>
+                                </div>
+                              </div>
+                              <div class="search-buttons">
+                                <div class="cancel-button" (click)="cancelSearch()">Cancel</div>
+                                <div class="apply-button" [class.active]="selected!='none' && searchInputControl.valid" (click)="applySearch()">Apply</div>
+                              </div>
+                            </div>
+                            </mat-menu>
+                          </div>
+                          <div class="filter-icon" (click)="toggleFilterDropdown()">
+                            <div><i class="fa-solid fa-filter"></i></div>
+                            <p>FIlter({{appliedFiltersCount}})</p>
+                        </div>
+                          
+                        
+                        <div class="quotes-list-icon" [ngClass]="{'active': selectedView === 'list'}" (click)="quotesViews('list')">
+                            <i class="fa-solid fa-list"></i>
+                        </div>
+                        <div class="quotes-list-icon" [ngClass]="{'active': selectedView === 'grid'}" (click)="quotesViews('grid')">
+                            <i class="fa-solid fa-table-cells-large"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Filter Dropdown -->
+            <div class="filter-dropdown" *ngIf="toggeledropdown===true">
+                <div class="filters-types-cnt">
+                    <div class="filters-title">Filter</div>
+                    <div class="products-filter">
+                        <div class="products-filter-title">Products</div>
+                        <div class="products-list">
+                            <ng-container *ngFor="let product of productsList; let i = index">
+                                <div class="product-item" *ngIf="i % 2 === 0">
+                                    <input [(ngModel)]="product.selected" type="checkbox" id="product{{i}}" (change)="calculateAppliedFiltersCount()" class="product-checkbox" />
+                                    <label for="product{{i}}">{{product.productName}}</label>
+                                </div>
+                                <div class="product-item" *ngIf="i % 2 !== 0">
+                                    <input [(ngModel)]="product.selected" type="checkbox" id="product{{i}}" (change)="calculateAppliedFiltersCount()" class="product-checkbox" />
+                                    <label for="product{{i}}">{{product.productName}}</label>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="policy-types-filter">
+                        <div class="policy-types-filter-title">Policy</div>
+                        <div class="policy-types-list">
+                            <ng-container *ngFor="let policyType of policyTypes; let i = index">
+                                <div class="policy-type" *ngIf="i % 2 === 0">
+                                    <input [(ngModel)]="policyType.selected" type="checkbox" id="policyType{{i}}" (change)="calculateAppliedFiltersCount()" class="policy-type-checkbox" />
+                                    <label for="policyType{{i}}">{{policyType.name}}</label>
+                                </div>
+                                <div class="policy-type" *ngIf="i % 2 !== 0">
+                                    <input [(ngModel)]="policyType.selected" type="checkbox" id="policyType{{i}}" (change)="calculateAppliedFiltersCount()" />
+                                    <label for="policyType{{i}}">{{policyType.name}}</label>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+  
+                    <div class="date-filter">
+                        <div class="date-filter-title">Date Range (MM/DD/YYYY)</div>
+                        <div class="date-ranges">
+                            <div class="from-date-input">
+                                <mat-form-field class="custom-datepicker" appearance="outline">
+                                    <mat-label>Select Start Date</mat-label>
+                                    <input matInput [matDatepicker]="dp1" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')" />
+                                    <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="to-date-input">
+                                <mat-form-field class="custom-datepicker" appearance="outline">
+                                  <mat-label>Select End Date</mat-label>
+                                  <input matInput [matDatepicker]="dp2" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')" />
+                                  <mat-datepicker-toggle matIconSuffix [for]="dp2"></mat-datepicker-toggle>
+                                  <mat-datepicker #dp2></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="filters-buttons">
+                    <div class="cancel-button" (click)="cancel()">Cancel</div>
+                    <div class="apply-button" [ngClass]="getApplyButtonClass()" (click)="applyFilter()">Apply</div>
+                </div>
+            </div>
+
+            <!--Display Data-->
+            <div class="card-cnt">
+                <!--Card View-->
+                <div class="card-outer-cnt" *ngIf="selectedView == 'grid'">
+                    <div class="card" *ngFor="let row of renewalsList | paginate: { itemsPerPage: rows, currentPage: page } ; let i = index">
+                        <div class="top-section">
+                            <div class="card-header-cnt">
+                                <div class="name-and-rating">
+                                    <span class="name">{{ row.proposerFirstName }} {{ row.proposerLastName }}</span>
+                                    <div class="rating">
+                                        <span class="star" [ngClass]="getStarClass(row.rating)"><i class="fa-solid fa-star"></i></span>
+                                        <span class="rating-value">{{ row.rating }}</span>
+                                    </div>
+                                </div>
+                                <div>{{ row.productName }}</div>
+                            </div>
+                            <div class="icons" (click)="$event.stopPropagation()">
+                                <div class="icon" ><i class="fa-brands fa-whatsapp" style="color: #3cb224;"></i> </div>
+                                <div class="icon" ><i class="fa-solid fa-comment-sms" style="color: #827e8b;"></i> </div>
+                                <div class="icon" ><i class="fa-regular fa-envelope"></i></div>
+                                <div class="icon" [matMenuTriggerFor]="moreMenu">
+                                    <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                    <mat-menu #moreMenu="matMenu" class="more-values">
+                                      <div class="dropdown-item" (click)="handleAction(row, 'renew')">
+                                        <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                        <span>Renew</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'modify')">
+                                        <div class="icon-wrapper"><i class="fa-regular fa-pen-to-square" style="color: #979CAE;"></i></div>
+                                        <span>Modify</span>
+                                      </div>
+                                      <div class="dropdown-item" [class.disabled]="true">
+                                        <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                        <span>Migrate</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'download')">
+                                        <div class="icon-wrapper"><i class="fa-solid fa-download" style="color: #979CAE;"></i></div>
+                                        <span>Download Renewal Notice</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'copyPayLink')">
+                                        <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                        <span>Copy Pay Link</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'registerNow')">
+                                        <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                        <span>Register Now</span>
+                                      </div>
+                                      <div class="dropdown-item" (click)="handleAction(row, 'delete')">
+                                        <div class="icon-wrapper"><i class="fa-solid fa-trash" style="color: #979CAE;"></i></div>
+                                        <span>Delete</span>
+                                      </div>
+                                    </mat-menu>
+                                  </div>
+                            </div>
+                        </div>
+                        <div class="details-section">
+                            <div class="policy-detail">
+                                <div class="detail">
+                                    <span class="label">Policy Type</span>
+                                    <span class="value">{{ row.policyType }}</span>
+                                </div>
+                                <div class="detail">
+                                    <span class="label">Policy No.</span>
+                                    <span class="value">{{  row.policyNumber }}</span>
+                                </div>
+                                <div class="detail">
+                                    <span class="label">Status</span>
+                                    <span class="value">{{ row.status }}</span>
+                                </div>
+                            </div>
+                            <div class="policy-detail">
+                                <div class="detail">
+                                    <span class="label">MobileNo</span>
+                                    <span class="value">{{ row.proposerMobileNumber}}</span>
+                                </div>
+                                <div class="detail">
+                                    <span class="label">Date of Renewal</span>
+                                    <span class="value">{{ row.renewedDate }}</span>
+                                </div>
+                            </div>
+                            <div class="policy-detail2">
+                                <div class="detail widths">
+                                    <span class="label">Renewal Premium</span>
+                                    <div class="value">
+                                        <div class="sub-detail">
+                                            <div>Total Premium</div>
+                                            <div>{{  row.renewalPremiumAmount }}</div>
+                                        </div>
+                                        <div class="sub-detail benifit">
+                                            <div>HR benefits</div>
+                                            <div>{{ row.healthReturn }}</div>
+                                        </div>
+                                        <div class="sub-detail">
+                                            <div>Renewal Premium</div>
+                                            <div>{{ row.renewalPremiumAmount - row.healthReturn }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detail widths">
+                                    <span class="label">Modification</span>
+                                    <span class="value1">{{ row.modification }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- table View -->
+                <div class="table-format-cnt table-responsive" *ngIf="selectedView == 'list'">
+                    <div class="table-inner-cnt">
+                        <table class="table tableRenewalList table-borderless">
+                            <thead>
+                                <tr class="table-headings-row">
+                                    <th scope="col" class="col-proposer">Proposer</th>
+                                    <th scope="col" class="col-ratings">Ratings</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Policy Type & No</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Renewal Premium</th>
+                                    <th scope="col">Mobile No</th>
+                                    <th scope="col">Date Of Renewal</th>
+                                    <th scope="col">Modification</th>
+                                    <th scope="col">Notice</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of renewalsList | paginate: { itemsPerPage: rows, currentPage: page }; let i = index" class="table-values">
+                                    <td class="pro-name">{{ row.proposerFirstName }} {{row.proposerLastName}}</td>
+                                    <td>
+                                        <div class="rating">
+                                            <span class="star" [ngClass]="getStarClass(row.rating)"><i class="fa-solid fa-star"></i></span>
+                                            <span class="rating-value">{{ row.rating }}</span>
+                                        </div>
+                                    </td>
+                                    <td>{{ row.productName }}</td>
+                                    <td class="policy-type-no">
+                                        <div>{{ row.policyType }}</div><br>
+                                        <div>{{ row.policyNumber }}</div>
+                                    </td>
+                                    <td>{{ row.status }}</td>
+                                    <td class="renewal">
+                                        <div class="total-premium">
+                                            <p>Total Premium</p>
+                                            <p>{{ row.renewalPremiumAmount }}</p>
+                                        </div>
+                                        <div class="hr-benefits">
+                                            <p>HR Benefits</p>
+                                            <p>{{ row.healthReturn }}</p>
+                                        </div>
+                                        <div class="renewal-premium">
+                                            <p>Renewal Premium</p>
+                                            <p>{{ row.renewalPremiumAmount - row.healthReturn }}</p>
+                                        </div>
+                                    </td>
+                                    <td>{{row.proposerMobileNumber}}</td>
+                                    <td>{{ row.renewedDate }}</td>
+                                    <td class="modification">{{ row.modification }}</td>
+                                    <td>
+                                        <div class="notice-icons">
+                                            <div class="icon" (click)="$event.stopPropagation()">
+                                                <i class="fa-brands fa-whatsapp" style="color: #3cb224;"></i>                                            </div>
+                                            <div class="icon" (click)="$event.stopPropagation()">
+                                                <i class="fa-solid fa-comment-sms" style="color: #827e8b;"></i>                                            </div>
+                                            <div class="icon">
+                                                <i class="fa-regular fa-envelope"></i>
+                                            </div>
+                                            <div class="icon" [matMenuTriggerFor]="menu">
+                                                <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                                                <mat-menu #menu="matMenu" class="more-values">
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'renew')">
+                                                    <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                                    <span>Renew</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'modify')">
+                                                    <div class="icon-wrapper"><i class="fa-regular fa-pen-to-square" style="color: #979CAE;"></i></div>
+                                                    <span>Modify</span>
+                                                  </div>
+                                                  <div class="dropdown-item" [class.disabled]="true">
+                                                    <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                                    <span>Migrate</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'download')">
+                                                    <div class="icon-wrapper"><i class="fa-solid fa-download" style="color: #979CAE;"></i></div>
+                                                    <span>Download Renewal Notice</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'copyPayLink')">
+                                                    <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                                    <span>Copy Pay Link</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'registerNow')">
+                                                    <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
+                                                    <span>Register Now</span>
+                                                  </div>
+                                                  <div class="dropdown-item" (click)="handleAction(row, 'delete')">
+                                                    <div class="icon-wrapper"><i class="fa-solid fa-trash" style="color: #979CAE;"></i></div>
+                                                    <span>Delete</span>
+                                                  </div>
+                                                </mat-menu>
+                                              </div>
+                                              
+                                                 
+                                        </div>
+                                    </td>                                   
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- image no data -->
+                <div class="no-data" *ngIf="renewalsList.length === 0">
+                    <img src="assets/images/noDataFound.png" alt="No Data Found" />
+                </div>
+            </div>
+            <!--Pagination-->
+            <div class="pagination">
+                <div class="no-data-bottom-section-cnt" *ngIf="renewalsList.length === 0 ; else pagination">
+                    <div class="no-data-bottom">
+                        <div class="left-cnt">
+                            <div class="text-message1">
+                                Hi Ajay, let's get started with new leads
+                            </div>
+                            <div class="text-message2">
+                                <div class="lightbulb-icon">
+                                    <img src="assets/images/Lightbulb Icon.png" alt="No Data Found" />
+                                </div>
+                                <div class="message">
+                                    You need 5 leads to hit your goal this month
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-cnt">
+                            <div class="plus-symbol">+</div>
+                            <div>Create new quote</div>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #pagination>
+                    <div class="pages custom-paginator-background">
+                    <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" 
+                      [rowsPerPageOptions]="[5,10,15]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                    </p-paginator>
+                    <div class="pagination-info">
+                        Showing {{first + 1}} to {{first + rows > totalRecords ? totalRecords : first + rows}} of {{totalRecords}} entries
+                    </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="sub-quotes-main-cnt" *ngIf="showSubQuotes && !showComparison">
+      <div class="sub-quotes-header-cnt">
+           <div class="left-header">
+              <p class="customer-photo"><img src="assets/renewalLogos/profile-photo.jpg" alt="no image" width="33px" height="33px"></p>
+              <p class="customer-name">Ishwar vidhyarthi</p>
+           </div>
+           <div class="right-header">
+              <div class="download-icon"><i class="fa-solid fa-download"></i></div>
+               <div class="grid-list-views">
+                  <div class="grid-view" [ngClass]="{'active': selectedQuotesView === 'quotesGrid'}" (click)="subQuotesViews('quotesGrid')"><i class="fa-solid fa-table-cells-large"></i><span class="grid-view-title">Grid View</span></div>
+                  <div class="list-view" [ngClass]="{'active': selectedQuotesView === 'quotesList'}" (click)="subQuotesViews('quotesList')"><i class="fa-solid fa-list"></i> <span class="list-view-title">List View</span></div>
+               </div>
+           </div>
+      </div>
+      <div class="sub-quotes-cnt">
+          <div class="list-sub-quotes" *ngIf="selectedQuotesView=='quotesList' ">
+              <div class="sub-quotes">
+                  <div class="quote-type-cnt">
+                    <div class="quote-type-title">Quote Type</div>
+                    <div class="quote-type-list">
+                    <div class="quote-type-names" *ngFor="let member of members" [ngClass]="{'base-quote-row': member.quote.startsWith('Base Quote')}">
+                      <input type="checkbox"><span>{{member.quote}}</span>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="quote-details-cnt">
+                    <div class="quote-details-headings">
+                      <div class="proposer-title title">Proposer</div>
+                      <div class="product-title title">Product</div>
+                      <div class="policyno-title title">Policy No.</div>
+                      <div class="renewal-premium-title title">Renewal Premium</div>
+                      <div class="mobileno-title title">Mobile No</div>
+                      <div class="renewal-date-title title">Date Of Renewal</div>
+                      <div class="modification-title title">Modification</div>
+                      <div class="notice-title title">Notice</div>
+                    </div>
+                    
+                    <div class="quote-details">
+                      <div class="quote-details-data" *ngFor="let member of members;let i=index" [ngClass]="{'base-quote-row': member.quote.startsWith('Base Quote')}">
+                      <div class="proposer-value data">{{ member.proposer }}</div>
+                      <div class="product-value data">{{ member.product }}</div>
+                      <div class="policyno-value data">{{ member.policyNo }}</div>
+                      <div class="renewal data">
+                        <div>{{ member.renewalPremium.amount }}</div>
+                        <div>{{ member.renewalPremium.benefits }}</div>
+                      </div>
+                      <div class="mobileno-value data">{{ member.mobileNo }}</div>
+                      <div class="renewal-date-value data">{{ member.dateOfRenewal }}</div>
+                      <div class="modification data">{{ member.modification }}</div>
+                      <div class="notice-icons data">
+                        <div class="icon">
+                          <i class="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div class="icon">
+                          <i class="fa-solid fa-shield-heart"></i>
+                        </div>
+                        <div class="dropdown">
+                          <div class="icon" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                          </div>
+                          <ul class="dropdown-menu dropdown-menu-start custom-dropdown-menu">
+                            <li>
+                              <a class="dropdown-item">
+                                <i class="fa-solid fa-download" style="font-size: 12px;color:#979CAE ;"></i> <span class="quotes-dropdown-names">Download</span>
+                              </a>
+                            </li>
+                            <li>
+                              <a class="dropdown-item">
+                                <i class="fa-solid fa-trash" style="font-size: 12px;color:#979CAE ;"></i> <span class=quotes-dropdown-names>Delete</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>                       
+                      </div>
+                      </div>
+                    </div>
+                  </div>        
+              </div>   
+              <div class="comparision-cnt">
+              <button class="compare-button" (click)="compareSelectedQuotes()">Compare Selected</button>
+              </div>
+          </div>
+          <div class="card-sub-quotes" *ngIf="selectedQuotesView=='quotesGrid' ">
+            <div class="card-outer-cnt">
+                <div class="card-header-cnt">
+                    <div class="quote-names">
+                        <div class="base-quote-name">Base Quote1</div>
+                        <div class="sub-quote-name">Sub Quote1</div>
+                    </div>
+                    <div class="notice-icons">
+                        <div class="icon" (click)="$event.stopPropagation()">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div class="icon" (click)="$event.stopPropagation()">
+                            <i class="fa-solid fa-comment-sms"></i>
+                        </div>
+                        <!-- <div class="icon" (click)="renewalJourney()">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </div> -->
+                        <div class="icon">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-inner-cnt">
+                    <div class="card-information">
+                        <div class="product-policyno-proposer-details">
+                            <div class="product-details">
+                                <div class="product-title">Product</div>
+                                <div class="product-name">Active User</div>
+                            </div>
+                            <div class="policyno-details">
+                                <div class="policyno-title">PolicyNo</div>
+                                <div class="policyno">23-22-D175217-00</div>
+                            </div>
+                            <div class="proposer-details">
+                                <div class="proposer-title">Proposer</div>
+                                <div class="proposer-name">Krishnan</div>
+                            </div>
+                        </div>
+                        <div class="premium-mobileno-renewaldate-details">
+                            <div class="premium-details">
+                                <div class="premium-title">Renewal Premium</div>
+                                <div class="premium-amount">₹25558</div>
+                                <div class="hr-benefits">HR Benefits of ₹786 added</div>
+                            </div>
+                            <div class="mobile-no-details">
+                                <div class="mobileno-title">Mobile No</div>
+                                <div class="mobileno">9177023885</div>
+                            </div>
+                            <div class="renewaldate-details">
+                                <div class="renewaldate-title">Date Of Renewal</div>
+                                <div class="renewaldate">2023-03-15</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modification">
+                        <div class="badge">Modified</div>
+                        <div class="content">
+                            <!-- <div class="item">
+                                <div class="label">Members</div>
+                                <div class="value">1 Member Added<span class="dot"></span></div>
+                            </div>
+                            <div class="item">
+                                <div class="label">Tenure</div>
+                                <div class="value">1 Year</div>
+                            </div> -->
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="quotes-comparision-main-cnt" *ngIf="showComparison && !showSubQuotes">
+      <div class="quotes-comparision-header">
+          <p>Active Assure Diamond - Quote Comparison</p>
+      </div>
+      <div class="quotes-comparision-cnt">
+          <div class="comparision-titles-cnt">
+              <div class="quote-type-premium-details-title"><p>Quote  Comparison</p></div>
+              <div class="upgrade-recommendation-title"><p>Upgrade Recommendations</p></div>
+              <div class="policy-details">
+                  <div class="members-title"><p>Members</p></div>
+                  <div class="nominee-title"><p>Nominee</p></div>
+                  <div class="covers-title"><p>Optional Covers</p></div>
+                  <div class="room-title"><p>Room</p></div>
+              </div>
+          </div>
+          <div class="comparision-quotes-details-cnt">
+            <div class="quote-details-cnt">
+              <div class="quote-type-premium-details">
+                  <div class="quote-type-and-premium">
+                      <p class="quote-type">Base Quote</p>
+                      <p class="Premium">₹6,863*/year</p>
+                  </div>
+                  <div class="buy-plan-button">
+                      <button>Buy Plan</button>
+                  </div>
+              </div>
+              <div class="upgrade-recommendation-details"><p>10% off on 2 years tenure</p></div>
+              <div class="policy-details">
+                  <div class="members-details"><p>You,Spouse,Father</p></div>
+                  <div class="nominee-details"><p>Rakesh</p></div>
+                  <div class="covers-details"><p>Cancer Secure Covers</p></div>
+                  <div class="room-details"><p>Private AC</p></div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  

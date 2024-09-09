@@ -1,0 +1,92 @@
+<div class="part-1">
+    <div class="main-container">
+        <form [formGroup]="ChannelForm">
+            <div class="card-body rectangle">
+                <div class="card-header">Add Channel Details</div>
+                <div class="col-md-6 typecss">
+                    <label>Vertical Code <span>*</span></label>
+                    <input formControlName="verticalCode" class="line-border" type="number">
+                    <small *ngIf="ChannelForm.controls['verticalCode'].dirty && ChannelForm.hasError('required','verticalCode')" class="text-danger">*
+                        Vertical Code is required
+                    </small>
+                </div>
+                <div class="col-md-6 typecss">
+                    <label>Channel Name <span>*</span></label>
+                    <input formControlName="channelName" class="line-border" type="text">
+                    <small *ngIf="ChannelForm.controls['channelName'].dirty && ChannelForm.hasError('required','channelName')" class="text-danger">*
+                        Channel Name is required
+                    </small>
+                </div>   
+
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onSubmit()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="part-2">
+    <h4>All Bank Details</h4>
+    <p-table [value]="allChannel" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10,20,30]">
+        <ng-template pTemplate="header">
+            <tr class="custom-header">
+                <th id="verticalCodeHeader" pSortableColumn="verticalCode">Channel Code <p-sortIcon field="verticalCode"></p-sortIcon></th>
+                <th id="channelNameHeader" pSortableColumn="channelName">Channel Name <p-sortIcon field="channelName"></p-sortIcon></th>
+                <th id="channelStatusHeader" pSortableColumn="channelStatus">Status <p-sortIcon field="channelStatus"></p-sortIcon></th>
+                <th id="creatDateHeader" pSortableColumn="created_Date">Created Date <p-sortIcon field="created_Date"></p-sortIcon></th>
+                <th id="channelHeader"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+            <tr>
+                <td>{{data.verticalCode}}</td>
+                <td>{{data.channelName}}</td>
+                <td>
+                    <ng-container *ngIf="data.channelStatus === true; else inactiveBlock">
+                        <span style="color: green;">Active</span>
+                      </ng-container>
+                      <ng-template #inactiveBlock>
+                        <span style="color: red;">Inactive</span>
+                    </ng-template>
+                </td>
+                <td>{{data.created_Date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data)"></i></td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="Edit Channel Details" [modal]="true" [(visible)]="visible" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+    <form [formGroup]="ChannelForm">
+        <div class="card-body rectangle">
+            <div class="col-md-6 typecss">
+                <label>Vertical Code <span>*</span></label>
+                <input style="background: rgba(211, 209, 209, 0.644);" formControlName="verticalCode" class="line-border" type="number" readonly>
+                <small *ngIf="ChannelForm.controls['verticalCode'].dirty && ChannelForm.hasError('required','verticalCode')" class="text-danger">*
+                    Vertical Code is required
+                </small>
+            </div>
+            <div class="col-md-6 typecss">
+                <label>Channel Name <span>*</span></label>
+                <input formControlName="channelName" class="line-border" type="text">
+                <small *ngIf="ChannelForm.controls['channelName'].dirty && ChannelForm.hasError('required','channelName')" class="text-danger">*
+                    Channel Name is required
+                </small>
+            </div>   
+            <div class="col-md-6 typecss">
+                <div style="display: flex;justify-content: space-between;">
+                    <label>Channel Status </label>
+                    <p-inputSwitch formControlName="channelStatus"></p-inputSwitch>
+                </div>
+            </div>
+
+            <br>
+            <div class="btn-container card-body">
+                <button class="btn btn-primary nextbtn" (click)="onUpdate()">Save</button>
+            </div>
+        </div>
+    </form>
+</p-dialog>

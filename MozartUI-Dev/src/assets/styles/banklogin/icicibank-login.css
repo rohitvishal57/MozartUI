@@ -1,0 +1,68 @@
+.login-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff7eb;
+}
+.login-heading {
+    color: rgb(7,74,134);
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+.login-subheading{
+    color: #f37e20;
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+.login-form {
+    width: 500px;
+    background-color: #fff7eb;
+    padding: 20px;
+}
+input[type="email"],
+input[type="password"],input[type="text"] {
+    font-size: medium;
+    width: 100%;
+    padding: 7px;
+    margin: 17px 0;
+    border-radius: 8px;
+    border: 1px solid #B8B8B8;
+    background: #FFF;
+}
+small{
+    font-size: 12px;
+}
+input::placeholder {
+    color:#dddddd;
+}
+.button{
+    display: flex;
+    justify-content: center;
+}
+.login-button {
+    margin-top: 10px;
+    width: max-content;
+    font-size: 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    background: #f37e20;
+    color: white;
+    border: none;
+    padding: 10px 40px;
+    cursor: pointer;
+    align-items: center;
+}
+.login-button:hover {
+    background-color:rgb(199, 160, 88);
+}

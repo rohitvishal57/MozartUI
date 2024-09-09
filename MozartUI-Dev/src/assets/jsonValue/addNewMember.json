@@ -1,0 +1,240 @@
+{
+    "formTitle": "Add New Member",
+    "addNomineeBtnTitle": "Add another member",
+    "nextButton":"Next",
+    "formSections": [
+      {
+        "sectionTitle": "",
+        "visible": true,
+        "class": "Member_dtl_add_inf",
+        "formControls": [
+            {
+                "name": "Member details",
+                "label": "Member details",
+                "visible": true,
+                "visibleLabel": true,
+                "type": "detail",
+                "value": false,
+                "class": "col-1 detail-header"
+            },
+            {
+                "name": "arrow",
+                "label": "arrow",
+                "visible": true,
+                "visibleLabel": true,
+                "type": "icon",
+                "value": false,
+                "class": "col-1"
+
+            },
+            {
+                "name": "Additional Information",
+                "label": "Additional Information",
+                "visible": true,
+                "visibleLabel": true,
+                "type": "detail",
+                "value": false,
+                "class": "col-1 add-info"
+
+            }
+        ]
+      },
+      {
+        "sectionTitle": "Personal Details",
+        "visible": true,
+        "class": "personal-details",
+        "formControls": [
+          {
+            "name": "name",
+            "label": "Name",
+            "type": "text",
+            "placeholder": "Enter your name",
+            "value": "",
+            "class": "col-md-4",
+            "visibleLabel":true
+          },
+          {
+            "name": "weight",
+            "label": "Enter weight",
+            "type": "text",
+            "placeholder": "Enter weight",
+            "value": "",
+            "class": "col-md-4",
+            "visibleLabel":true
+          },
+          {
+            "name": "heightFt&in",
+            "label": "Enter height ft ! Enter height in ",
+            "type": "text",
+            "placeholder": "Enter height",
+            "value": "",
+            "class": "col-md-3",
+            "visibleLabel":true
+          },
+          {
+            "name": "gender",
+            "label": "Gender",
+            "type": "select",
+            "visibleLabel": true,
+            "value": "",
+            "options": [
+              { "name": "Male", "value": "male" },
+              { "name": "Female", "value": "female" }
+            ],
+            "class": "col-md-4"
+          },
+          {
+            "name": "dob",
+            "label": "Date of birth",
+            "type": "date",
+            "placeholder": "Date of birth",
+            "visibleLabel": true,
+            "value": "",
+            "class": "col-md-4"
+          },
+          {
+            "name": "idType",
+            "label": "ID type",
+            "type": "select",
+            "value": "",
+            "visibleLabel": true,
+            "options": [
+              { "name": "Aadhaar", "value": "aadhaar" },
+              { "name": "PAN", "value": "pan" },
+              { "name": "Passport", "value": "passport" }
+            ],
+            "class": "col-md-4"
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Sum Insured",
+        "visible": true,
+        "class": "sum-insured",
+        "formControls": [
+            {
+                "name": "sumInsured",
+                "label": "Sum Insured",
+                "type": "range",
+                "min": 500000,
+                "max": 20000000,
+                "step": 2500000,
+                "value": 500000,
+                "class": "col-md-12"
+              },
+          {
+            "name": "sliderValue",
+            "label": "slider Value",
+            "type": "sliderValue",
+            "value": "",
+            "visibleLabel": true,
+            "class": "col-md-2"
+          },
+          {
+            "name": "additionalInfo",
+            "label": "Proposer can have increased cover of 15L with only ₹200 addition to the previous premium",
+            "type": "word",
+            "visibleLabel": true,
+            "class": "col-md-12 additional-info"
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Professional Details",
+        "visible": true,
+        "class": "professional-details",
+        "formControls": [
+          {
+            "name": "annualIncome",
+            "label": "Annual income range",
+            "visibleLabel": true,
+            "value": "",
+            "type": "select",
+            "options": [
+              { "name": "<5L", "value": "<5L" },
+              { "name": "5L-10L", "value": "5L-10L" },
+              { "name": "10L-15L", "value": "10L-15L" },
+              { "name": ">15L", "value": ">15L" }
+            ],
+            "class": "col-md-4"
+          },
+          {
+            "name": "occupation",
+            "label": "Occupation",
+            "visibleLabel": true,
+            "type": "select",
+            "value": "",
+            "options": [
+              { "name": "Engineer", "value": "engineer" },
+              { "name": "Doctor", "value": "doctor" },
+              { "name": "Teacher", "value": "teacher" }
+            ],
+            "class": "col-md-4"
+          },
+          {
+            "name": "educationQualification",
+            "label": "Education qualification",
+            "visibleLabel": true,
+            "value": "",
+            "type": "select",
+            "options": [
+              { "name": "Graduate", "value": "graduate" },
+              { "name": "Postgraduate", "value": "postgraduate" },
+              { "name": "Doctorate", "value": "doctorate" }
+            ],
+            "class": "col-md-4"
+          }
+        ]
+      },
+      {
+        "sectionTitle": "",
+        "visible": true,
+        "class": "health-conditions",
+        "formControls": [
+          {
+            "name": "habits",
+            "label": "Please select any conditions that apply",
+            "type": "select-multiple",
+            "options": [
+              { "label": "Alcohol", "value": "alcohol", "icon": "fa-wine-bottle", "selected": true },
+              { "label": "Tobacco", "value": "tobacco", "icon": "fa-smoking" },
+              { "label": "Pan masala / Guthka", "value": "panMasala", "icon": "fa-leaf" },
+              { "label": "Smoking", "value": "smoking", "icon": "fa-smoking" },
+              { "label": "Other", "value": "other", "icon": "fa-ellipsis-h" }
+            ],
+            "class": "col-md-12",
+            "visibleLabel":true
+          },
+          {
+            "name": "searchConditions",
+            "label": "Do you have any health conditions?",
+            "type": "search",
+            "placeholder": "Search conditions",
+            "buttonLabel": "Search now",
+            "class": "col-md-12",
+            "visibleLabel":true
+          },
+          {
+            "name": "chronicConditions",
+            "label": "Chronic conditions",
+            "type": "tabs",
+            "tabs": [
+              { "label": "Chronic conditions", "value": "chronic", "selected": true },
+              { "label": "Organ related condition", "value": "organRelated" },
+              { "label": "Major Procedure / Conditions", "value": "majorProcedure" },
+              { "label": "Other Conditions", "value": "otherConditions" }
+            ],
+            "options": [
+              { "label": "High Blood Pressure (Hypertension)", "value": "highBloodPressure","icon":"fa-check", "selected": true },
+              { "label": "Asthma/Chronic Pulmonary Obstructive Disease", "value": "asthma","icon": "fa-smoking" },
+              { "label": "Diabetes", "value": "diabetes" }
+            ],
+            "class": "col-md-12",
+            "visibleLabel":true
+          }
+        ]
+      }
+      
+    ]
+  }
+  

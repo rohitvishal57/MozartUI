@@ -1,0 +1,49 @@
+<div class="main-container hsb">
+    <div class="right-panel">
+        <div class="main">
+            <div class="sub-main">
+                <div *ngIf="isDesktopView" class="logo">
+                    <img [src]="common.baseCssUrl+'assets/logo/ABHI_Logo.svg'" alt="abhi-logo">
+                </div>
+                <div class="header">
+                    <div class="header2">
+                        <div class="header-left-cnt">
+                            <div class="toolbar">
+                                <button *ngIf="!isDesktopView" class="menu-button" (click)="toggleSidenav()">☰</button>
+                                <div *ngIf="isDesktopView" class="menu">
+                                    <a routerLink="viewdashboard" routerLinkActive="active-link">Dashboard</a>
+                                    <a routerLink="viewProposals" routerLinkActive="active-link">Proposals</a>
+                                    <a routerLink="viewproducts" routerLinkActive="active-link">Products</a>
+                                    <a routerLink="renewalList" routerLinkActive="active-link">
+                                        <div class="nav-text">Renewals</div>
+                                    </a>
+                                    <a routerLink="viewClaims" routerLinkActive="active-link">Claims</a>
+                                    <a routerLink="requests" routerLinkActive="active-link">Endorsements</a>
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="header-right-cnt">
+                            <div class="language-selector">
+                                <select (change)="setLanguage($event)" [value]="currentLanguage">
+                                  <option value="en">English</option>
+                                  <option value="hi">Hindi</option>
+                                  <option value="te">Telugu</option>
+                                </select>
+                            </div>  
+                            <button class="logout-button" (click)="logOut()">Log Out</button>
+                        </div>
+                        <div class="sidenav" [class.active]="isSidenavOpen">
+                            <a routerLink="viewdashboard" (click)="toggleSidenav()">Dashboard</a>
+                            <a routerLink="viewProposals" (click)="toggleSidenav()">Proposals</a>
+                            <a routerLink="viewproducts" (click)="toggleSidenav()">Products</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="abhifont">Aditya Birla Health Insurance</p>
+        </div>
+        <div class="body">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

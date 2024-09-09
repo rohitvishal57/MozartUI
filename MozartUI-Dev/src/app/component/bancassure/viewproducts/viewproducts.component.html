@@ -1,0 +1,56 @@
+<div class="main-container">
+    <div class="right-panel-product">
+        <div class="r-p-header">
+            <div class="product-heading">Products</div>
+            <div class="prod-head-desc">Discover our products to insure your health
+            </div>
+        </div>
+        <!-- <div class="toggle-container">
+            <div class="toggle-list" *ngFor="let prod of products"
+                [ngClass]="{'blue': prod.insuranceType === selectedToggle, 'gray': prod.insuranceType !== selectedToggle}"
+                (click)="getPoductList(prod)">
+                <img *ngIf="prod.insurancetype === 'Health'" [src]="common.baseCssUrl+'assets/images/health_black_icon.svg'" alt="{{prod.insurancetype}} Icon">
+                <img *ngIf="prod.insurancetype === 'Motor'" src="../../../../assets/images/car_black_icon18.svg" alt="{{prod.insurancetype}} Icon">
+                {{prod.insurancetype}}
+            </div>
+        </div> -->
+
+        <div class="product-list-container">
+        <div *ngIf="ProductList.length > 0; else noProducts">
+        <!-- <h4>Select insurance type to get Quote or Insure</h4> -->
+        <!-- <div class="product-class">
+            <div *ngFor="let item of ProductList">
+                <div class="product-list">
+                    <div class="product-item">{{item.productname}}</div>
+                    <div class="product-list">
+                        /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/
+                        <button class="get" (click)="insurenow(item)">Buy Now</button>
+                    </div>
+                </div>
+                <div class="horizontal-line"></div>
+            </div>
+        </div> -->
+        <div  class="card_ProductList" >
+            <div class="cardRow">
+
+                <ng-container *ngFor="let item of ProductList">
+                    <div class="cardItem box">
+                        <!-- {{ item | json}}  -->
+                        <div class="product-item">{{item.productname}}</div>
+                        <p>{{item.productdescription}}</p>
+                        <div class="product-button">
+                            <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
+                            <button class="get" (click)="insurenow(item)">Buy Now</button>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        </div>
+        <ng-template #noProducts>
+            <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected
+                type.</div>
+        </ng-template>
+     </div>
+    </div>
+</div>

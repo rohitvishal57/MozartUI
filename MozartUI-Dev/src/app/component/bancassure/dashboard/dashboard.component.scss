@@ -1,0 +1,197 @@
+.policySummaryMain {
+    margin: 3rem 3rem 3.9rem 3rem; }
+
+    .card_Main {
+        display: flex;
+        align-self: stretch;
+        justify-content: space-between;
+        gap: 15px; }
+        .card_Main .card_Item {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: space-between;
+          flex: 1;
+          padding: 2rem 2rem;
+          background-color: #ffffff;
+          border-radius: 14px;
+          border-color: #D9D9D9;
+          border-style: solid;
+          border-width: 1px 1px 1px 1px;
+          box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+          position: relative; }
+          .card_Main .card_Item h6 {
+            font: 300 2rem "Noto Sans", sans-serif;
+            color: #3F3F3F; }
+          .card_Main .card_Item .card_ItemImg {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem; }
+          .card_Main .card_Item .card_ItemHead {
+            font: 500 2rem "Noto Sans", sans-serif;
+            color: #726E4B;
+            margin: 0 0 3.9rem 0; }
+          .card_Main .card_Item .card_ItemResult {
+            font: 400 1.4rem "Noto Sans", sans-serif;
+            color: #3F3F3F;
+            z-index: 1; }
+            .card_Main .card_Item .card_ItemResult .resultValue {
+              font: 500 4rem "Noto Sans", sans-serif;
+              line-height: 1; }
+          .card_Main .card_Item.card_innerItem {
+            padding: 0 0;
+            border-radius: 0px;
+            border-color: #D9D9D9;
+            border-style: solid;
+            border-width: 0 0 0 0;
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.15); }
+        .card_Main .cardItem1 {
+          width: 100%;
+          max-width: 23.1rem; }
+        .card_Main .cardItem2 {
+          width: 100%; }
+          .card_Main .cardItem2 .card_Main {
+            gap: 15px; }
+            .card_Main .cardItem2 .card_Main .card_innerItem:nth-child(1) {
+              width: 100%;
+              max-width: 11rem; }
+        .card_Main .cardItem3 {
+          width: 100%;
+          max-width: 40.1rem; }
+      
+      .card_header {
+        position: absolute;
+        top: -3.5rem;
+        left: 0;
+        font: 300 2rem "Noto Sans", sans-serif;
+        color: #000000; }
+      
+      .card_policy {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 31px; }
+        @media (max-width: 1024px) {
+          .card_policy {
+            flex-direction: column; } }
+        .card_policy .card_policyItem {
+          flex: 1;
+          border-radius: 1.2rem;
+          border-color: #D9D9D9;
+          border-style: solid;
+          border-width: 1px 1px 1px 1px;
+          background: #ffffff;
+          padding: 2.4rem 2.8rem; }
+          .card_policy .card_policyItem header {
+            display: flex;
+            justify-content: space-between;
+            font: 600 1.6rem "Noto Sans", sans-serif;
+            color: #EF7300;
+            padding: 0 0 2rem 0; }
+            .card_policy .card_policyItem header .vehicle_img {
+              width: 32px; }
+              .card_policy .card_policyItem header .vehicle_img img {
+                width: 100%; }
+          .card_policy .card_policyItem .card_address {
+            margin: 0 0 3rem 0; }
+            .card_policy .card_policyItem .card_address h6 {
+              font: 300 1.4rem "Noto Sans", sans-serif;
+              color: #3F3F3F; }
+            .card_policy .card_policyItem .card_address span {
+              font: 400 1.4rem "Noto Sans", sans-serif;
+              color: #000000; }
+      
+      .card_details {
+        display: flex;
+        flex-wrap: wrap; }
+        .card_details .card_detailsItem {
+          flex: 50%;
+          margin: 0 0 2.7rem 0;
+          position: relative; }
+          .card_details .card_detailsItem:nth-child(even) {
+            padding: 0 0 0 3rem; }
+          .card_details .card_detailsItem h6 {
+            font: 400 1.3rem "Noto Sans", sans-serif;
+            color: #3F3F3F;
+            margin: 0 0 0.5rem 0; }
+          .card_details .card_detailsItem h5 {
+            font: 400 1.3rem "Noto Sans", sans-serif;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; }
+          .card_details .card_detailsItem span {
+            font: 600 1.4rem "Noto Sans", sans-serif;
+            color: #000000;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block; }
+            .card_details .card_detailsItem span:hover {
+              white-space: wrap;
+              word-break: break-word;
+              position: absolute; }
+            .card_details .card_detailsItem span.text_sizeSmall {
+              font-weight: 400;
+              font-size: 1rem;
+              display: inline-block;
+              overflow: initial; }
+              .card_details .card_detailsItem span.text_sizeSmall:hover {
+                position: initial; }
+            .card_details .card_detailsItem span.text_sizehighlight {
+              font: 500 2rem "Noto Sans", sans-serif; }
+            .card_details .card_detailsItem span.rupee_icon {
+              background: url(../../../../assets/images/rupee_black_icon.svg) no-repeat left center;
+              background-size: 16px 16px;
+              padding: 0 0 0 1.8rem; }
+        .card_details.card_otherDetails .card_detailsItem {
+          flex: 100%;
+          margin: 0 0 2rem 0;
+          display: flex; }
+          .card_details.card_otherDetails .card_detailsItem:nth-child(even) {
+            padding: 0 0 0 0; }
+          .card_details.card_otherDetails .card_detailsItem h6 {
+            font: 300 1.3rem "Noto Sans", sans-serif;
+            color: #3F3F3F;
+            text-align: right;
+            flex: 50%; }
+          .card_details.card_otherDetails .card_detailsItem span {
+            font: 300 1.3rem "Noto Sans", sans-serif;
+            color: #000000;
+            text-align: left;
+            flex: 50%;
+            padding: 0 0 0 3rem; }
+            .card_details.card_otherDetails .card_detailsItem span:hover {
+              position: initial; }
+          .card_details.card_otherDetails .card_detailsItem.card_footerDetails h6, .card_details.card_otherDetails .card_detailsItem.card_footerDetails span {
+            font-weight: 700; }
+        .card_details.card_SP {
+          margin: 1rem 0;
+          padding: 0 0.9rem 0 0.9rem; }
+          .card_details.card_SP .card_detailsItem {
+            text-align: center;
+            flex: auto;
+            margin: 0 0;
+            padding: 0 0.5rem 0 0.5rem; }
+            .card_details.card_SP .card_detailsItem:nth-child(even) {
+              padding: 0 0.5rem 0 0.5rem; }
+            .card_details.card_SP .card_detailsItem h6 {
+              font-weight: 300; }
+            .card_details.card_SP .card_detailsItem span {
+              color: #3F3F3F; }
+              .card_details.card_SP .card_detailsItem span:hover {
+                position: relative; }
+      
+      .card_outerHeading {
+        font: 600 1.6rem "Noto Sans", sans-serif;
+        color: #EF7300;
+        padding: 2rem 0 1.3rem 0; }
+
+  @media (max-width:767px) {
+    .card_Main {
+      flex-direction: column;
+    }
+    .card_Main .cardItem1,
+    .card_Main .cardItem2 .card_Main .card_innerItem:nth-child(1) {
+      max-width: 100%;
+    }
+  }      

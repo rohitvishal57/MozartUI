@@ -1,0 +1,105 @@
+<div class="login-mainContainer">
+  <div class="main">
+    <div class="sub-mainNav"></div>
+    <div class="sub-main">
+      <div class="logo">
+        <img [src]="common.baseCssUrl+'assets/logo/ABHI_Logo.svg'" alt="abhi-logo">
+      </div>
+      <div class="header">
+      </div>
+    </div>
+    <div class="abhifont">Aditya Birla Health Insurance</div>
+  </div>
+  <div class="body">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="login-formMain">
+    <div class="login-form">
+      <h1>Welcome to Aditya Birla Health Insurance</h1>
+      <form [formGroup]="loginForm">
+        <div class="login-form-section">
+          <div class="input-item">
+            <div class="input-with-icon">
+              <input type="text" placeholder="Username" formControlName="agentUserName">
+            </div>
+            <small
+              *ngIf="loginForm.controls['agentUserName'].touched && !loginForm.controls['agentUserName'].hasError('maxlength') && loginForm.controls['agentUserName'].hasError('required')"
+              class="text-danger">Username is required</small>
+            <!-- <small
+              *ngIf="loginForm.controls['agentUserName'].touched && !loginForm.controls['agentUserName'].hasError('maxlength') && loginForm.controls['agentUserName'].hasError('pattern')"
+              class="text-danger">Username contains letters, numbers and special characters allowed are
+              (&#64;,.)</small>
+            <small
+              *ngIf="loginForm.controls['agentUserName'].touched && loginForm.controls['agentUserName'].hasError('maxlength')"
+              class="text-danger">Username cannot be more than 30 characters</small> -->
+          </div>
+          <div class="input-item">
+            <div class="input-with-icon">
+              <input [type]="passwordFieldType" placeholder="Password" formControlName="agentPassword">
+              <i class="fa eye-icon"
+                [ngClass]="{'fa-eye': passwordFieldType === 'password', 'fa-eye-slash': passwordFieldType === 'text'}"
+                (click)="togglePasswordVisibility()" aria-hidden="true">
+              </i>
+            </div>
+            <small
+              *ngIf="loginForm.controls['agentPassword'].touched && loginForm.controls['agentPassword'].hasError('maxlength')"
+              class="text-danger">Password cannot be more than 20 characters long</small>
+
+            <small
+              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && loginForm.controls['agentPassword'].hasError('minlength')"
+              class="text-danger">Password cannot be less than 5 characters</small>
+
+            <small
+              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && !loginForm.controls['agentPassword'].hasError('minlength') && loginForm.controls['agentPassword'].hasError('required')"
+              class="text-danger">Password is required</small>
+
+            <small
+              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && !loginForm.controls['agentPassword'].hasError('minlength') && !loginForm.controls['agentPassword'].hasError('required') && loginForm.controls['agentPassword'].hasError('pattern')"
+              class="text-danger">Password contains letters, numbers, and allowed special characters (&#64;, &amp;,
+              $)</small>
+          </div>
+          <div class="submit-button">
+            <button type="submit" class="login-button" (click)="onSubmit()">
+              <span>Login </span>
+            </button>
+          </div>
+          <!-- <div class="social-login">
+          <a (click)="triggerAzureAdLogin()" class="social-login-button social-login-button-microsoft">
+            <svg height="30" style="overflow: visible; enable-background: new 0 0 30 30" viewBox="0 0 30 30"
+              width="30" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g>
+                <g id="Microsoft_1_">
+                  <g id="Microsoft">
+                    <g id="Blue_x5F_Square">
+                      <rect height="15" style="fill: #51aed9" width="15" y="17" />
+                    </g>
+                    <g id="Yellow_x5F_Square">
+                      <rect height="15" style="fill: #fec327" width="15" x="17" y="17" />
+                    </g>
+                    <g id="Green_x5F_Square">
+                      <rect height="15" style="fill: #34b67a" width="15" x="17" />
+                    </g>
+                    <g id="Orange_x5F_Square">
+                      <rect height="15" style="fill: #f15723" width="15" />
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+            <span>Microsoft Login</span>
+          </a>
+          <div id="google-button"></div>
+        </div> -->
+          <!-- <div class="paragraph">
+                    <p>Activ Health App presents Mental Health Coach for our customers with Activ Health Plans.So,they can focus on their mental well-being in these testing times.
+                        <br><br>Activ Health App Present Homeopathy consulations.Our customers with Activ Health Platinum Enhanced and Premier Plans can now avail unlimited tele-consulations at their finger-tips.</p>
+                </div> -->
+
+        </div>
+      </form>
+
+    </div>
+  </div>
+  <img [src]="common.baseCssUrl+'assets/logo/Backgroundimage_ABHI.jpg'" class="background-image">
+</div>

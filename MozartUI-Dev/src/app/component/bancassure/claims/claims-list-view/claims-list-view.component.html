@@ -1,0 +1,188 @@
+<div class="main-container" >
+<div class="all-claims">
+    <div class="header">
+        <div class="header-value">Claims</div>
+        <div class="plus-icon">
+            <i class="fa-solid fa-plus" (click)="nav()">
+                <label class="label" >New Requests</label>
+            </i>
+        </div>
+    
+    </div>
+    <div class="main-claims">
+        <div class="claims-header">
+            <div class="filter-list">
+                <div class="left-header">
+                    <div class="left-value">Claim Status</div>
+                    <div class="filter-types">
+                        <div>
+                            <p (click)="filterClaims('all')"  [ngClass]="{'active-button': selectedStatus === 'all'}">All</p>
+                        </div>
+                        <div>
+                            <p (click)="filterClaims('active')" [ngClass]="{'active-button': selectedStatus === 'active'}">Active</p>
+                        </div>
+                        <div>
+                            <p (click)="filterClaims('Resolved')" [ngClass]="{'active-button': selectedStatus === 'resolved'}">Resolved</p>
+                        </div>
+                        <div>
+                            <p (click)="filterClaims('Cancelled')" [ngClass]="{'active-button': selectedStatus === 'cancelled'}">Cancelled</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-header">
+                    <div class="claims-icon">
+                        <i class="fa-solid fa-download"></i>
+                    </div>
+                    <div class="claims-icon" >
+                        <i class="fa-solid fa-magnifying-glass" ></i>
+                    </div>
+                    <div class="claims-list-icon" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')">
+                        <i class="fa-solid fa-list"></i>
+                    </div>
+                    <div class="claims-list-icon" >
+                        <i class="fa-solid fa-table-cells-large" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')"></i>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+
+               <!--Search DropDown-->
+              
+         
+         <div class="card-container" >
+           <!------------ grid-view ------------------>
+            <div class="card-outer-container" *ngIf="selectedView === 'grid' ">
+                <mat-card *ngFor="let gridClaims of gridClaimsData| paginate: {itemsPerPage: rows, currentPage: page} " class="grid-view-container" appearance="outlined">
+                    <mat-card-title class="top-section">Request
+                       
+                        <div class="icon">
+                            <i class="fa-solid fa-download"></i>
+                        </div>
+                    </mat-card-title>
+
+                    <mat-card-subtitle> <span class="value">{{ gridClaims.id }}</span> </mat-card-subtitle>
+                    <div class="details-section">
+                        <div class="policy-detail">
+                            <div class="detail">
+                                <span class="label">Policy No.</span>
+                                <span class="value">{{ gridClaims.policyNumber }}</span>
+                            </div>
+                            <div class="detail">
+                                <span class="label">Policy Name</span>
+                                <span class="value">{{ gridClaims.productName }}</span>
+                            </div>
+                            <div class="detail">
+                                <span class="label">Member Name</span>
+                                <span class="value">{{ gridClaims.memberName }}</span>
+                            </div>
+                        </div>
+                        <div class="policy-detail">
+                            <div class="detail">
+                                <span class="label">Member Relation</span>
+                                <span class="value">{{ gridClaims.memberRelation }}</span>
+                            </div>
+                            <div class="detail">
+                                <span class="label">Request Type</span>
+                                <span class="value">{{ gridClaims.requestType }}</span>
+                            </div>
+                        </div>
+                        <div class="policy-detail">
+                            <div class="detail1">
+                                <span class="label">Status</span>
+                                <span class="value">{{ gridClaims.claimStatus }}</span>
+                            </div>
+                            <div class="detail">
+                                <span class="label">Raised Date</span>
+                                <span class="value">{{ gridClaims.raisedDate  }}</span>
+                            </div>
+                        </div>
+                        
+                           
+                    </div>
+                  </mat-card> 
+            </div>
+          
+            <!------------ list-view ------------------>
+
+               <br/>
+            <div class="listView" *ngIf="selectedView === 'list' ">
+                            <div class="list-view-container">
+                                <table mat-table  [dataSource]="claims" class="mat-elevation-z8">
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> 
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                <ng-container matColumnDef="request">
+                                    <th mat-header-cell *matHeaderCellDef> Request </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="policyNo">
+                                    <th mat-header-cell *matHeaderCellDef> Policy No. </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.policyNumber}} </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="productName">
+                                    <th mat-header-cell *matHeaderCellDef> Product Name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="memberName">
+                                    <th mat-header-cell *matHeaderCellDef> Member Name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.memberName}} </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="memberRelation">
+                                    <th mat-header-cell *matHeaderCellDef> Member Relation </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.memberRelation}} </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="requestType">
+                                    <th mat-header-cell *matHeaderCellDef> Request Type </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.requestType}} </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="status">
+                                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.claimStatus}} </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="raisedDate">
+                                    <th mat-header-cell *matHeaderCellDef> Raised Date </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.raisedDate   }} </td>
+                                </ng-container>
+                            
+                                <ng-container matColumnDef="download">
+                                    <th mat-header-cell *matHeaderCellDef> Download </th>
+                                    <td mat-cell *matCellDef="let element">
+                                    <button mat-icon-button>
+                                        <mat-icon><i class="fa-solid fa-download"></i>
+                                        </mat-icon>
+                                    </button>
+                                    </td>
+                                </ng-container>
+                            
+
+                                </table>
+                            
+                            
+                            </div>
+
+
+            <br/>
+                   
+            </div>
+                <div class="pages custom-paginator-background">
+                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
+                  [rowsPerPageOptions]="[5,10]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                </p-paginator>
+                <div class="pagination-info">
+                     {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}} of {{totalRecords}}
+                </div>
+                </div>
+               
+        </div>
+    </div>
+</div>
