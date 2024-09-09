@@ -28,12 +28,21 @@ jobs:
       with:
         node-version: '18.20.3'
 
-    - name: print the current directory
-      run: pwd
-      
+    - name: Print working directory and list its contents
+      run: |
+        echo "Current working directory is:"
+        pwd  # Print the current working directory
+        echo "Listing the contents of the current directory:"
+        s -la  # List the contents of the current working directory
+  
+    - name: List MozartUI-Dev directory contents
+      run: |
+        echo "Listing the contents of MozartUI-Dev directory:"
+        ls -la MozartUI-Dev  # List the contents of the MozartUI-Dev directory (if it exists)
+
     - name: Install Dependencies
       working-directory: MozartUI-Dev
-      run: npm install
+      run: npm install --legacy-peer-deps
 
     - name: Build Angular Project
       run: npm run build --prod
