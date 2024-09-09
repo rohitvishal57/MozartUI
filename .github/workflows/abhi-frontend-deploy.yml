@@ -68,7 +68,6 @@ jobs:
         pwd
         ls -la 
         ls -la MozartUI-Dev
-        ls -la MozartUI-Dev/dist
 
     - name: Remove artifacts
         # You may pin to the exact commit or the version.
