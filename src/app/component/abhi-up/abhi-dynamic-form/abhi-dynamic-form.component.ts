@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { Router } from '@angular/router';
 import { concatMap, of, tap } from 'rxjs';
+import { totalpremium } from 'src/assets/styles/config/totalPremium';
 
 @Component({
   selector: 'app-abhi-dynamic-form',
@@ -148,7 +149,7 @@ export class AbhiDynamicFormComponent {
       this.tenureAmount = this.encryptionService.decrypt(sessionStorage.getItem('tenureAmount') as string)
     }
 
-    if(sessionStorage.getItem('premiumAmountDetails')){
+    if (sessionStorage.getItem('premiumAmountDetails')) {
       this.premiumAmountDetails = this.encryptionService.decrypt(sessionStorage.getItem('premiumAmountDetails') as string)
     }
   }
@@ -326,7 +327,7 @@ export class AbhiDynamicFormComponent {
               if (control.getAllOption && control.options.length === 0) {
                 this.callMethod(control.getAllOption, control);
               }
-            
+
               // If the control's value is empty, set it based on the selected options
               if (control.value === "") {
                 // Set control value if any option is selected
@@ -337,7 +338,7 @@ export class AbhiDynamicFormComponent {
                     }
                   });
                 }
-            
+
                 // Call the methodName method after setting the value if defined
                 if (control.methodName) {
                   this.resolveMethod(control.methodName, control);
@@ -1520,7 +1521,7 @@ export class AbhiDynamicFormComponent {
             }
 
 
-           
+
             if (checkbox.checked == true && option.value == 'Self') {
               // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
               let index = -1;
@@ -1558,17 +1559,17 @@ export class AbhiDynamicFormComponent {
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
-              
+
             }
             console.log(this.dynamicFormGroup.get('memberPolicyType')?.value);
-            
-          if(this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater'){
-            console.log((this.dynamicFormGroup.get(controls.idProperty) as FormArray));
-            
-            (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control:any)=>{
-              control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
-            })
-          }
+
+            if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+              console.log((this.dynamicFormGroup.get(controls.idProperty) as FormArray));
+
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
+                control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+              })
+            }
             console.log(typeof this.dynamicFormGroup.get('numberOfInsuredMembers')?.value, this.dynamicFormGroup.get('numberOfInsuredMembers')?.value);
 
             this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
@@ -1699,7 +1700,7 @@ export class AbhiDynamicFormComponent {
           sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
           sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
         }
-        
+
 
         if (this.form.saveBtnFunction) {
           await this.resolveMethod(this.form.saveBtnFunction);
@@ -2056,7 +2057,7 @@ export class AbhiDynamicFormComponent {
             });
           });
           console.log(this.premiumAmountDetails);
-          sessionStorage.setItem("premiumAmountDetails",this.encryptionService.encrypt(this.premiumAmountDetails));
+          sessionStorage.setItem("premiumAmountDetails", this.encryptionService.encrypt(this.premiumAmountDetails));
         }
         else {
           quoteResponse.forEach((element: any) => {
@@ -2415,7 +2416,7 @@ export class AbhiDynamicFormComponent {
           }
         })
 
-        this.addOnRemoved(control,parentControl);
+        this.addOnRemoved(control, parentControl);
         // ;
       }
       if (control.onChangeMethod)
@@ -2506,9 +2507,15 @@ export class AbhiDynamicFormComponent {
       });
 
     }
+    console.log(addOnListData);
+    let existingItem = this.addOnList.find((item: any) => item.optionalId === addOnListData.optionalId);
 
-
-    this.addOnList.push(addOnListData);
+    if (existingItem) {
+      Object.assign(existingItem, addOnListData);
+      // existingItem = addOnListData;
+    } else {
+      this.addOnList.push(addOnListData);
+    }
 
     reqData = {
       productType: this.formData['productType'],
@@ -2531,20 +2538,20 @@ export class AbhiDynamicFormComponent {
       // 1. Step: First process the API response
       tap((response) => {
         console.log(response);
-        
+
         // Update tenure amounts
         for (let i = 0; i < response.calculatedValuesList.length; i++) {
           this.tenureAmount[i] = Math.round(response.calculatedValuesList[i]);
         }
         console.log('Updated tenureAmount:', this.tenureAmount, this.selectedIndex);
-        
+
         // Set other lists
         this.taxList = response.taxList;
         this.netPremiumList = response.netPremiumList;
         this.totalPremiumList = response.totalPremiumList;
         this.indPremiumList = response.indPremiumList;
         this.addOnPremiumValueList = response.totalPremiumValue;
-    
+
         // Set discount values
         const roundedDiscountValues = response.discountValueList.map((value: number) => Math.round(value));
       }),
@@ -2557,7 +2564,7 @@ export class AbhiDynamicFormComponent {
                 const tenureAmount = this.tenureAmount[index];
                 option.label = `<b>Rs - ${tenureAmount}</b>`;
                 option.value = tenureAmount;
-    
+
                 if (index === 0) {
                   option.year = '1 year';
                 } else if (index === 1) {
@@ -2567,7 +2574,7 @@ export class AbhiDynamicFormComponent {
                   option.year = '3 years';
                   option.discount = '10% off';
                 }
-    
+
                 if (index === this.selectedIndex) {
                   this.dynamicFormGroup.value.totalPremium = tenureAmount;
                 }
@@ -2591,23 +2598,23 @@ export class AbhiDynamicFormComponent {
                 "premium": 0,
                 "riskClass": ""
               };
-    
+
               if (addOnData.addOnId === 'AHPA') {
                 this.isAHPAAdded = true;
                 const occupationRisk = JSON.parse(addOnDataArray.occupationRisk);
                 this.AHPARiskValue = occupationRisk['value'];
                 reqData = { ...reqData, riskClass: occupationRisk['value'] };
               }
-    
+
               if (this.selectedIndex !== -1) {
                 const addOnIndex = this.addOnList.findIndex((addOn: any) => addOn.optionalId === addOnData.addOnId);
                 reqData.premium = this.addOnPremiumValueList[addOnIndex][index][this.selectedIndex];
               }
-    
+
               if (this.addOnDetails[index]) {
                 this.addOnDetails[index].push(reqData);
               }
-    
+
               index++;
             }
           }
@@ -2641,7 +2648,7 @@ export class AbhiDynamicFormComponent {
     // }
   }
 
-  addOnRemoved(control: any,parentControl: any) {
+  addOnRemoved(control: any, parentControl: any) {
 
     let reqData: {
       productType: any;
@@ -2695,26 +2702,26 @@ export class AbhiDynamicFormComponent {
     }
 
     console.log(reqData);
-    
+
 
     this.service.getAddOnPremium(reqData).pipe(
       // 1. Step: First process the API response
       tap((response) => {
         console.log(response);
-        
+
         // Update tenure amounts
         for (let i = 0; i < response.calculatedValuesList.length; i++) {
           this.tenureAmount[i] = Math.round(response.calculatedValuesList[i]);
         }
         console.log('Updated tenureAmount:', this.tenureAmount, this.selectedIndex);
-        
+
         // Set other lists
         this.taxList = response.taxList;
         this.netPremiumList = response.netPremiumList;
         this.totalPremiumList = response.totalPremiumList;
         this.indPremiumList = response.indPremiumList;
         this.addOnPremiumValueList = response.totalPremiumValue;
-    
+
         // Set discount values
         const roundedDiscountValues = response.discountValueList.map((value: number) => Math.round(value));
       }),
@@ -2727,7 +2734,7 @@ export class AbhiDynamicFormComponent {
                 const tenureAmount = this.tenureAmount[index];
                 option.label = `<b>Rs - ${tenureAmount}</b>`;
                 option.value = tenureAmount;
-    
+
                 if (index === 0) {
                   option.year = '1 year';
                 } else if (index === 1) {
@@ -2737,7 +2744,7 @@ export class AbhiDynamicFormComponent {
                   option.year = '3 years';
                   option.discount = '10% off';
                 }
-    
+
                 if (index === this.selectedIndex) {
                   this.dynamicFormGroup.value.totalPremium = tenureAmount;
                 }
@@ -2761,23 +2768,23 @@ export class AbhiDynamicFormComponent {
                 "premium": 0,
                 "riskClass": ""
               };
-    
+
               if (addOnData.addOnId === 'AHPA') {
                 this.isAHPAAdded = true;
                 const occupationRisk = JSON.parse(addOnDataArray.occupationRisk);
                 this.AHPARiskValue = occupationRisk['value'];
                 reqData = { ...reqData, riskClass: occupationRisk['value'] };
               }
-    
+
               if (this.selectedIndex !== -1) {
                 const addOnIndex = this.addOnList.findIndex((addOn: any) => addOn.optionalId === addOnData.addOnId);
                 reqData.premium = this.addOnPremiumValueList[addOnIndex][index][this.selectedIndex];
               }
-    
+
               if (this.addOnDetails[index]) {
                 this.addOnDetails[index].push(reqData);
               }
-    
+
               index++;
             }
           }
@@ -3104,6 +3111,7 @@ export class AbhiDynamicFormComponent {
   }
 
   closeOverlay(subControl: any, parentControl: any = null) {
+    console.log(subControl,parentControl);
     if (parentControl != null) {
       let count = 0;
       let memberDetails = this.dynamicFormGroup.get(parentControl.name)?.get(subControl.name)?.value;
