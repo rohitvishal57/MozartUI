@@ -66,8 +66,7 @@ jobs:
       run: |
         pwd
         ls -la 
-        ls -la dist/
-        ls -la dist/frontend
+        las -la MozartUI-Dev
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
