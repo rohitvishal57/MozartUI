@@ -23,57 +23,57 @@ jobs:
       with:
         fetch-depth: 10
 
-    # - name: Set up Node.js
-    #   uses: actions/setup-node@v3
-    #   with:
-    #     node-version: '18.20.3'
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.20.3'
 
-    # - name: Cache Node modules
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: |
-    #       ~/.npm
-    #       ~/.cache
-    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-node-
+    - name: Cache Node modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.npm
+          ~/.cache
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
 
-    - name: Print working directory and list its contents
-      run: |
-        echo "Current working directory is:"
-        pwd  # Print the current working directory
-        echo "Listing the contents of the current directory:"
-        ls -la  # List the contents of the current working directory
+    # - name: Print working directory and list its contents
+    #   run: |
+    #     echo "Current working directory is:"
+    #     pwd  # Print the current working directory
+    #     echo "Listing the contents of the current directory:"
+    #     ls -la  # List the contents of the current working directory
   
-    - name: List MozartUI-Dev directory contents
-      run: |
-        echo "Listing the contents of MozartUI-Dev directory:"
-        ls -la MozartUI-Dev  # List the contents of the MozartUI-Dev directory (if it exists)
+    # - name: List MozartUI-Dev directory contents
+    #   run: |
+    #     echo "Listing the contents of MozartUI-Dev directory:"
+    #     ls -la MozartUI-Dev  # List the contents of the MozartUI-Dev directory (if it exists)
 
-    # - name: Install dependencies
-    #   run: |
-    #     cd MozartUI-Dev
-    #     npm install --legacy-peer-deps
+    - name: Install dependencies
+      run: |
+        cd MozartUI-Dev
+        npm install --legacy-peer-deps
       
-    # - name: Build the project
-    #   run: |
-    #     cd MozartUI-Dev
-    #     npm run build --prod
+    - name: Build the project
+      run: |
+        cd MozartUI-Dev
+        npm run build --prod
 
     # - name: List Build Artifacts
     #   run: ls -la dist/frontend
 
-    - name: List contents in the current directory
-      run: |
-        pwd
-        ls -la 
-        ls -la MozartUI-Dev
+    # - name: List contents in the current directory
+    #   run: |
+    #     pwd
+    #     ls -la 
+    #     ls -la MozartUI-Dev
       
-#     - name: Upload build artifacts
-#       uses: actions/upload-artifact@v3
-#       with:
-#         name: angular-artifacts
-#         path: ./MozartUI-Dev/dist/
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: angular-artifacts
+        path: ./MozartUI-Dev/dist/
 
 #     - name: SonarQube Scan
 #       uses: sonarsource/sonarqube-scan-action@v3.0.0
