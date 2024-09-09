@@ -65,7 +65,7 @@ jobs:
     - name: List contents in the current directory
       run: |
         ls -la pwd
-        ls -la dist/
+        ls -la
         pwd
         ls -la dist/
         ls -la dist/frontend
