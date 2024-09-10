@@ -62,12 +62,17 @@
     cursor: pointer;
     background-color: #f3f3f3;
 }
-.main-container .all-claims .details-section .dropdowns .dropdown-field .label{
+.main-container .all-claims .details-section .dropdowns .dropdown-field .label
+{
+    color:#999494;    
+}
+.main-container .all-claims .details-section .dropdowns2 .dropdown-field .label{
     color:#999494;    
 }
 .main-container .all-claims .details-section .dropdowns2{
     display: flex;
     padding: 1.5rem;
+    width: 76.5%;
     justify-content: space-between;
 }
 .main-container .all-claims .details-section .dropdowns2 .dropdown-field{
@@ -77,8 +82,9 @@
 .main-container .all-claims .details-section .dropdowns2 .dropdown-field .input-field{
     border:#999494;    
     background-color: #f3f3f3;
-    width: 206px;
+    width: 49rem;
     border-radius:8px;
+    height: 38px
 }
 .main-container .all-claims .details-section .dropdowns2 .dropdown-field .dropdownp .p-dropdown {
     width: 20px; 
@@ -161,3 +167,27 @@
   border: none;
   margin-top: 3rem;
 }
+  .uploaded-files {
+    margin-top: 20px;
+  }
+  
+  .uploaded-files ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+  }
+  
+  .uploaded-files li {
+    background: #f1f3f6;
+    padding: 10px;
+    border-radius: 13px;
+    width: 50%;
+  }
+
+  .delete-button{
+    background-color:#f1f3f6;
+    border:none;
+    margin-left:-4rem;
+    color:#C7222A;
+  }
+  
