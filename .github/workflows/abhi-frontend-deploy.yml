@@ -1,0 +1,140 @@
+name: Build and Deploy Angular App to Azure VM
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  #     - Dev
+  #     - release
+  workflow_dispatch:
+
+env:
+  SONAR_PROJECT_KEY: "frontend-sonar-project"
+  DEPLOY_BASE_DIR: "D:/frontend_deployments"
+  WEB_ROOT: "C:/inetpub/wwwroot/frontend"
+  PORT: 4200
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 10
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.20.3'
+
+    
+    - name: Cache Node modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.npm
+          ~/.cache
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    # - name: Print working directory and list its contents
+    #   run: |
+    #     echo "Current working directory is:"
+    #     pwd  # Print the current working directory
+    #     echo "Listing the contents of the current directory:"
+    #     ls -la  # List the contents of the current working directory
+  
+    # - name: List MozartUI-Dev directory contents
+    #   run: |
+    #     echo "Listing the contents of MozartUI-Dev directory:"
+    #     ls -la MozartUI-Dev  # List the contents of the MozartUI-Dev directory (if it exists)
+
+    - name: Install dependencies
+      run: |
+        cd MozartUI-Dev
+        npm install --legacy-peer-deps
+      
+    - name: Build the project
+      run: |
+        cd MozartUI-Dev
+        npm run build --prod
+
+    # - name: List Build Artifacts
+    #   run: ls -la dist/frontend
+
+    # - name: List contents in the current directory
+    #   run: |
+    #     pwd
+    #     ls -la 
+    #     ls -la MozartUI-Dev
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: angular-artifacts
+        path: ./MozartUI-Dev/dist/
+
+#     - name: SonarQube Scan
+#       uses: sonarsource/sonarqube-scan-action@v3.0.0
+#       with:
+#         projectBaseDir: .
+#         args: |
+#           -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
+#           -Dsonar.sources=./MozartUI-Dev/src
+#       env:
+#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+#     - name: Check SonarQube Quality Gate
+#       run: |
+#         status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: \
+#           "${{ secrets.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=${{ env.SONAR_PROJECT_KEY }}" \
+#           | jq -r .projectStatus.status)
+#         echo "Quality Gate status: $status"
+#         if [ "$status" != "OK" ]; then
+#           echo "Quality Gate failed: $status"
+#           exit 1
+#         fi
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: build
+
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v3
+#       with:
+#         fetch-depth: 10
+
+#     - name: Set up SSH
+#       run: |
+#         mkdir -p ~/.ssh
+#         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+#         chmod 600 ~/.ssh/id_rsa
+
+#     - name: Add VM to known hosts
+#       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+#     - name: Create deployment directory on VM
+#       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA')) { New-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA' -ItemType Directory }\""
+
+#     - name: Manage Previous Deployments (Keep Last 3)
+#       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
+
+#     - name: Download build artifacts
+#       uses: actions/download-artifact@v3
+#       with:
+#         name: angular-artifacts
+#         path: ./MozartUI-Dev/dist/
+
+#     - name: Upload artifact to VM
+#       run: scp -i ~/.ssh/id_rsa -P 22 -r ./dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
+
+#     - name: Deploy application on IIS
+#       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Get-WebSite -Name 'AngularApp')) { New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath '$WEB_ROOT' -ApplicationPool 'DefaultAppPool' }\""
+
+#     - name: Update IIS Site for the Latest Deployment
+#       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Stop-WebSite -Name 'AngularApp'; Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse; Start-WebSite -Name 'AngularApp'\""

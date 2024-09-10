@@ -1,0 +1,179 @@
+<div class="part-1">
+    <div class="main-container">
+        <form [formGroup]="ProductForm">
+            <div class="card-body rectangle">
+                <div class="card-header">Add Product Details</div>
+                <div class="col-md-4 typecss">
+                    <label>ProductId <span>*</span></label>
+                    <input formControlName="productId" class="line-border" type="text">
+                    <small *ngIf="ProductForm.controls['productId'].dirty && ProductForm.hasError('required','productId')" class="text-danger">*
+                        ProductId is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Product Name <span>*</span></label>
+                    <input formControlName="productName" class="line-border" type="text">
+                    <small *ngIf="ProductForm.controls['productName'].dirty && ProductForm.hasError('required','productName')" class="text-danger">*
+                        Product Name is required
+                    </small>
+                </div>  
+                <div class="col-md-4 typecss">
+                    <label>Insurance Type <span>*</span></label>
+                    <select formControlName="insuranceType" class="line-border" aria-label="Default select example">
+                        <option selected value="">Choose...</option>
+                        <ng-container *ngFor="let opt of allInsuranceType">
+                            <option [value]="opt.insuranceType">{{ opt.insuranceType}}</option>
+                        </ng-container>
+                    </select>
+                    <small *ngIf="ProductForm.controls['insuranceType'].dirty && ProductForm.hasError('required','insuranceType')" class="text-danger">*
+                        Insurance Type is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Product Start Date <span>*</span></label>
+                    <input formControlName="productStartDate" class="line-border" type="date">
+                    <small *ngIf="ProductForm.controls['productStartDate'].dirty && ProductForm.hasError('required','productStartDate')" class="text-danger">*
+                        Product Start Date is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Product End Date <span>*</span></label>
+                    <input formControlName="productEndDate" class="line-border" type="date">
+                    <small *ngIf="ProductForm.controls['productEndDate'].dirty && ProductForm.hasError('required','productEndDate')" class="text-danger">*
+                        Product End Date is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Product Family <span>*</span></label>
+                    <input formControlName="productFamily" class="line-border" type="text">
+                    <small *ngIf="ProductForm.controls['productFamily'].dirty && ProductForm.hasError('required','productFamily')" class="text-danger">*
+                        Product Family is required
+                    </small>
+                </div>
+                <div class="col-md-4 typecss">
+                    <label>Product Family Plan <span>*</span></label>
+                    <input formControlName="familyPlan" class="line-border" type="text">
+                    <small *ngIf="ProductForm.controls['familyPlan'].dirty && ProductForm.hasError('required','familyPlan')" class="text-danger">*
+                        Product Family Plan is required
+                    </small>
+                </div>
+
+                <br>
+                <div class="btn-container card-body">
+                    <button class="btn btn-primary nextbtn" (click)="onSubmit()">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="part-2">
+    <h4>All Product Details</h4>
+    <p-table [value]="allProduct" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        [scrollable]="true" scrollHeight="auto" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [rowsPerPageOptions]="[10,20,30]">
+        <ng-template pTemplate="header">
+            <tr class="custom-header">
+                <th id="productIdHeader" pSortableColumn="productId">Product Id <p-sortIcon field="productId"></p-sortIcon></th>
+                <th id="productNameHeader" pSortableColumn="productName">Product Name <p-sortIcon field="productName"></p-sortIcon></th>
+                <th id="insuranceTypeHeader" pSortableColumn="insuranceType">Insurance Type <p-sortIcon field="insuranceType"></p-sortIcon></th>
+                <th id="productStartDateHeader" pSortableColumn="productStartDate">Product Start Date <p-sortIcon field="productStartDate"></p-sortIcon></th>
+                <th id="productFamilyHeader" pSortableColumn="productFamily">Product Family <p-sortIcon field="productFamily"></p-sortIcon></th>
+                <th id="familyPlanHeader" pSortableColumn="familyPlan">Family Plan <p-sortIcon field="familyPlan"></p-sortIcon></th>
+                <th id="statusHeader" pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                <th id="productHeader"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data>
+            <tr>
+                <td>{{data.productId}}</td>
+                <td>{{data.productName}}</td>
+                <td>{{data.insuranceType}}</td>
+                <td>{{data.productStartDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                <td>{{data.productFamily}}</td>
+                <td>{{data.familyPlan}}</td>
+                <td>
+                    <ng-container *ngIf="data.status === true; else inactiveBlock">
+                        <span style="color: green;">Active</span>
+                      </ng-container>
+                      <ng-template #inactiveBlock>
+                        <span style="color: red;">Inactive</span>
+                    </ng-template>
+                </td>
+                <td><i style="cursor: pointer;color: green;font-size: 16px;" class="fa-solid fa-pen-to-square" (click)="showDialog(data)"></i></td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+
+<p-dialog header="Edit Product Details" [modal]="true" [(visible)]="visible" [style]="{width: '50vw'}" [draggable]="false" [maximizable]="true">
+    <form [formGroup]="ProductForm">
+        <div class="card-body rectangle">
+            <div class="col-md-4 typecss">
+                <label>ProductId <span>*</span></label>
+                <input style="background: rgba(211, 209, 209, 0.644);" formControlName="productId" class="line-border" type="text" readonly>
+                <small *ngIf="ProductForm.controls['productId'].dirty && ProductForm.hasError('required','productId')" class="text-danger">*
+                    ProductId is required
+                </small>
+            </div>
+            <div class="col-md-4 typecss">
+                <label>Product Name <span>*</span></label>
+                <input formControlName="productName" class="line-border" type="text">
+                <small *ngIf="ProductForm.controls['productName'].dirty && ProductForm.hasError('required','productName')" class="text-danger">*
+                    Product Name is required
+                </small>
+            </div>  
+            <div class="col-md-4 typecss">
+                <label>Insurance Type <span>*</span></label>
+                <select formControlName="insuranceType" class="line-border" aria-label="Default select example">
+                    <option selected value="">Choose...</option>
+                    <ng-container *ngFor="let opt of allInsuranceType">
+                        <option [value]="opt.insuranceType">{{ opt.insuranceType}}</option>
+                    </ng-container>
+                </select>
+                <small *ngIf="ProductForm.controls['insuranceType'].dirty && ProductForm.hasError('required','insuranceType')" class="text-danger">*
+                    Insurance Type is required
+                </small>
+            </div>
+            <div class="col-md-4 typecss">
+                <label>Product Start Date <span>*</span></label>
+                <input formControlName="productStartDate" class="line-border" type="date">
+                <small *ngIf="ProductForm.controls['productStartDate'].dirty && ProductForm.hasError('required','productStartDate')" class="text-danger">*
+                    Product Start Date is required
+                </small>
+            </div>
+            <div class="col-md-4 typecss">
+                <label>Product End Date <span>*</span></label>
+                <input formControlName="productEndDate" class="line-border" type="date">
+                <small *ngIf="ProductForm.controls['productEndDate'].dirty && ProductForm.hasError('required','productEndDate')" class="text-danger">*
+                    Product End Date is required
+                </small>
+            </div>
+            <div class="col-md-4 typecss">
+                <label>Product Family <span>*</span></label>
+                <input formControlName="productFamily" class="line-border" type="text">
+                <small *ngIf="ProductForm.controls['productFamily'].dirty && ProductForm.hasError('required','productFamily')" class="text-danger">*
+                    Product Family is required
+                </small>
+            </div>
+            <div class="col-md-4 typecss">
+                <label>Product Family Plan <span>*</span></label>
+                <input formControlName="familyPlan" class="line-border" type="text">
+                <small *ngIf="ProductForm.controls['familyPlan'].dirty && ProductForm.hasError('required','familyPlan')" class="text-danger">*
+                    Product Family Plan is required
+                </small>
+            </div>
+            <div class="col-md-6 typecss">
+                <div style="display: flex;justify-content: space-between;">
+                    <label>Product Status </label>
+                    <p-inputSwitch formControlName="status"></p-inputSwitch>
+                </div>
+            </div>
+
+            <br>
+            <div class="btn-container card-body">
+                <button class="btn btn-primary nextbtn" (click)="onUpdate()">Save</button>
+            </div>
+        </div>
+    </form>
+</p-dialog>

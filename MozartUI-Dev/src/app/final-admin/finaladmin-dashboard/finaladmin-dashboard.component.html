@@ -1,0 +1,59 @@
+<div class="main-container">
+    <div class="header">
+        <div class="row">
+            <div class="right-side">
+                <div class="name">
+                    <img [src]="common.baseCssUrl+'assets/logo/new_admin_logo.svg'" alt="admin-logo">
+                </div>
+            </div>
+            <div class="crossline"></div>
+            <div class="crossline"></div>
+            <div class="crossline"></div>
+            <div class="crossline"></div>
+            <div class="crossline"></div>
+            <div class="crossline"></div>
+            <div class="left-side">
+                <div class="profile">
+                    <img [src]="common.baseCssUrl+'assets/logo/admin_logo.svg'" alt="profile">
+                    <!-- <button (click)="logOut()">Logout</button> -->
+                    <div (click)="logOut()" class="logout">
+                        <div  class="logout-icon">
+                            <i  class="fa fa-power-off color-danger"></i>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+    <router-outlet></router-outlet>
+    <div class="footer col-md-12">
+        <div class="foot-text col-md-2">
+            Products
+            <div class="lower-text">Auto Insurance</div>
+            <div class="lower-text">Motor Bike Insurance </div>
+            <div class="lower-text">Health Insurance </div>
+            <div class="lower-text">Home Insurance</div>
+            <div class="lower-text">Travel Insurance </div>
+        </div>
+        <div class="foot-text col-md-2">
+            Onboarding Platform
+            <div class="lower-text">About Us </div>
+            <div class="lower-text">Our Services </div>
+            <div class="lower-text">Contact Us </div>
+            <div class="lower-text">Our Offices</div>
+        </div>
+        <div class="foot-text col-md-2">
+            Others
+            <div class="lower-text">Agents Portal Login </div>
+            <div class="lower-text">Corporate Portal Login </div>
+        </div>
+        <div class="foot-text col-md-6">
+    
+            <div class="lower-text">Mozart Onboarding Platform, is one of the leading private sector general insurance
+                product in India offering insurance coverage for motor, health, travel, home, student travel and more.
+                Policies can be purchased and renewed online as well. Immediate issuance of policy copy online.</div>
+                <div></div>
+        </div>
+    </div>
+</div>

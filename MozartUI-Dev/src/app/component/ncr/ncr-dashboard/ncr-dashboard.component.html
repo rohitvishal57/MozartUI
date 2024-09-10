@@ -1,0 +1,33 @@
+<div class="body">
+    <div class="header">
+        <div class="logo">
+            <p>{{appName}}</p>
+        </div>
+        <div class="service">
+            <!-- <div>AxCards</div>
+            <div>02.07.00</div> -->
+            <div>{{heading}}</div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="leftbar" [ngClass]="{'expand-sidebar': isMouseOver}" (mouseout)="collapseSidebar()">
+            <div *ngFor="let menuItem of menuItems;let i = index" class="option-item" (mouseover)="expandSidebar()">
+              <div (click)="onSelectService(menuItem.id,i)" [ngClass]="{'activeSidebar': i==activeIndex}" class="item-link">
+                <i class="fa-solid fa-solid fa-sitemap"></i>
+                <span>{{menuItem.label}}</span>
+              </div>
+            </div>
+        </div>
+        <div class="leftbar leftSubbar" [ngClass]="{'expand-sidebar': isMouseOverSidebar}" (mouseout)="collapseSubSidebar()" *ngIf="subMenuItems">
+            <div *ngFor="let subMenu of subMenuItems;index as i" class="option-item" (mouseover)="expandSubSidebar()">
+                <div (click)="onselectSubService(i,subMenu.label)" [ngClass]="{'activeSubsidebar': i==activeSubIndex}" class="item-link">
+                    <i class="fa-solid fa-gear fa-1x"></i>
+                    <span>{{subMenu.label}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="rightside">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

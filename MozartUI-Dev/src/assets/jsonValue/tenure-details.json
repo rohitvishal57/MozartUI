@@ -1,0 +1,19 @@
+[
+    {
+      "id": "tenure1",
+      "tenure": "1 Year",
+      "premium": "₹ 9162"
+    },
+    {
+      "id": "tenure2",
+      "tenure": "2 Year",
+      "premium": "₹ 8204",
+      "offerPercentage": "7.5% off"
+    },
+    {
+      "id": "tenure3",
+      "tenure": "3 Year",
+      "premium": "₹ 6567",
+      "offerPercentage": "13% off"
+    }
+  ]

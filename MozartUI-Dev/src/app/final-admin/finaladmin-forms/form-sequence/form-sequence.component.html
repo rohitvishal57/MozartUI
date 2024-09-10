@@ -1,0 +1,50 @@
+<div class="main-container">
+    <div style="display: flex;">
+        <a routerLink="/portal/finaladminDashboard/addBank" style="cursor: pointer;"><i class="fa-solid fa-arrow-left" style=" font-size: 22px; color: #000000;"></i></a>
+        <p>Create New Insurance Template</p>
+    </div>
+    <div class="state">
+        <div class="state-1" (click)="getEditNewForm()">Edit Form</div>
+        <div class="states" >Form Sequence</div>
+        <div class="state-2" >Form Preview</div>
+    </div>
+    <form [formGroup]="jsonForm">
+        <div class="right-side" *ngIf="formSequence.length>0">
+            <h2>Form Sequence</h2>
+            <div class="card-body" *ngIf="bankCode && insuranceTypeCode">
+                <div cdkDropList (cdkDropListDropped)="drop($event)">
+                    <table class="table">
+                        <caption>Insurance Template</caption>
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Form Id</th>
+                                <th>Form Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let form of formSequence;index as i;" cdkDrag>
+                                <td>{{i+1}}</td>
+                                <td>{{ form.formId }}</td>
+                                <td>{{ form.formName }}</td>
+                                <td class="d-flex"> <!-- New td for actions -->
+                                    <span class="col-md-3" (click)="deleteFormConfiguration(i)"><i style="color: red;font-size: 16px;"
+                                        class="fa-solid fa-trash-can"></i></span>
+                                    <span class="col-md-3" (click)="getPreview(form)"><i class="fa-solid fa-eye"></i></span>
+                                    <span class="col-md-3" (click)="getEditForm(form)"><i class="fa-solid fa-edit"></i></span>
+                                </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="btn-container card-body">
+                <button class="btn btn-primary nextbtn" (click)="saveFormSequence()">Save Form Sequence</button>
+            </div>
+        </div>
+    </form>
+    
+</div>
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '30vw'}"></p-confirmDialog>

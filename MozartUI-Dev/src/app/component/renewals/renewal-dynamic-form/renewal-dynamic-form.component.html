@@ -1,0 +1,710 @@
+<div class="main-container">
+    <div class="container">
+
+        <div class="left-nav">
+          <div class="left-inner-cnt">
+              <div>Select from any customisation below</div>
+              <div class="left-main-btn-cnt">
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': selectedButton === 'primary', 'active-green': selectedButton === 'additional' || selectedButton === 'payment' }" (click)="selectButton('primary',1)">
+                      <div><i class="fa-solid fa-users"></i></div>
+                      <div>Primary</div>
+                  </div>
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': selectedButton === 'additional', 'active-green': selectedButton === 'payment' }" (click)="selectButton('additional')">
+                      <div><i class="fa-solid fa-square-plus"></i></div>
+                      <div>Additional</div>
+                  </div>
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': selectedButton === 'payment' }" (click)="selectButton('payment')">
+                      <div><i>₹</i></div>
+                      <div>Payment</div>
+                  </div>
+              </div>
+          </div>
+        </div>
+    
+        <div *ngIf="mainCnt == 1" class="main-content">
+            <div class="formSections" *ngIf="formId == 1">
+                <div class="section">
+                    <h3>Proposer</h3>
+                    <div class="edit-icon"><i class="fa-solid fa-pen"></i></div>
+                </div>
+                <div class="section-content">
+                    <div class="proposer">
+                      <div class="address-cnt">
+                        <div><div>Name:</div><h3>Ishwar Vidyarthi</h3></div>
+                        <div><div>ID No.:</div><h3>AXG04443A</h3></div>
+                        <div><div>D.O.B.:</div><h3>20/04/1940</h3></div>
+                      </div>                   
+                    </div>
+                </div>
+                <div class="section-content">
+                    <h3>Address</h3>
+                    <div class="proposer">
+                      <div class="address-cnt">
+                        <div><div>Address Line 1:</div><h3>Flat 1, Floor 5,Building Name</h3></div>
+                        <div><div>Address Line 2:</div><h3>Street Name, Locality</h3></div>
+                        <div><div>City:</div><h3>Mumbai</h3></div>
+                        <div><div>State:</div><h3>Maharashtra</h3></div>
+                        <div><div>PINCode:</div><h3>410002</h3></div>
+                      </div>
+                      <div class="edit-i" (click)="selectButton('primary',5005)">
+                        <i class="fa-solid fa-pen"></i>
+                      </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="formSections" *ngIf="formId == 1">
+                <div class="section">
+                    <h3>Member Details</h3>
+                    <div class="add-member-btn" (click)="selectButton('primary',5002)">+ Add another member</div>
+                </div>
+                <div class="section-content">
+                    <h3>Proposer</h3>
+                    <div class="member">
+                      <div class="member-dtl-cnt">
+                        <div><div>Name:</div><h3>Ishwar Vidyarthi</h3></div>
+                        <div><div>ID No.:</div><h3>AXG04443A</h3></div>
+                        <div><div>D.O.B.:</div><h3>20/04/1940</h3></div>
+                        <div><div>Cover:</div><h3>₹10,00,000</h3></div>
+                      </div>
+                      <div class="edit-i" (click)="selectButton('primary',5003)"><i class="fa-solid fa-pen"></i></div>
+                    </div>
+                    <hr>
+                    <h3>Proposer's Mother</h3>
+                    <div class="member">
+                      <div class="member-dtl-cnt">
+                        <div><div>Name:</div><h3>Soumya Vidyarthi</h3></div>
+                        <div><div>ID No.:</div><h3>AXG04443A</h3></div>
+                        <div><div>D.O.B.:</div><h3>20/04/1940</h3></div>
+                        <div><div>Cover:</div><h3>₹10,00,000</h3></div>
+                      </div>
+                      <div class="edit-i" (click)="selectButton('primary',5003)"><i class="fa-solid fa-pen"></i></div>
+                    </div>
+                    <hr>
+                    <h3>Proposer's Father</h3>
+                    <div class="member">
+                      <div class="member-dtl-cnt">
+                        <div><div>Name:</div><h3>Ganesh Vidyarthi</h3></div>
+                        <div><div>ID No.:</div><h3>AXG04443A</h3></div>
+                        <div><div>D.O.B.:</div><h3>20/04/1940</h3></div>
+                        <div><div>Cover:</div><h3>₹10,00,000</h3></div>
+                      </div>
+                      <div class="edit-i" (click)="selectButton('primary',5003)"> <i class="fa-solid fa-pen"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="formSections" *ngIf="formId == 1">
+                <div class="section">
+                    <h3>Nominee Details</h3>
+                    <div class="add-member-btn"  (click)="selectButton('primary',5004)">+ Add another member</div>
+                </div>
+                <div class="section-content">
+                    <h3>Proposer</h3>
+                    <div class="member">
+                      <div class="member-dtl-cnt">
+                        <div><div>Name:</div><h3>Ishwar Vidyarthi</h3></div>
+                        <div><div>ID No.:</div><h3>AXG04443A</h3></div>
+                        <div><div>D.O.B.:</div><h3>20/04/1940</h3></div>
+                        <div><div>Relation to Nominee :</div><h3>Spouse</h3></div>
+                       </div>
+                       <div class="edit-i"> <i class="fa-solid fa-pen"></i></div>
+                    </div>
+                </div>
+             </div>
+
+             <!--  -->
+             <div class="formSections" [formGroup]="nomineeForm" *ngIf="formId == 5004 || formId == 5005 || formId == 5003 || formId == 5002">
+                <div class="card-header section">
+                  <div class="form-title" >{{ formConfig?.formTitle }}</div>
+                  <div class="add-member-btn" (click)="addNominee()">
+                    <i class="fa fa-plus" *ngIf="formConfig?.addNomineeBtnTitle == 'Add another Nominee'"></i>
+                    <i class="fa-solid fa-trash" *ngIf="formConfig?.addNomineeBtnTitle == 'Delete Member'"></i>
+                    {{ formConfig?.addNomineeBtnTitle }}
+                  </div>
+                </div>
+                <div class="card-body" style="margin: 2%;">
+                  <ng-container *ngFor="let section of formConfig?.formSections">
+                    <div [ngClass]="section.class" *ngIf="section.visible">
+                      <div class="form-header">{{ section.sectionTitle }}</div>
+                      <div class="row">
+                        <ng-container *ngFor="let control of section.formControls">
+                          <div [ngClass]="control.class" class="control-item">
+                            <!-- <div class="input-container"> -->
+                              <ng-container [ngSwitch]="control.type">
+
+                                <ng-container *ngSwitchCase="'word'" [class]="">
+                                  <img *ngIf="control.name == 'additionalInfo'" src="assets/images/Lightbulb Icon.png" alt="">
+                                  <i class="fa fa-arrow-right" *ngIf="control.name == 'arrow'"></i>
+                                  <span *ngIf="control.visibleLabel">{{ control.label }}</span>
+                                </ng-container>
+
+                                <div class="memberDetail1"  *ngIf="control.visibleLabel && control.type == 'detail' || control.type == 'icon'">
+                                   <span *ngIf="control.type == 'detail'" [class]="control.class">{{ control.label }}</span>
+                                   <i class="fa fa-arrow-right" *ngIf="control.type == 'icon'"></i>
+                                </div>
+                            
+                                <div *ngIf="['text', 'email', 'password', 'number'].includes(control.type)" class="typecss">
+                                  <div class="input-container">
+                                    <input class="inputField_Text" [formControlName]="control.name" [type]="control.type" 
+                                    [ngClass]="{'has-value': hasAnyValue(control)}">
+                                    <label *ngIf="control.visibleLabel">{{control.label}}</label>
+                                  </div>
+                                </div>
+
+                                <div *ngIf="control.type==='date'" class="typecss">
+                                  <div class="input-container">
+                                    <input class="inputField_Text" [formControlName]="control.name" [type]="control.type" 
+                                           [ngClass]="{'has-value': hasAnyValue(control)}">
+                                    <label *ngIf="control.visibleLabel">{{control.label}}</label>
+                                  </div>
+                                </div>
+                                
+                                <input *ngSwitchCase="'checkbox'" [type]="control.type" [formControlName]="control.name" [id]="control.name" class="checkbox-cnt">
+                                <label for="" *ngIf="control.type == 'checkbox'">{{control.label}}</label>
+
+                                <div *ngIf="control.type==='select'" class="typecss">
+                                  <div class="input-container">
+                                    <select class="inputField_Select" formControlName="{{ control.name }}"[ngClass]="{'has-value': hasAnyValue(control)}">
+                                      <ng-container *ngFor="let opt of control.options">
+                                        <option [class]="opt.class">{{ opt.name }}</option>
+                                      </ng-container>
+                                    </select>
+                                    <label *ngIf="control.visibleLabel">{{ control.label }}</label>
+                                  </div>
+                                </div>
+
+                                <div *ngSwitchCase="'radio'" class="custom-radio-buttons">
+                                  <div class="radio-label">{{ control.label }}</div>
+                                  <label *ngFor="let option of control.options" 
+                                         [ngClass]="{'yes-option': option.value === 'yes', 'no-option': option.value === 'no'}">
+                                    <div>
+                                      <input type="radio" [formControlName]="control.name" [value]="option.value" 
+                                             (change)="onRadioChange(control.name, option.value)">
+                                      {{ option.label }}
+                                    </div>
+                                  </label>
+                                </div>
+                                
+
+                                  <div *ngSwitchCase="'range'" class="slider">
+                                    <div class="slider-container">
+                                        <input type="range"  [min]="control.min" [max]="control.max" [step]="control.step" 
+                                               [value]="rangeValue[control.name]" (input)="updateRangeValue($event, control.name)"
+                                               [style.background]="getBackground(rangeValue[control.name], control.min, control.max)">      
+                                        <div class="slider-values">
+                                            <span>5L</span><span>7L</span><span>10L</span><span>15L</span><span>20L</span>
+                                            <span>25L</span><span>50L</span><span>1Cr</span><span>2Cr</span>
+                                        </div>
+                                    </div>
+                                    <span class="selected-value">{{ formatValue(rangeValue[control.name]) }}</span>
+                                  </div>
+                                
+                                  <div *ngIf="control.type === 'select-multiple'" class="{{control.class}}">
+                                    <label class="heading-txt">{{control.label}}</label>
+                                    <div class="select-multiple">
+                                      <div *ngFor="let option of control.options" class="option" [ngClass]="{'selected': option.selected}" (click)="toggleSelect(option)">
+                                        <div><i class="fa" [ngClass]="option.icon"></i></div>
+                                        <span class="options-txt">{{option.label}}</span>
+                                        <div class="tick-icon" *ngIf="option.selected"><i class="fa-solid fa-check"></i></div>
+                                      </div>
+                                    </div>
+                                  </div>                                  
+
+                                  <div *ngIf="control.type === 'search'" class="{{control.class}}">
+                                    <label class="heading-txt">{{control.label}}</label>
+                                    <div class="search-container">
+                                      <input type="text" placeholder="{{control.placeholder}}" class="search-input">
+                                      <button class="search-button">{{control.buttonLabel}}</button>
+                                    </div>  
+                                  </div>
+
+                                  <div *ngIf="control.type === 'tabs'" class="{{control.class}}">
+                                    <div class="tabs">
+                                      <div *ngFor="let tab of control.tabs" class="tab" [ngClass]="{'selected': tab.selected}">
+                                        {{tab.label}}
+                                      </div>
+                                    </div>
+                                    <div class="select-multiple">
+                                      <div *ngFor="let option of control.options" class="option" [ngClass]="{'selected': option.selected}">
+                                        <div><i class="fa" [ngClass]="option.icon"></i></div>
+                                        <span>{{option.label}}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!--  -->
+                              </ng-container>
+                            <!-- </div> -->
+                          </div>            
+                        </ng-container>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div class="form-footer" *ngIf="formConfig?.buttonTitle == 'Save Updates' || formConfig?.buttonTitle == 'Add Member' ">
+                    <button class="btn btn-primary" type="submit" (click)="updatePrimarycnt(formConfig?.buttonTitle)">{{ formConfig?.buttonTitle }}</button>
+                  </div>
+                  <div class="form-footer" *ngIf="formConfig?.nextButton == 'Next'">
+                    <button class="next-btn" type="submit">{{ formConfig?.nextButton }}</button>
+                  </div>
+                </div>
+              </div>
+             <!--  -->
+        </div>
+
+        <div class="main-content" *ngIf="mainCnt == 3">
+          <div class="tenure-details-cnt">
+              <div class="tenure-details-title">Tenure Details</div>
+              <div class="tenure-details">
+                  <div class="premium-values">
+                      <div class="year-premium-details" *ngFor="let tenure of tenureDetails"  [ngClass]="{'active-border': selectedTenure === tenure.id}" (click)="selectedTenure=tenure.id">
+                          <div class="year-value">{{ tenure.tenure }}</div>
+                          <div class="premium-value">{{ tenure.premium }}<span>/yr</span></div>
+                          <div class="offer-percentage-value">{{ tenure.offerPercentage }}</div>
+                      </div>
+                  </div>
+                  <div class="premium-offer-details">
+                      <div class="lightbulb-icon"><img src="assets/renewalLogos/Lightbulb Icon.jpg" alt="No Data Found" /></div>
+                      <div class="discount-value">You can potentially earn 10,000 more with just 2 more years</div>
+                  </div>
+              </div>
+          </div>
+          <div class="optional-coverages-cnt">
+              <div class="optional-coverages-title">Optional Coverages</div>
+              <div class="optional-coverages-list">
+                  <div *ngFor="let coverage of coverages" class="coverage" [ngClass]="{'active-border': isCoverageSelected(coverage)}" (click)="selectCoverage(coverage)">
+                      <div class="coverage-logo">
+                          <img [src]="coverage.image" alt="coverage image" width="30px" height="30px" />
+                      </div>
+                      <div class="coverage-name">{{ coverage.name }}</div>
+                      <div class="coverage-description">{{ coverage.description }}</div>
+                  </div>
+              </div>
+          </div>
+          <div class="health-add-ons-cnt">
+              <div class="health-add-ons-title">Health add-ons</div>
+              <div class="health-add-ons-list">
+                  <div *ngFor="let addOn of healthAddOns" class="health-add-on" [ngClass]="{'active-border': isHealthAddOnSelected(addOn)}" (click)="selectAddOn(addOn)">
+                      <div class="health-add-on-logo"><img [src]="addOn.image" alt="No Data Found" /></div>
+                      <div class="health-add-on-name">{{addOn.name}}</div>
+                      <div class="health-add-on-description">{{addOn.description}}</div>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="payment-container" *ngIf="mainCnt == 2 && policySummarys == false">
+          <div class="payment-header">
+              <span>Share payment link</span>
+              <i class="fa fa-chevron-down"></i>
+          </div>
+          <div class="message-cnt">
+              <div class="payment-details">
+                  <div class="detail-item">
+                      <i class="fa fa-phone"></i>
+                      <span class="detail-label">Customer Mobile Number :</span>
+                      <span class="detail-value">91 8659378459</span>
+                      <div class="edit-icon"><i class="fa-regular fa-pen-to-square"></i></div>
+                  </div>
+                  <div class="detail-item">
+                      <i class="fa fa-envelope" *ngIf="!isEditingEmail"></i>
+                      <span class="detail-label" *ngIf="!isEditingEmail">Email Address :</span>
+                      <ng-container *ngIf="!isEditingEmail; else editEmailField">
+                        <span class="detail-value">{{ email }}</span>
+                        <div class="edit-icon" (click)="toggleEditEmail()"><i class="fa-regular fa-pen-to-square"></i></div>
+                      </ng-container>
+                      <ng-template #editEmailField>
+                        <div  class="email-input">
+                          <div class="input-container">
+                            <input type="email"  [(ngModel)]="email" class="inputField_Text" [ngClass]="{'has-value': email && email !== ''}">
+                            <label>Email Address</label>
+                          </div>
+                        </div>
+                        <button class="save-btn" (click)="saveEmail()">Save and send</button>
+                      </ng-template>
+                  </div>
+              </div>
+              <div class="message-send-cnt" *ngIf="!emailSaved">
+                  <div class="send-link-btn">
+                    <button [ngClass]="{'disabled-btn': isEditingEmail}" [disabled]="isEditingEmail">Send Link</button>
+                  </div>
+                  <div class="separator" *ngIf="!isEditingEmail">
+                    <span>OR</span>
+                  </div>
+
+                  <div class="payment-select" *ngIf="!isEditingEmail">
+                    <div>Make payment online</div>
+                    
+                    <div class="custom-dropdown" (click)="toggleDropdown()">
+                      <div class="selected-option">
+                        {{ selectedPaymentTypeLabel || 'Select payment type' }}
+                      </div>
+                      <div class="dropdown-options" *ngIf="isDropdownOpen">
+                        <div class="payment-option" *ngFor="let option of paymentTypes" [ngClass]="{'selected': selectedPaymentType === option.value}" 
+                          (click)="selectPaymentType(option)">
+                          <div>{{ option.label }}</div>
+                          <div *ngIf="option.isFasterProcess" class="faster-process">Faster process</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>    
+              </div>
+                <!-- New Feature: Message after sending payment link -->
+              <div class="message-sent-container" *ngIf="emailSaved">
+                <div class="payment-responce">
+                    <div class="message-icon">
+                        <i class="fa fa-check-circle"></i>
+                    </div>
+                    <div class="message-text">
+                        Payment link is sent to customer’s mobile number and email ID
+                    </div>
+                </div>
+                <div class="resend-link-btn">
+                    <button (click)="resendLink()">Resend Link</button>
+                </div>
+              </div>
+          </div>
+        </div>      
+         
+         <div class="policy-summary" *ngIf="policySummarys == true">
+          <div class="formSections">
+            <div class="section-header">
+              <h3>Policy Summary</h3>
+              <div class="header-actions">
+                <div class="copy-link">
+                  <span>Copy link to share</span>
+                  <i class="fa-solid fa-link"></i>
+                </div>
+                <div class="edit-icons">
+                  <i class="fa-solid fa-pen"></i>
+                </div>
+              </div>
+            </div>
+            <div class="details-header">
+                  <div class="policy-section">
+                    <div class="policy-header">
+                      <span class="badge original">Original</span>
+                    </div>
+                    <div class="policy-details">
+                      <div class="policy-item">
+                        <div class="policy-label">Members</div><div class="policy-value">Self, Spouse, Kid 1</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Policy</div><div class="policy-value">Activ Health Platinum</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Premium</div><div class="policy-value">₹7,562/yr</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Cover</div><div class="policy-value">₹10 lacs</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Tenure</div><div class="policy-value">2 years</div>
+                      </div>
+                    </div>
+                    <div class="addons">
+                      <div class="policy-label">Add ons</div>
+                      <div class="policy-addon">
+                          <div class="addon">Cancer secure cover</div>
+                          <div class="addon">Personal accident cover</div>
+                    </div>
+                    </div>
+                  </div>
+              
+                  <div class="policy-section modifieds" >
+                    <div class="policy-header">
+                      <span class="badge modified">Modified</span>
+                    </div>
+                    <div class="policy-details">
+                      <div class="policy-item">
+                        <div class="policy-label">Members</div><div class="policy-value">Self, Spouse, Kid 1, Mother</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Policy</div><div class="policy-value">Activ Health Platinum</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Premium</div><div class="policy-value">₹8,291/yr</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Cover</div><div class="policy-value">₹15 lacs</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Tenure</div><div class="policy-value">3 years</div>
+                      </div>
+                    </div>
+                    <div class="addons">
+                      <div class="policy-label">Add ons</div>
+                      <div class="policy-addon">
+                          <div class="addon">Cancer secure cover</div>
+                          <div class="addon">Personal accident cover</div>
+                          <div class="addon">Vaccine Cover</div>
+                    </div>
+                    </div>
+                  </div>
+              
+                  <div class="free-benefits">
+                    <div>Free benefits included with your plan</div>
+                    <div class="lisr-free-benefits">
+                        <div class="benefit">
+                          <div class="benefit-icon"><i class="fa-solid fa-heart"></i></div>
+                          <span>Upto 100% Health Returns™</span>
+                        </div>
+                        <div class="benefit">
+                          <div class="benefit-icon"><i class="fa-solid fa-heart"></i></div>
+                          <span>Access To Expert Health Coaches</span>
+                        </div>
+                        <div class="benefit">
+                          <div class="benefit-icon"><i class="fa-solid fa-heart"></i></div>
+                          <span>Cover for dental consultations</span>
+                        </div>
+                        <div class="benefit">
+                          <div class="benefit-icon"><i class="fa-solid fa-heart"></i></div>
+                          <span>Free Wellness Services</span>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+          <div class="formSections">
+            <div class="section-header">
+              <h3>Member Details</h3>
+              <div class="edit-icons">
+                  <i class="fa-solid fa-pen"></i>
+              </div>
+            </div>
+            <div class="member-cards">
+              <div class="member-card">
+                  <div class="member-header">
+                      <div class="member-name">Mihir Sodawalla</div>
+                      <div class="badges">Proposer</div>
+                  </div>
+                  <div class="member-details">
+                      <div class="member-item"><div>Height:</div><div>5.3 ft</div></div>
+                      <div class="member-item"><div>Weight:</div><div>63 kgs</div></div>
+                      <div class="member-item"><div>DOB:</div><div>06/06/1990</div></div>
+                  </div>
+                  <div class="member-details">
+                      <div class="member-item"><div>PAN Card:</div><div>9768850231</div></div>
+                      <div class="member-item"><div>Health Conditions:</div><div>Yes</div></div>
+                  </div>
+              </div>
+          
+              <div class="member-card">
+                <div class="member-header">
+                    <div class="member-name">Mihir Sodawalla</div>
+                </div>
+                <div class="member-details">
+                    <div class="member-item"><div>Height:</div><div>5.3 ft</div></div>
+                    <div class="member-item"><div>Weight:</div><div>63 kgs</div></div>
+                    <div class="member-item"><div>DOB:</div><div>06/06/1990</div></div>
+                </div>
+                <div class="member-details">
+                    <div class="member-item"><div>PAN Card:</div><div>9768850231</div></div>
+                    <div class="member-item"><div>Health Conditions:</div><div>Yes</div></div>
+                </div>
+            </div>
+          
+            <div class="member-card">
+              <div class="member-header">
+                  <div class="member-name">Mihir Sodawalla</div>
+              </div>
+              <div class="member-details">
+                  <div class="member-item"><div>Height:</div><div>5.3 ft</div></div>
+                  <div class="member-item"><div>Weight:</div><div>63 kgs</div></div>
+                  <div class="member-item"><div>DOB:</div><div>06/06/1990</div></div>
+              </div>
+              <div class="member-details">
+                  <div class="member-item"><div>PAN Card:</div><div>9768850231</div></div>
+                  <div class="member-item"><div>Health Conditions:</div><div>Yes</div></div>
+              </div>
+            </div>
+            
+          </div>
+          
+          </div>
+          <div class="formSections">
+            <div class="section-header">
+              <h3>Contact Details</h3>
+              <div class="edit-icons">
+                  <i class="fa-solid fa-pen"></i>
+              </div>
+            </div>
+            <div class="contact-details">
+              <div class="member-item">
+                <div>Address:</div> 
+                <div>Flat 1, Floor 5, Building Name, Street Name, Locality, Mumbai - 400067</div>
+              </div>
+              <div class="contact-detail">
+                  <div class="member-item">
+                    <div>Contact:</div> 
+                    <div>+91 8345346464</div>
+                  </div>
+                  <div class="member-item">
+                    <div>Emergency Contact:</div>
+                    <div>+91 8345346464</div>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+        </div>      
+
+        <div class="plan-detail-cnt" *ngIf="planDetail === true">
+          <div class="first-cnt">
+              <div class="plan-details-text">Plan Details</div>
+              <div class="plan-details">
+                  <div class="base-quote-details">
+                      <div class="product-details">
+                          <div class="product-logo">
+                            <img src="assets/images/active_one_plus.png" alt="no image" width="40px" height="45px">
+                          </div>
+                          <div class="product-name-details">
+                              <div class="product-name">Active One Next</div>
+                              <div class="company-name">Aditya Birla Health Insurance</div>
+                              <div class="policy-no">23-22-0175217-0</div>
+                          </div>
+                      </div>
+                      <div class="base-premium-details">
+                          <div class="base-quoe-title">Base Quote/Incl tax</div>
+                          <div class="base-premium">₹6,863</div>
+                      </div>
+                      <div class="tenure-details">
+                          <div class="term-title">Term</div>
+                          <div class="term-years">1 year</div>
+                      </div>
+                  </div>
+                  <div class="horizontal-line"></div>
+                  <div class="covers-details">
+                      <div class="covers">
+                          <div *ngFor="let coverage of selectedCoverages" class="cover">
+                              <div class="cover-name-logo">
+                                  <img [src]="coverage.image" alt="coverage image" width="30px" height="30px" />
+                              </div>
+                              <div class="cover-details">
+                                  <div class="cover-name">{{ coverage.name }}</div>
+                                  <div class="cover-premium">Premium - ₹{{ coverage.premium }}</div>
+                              </div>
+                          </div>
+                          <div *ngFor="let addOn of selectedAddOns" class="health-add-on">
+                              <div class="health-add-on-logo">
+                                  <img [src]="addOn.image" alt="add-on image" width="30px" height="30px" />
+                              </div>
+                              <div class="health-add-on-details">
+                                  <div class="health-add-on-name">{{ addOn.name }}</div>
+                                  <div class="health-add-on-premium">Premium - ₹{{ addOn.premium }}</div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="additional-premium-details">
+                          <div class="additional-premium-title">Additional premium</div>
+                          <div class="additional-premium">₹1498</div>
+                      </div>
+                      <div class="health-returns-checkbox">
+                          <div class="health-returns-title"><input type="checkbox" id="health" /> <label for="health"> Use my Health Returns</label></div>
+                          <div class="health-returns-value">₹600</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="second-cnt">
+              <div class="total-premium-details">
+                  <div class="total-premium-title">Working Quote/incl tax</div>
+                  <div class="total-premium">₹8361</div>
+              </div>
+              <div class="save-new-subquote">
+                  <div class="save-icon"><i class="fa-regular fa-bookmark" style="color: #f42525;"></i></div>
+                  <div class="save-icon-title" (click)="getSubquotes()">Save New Sub Quote</div>
+              </div>
+              <div class="view-all">
+                  <div class="view-all-title">View All</div>
+                  <div class="arrow-icon"><i class="fa-solid fa-right-long" style="color: #e60a27;"></i></div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="bottom-fixed-container">
+        <div class="plan-summary">
+            <img src="assets/images/active_one_plus.png" alt="Plan Logo" class="plan-logo">
+            <div class="plan-details">
+                <div class="plan-name">Activ One NXT</div>
+                <div class="plan-provider">Aditya Birla Health Insurance</div>
+                <div class="policy-no">223-22-3433443-00</div>
+            </div>
+            <div class="plan-price">
+                <div>Total Premium/ incl tax</div>
+                <div class="price">₹6,863</div>
+            </div>
+        </div>
+            <div class="action-buttons">
+                <button *ngIf="mainCnt != 3" class="proceed-btn" (click)=" selectButton('primary',1)">Proceed</button>
+                <button *ngIf="mainCnt == 3" class="proceed-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Proceed</button>
+                <button class="renew-btn" *ngIf="mainCnt != 2">Renew Now</button>
+                <button class="renew-btn" *ngIf="mainCnt == 2" (click)="selectButton('payment','policySummary')">Next</button>
+            </div>
+    </div>
+
+    <!-- modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <div class="room-update-details-cnt">
+                      <div class="room-update-title">Would you like to upgrade your room?</div>
+                      <div class="product-details-cnt">
+                          <div class="product-premium-details">
+                              <div class="product-details">
+                                  <div class="product-logo">
+                                      <img src="assets/renewalLogos/product-logo.jpg" alt="no image" width="40px" height="45px" />
+                                  </div>
+                                  <div class="product-name-details">
+                                      <div class="product-name">Active One Next</div>
+                                      <div class="company-name">Aditya Birla Health Insurance</div>
+                                      <div class="policy-no">23-22-0175217-0</div>
+                                  </div>
+                              </div>
+                              <div class="premium-details">
+                                  <div class="premium-title">Total Premium/Incl tax</div>
+                                  <div class="premium">₹6,863</div>
+                              </div>
+                          </div>
+                          <div class="rooms">
+                              <div class="room">
+                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
+                                  <div class="room-name">Semi-Delux Room</div>
+                              </div>
+                              <div class="room">
+                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
+                                  <div class="room-name">Semi-Delux Room</div>
+                              </div>
+                              <div class="room">
+                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
+                                  <div class="room-name">Semi-Delux Room</div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="room-upgrade-benefits-cnt">
+                          <div class="room-upgrade-benefits-title">Upgrade benefits</div>
+                          <div class="upgrade-rooms-list">
+                              <div *ngFor="let plan of roomUpgradeBenefits" class="upgrade-rooms">
+                                  <input type="radio" id="plan1" name="plan" class="plan-radio" (change)="onRadioChanges()" />
+                                  <label [for]="plan.id" class="plan-label">
+                                      <div class="plan-details" *ngIf="plan.type !== 'No Upgrade'">
+                                          <div class="plan-type">{{ plan.type }}</div>
+                                          <div class="plan-price">{{ plan.price }}</div>
+                                      </div>
+                                      <div class="plan-premium" *ngIf="plan.type !== 'No Upgrade'">
+                                          <div class="premium-title">Premium</div>
+                                          <div>{{ plan.premium }}</div>
+                                      </div>
+                                      <span *ngIf="plan.type === 'No Upgrade'" class="no-need-upgrade">{{ plan.label }}</span>
+                                  </label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="apply-button-cnt"><button class="apply-button" [class.active]="isRadioSelected" data-bs-dismiss="modal">Apply</button></div>
+              </div>
+          </div>
+      </div>
+        </div>
+    
+</div>

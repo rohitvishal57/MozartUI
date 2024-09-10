@@ -1,0 +1,149 @@
+.part-1{
+    background: #FFF;
+    border-radius: 10px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+    .main-container {
+        background-color: #FFF;
+        border-radius: 20px;
+        // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    .card-body{
+        padding: 30px 40px;
+    }
+    .card-header{
+        color: #EF7300;
+        text-align: start;
+        font: 400 2rem "Noto Sans", sans-serif;
+    }
+    .typecss{
+        display: inline-table;
+        padding-right: 30px;
+        padding-top: 40px;
+    }
+    label {
+        display: block;
+        font-size: 14px;
+        color: grey;
+        font-family: "Roboto", sans-serif;
+        padding-bottom: 4px;
+    }
+    small {
+        font-size: 14px;
+    }
+    input {
+        font-family: Noto Sans, sans-serif;
+        font-size: 16px;
+        padding: 10px;
+        border: 1px solid #B8B8B8;
+        border-radius: 4px;
+        width: 100%;
+        background: #F6F6F6;
+        color: #3F3F3F;
+    }
+    select {
+        width: 100%;
+        height: 40px;
+        font-size: 16px;
+        font-family: Noto Sans, sans-serif;
+        border: 1px solid #B8B8B8;
+        border-radius: 4px;
+        background: #F6F6F6;
+        color: #3F3F3F;
+    }
+    .btn-container {
+        display: flex;
+        justify-content: right;
+    }
+    .btn {
+        padding: 15px 50px;
+        font-size: 12px;
+        font-weight: 500;
+        color: white;
+        background-image: linear-gradient(rgb(73, 72, 71), #8f8888);
+        border: none;
+        border-radius: 50px;
+        margin: 10px;
+    }
+    .btn:hover {
+        background-image: linear-gradient(#5e7c60, #60856e);
+    }
+}
+.part-2{
+    margin-top: 5rem;
+    background: #FFF;
+    border-radius: 10px;
+    box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.15);
+}
+h4{
+    text-align: start;
+    padding-left: 20px;
+    color: #EF7300;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+:host::ng-deep{
+    .p-dialog .p-dialog-header {
+        border-bottom: 0 none;
+        background: #ffffff;
+        color: #343a40;
+        padding: 1.5rem;
+        border-top-right-radius: 6px;
+        border-top-left-radius: 6px;
+    }
+    .card-body{
+        padding: 10px 20px;
+    }
+    .typecss{
+        display: inline-table;
+        padding-right: 30px;
+        padding-top: 40px;
+    }
+    label {
+        display: block;
+        font-size: 14px;
+        color: grey;
+        font-family: "Roboto", sans-serif;
+        padding-bottom: 4px;
+    }
+    small {
+        font-size: 14px;
+    }
+    input {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        width: 100%;
+        border-bottom: 1px solid grey;
+    }
+    select {
+        width: 100%;
+        height: 27px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        border: none;
+        outline: none;
+        border-bottom: 1px solid grey;
+        color: gray;
+    }
+    .btn-container {
+        padding-top : 20px;
+        display: flex;
+        justify-content: right;
+    }
+    .btn {
+        padding: 15px 50px;
+        font-size: 12px;
+        font-weight: 500;
+        color: white;
+        background-image: linear-gradient(rgb(73, 72, 71), #8f8888);
+        border: none;
+        border-radius: 50px;
+        margin: 10px;
+    }
+    .btn:hover {
+        background-image: linear-gradient(#5e7c60, #60856e);
+    }
+}

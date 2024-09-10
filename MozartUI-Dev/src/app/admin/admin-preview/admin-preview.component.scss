@@ -1,0 +1,458 @@
+.admin-form-preview{
+    // margin: 2.5rem 1.5rem;
+}
+.admin-card-body {
+    padding: 30px 40px;
+    margin-bottom: 20px;
+    background-color: #FFF;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.admin-card-header{
+    color: #002EDC;
+    font-size: 14px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    padding-bottom: 15px;
+}
+.admin-typecss{
+    display: inline-table;
+    padding-right: 30px;
+    padding-bottom: 30px;
+}
+.p-tabview-title {
+    line-height: 1;
+    white-space: nowrap;
+    font-size: 12px;
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+    background: #ffffff;
+    border-color: #002EDC;
+    color: #34383e;
+}
+label {
+    display: block;
+    font-size: 12px;
+    color: #002EDC;
+    font-family: "Roboto", sans-serif;
+    padding-bottom: 4px;
+}
+small {
+    font-size: 12px;
+}
+input {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    width: 100%;
+    border-bottom: 1px solid #002EDC;
+}
+select {
+    width: 100%;
+    height: 27px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #002EDC;
+}
+.admin-increment-typecss {
+    display: inline-table;
+    padding-right: 30px;
+}
+.admin-increment-typecss>input {
+    text-align: center;
+    width: 40px;
+    color: #002EDC;
+    border: none;
+    font-weight: 600;
+}
+.admin-increment-typecss>button {
+    border: none;
+    background: #fff;
+    color: black;
+    width: 30px;
+    font-size: 14px;
+    font-weight: 400;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.admin-sideselect-css {
+    display: inline-table;
+}
+.admin-box-label {
+    font-size: 14px;
+    font-weight: 400;
+}
+.admin-box {
+    font-size: 14px;
+    font-weight: 600;
+    width: max-content;
+    padding: 12px;
+    background-color: #002EDC;
+    color: white;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+.admin-form-switch {
+    display: flex;
+    justify-content: space-between;
+    padding:0px;
+}
+.admin-form-switch>label {
+    font-size: 16px;
+    font-weight: 400;
+    color: #002EDC;
+}
+.admin-form-switch .admin-form-check-input {
+    width: 3em;
+    margin-left: -2.5em;
+    background-image: var(--bs-form-switch-bg);
+    background-position: left center;
+    border-radius: 2.5em;
+    transition: background-position .15s ease-in-out;
+    height: 2.5rem;
+}
+.admin-form-check-input:checked {
+    background-color: #002EDC;
+    border-color: #002EDC;
+}
+.admin-btn-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.admin-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    background: #002EDC;
+    border: none;
+    border-radius: 50px;
+    margin: 10px;
+}
+.admin-checkboxes{
+    display: flex;
+}
+.admin-checkboxes>input{
+    width: 20px;
+    height: 20px;
+}
+.admin-checkboxes>label{
+    padding-left: 15px;
+    font-weight: 500;
+    font-size: 16px;
+}
+.admin-bullet-text{
+    display:block;
+}
+.admin-bullet-text>label{
+    color: black;
+    font-weight: 500;
+    font-size: 16px;
+}
+.admin-bullet-text>ul{
+    color: black;
+    font-weight: 400;
+    font-size: 14px;
+}
+.admin-top-buttons {
+    margin-bottom: 10px;
+    display: contents;
+}
+.admin-bottom-buttons {
+    margin-bottom: 10px;
+}
+/* Vehicle Registration Page */
+.admin-my-btn-class {
+    height: 54px;
+    border-radius: 20px;
+    font-size: 20px;
+    border: 2px solid #002EDC;
+    color: #fff;
+    margin: 19px 13px 0px 10px;
+    width: 44% !important;
+}
+.admin-my-btn-class:hover {
+    background-color: #002EDC;
+    color: #fff;
+}
+/* Get Customer Details Page */
+.admin-my-btn-class1 {
+    height: 44px;
+    border-radius: 20px;
+    font-size: 15px;
+    border: 2px solid  #10348e;
+    color: #002EDC;
+    margin: 19px 13px 0px 10px;
+    width: 15% !important;
+    padding-top: 8px;
+}
+.admin-my-btn-class1:hover {
+  background-color: #002EDC;
+  color: #000;
+}
+/* Select Package Page */
+.admin-banner-border{
+  border: 1px solid #ebebeb;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 10px;
+  background-color: rgb(231, 235, 240);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+.admin-expandable-border{
+  border-radius: 20px;
+  background-color: rgb(229, 224, 255);
+  cursor: pointer;
+  padding: 10px;
+  box-shadow: 0 2px 3px 0 rgba(73, 73, 73, 0.2), 0 3px 10px 0 rgba(73, 73, 73, 0.19);
+}
+.admin-expandable-border>label{
+  font-size: 17px;
+  font-weight: 500;
+  color: #002EDC;
+}
+/* Additional Covers Page */
+.admin-checkboxes{
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color:rgb(241, 252, 255);
+  display: flex;
+  flex-direction: column;
+}
+.admin-acceptTermsCheck {
+  flex-direction: row;
+}
+.admin-checkboxes #cover-checkbox{
+  margin-right: 5px;
+    width: 20px;
+    height: 20px;
+    appearance: none;
+    border: 2px solid #002EDC;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+
+}
+
+.admin-checkboxes #cover-checkbox:checked {
+  background-color: #002EDC;
+}
+
+.admin-checkboxes #cover-checkbox:checked::before {
+  content: '\2713';
+  display: block;
+  text-align: center;
+  line-height: 20px;
+  color: white;
+  font-size: 13px;
+}
+
+.admin-checkboxes #cover-description{
+  font-size: 13px;
+    color: #777;
+    margin-left: 25px;
+}
+.admin-question-item{
+  font-size: 13px;
+  text-align: center;
+  display: flex;
+  margin-left: 25px;
+  padding: 5px;
+  border: 2px solid #002EDC;
+  border-radius: 5px;
+}
+.admin-cover-heading {
+    font-size: 18px;
+    color: #002EDC;
+  }
+  .admin-radio-option{
+    align-items:flex-end;
+    margin-right: 10px;
+  }
+  
+  .admin-radio-option label{
+    font-size: 13px;
+    
+  }
+  
+  .admin-radio-option input[type="radio"] {
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid black;
+    border-radius: 50%;
+  }
+  
+  .admin-radio-option input[type="radio"]:checked {
+    background-color: #002EDC;
+  }
+  /* Payment Page */
+  .admin-sendlink {
+    display: inline-table;
+    padding-right: 30px;
+    justify-content: center;
+}
+.admin-sendlink>label {
+    display: block;       /* Firstly there was another display: flex */
+    font-size: 14px;
+    color: #212336;
+    font-family: "Roboto", sans-serif;
+    padding-bottom: 5px;
+    justify-content: center;
+}
+.admin-sendlink-img {
+    background: #fff;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.admin-sendlink-img>img {
+    border-radius: 10px;
+    width: 50px;
+    padding: 10px;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+    cursor: pointer;
+}
+.admin-center-element>label{
+    font-size: 20px;
+    color: #002EDC;
+    font-family: "Roboto", sans-serif;
+    padding-bottom: 5px;
+    display: flex;
+    justify-content: center;
+}
+.admin-center-element>input{
+  font-family: Arial, sans-serif;
+  font-size: 28px;
+  border:none;
+  outline: none;
+  width: 100%;
+  border-bottom: 1px solid #002EDC;
+  display: flex;
+  text-align: center;
+}
+.admin-center-label {
+    justify-content: center !important;
+    display: flex;
+    align-self: center;
+    flex-direction: column;
+    font-size: 14px;
+    color: #212336;
+    font-family: "Roboto", sans-serif;
+    padding-bottom: 5px;
+}
+.admin-premium-details-box {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .admin-left-side, .admin-right-side {
+    flex: 1;
+  }
+  
+  .admin-left-side p, .admin-right-side p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .admin-left-side p {
+    color: #007bff; 
+    display: grid;
+  }
+  
+  .admin-right-side p {
+    color: #28a745;
+    display: inline-block;
+  }
+
+
+  /*For Payment*/
+  .admin-center-label {
+    justify-content: center !important;
+    display: flex;
+    align-self: center;
+    flex-direction: column;
+    font-size: 14px;
+    color: #212336;
+    font-family: "Roboto", sans-serif;
+    padding-bottom: 5px;
+}
+
+.admin-imageLoop {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.admin-imageLoop>div {
+    margin-right: 20px;
+    /* Adjust the value for horizontal spacing between images and labels */
+}
+
+.admin-paymentLogo {
+    width: 50px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center content vertically */
+    padding: 10px;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
+
+.admin-img1 {
+    width: 40px;
+    /* Adjust the value for the width of the image */
+    height: 40px;
+    /* Adjust the value for the height of the image */
+}
+
+.admin-imagelabel {
+    margin-top: 5px;
+    /* Adjust the value for vertical spacing between image and label */
+    font-size: 18px;
+    /* Adjust the value for the font size of the label */
+}
+
+.admin-confirm_button{
+    background-color: #EF7300;
+      width: 85px;
+      border-radius: 20px;
+      border: none;
+      height: 30px;
+      font-size: 14px;
+      color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: auto;
+    margin-left: calc(50% - 50px);
+  }
+
+.admin-proposal{
+    font-size: 14px;
+    font-weight: 500;
+}
+.p-dialog .p-dialog-header .p-dialog-title {
+    flex-grow: 1;
+    font-size: 20px;
+}
