@@ -849,7 +849,7 @@
                                 <ng-container [formGroupName]="subControl.name">
                                   <div *ngFor="let innerSubForm of subControl.innerSubControls,index as k">
                                     <div *ngIf="k>0" class="row" style="margin-bottom: 15px; margin-top: 15px;">
-                                      <ng-container [formArrayName]="innerSubForm.name">
+                                      <ng-container *ngIf="innerSubForm.coreControls" [formArrayName]="innerSubForm.name">
                                         <ng-container *ngFor="let innerControl of innerSubForm.coreControls;index as l">
                                           <ng-container [formGroupName]="l">
                                             <!--<div *ngFor="let coreControl of innerControl.coreControls"> -->
@@ -883,22 +883,30 @@
                                       margin-top: 0px;"></label>
                                               </div>
                                             </div>
+
                                             <!-- </div> -->
                                           </ng-container>
                                         </ng-container>
                                       </ng-container>
 
+                                      <div *ngIf="innerSubForm.type == 'button'" class="row">
+                                        <div class="col-12 col-xl-12 text-right">
+                                          
+                                          <input type="button" class="next-btn" (click)="closeOverlay(subControl,control)" value="Done" />
+        
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </ng-container>
                               </div>
-                              <div class="row">
+                              <!-- <div class="row">
                                 <div class="col-12 col-xl-12 text-right">
-                                  <input type="button" class="next-btn" (click)="closeOverlay(subControl,control)"
-                                    value="Done" />
+                                  
+                                  <input *ngIf="showDoneButton" type="button" class="next-btn" (click)="closeOverlay($event,subControl,control)" value="Done" />
 
                                 </div>
-                              </div>
+                              </div> -->
                               <!-- <div *ngIf="subControl.type === 'addOnDetails'" style="margin-left: 10px;">
                                     <ng-container [formArrayName]="subControl.name">
                                       <label *ngIf="subControl.visibleLabel==true" [innerHTML]="subControl.label"></label>

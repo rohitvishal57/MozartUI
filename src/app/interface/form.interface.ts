@@ -102,6 +102,7 @@ export interface ISubControl {
   disabled?: boolean;
   method?: string;
   innerSubControls?: ISubControl[];
+  displayOnly?: boolean;
   coreControls?: ISubControl[];
   bigFont?: boolean;
   getAllOption?: string;

@@ -75,6 +75,7 @@ export class AbhiDynamicFormComponent {
   isAHPAAdded: boolean = false;
   AHPARiskValue: any;
   showPopup: boolean = false;
+  showDoneButton = true;
 
   displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
@@ -147,10 +148,21 @@ export class AbhiDynamicFormComponent {
 
     if (sessionStorage.getItem('tenureAmount')) {
       this.tenureAmount = this.encryptionService.decrypt(sessionStorage.getItem('tenureAmount') as string)
+      console.log(this.tenureAmount);
+
     }
 
     if (sessionStorage.getItem('premiumAmountDetails')) {
       this.premiumAmountDetails = this.encryptionService.decrypt(sessionStorage.getItem('premiumAmountDetails') as string)
+      console.log(this.premiumAmountDetails);
+
+    }
+
+    if (sessionStorage.getItem('addOnList')) {
+      this.addOnList = this.encryptionService.decrypt(sessionStorage.getItem('addOnList') as string);
+    }
+    else {
+      this.addOnList = [];
     }
   }
   getFormDataFromFormSequence(formId: any) {
@@ -271,21 +283,55 @@ export class AbhiDynamicFormComponent {
             }
           }
           else if (control.subControls) {
+            // control.subControls.forEach((subControl: ISubControl) => {
+            //   if (subControl.name == 'addOnDetails') {
+            //     subControl.innerSubControls = subControl.innerSubControls?.slice(0, 1)
+            //     this.formData['insuredMemberDetails'].forEach((member: any) => {
+            //       if (subControl.innerSubControls) {
+            //         let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
+            //         console.log(tempInnerControl, member);
+            //         const tempRelationshipType = JSON.parse(member.relationshipType);
+            //         tempInnerControl.label = tempRelationshipType.value;
+            //         tempInnerControl.name = tempRelationshipType.value;
+            //         subControl.innerSubControls.push(tempInnerControl)
+            //       }
+            //     })
+            //   }
+            // })
             control.subControls.forEach((subControl: ISubControl) => {
               if (subControl.name == 'addOnDetails') {
-                subControl.innerSubControls = subControl.innerSubControls?.slice(0, 1)
+                let demoTypeIndex: any;
+                let doneButton: any;
+                if (subControl.innerSubControls) {
+                  demoTypeIndex = subControl.innerSubControls.findIndex(control => control.name === 'demoType');
+                  doneButton = subControl.innerSubControls.find(control => control.name === 'doneButton');
+                  // Slice the array to retain demoType and doneButton only
+                  subControl.innerSubControls = [
+                    ...subControl.innerSubControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
+                    // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
+                  ]; // Keep the first control (or reset)
+                }
+
+
+                console.log(subControl.innerSubControls);
+
+
                 this.formData['insuredMemberDetails'].forEach((member: any) => {
                   if (subControl.innerSubControls) {
                     let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
                     console.log(tempInnerControl, member);
+
                     const tempRelationshipType = JSON.parse(member.relationshipType);
                     tempInnerControl.label = tempRelationshipType.value;
                     tempInnerControl.name = tempRelationshipType.value;
-                    subControl.innerSubControls.push(tempInnerControl)
+                    subControl.innerSubControls?.push(tempInnerControl);
                   }
-                })
+                });
+                subControl.innerSubControls?.push(doneButton);
               }
-            })
+            });
+
+
             console.log(this.initializeSubControls(control.subControls));
 
             this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
@@ -427,7 +473,7 @@ export class AbhiDynamicFormComponent {
           }
           formGroup.addControl(control.name, tempFormArray);
         }
-        else
+        else if (!control.displayOnly || control.displayOnly === false)
           formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
       });
     }
@@ -1699,6 +1745,7 @@ export class AbhiDynamicFormComponent {
         if (this.form.formTitle.includes("Total Premium")) {
           sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
           sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
+          sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
         }
 
 
@@ -1918,9 +1965,14 @@ export class AbhiDynamicFormComponent {
 
   async getPremiumAmount(control: IFormControl) {
     this.spinner.show();
-    this.tenureAmount.forEach((element) => {
-      element = 0;
-    })
+    // this.tenureAmount.forEach((element) => {
+    //   element = 0;
+    // })
+    for (let i = 0; i < this.tenureAmount.length; i++) {
+      this.tenureAmount[i] = 0;
+    }
+    console.log(this.tenureAmount);
+
 
     this.premiumDetails = [];
     this.premiumAmountDetails = [];
@@ -2052,11 +2104,13 @@ export class AbhiDynamicFormComponent {
                 this.tenureAmount[premium.tenure - 1] += premium.premium || 0;
                 tempArray.push(premium.premium);
               });
+              console.log(this.tenureAmount);
+
               this.premiumDetails.push(member.premium);
               this.premiumAmountDetails.push(tempArray);
             });
           });
-          console.log(this.premiumAmountDetails);
+          // console.log(this.premiumAmountDetails);
           sessionStorage.setItem("premiumAmountDetails", this.encryptionService.encrypt(this.premiumAmountDetails));
         }
         else {
@@ -2402,14 +2456,16 @@ export class AbhiDynamicFormComponent {
             for (let i = 1; i < subControl.innerSubControls.length; i++) {
               console.log(subControl.innerSubControls[i]);
 
-              for (let j = 0; j < subControl.innerSubControls[i].coreControls.length; j++) {
-                console.log(subControl.innerSubControls[i].coreControls[j], this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`));
-                if (this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == true) {
+              if (subControl.innerSubControls[i].coreControls) {
+                for (let j = 0; j < subControl.innerSubControls[i].coreControls.length; j++) {
+                  console.log(subControl.innerSubControls[i].coreControls[j], this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`));
+                  if (this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == true) {
 
-                  this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue(false);
-                }
-                else {
-                  this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
+                    this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue(false);
+                  }
+                  else {
+                    this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
+                  }
                 }
               }
             }
@@ -2585,6 +2641,7 @@ export class AbhiDynamicFormComponent {
       }),
       // 3. Step: Process the add-on data
       concatMap(() => {
+
         let index = 0; // Initialize the index variable
         const addOnProcessing = Object.keys(addOnData).map((key: string) => {
           if (Array.isArray(addOnData[key])) {
@@ -3111,7 +3168,6 @@ export class AbhiDynamicFormComponent {
   }
 
   closeOverlay(subControl: any, parentControl: any = null) {
-    console.log(subControl,parentControl);
     if (parentControl != null) {
       let count = 0;
       let memberDetails = this.dynamicFormGroup.get(parentControl.name)?.get(subControl.name)?.value;
@@ -3191,10 +3247,21 @@ export class AbhiDynamicFormComponent {
 
     }
 
+    this.changeOverLayDone(false);
+
     this.addOnAdded(subControl, parentControl);
 
     this.isOverlayVisible = false;
     subControl.visible = false;
+  }
+
+  changeOverLayDone(changeValue: boolean = false) {
+
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((controls: any) => {
+
+      })
+    })
   }
 
   showOverlay(control: any) {
