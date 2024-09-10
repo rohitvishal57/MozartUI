@@ -11,7 +11,7 @@ on:
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
   DEPLOY_BASE_DIR: "D:/abhi_deployments/frontend_deployments"
-  WEB_ROOT: "C:/inetpub/wwwroot/abhi_frontend"
+  WEB_ROOT: "C:/inetpub/wwwroot/abhi_frontend/bancaassurance-frontend"
   PORT: 4800
 
 jobs:
