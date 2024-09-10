@@ -10,8 +10,8 @@ on:
 
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
-  DEPLOY_BASE_DIR: "D:/frontend_deployments"
-  WEB_ROOT: "C:/inetpub/wwwroot/frontend"
+  DEPLOY_BASE_DIR: "D:/abhi_deployments/frontend_deployments"
+  WEB_ROOT: "C:/inetpub/wwwroot/abhi_frontend"
   PORT: 4200
 
 jobs:
@@ -123,7 +123,7 @@ jobs:
 
     - name: Manage Previous Deployments (Keep Last 3)
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
-
+    
     - name: Download build artifacts
       uses: actions/download-artifact@v3
       with:
@@ -132,9 +132,13 @@ jobs:
 
     - name: Upload artifact to VM
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./MozartUI-Dev/dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
-
+  
+    - name: Ensure abhi_frontend Directory Exists in IIS Web Root
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
+  
     - name: Deploy application on IIS
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Get-WebSite -Name 'AngularApp')) { New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath '$WEB_ROOT' -ApplicationPool 'DefaultAppPool' }\""
-
+  
     - name: Update IIS Site for the Latest Deployment
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Stop-WebSite -Name 'AngularApp'; Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse; Start-WebSite -Name 'AngularApp'\""
+      
