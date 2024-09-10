@@ -155,9 +155,14 @@ jobs:
 
     - name: Deploy application on IIS
       run: |
-        # Convert slashes in the path
-        webRoot=${{ env.WEB_ROOT }}
-        webRootIIS=$(echo $webRoot | sed 's/\//\\/g')
+        # Deploy the website with proper path formatting
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}' -replace '/', '\') -ApplicationPool 'FrontendAppPool'\""
+
+    # - name: Deploy application on IIS
+    #   run: |
+    #     # Convert slashes in the path
+    #     webRoot=${{ env.WEB_ROOT }}
+    #     webRootIIS=$(echo $webRoot | sed 's/\//\\/g')
         
-        # Deploy the website
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath '$webRootIIS' -ApplicationPool 'FrontendAppPool'\""
+    #     # Deploy the website
+    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath '$webRootIIS' -ApplicationPool 'FrontendAppPool'\""
