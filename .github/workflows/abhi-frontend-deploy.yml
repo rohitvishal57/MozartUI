@@ -134,7 +134,7 @@ jobs:
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./MozartUI-Dev/dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
     
     - name: Create Application Pool
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Get-Item 'IIS:\\AppPools\\FrontendAppPool' -ErrorAction SilentlyContinue)) { New-WebAppPool -Name 'FrontendAppPool' }\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Get-Item 'IIS:\\AppPools\\FrontendAppPool' -ErrorAction SilentlyContinue)) { New-WebAppPool -Name 'FrontendAppPool' } else { Write-Host 'Application pool already exists.' }\""
     
     - name: Stop IIS Website if Exists
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Stop-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
