@@ -193,21 +193,4 @@ jobs:
   
     - name: Deploy application on IIS
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\bancaassurance-frontend' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
-    # - name: Convert slashes in WEB_ROOT path
-    #   id: convert-path
-    #   run: |
-    #     echo "WEB_ROOT=$(echo 'C:/inetpub/wwwroot/abhi_frontend' | sed 's/\//\\/g')" >> $GITHUB_ENV
-
-    # - name: Deploy application on IIS
-    #   run: |
-    #     # Deploy the website with proper path formatting
-    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}' -replace '/', '\') -ApplicationPool 'FrontendAppPool'\""
-
-    # - name: Deploy application on IIS
-    #   run: |
-    #     # Convert slashes in the path
-    #     webRoot=${{ env.WEB_ROOT }}
-    #     webRootIIS=$(echo $webRoot | sed 's/\//\\/g')
-        
-    #     # Deploy the website
-    #     ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath '$webRootIIS' -ApplicationPool 'FrontendAppPool'\""
+    
