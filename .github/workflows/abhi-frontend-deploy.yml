@@ -1,22 +1,22 @@
 name: Build and Deploy Angular App to Azure VM
 
 on:
-  # push:
-  #   branches:
-  #     - main
+   push:
+     branches:
+       - RV_abhi_frontend_deploy
   #     - Dev
   #     - release
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'abhi_dev'
-        type: choice
-        options:
-          - abhi_dev
-          - abhi_uat
-          - abhi_prod
+  # workflow_dispatch:
+  #   inputs:
+  #     environment:
+  #       description: 'Deployment environment'
+  #       required: true
+  #       default: 'abhi_dev'
+  #       type: choice
+  #       options:
+  #         - abhi_dev
+  #         - abhi_uat
+  #         - abhi_prod
 
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
