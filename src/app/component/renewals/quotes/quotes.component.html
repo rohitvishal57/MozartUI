@@ -7,7 +7,7 @@
                 <div class="list-of-filter">
                     <div class="left-header" #filterSection>
                         <div class="left-value1">Quick filters</div>
-                        <div class="filter-types" *ngIf="!isDesktopView">
+                        <div class="filter-types">
                             <div [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">
                                 <p>All Policies({{countsList.totalRecords}})</p>
                             </div>
@@ -24,65 +24,18 @@
                                 <p>Expired ({{countsList.expiredCount}})</p>
                             </div>
                         </div>
-                        <div class="mobile-filter" *ngIf="isDesktopView">
-                            <mat-form-field  class="aaa"  appearance="outline">
-                                <mat-label>Filter Policies</mat-label>
-                                <mat-select [(ngModel)]="activeFilter" (selectionChange)="filterQuotes($event.value)">
-                                    <mat-option value="all">All Policies ({{countsList.totalRecords}})</mat-option>
-                                    <mat-option value="<30DaysExpired">< 30 Days ({{countsList.expiringInLessThan30DaysCount}})</mat-option>
-                                    <mat-option value="30-60Days">30-60 Days ({{countsList.expiringIn30To60DaysCount}})</mat-option>
-                                    <mat-option value="60-90Days">60-90 Days ({{countsList.expiringIn60To90DaysCount}})</mat-option>
-                                    <mat-option value="ExpiredPolicies">Expired ({{countsList.expiredCount}})</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
                     </div>
                     <div class="right-header">
                         <div class="quotes-icon">
                             <i class="fa-solid fa-download"></i>
                         </div>
-
-
-                        <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown()">
-                            <i class="fa-solid fa-magnifying-glass" data-bs-toggle="dropdown" aria-expanded="false"></i>
-                            <mat-menu #searchMenu="matMenu"  [overlapTrigger]="false" hasBackdrop="true" (closed)="menuClosed()">
-                                <div class="search-dropdown-cnt">
-                              <div class="search-title">Search</div>
-                              <div class="search-dropdown">
-                                <mat-form-field class="select-boxes" color="accent" appearance="outline" (click)="$event.stopPropagation()">
-                                  <mat-label>Select search type</mat-label>
-                                  <mat-select [(ngModel)]="selected" (selectionChange)="onSelectChanges($event)" >
-                                    <mat-option value="none">Select</mat-option>
-                                    <mat-option value="mobileNo">Mobile Number</mat-option>
-                                    <mat-option value="name">Proposer Name</mat-option>
-                                    <mat-option value="policyNumber">Policy Number</mat-option>
-                                  </mat-select>
-                                </mat-form-field>
-                                <div class="search-input">
-                                  <input matInput 
-                                         type="text" 
-                                         *ngIf="selected !== 'none' && selected !== ''" 
-                                         [formControl]="searchInputControl"
-                                         [placeholder]="getPlaceholder()"
-                                         (click)="$event.stopPropagation()"> <!-- Stop propagation here -->
-                                  <mat-error *ngIf="searchInputControl.invalid && searchInputControl.touched">
-                                    {{ getErrorMessage() }}
-                                  </mat-error>
-                                </div>
-                              </div>
-                              <div class="search-buttons">
-                                <div class="cancel-button" (click)="cancelSearch()">Cancel</div>
-                                <div class="apply-button" [class.active]="selected!='none' && searchInputControl.valid" (click)="applySearch()">Apply</div>
-                              </div>
-                            </div>
-                            </mat-menu>
-                          </div>
-                          <div class="filter-icon" (click)="toggleFilterDropdown()">
+                        <div class="quotes-icon" (click)="toggleSearchDropdown()">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <div class="filter-icon" (click)="toggleFilterDropdown()">
                             <div><i class="fa-solid fa-filter"></i></div>
                             <p>FIlter({{appliedFiltersCount}})</p>
                         </div>
-                          
-                        
                         <div class="quotes-list-icon" [ngClass]="{'active': selectedView === 'list'}" (click)="quotesViews('list')">
                             <i class="fa-solid fa-list"></i>
                         </div>
@@ -155,7 +108,35 @@
                     <div class="apply-button" [ngClass]="getApplyButtonClass()" (click)="applyFilter()">Apply</div>
                 </div>
             </div>
-
+            <!--Search DropDown-->
+            <div class="search-dropdown-cnt" *ngIf="toggeleSearchdropdown === true">
+              <div class="search-title">Search</div>
+              <div class="search-dropdown">
+                <mat-form-field class="select-boxes" color="accent" appearance="outline">
+                  <mat-label>Select search type</mat-label>
+                  <mat-select [(ngModel)]="selected" (selectionChange)="onSelectChanges()">
+                    <mat-option value="none">Select</mat-option>
+                    <mat-option value="mobileNo">Mobile Number</mat-option>
+                    <mat-option value="name">Proposer Name</mat-option>
+                    <mat-option value="policyNumber">Policy Number</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div class="search-input">
+                  <input matInput 
+                         type="text" 
+                         *ngIf="selected !== 'none' && selected !== ''" 
+                         [formControl]="searchInputControl"
+                         [placeholder]="getPlaceholder()">
+                  <mat-error *ngIf="searchInputControl.invalid && searchInputControl.touched">
+                    {{ getErrorMessage() }}
+                  </mat-error>
+                </div>
+              </div>
+              <div class="search-buttons">
+                <div class="cancel-button" (click)="cancelSearch()">Cancel</div>
+                <div class="apply-button" [class.active]="selected!='none' && searchInputControl.valid" (click)="applySearch()">Apply</div>
+              </div>
+            </div>
             <!--Display Data-->
             <div class="card-cnt">
                 <!--Card View-->
@@ -176,9 +157,9 @@
                                 <div class="icon" ><i class="fa-brands fa-whatsapp" style="color: #3cb224;"></i> </div>
                                 <div class="icon" ><i class="fa-solid fa-comment-sms" style="color: #827e8b;"></i> </div>
                                 <div class="icon" ><i class="fa-regular fa-envelope"></i></div>
-                                <div class="icon" [matMenuTriggerFor]="moreMenu">
+                                <div class="icon" [matMenuTriggerFor]="menu">
                                     <i class="fa-solid fa-ellipsis-vertical" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"></i>
-                                    <mat-menu #moreMenu="matMenu" class="more-values">
+                                    <mat-menu #menu="matMenu" class="more-values">
                                       <div class="dropdown-item" (click)="handleAction(row, 'renew')">
                                         <div class="icon-wrapper"><i class="" style="color: #979CAE;"></i></div>
                                         <span>Renew</span>

@@ -37,7 +37,6 @@ export class QuotesComponent implements OnInit {
   showComparison: boolean = false;
   selected: string = "";
   searchInputControl = new FormControl("");
-  isDesktopView:boolean=false
 
   members = [
     {
@@ -103,13 +102,6 @@ export class QuotesComponent implements OnInit {
     this.rows = event.rows; 
     this.page = Math.floor(this.first / this.rows) + 1;
     // console.log('First index:', this.first, 'Rows:', this.rows, 'Page:', this.page);
-  }
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isDesktopView = window.innerWidth <= 1116;
-    if (this.isDesktopView) {
-      // this.isSidenavOpen = false;
-    }
   }
 
   renewalLisRequestBody={
@@ -270,13 +262,11 @@ export class QuotesComponent implements OnInit {
     this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
   }
 
-  onSelectChanges(event: any): void {
-    event.stopPropagation(); // Prevents the menu from closing
+  onSelectChanges(): void {
     this.selected !== "none";
     console.log("selected value", this.selected);
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
-  
     if (this.selected === "mobileNo") {
       this.searchInputControl.setValidators([
         Validators.required,
@@ -288,23 +278,16 @@ export class QuotesComponent implements OnInit {
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
       ]);
-    } 
-    // Uncomment if you need policyNumber
+    }
     // else if (this.selected === "policyNumber") {
     //   this.searchInputControl.setValidators([
     //     Validators.required,
     //     Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
     //   ]);
     // }
-    
     this.searchInputControl.updateValueAndValidity();
-    this.searchInputControl.markAsUntouched(); 
+    this.searchInputControl.markAsUntouched();
   }
-  menuClosed(): void {
-    // Add logic here if you need to handle anything when the menu closes
-  }
-  
-  
 
   getPlaceholder(): string {
     if (this.selected === "mobileNo") {
@@ -396,5 +379,4 @@ export class QuotesComponent implements OnInit {
     this.showSubQuotes = false;
     this.showComparison = true;
   }
-  
 }

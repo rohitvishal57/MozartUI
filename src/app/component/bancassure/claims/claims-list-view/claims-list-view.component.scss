@@ -1,5 +1,5 @@
 .main-container {
-  height: 1100px;
+  height: 1200px;
   display: flex;
   justify-content: center;
   margin-left: 6%;
@@ -89,16 +89,14 @@
 .main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types p{
   font-size: 11px;
 }
-.main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div .active-button{
-  background: #c7222a;
+.main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div.active{
+  background-color: #c7222a;
   color: #fff;
-// Text color when active //
-border: 1px solid #c7222a;
 }
 .main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div:hover{
-background: #ffe7e5;
-border: 1px solid #c7222a;
-color: #c7222a;
+  background: #ffe7e5;
+  border: 1px solid #c7222a;
+  color: #c7222a;
 }
 .main-container .all-claims .main-claims .claims-header .filter-list .right-header{
   display: flex;
@@ -125,7 +123,7 @@ color: #c7222a;
   border-radius: 8px;
   opacity: 0px;
 }
-.main-container .all-claims .main-claims .claims-header .filter-list .right-header .claims-list-icon.active {
+.main-container .all-claims .main-claims .claims-header .filter-list .claims-list-icon.active {
   background-color: #c7222a;
   color: white;
 }
@@ -133,63 +131,104 @@ color: #c7222a;
   background-color: #c7222a;
   color: white;
 }
-.main-container .all-claims .main-claims .search-dropdown-cnt {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  z-index: 1000;
-  width: 36%;
-  left: 53%;
+
+.search-dropdown-cnt {
+  width: 100%;
   padding: 24px;
   gap: 24px;
   border-radius: 16px;
   background: #f5f5f5ea;
-  border: 2px solid #FFFFFF;
+  border: 4px solid #FFF;
   box-shadow: 0px 12px 20px 0px #00000026;
   display: flex;
   flex-direction: column;
-  gap:20px;
 }
-.main-container .all-claims .main-claims .search-dropdown-cnt .search-title{
+.search-dropdown-cnt .search-title{
+ width:100%;
+ height:25px;
+ width: 100%;
  font-family: Anek Latin;
  font-size: 20px;
  font-weight: 600;
+ line-height: 24.2px;
  text-align: left;
  color: #000;
 }
-.main-container .all-claims .main-claims .search-dropdown-cnt .search-dropdown{
+.search-dropdown-cnt .search-dropdown{
   width:100%;
   min-height:50px;
   max-height: 500px;
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
 }
-.select-boxes{
-  width:50%;
+.search-dropdown-cnt .search-dropdown .select-boxes{
+  width:225px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.search-input{
-  width: 47%;
+.search-dropdown-cnt .search-dropdown .search-input{
+  width: 225px;
 }
-.search-input input{
+.search-dropdown-cnt .search-dropdown .search-input input{
   width:100%;
   height:50px;
   border-radius: 6px;
   background-color: white;
-  border: 2px solid #FF4081;
+  border: 2px solid #c7222a;
   outline: none;
 }
-.main-container .all-claims .main-claims .search-dropdown-cnt .search-buttons {
+.search-dropdown-cnt .search-buttons {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
   height: 40px;
   gap:30px;
+}
+.search-dropdown-cnt .search-buttons .cancel-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 40px;
+  padding: 10px 16px 10px 16px;
+  gap: 8.04px;
+  border-radius: 12px;
+  background-color: #c7222a;
+  color: white;
+  cursor: pointer;
+  font-family: PF Encore Sans Pro;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+}
+
+.search-dropdown-cnt .search-buttons .apply-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 40px;
+  padding: 10px 16px 10px 16px;
+  gap: 8.04px;
+  border-radius: 12px;
+  background-color: #fff;
+  font-family: PF Encore Sans Pro;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+  color: #4c4c4c;
+  background-color: white;
+}
+.search-dropdown-cnt .search-buttons .apply-button.active {
+  background-color: #c7222a;
+  color: white;
+  cursor: pointer;
 }
 .main-container .all-claims .main-claims .search-dropdown-cnt .search-buttons .cancel-button {
   display: flex;
@@ -233,51 +272,59 @@ color: #c7222a;
   color: white;
   cursor: pointer;
 }
+////table
 .main-container .all-claims .main-claims .card-container .list-view-container {
    border-radius: 8px; 
    overflow: hidden; 
    border: 2px solid white;
  }
 
-::ng-deep .mat-mdc-table .mat-mdc-header-cell {
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 4px 8px;
-  background: #f0eeee !important;
-  padding: 12px;
-  font-family: Anek Latin;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 13.2px;
-  letter-spacing: -0.200000003px;
-  color: #222222;
+// ::ng-deep .mat-mdc-table .mat-mdc-header-cell {
+//   text-align: left;
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   background: #f0eeee !important;
+//   padding: 5px;
+//   font-family: Anek Latin;
+//   font-size: 12px;
+//   font-weight: 600;
+//   line-height: 13.2px;
+//   letter-spacing: -0.200000003px;
+//   color: #222222;
 
+// }
+
+// ::ng-deep .mat-mdc-cell
+//  {
+//   font-family: Anek Latin;
+//   font-size: 12px;
+//   font-weight: 500;
+//   line-height: 14px;
+//   letter-spacing: -0.20000000298023224px;
+//   color: #181414;
+//   padding-right: 0px;
+// }
+
+// .mat-header-cell{
+// font-family: Anek Latin;
+
+// }
+
+// ::ng-deep .mat-mdc-row{
+// white-space: nowrap;
+// }
+// ::ng-deep .mat-mdc-row:nth-child(even) {
+//   background-color: #f0eeee;
+// }
+////
+::ng-deep .table>:not(caption)>*>* {
+  border-radius: 8px;
+}
+::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #f8f9fa;
 }
 
-::ng-deep .mat-mdc-cell
- {
-  font-family: Anek Latin;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 14px;
-  letter-spacing: -0.20000000298023224px;
-  color: #181414;
-  padding-right: 0px;
-}
-
-.mat-header-cell{
-font-family: Anek Latin;
-
-}
-
-::ng-deep .mat-mdc-row{
-white-space: nowrap;
-}
-::ng-deep .mat-mdc-row:nth-child(even) {
-  background-color: #f0eeee;
-}
 
 .main-container .all-claims .main-claims .grid-view-container{
   border-radius:8px;
@@ -325,6 +372,15 @@ white-space: nowrap;
   gap: 20px;
   justify-content: center;
 }
+.main-container .all-claims .main-claims .card-container .card-outer-container .icon{
+    background-color: #c7222a;
+    color: white;
+    border-radius: 5px;
+    padding: 0px 5px 5px 5px;
+    width: 30px;
+    height: 30px;
+}
+
 ::ng-deep .p-paginator{
   background-color: transparent;
 }

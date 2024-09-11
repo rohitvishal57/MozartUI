@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { BancassureRoutingModule } from './bancassure.routing-module';
 import { PrimeNgModule } from 'src/app/prime-ng.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -21,6 +21,7 @@ import { MyMaterialModule } from 'src/app/material.module';
 import { ClaimsComponent } from './claims/claims.component';
 import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
 import { ClaimsListViewComponent } from './claims/claims-list-view/claims-list-view.component';
+import { DatepipePipe } from 'src/app/pipe/datepipe.pipe';
 import { EndorsementsModule } from './endorsements/endorsements.module';
 
 @NgModule({
@@ -49,7 +50,8 @@ export class AppModule { }
     RenewalDynamicFormComponent,
     ClaimsComponent,
     ClaimsViewComponent,
-    ClaimsListViewComponent
+    ClaimsListViewComponent,
+    DatepipePipe
   ],
   imports: [
     CommonModule,
