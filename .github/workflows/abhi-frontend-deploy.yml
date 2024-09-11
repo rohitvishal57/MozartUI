@@ -11,7 +11,7 @@ on:
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
   DEPLOY_BASE_DIR: "D:/abhi_deployments/frontend_deployments"
-  WEB_ROOT: "C:/inetpub/wwwroot/abhi_frontend"
+  WEB_ROOT: "C:/inetpub/wwwroot"
   PORT: 4800
 
 jobs:
@@ -52,18 +52,21 @@ jobs:
     #     echo "Listing the contents of MozartUI-Dev directory:"
     #     ls -la MozartUI-Dev  # List the contents of the MozartUI-Dev directory (if it exists)
 
+    # - name: Install dependencies
+    #   run: |
+    #     cd MozartUI-Dev
+    #     npm install --legacy-peer-deps
+
     - name: Install dependencies
       run: |
-        cd MozartUI-Dev
         npm install --legacy-peer-deps
       
     - name: Build the project
       run: |
-        cd MozartUI-Dev
         npm run build --prod
 
     - name: List Build Artifacts
-      run: ls -la ./MozartUI-Dev/dist/
+      run: ls -la ./dist/
 
     # - name: List contents in the current directory
     #   run: |
@@ -75,7 +78,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: angular-artifacts
-        path: ./MozartUI-Dev/dist/
+        path: .dist/
 
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v3.0.0
@@ -83,7 +86,7 @@ jobs:
         projectBaseDir: .
         args: |
           -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}
-          -Dsonar.sources=./MozartUI-Dev/src
+          -Dsonar.sources=./src
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
@@ -124,14 +127,17 @@ jobs:
     - name: Manage Previous Deployments (Keep Last 3)
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
     
+    - name: Create directory for artifacts
+      run: mkdir -p ./my-artifacts
+      
     - name: Download build artifacts
       uses: actions/download-artifact@v3
       with:
         name: angular-artifacts
-        path: ./MozartUI-Dev/dist/
+        path: ./my-artifacts
 
     - name: Upload artifact to VM
-      run: scp -i ~/.ssh/id_rsa -P 22 -r ./MozartUI-Dev/dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
+      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
     
     - name: Create or Update Application Pool
       run: |
@@ -158,17 +164,17 @@ jobs:
     - name: Remove Existing Website if Exists
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
   
-    - name: Ensure abhi_frontend Directory Exists in IIS Web Root
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
+    # - name: Ensure abhi_frontend Directory Exists in IIS Web Root
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
   
-    - name: Clean up the abhi_frontend Directory
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
+    # - name: Clean up the abhi_frontend Directory
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
   
-    - name: Copy Latest Build to abhi_frontend
+    - name: Copy Latest Build to IIS web root directory
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse -Force\""
   
     - name: Deploy application on IIS
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\bancaassurance-frontend' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
     # - name: Convert slashes in WEB_ROOT path
     #   id: convert-path
     #   run: |
