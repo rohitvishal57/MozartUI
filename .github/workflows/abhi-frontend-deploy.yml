@@ -7,6 +7,16 @@ on:
   #     - Dev
   #     - release
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'abhi_dev'
+        type: choice
+        options:
+          - abhi_dev
+          - abhi_uat
+          - abhi_prod
 
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
@@ -108,6 +118,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
     - name: Checkout code
