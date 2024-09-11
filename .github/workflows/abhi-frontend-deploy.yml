@@ -80,6 +80,9 @@ jobs:
         name: angular-artifacts
         path: .dist/
 
+    - name: Debug:List files after downloading artifacts
+      run: ls -l .dist/
+
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v3.0.0
       with:
@@ -135,6 +138,9 @@ jobs:
       with:
         name: angular-artifacts
         path: ./my-artifacts
+    
+    - name: Debug:List files after downloading artifacts
+      run: ls -l ./my-artifacts
 
     - name: Upload artifact to VM
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
