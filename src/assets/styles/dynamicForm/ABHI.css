@@ -1083,6 +1083,7 @@ body {
 
 .main-container .right-panel .ah-opcovers {
     padding: 30px 0px 5px !important;
+    margin-top: 28px;
     min-height: 100px;
     min-width: 380px;
 }

@@ -2472,8 +2472,7 @@ export class AbhiDynamicFormComponent {
           }
         })
 
-        this.addOnRemoved(control, parentControl);
-        // ;
+        this.addOnRemoved(control,parentControl);
       }
       if (control.onChangeMethod)
         this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, false, control?.name, parentControl?.name, index, 'remove');
@@ -2579,7 +2578,7 @@ export class AbhiDynamicFormComponent {
       totalPremium: this.premiumAmountDetails,
       valueUnit: valueUnit,
       yearlyDiscount: [0, 7.5, 10],
-      zoneDiscount: 9,
+      zoneDiscount: this.formData.productType == 'AF' || this.formData.productType == 'AA' || this.formData.productType == 'AO' || this.formData.productType == 'AC' || this.formData.productType == 'AGS' || this.formData.productType == 'STUB' || this.formData.productType == 'GHS' ? 0 : 9,
       memberDiscount: 0,
       addOnList: this.addOnList
     };
@@ -2749,7 +2748,7 @@ export class AbhiDynamicFormComponent {
       totalPremium: this.premiumAmountDetails,
       valueUnit: valueUnit,
       yearlyDiscount: [0, 7.5, 10],
-      zoneDiscount: 9,
+      zoneDiscount: this.formData.productType == 'AF' || this.formData.productType == 'AA' || this.formData.productType == 'AO' || this.formData.productType == 'AC' || this.formData.productType == 'AGS' || this.formData.productType == 'STUB' || this.formData.productType == 'GHS' ? 0 : 9,
       memberDiscount: 0,
       addOnList: this.addOnList
     };
