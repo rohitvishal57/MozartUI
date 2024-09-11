@@ -1132,6 +1132,7 @@ export class EditFormComponent {
           severity: 'info',
           summary: 'Confirmed',
           detail: 'Form Sequence Updated Successfully.',
+          life: 2000 
         });
       },
       error: (err) => {

@@ -36,11 +36,15 @@
                 <ng-container *ngFor="let item of ProductList">
                     <div class="cardItem box">
                         <!-- {{ item | json}}  -->
-                        <div class="product-item">{{item.productname}}</div>
+                        <div class="product-item">
+                            <img src="../../../../assets/logo/activeOne.svg">
+                            {{item.productname}}</div>
                         <p>{{item.productdescription}}</p>
                         <div class="product-button">
                             <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
                             <button class="get" (click)="insurenow(item)">Buy Now</button>
+                            <button class="get1" >View Recommended Add-Ons</button>
+                            <button class="get2" >Add to Compare</button>
                         </div>
                     </div>
                 </ng-container>

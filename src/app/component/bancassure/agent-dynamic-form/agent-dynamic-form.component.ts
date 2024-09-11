@@ -257,7 +257,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
           else if (control.subControls) {
             let tempFormArray = this.fb.array([]);
             for (let i = 0; i < control.subControls.length; i++) {
-              tempFormArray.push(this.initializeSubControls(control.subControls[i].slice(1)))
+              // tempFormArray.push(this.initializeSubControls(control.subControls[i].slice(1)))
             }
             this.dynamicFormGroup.addControl(control.name, tempFormArray);
           }
@@ -381,7 +381,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
 
       if (control.type == 'select' && control.method) {
         if (control.options?.length == 0) {
-          this.callMethod(control.method, control);
+          // this.callMethod(control.method, control);
         }
       }
 
@@ -424,7 +424,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
         }
         if (control.type == 'select' && control.methodName) {
           if (control.options?.length == 0) {
-            this.callMethod(control.methodName, control);
+            // this.callMethod(control.methodName, control);
           }
         }
 
@@ -1094,7 +1094,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
   }
 
 
-  onInputChange(event: any, control: IFormControl, parentControl: any = null, index: any = null) {
+  onInputChange(event: any, control: any, parentControl: any = null, index: any = null) {
 
     if(control.name === 'idProof') {
       const idProof = JSON.parse(event.target.value);
@@ -1883,7 +1883,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
         this.changeDetectorRef.detectChanges();
         this.spinner.hide();
         console.log("updated the values");
-        console.log(this.form.formSections[3].formControls[3].subControls?.[0]?.[3].innerSubControls?.[1].options?.[0]);
+        // console.log(this.form.formSections[3].formControls[3].subControls?.[0]?.[3].innerSubControls?.[1].options?.[0]);
       } catch (err) {
         console.error(err);
         this.spinner.hide();

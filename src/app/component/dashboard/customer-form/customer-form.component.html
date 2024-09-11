@@ -207,9 +207,9 @@
                                 <label class="form.label" *ngIf="subControl.visibleLabel==true">{{ subControl.label }} <span *ngIf="subControl.validators">*</span></label>
                                 <input *ngIf="!subControl.disabled" formControlName="{{ subControl.name }}" class="line-border" [type]="subControl.type">
                                 <input *ngIf="subControl.disabled==true" formControlName="{{ subControl.name }}" [type]="subControl.type" style="background-color: rgb(187, 183, 183);" readonly>
-                                <small *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.touched)"
+                                <!-- <small *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.touched)"
                                   class="text-danger">{{getValidationErrors(subControl)}}
-                                </small>
+                                </small> -->
                                 </div>
                                 <div *ngIf="subControl.type === 'select'" [class]="subControl.class" class="typecss">
                                   <label *ngIf="subControl.visibleLabel==true">{{ subControl.label }} <span *ngIf="control.validators">*</span></label>
@@ -225,9 +225,9 @@
                                       <option [value]="opt.name">{{ opt.name }}</option>
                                     </ng-container>
                                   </select>
-                                  <small *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.touched)"
+                                  <!-- <small *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.touched)"
                                     class="text-danger">{{getValidationErrors(subControl)}}
-                                  </small>
+                                  </small> -->
                                 </div>
                                 <div *ngIf="subControl.type  === 'toggle'" [class]="subControl.class" class="typecss">
                                   <div class="form-check form-switch">

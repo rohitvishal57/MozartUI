@@ -21,6 +21,9 @@ export interface IFormSections {
   sectionButton?: ISectionButton;
   class?: string;
   toolTipText?: string;
+  urlDependentControls?:any;
+  urlPath?:any;
+  productFeaturesUrl?:any
 }
 export interface ISectionButton {
   label?: string;
@@ -66,7 +69,7 @@ export interface IFormControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   images?: IImage[];
   otherControlName?: any;
-  subControls?: ISubControl[][];
+  subControls?: ISubControl[];
   methodName?: any;
   getAllOption?: any;
   onChangeMethod?: any;
@@ -99,6 +102,8 @@ export interface ISubControl {
   disabled?: boolean;
   method?: string;
   innerSubControls?: ISubControl[];
+  displayOnly?: boolean;
+  coreControls?: ISubControl[];
   bigFont?: boolean;
   getAllOption?: string;
 }
@@ -121,7 +126,7 @@ export interface IConditionalVisibility {
 export interface IRadioOption {
   name: string;
   label: string;
-  value: string;
+  value: any;
   selected?: boolean;
   year?: string;
   discount?: string;

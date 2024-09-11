@@ -22,6 +22,8 @@ import { ClaimsComponent } from './claims/claims.component';
 import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
 import { ClaimsListViewComponent } from './claims/claims-list-view/claims-list-view.component';
 import { DatepipePipe } from 'src/app/pipe/datepipe.pipe';
+import { EndorsementsModule } from './endorsements/endorsements.module';
+
 @NgModule({
   declarations: [
     // Your components
@@ -50,8 +52,6 @@ export class AppModule { }
     ClaimsViewComponent,
     ClaimsListViewComponent,
     DatepipePipe
-
-
   ],
   imports: [
     CommonModule,
@@ -65,6 +65,7 @@ export class AppModule { }
     MatInputModule,
     MatMenuModule,
     MyMaterialModule,
+    EndorsementsModule
   ]
 })
 export class BancassureModule { }
