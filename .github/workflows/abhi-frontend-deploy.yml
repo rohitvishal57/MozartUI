@@ -78,10 +78,10 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: angular-artifacts
-        path: .dist/
+        path: ./dist/*
 
     - name: Debug:List files after downloading artifacts
-      run: ls -l .dist/
+      run: ls -l ./dist/
 
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@v3.0.0
