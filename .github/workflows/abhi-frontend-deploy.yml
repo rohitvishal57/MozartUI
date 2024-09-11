@@ -148,22 +148,23 @@ jobs:
     - name: Create or Update Application Pool
       run: |
         ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-          $AppPoolName = 'FrontendAppPool';
+          \$AppPoolName = 'FrontendAppPool';
           try {
-            if (Test-Path \"IIS:\\AppPools\\$AppPoolName\") {
-              Write-Output \"Application Pool '$AppPoolName' already exists. Skipping creation.\";
+            if (Test-Path 'IIS:\\AppPools\\\$AppPoolName') {
+            Write-Output \"Application Pool '\$AppPoolName' already exists. Skipping creation.\";
             } else {
-              Write-Output \"Creating Application Pool: $AppPoolName\";
-              New-WebAppPool -Name $AppPoolName;
-              Set-ItemProperty IIS:\\AppPools\\$AppPoolName -Name managedRuntimeVersion -Value 'v4.0';
-              Set-ItemProperty IIS:\\AppPools\\$AppPoolName -Name processModel.identityType -Value ApplicationPoolIdentity;
+              Write-Output \"Creating Application Pool: \$AppPoolName\";
+              New-WebAppPool -Name \$AppPoolName;
+              Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name managedRuntimeVersion -Value 'v4.0';
+              Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name processModel.identityType -Value ApplicationPoolIdentity;
             }
           } catch {
-            Write-Output \"Error while creating Application Pool: $AppPoolName\";
-            Write-Output $_.Exception.Message;
-            exit 1;
+          Write-Output \"Error while creating Application Pool: \$AppPoolName\";
+          Write-Output \$_.Exception.Message;
+          exit 1;
           }
         "
+
     - name: Stop IIS Website if Exists
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Stop-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
     
@@ -180,7 +181,7 @@ jobs:
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse -Force\""
   
     - name: Deploy application on IIS
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\bancaassurance-frontend' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
     # - name: Convert slashes in WEB_ROOT path
     #   id: convert-path
     #   run: |
