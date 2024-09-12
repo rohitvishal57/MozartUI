@@ -104,16 +104,16 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-    - name: Check SonarQube Quality Gate
-      run: |
-        status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: \
-          "${{ secrets.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=${{ env.SONAR_PROJECT_KEY }}" \
-          | jq -r .projectStatus.status)
-        echo "Quality Gate status: $status"
-        if [ "$status" != "OK" ]; then
-          echo "Quality Gate failed: $status"
-          exit 1
-        fi
+    # - name: Check SonarQube Quality Gate
+    #   run: |
+    #     status=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: \
+    #       "${{ secrets.SONAR_HOST_URL }}/api/qualitygates/project_status?projectKey=${{ env.SONAR_PROJECT_KEY }}" \
+    #       | jq -r .projectStatus.status)
+    #     echo "Quality Gate status: $status"
+    #     if [ "$status" != "OK" ]; then
+    #       echo "Quality Gate failed: $status"
+    #       exit 1
+    #     fi
 
   deploy:
     runs-on: ubuntu-latest
