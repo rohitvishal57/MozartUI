@@ -162,17 +162,17 @@ jobs:
           \$AppPoolName = 'FrontendAppPool';
           try {
             if (Test-Path 'IIS:\\AppPools\\\$AppPoolName') {
-            Write-Output \"Application Pool '\$AppPoolName' already exists. Skipping creation.\";
+              Write-Output 'Application Pool ''\$AppPoolName'' already exists. Skipping creation.';
             } else {
-              Write-Output \"Creating Application Pool: \$AppPoolName\";
+              Write-Output 'Creating Application Pool: \$AppPoolName';
               New-WebAppPool -Name \$AppPoolName;
               Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name managedRuntimeVersion -Value 'v4.0';
               Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name processModel.identityType -Value ApplicationPoolIdentity;
             }
           } catch {
-          Write-Output \"Error while creating Application Pool: \$AppPoolName\";
-          Write-Output \$_.Exception.Message;
-          exit 1;
+            Write-Output 'Error while creating Application Pool: \$AppPoolName';
+            Write-Output \$_.Exception.Message;
+            exit 1;
           }
         "
 
