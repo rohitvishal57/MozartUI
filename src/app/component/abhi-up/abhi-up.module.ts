@@ -12,6 +12,7 @@ import { AbhiDashboardComponent } from './abhi-dashboard/abhi-dashboard.componen
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { ProductDetailsComponent } from '../bancassure/product-details/product-details.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');

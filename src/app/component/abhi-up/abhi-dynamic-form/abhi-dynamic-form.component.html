@@ -840,8 +840,10 @@
                             <!-- Popup Overlay -->
                             <div class="popup-overlay" *ngIf="isOverlayVisible">
                               <div class="row">
-                                <p>Select Member</p>
-                                <div class="col-12 col-xl-12 text-right">
+                                <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8 text-right">
+                                  <p>Select Member</p>
+                                </div>
+                                <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
                                   <i class="fa-solid fa-xmark" (click)="closeOverlay(subControl,control)"></i>
                                 </div>
                               </div>
@@ -890,9 +892,9 @@
                                       </ng-container>
 
                                       <div *ngIf="innerSubForm.type == 'button'" class="row">
-                                        <div class="col-12 col-xl-12 text-right">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
                                           
-                                          <input type="button" class="next-btn" (click)="closeOverlay(subControl,control)" value="Done" />
+                                          <input type="button" class="" (click)="closeOverlay(subControl,control)" value="Done" />
         
                                         </div>
                                       </div>
@@ -968,9 +970,9 @@
 </div>
 
 
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+<!-- <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
   <p style="color: white;font-size: 14px;"> Loading... </p>
-</ngx-spinner>
+</ngx-spinner> -->
 <!-- app.component.html -->
 <!-- <ngx-spinner
   bdColor="rgba(0, 0, 0, 0.8)"

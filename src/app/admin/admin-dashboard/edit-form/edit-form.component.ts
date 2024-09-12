@@ -154,14 +154,14 @@ export class EditFormComponent {
         console.log(this.selectedInsuranceType);
         
 
-        this.loginService.getAllProductList(this.channelcode,this.agencycode,event).subscribe({
-          next: (res) => {
-            this.allProducts = res;
-          },
-          error: (err) => {
-            console.error(err);
-          }
-        });
+        // this.loginService.getAllProductList(this.channelcode,this.agencycode,event).subscribe({
+        //   next: (res) => {
+        //     this.allProducts = res;
+        //   },
+        //   error: (err) => {
+        //     console.error(err);
+        //   }
+        // });
     }
     onSelectProduct(event: string){
       this.productid = event;

@@ -77,6 +77,9 @@ export class AbhiDynamicFormComponent {
   showPopup: boolean = false;
   showDoneButton = true;
 
+  partnerId:any
+  productId:any
+
   displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
   selectedButton: string | null = null;
@@ -94,15 +97,17 @@ export class AbhiDynamicFormComponent {
     this.formSequence = history.state.formSequence;
     console.log(this.formSequence);
     this.Code = localStorage.getItem('code');
-    this.verticalCode = localStorage.getItem('verticalCode');
-    this.insurancetypecode = history.state.productData.insurancetypecode;
-    this.productid = history.state.productData.productid;
-    this.productName = history.state.productData.productName;
-    this.productEndDate = history.state.productData.productEndDate;
-    this.productStartDate = history.state.productData.productStartDate;
-    this.proposalNum = history.state.productData.proposalNumber;
+    // this.verticalCode = localStorage.getItem('verticalCode');
+    // this.insurancetypecode = history.state.productData.insurancetypecode;
+    // this.productid = history.state.productData.productid;
+    // this.productName = history.state.productData.productName;
+    // this.productEndDate = history.state.productData.productEndDate;
+    // this.productStartDate = history.state.productData.productStartDate;
+    // this.proposalNum = history.state.productData.proposalNumber;
     this.agentCode = localStorage.getItem('agentCode');
-    this.agencyCode = history.state.productData.agencyCode;
+    // this.agencyCode = history.state.productData.agencyCode;
+    this.productId = history.state.productData.productId;
+    this.partnerId = history.state.productData.partnerId;
 
     this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
     console.log(this.formData)
@@ -172,37 +177,50 @@ export class AbhiDynamicFormComponent {
       this.renderer.removeChild(this.document.head, this.dynamicStyle)
       this.showHtmlContent = false;
     }
-    if (Object.keys(this.allJsonForm[this.getFormIndexValue()]).length > 0) {
-      // this.form = this.allJsonForm[this.getFormIndexValue()];
-      let reqdata = {
-        "verticalCode": this.verticalCode,
-        "proposalNum": this.proposalNum,
-        "code": this.agencyCode,
-        "agentCode": this.agentCode,
-        "productId": this.productid,
-        "formData": "string",
-        "formWithFormData": "string",
-        "formName": "string",
-        "formId": formId,
-        "formConfig": "string"
-      }
-      this.service.getAllFormDataViaVerticalCode(reqdata).subscribe({
-        next: (res) => {
-          this.form = JSON.parse(res.jsonForm);
-          // this.form = totalpremium;
-          this.initializeForm();
-        },
-        error: (err) => {
-          console.error(err)
-        }
-      })
+    // if (Object.keys(this.allJsonForm[this.getFormIndexValue()]).length > 0) {
+    //   this.form = this.allJsonForm[this.getFormIndexValue()];
+    //   let reqdata = {
+    //     "verticalCode": this.verticalCode,
+    //     "proposalNum": this.proposalNum,
+    //     "code": this.agencyCode,
+    //     "agentCode": this.agentCode,
+    //     "productId": this.productId,
+    //     "partnerId": this.partnerId,
+    //     "formData": "string",
+    //     "formWithFormData": "string",
+    //     "formName": "string",
+    //     "formId": formId,
+    //     "formConfig": "string"
+    //   }
+    //   this.service.getAllFormDataViaVerticalCode(reqdata).subscribe({
+    //     next: (res) => {
+    //       this.form = JSON.parse(res.jsonForm);
+    //       // this.form = totalpremium;
+    //       this.initializeForm();
+    //     },
+    //     error: (err) => {
+    //       console.error(err)
+    //     }
+    //   })
 
+    // }\
+    if (Object.keys(this.allJsonForm[this.getFormIndexValue()]).length > 0) {
+      this.form = this.allJsonForm[this.getFormIndexValue()];
+      console.log(this.form);
+      this.initializeForm();
     }
 
     else {
-      this.service.getJSONFormViaVerticalCode(this.verticalCode, this.Code, this.insurancetypecode, this.productid, formId).subscribe({
+      let reqData = {
+        "partnerId": this.partnerId,
+        "productId": this.productId,
+        "formId": formId
+      }
+      console.log(reqData);
+      this.service.Getform(reqData).subscribe({
         next: (res) => {
-          this.form = JSON.parse(res.jsonFormData);
+          console.log(res);
+          this.form = JSON.parse(res.data.jsonFormData);
           // this.form = totalpremium;
           this.initializeForm();
         },
@@ -1475,13 +1493,13 @@ export class AbhiDynamicFormComponent {
   getProposerRelationship(control: IFormControl) {
     this.spinner.show();
     const reqData = {
-      agencyCode: this.Code,
-      insuranceTypeCode: this.insurancetypecode,
-      productId: this.productid,
-      policyType: this.dynamicFormGroup.get('memberPolicyType')?.value
+      agencyCode: this.partnerId,
+      insuranceTypeCode: 101,
+      productId: this.productId,
+      policyType: this.dynamicFormGroup.get('memberPolicyType')?.value,
     }
-
-    this.service.getProposerRelationships(reqData).subscribe({
+    console.log(reqData);
+    this.service.GetProposerRelationships(reqData).subscribe({
       next: (res) => {
         const controlGroup = this.fb.group({});
         res.relationShip.forEach((option: any) => {
@@ -1774,6 +1792,7 @@ export class AbhiDynamicFormComponent {
         //   // for Store Form Data in Database
         let reqData = {
           "proposalNum": this.proposalNum,
+          "partnerId":this.partnerId,
           "agentCode": this.agentCode,
           "code": this.Code,
           "verticalCode": this.verticalCode,
@@ -1782,13 +1801,13 @@ export class AbhiDynamicFormComponent {
           "formData": JSON.stringify(this.dynamicFormGroup.value),
           "formName": this.formSequence[this.getFormIndexValue()].formName,
           "formConfig": JSON.stringify(this.formSequence),
-          "productId": this.productid,
+          "productId": this.productId,
           "formId": this.formSequence[this.getFormIndexValue()].formId,
           "jsonForm": JSON.stringify(this.form),
           "formSequence": this.getFormIndexValue()
         };
 
-        this.service.insertOrUpdateFormDataViaVertical(reqData).subscribe({
+        this.service.Insertorupdateformdata(reqData).subscribe({
           next: (res) => {
             // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
             console.log(res);
@@ -1800,17 +1819,18 @@ export class AbhiDynamicFormComponent {
         });
         const reqdata = {
           "verticalCode": this.verticalCode,
+          "partnerId": this.partnerId,
           "proposalNum": this.proposalNum,
           "code": this.Code,
           "agentCode": this.agentCode,
           "insuranceTypeCode": this.insurancetypecode,
-          "productId": this.productid,
+          "productId": this.productId,
           "formName": this.formSequence[this.getFormIndexValue()].formName,
           "formData": JSON.stringify(this.formData),
           "formId": this.formSequence[this.getFormIndexValue()].formId,
           "formSequence": this.getFormIndexValue()
         }
-        this.service.insertOrUpdateJourneyDetailsViaVerticalCode(reqdata).subscribe({
+        this.service.Insertorupdatejourneydetails(reqdata).subscribe({
           next: (response) => {
             console.log(response);
           },

@@ -47,10 +47,16 @@ export class LoginService {
     );
   }
 
-  getAllProductList(verticalCode: any, code: any, insuranceTypeCode: any) {
-    return this.http.get<any>(
-      `${this.baseUrl}Banca/Product/GetProductList?verticalCode=${verticalCode}&code=${code}&insuranceTypeCode=${insuranceTypeCode}`
-    );
+  // getAllProductList(verticalCode: any, code: any, insuranceTypeCode: any) {
+  //   return this.http.get<any>(
+  //     `${this.baseUrl}Banca/Product/GetProductList?verticalCode=${verticalCode}&code=${code}&insuranceTypeCode=${insuranceTypeCode}`
+  //   );
+  // }
+  Getproductlist(reqData:any){
+    return this.http.post<any>(`https://usp.monocept.ai/Yatra/api/product/getproductlist`,reqData)
+  }
+  Getformsequence(reqData:any){
+    return this.http.post<any>(`https://usp.monocept.ai/Yatra/api/forms/getformsequence`,reqData)
   }
 
   storeToken(token: string) {

@@ -1,0 +1,69 @@
+<div class="main-container">
+    <div class="cardItem box">
+        <div class="product-item">
+            <img src="../../../../assets/logo/activeOne.svg">
+            {{state.productName}}
+        </div>
+        <p>{{state.productDescription}}</p>
+        <div class="custom-tabview">
+            <div class="top-box">
+              <div class="top-container" #topContainer>
+                <p-tabView [(activeIndex)]="activeIndex" (onChange)="onTabChange($event)">
+                  <p-tabPanel header="Overview"></p-tabPanel>
+                  <p-tabPanel header="Cashless Hospitals"></p-tabPanel>
+                  <p-tabPanel header="FAQs"></p-tabPanel>
+                  <p-tabPanel header="Claims"></p-tabPanel>
+                  <p-tabPanel header="Activ Health"></p-tabPanel>
+                  <p-tabPanel header="Cover"></p-tabPanel>
+                </p-tabView>
+              </div>
+            </div>
+      
+            <div [ngSwitch]="activeIndex">
+              <div *ngSwitchCase="0">
+                <h3>Features</h3>
+                <ul>
+                  <li>Dolor sit amet, consectetur adipiscing elit.</li>
+                  <li>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</li>
+                  <li>Nunc volutpat libero et velit interdum, ac aliquet odio mattis.</li>
+                </ul>
+                <h3>Policy Covers</h3>
+                <ul>
+                  <li>Dolor sit amet, consectetur adipiscing elit.</li>
+                  <li>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</li>
+                  <li>Nunc volutpat libero et velit interdum, ac aliquet odio mattis.</li>
+                </ul>
+              </div>
+              <div *ngSwitchCase="1">
+                <p>Information about cashless hospitals would go here.</p>
+              </div>
+              <div *ngSwitchCase="2">
+                <p>Frequently asked questions would be listed here.</p>
+              </div>
+              <div *ngSwitchCase="3">
+                <p>Information about making claims would be provided here.</p>
+              </div>
+              <div *ngSwitchCase="4">
+                <p>Details about Activ Health services would be displayed here.</p>
+              </div>
+              <div *ngSwitchCase="5">
+                <div *ngFor="let section of groupedFeatures | keyvalue">
+                    <h3>{{ section.key }}</h3>
+                    <ul>
+                      <li *ngFor="let feature of section.value">
+                        {{ feature.featureName }}
+                      </li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="custom-tabview">
+          <div>
+            <button (click)="buyNow(state)">
+              Buy Now
+            </button>
+          </div>
+        </div>
+    </div>
+</div>

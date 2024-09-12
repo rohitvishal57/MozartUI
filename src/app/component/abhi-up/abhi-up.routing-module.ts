@@ -4,6 +4,7 @@ import { AuthGuard } from 'src/app/authorize/auth.guard';
 import { AbhiupComponent } from './abhi-up.component';
 import { AbhiDynamicFormComponent } from './abhi-dynamic-form/abhi-dynamic-form.component';
 import { AbhiDashboardComponent } from './abhi-dashboard/abhi-dashboard.component';
+import { ProductDetailsComponent } from '../bancassure/product-details/product-details.component';
 
 const routes: Routes = [
     {

@@ -88,17 +88,17 @@ export class ProductsComponent implements OnInit {
   getPoductList(item:any){
     console.log(item)
     this.selectedToggle = item.insurancetype
-    this.loginService.getAllProductList(item.verticalcode, item.bankcode ,item.insurancetypecode).subscribe({
-      next :(res) => {
-        this.ProductList = res;
-      },
-      error:(err) =>{
-        console.error(err);
-        if (err.status === 404) {
-          this.displayNoProductsMessage = true;
-        }
-      }
-    })
+    // this.loginService.getAllProductList(item.verticalcode, item.bankcode ,item.insurancetypecode).subscribe({
+    //   next :(res) => {
+    //     this.ProductList = res;
+    //   },
+    //   error:(err) =>{
+    //     console.error(err);
+    //     if (err.status === 404) {
+    //       this.displayNoProductsMessage = true;
+    //     }
+    //   }
+    // })
   }
   async getQuote(item:any){
     try{

@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class CommonService {
   private baseUrl: string = 'https://usp.monocept.ai/api/';
+  private yatraUrl: string = 'https://usp.monocept.ai/Yatra/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
   public baseCssUrl= 	'https://usp.monocept.ai/ABHI/' 
@@ -28,9 +29,9 @@ export class CommonService {
   insertJSONForm(jsonForm: any) {
     return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertJSONFormViaVerticalCode`, jsonForm);
   }
-  insertOrUpdateFormData(formData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateFormData`, formData);
-  }
+  // insertOrUpdateFormData(formData: any) {
+  //   return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateFormData`, formData);
+  // }
   getFormData(bankCode: any, insuranceTypeCode: number, productId: any, formId: number, proposalNumber: any) {
     return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetFormData?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}&proposalNumber=${proposalNumber}`);
   }
@@ -175,9 +176,9 @@ export class CommonService {
     return this.http.get<any>(`${this.baseUrl}Agent/getProposerOccupation`);
   }
 
-  getProposerRelationships(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Agent/getProposerRelationships`,reqData);
-  }
+  // getProposerRelationships(reqData: any){
+  //   return this.http.post<any>(`${this.baseUrl}Agent/getProposerRelationships`,reqData);
+  // }
   
   getNatureOfOccupation(){
     return this.http.get<any>(`${this.baseUrl}Agent/GetNatureOfWork`);
@@ -228,4 +229,30 @@ export class CommonService {
     getClaimsList(data: any): Observable<any>{
       return this.http.post('https://usp.monocept.ai/ClaimsEndorsement/api/claim/getclaimlist',data);
      }
+
+   //yatra
+   Getform(reqData:any){
+    return this.http.post<any>(`${this.yatraUrl}api/forms/getform`,reqData)
+  }
+  Getproductdetailsandfeatures(reqData:any){
+    return this.http.post<any>(`${this.yatraUrl}api/product/getproductdetailsandfeatures`,reqData)
+  }
+  Insertorupdatejourneydetails(reqData:any){
+    return this.http.post<any>(`${this.yatraUrl}api/forms/insertorupdatejourneydetails`,reqData)
+  }
+  Insertorupdateformconfig(reqData:any){
+    return this.http.post<any>(`${this.yatraUrl}api/forms/insertorupdateformconfig`,reqData)
+  }
+  InsertOrUpdateForm(reqdata:any){
+    return this.http.post<any>(`${this.yatraUrl}api/`,reqdata)
+  }
+  Insertorupdateformdata(reqdata:any){
+    return this.http.post<any>(`${this.yatraUrl}api/forms/insertorupdateformdata`,reqdata)
+  }
+  GetProposerRelationships(reqData:any){
+    return this.http.post<any>(`${this.yatraUrl}Agent/GetProposerRelationships`,reqData)
+  }
+  GetAllFormData(reqData: any) {
+    return this.http.post<any>(`${this.yatraUrl}Banca/Forms/GetAllFormDataViaVerticalCode`, reqData);
+  }
 }

@@ -27,6 +27,11 @@ export class ViewproductsComponent implements OnInit {
   code = localStorage.getItem('code');
   products: any[] = []
   ProductList: any[] = []
+  agentCode=4620973
+  partnerId:any
+  productId:any
+
+
 
   private dynamicStyle!: HTMLLinkElement;
 
@@ -47,9 +52,12 @@ export class ViewproductsComponent implements OnInit {
 
   getPoductList(item: any) {
     this.selectedToggle = item.insuranceType
-    this.loginService.getAllProductList(item.verticalcode, item.agencycode, item.insurancetypecode).subscribe({
+    const reqData={
+      "agentCode": this.agentCode
+    }
+    this.loginService.Getproductlist(reqData).subscribe({
       next: (res) => {
-        this.ProductList = res;
+        this.ProductList = res.data;
         console.log(this.ProductList)
       },
       error: (err) => {
@@ -60,52 +68,78 @@ export class ViewproductsComponent implements OnInit {
       }
     })
   }
-  async insurenow(item: any) {
-    this.formData = { ...this.formData, productName: item.productName }
-    try {
-      await this.getFormSequence(item);
-      await this.getProposalNum();
-      console.log(item)
-      const productData = {
-        productid: item.productid,
-        productStartDate: item.productstartdate,
-        productEndDate: item.productenddate,
-        productName: item.productname,
-        insurancetypecode: item.insurancetypecode,
-        proposalNumber: this.proposalNum,
-        agencyCode:item.agencycode
-      };
-      console.log(productData)
-      if (this.formSequence != null && this.formSequence.length > 0) {
-        this.router.navigate(['portal/abhi/forms'], {
-          state: { productData: productData, formSequence: this.formSequence }
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-  async getFormSequence(item: any) {
-    console.log(item);
+  // async insurenow(item: any) {
+  //   this.formData = { ...this.formData, productName: item.productName }
+  //   try {
+  //     await this.getFormSequence(item);
+  //     await this.getProposalNum();
+  //     console.log(item)
+  //     // const productData = {
+  //     //   productid: item.productid,
+  //     //   productStartDate: item.productstartdate,
+  //     //   productEndDate: item.productenddate,
+  //     //   productName: item.productname,
+  //     //   insurancetypecode: item.insurancetypecode,
+  //     //   proposalNumber: this.proposalNum,
+  //     //   agencyCode:item.agencycode
+  //     // };
+  //     const productData = {
+  //       partnerId : item.partnerId,
+  //       productId : item.productId
 
-    try {
-      sessionStorage.clear();
-      const res = await firstValueFrom(this.service.getFormConfigViaVerticalCode(item.verticalcode, item.agencycode, item.insurancetypecode, item.productid));
-      console.log(res);
-      this.formSequence = JSON.parse(res.insureFormConfiguration);
-      console.log(this.formSequence);
+  //     }
+  //     console.log(productData)
+  //     if (this.formSequence != null && this.formSequence.length > 0) {
+  //       this.router.navigate(['portal/agent/productDetails'], {
+  //         state: { productData: productData, formSequence: this.formSequence }
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+  // async getFormSequence(item: any) {
+  //   console.log(item);
+  //   try {
+  //     sessionStorage.clear();
+  //     const reqData = {
+  //       "partnerId": item.partnerId,
+  //       "productId": item.productId
 
-      if (this.formSequence != null && this.formSequence.length > 0) {
-        this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
-        sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
-      }
-      console.log(this.allJsonFormData);
-      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-      localStorage.setItem("formIndex", "0");
-    } catch (err) {
-      this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
-    }
-  }
+  //     }
+  //     const res = await firstValueFrom(this.loginService.Getformsequence(reqData));
+  //     console.log(res);
+  //     this.formSequence = JSON.parse(res.data.formSequence);
+  //     console.log(this.formSequence);
+
+  //     if (this.formSequence != null && this.formSequence.length > 0) {
+  //       this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+  //       sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
+  //     }
+  //     console.log(this.allJsonFormData);
+  //     sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+  //     localStorage.setItem("formIndex", "0");
+  //   } catch (err) {
+  //     this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+  //   }
+  //   // try {
+  //   //   sessionStorage.clear();
+  //   //   const res = await firstValueFrom(this.service.getFormConfigViaVerticalCode(item.verticalcode, item.agencycode, item.insurancetypecode, item.productid));
+  //   //   console.log(res);
+  //   //   this.formSequence = JSON.parse(res.insureFormConfiguration);
+  //   //   console.log(this.formSequence);
+
+  //   //   if (this.formSequence != null && this.formSequence.length > 0) {
+  //   //     this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+  //   //     sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
+  //   //   }
+  //   //   console.log(this.allJsonFormData);
+  //   //   sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+  //   //   localStorage.setItem("formIndex", "0");
+  //   // } catch (err) {
+  //   //   this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+  //   // }
+  // }
   getProducts() {
     this.loginService.getAllProducts(this.verticalCode, this.code).subscribe({
       next: (res) => {
@@ -128,6 +162,12 @@ export class ViewproductsComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  buyNow(item:any){
+    this.router.navigate(['portal/agent/productDetails'], {
+      state: { item: item }
+    });
   }
 
 }
