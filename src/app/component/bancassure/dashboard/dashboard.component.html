@@ -3,8 +3,7 @@
         <div class="card-outer">
             <div class="card">
                 <div class="header">
-                    <input type="text" class="search-bar"
-                        placeholder="Search Your Customer, Leads, Claims No and more" />
+                    <input type="text" class="search-bar" placeholder="Search Your Customer, Leads, Claims No and more" />
                     <button class="get-quote-btn" type="submit">
                         <i class="fas fa-plus"></i> Get Quote
                     </button>
@@ -14,20 +13,18 @@
                     <div class="dropdown-item" *ngFor="let dropdown of dropdownOptions; let i = index">
                         <label [for]="'dropdown' + i">{{ dropdown.label }}</label>
                         <div class="custom-dropdown">
-                            <div class="selected-option" (click)="toggleDropdown(i)">
-                                <span>{{ selectedOptions[i] || 'Select an option' }}</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div>
-                                <!-- {{i}}{{activeDropdown}} -->
-                            </div>
+                            <button class="dropdown-button" (click)="toggleDropdown(i)">
+                                <div>
+                                    {{ selectedOptions[i] || 'Select ' + dropdown.label }}
+                                    
+                                </div>
+                                <div>
+                                    <i class="fas fa-chevron-down"></i> 
+                                </div>
+                            </button>
                             <div class="dropdown-menu" *ngIf="activeDropdown === i">
-                                <div *ngFor="let option of dropdown.options" class="dropdown-option">
-                                    <div>
-                                        {{ option.label }}
-                                    </div>
-                                    <button type="button" class="save-btn"
-                                        (click)="saveOption(option.value, i)">Save</button>
+                                <div *ngFor="let option of dropdown.options" class="dropdown-option" (click)="selectOption(option.label, i)">
+                                    {{ option.label }}
                                 </div>
                             </div>
                         </div>
@@ -35,7 +32,7 @@
                 </div>
 
                 <div class="continue-btn-container">
-                    <button type="button" class="continue-btn" (click)="continue()">Continue</button>
+                    <button type="button" class="continue-btn">Continue</button>
                 </div>
             </div>
         </div>

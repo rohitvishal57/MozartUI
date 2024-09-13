@@ -59,9 +59,9 @@ export class DashboardComponent {
 
   }
 
-  selectOption(option: any) {
-    this.selectedDropdown.selectedValue = option.label;
-    this.closeDropdownModal();
+  selectOption(option: string, index: number): void {
+    this.selectedOptions[index] = option;
+    this.activeDropdown = null;  // Close the dropdown after selecting
   }
 
   saveOption(value: string, index: number): void {
@@ -78,13 +78,13 @@ export class DashboardComponent {
       ]
     },
     {
-      label: 'Select Relationship',
+      label: 'Relationship',
       options: [
         { label: 'Self', value: 'Self' },
       ]
     },
     {
-      label: 'Select Sum Insured',
+      label: 'Sum Insured',
       options: [
         { label: '5 Lakhs', value: '5 Lakhs' },
         { label: '10 Lakhs', value: '10 Lakhs' },
@@ -108,27 +108,6 @@ export class DashboardComponent {
       options: []
     }
   ];
-
-  populateProductDropdown() {
-    const productDropdown = this.dropdownOptions.find(option => option.label === 'Product');
-    if (productDropdown) {
-      productDropdown.options = this.ProductList.map(product => ({
-        label: product.productname,
-        value: product.productid  
-      }));
-      this.quoteForm.get('dropdown4')?.setValue(productDropdown.options[0]?.value);
-    }
-  }
-
-
-  async getProposalNum() {
-    try {
-      const res = await firstValueFrom(this.loginService.getProposalNumber());
-      this.proposalNum = res;
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
 
   onSubmit() {
