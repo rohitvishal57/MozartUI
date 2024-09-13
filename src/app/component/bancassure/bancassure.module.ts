@@ -23,7 +23,6 @@ import { ClaimsViewComponent } from './claims/claims-view/claims-view.component'
 import { ClaimsListViewComponent } from './claims/claims-list-view/claims-list-view.component';
 import { DatepipePipe } from 'src/app/pipe/datepipe.pipe';
 import { EndorsementsModule } from './endorsements/endorsements.module';
-import { ProductDetailsComponent } from './product-details/product-details.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +41,6 @@ export class AppModule { }
 @NgModule({
   declarations: [
     ViewproductsComponent,
-    ProductDetailsComponent,
     DashboardComponent,
     TransactionComponent,
     ReportsComponent,  

@@ -19,7 +19,7 @@
               </div>
             </div>
       
-            <div [ngSwitch]="activeIndex">
+            <div class="bottom-box" [ngSwitch]="activeIndex">
               <div *ngSwitchCase="0">
                 <h3>Features</h3>
                 <ul>
@@ -46,14 +46,16 @@
               <div *ngSwitchCase="4">
                 <p>Details about Activ Health services would be displayed here.</p>
               </div>
-              <div *ngSwitchCase="5">
-                <div *ngFor="let section of groupedFeatures | keyvalue">
+              <div class="row" *ngSwitchCase="5">
+                <div *ngFor="let section of groupedFeatures | keyvalue" class="card">
+                  <!-- <div class="card"> -->
                     <h3>{{ section.key }}</h3>
                     <ul>
                       <li *ngFor="let feature of section.value">
                         {{ feature.featureName }}
                       </li>
                     </ul>
+                  <!-- </div> -->
                 </div>
               </div>
             </div>

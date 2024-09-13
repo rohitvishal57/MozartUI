@@ -1,19 +1,66 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-abhi-header',
   templateUrl: './abhi-header.component.html',
   styleUrls: ['./abhi-header.component.scss']
 })
-export class AbhiHeaderComponent {
-  constructor(public common:CommonService,private router:Router){
+export class AbhiHeaderComponent implements OnInit{
+  currentLanguage: string = 'en'; 
+  isSidenavOpen: boolean = false;
+  isDesktopView: boolean = window.innerWidth >= 768;
+
+  constructor(public common:CommonService,private router:Router,
+    private loginService: LoginService,private toast: NgToastService
+  ){
 
   }
 
-  redirect(){
-    this.router.navigate(["portal/agent/viewproducts"]);
+  ngOnInit() {
+    this.currentLanguage = this.getLanguage();
+  }
+
+  logOut() {
+    this.toast.success({ detail: "SUCCESS", summary: "Agent Logout successfully!!", duration: 2000 });
+    this.loginService.signOut();
+    this.router.navigate(['']);
+  }
+
+  setLanguage(event: any) {
+    console.log(event);
+    let language = event.target.value;
+    localStorage.setItem('preferredLanguage', language);
+    this.currentLanguage = language;
+  }
+
+  getLanguage(): string {
+    // localStorage.setItem('preferredLanguage',  navigator.language.split('-')[0] || 'en');
+    // return localStorage.getItem('preferredLanguage') ||'';
+    const preferredLanguage = localStorage.getItem('preferredLanguage') || navigator.language.split('-')[0] || 'en';
+    localStorage.setItem('preferredLanguage', preferredLanguage);
+    return preferredLanguage;
+  }
+
+  toggleSidenav() {
+    this.isSidenavOpen = !this.isSidenavOpen;
+    console.log('a',this.isSidenavOpen,this.isDesktopView);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isDesktopView = window.innerWidth >= 768;
+    if (this.isDesktopView) {
+      this.isSidenavOpen = false;
+    }
+  }
+  redirect(value:any){
+    const item = 'portal/agent/'+value
+    console.log(item);
+    this.router.navigate([item]);
   }
 
 }

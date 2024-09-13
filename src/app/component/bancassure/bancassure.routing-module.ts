@@ -12,7 +12,6 @@ import { QuotesComponent } from '../renewals/quotes/quotes.component';
 import { RenewalDynamicFormComponent } from '../renewals/renewal-dynamic-form/renewal-dynamic-form.component';
 import { ClaimsComponent } from './claims/claims.component';
 import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
-import { ProductDetailsComponent } from './product-details/product-details.component';
 
 const routes: Routes = [
     {
@@ -20,7 +19,6 @@ const routes: Routes = [
       component: BancassureComponent,
       children: [
         {path: "viewproducts", component: ViewproductsComponent, canActivate: [AuthGuard]},
-        {path: "productDetails",component:ProductDetailsComponent,canActivate: [AuthGuard]},
         {path: "viewdashboard", component: DashboardComponent, canActivate: [AuthGuard]},
         {path: "viewProposals", component: ProposalsComponent, canActivate: [AuthGuard]},
         {path: "viewtransaction", component: TransactionComponent, canActivate: [AuthGuard]},

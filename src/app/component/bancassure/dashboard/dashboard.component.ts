@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,7 +9,7 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 export class DashboardComponent {
   // @ViewChild('productCategoryChart', { static: true }) productCategoryChart!: ElementRef;
   // private Highcharts: any;
-  // constructor() { }
+  constructor(private route:Router) { }
 
 
   // ngAfterViewInit(): void {
@@ -174,4 +175,8 @@ export class DashboardComponent {
   //     }]
   //   });
   // }
+
+  continue(){
+    this.route.navigate(['portal/abhi/quoteProducts'])
+  }
 }

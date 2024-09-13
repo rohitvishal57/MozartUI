@@ -1,0 +1,37 @@
+<div class="main-container">
+    <div class="right-panel-product">
+        <div class="r-p-header">
+            <div class="product-heading">Products</div>
+            <div class="prod-head-desc">Discover our products to insure your health
+            </div>
+        </div>
+        <div class="product-list-container">
+        <div *ngIf="ProductList.length > 0; else noProducts">
+        <div  class="card_ProductList" >
+            <div class="cardRow">
+
+                <ng-container *ngFor="let item of ProductList">
+                    <div class="cardItem box">
+                        <!-- {{ item | json}}  -->
+                        <div class="product-item">
+                            <img src="../../../../assets/logo/activeOne.svg">
+                            {{item.productName}}</div>
+                        <p>{{item.productDescription}}</p>
+                        <div class="product-button">
+                            <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
+                            <button class="get" (click)="buyNow(item)">Buy Now</button>
+                            <button class="get1" >View Recommended Add-Ons</button>
+                            <button class="get2" >Add to Compare</button>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        </div>
+        <ng-template #noProducts>
+            <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected
+                type.</div>
+        </ng-template>
+     </div>
+    </div>
+</div>

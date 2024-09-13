@@ -165,7 +165,7 @@ export class ViewproductsComponent implements OnInit {
   }
 
   buyNow(item:any){
-    this.router.navigate(['portal/agent/productDetails'], {
+    this.router.navigate(['portal/abhi/productDetails'], {
       state: { item: item }
     });
   }

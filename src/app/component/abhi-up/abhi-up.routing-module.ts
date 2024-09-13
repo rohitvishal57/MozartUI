@@ -4,7 +4,8 @@ import { AuthGuard } from 'src/app/authorize/auth.guard';
 import { AbhiupComponent } from './abhi-up.component';
 import { AbhiDynamicFormComponent } from './abhi-dynamic-form/abhi-dynamic-form.component';
 import { AbhiDashboardComponent } from './abhi-dashboard/abhi-dashboard.component';
-import { ProductDetailsComponent } from '../bancassure/product-details/product-details.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
+import { QuoteProductsComponent } from './quote-products/quote-products.component';
 
 const routes: Routes = [
     {
@@ -14,6 +15,9 @@ const routes: Routes = [
         {path: "forms", component: AbhiDynamicFormComponent},
         {path:'',redirectTo:'forms',pathMatch:'full'},
         {path: "dashboard", component: AbhiDashboardComponent},
+        {path: "productDetails",component:ProductDetailsComponent,canActivate: [AuthGuard]},
+        {path: "quoteProducts",component:QuoteProductsComponent,canActivate: [AuthGuard]},
+
         // {path: "viewProposals", component: ProposalsComponent, canActivate: [AuthGuard]},
         // {path: "viewtransaction", component: TransactionComponent, canActivate: [AuthGuard]},
         // {path: "viewreports", component: ReportsComponent, canActivate: [AuthGuard]},
