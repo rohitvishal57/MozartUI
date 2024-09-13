@@ -18,7 +18,7 @@ import { totalpremium } from 'src/assets/styles/config/totalPremium';
   encapsulation: ViewEncapsulation.None,
 })
 export class AbhiDynamicFormComponent {
-  @ViewChild('fileInput') fileInput!: ElementRef;
+  // @ViewChild('fileInput') fileInput!: ElementRef;
   form!: IForm;
   fb = inject(FormBuilder)
   dynamicFormGroup: FormGroup = this.fb.group({});

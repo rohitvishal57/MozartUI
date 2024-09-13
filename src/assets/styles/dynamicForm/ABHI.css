@@ -567,6 +567,7 @@ body {
     margin-top: 2px;
     margin-bottom: 28px;
     margin-left: 4px;
+    max-width: 216px;
 }
 
 .main-container .right-panel .acceptTermsCheck {

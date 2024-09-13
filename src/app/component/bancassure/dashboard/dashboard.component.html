@@ -1,39 +1,43 @@
-<section class="policySummaryMain">
-    <div class="card_Main">
-        <div class="card_Item cardItem1">
-            <div class="card_ItemHead">Quotes Sent</div>
-            <div class="card_ItemResult">
-                <div class="resultLabel">In Process</div>
-                <div class="resultValue">25</div>
-            </div>
-            <span class="card_ItemImg"><img src="../../../../assets/images/document-edit-icon.svg" alt="Document Edit Icon"></span>
-        </div>
-        <div class="card_Item cardItem2">
-            <div class="card_Main">
-                <div class="card_Item card_innerItem">
-                    <div class="card_ItemHead">Total Policies</div>
-                    <div class="card_ItemResult">
-                        <div class="resultLabel">In Force</div>
-                        <div class="resultValue">1024</div>
+<div class="main-content">
+    <form [formGroup]="quoteForm" (ngSubmit)="onSubmit()">
+        <div class="card-outer">
+            <div class="card">
+                <div class="header">
+                    <input type="text" class="search-bar"
+                        placeholder="Search Your Customer, Leads, Claims No and more" />
+                    <button class="get-quote-btn" type="submit">
+                        <i class="fas fa-plus"></i> Get Quote
+                    </button>
+                </div>
+
+                <div class="dropdown-container">
+                    <div class="dropdown-item" *ngFor="let dropdown of dropdownOptions; let i = index">
+                        <label [for]="'dropdown' + i">{{ dropdown.label }}</label>
+                        <div class="custom-dropdown">
+                            <div class="selected-option" (click)="toggleDropdown(i)">
+                                <span>{{ selectedOptions[i] || 'Select an option' }}</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div>
+                                <!-- {{i}}{{activeDropdown}} -->
+                            </div>
+                            <div class="dropdown-menu" *ngIf="activeDropdown === i">
+                                <div *ngFor="let option of dropdown.options" class="dropdown-option">
+                                    <div>
+                                        {{ option.label }}
+                                    </div>
+                                    <button type="button" class="save-btn"
+                                        (click)="saveOption(option.value, i)">Save</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="card_Item card_innerItem">
-                    <div id="productcategory" class="chartContainer"></div>
-                </div>
-                <div class="card_Item card_innerItem">
-                    <div id="productcategorylist" class="chartContainer"></div>
+
+                <div class="continue-btn-container">
+                    <button type="button" class="continue-btn" (click)="continue()">Continue</button>
                 </div>
             </div>
-            
         </div>
-        <div class="card_Item cardItem1">
-            <div class="card_ItemHead">Policies Expiring</div>
-            <div class="card_ItemResult">
-                <div class="resultLabel">In next 2 months</div>
-                <div class="resultValue">18</div>
-            </div>
-            <span class="card_ItemImg"><img src="../../../../assets/images/warning_icon.svg" alt="Document Edit Icon"></span>
-        </div>
-    </div>
-    <button (click)="continue()">continue</button>
-</section>
+    </form>
+</div>

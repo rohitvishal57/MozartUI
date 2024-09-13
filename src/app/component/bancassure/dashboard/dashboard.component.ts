@@ -1,5 +1,9 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,176 +11,132 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-  // @ViewChild('productCategoryChart', { static: true }) productCategoryChart!: ElementRef;
-  // private Highcharts: any;
-  constructor(private route:Router) { }
+  proposalNum: any;
+  verticalCode = localStorage.getItem('verticalCode');
+  
+  code = localStorage.getItem('code');
+  displayNoProductsMessage: boolean = false;
+  ProductList: any[] = [];
+  products: any[] = []
+  isDropdownModalOpen = false;
+  selectedDropdownIndex: number = 0;
+  selectedDropdown: any;
+
+  quoteForm!: FormGroup;
+
+  selectedOptions: { [key: number]: string } = {};
+  activeDropdown: number | null = null;
+
+  constructor(private fb: FormBuilder, private loginService: LoginService,@Inject(DOCUMENT) private document: Document,
+                private route:Router) {}
+
+  ngOnInit() {
+    console.log(this.verticalCode);
+    console.log(this.code);
+    const formControls: { [key: string]: FormControl } = {};
+    this.dropdownOptions.forEach((dropdown, index) => {
+      const defaultValue = dropdown.options.length > 0 ? dropdown.options[0].value : '';
+      formControls[`dropdown${index}`] = new FormControl(defaultValue);
+    });
+
+    this.quoteForm = this.fb.group(formControls);
+  }
+
+  openDropdownModal(index: number) {
+    this.selectedDropdownIndex = index;
+    this.selectedDropdown = this.dropdownOptions[index];
+    this.isDropdownModalOpen = true;
+  }
+
+  closeDropdownModal() {
+    this.isDropdownModalOpen = false;
+  }
+
+  toggleDropdown(index: number): void {
+    console.log(index,this.activeDropdown);
+    this.activeDropdown = this.activeDropdown === index ? null : index;
+    console.log(index,this.activeDropdown);
+
+  }
+
+  selectOption(option: any) {
+    this.selectedDropdown.selectedValue = option.label;
+    this.closeDropdownModal();
+  }
+
+  saveOption(value: string, index: number): void {
+    this.selectedOptions[index] = value;
+    this.activeDropdown = null;
+  }
+  
+  dropdownOptions = [
+    {
+      label: 'Policy Type',
+      options: [
+        { label: 'Family Floater', value: 'Family Floater' },
+        { label: 'Multi Individual', value: 'Multi Individual' },
+      ]
+    },
+    {
+      label: 'Select Relationship',
+      options: [
+        { label: 'Self', value: 'Self' },
+      ]
+    },
+    {
+      label: 'Select Sum Insured',
+      options: [
+        { label: '5 Lakhs', value: '5 Lakhs' },
+        { label: '10 Lakhs', value: '10 Lakhs' },
+        { label: '15 Lakhs', value: '15 Lakhs' },
+      ]
+    },
+    {
+      label: 'Chronic',
+      options: [
+        { label: 'Hypertension', value: 'Hypertension' },
+        { label: 'Hyperlipidaemia', value: 'Hyperlipidaemia' },
+        { label: 'Diabetes', value: 'Diabetes' },
+        {label:'Asthma',value:'Asthma'},
+        {label:'PTCA', value:'PTCA'},
+        {label:'COPD', value:'COPD'},
+        {label:'HighBMI', value:'HighBMI'}
+      ]
+    },
+    {
+      label: 'Product',
+      options: []
+    }
+  ];
+
+  populateProductDropdown() {
+    const productDropdown = this.dropdownOptions.find(option => option.label === 'Product');
+    if (productDropdown) {
+      productDropdown.options = this.ProductList.map(product => ({
+        label: product.productname,
+        value: product.productid  
+      }));
+      this.quoteForm.get('dropdown4')?.setValue(productDropdown.options[0]?.value);
+    }
+  }
 
 
-  // ngAfterViewInit(): void {
-  //   console.log('DashboardComponent ngAfterViewInit');
-  //   this.createProductCategoryChart();
-  //   this.createProductCategoryListChart();
-  //   this.createPolicyChart();
-  // }
+  async getProposalNum() {
+    try {
+      const res = await firstValueFrom(this.loginService.getProposalNumber());
+      this.proposalNum = res;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 
-  // createProductCategoryChart() {
-  //   this.Highcharts.chart(this.productCategoryChart.nativeElement, {
-  //     colors: ['#69CF86', '#1491AC'],
-  //     chart: {
-  //       type: 'pie'
-  //     },
-  //     title: {
-  //       text: ''
-  //     },
-  //     tooltip: {
-  //       valueSuffix: ''
-  //     },
-  //     plotOptions: {
-  //       pie: {
-  //         allowPointSelect: true,
-  //         cursor: 'pointer',
-  //         dataLabels: {
-  //           enabled: true,
-  //           format: '{point.name}: {point.percentage:.1f}%'
-  //         },
-  //         showInLegend: false
-  //       }
-  //     },
-  //     series: [
-  //       {
-  //         name: 'Count',
-  //         colorByPoint: true,
-  //         data: [
-  //           {
-  //             name: 'Health',
-  //             y: 356
-  //           },
-  //           {
-  //             name: 'Motor',
-  //             y: 564
-  //           }
-  //         ]
-  //       }
-  //     ]
-  //   });
-  // }
-
-  // createProductCategoryListChart() {
-  //   this.Highcharts.chart('productcategorylist', {
-  //     colors: ['#1491AC', '#31A9C2', '#81D6E8', '#022F38', '#095D70'],
-  //     chart: {
-  //       type: 'pie'
-  //     },
-  //     accessibility: {
-  //       point: {
-  //         valueSuffix: '%'
-  //       }
-  //     },
-  //     title: {
-  //       text: ''
-  //     },
-  //     subtitle: {
-  //       text: ''
-  //     },
-  //     tooltip: {
-  //       //pointFormat: '{series.name}: <b>{point.percentage:.0f}%</b>'
-  //     },
-  //     plotOptions: {
-  //       pie: {
-  //         allowPointSelect: true,
-  //         cursor: 'pointer',
-  //         dataLabels: {
-  //           enabled: true,
-  //           format: '{point.name}: {y} '
-  //         },
-  //         showInLegend: false
-  //       }
-  //     },
-  //     series: [{
-  //       name: 'Count',
-  //       colorByPoint: true,
-  //       innerSize: '45%',
-  //       data: [{
-  //         name: 'Two Wheeler',
-  //         count: '134',
-  //         y: 134
-  //       }, {
-  //         name: 'PCV',
-  //         y: 101
-  //       }, {
-  //         name: 'Private Car',
-  //         y: 156
-  //       }, {
-  //         name: 'GCV',
-  //         y: 110
-  //       }, {
-  //         name: 'Misc',
-  //         y: 98
-  //       }]
-  //     }]
-  //   });
-  // }
-
-  // createPolicyChart() {
-  //   this.Highcharts.chart('policychart', {
-  //     colors: ['#B50536', '#3F97FD'],
-  //     chart: {
-  //       type: 'spline'
-  //     },
-  //     title: {
-  //       text: ''
-  //     },
-  //     subtitle: {
-  //       text: ''
-  //     },
-  //     xAxis: {
-  //       categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  //         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-  //       accessibility: {
-  //         description: 'Months of the year'
-  //       }
-  //     },
-  //     yAxis: {
-  //       title: {
-  //         text: ''
-  //       },
-  //       labels: {
-  //         //format: '{value}°'
-  //         format: '{value} K'
-  //       }
-  //     },
-  //     tooltip: {
-  //       crosshairs: true,
-  //       shared: true
-  //     },
-  //     plotOptions: {
-  //       spline: {
-  //         marker: {
-  //           radius: 4,
-  //           lineColor: '#666666',
-  //           lineWidth: 0
-  //         }
-  //       }
-  //     },
-  //     series: [{
-  //       name: 'Renewed',
-  //       marker: {
-  //         symbol: 'circle'
-  //       },
-  //       data: [5.2, 5.7, 8.7, 13.9, 18.2, 21.4, 25.0, 26.4, 22.8, 17.5, 12.1, 7.6]
-
-  //     }, {
-  //       name: 'Pending',
-  //       marker: {
-  //         symbol: 'circle'
-  //       },
-  //       data: [1.5, 1.6, 3.3, 5.9, 10.5, 13.5, 14.5, 14.4, 11.5, 8.7, 4.7, 2.6]
-  //     }]
-  //   });
-  // }
+  onSubmit() {
+    // Implement API logic here
+  }
 
   continue(){
     this.route.navigate(['portal/abhi/quoteProducts'])
   }
+  
 }
