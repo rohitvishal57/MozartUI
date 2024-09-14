@@ -14,6 +14,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { QuoteProductsComponent } from './quote-products/quote-products.component';
+import { GetQuoteComponent } from './get-quote/get-quote.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
@@ -25,9 +26,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     AbhiHeaderComponent,
     AbhiNavbarComponent,
     AbhiDynamicFormComponent,
-    AbhiDashboardComponent,
+    // AbhiDashboardComponent,
     QuoteProductsComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    // GetQuoteComponent
   ],
   imports: [
     CommonModule,

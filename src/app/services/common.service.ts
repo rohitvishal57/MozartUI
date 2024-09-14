@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class CommonService {
   private baseUrl: string = 'https://usp.monocept.ai/api/';
-  private yatraUrl: string = 'https://usp.monocept.ai/Yatra/';
+  private yatraUrl: string = 'https://usp.monocept.ai/yatra/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
   public baseCssUrl= 	'https://usp.monocept.ai/ABHI/' 

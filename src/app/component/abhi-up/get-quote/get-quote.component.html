@@ -1,0 +1,65 @@
+<div class="main-content">
+    <form [formGroup]="quoteForm" (ngSubmit)="onSubmit()">
+        <div class="card-outer">
+            <div class="card">
+                <div class="header">
+                    <input type="text" class="search-bar" placeholder="Search Your Customer, Leads, Claims No and more" />
+                    <button class="get-quote-btn" type="button" (click)="getQuote()">
+                        <i class="fas fa-plus"></i> Get Quote
+                    </button>
+                </div>
+
+                <div *ngIf="showCard">
+                    <div class="dropdown-container" *ngIf="showDropdownsFlag">
+                        <div *ngFor="let dropdown of dropdownOptions; let i = index">
+                            <!-- <label [for]="'dropdown' + i">{{ dropdown.label }}</label> -->
+                            <!-- <div class="custom-dropdown"> -->
+                                <button class="dropdown-button" type="button" (click)="openCustomDiv(dropdown.label, i)">
+                                    <!-- <div> -->
+                                        <!-- </div> -->
+                                        <div class="selected-value">
+                                            {{ dropdown.label }}<i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </button>
+                                    <p>{{ selectedOptions[i]}}</p>
+                                <!-- <div class="option-menu" *ngIf="activeDropdown === i">
+                                    <div *ngFor="let option of dropdown.options" class="dropdown-option"
+                                    (click)="openCustomDiv(option.value, i)">
+                                        {{ option.label }}
+                                    </div> -->
+                                <!-- </div> -->
+                            <!-- </div> -->
+                        </div>
+                    </div>
+
+                    <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="showCustomDiv">
+                        <div class="option_policyType" *ngIf="selectedDropdown === 'Policy Type'">
+                            <div class="input-radio-block raido_policyType">
+                                <label class="input-radiolabel ">
+                                    <input type="radio" name="policytype" value="familyfloater" (click)="continueSelection(0, 'Family Floater')" [checked]="selectedOptions[0] === 'Family Floater'">
+                                    <span><em class="pt-head"><img src="../../../../assets/images/icon_familyfloater.svg">Family Floater Policy</em>
+                                    <em class="para-12">A family floater health insurance is a type of policy where you and your family share the same cover amount.</em>
+                                    </span>
+                                    <img src="../../../../assets/images/img_selected_policytype.svg" class="selected_policy">
+                                </label>
+                                <label class="input-radiolabel ">
+                                    <input type="radio" name="policytype" value="multiindividual" (click)="continueSelection(0, 'Multi Individual')" [checked]="selectedOptions[0] === 'Multi Individual'">
+                                    <span><em class="pt-head"><img src="../../../../assets/images/icon_multiindividual.svg">Multi-individual Policy</em>
+                                    <em class="para-12">A multi-individual health insurance is a type of policy wherein each member has their own cover amount.</em>
+                                    </span>
+                                    <img src="../../../../assets/images/img_selected_policytype.svg" class="selected_policy2">
+                                </label>
+                            </div>
+                            <div class="tipInfo_org"><img src="../../../../assets/images/Lightbulb Icon.png">You can edit members to change back to family floater policy.</div>
+                            <button type="button" class="btn_red btn_fullWidth" (click)="closeCustomDiv()">Continue</button>
+                        </div>
+                    </div>
+
+                    <div class="continue-btn-container">
+                        <button type="button" class="continue-btn" (click)="continue()">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

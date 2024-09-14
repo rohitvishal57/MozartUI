@@ -1,9 +1,10 @@
-<div class="main-content">
+<!-- <div class="main-content">
     <form [formGroup]="quoteForm" (ngSubmit)="onSubmit()">
         <div class="card-outer">
             <div class="card">
                 <div class="header">
-                    <input type="text" class="search-bar" placeholder="Search Your Customer, Leads, Claims No and more" />
+                    <input type="text" class="search-bar"
+                        placeholder="Search Your Customer, Leads, Claims No and more" />
                     <button class="get-quote-btn" type="submit">
                         <i class="fas fa-plus"></i> Get Quote
                     </button>
@@ -16,14 +17,14 @@
                             <button class="dropdown-button" (click)="toggleDropdown(i)">
                                 <div>
                                     {{ selectedOptions[i] || 'Select ' + dropdown.label }}
-                                    
                                 </div>
                                 <div>
-                                    <i class="fas fa-chevron-down"></i> 
+                                    <i class="fas fa-chevron-down"></i>
                                 </div>
                             </button>
-                            <div class="dropdown-menu" *ngIf="activeDropdown === i">
-                                <div *ngFor="let option of dropdown.options" class="dropdown-option" (click)="selectOption(option.label, i)">
+                            <div class="option-menu" *ngIf="activeDropdown === i">
+                                <div *ngFor="let option of dropdown.options" class="dropdown-option"
+                                    (click)="selectOption(option.label, i)">
                                     {{ option.label }}
                                 </div>
                             </div>
@@ -59,4 +60,6 @@
             </div>
         </div>
     </form>
-</div>
+</div> -->
+<app-get-quote></app-get-quote>
+<app-abhi-dashboard></app-abhi-dashboard>

@@ -23,6 +23,8 @@ import { ClaimsViewComponent } from './claims/claims-view/claims-view.component'
 import { ClaimsListViewComponent } from './claims/claims-list-view/claims-list-view.component';
 import { DatepipePipe } from 'src/app/pipe/datepipe.pipe';
 import { EndorsementsModule } from './endorsements/endorsements.module';
+import { AbhiDashboardComponent } from '../abhi-up/abhi-dashboard/abhi-dashboard.component';
+import { GetQuoteComponent } from '../abhi-up/get-quote/get-quote.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,9 @@ export class AppModule { }
     ClaimsComponent,
     ClaimsViewComponent,
     ClaimsListViewComponent,
-    DatepipePipe
+    DatepipePipe,
+    AbhiDashboardComponent,
+    GetQuoteComponent
   ],
   imports: [
     CommonModule,

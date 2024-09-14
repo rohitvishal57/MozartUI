@@ -1,0 +1,114 @@
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
+
+@Component({
+  selector: 'app-get-quote',
+  templateUrl: './get-quote.component.html',
+  styleUrls: ['./get-quote.component.scss']
+})
+export class GetQuoteComponent {
+
+  proposalNum: any;
+  verticalCode = localStorage.getItem('verticalCode');
+
+  code = localStorage.getItem('code');
+  displayNoProductsMessage: boolean = false;
+  ProductList: any[] = [];
+  products: any[] = []
+  isDropdownModalOpen = false;
+  selectedDropdownIndex: number = 0;
+  // selectedDropdown: any;
+
+  quoteForm!: FormGroup;
+
+  selectedOptions:string[]= [];
+  activeDropdown: number | null = null;
+  showCard: boolean = false;
+  showDropdownsFlag: boolean = false;
+  showCustomDiv = false;
+  selectedDropdown = '';
+
+  constructor(private fb: FormBuilder, private loginService: LoginService, @Inject(DOCUMENT) private document: Document,
+    private route: Router) { }
+
+  ngOnInit() {
+    console.log(this.verticalCode);
+    console.log(this.code);
+    const formControls: { [key: string]: FormControl } = {};
+    // this.dropdownOptions.forEach((dropdown, index) => {
+    //   const defaultValue = dropdown.options.length > 0 ? dropdown.options[0].value : '';
+    //   formControls[`dropdown${index}`] = new FormControl(defaultValue);
+    // });
+    this.quoteForm = this.fb.group(formControls);
+  }
+
+  // Toggle the dropdown for the clicked button
+  toggleDropdown(index: number): void {
+    this.activeDropdown = this.activeDropdown === index ? null : index;
+  }
+
+  // When an option is selected
+  selectOption(option: string, index: number): void {
+    this.selectedOptions[index] = option;
+    this.showCustomDiv = false;
+    // this.activeDropdown = null;
+  }
+
+  continueSelection(index: number, selectedOption: string) {
+    console.log(index,selectedOption);
+    this.selectedOptions[index] = selectedOption; 
+  }
+
+  openCustomDiv(label: string, index: number) {
+    this.selectedDropdown = label;
+    this.showCustomDiv = true;
+  }
+
+  showDropdowns() {
+    this.showDropdownsFlag = true;
+  }
+
+  closeCustomDiv() {
+    this.showCustomDiv = false;
+  }
+
+
+  dropdownOptions = [
+    {
+      label: 'Policy Type',
+      options: []
+    },
+    {
+      label: 'Relationship',
+      options: []
+    },
+    {
+      label: 'Sum Insured',
+      options: []
+    },
+    {
+      label: 'Chronic',
+      options: []
+    }
+  ];
+
+
+  onSubmit() {
+    // Implement API logic here
+  }
+
+  getQuote() {
+    console.log("Clicked");
+    this.showCard = true;
+    this.showDropdownsFlag = true;
+    console.log('showCard:', this.showCard);
+  }
+
+  continue() {
+    this.route.navigate(['portal/abhi/quoteProducts'])
+  }
+
+}

@@ -38,36 +38,21 @@ export class DashboardComponent {
       const defaultValue = dropdown.options.length > 0 ? dropdown.options[0].value : '';
       formControls[`dropdown${index}`] = new FormControl(defaultValue);
     });
-
     this.quoteForm = this.fb.group(formControls);
   }
 
-  openDropdownModal(index: number) {
-    this.selectedDropdownIndex = index;
-    this.selectedDropdown = this.dropdownOptions[index];
-    this.isDropdownModalOpen = true;
-  }
 
-  closeDropdownModal() {
-    this.isDropdownModalOpen = false;
-  }
-
+  // Toggle the dropdown for the clicked button
   toggleDropdown(index: number): void {
-    console.log(index,this.activeDropdown);
     this.activeDropdown = this.activeDropdown === index ? null : index;
-    console.log(index,this.activeDropdown);
-
   }
 
+  // When an option is selected
   selectOption(option: string, index: number): void {
     this.selectedOptions[index] = option;
-    this.activeDropdown = null;  // Close the dropdown after selecting
+    this.activeDropdown = null;  // Close the dropdown after selection
   }
 
-  saveOption(value: string, index: number): void {
-    this.selectedOptions[index] = value;
-    this.activeDropdown = null;
-  }
   
   dropdownOptions = [
     {
