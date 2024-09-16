@@ -11,16 +11,11 @@ import { LoginService } from 'src/app/services/login.service';
 })
 export class GetQuoteComponent {
 
-  proposalNum: any;
-  verticalCode = localStorage.getItem('verticalCode');
-
-  code = localStorage.getItem('code');
   displayNoProductsMessage: boolean = false;
   ProductList: any[] = [];
   products: any[] = []
   isDropdownModalOpen = false;
   selectedDropdownIndex: number = 0;
-  // selectedDropdown: any;
 
   quoteForm!: FormGroup;
 
@@ -35,26 +30,17 @@ export class GetQuoteComponent {
     private route: Router) { }
 
   ngOnInit() {
-    console.log(this.verticalCode);
-    console.log(this.code);
     const formControls: { [key: string]: FormControl } = {};
-    // this.dropdownOptions.forEach((dropdown, index) => {
-    //   const defaultValue = dropdown.options.length > 0 ? dropdown.options[0].value : '';
-    //   formControls[`dropdown${index}`] = new FormControl(defaultValue);
-    // });
     this.quoteForm = this.fb.group(formControls);
   }
 
-  // Toggle the dropdown for the clicked button
   toggleDropdown(index: number): void {
     this.activeDropdown = this.activeDropdown === index ? null : index;
   }
 
-  // When an option is selected
   selectOption(option: string, index: number): void {
     this.selectedOptions[index] = option;
     this.showCustomDiv = false;
-    // this.activeDropdown = null;
   }
 
   continueSelection(index: number, selectedOption: string) {
@@ -63,8 +49,14 @@ export class GetQuoteComponent {
   }
 
   openCustomDiv(label: string, index: number) {
-    this.selectedDropdown = label;
-    this.showCustomDiv = true;
+    if (this.activeDropdown === index) {
+      // If the dropdown is already open, close it
+      this.activeDropdown = null;
+    } else {
+      // Otherwise, set the active dropdown and show its content
+      this.selectedDropdown = label;
+      this.activeDropdown = index;
+    }
   }
 
   showDropdowns() {
@@ -72,7 +64,7 @@ export class GetQuoteComponent {
   }
 
   closeCustomDiv() {
-    this.showCustomDiv = false;
+    this.activeDropdown = null;
   }
 
 
