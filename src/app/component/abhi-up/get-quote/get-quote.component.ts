@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import {MatSliderModule} from '@angular/material/slider';
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-get-quote',
@@ -12,14 +13,7 @@ import {MatSliderModule} from '@angular/material/slider';
 })
 export class GetQuoteComponent {
 
-  displayNoProductsMessage: boolean = false;
-  ProductList: any[] = [];
-  products: any[] = []
-  isDropdownModalOpen = false;
-  selectedDropdownIndex: number = 0;
-
   quoteForm!: FormGroup;
-
   selectedOptions:string[]= [];
   activeDropdown: number | null = null;
   showCard: boolean = false;
@@ -27,8 +21,18 @@ export class GetQuoteComponent {
   showCustomDiv = false;
   selectedDropdown = '';
 
-  sumInsuredValues: number[] = [200000, 300000, 400000, 500000, 700000, 1000000, 1500000, 2000000, 2500000, 5000000, 7500000, 10000000, 20000000, 30000000, 40000000, 50000000, 60000000];
-  selectedSumInsured: number = this.sumInsuredValues[0];
+  value: number = 25; 
+  options: Options = {
+    floor: 5,
+    ceil: 200,
+    step: 5, 
+    showTicks: true,
+    showTicksValues: true,
+    ticksArray: [5, 7, 10, 15, 20, 25, 50, 100, 200],
+    translate: (value: number): string => {
+      return '';
+    }
+  };
 
   constructor(private fb: FormBuilder, private loginService: LoginService, @Inject(DOCUMENT) private document: Document,
     private route: Router) { }
@@ -47,15 +51,6 @@ export class GetQuoteComponent {
     this.showCustomDiv = false;
   }
 
-  selectSumInsured(event: any): void {
-    const index = event.value;
-    console.log(index,event);
-    
-    if (index >= 0 && index < this.sumInsuredValues.length) {
-      this.selectedSumInsured = this.sumInsuredValues[index];
-    }
-  }
-
   continueSelection(index: number, selectedOption: string) {
     console.log(index,selectedOption);
     this.selectedOptions[index] = selectedOption; 
@@ -63,7 +58,6 @@ export class GetQuoteComponent {
 
   openCustomDiv(label: string, index: number) {
     if (this.activeDropdown === index) {
-      // If the dropdown is already open, close it
       this.activeDropdown = null;
     } else {
       console.log(label);
@@ -82,6 +76,14 @@ export class GetQuoteComponent {
     this.activeDropdown = null;
   }
 
+  formatTickLabel(value: number): string {
+    if (value >= 100) {
+      return (value / 100).toFixed(0) + 'Cr';
+    } else {
+      return value + 'L';
+    }
+  }
+
 
   dropdownOptions = [
     {
@@ -97,32 +99,11 @@ export class GetQuoteComponent {
       options: []
     },
     {
-      label: 'Chronic',
+      label: 'Diseases',
       options: []
     }
   ];
 
-  // formatLabel(value: number): string {
-  //   if (value < 0 || value >= this.sumInsuredValues.length) {
-  //     return '';
-  //   }
-  //   const insuredValue = this.sumInsuredValues[value];
-  //   console.log(insuredValue);
-  //   return insuredValue >= 100000 ? `${insuredValue / 100000}L` : `${insuredValue}`;
-  // }
-
-   formatLabel(value: number): string {
-    if (value >= 1000) {
-      return Math.round(value / 1000) + 'k';
-    }
-
-    return `${value}`;
-  }
-
-
-  onSubmit() {
-    // Implement API logic here
-  }
 
   getQuote() {
     console.log("Clicked");
@@ -133,6 +114,14 @@ export class GetQuoteComponent {
 
   continue() {
     this.route.navigate(['portal/abhi/quoteProducts'])
+  }
+
+  onSumInsuredSelect() {
+    console.log('Selected Sum Insured: ₹','Lakhs');
+  }
+
+   onValueChange(newValue: number) {
+    console.log('Slider value changed to:', newValue);
   }
 
 }

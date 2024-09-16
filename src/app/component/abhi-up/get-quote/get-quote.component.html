@@ -25,7 +25,24 @@
               <!-- Button for each dropdown -->
               <button class="dropdown-button" type="button" (click)="openCustomDiv(dropdown.label, i)">
                 <div class="selected-value">
-                  <span>{{ selectedOptions[i] }}</span><i class="fas fa-chevron-down"></i>
+                  <span>
+                    <ng-container *ngIf="dropdown.label === 'Policy Type'">
+                      {{ selectedOptions[i] || 'Family Floater' }}
+                    </ng-container>
+
+                    <ng-container *ngIf="dropdown.label === 'Relationship'">
+                      {{ selectedOptions[i] || 'Please select members' }}
+                    </ng-container>
+                    
+                    <ng-container *ngIf="dropdown.label === 'Sum Insured'">
+                      {{ selectedOptions[i] || '5 Lakhs' }}
+                    </ng-container>
+
+                    <ng-container *ngIf="dropdown.label === 'Diseases'">
+                      {{ selectedOptions[i] || 'Hypertension' }}
+                    </ng-container>
+
+                  </span><i class="fas fa-chevron-down"></i>
                 </div>
               </button>
 
@@ -70,14 +87,21 @@
 
                 <!-- Add similar divs for other dropdowns based on selectedDropdown -->
 
-                <div class="option_sumInsured" *ngIf="selectedDropdown === 'Sum Insured'">
-                  <p>Selected Sum Insured: {{ formatLabel(sumInsuredValues.indexOf(selectedSumInsured)) }}</p>
-                  <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
-                    <input matSliderThumb>
-                  </mat-slider>
-                  <!-- Continue Button for Sum Insured -->
-                  <button type="button" class="btn_red_suminsured btn_fullWidth"
-                    (click)="closeCustomDiv()">Continue</button>
+                <div class="card-container" *ngIf="selectedDropdown === 'Sum Insured'">
+                  <div class="slider-container">
+                    <div class="label">
+                      <h4>Sum Insured</h4>
+                      <span class="value">₹{{ value }} Lakhs</span>
+                    </div>
+                    <!-- Listen to value change event here -->
+                     <ngx-slider [(value)]="value" [options]="options" (valueChange)="onValueChange($event)"></ngx-slider>
+                     <div class="tick-labels">
+                      <span *ngFor="let tick of options.ticksArray">{{ formatTickLabel(tick) }}</span>
+                    </div>
+                  </div>
+                  <button class="suminsured-button" (click)="onSumInsuredSelect()">
+                    Continue
+                  </button>
                 </div>
 
                 <div class="overlay_popupMain overlay_dropdown_w518" *ngIf="selectedDropdown === 'Relationship'">

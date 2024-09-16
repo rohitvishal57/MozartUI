@@ -29,7 +29,7 @@ export class ViewproductsComponent implements OnInit {
   products: any[] = []
   ProductList: any[] = [];
   cartProductList: any[] = [];
-  agentCode=4620973
+  agentCode=localStorage.getItem('agentcode');
   partnerId:any
   productId:any
 
@@ -61,7 +61,7 @@ export class ViewproductsComponent implements OnInit {
   getPoductList(item: any) {
     this.selectedToggle = item.insuranceType
     const reqData={
-      "agentCode": this.agentCode
+      "agentcode": this.agentCode
     }
     this.loginService.Getproductlist(reqData).subscribe({
       next: (res) => {

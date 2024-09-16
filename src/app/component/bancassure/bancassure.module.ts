@@ -25,6 +25,7 @@ import { DatepipePipe } from 'src/app/pipe/datepipe.pipe';
 import { EndorsementsModule } from './endorsements/endorsements.module';
 import { AbhiDashboardComponent } from '../abhi-up/abhi-dashboard/abhi-dashboard.component';
 import { GetQuoteComponent } from '../abhi-up/get-quote/get-quote.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ export class AppModule { }
     CommonModule,
     PrimeNgModule,
     NgxSpinnerModule,
+    NgxSliderModule,
     ReactiveFormsModule,
     BancassureRoutingModule,
     NgxPaginationModule,
