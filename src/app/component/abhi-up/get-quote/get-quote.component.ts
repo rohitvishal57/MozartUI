@@ -66,6 +66,8 @@ export class GetQuoteComponent {
       // If the dropdown is already open, close it
       this.activeDropdown = null;
     } else {
+      console.log(label);
+      
       // Otherwise, set the active dropdown and show its content
       this.selectedDropdown = label;
       this.activeDropdown = index;
