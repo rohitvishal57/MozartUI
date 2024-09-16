@@ -6,10 +6,11 @@
   padding: 39px;
 }
 
-.card-outer {
+.dashboard_insureContainer {
   width: 100%;
   height: 100%;
   padding: 0;
+  
 }
 
 .card {
@@ -20,7 +21,7 @@
   border-color: #fff;
   border-style: solid;
   position: relative;
-  padding: 30px;
+  padding: 14px 16px;
   margin: 0 auto;
 }
 
@@ -28,7 +29,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  .headerSearch {
+    width: 100%;
+    .field_searchMain {
+      max-width: 400px;
+      img {
+        top: 12px;
+      }
+      .filterSearch {
+        background: #fafafa;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 400;
+        &:focus {
+          outline: 0;
+        }
+      }
+    }
+  }
+  .headerButtons {
+    width: 300px;
+    text-align: right;
+  }
 }
 
 p {
@@ -63,22 +85,44 @@ p {
 .get-quote-btn:hover {
   background-color: #a61d24;
 }
-
+.insurance_optionHUB {
+  padding: 20px;
+}
 .dropdown-container {
   display: flex;
   flex-wrap: wrap;
   margin-top: 20px;
-  background-color: #f5f5f5;
-  padding: 10px;
+  background-color: #f9f8fb;
+  padding: 14px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  justify-content: space-between;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
+  gap: 15px;
+  .field_div {
+    width: 16.6%;
+    display: flex;
+    flex-direction: column;
+    gap:4px;
+    position: relative;
+    .field_label {
+      font-weight: 300;
+      font-size: 12px;
+      color: #000;
+    }
+  }
 }
 
 .selected-value {
   margin-top: 5px;
-  font-size: 14px;
-  color: #555;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  i {
+    font-size: 9px;
+    padding: 5px;
+  }
 }
 
 .dropdown-item {
@@ -94,9 +138,9 @@ p {
 .dropdown-button {
   display: flex;
   width: 100%;
-  padding: 10px;
+  padding: 0px;
   border: none;
-  background-color: #f5f5f5;
+  background-color: transparent;
   border-radius: 8px;
   cursor: pointer;
   text-align: left;
@@ -155,6 +199,458 @@ p {
 }
 
 
+.field_searchMain {
+  width: 100%;
+  position: relative;
+}
+
+.field_searchMain img {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+.field_searchMain .filterSearch {
+    width: 100%;
+    background: #F1F3F6;
+    border-width: 0;
+    padding: 12px 16px 12px 35px;
+}
+
+.input-block {
+  max-width: 100%;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.input-block > label {
+  font-weight: 400;
+  color: #282828;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: normal;
+  display: block;
+  margin-bottom: 8px;
+  font-family: "Anek Latin", sans-serif;
+}
+
+.input-block .input-textBox {
+  border: 1px solid #f1f3f6;
+  padding: 14px 16px !important;
+  height: 44px;
+  border-radius: 16px !important;
+  font-weight: 400;
+  color: #282828;
+  font-size: 14px;
+  line-height: 20px;
+  width: 100%;
+  margin-bottom: 0px;
+}
+
+.input-block .input-textBox:hover, .input-block .input-selectBox:hover {
+  /*border-bottom: solid 1px #EB0000;
+    border-bottom: 1px solid #EB0000 ;*/
+  }
+
+  input:focus, select:focus {
+    border: 1px solid #f1f3f6 !important;
+    outline: none;
+  }
+  
+  input:disabled, select:disabled, .input-block .input-textBox:disabled:hover, .input-block .input-selectBox:disabled:hover,
+  .input-block .input-textBox:disabled, .input-block .input-selectBox:disabled {
+    background: #f1f1f1;
+    border: 1px solid #b4b4b4;
+    color: #B4B4B4;
+  }
+  
+  input[type="checkbox"]:focus + label:before {
+    border: 1px solid #861f41;
+    border: 2px solid #b4b4b4;
+    background: #f9f9f9;
+  }
+  
+  .input-block .input-selectBox {
+    font-family: "Anek Latin", sans-serif;
+    font-weight: 400;
+    color: #282828;
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-appearance: none;
+    position: relative;
+    background: url(../../../../assets/images/down_arrow.svg) no-repeat 96% 50%;
+    border: 1px solid #E2E2E2;
+    padding: 8px !important;
+    height: 44px;
+    border-radius: 4px !important;
+    width: 100%;
+    margin-bottom: 0px;
+  }
+  
+  .mandatory {
+    color: #282828;
+  }
+  
+  .ui-error {
+    font-family: "Anek Latin", sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    color: #EB0000;
+    line-height: 12px;
+    text-align: left;
+    /*position: absolute;
+    left: 0;
+    top: 44px;*/
+    display: none;
+  }
+  
+  .ui-dob-icon {
+    width: 20px;
+    height: 20px;
+    background: url(../../../../assets/images/date_icon.svg) no-repeat;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+  }
+  
+  .input-block-renew {
+    margin-bottom: 16px;
+  }
+  
+  .input-block-renew > label {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    color: #799cae;
+    margin-bottom: 0;
+    position: absolute;
+    left: 16px;
+    top: 14px;
+    width: 80%;
+    height: auto;
+    /*background: var(--site-body-bg);*/
+    padding: 0;
+    z-index: 1;
+  }
+  
+  .input-block-renew.focus > label {
+    top: -8px;
+    font-size: 10px;
+    color: #4c4c4c;
+    background: transparent;
+  }
+  
+  .input-block-renew .input-textBox {
+    border: 1px solid #f1f3f6;
+    background: #f1f3f6;
+    padding: 12px 16px;
+  }
+  
+  .input-block-renew .input-selectBox {
+    font-family: "Anek Latin", sans-serif;
+    font-weight: 400;
+    color: #282828;
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-appearance: none;
+    position: relative;
+    background: var(--site-body-bg) url(../../../../assets/images/down_arrow.svg) no-repeat 96% 50%;
+    border: 1px solid var(--site-body-bg);
+    padding: 12px 16px !important;
+    height: 44px;
+    border-radius: 16px !important;
+    width: 100%;
+    margin-bottom: 0px;
+  }
+  
+  .input-textBox::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
+    color: #d5d7de;
+    font-size: 12px;
+  }
+  
+  .input-textBox::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #d5d7de;
+    font-size: 12px;
+  }
+  
+  .input-textBox:-ms-input-placeholder {
+    /* IE 10+ */
+    color: #d5d7de;
+    font-size: 12px;
+  }
+  
+  .input-textBox:-moz-placeholder {
+    /* Firefox 18- */
+    color: #d5d7de;
+    font-size: 12px;
+  }
+  
+  .ui-prefix {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 12px;
+    color: #797979;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+  
+  .input-blockBg {
+    background: #f1f3f6;
+    border: 1px solid #f1f3f6;
+    padding: 12px 16px !important;
+    border-radius: 16px !important;
+    height: 44px;
+  }
+  
+  .fields-blockHeight {
+    background: #f1f3f6;
+    border: 1px solid #f1f3f6;
+    padding: 12px 16px !important;
+    border-radius: 16px !important;
+    height: 44px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .fields-blockHeight .ui-prefix {
+    position: absolute;
+    top: 16px;
+    width: 12px;
+  }
+  
+  .fields-blockHeight .ft-prefix {
+    left: 94px;
+  }
+  
+  .fields-blockHeight .in-prefix {
+    right: 10px;
+  }
+  
+  .fields-blockHeight .input-textBox {
+    background: transparent;
+    border-width: 0 !important;
+    height: auto;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    width: 49%;
+  }
+  
+  .fields-blockHeight .input-textBox:first-child {
+    border-right: 1px solid #d5d7de !important;
+  }
+  
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+  }
+/*---Textbox end-->
+
+
+/*----Checkbox buttons----*/
+.input-checkbox-block {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.input-checkbox {
+  position: relative;
+  left: 0px;
+  top: 2px;
+  /* top: 13px;
+    left: 18px; */
+  height: 22px;
+  width: 22px;
+  background-color: transparent;
+  display: block;
+  padding-left: 25px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+}
+
+.input-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.input-checkbox .checkmark {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  background: #fff;
+  border: 1px solid #606c76;
+  border-radius: 3px;
+}
+
+.input-checkbox .checkmark {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+}
+
+.input-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.input-checkbox input:checked ~ .checkmark {
+  background-color: #ec6608;
+  border: none;
+}
+
+.input-checkbox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.input-checkbox .checkmark:after {
+  left: 5px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.input-checkbox .checkmarkLabel {
+  padding: 0 10px 0 20px;
+}
+
+.input-checkbox-feild {
+  display: inline-block;
+  vertical-align: top;
+  padding-right: 1.5rem;
+  position: relative;
+}
+
+.input-checkbox-feild .input-check {
+  position: absolute;
+  opacity: 0;
+}
+
+.input-checkbox-feild .input-check + label {
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: #000;
+  line-height: 17px;
+  display: inline-block;
+}
+
+.input-checkbox-feild .input-check + label:before {
+  content: "";
+  margin-right: 1rem;
+  display: inline-block;
+  vertical-align: text-top;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #797979;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.input-checkbox-feild .input-check:checked + label:before {
+  border: 1px solid #C7222A;
+  background: #C7222A;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  border-radius: 4px;
+}
+
+.input-checkbox-feild .input-check:disabled + label {
+  color: #b8b8b8;
+  cursor: auto;
+}
+
+.input-checkbox-feild .input-check:disabled + label:before {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -ms-box-shadow: none;
+  box-shadow: none;
+  border: 2px solid #b4b4b4;
+}
+
+.input-checkbox-feild .input-check:checked + label:after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(38deg);
+  -ms-transform: rotate(38deg);
+  transform: rotate(38deg);
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+}
+
+.input-checkbox-withIcon {
+  gap: 12px;
+}
+
+.input-checkbox-withIcon .input-checkbox-feild {
+  padding-right: 0;
+}
+
+.input-checkbox-withIcon .input-checkbox-feild .input-check + label {
+  padding: 8px 16px 8px 8px;
+  background: #f1f3f6;
+  border-radius: 16px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #f1f3f6;
+  font-weight: 400;
+  font-size: 12px;
+  color: #4c4c4c;
+}
+
+.input-checkbox-withIcon .input-checkbox-feild .input-check + label:before {
+  display: none;
+}
+
+.input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label {
+  padding: 8px 41px 8px 8px;
+  border: 1px solid #c7222a;
+}
+
+.input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label:after {
+  content: "";
+  position: absolute;
+  left: auto;
+  right: 8px;
+  top: 8px;
+  border-width: 0;
+  width: 24px;
+  height: 24px;
+  background: url(../../../../assets/images/icon_tick_round_red.svg) no-repeat;
+  transform: rotate(0deg);
+  background-size: 100%;
+}
+.input-checkbox-withIconLeft .input-checkbox-feild .input-check:checked + label {
+    padding: 8px 16px 8px 8px;
+}
+.input-checkbox-withIconLeft .input-checkbox-feild .input-check:checked + label:after {
+    left: 8px;
+}
 /*----Radio buttons start----*/
 .input-radio-block {
   display: flex;
@@ -270,6 +766,17 @@ p {
   color: #C7222A;
   background: #fff;
 }
+.btn_grey {
+  padding: 8px 20px;
+  border-radius: 8px;
+  background: #767d93;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  color: #fff;
+  border: 1px solid #767d93;
+  min-width: 196px;
+}
 
 .btn_red_suminsured {
   padding: 10px 33px;
@@ -288,7 +795,13 @@ p {
   background: #fff;
 }
 
+.btn_grey:hover {
+  color: #767d93;
+  background: #fff;
+}
 .overlay_popupMain {
+  position: absolute;
+  top:40px;
   border-radius: 16px;
   padding: 24px;
   background: #F5F5F594;
@@ -299,9 +812,11 @@ p {
 }
 
 .overlay_dropdown_w360 {
-  max-width: 360px;
+  width: 360px;
 }
-
+.overlay_dropdown_w518 {
+  width: 518px;
+}
 .option_policyType {
   display: flex;
   flex-direction: column;
@@ -394,6 +909,85 @@ p {
   border-radius: 17px;
   padding: 16px;
 }
+.checkbox_disease .input-checkbox-feild .input-check + label{
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--black-color);
+}
+.checkbox_disease .input-checkbox-feild .input-check + label:before {
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  border-color:var(--text-black-2e);
+}
+.checkbox_disease .input-checkbox-feild .input-check:checked + label:before {
+  border-color:var(--primary-red-color);
+}
+.checkbox_disease_scroll {
+  max-height: 232px;
+  overflow-x: auto;
+}
+.sumInsured_selectMain {
+  display: flex;
+  flex-direction: column;
+  gap:20px;
+}
+.sumInsured_selectMain .sumInsured_select header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 20px;
+  color:var(--black-color);
+}
+.sumInsured_selectMain .sumInsured_select header h3 {
+  font-size: 20px;
+  color: var(--text-black-2e);
+}
+.insurer_detailsMain {
+  display: flex;
+  flex-direction: column;
+  gap:32px;
+}
+.insurer_detailsMain h3 {
+  font-family:Anek Latin ;
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0;
+}
+.btn_coverAdditional_FM {
+  border-radius: 24px;
+  padding: 16px;
+  background: #fff4ce;
+  border: 2px solid #fff;
+  box-shadow: 0px 8px 16px 0px #0000000A;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.btn_coverAdditional_FM .cover_label {
+  display: flex;
+  gap:8px;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 17px;
+  color: #2e2e2e;
+}
+.btn_coverAdditional_FM .cover_label span {
+  width: 50%;
+  text-align: left;
+}
+.input-filed-white .input-textBox {
+  background: #fff;
+  border:1px solid #f1f3f6;
+  height: 56px;
+}
+.input-filed-white .input-textBox::-webkit-input-placeholder {
+/* Chrome/Opera/Safari */
+color: #979cae;
+font-size: 16px;
+}
 
 /*Custom overlay dropdown end*/
 
@@ -417,3 +1011,191 @@ p {
   position: relative;
   touch-action: pan-y;
 }
+.input-filed-white .input-textBox::-moz-placeholder {
+/* Firefox 19+ */
+color: #979cae;
+font-size: 16px;
+}
+
+.input-filed-white .input-textBox:-ms-input-placeholder {
+/* IE 10+ */
+color: #979cae;
+font-size: 16px;
+}
+
+.input-filed-white .input-textBox:-moz-placeholder {
+/* Firefox 18- */
+color: #979cae;
+font-size: 16px;
+}
+.insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild {
+  width: 48%;
+  position: relative;
+}
+.member_extraInfo{
+  position: absolute;
+  top: 9px;
+  right: 24px;
+  font-size: 12px;
+  width: 80px;
+  display: none;
+}
+.member_extraInfo .member_extraInfoSub {
+  display: flex;
+  align-items: center;
+  gap:8px;
+}
+.insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild .member_textbox {
+  width: 70px;
+  height: 24px;
+  background: #fff;
+  border-width: 0;
+  border-radius: 16px;
+  padding: 0px 8px;
+}
+.insurer_memberDetails  .input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label {
+  background: #FEE0DD;
+}
+.insurer_memberDetails  .input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label:after {
+  display: none;
+}
+.insurer_memberDetails  .input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label + .member_extraInfo {
+  display: block;
+}
+.member_textbox::-webkit-input-placeholder {
+/* Chrome/Opera/Safari */
+color: #797979;
+font-size: 12px;
+}
+
+.member_textbox::-moz-placeholder {
+/* Firefox 19+ */
+color: #797979;
+font-size: 12px;
+}
+
+.member_textbox:-ms-input-placeholder {
+/* IE 10+ */
+color: #797979;
+font-size: 12px;
+}
+
+.member_textbox:-moz-placeholder {
+/* Firefox 18- */
+color: #797979;
+font-size: 12px;
+}
+.delete_member {
+  cursor: pointer;
+}
+.btn_white {
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--text-black-4c);
+  border: 1px solid #fff;
+}
+
+.btn_white:hover {
+  color: #C7222A;
+}
+.btn_addChildren {
+  padding: 8px;
+  border-radius: 16px;
+  font-weight: 500;
+  font-size: 12px;
+  color: #4c4c4c;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.btn_addChildren span{
+  display: flex;
+  gap:8px;
+}
+.btn_addChildren:hover {
+  border-color: #c7222a;
+  color: #4c4c4c;
+}
+.insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild {
+  width: 48%;
+  position: relative;
+}
+.member_extraInfo{
+  position: absolute;
+  top: 9px;
+  right: 24px;
+  font-size: 12px;
+  width: 80px;
+  display: none;
+}
+.member_extraInfo .member_extraInfoSub {
+  display: flex;
+  align-items: center;
+  gap:8px;
+}
+.insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild .member_textbox {
+  width: 70px;
+  height: 24px;
+  background: #fff;
+  border-width: 0;
+  border-radius: 16px;
+  padding: 0px 8px;
+}
+.insurer_memberDetails  .input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label {
+  background: #FEE0DD;
+}
+.insurer_memberDetails  .input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label:after {
+  display: none;
+}
+.insurer_memberDetails  .input-checkbox-withIcon .input-checkbox-feild .input-check:checked + label + .member_extraInfo {
+  display: block;
+}
+.member_textbox::-webkit-input-placeholder {
+/* Chrome/Opera/Safari */
+color: #797979;
+font-size: 12px;
+}
+
+.member_textbox::-moz-placeholder {
+/* Firefox 19+ */
+color: #797979;
+font-size: 12px;
+}
+
+.member_textbox:-ms-input-placeholder {
+/* IE 10+ */
+color: #797979;
+font-size: 12px;
+}
+
+.member_textbox:-moz-placeholder {
+/* Firefox 18- */
+color: #797979;
+font-size: 12px;
+}
+.delete_member {
+  cursor: pointer;
+}
+.btn_addChildren {
+  padding: 8px;
+  border-radius: 16px;
+  font-weight: 500;
+  font-size: 12px;
+  color: #4c4c4c;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.btn_addChildren span{
+  display: flex;
+  gap:8px;
+}
+.btn_addChildren:hover {
+  border-color: #c7222a;
+  color: #4c4c4c;
+}
+/*Custom overlay dropdown end*/

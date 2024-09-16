@@ -3,23 +3,30 @@
       <div class="card-outer">
         <div class="card">
           <div class="header">
-            <input type="text" class="search-bar" placeholder="Search Your Customer, Leads, Claims No and more" />
-            <button class="get-quote-btn" type="button" (click)="getQuote()">
-              <i class="fas fa-plus"></i> Get Quote
-            </button>
+            <div class="headerSearch">
+              <div class="field_searchMain">
+                <input type="text" class="search-bar filterSearch" placeholder="Search Your Customer, Leads, Claims No and more" />
+                <img src="../../../../assets/images/icon_magnify_grey.svg">
+              </div>
+            </div>
+            <div class="headerButtons">
+              <button class="get-quote-btn" type="button" (click)="getQuote()">
+                <i class="fas fa-plus"></i> Get Quote
+              </button>
+            </div>
           </div>
   
-          <div *ngIf="showCard">
-            <div class="dropdown-container" *ngIf="showDropdownsFlag">
-              <div *ngFor="let dropdown of dropdownOptions; let i = index">
+          <div class="insurance_optionHUB" *ngIf="showCard">
+            <div class="dropdown-container " *ngIf="showDropdownsFlag">
+              <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
+                <!-- Label -->
+                 <label class="field_label">{{ dropdown.label }}</label>
                 <!-- Button for each dropdown -->
                 <button class="dropdown-button" type="button" (click)="openCustomDiv(dropdown.label, i)">
                   <div class="selected-value">
-                    {{ dropdown.label }}<i class="fas fa-chevron-down"></i>
+                    <span>{{ selectedOptions[i] }}</span><i class="fas fa-chevron-down"></i>
                   </div>
                 </button>
-                <!-- Selected value is displayed here -->
-                <p>{{ selectedOptions[i] }}</p>
   
                 <!-- Dropdown content for each item, displayed only when the activeDropdown matches the index -->
                 <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="activeDropdown === i">
@@ -69,11 +76,122 @@
             </div>
   
             <div class="continue-btn-container">
-              <button type="button" class="continue-btn" (click)="continue()">Continue</button>
+              <button type="button" class="continue-btn btn_grey" (click)="continue()">Continue</button>
             </div>
           </div>
         </div>
       </div>
     </form>
   </div>
+
+  <!--Overlay: Personal details start-->
+  <div class="overlay_popupMain overlay_dropdown_w518">
+    <div class="option_policyType">
+        <div class="overlay_body insurer_detailsMain">
+            <h3>Personal details</h3>
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <div class="input-block input-block-renew input-filed-white">
+                        <input type="text" id="nameproposer" name="nameproposer" value="" placeholder="Enter name of proposer" class="input-textBox">
+                        <span class="ui-error">Please enter name of proposer</span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <div class="input-block input-block-renew input-filed-white">
+                        <input type="text" id="pincodeproposer" name="pincodeproposer" value="" placeholder="Enter pincode of proposer" class="input-textBox">
+                        <span class="ui-error">Please enter pincode of proposer</span>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <div class="input-block input-block-renew input-filed-white">
+                        <input type="text" id="mobileproposer" name="mobileproposer" value="" placeholder="Enter mobile no of proposer" class="input-textBox">
+                        <span class="ui-error">Please enter mobile no of proposer</span>
+                    </div>
+                </div>
+            </div>
+            <h3>Member details</h3>
+            <div class="insurer_memberDetails">
+                <div class="input-checkbox-block input-checkbox-withIcon">
+                    <div class="input-checkbox-feild">
+                        <input type="checkbox" id="member-self" value="self" class="input-check" >
+                        <label for="member-self"><img src="../../../../assets/images/icon_member_self.png">Self</label>
+                        <div class="member_extraInfo">
+                            <div class="member_extraInfoSub">
+                                <input type="text" placeholder="Enter Age" class="member_textbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-checkbox-feild">
+                        <input type="checkbox" id="member-spouse" value="spouse" class="input-check" >
+                        <label for="member-spouse"><img src="../../../../assets/images/icon_member_spouse.png">Spouse</label>
+                        <div class="member_extraInfo">
+                            <div class="member_extraInfoSub">
+                                <input type="text" placeholder="Enter Age" class="member_textbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-checkbox-feild">
+                        <input type="checkbox" id="member-daughter1" value="daughter1" class="input-check" >
+                        <label for="member-daughter1"><img src="../../../../assets/images/icon_member_daughter.png">Daughter 1</label>
+                        <div class="member_extraInfo">
+                            <div class="member_extraInfoSub">
+                                <input type="text" placeholder="Enter Age" class="member_textbox">
+                                <span class="delete_member"><img src="../../../../assets/images/icon_delete_red2.svg"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-checkbox-feild">
+                        <input type="checkbox" id="member-daughter2" value="daughter2" class="input-check" >
+                        <label for="member-daughter2"><img src="../../../../assets/images/icon_member_daughter.png">Daughter 2</label>
+                        <div class="member_extraInfo">
+                            <div class="member_extraInfoSub">
+                                <input type="text" placeholder="Enter Age" class="member_textbox">
+                                <span class="delete_member"><img src="../../../../assets/images/icon_delete_red2.svg"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-checkbox-feild">
+                        <input type="checkbox" id="member-father" value="father" class="input-check" >
+                        <label for="member-father"><img src="../../../../assets/images/icon_member_father.png">Father</label>
+                        <div class="member_extraInfo">
+                            <div class="member_extraInfoSub">
+                                <input type="text" placeholder="Enter Age" class="member_textbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-checkbox-feild">
+                        <input type="checkbox" id="member-mother" value="mother" class="input-check" >
+                        <label for="member-mother"><img src="../../../../assets/images/icon_member_spouse.png">Mother</label>
+                        <div class="member_extraInfo">
+                            <div class="member_extraInfoSub">
+                                <input type="text" placeholder="Enter Age" class="member_textbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-checkbox-feild">
+                        <button type="button" class="btn_white btn_addChildren">
+                            <span><img src="../../../../assets/images/icon_member_daughter.png">Daughter</span>
+                            <img src="../../../../assets/images/icon_round_plus_red.svg">
+                        </button>
+                    </div>
+                    <div class="input-checkbox-feild">
+                        <button type="button" class="btn_white btn_addChildren">
+                            <span><img src="../../../../assets/images/icon_member_son.png">Son</span>
+                            <img src="../../../../assets/images/icon_round_plus_red.svg">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" value="additional-family" class="btn_coverAdditional_FM">
+                <span class="cover_label">
+                    <img src="../../../../assets/images/icon_familymembers_org.svg" width="20">
+                    <span>Would you like to cover additional family members?</span>
+                </span>
+                <img src="../../../../assets/images/icon_right_arrow_black.svg" width="7">
+            </button>
+        </div>
+        <button type="button" class="btn_red btn_fullWidth">Next</button>
+    </div>
+</div>
+<!--Overlay: Personal details end-->
   
