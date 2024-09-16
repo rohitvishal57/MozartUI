@@ -9,7 +9,7 @@ export interface RenewalList {
     renewalPremiumAmount: number;
     healthReturn: number;
     proposerMobileNumber: string;
-    renewedDate: Date;
+    policyEndDate: string;
     modification: string;
   }
   

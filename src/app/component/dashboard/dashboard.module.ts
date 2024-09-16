@@ -12,6 +12,7 @@ import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { BancaAgentDashboardComponent } from './banca-agent-dashboard/banca-agent-dashboard.component';
 import { DashboardSidebarComponent } from './dashboard-sidebar/dashboard-sidebar.component';
 import { FooterComponent } from 'src/app/portal/footer/footer.component';
+import { CustomaizedDashboardComponent } from './customaized-dashboard/customaized-dashboard.component';
 
 @NgModule({
     declarations: [
@@ -22,7 +23,8 @@ import { FooterComponent } from 'src/app/portal/footer/footer.component';
         CustomerFormComponent,
         BancaAgentDashboardComponent,
         DashboardSidebarComponent,
-        FooterComponent
+        FooterComponent,
+        CustomaizedDashboardComponent
     ],
     imports:[
         CommonModule,
