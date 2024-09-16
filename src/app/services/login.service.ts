@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class LoginService {
-  private baseUrl: string = 'https://usp.monocept.ai/api/';
+  private baseUrl: string = 'https://usp.monocept.ai/ABHIUPAPI/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
   constructor(private http: HttpClient, private router: Router) {}

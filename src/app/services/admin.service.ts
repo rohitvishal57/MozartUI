@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class AdminService {
-  private baseUrl: string = 'https://usp.monocept.ai/api/Banca/Admin/';
+  private baseUrl: string = 'https://usp.monocept.ai/ABHIUPAPI/Banca/Admin/';
   // private baseUrl: string = 'http://20.235.250.168:8086/Banca/Admin/';
 
   constructor(private http: HttpClient) {}

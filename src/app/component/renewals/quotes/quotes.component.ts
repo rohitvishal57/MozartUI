@@ -1,18 +1,19 @@
 import {Component,ElementRef,HostListener,OnInit,} from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { CommonService } from "src/app/services/common.service";
-import { LoginService } from "src/app/services/login.service";
 import { FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { RenewalServiceService } from "src/app/services/renewal/renewal-service.service";
 import { RenewalList } from "src/app/interface/renewal-list.interface";
 import { AdminService } from "src/app/services/admin.service";
+import { Subject } from "rxjs";
+import { MatMenuTrigger } from '@angular/material/menu';
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: "app-quotes",
   templateUrl: "./quotes.component.html",
-  styleUrls: ["./quotes.component.scss"],
+  styleUrls:['./quotes.component.scss']
 })
 export class QuotesComponent implements OnInit {
   renewalsList: RenewalList[] = [];
@@ -21,7 +22,7 @@ export class QuotesComponent implements OnInit {
   activeFilter: string = "all";
   page: number = 1;
   first: number = 0;
-  rows: number = 5;
+  rows: number = 10;
   totalRecords: number = 0;
   selectedView: string = "list";
   selectedQuotesView: string = "quotesGrid";
@@ -81,17 +82,42 @@ export class QuotesComponent implements OnInit {
     },
   ];
 
+  private onDestroy$: Subject<boolean> = new Subject<boolean>();
+
   constructor(
     private http: HttpClient,
     private renewalService: RenewalServiceService,
     private router: Router,
     private route: ActivatedRoute,
     private datePipe: DatePipe,
-    private adminService:AdminService,private eRef: ElementRef
+    private adminService:AdminService,
+    private eRef: ElementRef,
+    private spinner: NgxSpinnerService
   ) {}
 
+  renewalLisRequestBody={
+    "agentCode": "",
+    "proposer": "",
+    "productName": "",
+    "policyNumber": "",
+    "policyType": "",
+    "startDate": null as string | null,
+    "endDate": null as string | null,
+    "pageNumber": this.page,
+    "pageSize": this.rows,
+    "mobileNumber": "",
+    "filterType": ""
+  }
+
   ngOnInit(): void {
-    this.getRenewalsList();
+    const storedAgentCode = localStorage.getItem('agentCode');
+    if (storedAgentCode) {
+      this.renewalLisRequestBody.agentCode = storedAgentCode;
+      this.getRenewalsList();
+    }
+    else{
+      console.log("agent code is not present in local storege");
+    }
     this.getProducts();
     this.route.queryParams.subscribe((params) => {
       this.showSubQuotes = params["showSubQuotes"] === "true";
@@ -100,45 +126,30 @@ export class QuotesComponent implements OnInit {
 
   onPageChange(event: any) {
     this.first = event.first;
-    this.rows = event.rows; 
+    this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
-    // console.log('First index:', this.first, 'Rows:', this.rows, 'Page:', this.page);
-  }
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isDesktopView = window.innerWidth <= 1116;
-    if (this.isDesktopView) {
-      // this.isSidenavOpen = false;
-    }
+    this.getRenewalsList();
   }
 
-  renewalLisRequestBody={
-    "agentCode": "5100003",
-    "proposer": "",
-    "productName": "",
-    "policyNumber": "",
-    "policyType": "",
-    "startDate": null as string | null,
-    "endDate": null as string | null,
-    "pageNumber": 1,
-    "pageSize": 10,
-    "mobileNumber": "",
-    "filterType": ""
-  }
 
   getRenewalsList() {
+    this.spinner.show();
+    this.renewalLisRequestBody.pageNumber = this.page;
+    this.renewalLisRequestBody.pageSize = this.rows;
+  
     this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
-      (response) => {        
+      (response) => { console.log(response.data);
         if (response.success) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
-            ...item,renewedDate: this.formatRenewedDate(item.renewedDate)}));
+            ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
+          })); console.log(this.renewalsList);
           this.countsList = response.data;
-          this.totalRecords=this.renewalsList.length;
-        } else {
-          console.error("API request was not successful.");
-        }
+          this.totalRecords = this.countsList.totalRecords;
+        } else {console.error("API request was not successful.");}
+        this.spinner.hide();
       },
       (error) => {
+        this.spinner.hide();
         console.error("Error from API:", error);
       }
     );
@@ -162,18 +173,6 @@ export class QuotesComponent implements OnInit {
     }
   }
   
-  getStarClass(rating: number): string {
-    if (rating >= 8) {
-      return "green-star";
-    } else if (rating >= 4 && rating <= 7) {
-      return "yellow-star";
-    } else if (rating >= 1 && rating <= 3) {
-      return "red-star";
-    } else {
-      return "";
-    }
-  }
-
   getProducts() {
     this.adminService.getAllProductList().subscribe({
       next: (res) => {
@@ -194,7 +193,7 @@ export class QuotesComponent implements OnInit {
     {
        this.toggeleSearchdropdown=false;
     }
-    this.toggeledropdown = !this.toggeledropdown;
+    this.toggeledropdown = !this.toggeledropdown;    
   }
 
   calculateAppliedFiltersCount(): number {
@@ -208,7 +207,6 @@ export class QuotesComponent implements OnInit {
     if (this.startDate && this.endDate) {
       count++;
     }
-
     this.appliedFiltersCount = count;
     return this.appliedFiltersCount;
   }
@@ -240,7 +238,7 @@ export class QuotesComponent implements OnInit {
     console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType);
     
     this.getRenewalsList();
-    this.toggeledropdown = false;
+    this.toggeledropdown=false;
   }
 
   cancel() {
@@ -256,10 +254,18 @@ export class QuotesComponent implements OnInit {
     this.toggeledropdown = false;
     this.getRenewalsList();
   }
-  
-  
-  getApplyButtonClass(): string {
-    return this.calculateAppliedFiltersCount() > 0 ? "apply-btn-red" : "";
+
+  clear(){
+    this.productsList.forEach((product) => (product.selected = false));
+    this.policyTypes.forEach((policyType) => (policyType.selected = false));
+    this.startDate = null;
+    this.endDate = null;
+    this.appliedFiltersCount = 0;
+    this.renewalLisRequestBody.productName = "";
+    this.renewalLisRequestBody.policyType = "";
+    this.renewalLisRequestBody.startDate = null;
+    this.renewalLisRequestBody.endDate = null;
+    this.getRenewalsList();
   }
 
   toggleSearchDropdown() {
@@ -271,118 +277,161 @@ export class QuotesComponent implements OnInit {
   }
 
   onSelectChanges(event: any): void {
-    event.stopPropagation(); // Prevents the menu from closing
-    this.selected !== "none";
-    console.log("selected value", this.selected);
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
-  
-    if (this.selected === "mobileNo") {
+    if (this.selected === "mobileNumber") {
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[6-9][0-9]{9}$"),
       ]);
-    } 
-    else if (this.selected === "name") {
+    } else if (this.selected === "proposerName") {
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
       ]);
     } 
-    // Uncomment if you need policyNumber
-    // else if (this.selected === "policyNumber") {
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
-    //   ]);
-    // }
-    
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched(); 
   }
-  menuClosed(): void {
-    // Add logic here if you need to handle anything when the menu closes
-  }
-  
-  
 
-  getPlaceholder(): string {
-    if (this.selected === "mobileNo") {
-      return "Enter Mobile Number";
-    } else if (this.selected === "name") {
-      return "Enter Proposer Name";
-    } else if (this.selected === "policyNumber") {
-      return "Enter Policy Number";
-    } 
-    else {
-      return "";
-    }
-  }
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";
-    } 
-    else if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "mobileNo") {
+    } else if (this.searchInputControl.hasError("pattern")) {
+      if (this.selected === "mobileNumber") {
         return "Invalid Mobile Number";
-      } else if (this.selected === "name") {
+      } else if (this.selected === "proposerName") {
         return "Invalid Proposer Name";
       }
     }
     return "";
   }
-  cancelSearch() {
+
+  cancelSearch(menuTrigger: MatMenuTrigger) {
     this.toggeleSearchdropdown = false;
     this.selected = "";
-    this.renewalLisRequestBody.mobileNumber=""
-    this.renewalLisRequestBody.proposer=""
-    this.renewalLisRequestBody.policyNumber=""
-    this.getRenewalsList()
+    this.renewalLisRequestBody.mobileNumber = "";
+    this.renewalLisRequestBody.proposer = "";
+    this.renewalLisRequestBody.policyNumber = "";
+    this.getRenewalsList();
+    menuTrigger.closeMenu();
   }
 
-  applySearch() {
+  applySearch(menuTrigger: MatMenuTrigger) {
     if (this.searchInputControl.valid) {
-      if (this.selected === "mobileNo") {
-        this.renewalLisRequestBody.mobileNumber =this.searchInputControl.value!;
-        console.log(this.renewalLisRequestBody.mobileNumber);
-      } 
-      else if (this.selected === "name") {
+      if (this.selected === "mobileNumber") {
+        this.renewalLisRequestBody.mobileNumber = this.searchInputControl.value!;
+      } else if (this.selected === "proposerName") {
         this.renewalLisRequestBody.proposer = this.searchInputControl.value!;
-      }
-      else if (this.selected === "policyNumber") {
+      } else if (this.selected === "policyNumber") {
         this.renewalLisRequestBody.policyNumber = this.searchInputControl.value!;
       }
       this.getRenewalsList();
-      this.toggeleSearchdropdown = false;
-    } 
-    else {
       this.toggeleSearchdropdown = true;
+      menuTrigger.closeMenu();  
+      } 
+    else {
+      this.toggeleSearchdropdown = false;
     }
   }
-
   
   quotesViews(view: string) {
     this.selectedView = view;
   }
+
   subQuotesViews(view: string) {
     this.selectedQuotesView = view;
   }
 
   handleAction(item: RenewalList, event: string) {
     switch (event) {
-      case 'renew':
-        break;
-      case 'modify':
-        this.renewalJourney(item);
-        break;
       case 'download':
         break;
-      case 'copyPayLink':
-        break;
-      case 'registerNow':
-        break;
       case 'delete':
+        // this.renewalJourney(item);
         break;
+      case 'email':
+        break;
+      case 'copyPayLink':
+        const copyPayLinkRequestBody = {
+          policy: item.policyNumber,  
+          mobile: item.proposerMobileNumber,  
+          source: ""  
+        };
+  
+        this.renewalService.generatepaymentlink (copyPayLinkRequestBody).subscribe(
+          (response:any) => {
+            if (response.success) {
+              console.log('Payment link copied successfully.');
+            } else {
+              console.error('Failed to copy payment link.');
+            }
+          },
+          (error:any) => {
+            console.error('Error while copying payment link:', error);
+          }
+        );
+        console.log("copyPayLink");
+        break;  
+      case 'sms':
+        const smsRequestBody = {
+          agentCode: "5100003",
+          type: item.policyType,
+          customerName: "",  
+          customerMobileNo: item.proposerMobileNumber,  
+          agentMobileNo: "",  
+          masterPolicyNo: "",  
+          eventName: "",  
+          renewalLink: "",  
+          dueDate: "",  
+          dateOfRenewal: item.policyEndDate,  
+          renewedPolicyNo: item.policyNumber,  
+          proposalNumber: "",  
+          policyNumber: item.policyNumber,  
+          grossRenewalAmount: item.renewalPremiumAmount.toString(),  
+          isAutoSMS: true,
+          sessionId: ""  
+        };
+  
+        this.renewalService.sendrenewalsms(smsRequestBody).subscribe(
+          (response:any) => {
+            if (response.success) {
+              console.log('WhatsApp message sent successfully.');
+            } else {
+              console.error('Failed to send WhatsApp message.');
+            }
+          },
+          (error:any) => {
+            console.error('Error while sending WhatsApp message:', error);
+          }
+        );
+        console.log("sms");
+        
+        break;
+      case 'whatsapp':
+        const whatsApprequestBody = {
+          templateCode: "DUE-CSTMR",
+          policyNumbers: [item.policyNumber]
+        };
+        this.renewalService.sendrenewalwhatappsms(whatsApprequestBody).subscribe(
+          (response:any) => {
+            if (response.success) {
+              console.log('WhatsApp message sent successfully.');
+            } else {
+              console.error('Failed to send WhatsApp message.');
+            }
+          },
+          (error:any) => {
+            console.error('Error while sending WhatsApp message:', error);
+          }
+        );
+        console.log("whatsApp");
+        
+        break;
+      case 'notice':
+        break;
+      case 'autodebit':
+        break;  
       default:
         console.warn('Unknown action:', event);
     }
@@ -396,5 +445,40 @@ export class QuotesComponent implements OnInit {
     this.showSubQuotes = false;
     this.showComparison = true;
   }
+
+  getFixedStarArray(): number[] {
+    return Array.from({ length: 5 }, (_, i) => i); 
+  }
+
+  getStarClasses(index: number, rating: number): string[] {
+    const starClasses = ['star'];
+    const fullStars = Math.floor(rating);
+    const fractionalPart = rating % 1;
+    const colorClass = this.getColorClass(rating);
+    starClasses.push(colorClass); 
+    if (index < fullStars) {
+      starClasses.push('full');
+    } else if (index === fullStars && fractionalPart > 0) {
+      starClasses.push('half');
+    } else {
+      starClasses.push('empty');
+    }
+    return starClasses;
+  }
+
+  getColorClass(rating: number): string {
+    if (rating <= 1.5) {
+      return 'red-color';
+    } else if (rating > 1.5 && rating <= 3) {
+      return 'gold-color';
+    } else {
+      return 'green-color';
+    }
+  }
   
+  ngOnDestroy(): void {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+  }
+
 }
