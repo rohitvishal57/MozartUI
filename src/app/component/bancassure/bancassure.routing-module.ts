@@ -8,10 +8,10 @@ import { TransactionComponent } from './transaction/transaction.component';
 import { ReportsComponent } from './reports/reports.component';
 import { AgentDynamicFormComponent } from './agent-dynamic-form/agent-dynamic-form.component';
 import { ProposalsComponent } from './proposals/proposals.component';
-import { QuotesComponent } from '../renewals/quotes/quotes.component';
 import { RenewalDynamicFormComponent } from '../renewals/renewal-dynamic-form/renewal-dynamic-form.component';
 import { ClaimsComponent } from './claims/claims.component';
 import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
+import { RenewalListComponent } from '../renewals/renewal-list/renewal-list.component';
 
 const routes: Routes = [
     {
@@ -24,7 +24,7 @@ const routes: Routes = [
         {path: "viewtransaction", component: TransactionComponent, canActivate: [AuthGuard]},
         {path: "viewreports", component: ReportsComponent, canActivate: [AuthGuard]},
         {path: "agentForm",component:AgentDynamicFormComponent,canActivate:[AuthGuard]},
-        {path: "renewalList", component: QuotesComponent},
+        {path: "renewalList", component: RenewalListComponent},
         {path: "renewalDynamicForm", component: RenewalDynamicFormComponent},
         {path: "viewClaims", component: ClaimsComponent},
         {path: "list", component:ClaimsViewComponent}

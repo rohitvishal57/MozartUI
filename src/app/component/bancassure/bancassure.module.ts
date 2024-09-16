@@ -10,7 +10,6 @@ import { TransactionComponent } from './transaction/transaction.component';
 import { ReportsComponent } from './reports/reports.component';
 import { AgentDynamicFormComponent } from './agent-dynamic-form/agent-dynamic-form.component';
 import { ProposalsComponent } from './proposals/proposals.component';
-import { QuotesComponent } from '../renewals/quotes/quotes.component';
 import { NgxPaginationModule } from 'ngx-pagination'; 
 import { RenewalDynamicFormComponent } from '../renewals/renewal-dynamic-form/renewal-dynamic-form.component';
 import {MatSelectModule} from '@angular/material/select';
@@ -21,6 +20,7 @@ import { MyMaterialModule } from 'src/app/material.module';
 import { ClaimsComponent } from './claims/claims.component';
 import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
 import { ClaimsListViewComponent } from './claims/claims-list-view/claims-list-view.component';
+import { RenewalListComponent } from '../renewals/renewal-list/renewal-list.component';
 @NgModule({
   declarations: [
     // Your components
@@ -43,13 +43,11 @@ export class AppModule { }
     ReportsComponent,  
     AgentDynamicFormComponent, 
     ProposalsComponent,
-    QuotesComponent,
     RenewalDynamicFormComponent,
     ClaimsComponent,
     ClaimsViewComponent,
-    ClaimsListViewComponent
-
-
+    ClaimsListViewComponent,
+    RenewalListComponent
   ],
   imports: [
     CommonModule,

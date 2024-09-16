@@ -1,4 +1,4 @@
-import {Component,ElementRef,HostListener,OnInit,} from "@angular/core";
+import { Component,ElementRef,HostListener,OnInit } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -10,12 +10,13 @@ import { Subject } from "rxjs";
 import { MatMenuTrigger } from '@angular/material/menu';
 import { NgxSpinnerService } from "ngx-spinner";
 
+
 @Component({
-  selector: "app-quotes",
-  templateUrl: "./quotes.component.html",
-  styleUrls:['./quotes.component.scss']
+  selector: 'app-renewal-list',
+  templateUrl: './renewal-list.component.html',
+  styleUrls: ['./renewal-list.component.scss']
 })
-export class QuotesComponent implements OnInit {
+export class RenewalListComponent {
   renewalsList: RenewalList[] = [];
   countsList: any = [];
   renewedDate: any;
