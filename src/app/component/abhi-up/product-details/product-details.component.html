@@ -4,23 +4,31 @@
             <img src="../../../../assets/logo/activeOne.svg">
             {{state.productName}}
         </div>
-        <p>{{state.productDescription}}</p>
+        <!-- <p>{{state.productDescription}}</p> -->
+        <div class="key" >
+          <div *ngFor="let key of state.keyFeatures">
+              <div class="keypoint">
+                  <img src="../../../../assets/logo/keypoint.svg">
+                  {{ key }}
+              </div>
+          </div>
+        </div>
         <div class="custom-tabview">
             <div class="top-box">
               <div class="top-container" #topContainer>
                 <p-tabView [(activeIndex)]="activeIndex" (onChange)="onTabChange($event)">
-                  <p-tabPanel header="Overview"></p-tabPanel>
+                  <!-- <p-tabPanel header="Overview"></p-tabPanel>
                   <p-tabPanel header="Cashless Hospitals"></p-tabPanel>
                   <p-tabPanel header="FAQs"></p-tabPanel>
                   <p-tabPanel header="Claims"></p-tabPanel>
-                  <p-tabPanel header="Activ Health"></p-tabPanel>
+                  <p-tabPanel header="Activ Health"></p-tabPanel> -->
                   <p-tabPanel header="Cover"></p-tabPanel>
                 </p-tabView>
               </div>
             </div>
       
             <div class="bottom-box" [ngSwitch]="activeIndex">
-              <div *ngSwitchCase="0">
+              <!-- <div *ngSwitchCase="0">
                 <h3>Features</h3>
                 <ul>
                   <li>Dolor sit amet, consectetur adipiscing elit.</li>
@@ -45,16 +53,25 @@
               </div>
               <div *ngSwitchCase="4">
                 <p>Details about Activ Health services would be displayed here.</p>
-              </div>
-              <div class="row" *ngSwitchCase="5">
+              </div> -->
+              <div class="row" *ngSwitchCase="0">
                 <div *ngFor="let section of groupedFeatures | keyvalue" class="card">
                   <!-- <div class="card"> -->
                     <h3>{{ section.key }}</h3>
-                    <ul>
-                      <li *ngFor="let feature of section.value">
+                    <!-- <ul> -->
+                      <!-- <li *ngFor="let feature of section.value">
                         {{ feature.featureName }}
-                      </li>
-                    </ul>
+                      </li> -->
+                      <div class="key">
+                        <div *ngFor="let feature of section.value" class="keypoint">
+                          <img src="../../../../assets/logo/greenpoint.svg" alt="checkmark" class="icon">
+                          <div class="feature-text">
+                            {{ feature.featureName }}
+                          </div>
+                        </div>
+                      </div>
+                      
+                    <!-- </ul> -->
                   <!-- </div> -->
                 </div>
               </div>

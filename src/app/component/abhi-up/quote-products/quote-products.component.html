@@ -6,32 +6,59 @@
             </div>
         </div>
         <div class="product-list-container">
-        <div *ngIf="ProductList.length > 0; else noProducts">
-        <div  class="card_ProductList" >
-            <div class="cardRow">
+            <div *ngIf="ProductList.length > 0; else noProducts">
+                <div class="card_ProductList">
+                    <div class="cardRow">
 
-                <ng-container *ngFor="let item of ProductList">
-                    <div class="cardItem box">
-                        <!-- {{ item | json}}  -->
-                        <div class="product-item">
-                            <img src="../../../../assets/logo/activeOne.svg">
-                            {{item.productName}}</div>
-                        <p>{{item.productDescription}}</p>
-                        <div class="product-button">
-                            <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
-                            <button class="get" (click)="buyNow(item)">Buy Now</button>
-                            <button class="get1" >View Recommended Add-Ons</button>
-                            <button class="get2" >Add to Compare</button>
-                        </div>
+                        <ng-container *ngFor="let item of ProductList">
+                            <div class="cardItem box">
+                                <!-- {{ item | json}}  -->
+                                <div class="product-item">
+                                    <img src="../../../../assets/logo/activeOne.svg">
+                                    {{item.productName}}
+                                </div>
+                                <!-- <p>{{item.productDescription}}</p> -->
+                                 <div class="key" >
+                                     <div *ngFor="let key of item.keyFeatures">
+                                         <div class="keypoint">
+                                             <img src="../../../../assets/logo/keypoint.svg">
+                                             {{ key }}
+                                         </div>
+                                     </div>
+                                 </div>
+                                <div class="plan-container">
+                                    <div *ngFor="let plan of plans; let i = index" class="plan" [ngClass]="{ 'highlight': selectedPlan === i }" (click)="selectPlan(i)">
+                                      <div class="plan-price" [ngClass]="{ 'highlight': selectedPlan === i }">
+                                        ₹{{ plan.price }}*
+                                      </div>
+                                      <div class="plan-duration" [ngClass]="{ 'highlight': selectedPlan === i }">
+                                        / {{ plan.duration }} year{{ plan.duration > 1 ? 's' : '' }}
+                                      </div>
+                                      <div *ngIf="plan.discount" class="plan-discount">
+                                        {{ plan.discount }}% Discount
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                            
+                                <!-- <p *ngIf="selectedPlan.value" class="mt-4">
+                                    You have selected the {{ selectedPlan.value }} year plan.
+                                </p> -->
+                                <div class="product-button">
+                                    <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
+                                    <button class="get" (click)="buyNow(item)">Buy Now</button>
+                                    <button class="get1">View Recommended Add-Ons</button>
+                                    <button class="get2">Add to Compare</button>
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
-                </ng-container>
+                </div>
             </div>
+            <ng-template #noProducts>
+                <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected
+                    type.</div>
+            </ng-template>
         </div>
-        </div>
-        <ng-template #noProducts>
-            <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected
-                type.</div>
-        </ng-template>
-     </div>
     </div>
 </div>
