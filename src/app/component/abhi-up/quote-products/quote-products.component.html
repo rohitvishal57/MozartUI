@@ -1,5 +1,5 @@
 <div class="main-container">
-    <div class="right-panel-product">
+    <div class="left-panel-product">
         <div class="r-p-header">
             <div class="product-heading">Products</div>
             <div class="prod-head-desc">Discover our products to insure your health
@@ -18,37 +18,44 @@
                                     {{item.productName}}
                                 </div>
                                 <!-- <p>{{item.productDescription}}</p> -->
-                                 <div class="key" >
-                                     <div *ngFor="let key of item.keyFeatures">
-                                         <div class="keypoint">
-                                             <img src="../../../../assets/logo/keypoint.svg">
-                                             {{ key }}
-                                         </div>
-                                     </div>
-                                 </div>
-                                <div class="plan-container">
-                                    <div *ngFor="let plan of plans; let i = index" class="plan" [ngClass]="{ 'highlight': selectedPlan === i }" (click)="selectPlan(i)">
-                                      <div class="plan-price" [ngClass]="{ 'highlight': selectedPlan === i }">
-                                        ₹{{ plan.price }}*
-                                      </div>
-                                      <div class="plan-duration" [ngClass]="{ 'highlight': selectedPlan === i }">
-                                        / {{ plan.duration }} year{{ plan.duration > 1 ? 's' : '' }}
-                                      </div>
-                                      <div *ngIf="plan.discount" class="plan-discount">
-                                        {{ plan.discount }}% Discount
-                                      </div>
+                                <div class="key">
+                                    <div *ngFor="let key of item.keyFeatures">
+                                        <div class="keypoint">
+                                            <img src="../../../../assets/logo/keypoint.svg">
+                                            {{ key }}
+                                        </div>
                                     </div>
-                                  </div>
-                                  
-                            
+                                </div>
+                                <div class="plan-container">
+                                    <div *ngFor="let plan of plans; let i = index" class="plan"
+                                        [ngClass]="{ 'highlight': selectedPlan === i }" (click)="selectPlan(i)">
+                                        <div class="plan-price" [ngClass]="{ 'highlight': selectedPlan === i }">
+                                            ₹{{ plan.price }}*
+                                        </div>
+                                        <div class="plan-duration" [ngClass]="{ 'highlight': selectedPlan === i }">
+                                            / {{ plan.duration }} year{{ plan.duration > 1 ? 's' : '' }}
+                                        </div>
+                                        <div *ngIf="plan.discount" class="plan-discount">
+                                            {{ plan.discount }}% Discount
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <!-- <p *ngIf="selectedPlan.value" class="mt-4">
                                     You have selected the {{ selectedPlan.value }} year plan.
                                 </p> -->
                                 <div class="product-button">
                                     <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
-                                    <button class="get" (click)="buyNow(item)">Buy Now</button>
+                                    <button class="get" (click)="addToCart(item)">
+                                        <img src="../../../../assets/images/trolley1.svg" alt="">
+                                        Add to Cart
+                                    </button>
                                     <button class="get1">View Recommended Add-Ons</button>
-                                    <button class="get2">Add to Compare</button>
+                                    <button class="get2">
+                                        <img src="../../../../assets/images/left-and-right-arrows1.svg" alt="">
+                                        Add to Compare
+                                    </button>
                                 </div>
                             </div>
                         </ng-container>
@@ -59,6 +66,65 @@
                 <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected
                     type.</div>
             </ng-template>
+        </div>
+    </div>
+
+    <div class="right-panel-cart">
+        <div class="r-p-header">
+            <div class="cart-heading">Cart</div>
+        </div>
+        <div class="cardItem box " [ngClass]="{'center-elements': cartProductList.length === 0}">
+            <div *ngIf="cartProductList.length == 0" class="no-product">
+                <!-- <div> -->
+                <img src="./../../../../assets/images/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
+                <p class="no-prod-para">No product added in the cart</p>
+                <!-- </div> -->
+            </div>
+            <div *ngIf="cartProductList.length >0">
+                <!-- <div>
+                    <p>Proposer Name</p>
+                </div> -->
+                <div *ngFor="let item of cartProductList">
+                    <div class="cart-cardItem">
+                        <div class="product-header">
+                            <div class="cart-productText"><img src="../../../../assets/logo/activeOne.svg"
+                                    class="cart-productImage"> {{item.productName}}</div>
+                            <input type="button" class="product-remove-btn" value="Remove"
+                                (click)="removeFromCart(item)">
+                        </div>
+                        <div class="product-features">
+                            <div *ngFor="let key of item.keyFeatures">
+                                <div class="feature-element">
+                                    <img src="./../../../../assets/images/Frame2.svg" alt="">
+                                    <div class="feature"> {{ key }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="plan-container">
+                            <div *ngFor="let plan of plans; let i = index" class="plan"
+                                [ngClass]="{ 'highlight': selectedPlan === i }">
+                                <div class="plan-price" [ngClass]="{ 'highlight': selectedPlan === i }">
+                                    ₹{{ plan.price }}*
+                                </div>
+                                <div class="plan-duration" [ngClass]="{ 'highlight': selectedPlan === i }">
+                                /{{ plan.duration }}year{{ plan.duration > 1 ? 's' : '' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quick-tip">
+                            <img src="./../../../../assets/images/lightbulb.svg" alt="">
+                            Premium might increase based on the addOns.
+                        </div>
+                        <!-- <div class=""> -->
+                        <input type="button" class="buy-btn" (click)="buyNow(item)" value="Buy now">
+                        <!-- </div> -->
+                    </div>
+                    <div class="line">
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

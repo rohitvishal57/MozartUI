@@ -20,13 +20,15 @@ export class ViewproductsComponent implements OnInit {
 
   proposalNum: any;
   formSequence: any[] = [];
+  isProductAdded: boolean = false;
 
   selectedToggle: string = '';
   style: any;
   verticalCode = localStorage.getItem('verticalCode');
   code = localStorage.getItem('code');
   products: any[] = []
-  ProductList: any[] = []
+  ProductList: any[] = [];
+  cartProductList: any[] = [];
   agentCode=4620973
   partnerId:any
   productId:any
@@ -42,10 +44,16 @@ export class ViewproductsComponent implements OnInit {
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
     private loginService: LoginService, private router: Router, private toast: NgToastService,
-    private service: CommonService, private encryptionService: EncryptionService,public common:CommonService,) { }
+    private service: CommonService, private encryptionService: EncryptionService,public common:CommonService,) { 
+      
+    }
 
   ngOnInit(): void {
-    sessionStorage.clear()
+    // sessionStorage.clear()
+    if(sessionStorage.getItem("cardListProducts"))
+      this.cartProductList = this.encryptionService.decrypt(sessionStorage.getItem("cardListProducts") as string);
+    else
+      this.cartProductList = [];
     localStorage.setItem("formIndex", "0")
     this.getProducts();
   }
@@ -68,78 +76,53 @@ export class ViewproductsComponent implements OnInit {
       }
     })
   }
-  // async insurenow(item: any) {
-  //   this.formData = { ...this.formData, productName: item.productName }
-  //   try {
-  //     await this.getFormSequence(item);
-  //     await this.getProposalNum();
-  //     console.log(item)
-  //     // const productData = {
-  //     //   productid: item.productid,
-  //     //   productStartDate: item.productstartdate,
-  //     //   productEndDate: item.productenddate,
-  //     //   productName: item.productname,
-  //     //   insurancetypecode: item.insurancetypecode,
-  //     //   proposalNumber: this.proposalNum,
-  //     //   agencyCode:item.agencycode
-  //     // };
-  //     const productData = {
-  //       partnerId : item.partnerId,
-  //       productId : item.productId
+  async insurenow(item: any) {
+    this.removeFromCart(item);
+    this.formData = { ...this.formData, productName: item.productName }
+    try {
+      await this.getFormSequence(item);
+      await this.getProposalNum();
+      console.log(item)
+      const productData = {
+        productid: item.productid,
+        productStartDate: item.productstartdate,
+        productEndDate: item.productenddate,
+        productName: item.productname,
+        insurancetypecode: item.insurancetypecode,
+        proposalNumber: this.proposalNum,
+        agencyCode:item.agencycode
+      };
+      console.log(productData)
+      if (this.formSequence != null && this.formSequence.length > 0) {
+        this.router.navigate(['portal/abhi/forms'], {
+          state: { productData: productData, formSequence: this.formSequence }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async getFormSequence(item: any) {
+    console.log(item);
 
-  //     }
-  //     console.log(productData)
-  //     if (this.formSequence != null && this.formSequence.length > 0) {
-  //       this.router.navigate(['portal/agent/productDetails'], {
-  //         state: { productData: productData, formSequence: this.formSequence }
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-  // async getFormSequence(item: any) {
-  //   console.log(item);
-  //   try {
-  //     sessionStorage.clear();
-  //     const reqData = {
-  //       "partnerId": item.partnerId,
-  //       "productId": item.productId
+    try {
+      sessionStorage.clear();
+      const res = await firstValueFrom(this.service.getFormConfigViaVerticalCode(item.verticalcode, item.agencycode, item.insurancetypecode, item.productid));
+      console.log(res);
+      this.formSequence = JSON.parse(res.insureFormConfiguration);
+      console.log(this.formSequence);
 
-  //     }
-  //     const res = await firstValueFrom(this.loginService.Getformsequence(reqData));
-  //     console.log(res);
-  //     this.formSequence = JSON.parse(res.data.formSequence);
-  //     console.log(this.formSequence);
-
-  //     if (this.formSequence != null && this.formSequence.length > 0) {
-  //       this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
-  //       sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
-  //     }
-  //     console.log(this.allJsonFormData);
-  //     sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-  //     localStorage.setItem("formIndex", "0");
-  //   } catch (err) {
-  //     this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
-  //   }
-  //   // try {
-  //   //   sessionStorage.clear();
-  //   //   const res = await firstValueFrom(this.service.getFormConfigViaVerticalCode(item.verticalcode, item.agencycode, item.insurancetypecode, item.productid));
-  //   //   console.log(res);
-  //   //   this.formSequence = JSON.parse(res.insureFormConfiguration);
-  //   //   console.log(this.formSequence);
-
-  //   //   if (this.formSequence != null && this.formSequence.length > 0) {
-  //   //     this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
-  //   //     sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
-  //   //   }
-  //   //   console.log(this.allJsonFormData);
-  //   //   sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-  //   //   localStorage.setItem("formIndex", "0");
-  //   // } catch (err) {
-  //   //   this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
-  //   // }
-  // }
+      if (this.formSequence != null && this.formSequence.length > 0) {
+        this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+        sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
+      }
+      console.log(this.allJsonFormData);
+      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+      localStorage.setItem("formIndex", "0");
+    } catch (err) {
+      this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+    }
+  }
   getProducts() {
     this.loginService.getAllProducts(this.verticalCode, this.code).subscribe({
       next: (res) => {
@@ -162,6 +145,16 @@ export class ViewproductsComponent implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  addToCart(item: any){
+    this.cartProductList.push(item);
+    sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
+  }
+
+  removeFromCart(item: any){
+    this.cartProductList = this.cartProductList.filter((element: any) => element.productname !== item.productname);
+    sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
   }
 
   buyNow(item:any){

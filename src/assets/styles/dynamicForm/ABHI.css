@@ -147,6 +147,14 @@ body {
     font-size: 15px;
 }
 
+.disable{
+
+    background-color: #c7222a !important;
+    color: #fff !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
 /* .main-container .right-panel .inputField_Text,
 .main-container .right-panel .inputField_Select {
     font-weight: 400;
@@ -2555,7 +2563,7 @@ margin: 0;
   left: 50%;
   transform: translate(-50%, -50%); /* Center the overlay */
   background-color: #ebf1e1;
-  border-radius: 40px;
+  border-radius: 20px;
   text-align: center;
   z-index: 11; /* Ensure it's above the backdrop */
   padding: 20px;

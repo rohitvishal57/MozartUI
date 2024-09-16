@@ -844,7 +844,7 @@
                                   <p>Select Member</p>
                                 </div>
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
-                                  <i class="fa-solid fa-xmark" (click)="closeOverlay(subControl,control)"></i>
+                                  <i class="fa-solid fa-xmark" (click)="closeOverlay(subControl)"></i>
                                 </div>
                               </div>
                               <div class="row">
@@ -859,7 +859,7 @@
                                               class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
                                                 <span *ngIf="innerControl.validators">*</span></label>
-                                              <select class="inputField_Select" *ngIf="!innerControl.disabled"
+                                              <select class="inputField_Select" *ngIf="!innerControl.disabled" (change)="onInputChange($event, subControl,control)"
                                                 [formControlName]="innerControl.name"
                                                 aria-label="Default select example">
                                                 <option selected value="">Choose...</option>
@@ -877,7 +877,7 @@
                                             <div *ngIf="innerControl.type === 'checkbox'" style="margin-bottom: 15px;">
                                               <div style="display: flex;">
                                                 <input type="checkbox" formControlName="{{ innerControl.name }}"
-                                                  style="height:25px; width:25px; margin-left: 10px;" />
+                                                  style="height:25px; width:25px; margin-left: 10px;" (change)="onInputChange($event, subControl,control)" />
                                                 <label [for]="innerControl.name" [innerHTML]="innerSubForm.label"
                                                   class="checkbox-label" style="padding-left: 15px;
                                       font-weight: 600;
@@ -894,8 +894,8 @@
                                       <div *ngIf="innerSubForm.type == 'button'" class="row">
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
                                           
-                                          <input type="button" class="" (click)="closeOverlay(subControl,control)" value="Done" />
-        
+                                          <input *ngIf="innerSubForm.disabled == false" type="button" class="next-btn" (click)="addOnMemberAdded(subControl,control)" value="Done" />
+                                          <input *ngIf="innerSubForm.disabled == true" type="button" class="next-btn disable" [disabled]="true" value="Done" />
                                         </div>
                                       </div>
                                     </div>
@@ -948,10 +948,6 @@
                       <!-- </ng-container>
                     </ng-container> -->
                     </ng-container>
-                  </div>
-                  <div *ngIf="control.showDoneButton === true">
-                    <button class="right-side btn" style="width: 80px; height: 40px; margin-right: 10px;"
-                      (click)="addOnAdded($event,control)">Done</button>
                   </div>
                 </div>
 

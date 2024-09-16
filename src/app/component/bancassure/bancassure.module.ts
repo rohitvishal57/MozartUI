@@ -52,8 +52,7 @@ export class AppModule { }
     ClaimsComponent,
     ClaimsViewComponent,
     ClaimsListViewComponent,
-    RenewalListComponent
-    ClaimsListViewComponent,
+    RenewalListComponent,
     DatepipePipe,
     AbhiDashboardComponent,
     GetQuoteComponent

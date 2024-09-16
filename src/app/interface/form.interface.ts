@@ -105,6 +105,7 @@ export interface ISubControl {
   displayOnly?: boolean;
   coreControls?: ISubControl[];
   bigFont?: boolean;
+  dependentControls?: string[];
   getAllOption?: string;
 }
 

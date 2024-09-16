@@ -1,35 +1,13 @@
 <div class="main-container">
-    <div class="right-panel-product">
+    <div class="left-panel-product">
         <div class="r-p-header">
             <div class="product-heading">Products</div>
             <div class="prod-head-desc">Discover our products to insure your health
             </div>
         </div>
-        <!-- <div class="toggle-container">
-            <div class="toggle-list" *ngFor="let prod of products"
-                [ngClass]="{'blue': prod.insuranceType === selectedToggle, 'gray': prod.insuranceType !== selectedToggle}"
-                (click)="getPoductList(prod)">
-                <img *ngIf="prod.insurancetype === 'Health'" [src]="common.baseCssUrl+'assets/images/health_black_icon.svg'" alt="{{prod.insurancetype}} Icon">
-                <img *ngIf="prod.insurancetype === 'Motor'" src="../../../../assets/images/car_black_icon18.svg" alt="{{prod.insurancetype}} Icon">
-                {{prod.insurancetype}}
-            </div>
-        </div> -->
 
         <div class="product-list-container">
         <div *ngIf="ProductList.length > 0; else noProducts">
-        <!-- <h4>Select insurance type to get Quote or Insure</h4> -->
-        <!-- <div class="product-class">
-            <div *ngFor="let item of ProductList">
-                <div class="product-list">
-                    <div class="product-item">{{item.productname}}</div>
-                    <div class="product-list">
-                        /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/
-                        <button class="get" (click)="insurenow(item)">Buy Now</button>
-                    </div>
-                </div>
-                <div class="horizontal-line"></div>
-            </div>
-        </div> -->
         <div  class="card_ProductList" >
             <div class="cardRow">
 
@@ -41,10 +19,15 @@
                             {{item.productName}}</div>
                         <p>{{item.productDescription}}</p>
                         <div class="product-button">
-                            <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
-                            <button class="get" (click)="buyNow(item)">Buy Now</button>
+                            <button class="get" (click)="addToCart(item)">
+                               <img src="../../../../assets/images/trolley1.svg" alt="">
+                                Add to Cart
+                            </button>
                             <button class="get1" >View Recommended Add-Ons</button>
-                            <button class="get2" >Add to Compare</button>
+                            <button class="get2" >
+                                <img src="../../../../assets/images/left-and-right-arrows1.svg" alt="">
+                                Add to Compare
+                            </button>
                         </div>
                     </div>
                 </ng-container>
@@ -57,4 +40,44 @@
         </ng-template>
      </div>
     </div>
+
+    <!-- <div class="right-panel-cart">
+        <div class="r-p-header">
+            <div class="cart-heading">Cart</div>
+        </div>
+        <div class="cardItem box " [ngClass]="{'center-elements': cartProductList.length === 0}">
+            <div *ngIf="cartProductList.length == 0" class="no-product">
+                
+                    <img src="./../../../../assets/images/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
+                    <p class="no-prod-para">No product added in the cart</p>
+                
+            </div>
+            <div *ngIf="cartProductList.length >0">
+                
+                <div *ngFor="let item of cartProductList">
+                    <div class="cart-cardItem">
+                        <div class="product-header">
+                            <div class="cart-productText"><img src="../../../../assets/logo/activeOne.svg" class="cart-productImage"> {{item.productname}}</div>
+                            <input type="button" class="product-remove-btn" value="Remove" (click)="removeFromCart(item)">
+                        </div>
+                        <div class="product-features">
+                            <div class="feature"><img src="./../../../../assets/images/Frame2.svg" alt=""> 5x cover of base premium</div>
+                            <div class="feature"><img src="./../../../../assets/images/Frame2.svg" alt=""> Health Assessment</div>
+                            <div class="feature"><img src="./../../../../assets/images/Frame2.svg" alt=""> Cover Home-based Treatments</div>
+                        </div>
+                        <div class="quick-tip">
+                            <img src="./../../../../assets/images/lightbulb.svg" alt="">
+                            Premium might increase based on the addOns.
+                        </div>
+                        
+                            <input type="button" class="buy-btn" (click)="insurenow(item)" value="Buy now">
+                        
+                    </div>
+                    <div class="line">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
 </div>
