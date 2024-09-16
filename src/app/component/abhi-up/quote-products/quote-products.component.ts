@@ -27,10 +27,16 @@ export class QuoteProductsComponent  implements OnInit {
   code = localStorage.getItem('code');
   products: any[] = []
   ProductList: any[] = []
-  agentCode=4620973
+  agentCode=localStorage.getItem('agentCode')
   partnerId:any
   productId:any
 
+  plans = [
+    { price: 6863, duration: 1, discount: 0 },
+    { price: 12863, duration: 2, discount: 0 },
+    { price: 22863, duration: 3, discount: 15 }
+  ];
+  selectedPlan: number | null = null;
 
 
   private dynamicStyle!: HTMLLinkElement;
@@ -47,6 +53,7 @@ export class QuoteProductsComponent  implements OnInit {
   ngOnInit(): void {
     sessionStorage.clear()
     localStorage.setItem("formIndex", "0")
+    console.log(this.agentCode);
     this.getProducts();
   }
 
@@ -59,6 +66,12 @@ export class QuoteProductsComponent  implements OnInit {
       next: (res) => {
         this.ProductList = res.data;
         console.log(this.ProductList)
+        this.ProductList.forEach((item:any)=>{
+          item.keyFeatures = JSON.parse(item.keyFeatures)
+          console.log(typeof(item.keyFeatures));
+          this.plans[1].discount = item.t2DiscPercentage;
+          this.plans[2].discount = item.t3DiscPercentage;
+        })
       },
       error: (err) => {
         console.error(err);
@@ -96,6 +109,11 @@ export class QuoteProductsComponent  implements OnInit {
     this.router.navigate(['portal/abhi/productDetails'], {
       state: { item: item }
     });
+  }
+
+  selectPlan(index: number): void {
+    this.selectedPlan = index;
+    console.log(this.selectedPlan);
   }
 
 }

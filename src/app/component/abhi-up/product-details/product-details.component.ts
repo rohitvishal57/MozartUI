@@ -15,6 +15,7 @@ export class ProductDetailsComponent {
 
   state:any
   productId: any
+  partnerId : any;
   tab:any[]=[]
   activeIndex:any=0
   groupedFeatures:any[]=[]
@@ -32,6 +33,7 @@ export class ProductDetailsComponent {
 
   ngOnInit(): void {
     this.productId = history.state.item.productId
+    this.partnerId = history.state.item.partnerId;
     this.state = history.state.item
     console.log(this.productId, this.state);
     this.productdetails();
@@ -41,11 +43,15 @@ export class ProductDetailsComponent {
     this.tab.push("Covers")
     let features: any
     const reqData = {
-      "productId": this.productId
+      "productId": this.productId,
+      "agentCode":localStorage.getItem('agentCode')
     }
+    console.log(reqData);
     this.services.Getproductdetailsandfeatures(reqData).subscribe({
       next: (res) => {
         console.log(res);
+        this.state = res;
+        this.state.keyFeatures = JSON.parse(this.state.keyFeatures);
         features = res.productFeatures
         this.groupedFeatures = features.reduce((result:any, { categoryName, featureName, featureDescription }:any) => {
           if (!result[categoryName]) {
@@ -71,8 +77,8 @@ export class ProductDetailsComponent {
       await this.getFormSequence(item);
       console.log(item)
       const productData = {
-        partnerId : item.partnerId,
-        productId : item.productId
+        partnerId : this.partnerId,
+        productId : this.productId
 
       }
       console.log(productData)
@@ -90,8 +96,8 @@ export class ProductDetailsComponent {
     try {
       sessionStorage.clear();
       const reqData = {
-        "partnerId": item.partnerId,
-        "productId": item.productId
+        "partnerId": this.partnerId,
+        "productId": this.productId
 
       }
       const res = await firstValueFrom(this.loginService.Getformsequence(reqData));

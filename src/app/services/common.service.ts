@@ -116,7 +116,7 @@ export class CommonService {
 
   //For ABHI
   getAllOccupation(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getOccupation`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getOccupation`);
   }
 
   getAllOccupationRisk(){
@@ -124,15 +124,15 @@ export class CommonService {
   }
 
   getAllBankDetails(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getAllBankDetails`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getAllBankDetails`);
   }
 
   getBankCity(reqBody:any){
-    return this.http.post<any>(`${this.baseUrl}getBankCity`,reqBody);
+    return this.http.post<any>(`${this.yatraUrl}getBankCity`,reqBody);
   }
 
   getBranchDetails(reqBody:any){
-    return this.http.post<any>(`${this.baseUrl}getBranchDetails`,reqBody);
+    return this.http.post<any>(`${this.yatraUrl}getBranchDetails`,reqBody);
   }
 
   convertData(reqData: any,reqType: number){
@@ -169,11 +169,11 @@ export class CommonService {
   }
 
   getIdentification(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getId`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getId`);
   }
 
   getProposerOccupation(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getProposerOccupation`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getProposerOccupation`);
   }
 
   // getProposerRelationships(reqData: any){
@@ -197,15 +197,15 @@ export class CommonService {
   }
 
   getMaritalStatus(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getMaritalStatus`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getMaritalStatus`);
   }
 
   getEducationType(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getEducationType`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getEducationType`);
   }
 
   getNomineeRelationship(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getNomineeRelationShip`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getNomineeRelationShip`);
   }
 
   getRelationship(){
