@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class LoginService {
-  private baseUrl: string = 'https://usp.monocept.ai/abhiupapi/';
+  private baseUrl: string = 'https://usp.monocept.ai/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -35,10 +35,7 @@ export class LoginService {
  
   //Agent APi's
   sendAgentLoginRequest(loginData: any) {
-    return this.http.post<any>(
-      `${this.baseUrl}Banca/User/Agent/AgentLogin`,
-      loginData
-    );
+    return this.http.post<any>(`${this.baseUrl}auth/api/login/partnerlogin`, loginData);
   }
 
   getAllProducts(verticalCode: any, code: any) {

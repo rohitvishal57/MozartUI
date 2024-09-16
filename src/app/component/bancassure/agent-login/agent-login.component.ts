@@ -211,14 +211,11 @@ export class AgentLoginComponent implements OnInit{
         .subscribe({  
           next: (res)=>{
             console.log(res);
-            
             this.loginService.storeToken(res.token);
-            localStorage.setItem('username', res.userName.split('@')[0] );
-            localStorage.setItem('code', res.agencyCode);
-            localStorage.setItem('agentCode', res.agentCode);
+            localStorage.setItem('agentcode', res.agentcode);
             localStorage.setItem('verticalCode', this.verticalCode);
             this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 5000 })
-            this.router.navigate(['portal/agent/viewproducts']);
+            this.router.navigate(['portal/agent/viewdashboard']);
           },
           error: (err => {
             console.log(err);
