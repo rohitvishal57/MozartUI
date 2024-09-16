@@ -52,6 +52,9 @@ export class LoginService {
   Getproductlist(reqData:any){
     return this.http.post<any>(`https://usp.monocept.ai/Yatra/api/product/getproductlist`,reqData)
   }
+  Getproductlist2(reqData:any){
+    return this.http.post<any>(`https://c8086f35-4bad-42b0-a093-4786bf2e44dd.mock.pstmn.io/Getproductlist2`,reqData)
+  }
   Getformsequence(reqData:any){
     return this.http.post<any>(`https://usp.monocept.ai/Yatra/api/forms/getformsequence`,reqData)
   }

@@ -12,7 +12,7 @@ import { LoginService } from 'src/app/services/login.service';
   templateUrl: './quote-products.component.html',
   styleUrls: ['./quote-products.component.scss']
 })
-export class QuoteProductsComponent  implements OnInit {
+export class QuoteProductsComponent implements OnInit {
 
   stylesList: any[] = [];
   private formData: any = {}
@@ -29,17 +29,26 @@ export class QuoteProductsComponent  implements OnInit {
   products: any[] = []
   ProductList: any[] = []
   cartProductList: any[] = [];
-  agentCode=localStorage.getItem('agentCode')
-  partnerId:any
-  productId:any
+  // agentCode=localStorage.getItem('agentCode')
+  // partnerId:any
+  // productId:any
 
-  plans = [
-    { price: 6863, duration: 1, discount: 0 },
-    { price: 12863, duration: 2, discount: 0 },
-    { price: 22863, duration: 3, discount: 15 }
-  ];
-  selectedPlan: number | null = null;
+  // plans = [
+  //   { price: 6863, duration: 1, discount: 0 },
+  //   { price: 12863, duration: 2, discount: 0 },
+  //   { price: 22863, duration: 3, discount: 15 }
+  // ];
+  // selectedPlan: number | null = null;
+  agentCode = localStorage.getItem('agentCode')
+  partnerId: any
+  productId: any
 
+  plans: any[] =
+    [
+      { price: 0, duration: 0, discount: 0 }
+    ];
+  plan: [[]] = [[]]
+  selectedPlans: any[] = [];
 
   private dynamicStyle!: HTMLLinkElement;
 
@@ -50,34 +59,56 @@ export class QuoteProductsComponent  implements OnInit {
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
     private loginService: LoginService, private router: Router, private toast: NgToastService,
-    private service: CommonService, private encryptionService: EncryptionService,public common:CommonService,) { }
+    private service: CommonService, private encryptionService: EncryptionService, public common: CommonService,) { }
 
   ngOnInit(): void {
     // sessionStorage.clear()
-    if(sessionStorage.getItem("cardListProducts"))
+    console.log(sessionStorage.getItem("cardListProducts"),sessionStorage.getItem("selectedPlans"));
+    if(sessionStorage.getItem("cardListProducts") && sessionStorage.getItem("selectedPlans")){
       this.cartProductList = this.encryptionService.decrypt(sessionStorage.getItem("cardListProducts") as string);
-    else
+      this.selectedPlans = this.encryptionService.decrypt(sessionStorage.getItem("selectedPlans") as string);
+    }
+    else{
       this.cartProductList = [];
+    }
     localStorage.setItem("formIndex", "0")
     console.log(this.agentCode);
-    this.getProducts();
+    this.getPoductList();
   }
 
-  getPoductList(item: any) {
-    this.selectedToggle = item.insuranceType
-    const reqData={
+  getPoductList() {
+    // this.selectedToggle = item.insuranceType
+    const reqData = {
       "agentCode": this.agentCode
     }
-    this.loginService.Getproductlist(reqData).subscribe({
+    // this.loginService.Getproductlist(reqData).subscribe({
+    //   next: (res) => {
+    //     this.ProductList = res.data;
+    //     console.log(this.ProductList)
+    //     this.ProductList.forEach((item:any)=>{
+    //       item.keyFeatures = JSON.parse(item.keyFeatures)
+    //       console.log(typeof(item.keyFeatures));
+    //       this.plans[1].discount = item.t2DiscPercentage;
+    //       this.plans[2].discount = item.t3DiscPercentage;
+    //     })
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //     if (err.status === 404) {
+    //       this.displayNoProductsMessage = true;
+    //     }
+    //   }
+    // })
+    this.loginService.Getproductlist2(reqData).subscribe({
       next: (res) => {
-        this.ProductList = res.data;
-        console.log(this.ProductList)
-        this.ProductList.forEach((item:any)=>{
-          item.keyFeatures = JSON.parse(item.keyFeatures)
-          console.log(typeof(item.keyFeatures));
-          this.plans[1].discount = item.t2DiscPercentage;
-          this.plans[2].discount = item.t3DiscPercentage;
+        console.log(res)
+        this.ProductList = res.data.products
+        console.log(this.ProductList);
+        this.ProductList.forEach((prod: any) => {
+          console.log(prod);
+          prod.keyFeatures = JSON.parse(prod.keyFeatures);
         })
+        this.selectedPlans = Array(this.ProductList.length).fill(null);
       },
       error: (err) => {
         console.error(err);
@@ -87,20 +118,20 @@ export class QuoteProductsComponent  implements OnInit {
       }
     })
   }
-  getProducts() {
-    this.loginService.getAllProducts(this.verticalCode, this.code).subscribe({
-      next: (res) => {
-        this.products = res;
-        console.log(this.products)
-        if (this.products.length > 0) {
-          this.getPoductList(this.products[0])
-        }
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
-  }
+  // getProducts() {
+  //   this.loginService.getAllProducts().subscribe({
+  //     next: (res) => {
+  //       this.products = res;
+  //       console.log(this.products)
+  //       if (this.products.length > 0) {
+  //         this.getPoductList(this.products[0])
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //     }
+  //   })
+  // }
 
   async getProposalNum() {
     try {
@@ -111,15 +142,16 @@ export class QuoteProductsComponent  implements OnInit {
     }
   }
 
-  buyNow(item:any){
+  buyNow(item: any) {
     this.router.navigate(['portal/abhi/productDetails'], {
       state: { item: item }
     });
   }
 
-  selectPlan(index: number): void {
-    this.selectedPlan = index;
-    console.log(this.selectedPlan);
+  selectPlan(i: number, planNumber: number) {
+    // Update the selected plan for the product at index i
+    this.selectedPlans[i] = planNumber;
+    console.log(this.selectedPlans);
   }
 
   async insurenow(item: any) {
@@ -146,12 +178,15 @@ export class QuoteProductsComponent  implements OnInit {
 
   addToCart(item: any){
     this.cartProductList.push(item);
+    console.log(this.cartProductList);
     sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
+    sessionStorage.setItem("selectedPlans",this.encryptionService.encrypt(this.selectedPlans));
   }
 
   removeFromCart(item: any){
     this.cartProductList = this.cartProductList.filter((element: any) => element.productName !== item.productName);
     sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
+    sessionStorage.setItem("selectedPlans",this.encryptionService.encrypt(this.selectedPlans));
   }
 
   async getFormSequence(item: any) {
