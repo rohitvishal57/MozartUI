@@ -271,6 +271,23 @@ p {
   background: #fff;
 }
 
+.btn_red_suminsured {
+  padding: 10px 33px;
+  border-radius: 12px;
+  width: 100%;
+  background: #C7222A;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #fff;
+  border: 1px solid #C7222A;
+}
+
+.btn_red_suminsured:hover {
+  color: #C7222A;
+  background: #fff;
+}
+
 .overlay_popupMain {
   border-radius: 16px;
   padding: 24px;
@@ -379,3 +396,24 @@ p {
 }
 
 /*Custom overlay dropdown end*/
+
+.mat-mdc-slider {
+  display: inline-block;
+  box-sizing: border-box;
+  outline: none;
+  vertical-align: middle;
+  margin-left: 8px;
+  margin-right: 8px;
+  width: auto;
+  min-width: 112px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.mdc-slider {
+  cursor: pointer;
+  height: 48px;
+  width: 84%;
+  margin: 0 24px;
+  position: relative;
+  touch-action: pan-y;
+}

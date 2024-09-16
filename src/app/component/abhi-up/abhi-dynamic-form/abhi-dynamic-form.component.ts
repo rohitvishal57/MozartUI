@@ -1103,13 +1103,13 @@ export class AbhiDynamicFormComponent {
 
     if (parentControl == null && control.name == 'pincode') {
       let reqData = event.target.value;
-      console.log(event.target.value.length);
+      console.log(event.target.value.length,reqData);
       this.service.getPinCodeByCity(reqData).subscribe({
         next: (res) => {
           console.log(res)
-          this.dynamicFormGroup.get('city')?.setValue(res.strcity);
-          this.dynamicFormGroup.get('state')?.setValue(res.strstate);
-          this.dynamicFormGroup.get('zone')?.setValue(res.strzone);
+          this.dynamicFormGroup.get('city')?.setValue(res.data.strcity);
+          this.dynamicFormGroup.get('state')?.setValue(res.data.strstate);
+          this.dynamicFormGroup.get('zone')?.setValue(res.data.strzone);
         },
         error: (err) => {
           console.error(err)
@@ -1132,10 +1132,10 @@ export class AbhiDynamicFormComponent {
 
                 const patchObject: { [key: string]: any } = {};
 
-                patchObject['city' as string] = res.strcity;
-                patchObject['zone' as string] = res.strzone;
-                patchObject['zoneValue' as string] = res.strzonemapping;
-                patchObject['state' as string] = res.strstate;
+                patchObject['city' as string] = res.data.strcity;
+                patchObject['zone' as string] = res.data.strzone;
+                patchObject['zoneValue' as string] = res.data.strzonemapping;
+                patchObject['state' as string] = res.data.strstate;
 
                 let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
 

@@ -3,6 +3,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
+import {MatSliderModule} from '@angular/material/slider';
 
 @Component({
   selector: 'app-get-quote',
@@ -26,6 +27,9 @@ export class GetQuoteComponent {
   showCustomDiv = false;
   selectedDropdown = '';
 
+  sumInsuredValues: number[] = [200000, 300000, 400000, 500000, 700000, 1000000, 1500000, 2000000, 2500000, 5000000, 7500000, 10000000, 20000000, 30000000, 40000000, 50000000, 60000000];
+  selectedSumInsured: number = this.sumInsuredValues[0];
+
   constructor(private fb: FormBuilder, private loginService: LoginService, @Inject(DOCUMENT) private document: Document,
     private route: Router) { }
 
@@ -41,6 +45,15 @@ export class GetQuoteComponent {
   selectOption(option: string, index: number): void {
     this.selectedOptions[index] = option;
     this.showCustomDiv = false;
+  }
+
+  selectSumInsured(event: any): void {
+    const index = event.value;
+    console.log(index,event);
+    
+    if (index >= 0 && index < this.sumInsuredValues.length) {
+      this.selectedSumInsured = this.sumInsuredValues[index];
+    }
   }
 
   continueSelection(index: number, selectedOption: string) {
@@ -86,6 +99,23 @@ export class GetQuoteComponent {
       options: []
     }
   ];
+
+  // formatLabel(value: number): string {
+  //   if (value < 0 || value >= this.sumInsuredValues.length) {
+  //     return '';
+  //   }
+  //   const insuredValue = this.sumInsuredValues[value];
+  //   console.log(insuredValue);
+  //   return insuredValue >= 100000 ? `${insuredValue / 100000}L` : `${insuredValue}`;
+  // }
+
+   formatLabel(value: number): string {
+    if (value >= 1000) {
+      return Math.round(value / 1000) + 'k';
+    }
+
+    return `${value}`;
+  }
 
 
   onSubmit() {

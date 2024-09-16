@@ -54,6 +54,16 @@
                   </div>
   
                   <!-- Add similar divs for other dropdowns based on selectedDropdown -->
+
+                  <div class="option_sumInsured" *ngIf="selectedDropdown === 'Sum Insured'">
+                    <p>Selected Sum Insured: {{ formatLabel(sumInsuredValues.indexOf(selectedSumInsured)) }}</p>
+                    <mat-slider min="0" max="100000" step="1000" showTickMarks discrete [displayWith]="formatLabel">
+                      <input matSliderThumb>
+                    </mat-slider>
+                    <!-- Continue Button for Sum Insured -->
+                    <button type="button" class="btn_red_suminsured btn_fullWidth" (click)="closeCustomDiv()">Continue</button>
+                  </div>          
+                  
                 </div>
               </div>
             </div>

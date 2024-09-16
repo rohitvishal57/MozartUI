@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class CommonService {
   private baseUrl: string = 'https://usp.monocept.ai/api/';
-  private yatraUrl: string = 'https://usp.monocept.ai/yatra/';
+  private yatraUrl: string = 'https://usp.monocept.ai/Yatra/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
   public baseCssUrl= 	'https://usp.monocept.ai/ABHI/' 
@@ -93,8 +93,8 @@ export class CommonService {
     const headers = { 'content-type': 'application/json' };
     return this.http.post<any>(`${this.baseUrl}getPinCode`, pinCode, { 'headers': headers });
   }
-  getPinCodeByCity(pincode: any) {
-    return this.http.get<any>(`${this.baseUrl}Agent/Agency/GetPincodeDetails?pincode=${pincode}`);
+  getPinCodeByCity(response: any) {
+    return this.http.get<any>(`${this.yatraUrl}api/agent/getpincodedetails?pincode=${response}`);
   }
 
   getHealthPlans(year: any, adultCount: any, childCount: any) {
