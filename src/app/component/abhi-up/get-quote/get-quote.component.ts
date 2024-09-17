@@ -3,7 +3,6 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
-import { MatSliderModule } from '@angular/material/slider';
 import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
@@ -24,6 +23,8 @@ export class GetQuoteComponent {
     ["R003",0],
     ["R004",0]
   ]);  
+  selectedSumInsured: number | null = null;
+  selectedDiseases: string[] = [];
 
   value: number = 25;
   options: Options = {
@@ -103,6 +104,7 @@ export class GetQuoteComponent {
   ngOnInit() {
     const formControls: { [key: string]: FormControl } = {};
     this.quoteForm = this.fb.group(formControls);
+    this.loadStoredData();
   }
 
   toggleDropdown(index: number): void {
@@ -112,11 +114,13 @@ export class GetQuoteComponent {
   selectOption(option: string, index: number): void {
     this.selectedOptions[index] = option;
     this.showCustomDiv = false;
+    this.saveDataToStorage();
   }
 
   continueSelection(index: number, selectedOption: string) {
-    console.log(index, selectedOption);
-    this.selectedOptions[index] = selectedOption;
+    console.log(index,selectedOption);
+    this.selectedOptions[index] = selectedOption; 
+    this.saveDataToStorage();
   }
 
   openCustomDiv(label: string, index: number) {
@@ -124,8 +128,6 @@ export class GetQuoteComponent {
       this.activeDropdown = null;
     } else {
       console.log(label);
-
-      // Otherwise, set the active dropdown and show its content
       this.selectedDropdown = label;
       this.activeDropdown = index;
     }
@@ -169,22 +171,23 @@ export class GetQuoteComponent {
 
 
   getQuote() {
-    console.log("Clicked");
     this.showCard = true;
     this.showDropdownsFlag = true;
     console.log('showCard:', this.showCard);
+    this.saveDataToStorage();
   }
 
   continue() {
+    this.saveDataToStorage();
     this.route.navigate(['portal/abhi/quoteProducts'])
   }
 
   onSumInsuredSelect() {
-    console.log('Selected Sum Insured: ₹', 'Lakhs');
-  }
-
-  onValueChange(newValue: number) {
-    console.log('Slider value changed to:', newValue);
+    const sumInsuredValue = this.value; // Get the current slider value
+    this.selectedOptions[2] = `${sumInsuredValue} Lakhs`; // Assuming 'Sum Insured' is the third option (index 2)
+    this.activeDropdown = null; // Close the dropdown
+    this.saveDataToStorage();
+    console.log('Selected Sum Insured: ₹', this.selectedOptions[2]);
   }
 
   incrementMember(relation : any){
@@ -214,5 +217,64 @@ export class GetQuoteComponent {
       this.relationCountMap.set(relation.value, count - 1); // Decrement the count
     }
   }
+
+   onValueChange(newValue: number) {
+    this.value = newValue; 
+    this.saveDataToStorage();
+    console.log('Slider value changed to:', newValue);
+  }
+
+  onDiseaseChange(event: any) {
+    const selectedValue = event.target.value;
   
+    if (event.target.checked) {
+      // Add the value to the array if the checkbox is checked and not already present
+      if (!this.selectedDiseases.includes(selectedValue)) {
+        this.selectedDiseases.push(selectedValue);
+      }
+    } else {
+      // Remove the value from the array if the checkbox is unchecked
+      this.selectedDiseases = this.selectedDiseases.filter(disease => disease !== selectedValue);
+    }
+    console.log('Selected Diseases:', this.selectedDiseases);
+    this.saveDataToStorage();
+  }
+
+  diseaseSelection() {
+    this.selectedOptions[3] = this.selectedDiseases.length > 0 ? this.selectedDiseases.join(', ') : 'No Diseases Selected';
+    this.activeDropdown = null;
+    this.saveDataToStorage();
+  }
+
+  isDiseaseSelected(disease: string): boolean {
+    return this.selectedDiseases.includes(disease);
+  }
+
+  saveDataToStorage() {
+    const data = {
+      selectedOptions: this.selectedOptions,
+      value: this.value,
+      selectedDiseases: this.selectedDiseases,
+      showCard: this.showCard 
+    };
+    console.log(data);
+    localStorage.setItem('quoteFormData', JSON.stringify(data));
+    console.log('Data saved to LocalStorage:', data);
+  }
+
+  // Load stored data from LocalStorage
+  loadStoredData() {
+    const storedData = localStorage.getItem('quoteFormData');
+    console.log(storedData);
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      this.selectedOptions = parsedData.selectedOptions || [];
+      this.value = parsedData.value || this.value;
+      this.selectedDiseases = parsedData.selectedDiseases || [];
+      this.showCard = parsedData.showCard || false;
+      this.showDropdownsFlag = this.showCard;
+      console.log('Data loaded from LocalStorage:', parsedData);
+    }
+  }
+
 }

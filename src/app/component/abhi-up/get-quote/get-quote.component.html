@@ -39,7 +39,7 @@
                     </ng-container>
 
                     <ng-container *ngIf="dropdown.label === 'Diseases'">
-                      {{ selectedOptions[i] || 'Hypertension' }}
+                      {{ selectedOptions[i] || 'No Diseases Selected' }}
                     </ng-container>
 
                   </span><i class="fas fa-chevron-down"></i>
@@ -48,6 +48,8 @@
 
               <!-- Dropdown content for each item, displayed only when the activeDropdown matches the index -->
               <div class="dropdownContent" *ngIf="activeDropdown === i">
+               
+               
                 <!-- Custom dropdown content for "Policy Type" -->
                  <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Policy Type'">
                    <div class="option_policyType" >
@@ -85,7 +87,7 @@
                    </div>
                  </div>
 
-                <!-- Add similar divs for other dropdowns based on selectedDropdown -->
+                <!-- Sum Insured Dropdown -->
 
                 <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Sum Insured'">
                   <div class="option_policyType">
@@ -112,6 +114,8 @@
                     </button>
                   </div>
                 </div>
+
+                <!-- Relationsip Dropdown -->
 
                 <div class="overlay_popupMain overlay_dropdown_w518" *ngIf="selectedDropdown === 'Relationship'">
                     <!--Overlay: Personal details start-->
@@ -256,6 +260,48 @@
 
                 </div>
 
+                <!-- Disease Dropdown -->
+
+                <div class="overlay_popupMain overlay_dropdown_w360 " *ngIf="selectedDropdown === 'Diseases'">
+                  <div class="option_policyType">
+                      <div class="overlay_body checkbox_disease_scroll">
+                          <div class="input-checkbox-block checkbox_disease">
+                              <div class="input-checkbox-feild">
+                                  <input type="checkbox" id="disease-hypertension" value="hypertension" 
+                                  (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected('hypertension')" class="input-check" >
+                                  <label for="disease-hypertension">Hypertension</label>
+                              </div>
+                              <div class="input-checkbox-feild">
+                                  <input type="checkbox" id="condition-bloodpressure" value="bloodpressure"  
+                                  (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected('bloodpressure')" class="input-check" >
+                                  <label for="condition-bloodpressure">Blood-Pressure</label>
+                              </div>
+                              <div class="input-checkbox-feild">
+                                  <input type="checkbox" id="condition-cholesterol" value="cholesterol"
+                                (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected('cholesterol')" class="input-check" >
+                                  <label for="condition-cholesterol">Cholesterol</label>
+                              </div>
+                              <div class="input-checkbox-feild">
+                                  <input type="checkbox" id="condition-diabetes" value="diabetes"
+                                  (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected('diabetes')" class="input-check" >
+                                  <label for="condition-diabetes">Diabetes</label>
+                              </div>
+                              <div class="input-checkbox-feild">
+                                  <input type="checkbox" id="disease-hypertension2" value="hypertension2"
+                                  (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected('hypertension2')" class="input-check" >
+                                  <label for="disease-hypertension2">Hypertension</label>
+                              </div>
+                              <div class="input-checkbox-feild">
+                                  <input type="checkbox" id="condition-bloodpressure2" value="bloodpressure2"
+                                  (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected('bloodpressure2')" class="input-check" >
+                                  <label for="condition-bloodpressure2">Blood-Pressure</label>
+                              </div>
+                          </div>
+                      </div>
+                      <button type="button" class="btn_red btn_fullWidth" (click)="diseaseSelection()">Continue</button>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -270,37 +316,5 @@
 </div>
 
 <!--Overlay: Disease & Products start-->
-<div class="overlay_popupMain overlay_dropdown_w360 ">
-  <div class="option_policyType">
-      <div class="overlay_body checkbox_disease_scroll">
-          <div class="input-checkbox-block checkbox_disease">
-              <div class="input-checkbox-feild">
-                  <input type="checkbox" id="disease-hypertension" value="hypertension" class="input-check" >
-                  <label for="disease-hypertension">Hypertension</label>
-              </div>
-              <div class="input-checkbox-feild">
-                  <input type="checkbox" id="condition-bloodpressure" value="bloodpressure" class="input-check" >
-                  <label for="condition-bloodpressure">Blood-Pressure</label>
-              </div>
-              <div class="input-checkbox-feild">
-                  <input type="checkbox" id="condition-cholesterol" value="cholesterol" class="input-check" >
-                  <label for="condition-cholesterol">Cholesterol</label>
-              </div>
-              <div class="input-checkbox-feild">
-                  <input type="checkbox" id="condition-diabetes" value="diabetes" class="input-check" >
-                  <label for="condition-diabetes">Diabetes</label>
-              </div>
-              <div class="input-checkbox-feild">
-                  <input type="checkbox" id="disease-hypertension2" value="hypertension" class="input-check" >
-                  <label for="disease-hypertension2">Hypertension</label>
-              </div>
-              <div class="input-checkbox-feild">
-                  <input type="checkbox" id="condition-bloodpressure2" value="bloodpressure" class="input-check" >
-                  <label for="condition-bloodpressure2">Blood-Pressure</label>
-              </div>
-          </div>
-      </div>
-      <button type="button" class="btn_red btn_fullWidth">Continue</button>
-  </div>
-</div>
+
 <!--Overlay: Disease & Products end-->
