@@ -162,11 +162,13 @@
                                   <div class="member_extraInfo">
                                     <div class="member_extraInfoSub">
                                       <input type="text" placeholder="Enter Age" class="member_textbox">
+                                      <span *ngIf="relation.deletable" class="delete_member" (click)="removeMember(relation)"><img
+                                        src="../../../../assets/images/icon_delete_red2.svg"></span>
                                     </div>
                                   </div>
                                 </div>
                                 <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
-                                <button type="button" class="btn_white btn_addChildren">
+                                <button type="button" class="btn_white btn_addChildren" (click)="incrementMember(relation)">
                                   <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
                                   <img src="../../../../assets/images/icon_round_plus_red.svg">
                                 </button>

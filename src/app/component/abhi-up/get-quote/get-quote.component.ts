@@ -20,6 +20,10 @@ export class GetQuoteComponent {
   showDropdownsFlag: boolean = false;
   showCustomDiv = false;
   selectedDropdown = '';
+  relationCountMap: Map<string, number> = new Map([
+    ["R003",0],
+    ["R004",0]
+  ]);  
 
   value: number = 25;
   options: Options = {
@@ -79,15 +83,15 @@ export class GetQuoteComponent {
     },
     {
       "id": "R003",
-      "value": "Son 1",
-      "name": "Son 1",
+      "value": "Son",
+      "name": "Son",
       "isIncrement": true,
       "imagePath": "../../../../assets/images/icon_member_son.png"
     },
     {
       "id": "R004",
-      "value": "Daughter 1",
-      "name": "Daughter 1",
+      "value": "Daughter",
+      "name": "Daughter",
       "isIncrement": true,
       "imagePath": "../../../../assets/images/icon_member_daughter.png"
     }
@@ -183,4 +187,32 @@ export class GetQuoteComponent {
     console.log('Slider value changed to:', newValue);
   }
 
+  incrementMember(relation : any){
+    let index = this.relations.length-2;
+    let baseRelation = JSON.parse(JSON.stringify(relation));
+
+    baseRelation.isIncrement = false;
+    baseRelation['deletable'] = true;
+    baseRelation.name = relation.name + " " + (this.relationCountMap.get(relation.id) as number + 1);
+    baseRelation.value = relation.name + " " + (this.relationCountMap.get(relation.id) as number + 1);
+    this.relations.splice(index,0,baseRelation);
+    this.relationCountMap.set(relation.name,((this.relationCountMap.get(relation.id) as number) + 1));
+  }
+
+  removeMember(relation: any) {
+    console.log(relation);
+    console.log(this.relations);
+  
+    // Filter out the relation that matches the name and value of the provided relation
+    this.relations = this.relations.filter((element: any) => element.name !== relation.name);
+  
+    console.log(this.relations);
+  
+    // Decrease the count of this particular relation in the map
+    const count = this.relationCountMap.get(relation.value) as number;
+    if (count > 1) {
+      this.relationCountMap.set(relation.value, count - 1); // Decrement the count
+    }
+  }
+  
 }
