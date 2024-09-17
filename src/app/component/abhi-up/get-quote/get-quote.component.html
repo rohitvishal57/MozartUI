@@ -47,7 +47,7 @@
               </button>
 
               <!-- Dropdown content for each item, displayed only when the activeDropdown matches the index -->
-              <div *ngIf="activeDropdown === i">
+              <div class="dropdownContent" *ngIf="activeDropdown === i">
                 <!-- Custom dropdown content for "Policy Type" -->
                  <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Policy Type'">
                    <div class="option_policyType" >
@@ -88,20 +88,29 @@
                 <!-- Add similar divs for other dropdowns based on selectedDropdown -->
 
                 <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Sum Insured'">
-                  <div class="slider-container">
-                    <div class="label">
-                      <h4>Sum Insured</h4>
-                      <p class="value">₹{{ value }} Lakhs</p>
+                  <div class="option_policyType">
+                    <div class="overlay_body sumInsured_selectMain">
+                      <div class="sumInsured_select">
+                          <header>
+                              <h3>Sum Insured</h3>
+                              <div class="sumInsured_value">₹{{ value }} Lakhs</div>
+                          </header>
+                      </div>
+                      <div class="sumInsured_dragBar">
+                        
+                        <div class="slider-container">
+                          <!-- Listen to value change event here -->
+                          <ngx-slider [(value)]="value" [options]="options" (valueChange)="onValueChange($event)"></ngx-slider>
+                          <div class="tick-labels">
+                            <span *ngFor="let tick of options.ticksArray">{{ formatTickLabel(tick) }}</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <!-- Listen to value change event here -->
-                     <ngx-slider [(value)]="value" [options]="options" (valueChange)="onValueChange($event)"></ngx-slider>
-                     <div class="tick-labels">
-                      <span *ngFor="let tick of options.ticksArray">{{ formatTickLabel(tick) }}</span>
-                    </div>
+                    <button class="suminsured-button" (click)="onSumInsuredSelect()">
+                      Continue
+                    </button>
                   </div>
-                  <button class="suminsured-button" (click)="onSumInsuredSelect()">
-                    Continue
-                  </button>
                 </div>
 
                 <div class="overlay_popupMain overlay_dropdown_w518" *ngIf="selectedDropdown === 'Relationship'">
@@ -239,3 +248,39 @@
     </div>
   </form>
 </div>
+
+<!--Overlay: Disease & Products start-->
+<div class="overlay_popupMain overlay_dropdown_w360 ">
+  <div class="option_policyType">
+      <div class="overlay_body checkbox_disease_scroll">
+          <div class="input-checkbox-block checkbox_disease">
+              <div class="input-checkbox-feild">
+                  <input type="checkbox" id="disease-hypertension" value="hypertension" class="input-check" >
+                  <label for="disease-hypertension">Hypertension</label>
+              </div>
+              <div class="input-checkbox-feild">
+                  <input type="checkbox" id="condition-bloodpressure" value="bloodpressure" class="input-check" >
+                  <label for="condition-bloodpressure">Blood-Pressure</label>
+              </div>
+              <div class="input-checkbox-feild">
+                  <input type="checkbox" id="condition-cholesterol" value="cholesterol" class="input-check" >
+                  <label for="condition-cholesterol">Cholesterol</label>
+              </div>
+              <div class="input-checkbox-feild">
+                  <input type="checkbox" id="condition-diabetes" value="diabetes" class="input-check" >
+                  <label for="condition-diabetes">Diabetes</label>
+              </div>
+              <div class="input-checkbox-feild">
+                  <input type="checkbox" id="disease-hypertension2" value="hypertension" class="input-check" >
+                  <label for="disease-hypertension2">Hypertension</label>
+              </div>
+              <div class="input-checkbox-feild">
+                  <input type="checkbox" id="condition-bloodpressure2" value="bloodpressure" class="input-check" >
+                  <label for="condition-bloodpressure2">Blood-Pressure</label>
+              </div>
+          </div>
+      </div>
+      <button type="button" class="btn_red btn_fullWidth">Continue</button>
+  </div>
+</div>
+<!--Overlay: Disease & Products end-->
