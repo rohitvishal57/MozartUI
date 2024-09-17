@@ -6,29 +6,47 @@
     background-color: #f5f5f5;
     padding: 39px;
 }
-
+.dashboard_contentContainer {
+    max-width: 1082px;
+    margin: auto;
+  }
 h2 {
     font-family: "Anek Latin", sans-serif;
 }
 
 .performance-overview {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    h2 {
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 24px;
+        margin: 0;
+    }
+    .subHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        @media (max-width:767px) {
+            flex-direction: column;
+        }
+    }
 }
 
 .notification {
-    padding: 12px 16px;
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-
+    padding: 10px 0;
+    gap:8px;
+    font-weight:400;
+    font-size: 16px;
+    color: #2e2e2e;
+    line-height: 17px;
     .notification-icon {
         font-size: 24px;
         margin-right: 12px;
-    }
-
-    p {
-        margin: 0;
-        font-size: 14px;
     }
 }
 
@@ -39,41 +57,76 @@ h2 {
 }
 
 .card {
-    border-radius: 12px;
-    padding: 18px;
-    height: 90%;
+    border-radius: 16px;
+    padding: 16px 22px;
     border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    box-shadow: 0px 2px 4px 0px #D5D7DE33;
+    box-shadow: 0px 1px 10px 0px #D5D7DE1F;
+    box-shadow: 0px 4px 5px 0px #D5D7DE24;
 
-    h3 {
-        font-size: 16px;
-        margin-bottom: 12px;
-        font-weight: bolder;
+    header {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 0;
+        color:#2e2e2e;
+        display: flex;
+        gap: 16px;
+        align-items: center;
     }
 
     .value {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 12px;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 0;
+        color:#2e2e2e;
     }
-
+    .card-tip {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        background: rgba(255, 244, 206, 0.5);
+        border: 0.5px solid #FF7A00;
+        //border-image-source: linear-gradient(90deg, #FFDE32 0%, #FF7A00 100%);
+        border-radius: 10px;
+        padding: 6px 8px;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        color: #2e2e2e;
+    }
     .sub-text {
         font-size: 12px;
         color: #666;
         padding-top: 14px;
     }
+    .progress-barMain {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        p {
+            padding: 0;
+            margin: 0;
+            font-weight: 500;
+            font-size: 12px;
+            color: rgba(36, 36, 36, 0.9);
+        }
+    }
 }
 
 .premium {
     .progress-bar {
-        height: 8px;
-        background-color: #e0e0e0;
-        border-radius: 4px;
-        margin-bottom: 8px;
+        height: 13px;
+        background-color: #e7fcf4;
+        border-radius: 16px;
 
         .progress {
             height: 100%;
-            background-color: #4caf50;
+            background-color: #1f874c;
             border-radius: 4px;
+            margin: 3px;
         }
     }
 }
@@ -83,6 +136,15 @@ h2 {
         width: 100%;
         max-width: 150px;
         margin: 0 auto;
+        .sub-text {
+            font-size: 12px;
+            color: #666;
+            padding-top: 0px;
+            z-index: 1;
+            position: relative;
+            top:25px;
+            text-align: center;
+        }
     }
 
     .gauge-body {
@@ -94,6 +156,7 @@ h2 {
         border-top-left-radius: 100% 200%;
         border-top-right-radius: 100% 200%;
         overflow: hidden;
+        background: conic-gradient(from 90deg at 50% 50%, #D34528 0deg, #034C22 180deg, #53A75C 212.4deg, #70B865 244.8deg, #FFD56C 277.2deg, #FAA61A 309.6deg, #D34528 360deg);
     }
 
     .gauge-fill {
@@ -109,12 +172,12 @@ h2 {
     }
 
     .gauge-cover {
-        width: 78%;
+        width: 72%;
         height: 121%;
         background: #ffffff;
-        border-radius: 50%;
+        border-radius: 50% 50% 0 0;
         position: absolute;
-        top: 19%;
+        top: 26%;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
@@ -122,5 +185,17 @@ h2 {
         align-items: center;
         justify-content: space-around;
         font-weight: bold;
+    }
+}
+.badge {
+    display: flex;
+    gap:16px;
+    font-weight: 700;
+    font-size: 28px;
+    color: #2e2e2e;
+    align-items: center;
+    padding: 0;
+    &.badge-purple {
+        color:#a83abb;
     }
 }
