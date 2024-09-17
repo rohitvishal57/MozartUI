@@ -145,27 +145,6 @@ p {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   text-align: center;
-
-  .slider-container {
-    margin-bottom: 20px;
-
-    .label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-
-      .value {
-        font-weight: bold;
-        font-size: 1.2em;
-      }
-    }
-  }
-
-  .tick-labels {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 2px;
-  }
 }
 
 .dropdown-item {
@@ -1316,6 +1295,28 @@ h4 {
 .btn_addChildren:hover {
   border-color: #c7222a;
   color: #4c4c4c;
+}
+
+.slider-container {
+  margin-bottom: 20px;
+
+  .label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    .value {
+      font-weight: bold;
+      margin: 10px;
+      font-size: 1.2em;
+    }
+  }
+}
+
+.tick-labels {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 2px;
 }
 
 /*Custom overlay dropdown end*/

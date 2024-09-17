@@ -87,11 +87,11 @@
 
                 <!-- Add similar divs for other dropdowns based on selectedDropdown -->
 
-                <div class="card-container" *ngIf="selectedDropdown === 'Sum Insured'">
+                <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Sum Insured'">
                   <div class="slider-container">
                     <div class="label">
                       <h4>Sum Insured</h4>
-                      <span class="value">₹{{ value }} Lakhs</span>
+                      <p class="value">₹{{ value }} Lakhs</p>
                     </div>
                     <!-- Listen to value change event here -->
                      <ngx-slider [(value)]="value" [options]="options" (valueChange)="onValueChange($event)"></ngx-slider>
