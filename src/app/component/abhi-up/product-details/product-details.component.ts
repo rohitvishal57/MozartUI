@@ -77,8 +77,8 @@ export class ProductDetailsComponent {
       await this.getFormSequence(item);
       console.log(item)
       const productData = {
-        partnerId : this.partnerId,
-        productId : this.productId
+        partnerId : item.partnerId,
+        productId : item.productId
 
       }
       console.log(productData)
@@ -96,10 +96,11 @@ export class ProductDetailsComponent {
     try {
       sessionStorage.clear();
       const reqData = {
-        "partnerId": this.partnerId,
-        "productId": this.productId
+        "partnerId": item.partnerId,
+        "productId": item.productId
 
       }
+      console.log(reqData);
       const res = await firstValueFrom(this.loginService.Getformsequence(reqData));
       console.log(res);
       this.formSequence = JSON.parse(res.data.formSequence);

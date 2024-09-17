@@ -212,7 +212,7 @@ export class AgentLoginComponent implements OnInit{
           next: (res)=>{
             console.log(res);
             this.loginService.storeToken(res.token);
-            localStorage.setItem('agentcode', res.agentcode);
+            localStorage.setItem('agentCode', res.agentcode);
             localStorage.setItem('verticalCode', this.verticalCode);
             this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 5000 })
             this.router.navigate(['portal/agent/viewdashboard']);

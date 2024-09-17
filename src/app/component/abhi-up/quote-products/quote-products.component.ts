@@ -63,10 +63,8 @@ export class QuoteProductsComponent implements OnInit {
 
   ngOnInit(): void {
     // sessionStorage.clear()
-    console.log(sessionStorage.getItem("cardListProducts"),sessionStorage.getItem("selectedPlans"));
-    if(sessionStorage.getItem("cardListProducts") && sessionStorage.getItem("selectedPlans")){
+    if(sessionStorage.getItem("cardListProducts")){
       this.cartProductList = this.encryptionService.decrypt(sessionStorage.getItem("cardListProducts") as string);
-      this.selectedPlans = this.encryptionService.decrypt(sessionStorage.getItem("selectedPlans") as string);
     }
     else{
       this.cartProductList = [];
@@ -180,13 +178,11 @@ export class QuoteProductsComponent implements OnInit {
     this.cartProductList.push(item);
     console.log(this.cartProductList);
     sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
-    sessionStorage.setItem("selectedPlans",this.encryptionService.encrypt(this.selectedPlans));
   }
 
   removeFromCart(item: any){
     this.cartProductList = this.cartProductList.filter((element: any) => element.productName !== item.productName);
     sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
-    sessionStorage.setItem("selectedPlans",this.encryptionService.encrypt(this.selectedPlans));
   }
 
   async getFormSequence(item: any) {
