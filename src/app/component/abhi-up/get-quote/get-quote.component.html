@@ -144,17 +144,35 @@
                           <h3>Member details</h3>
                           <div class="insurer_memberDetails">
                             <div class="input-checkbox-block input-checkbox-withIcon">
-                              <div class="input-checkbox-feild">
-                                <input type="checkbox" id="member-self" value="self" class="input-check">
-                                <label for="member-self"><img
+                              <!-- <div class="input-checkbox-feild">
+                                <input type="checkbox" id="self" value="self" class="input-check">
+                                <label for="self"><img
                                     src="../../../../assets/images/icon_member_self.png">Self</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="text" placeholder="Enter Age" class="member_textbox">
                                   </div>
                                 </div>
+                              </div> -->
+                              <ng-container *ngFor="let relation of relations">
+                                <div *ngIf="relation.isIncrement == false" class="input-checkbox-feild">
+                                  <input type="checkbox" id="{{relation.id}}" value="{{relation.id}}" class="input-check">
+                                  <label for="{{relation.id}}"><img
+                                      src="{{relation.imagePath}}">{{relation.name}}</label>
+                                  <div class="member_extraInfo">
+                                    <div class="member_extraInfoSub">
+                                      <input type="text" placeholder="Enter Age" class="member_textbox">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
+                                <button type="button" class="btn_white btn_addChildren">
+                                  <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
+                                  <img src="../../../../assets/images/icon_round_plus_red.svg">
+                                </button>
                               </div>
-                              <div class="input-checkbox-feild">
+                              </ng-container>
+                              <!-- <div class="input-checkbox-feild">
                                 <input type="checkbox" id="member-spouse" value="spouse" class="input-check">
                                 <label for="member-spouse"><img
                                     src="../../../../assets/images/icon_member_spouse.png">Spouse</label>
@@ -213,13 +231,13 @@
                                   <span><img src="../../../../assets/images/icon_member_daughter.png">Daughter</span>
                                   <img src="../../../../assets/images/icon_round_plus_red.svg">
                                 </button>
-                              </div>
-                              <div class="input-checkbox-feild">
+                              </div> -->
+                              <!-- <div class="input-checkbox-feild">
                                 <button type="button" class="btn_white btn_addChildren">
                                   <span><img src="../../../../assets/images/icon_member_son.png">Son</span>
                                   <img src="../../../../assets/images/icon_round_plus_red.svg">
                                 </button>
-                              </div>
+                              </div> -->
                             </div>
                           </div>
                           <button type="button" value="additional-family" class="btn_coverAdditional_FM">

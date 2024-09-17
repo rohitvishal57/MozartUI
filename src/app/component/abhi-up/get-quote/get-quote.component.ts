@@ -3,7 +3,7 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
-import {MatSliderModule} from '@angular/material/slider';
+import { MatSliderModule } from '@angular/material/slider';
 import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
@@ -14,18 +14,18 @@ import { Options } from '@angular-slider/ngx-slider';
 export class GetQuoteComponent {
 
   quoteForm!: FormGroup;
-  selectedOptions:string[]= [];
+  selectedOptions: string[] = [];
   activeDropdown: number | null = null;
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
   showCustomDiv = false;
   selectedDropdown = '';
 
-  value: number = 25; 
+  value: number = 25;
   options: Options = {
     floor: 5,
     ceil: 200,
-    step: 5, 
+    step: 5,
     showTicks: true,
     showTicksValues: true,
     ticksArray: [5, 7, 10, 15, 20, 25, 50, 100, 200],
@@ -33,6 +33,65 @@ export class GetQuoteComponent {
       return '';
     }
   };
+
+  relations: any[] = [
+    {
+      "id": "R001",
+      "value": "Self",
+      "name": "Self",
+      "isIncrement": false,
+      "imagePath": "../../../../assets/images/icon_member_self.png"
+    },
+    {
+      "id": "R002",
+      "value": "Spouse",
+      "name": "Spouse",
+      "isIncrement": false,
+      "imagePath": "../../../../assets/images/icon_member_spouse.png"
+    },
+    {
+      "id": "R005",
+      "value": "Mother",
+      "name": "Mother",
+      "isIncrement": false,
+      "imagePath": "../../../../assets/images/icon_member_spouse.png"
+    },
+    {
+      "id": "R006",
+      "value": "Father",
+      "name": "Father",
+      "isIncrement": false,
+      "imagePath": "../../../../assets/images/icon_member_father.png"
+    },
+    {
+      "id": "R007",
+      "value": "Mother-In-Law",
+      "name": "Mother-In-Law",
+      "isIncrement": false,
+      "imagePath": "../../../../assets/images/icon_member_spouse.png"
+    },
+    {
+      "id": "R008",
+      "value": "Father-In-Law",
+      "name": "Father-In-Law",
+      "isIncrement": false,
+      "imagePath": "../../../../assets/images/icon_member_father.png"
+    },
+    {
+      "id": "R003",
+      "value": "Son 1",
+      "name": "Son 1",
+      "isIncrement": true,
+      "imagePath": "../../../../assets/images/icon_member_son.png"
+    },
+    {
+      "id": "R004",
+      "value": "Daughter 1",
+      "name": "Daughter 1",
+      "isIncrement": true,
+      "imagePath": "../../../../assets/images/icon_member_daughter.png"
+    }
+  ]
 
   constructor(private fb: FormBuilder, private loginService: LoginService, @Inject(DOCUMENT) private document: Document,
     private route: Router) { }
@@ -52,8 +111,8 @@ export class GetQuoteComponent {
   }
 
   continueSelection(index: number, selectedOption: string) {
-    console.log(index,selectedOption);
-    this.selectedOptions[index] = selectedOption; 
+    console.log(index, selectedOption);
+    this.selectedOptions[index] = selectedOption;
   }
 
   openCustomDiv(label: string, index: number) {
@@ -61,7 +120,7 @@ export class GetQuoteComponent {
       this.activeDropdown = null;
     } else {
       console.log(label);
-      
+
       // Otherwise, set the active dropdown and show its content
       this.selectedDropdown = label;
       this.activeDropdown = index;
@@ -117,10 +176,10 @@ export class GetQuoteComponent {
   }
 
   onSumInsuredSelect() {
-    console.log('Selected Sum Insured: ₹','Lakhs');
+    console.log('Selected Sum Insured: ₹', 'Lakhs');
   }
 
-   onValueChange(newValue: number) {
+  onValueChange(newValue: number) {
     console.log('Slider value changed to:', newValue);
   }
 
