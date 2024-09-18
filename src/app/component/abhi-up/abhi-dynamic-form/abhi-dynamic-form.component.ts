@@ -76,8 +76,8 @@ export class AbhiDynamicFormComponent {
   showPopup: boolean = false;
   showDoneButton = true;
 
-  partnerId:any
-  productId:any
+  partnerId: any
+  productId: any
 
   displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
@@ -1003,6 +1003,8 @@ export class AbhiDynamicFormComponent {
 
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null) {
+    // console.log(event.target.value,event);
+    let eventValue = event.target.value;
     if (control.name === "chequeNumber") {
       const chequeNumber = event.target.value;
       if (chequeNumber.length > 6) {
@@ -1063,11 +1065,33 @@ export class AbhiDynamicFormComponent {
     }
 
     if (control.onChangeMethod) {
-      this.resolveMethod(control.onChangeMethod, control, event.target.value);
-    } 
 
-    if(parentControl!== null && parentControl.type == 'combinedCheckbox'){
-      this.changeOverLayDone(control,parentControl,false);
+      if (control.type === 'radio') {
+        const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
+        console.log(selectedValue);
+        
+        eventValue = selectedValue === 'yes' ? true : false;
+
+        // Find the selected option by value
+        const selectedOption = control.radioOptions.find((option: any) => option.value === selectedValue);
+
+        // Check if the control or the selected option has dependentControls
+        const dependent = control.dependentControls
+          ? control.dependentControls
+          : selectedOption?.dependentControls ?? control;
+
+        // Call the resolveMethod with the found dependent controls
+        this.resolveMethod(control.onChangeMethod, dependent, eventValue);
+      } else {
+        // If not a radio control, just resolve using the control
+        this.resolveMethod(control.onChangeMethod, control, eventValue);
+      }
+    }
+
+
+
+    if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
+      this.changeOverLayDone(control, parentControl, false);
     }
 
     if (control.type == 'date' && control.dependentControls != null) {
@@ -1103,7 +1127,7 @@ export class AbhiDynamicFormComponent {
 
     if (parentControl == null && control.name == 'pincode') {
       let reqData = event.target.value;
-      console.log(event.target.value.length,reqData);
+      console.log(event.target.value.length, reqData);
       this.service.getPinCodeByCity(reqData).subscribe({
         next: (res) => {
           console.log(res)
@@ -1756,7 +1780,7 @@ export class AbhiDynamicFormComponent {
         //   // for Store Form Data in Database
         let reqData = {
           "proposalNum": this.proposalNum,
-          "partnerId":this.partnerId,
+          "partnerId": this.partnerId,
           "agentCode": this.agentCode,
           "code": this.Code,
           "verticalCode": this.verticalCode,
@@ -1839,25 +1863,34 @@ export class AbhiDynamicFormComponent {
 
     }
   }
-  changeMainFormDependentControls(dependentControlNames: string[], visibility: boolean, controlName: string | null = null, parentControlName: string | null = null, controlIndex: number | null = null) {
-    console.log(dependentControlNames);
+  changeMainFormDependentControls(
+    dependentControlNames: (string | { name: string; visibility: boolean })[],
+    visibility: boolean,
+    controlName: string | null = null,
+    parentControlName: string | null = null,
+    controlIndex: number | null = null
+  ) {
+    console.log(dependentControlNames, visibility);
 
     const tempIndex = this.activeMemberTabIndex;
     setTimeout(() => {
+      dependentControlNames.forEach((dependent) => {
+        // Extract control name and visibility from either string or object
+        const dependentName = typeof dependent === 'string' ? dependent : dependent.name;
+        const dependentVisibility = typeof dependent === 'string' ? visibility : dependent.visibility;
 
-      dependentControlNames.forEach((dependentName) => {
         this.form.formSections.forEach((section: IFormSections) => {
           section.formControls.forEach((control: IFormControl) => {
             if (control.dynamicControls && controlIndex != null && control.dynamicControls.length > controlIndex) {
               const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
               targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
-                if (dynamicControl.name == dependentName) {
-                  dynamicControl.visible = visibility;
-                } else if (dynamicControl.subControls && dynamicControl.name == parentControlName) {
+                if (dynamicControl.name === dependentName) {
+                  dynamicControl.visible = dependentVisibility;
+                } else if (dynamicControl.subControls && dynamicControl.name === parentControlName) {
                   dynamicControl.subControls.forEach((subControlArray: any) => {
                     subControlArray.forEach((subControl: ISubControl) => {
-                      if (subControl.name == dependentName) {
-                        subControl.visible = visibility;
+                      if (subControl.name === dependentName) {
+                        subControl.visible = dependentVisibility;
                       }
                     });
                   });
@@ -1866,9 +1899,9 @@ export class AbhiDynamicFormComponent {
 
               control.dynamicControls[controlIndex] = targetDynamicControl;
 
-            } else if (control.name == dependentName) {
-              control.visible = visibility;
-              if (visibility) {
+            } else if (control.name === dependentName) {
+              control.visible = dependentVisibility;
+              if (dependentVisibility) {
                 let controlValidators: any = [];
                 control.validators?.forEach((val: IValidator) => {
                   if (val.validatorName === 'required') controlValidators.push(Validators.required);
@@ -1876,11 +1909,12 @@ export class AbhiDynamicFormComponent {
                   if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
                   if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
                   if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
-                })
+                });
                 this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
-              }
-              else
+              } else {
                 this.dynamicFormGroup.get(control.name)?.clearValidators();
+                this.dynamicFormGroup.get(control.name)?.reset();
+              }
             }
           });
         });
@@ -1889,7 +1923,9 @@ export class AbhiDynamicFormComponent {
     }, 0);
 
     this.activeMemberTabIndex = tempIndex;
+    console.log(this.form);
   }
+
 
 
   generateLeadAndProposalId(control: any) {
@@ -2693,7 +2729,7 @@ export class AbhiDynamicFormComponent {
   addOnRemoved(control: any, parentControl: any) {
 
     console.log(parentControl);
-    
+
     let reqData: {
       productType: any;
       overAllSIAge: number[];
@@ -3052,40 +3088,40 @@ export class AbhiDynamicFormComponent {
           });
         } else {
           count++;
-          console.log(subControl,parentControl);
+          console.log(subControl, parentControl);
           let dependentControls: string[] = [];
           let tempControlArray = (((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.get(subControl.name) as FormGroup)?.get(key) as FormArray);
           let breakFlag = false;
-          this.form.formSections.forEach((section:IFormSections)=>{
-            if(breakFlag) return;
-            section.formControls.forEach((control:IFormControl)=>{
-              if(breakFlag) return;
-              if(control.name == parentControl.name && control.subControls){
-                control.subControls.forEach((subControl:ISubControl)=>{
-                  if(breakFlag) return;
-                  if(subControl.innerSubControls){
-                    subControl.innerSubControls.forEach((innerSubControl:ISubControl)=>{
-                      if(breakFlag) return;
-                      if(innerSubControl.name == key){
-                        innerSubControl.coreControls?.forEach((coreControl:ISubControl)=>{
-                          if(breakFlag) return;
-                          if(coreControl.name == 'memberCheckbox' && coreControl.dependentControls){
+          this.form.formSections.forEach((section: IFormSections) => {
+            if (breakFlag) return;
+            section.formControls.forEach((control: IFormControl) => {
+              if (breakFlag) return;
+              if (control.name == parentControl.name && control.subControls) {
+                control.subControls.forEach((subControl: ISubControl) => {
+                  if (breakFlag) return;
+                  if (subControl.innerSubControls) {
+                    subControl.innerSubControls.forEach((innerSubControl: ISubControl) => {
+                      if (breakFlag) return;
+                      if (innerSubControl.name == key) {
+                        innerSubControl.coreControls?.forEach((coreControl: ISubControl) => {
+                          if (breakFlag) return;
+                          if (coreControl.name == 'memberCheckbox' && coreControl.dependentControls) {
                             dependentControls = coreControl.dependentControls;
                           }
                           console.log(dependentControls);
-                          
+
                           let memberFormGroup = tempControlArray.controls.find((group: AbstractControl) => {
                             return (group as FormGroup).get(coreControl.name)
                           }) as FormGroup;
                           console.log(memberFormGroup);
-                          
+
                           let memberFormGroupControl = memberFormGroup.get(coreControl.name);
                           if (memberFormGroupControl?.value == '') {
-                            
-                            tempControlArray.controls.forEach((coreControlGroup:any)=>{
+
+                            tempControlArray.controls.forEach((coreControlGroup: any) => {
                               Object.keys(coreControlGroup.controls).forEach((controlName: string) => {
                                 const control = coreControlGroup.get(controlName);
-                            
+
                                 if (control) {
                                   if (control.value === true) {
                                     // If the control's value is true, set it to false
@@ -3096,15 +3132,15 @@ export class AbhiDynamicFormComponent {
                                   }
                                 }
                               });
-                              
+
                             })
                             breakFlag = true;
                             count--;
                           }
 
                           console.log(memberFormGroup);
-                          
-                          
+
+
                           // if{
 
                           // }
@@ -3130,11 +3166,11 @@ export class AbhiDynamicFormComponent {
         // Get the first key
         if (count == 0) {
           control.controls[firstKey].setValue(false);
-          this.addOnRemoved(subControl,parentControl)
+          this.addOnRemoved(subControl, parentControl)
         }
         else {
           control.controls[firstKey].setValue(true);
-          this.changeOverLayDone(subControl,parentControl,true);
+          this.changeOverLayDone(subControl, parentControl, true);
           this.addOnAdded(subControl, parentControl);
         }
       }
@@ -3143,26 +3179,26 @@ export class AbhiDynamicFormComponent {
     this.closeOverlay(subControl);
 
 
-    
+
 
   }
-  
-  closeOverlay(subControl: any){
-    
+
+  closeOverlay(subControl: any) {
+
     this.isOverlayVisible = false;
     subControl.visible = false;
   }
 
-  changeOverLayDone(control: any,parentControl: any,changeValue: boolean = false) {
+  changeOverLayDone(control: any, parentControl: any, changeValue: boolean = false) {
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((controls: any) => {
-        if(controls.name == parentControl.name){
-          if(parentControl.subControls){
-            parentControl.subControls.forEach((subControl:any)=>{
-              if(subControl.innerSubControls){
-                subControl.innerSubControls.forEach((innerSubControl:any)=>{
-                  if(innerSubControl.name == 'doneButton'){
+        if (controls.name == parentControl.name) {
+          if (parentControl.subControls) {
+            parentControl.subControls.forEach((subControl: any) => {
+              if (subControl.innerSubControls) {
+                subControl.innerSubControls.forEach((innerSubControl: any) => {
+                  if (innerSubControl.name == 'doneButton') {
                     innerSubControl.disabled = changeValue;
                   }
                 })

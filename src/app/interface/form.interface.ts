@@ -213,4 +213,5 @@ export interface IOptions {
   value?: any;
   class?: string;
   selected?: boolean;
+  dependentControls?: string[];
 }

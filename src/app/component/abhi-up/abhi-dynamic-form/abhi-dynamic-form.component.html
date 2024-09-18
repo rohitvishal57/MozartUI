@@ -141,7 +141,7 @@
                   <hr />
                 </div>
 
-                <div *ngIf="control.type === 'paragraph'" [class]="control.class">
+                <div *ngIf="control.type === 'paragraph'" [class]="control.class" [hidden]="!control.visible">
                   <p [innerHTML]="control.label ? (control.label | translate) : ''"></p>
                   <p *ngIf="control.value" [innerHTML]="control.value"></p>
                 </div>
@@ -186,7 +186,7 @@
                 </div>
 
 
-                <div *ngIf="control.type === 'fileupload'" [class]="control.class" class="typecss">
+                <div *ngIf="control.type === 'fileupload'" [class]="control.class" class="typecss" [hidden]="!control.visible">
                   <div class="custom-file-upload">
                     <label *ngIf="control.visibleLabel == true">{{ control.label }} <span
                         *ngIf="control.validators">*</span></label>
@@ -686,19 +686,20 @@
                   </small>
                 </div>
 
-                <div *ngIf="control.type==='radio'" style="font-size: 12px; font-weight: 600;">
-                  <label class="radio-option-label" *ngIf="control.visibleLabel==true"
-                    [innerHTML]="control.label ? (control.label | translate) : ''"> <span
-                      *ngIf="control.validators"></span></label>
+                <div *ngIf="control.type === 'radio'" style="font-size: 12px; font-weight: 600;" [hidden]="!control.visible">
+                  <label class="radio-option-label" *ngIf="control.visibleLabel === true"
+                    [innerHTML]="control.label ? (control.label | translate) : ''">
+                    <span *ngIf="control.validators"></span>
+                  </label>
                   <div class="radio-button">
                     <div [class]="control.class" *ngFor="let option of control.radioOptions">
                       <input type="radio" [formControlName]="control.name" [value]="option.value"
-                        style="margin-right: 10px;">
-                      <label [innerHTML]="option.label">
-                      </label>
+                        style="margin-right: 10px;" (change)="onInputChange($event, control)">
+                      <label [innerHTML]="option.label"></label>
                     </div>
                   </div>
                 </div>
+                
 
                 <div *ngIf="control.type === 'bigbutton'" [class]="control.class">
                   <label for="">{{ control.label ? (control.label | translate) : '' }}</label>

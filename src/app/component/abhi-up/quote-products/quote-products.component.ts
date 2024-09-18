@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
@@ -59,7 +60,7 @@ export class QuoteProductsComponent implements OnInit {
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
     private loginService: LoginService, private router: Router, private toast: NgToastService,
-    private service: CommonService, private encryptionService: EncryptionService, public common: CommonService,) { }
+    private service: CommonService, private encryptionService: EncryptionService, public common: CommonService,private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     // sessionStorage.clear()
@@ -97,9 +98,12 @@ export class QuoteProductsComponent implements OnInit {
     //     }
     //   }
     // })
+    this.spinner.show();
     this.loginService.Getproductlist2(reqData).subscribe({
       next: (res) => {
+        this.spinner.hide();
         console.log(res)
+        this.partnerId = res.data.partnerId
         this.ProductList = res.data.products
         console.log(this.ProductList);
         this.ProductList.forEach((prod: any) => {
@@ -109,6 +113,7 @@ export class QuoteProductsComponent implements OnInit {
         this.selectedPlans = Array(this.ProductList.length).fill(null);
       },
       error: (err) => {
+        this.spinner.hide();
         console.error(err);
         if (err.status === 404) {
           this.displayNoProductsMessage = true;
@@ -146,6 +151,27 @@ export class QuoteProductsComponent implements OnInit {
     });
   }
 
+  // async buyNow(item: any) {
+  //   console.log(item)
+  //   this.formData = { ...this.formData, productName: item.productName }
+  //   try {
+  //     await this.getFormSequence(item);
+  //     const productData = {
+  //       partnerId : item.partnerId,
+  //       productId : item.productId
+
+  //     }
+  //     console.log(productData)
+  //     if (this.formSequence != null && this.formSequence.length > 0) {
+  //       this.router.navigate(['portal/abhi/forms'], {
+  //         state: { productData: productData, formSequence: this.formSequence }
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
   selectPlan(i: number, planNumber: number) {
     // Update the selected plan for the product at index i
     this.selectedPlans[i] = planNumber;
@@ -159,7 +185,7 @@ export class QuoteProductsComponent implements OnInit {
       this.removeFromCart(item);
       console.log(item)
       const productData = {
-        partnerId : item.partnerId,
+        partnerId : this.partnerId,
         productId : item.productId
 
       }
@@ -190,7 +216,7 @@ export class QuoteProductsComponent implements OnInit {
     try {
       sessionStorage.clear();
       const reqData = {
-        "partnerId": item.partnerId,
+        "partnerId": this.partnerId,
         "productId": item.productId
 
       }

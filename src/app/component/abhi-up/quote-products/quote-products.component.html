@@ -138,7 +138,7 @@
 
                             <!-- Plan 1 -->
                             <div class="plan1" [ngClass]="{ 'highlight': selectedPlans[i] === 1 }"
-                                (click)="selectPlan(i, 1)">
+                                >
                                 <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 1}">
                                     ₹{{ item.tenure1Premium }}
                                 </div>
@@ -149,7 +149,7 @@
 
                             <!-- Plan 2 -->
                             <div class="plan2" [ngClass]="{ 'highlight': selectedPlans[i] === 2 }"
-                                (click)="selectPlan(i, 2)">
+                                >
                                 <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 2}">
                                     ₹{{ item.tenure2Premium }}
                                 </div>
@@ -160,7 +160,7 @@
 
                             <!-- Plan 3 -->
                             <div class="plan3" [ngClass]="{ 'highlight': selectedPlans[i] === 3 }"
-                                (click)="selectPlan(i, 3)">
+                                >
                                 <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 3}">
                                     ₹{{ item.tenure3Premium }}
                                 </div>
@@ -175,7 +175,7 @@
                             Premium might increase based on the addOns.
                         </div>
                         <!-- <div class=""> -->
-                        <input type="button" class="buy-btn" (click)="buyNow(item)" value="Buy now">
+                        <input type="button" class="buy-btn" (click)="insurenow(item)" value="Buy now">
                         <!-- </div> -->
                     </div>
                     <div class="line">
@@ -186,3 +186,18 @@
         </div>
     </div>
 </div>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+  <p style="color: white;font-size: 14px;"> Loading... </p>
+</ngx-spinner>
+<!-- app.component.html -->
+<!-- <ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  [fullScreen]="true"
+>
+  <div class="simple-loader">
+    <img src="../../../../assets/Loader.gif" alt="Loading..." style="width: 700px; height: 500px;" />
+    <p>Loading...</p>
+  </div>
+</ngx-spinner> -->
