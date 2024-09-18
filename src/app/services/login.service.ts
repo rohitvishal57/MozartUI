@@ -81,4 +81,17 @@ export class LoginService {
   sendGoogleLoginRequest(reqBody: any) {
     return this.http.post<any>(`${this.baseUrl}Banca/User/GoogleLogin`, reqBody);
   }
+
+    // For Send OTP Login
+    validateOtpRequest(validateOtpReqBody: any) {
+      return this.http.post<any>('https://localhost:7253/api/communication/validateotp', validateOtpReqBody);
+    }
+
+    sendOtpRequest(OtpReqBody: any) {
+      return this.http.post<any>('https://localhost:7253/api/communication/sendotp', OtpReqBody);
+    }
+
+    getContactDetailsByAgentCode(contactDetailsReqBody: any) {
+      return this.http.post<any>('https://localhost:7253/api/user/getcontactdetailsbyagentcode', contactDetailsReqBody);
+    }
 }

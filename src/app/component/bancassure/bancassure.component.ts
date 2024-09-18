@@ -22,7 +22,7 @@ export class BancassureComponent implements OnInit {
   }
 
   logOut() {
-    this.toast.success({ detail: "SUCCESS", summary: "Agent Logout successfully!!", duration: 2000 });
+    // this.toast.success({ detail: "SUCCESS", summary: "Agent Logout successfully!!", duration: 2000 });
     this.loginService.signOut();
     this.router.navigate(['']);
   }
