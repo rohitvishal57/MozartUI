@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -25,7 +25,7 @@ export class ClaimsListViewComponent implements OnInit {
   gridClaimsData: any[] = [];
   first:number = 0;
   totalRecords:number = 0;
-  rows: number = 5;
+  rows: number = 10;
   page: number = 1;
   selectedStatus = 'all';
   filteredData: any[] = [];
@@ -35,14 +35,13 @@ export class ClaimsListViewComponent implements OnInit {
   toggleSearchdropdown: boolean = false;
   searchInputControl = new FormControl("");
   selected: string = "";
+  userId!: number;
+  agentId!: string
+  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe){ }
 
-  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe){
-  }
- 
   ngOnInit(){
-    this.fetchData();   
+    this.fetchData();    
   }
-
 
   claimsView(view:string){
     this.selectedView = view;
@@ -53,7 +52,6 @@ export class ClaimsListViewComponent implements OnInit {
     this.viewClaims = true;
     this.router.navigate(['/portal/agent/list']);
   }
-  
 
 //---------pagination------------//
 
@@ -64,33 +62,19 @@ onPageChange(event:any) {
     this.page = Math.floor(this.first/this.rows)+1
     console.log("this.first",this.first);
     console.log("this.ros",this.rows);
-   // this.updateTable();
 }
-
-// private updateTable() {
-//   const startIndex = this.first;
-//   const endIndex = this.first + this.rows;
-//   ///this.claims.data = this.allData.slice(startIndex, endIndex);
-//   console.log("this.claims.data ",this.claims.data )
-//   this.totalRecords = this.allData.length;
-// }
-
 
 //---------API Call-------//
-payload = {
-  "sellerId": 5100003,
-  "policyNumber": "",
-  "productName": "",
-  "memberName" : "",
-  "sortColumn": "RaisedDate",
-  "searchType": "string",
-  "sortdirection": "DESC",
-  "status": "All",
-  "searchString": "string",
-  "pageNumber": 1,
-  "pageSize": 10
-}
-
+payload =  {
+    "sellerId": localStorage.getItem('agentcode'),
+    "sortColumn": "RaisedDate",
+    "sortdirection": "DESC",
+    "status": "All",
+    "searchType": "",
+    "searchString": "",
+    "pageNumber": 1,
+    "pageSize": 10
+  }
 fetchData(): void {
   this.commonService.getClaimsList(this.payload).subscribe(res => {
     this.gridClaims = res.data;   
@@ -102,7 +86,7 @@ fetchData(): void {
 }
 
   //-----------search dropdown----------//
-  toggleSearchDropdown(){
+  toggleSearchDropdown(event: any){
     if(this.toggledropdown==true)
       {
         this.toggledropdown=false;
@@ -110,76 +94,60 @@ fetchData(): void {
       this.toggleSearchdropdown = !this.toggleSearchdropdown;
   }
 
-  cancelSearch() {
-    this.toggleSearchdropdown = false;
-    this.selected = "";
-    this.payload.policyNumber=""
-    this.payload.productName=""
-    this.payload.memberName=""
-    this.fetchData()
-  }
-
-  applySearch() {
-    if (this.searchInputControl.valid) {
-      if (this.selected === "policyNumber") {
-        this.payload.policyNumber =this.searchInputControl.value!;
-        console.log(this.payload.policyNumber);
-      } 
-      else if (this.selected === "productName") {
-        this.payload.productName = this.searchInputControl.value!;
-      }
-      else if (this.selected === "memberName") {
-        this.payload.memberName = this.searchInputControl.value!;
-      }
+  applySearch(): void {
+    console.log("this.searchInputControl.value",this.searchInputControl.value)
+    if (this.searchInputControl.value) {
+      this.payload.searchType = this.selected;
+      console.log("this.payload.searchType",this.payload.searchType)
+      this.payload.searchString = this.searchInputControl.value;
+      console.log("his.payload.searchString ",this.payload.searchString )
       this.fetchData();
       this.toggleSearchdropdown = false;
-    } 
-    else {
+    } else {
       this.toggleSearchdropdown = true;
     }
   }
 
+  cancelSearch(): void {
+    this.toggleSearchdropdown = false;
+    this.selected = '';
+    this.searchInputControl.setValue('');
+    this.payload.searchType = '';
+    this.payload.searchString = '';
+    this.fetchData();
+  }
   onSelectChanges(event: any): void {
-    event.stopPropagation(); // Prevents the menu from closing
-    this.selected !== "none";
-    console.log("selected value", this.selected);
-    this.searchInputControl.setValue("");
-    this.searchInputControl.clearValidators();
-  
-    if (this.selected === "policyNumber") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[6-9][0-9]{9}$"),
-      ]);
-    } 
-    else if (this.selected === "productName") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
-      ]);
-    } 
-    else if (this.selected === "memberName") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
-      ]);
-    } 
+  //  event.stopPropagation(); // Prevents the menu from closing
+  this.selected = event.value;
+  console.log("In selection change", this.selected)
+  this.searchInputControl.setValue('');
+  this.searchInputControl.clearValidators();
 
+  if (this.selected === 'policyNumber') {
+    this.searchInputControl.setValidators([
+      Validators.required,
+      Validators.pattern('^[6-9][0-9]{9}$')
+    ]);
+  } else if (this.selected === 'productName' || this.selected === 'requestType') {
+    this.searchInputControl.setValidators([
+      Validators.required,
+      Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$')
+    ]);
+  }
     
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched(); 
   }
 
   getPlaceholder(): string {
-    if (this.selected === "policyNumber") {
-      return "Enter Policy Number";
-    } else if (this.selected === "memberName") {
-      return "Enter Member Name";
-    } else if (this.selected === "productName") {
-      return "Enter Product Number";
-    } 
-    else {
-      return "";
+    if (this.selected === 'policyNumber') {
+      return 'Enter Policy Number';
+    } else if (this.selected === 'productName') {
+      return 'Enter Product Name';
+    } else if (this.selected === 'requestType') {
+      return 'Enter Request Type';
+    } else {
+      return '';
     }
   }
   menuClosed(): void {
@@ -203,7 +171,7 @@ filterClaims(status: string) {
   } else if (this.selectedStatus === 'active') {
     this.claims = this.gridClaims.filter(claim =>
       claim.claimStatus === 'Payment Rejected' || claim.claimStatus === 'Pending Approval'
-    );
+    ); 
     this.gridClaimsData = this.gridClaims.filter(gridClaim =>
       gridClaim.claimStatus === 'Payment Rejected' || gridClaim.claimStatus === 'Pending Approval'
     );

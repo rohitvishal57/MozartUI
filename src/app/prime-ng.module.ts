@@ -86,6 +86,7 @@ import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { EditorModule } from 'primeng/editor';
 import { ChartModule } from 'primeng/chart';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 @NgModule({
@@ -179,6 +180,7 @@ import { ChartModule } from 'primeng/chart';
         TreeTableModule,
         AnimateModule,
         CardModule,
+        ScrollingModule
     ],
 })
 export class PrimeNgModule { }

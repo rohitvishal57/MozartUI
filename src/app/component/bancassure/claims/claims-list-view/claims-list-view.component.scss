@@ -1,5 +1,6 @@
+
 .main-container {
-  height: 1200px;
+  height:100%;
   display: flex;
   justify-content: center;
   margin-left: 6%;
@@ -36,12 +37,9 @@
   font-size: 12px;
   font-family: Anek Latin;
   font-weight: bold;
-  padding: 8px;
+  padding: 2px 8px 2px 8px;
   }
-.main-container .all-claims .main-claims {
-  min-height: 200px;
-  max-height: 870px;
-}
+
 .main-container .all-claims .main-claims .claims-header {
   display: flex;
   justify-content: flex-start;
@@ -80,7 +78,7 @@
   gap: 8px;
 }
 .main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div{
-  padding: 4px 7px;
+  padding: 6px 7px;
   gap: 8px;
   background: #f1f3f6;
   border: 1px solid #f1f3f6;
@@ -90,7 +88,8 @@
   font-size: 11px;
 }
 .main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div.active{
-  background-color: #c7222a;
+  background-color: #ffe7e5;
+  border: 1px solid #c7222a;
   color: #fff;
 }
 .main-container .all-claims .main-claims .claims-header .filter-list .left-header .filter-types div:hover{
@@ -279,55 +278,25 @@
    border: 2px solid white;
  }
 
-// ::ng-deep .mat-mdc-table .mat-mdc-header-cell {
-//   text-align: left;
-//   white-space: nowrap;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   background: #f0eeee !important;
-//   padding: 5px;
-//   font-family: Anek Latin;
-//   font-size: 12px;
-//   font-weight: 600;
-//   line-height: 13.2px;
-//   letter-spacing: -0.200000003px;
-//   color: #222222;
-
-// }
-
-// ::ng-deep .mat-mdc-cell
-//  {
-//   font-family: Anek Latin;
-//   font-size: 12px;
-//   font-weight: 500;
-//   line-height: 14px;
-//   letter-spacing: -0.20000000298023224px;
-//   color: #181414;
-//   padding-right: 0px;
-// }
-
-// .mat-header-cell{
-// font-family: Anek Latin;
-
-// }
-
-// ::ng-deep .mat-mdc-row{
-// white-space: nowrap;
-// }
-// ::ng-deep .mat-mdc-row:nth-child(even) {
-//   background-color: #f0eeee;
-// }
-////
 ::ng-deep .table>:not(caption)>*>* {
   border-radius: 8px;
+  background: hidden;
+}
+::ng-deep .table .p-element {
+  padding: 0; // Set padding to 0 for p-element
 }
 ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
-  background-color: #f8f9fa;
+  background-color: #f1f3f67a
 }
 
+.main-container .p-table {
+  border-radius: 10px; /* Adjust radius as needed */
+  background-color: #ffffff; /* White background */
+  border: 1px solid #ddd; /* Light border color for table */
+}
 
 .main-container .all-claims .main-claims .grid-view-container{
-  border-radius:8px;
+  border-radius: 24px;
   padding: 8px 10px;
   top: 23px;
 }
@@ -335,7 +304,6 @@
 .main-container .all-claims .main-claims .top-section{
   display: flex;
   justify-content: space-between;
-
 }
 .main-container .all-claims .main-claims .details-section {
   display: flex;
@@ -344,8 +312,9 @@
 }
 .main-container .all-claims .main-claims .policy-detail {
   display: flex;
-  // flex-direction: row;
   gap: 16px;
+  font-size: smaller;
+  white-space: nowrap;
 }
 
 
@@ -365,8 +334,8 @@
 }
 
 .main-container .all-claims .main-claims .card-outer-container {
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  // height: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
   gap: 20px;
@@ -383,6 +352,7 @@
 
 ::ng-deep .p-paginator{
   background-color: transparent;
+  padding-top: 2rem;
 }
 
 ::ng-deep .p-paginator .p-paginator-page {

@@ -30,15 +30,15 @@
                     </div>
                 </div>
                 <div class="right-header">
-                    <div class="claims-icon">
-                        <i class="fa-solid fa-download"></i>
-                    </div>
+                    <!-- <div class="claims-icon">
+                         <i class="fa-solid fa-download"></i> 
+                    </div> -->
                                    
                     <!--Search DropDown-->
                     <div class="claims-icon" >
-                        <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown()">
+                        <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown($event)">
 
-                        <i class="fa-solid fa-magnifying-glass" (click)="toggleSearchDropdown()"></i>
+                        <i class="fa-solid fa-magnifying-glass" (click)="toggleSearchDropdown($event)"></i>
                         <mat-menu #searchMenu="matMenu"  [overlapTrigger]="false" hasBackdrop="true" (closed)="menuClosed()">
                             <div class="search-dropdown-cnt">
                           <div class="search-title">Search</div>
@@ -47,9 +47,11 @@
                               <mat-label>Select search type</mat-label>
                               <mat-select [(ngModel)]="selected" (selectionChange)="onSelectChanges($event)" >
                                 <mat-option value="none">Select</mat-option>
-                                <mat-option value="mobileNo">Policy Number</mat-option>
-                                <mat-option value="name">Product Name</mat-option>
-                                <mat-option value="policyNumber">Member Name</mat-option>
+                                <mat-option value="policyNumber">Policy Number</mat-option>
+                                <mat-option value="productName">Product Name</mat-option>
+                                <mat-option value="requestType">Request Type</mat-option>
+                                <!-- <mat-option value="requestId">Request Id</mat-option>
+                                <mat-option value="name">Member Name</mat-option> -->
                               </mat-select>
                             </mat-form-field>
                             <div class="search-input">
@@ -144,7 +146,7 @@
 <div class="table" *ngIf="selectedView == 'list'">
     <p-table [value]="claims" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
        currentPageReportTemplate=" {first} - {last} of {totalRecords}"
-        [rowsPerPageOptions]="[5,10,20,30]" class="custom-paginator my-paginator">
+        [rowsPerPageOptions]="[10,20]" class="custom-paginator my-paginator">
         <ng-template pTemplate="header">
             <tr class="custom-header">
                 <th >Request </th>
@@ -155,8 +157,7 @@
                 <th>Request Type</th>
                 <th>Status</th>
                 <th>Raised Date</th>
-
-                <th>Download</th>
+                <!-- <th>Download</th> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data>
@@ -171,9 +172,9 @@
 
                 <td>{{data.raisedDate | date:'yyyy-MM-dd'}}</td>
 
-                <td>
+                <!-- <td>
                     <mat-icon>download</mat-icon>
-                </td>
+                </td> -->
             </tr>
         </ng-template>
     </p-table>
@@ -181,7 +182,7 @@
             
             <div class="pages custom-paginator-background" *ngIf="selectedView=='grid'">
                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
-                  [rowsPerPageOptions]="[5,10]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                  [rowsPerPageOptions]="[10,20]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                 </p-paginator>
                 <div class="pagination-info">
                     
