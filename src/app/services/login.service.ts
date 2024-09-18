@@ -87,14 +87,14 @@ export class LoginService {
 
     // For Send OTP Login
     validateOtpRequest(validateOtpReqBody: any) {
-      return this.http.post<any>('https://localhost:7253/api/communication/validateotp', validateOtpReqBody);
+      return this.http.post<any>(`${this.baseUrl}auth/api/communication/validateotp`, validateOtpReqBody);
     }
 
     sendOtpRequest(OtpReqBody: any) {
-      return this.http.post<any>('https://localhost:7253/api/communication/sendotp', OtpReqBody);
+      return this.http.post<any>(`${this.baseUrl}auth/api/communication/sendotp`, OtpReqBody);
     }
 
     getContactDetailsByAgentCode(contactDetailsReqBody: any) {
-      return this.http.post<any>('https://localhost:7253/api/user/getcontactdetailsbyagentcode', contactDetailsReqBody);
+      return this.http.post<any>(`${this.baseUrl}auth/api/user/getcontactdetailsbyagentcode`, contactDetailsReqBody);
     }
 }
