@@ -161,12 +161,14 @@
                               </div> -->
                               <ng-container *ngFor="let relation of relations">
                                 <div *ngIf="relation.isIncrement == false" class="input-checkbox-feild">
-                                  <input type="checkbox" id="{{relation.id}}" value="{{relation.id}}" class="input-check">
+                                  <input type="checkbox" id="{{relation.id}}" [checked]="selectedRelationships.includes(relation.value)" 
+                                  (change)="onRelationChange($event, relation)" value="{{relation.id}}" class="input-check">
                                   <label for="{{relation.id}}"><img
                                       src="{{relation.imagePath}}">{{relation.name}}</label>
                                   <div class="member_extraInfo">
                                     <div class="member_extraInfoSub">
-                                      <input type="text" placeholder="Enter Age" class="member_textbox">
+                                      <input type="text" placeholder="Enter Age" class="member_textbox"
+                                      [value]="relation.age" (input)="onAgeChange($event, relation)">
                                       <span *ngIf="relation.deletable" class="delete_member" (click)="removeMember(relation)"><img
                                         src="../../../../assets/images/icon_delete_red2.svg"></span>
                                     </div>
@@ -255,10 +257,8 @@
                             <img src="../../../../assets/images/icon_right_arrow_black.svg" width="7">
                           </button>
                         </div>
-                        <button type="button" class="btn_red btn_fullWidth">Next</button>
+                        <button type="button" class="btn_red btn_fullWidth" (click)="onRelationshipNext()">Next</button>
                       </div>
-                    <!--Overlay: Personal details end-->
-
                 </div>
 
                 <!-- Disease Dropdown -->
