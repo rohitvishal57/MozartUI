@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -225,10 +224,22 @@ export class CommonService {
     return this.http.get<any>(`${this.baseUrl}Agent/GetInsurerData`);
   }
   
-    //claims
-    getClaimsList(data: any): Observable<any>{
-      return this.http.post('https://usp.monocept.ai/ClaimsEndorsement/api/claim/getclaimlist',data);
-     }
+  //claims
+  getClaimsList(data: any): Observable<any>{
+    return this.http.post('https://usp.monocept.ai/claims/api/claim/getclaimlist',data);
+    }
+
+    getProposalDetails(){
+    return this.http.get<any>(`https://usp.monocept.ai/claims/api/claim/getproposaldetails?AgentCode=5100003`)
+    }
+
+    saveClaims(saveData:any){
+    return this.http.post('https://usp.monocept.ai/claims/api/claim/saveclaim', saveData)
+    }
+      // Method to upload files
+    uploadFiles(formData: FormData): Observable<any> {
+      return this.http.post<any>('https://usp.monocept.ai/claims/api/claim/saveuploadfiledetails', formData);
+    }
 
    //yatra
    Getform(reqData:any){
