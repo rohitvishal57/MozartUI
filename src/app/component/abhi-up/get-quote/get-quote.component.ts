@@ -14,6 +14,7 @@ export class GetQuoteComponent {
 
   quoteForm!: FormGroup;
   selectedOptions: string[] = [];
+  selectedRelationships: string[] = []; 
   activeDropdown: number | null = null;
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
@@ -45,56 +46,64 @@ export class GetQuoteComponent {
       "value": "Self",
       "name": "Self",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_self.png"
+      "imagePath": "../../../../assets/images/icon_member_self.png",
+      "age":null
     },
     {
       "id": "R002",
       "value": "Spouse",
       "name": "Spouse",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_spouse.png"
+      "imagePath": "../../../../assets/images/icon_member_spouse.png",
+      "age":null
     },
     {
       "id": "R005",
       "value": "Mother",
       "name": "Mother",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_spouse.png"
+      "imagePath": "../../../../assets/images/icon_member_spouse.png",
+      "age":null
     },
     {
       "id": "R006",
       "value": "Father",
       "name": "Father",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_father.png"
+      "imagePath": "../../../../assets/images/icon_member_father.png",
+      "age":null
     },
     {
       "id": "R007",
       "value": "Mother-In-Law",
       "name": "Mother-In-Law",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_spouse.png"
+      "imagePath": "../../../../assets/images/icon_member_spouse.png",
+      "age":null
     },
     {
       "id": "R008",
       "value": "Father-In-Law",
       "name": "Father-In-Law",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_father.png"
+      "imagePath": "../../../../assets/images/icon_member_father.png",
+      "age":null
     },
     {
       "id": "R003",
       "value": "Son",
       "name": "Son",
       "isIncrement": true,
-      "imagePath": "../../../../assets/images/icon_member_son.png"
+      "imagePath": "../../../../assets/images/icon_member_son.png",
+      "age":null
     },
     {
       "id": "R004",
       "value": "Daughter",
       "name": "Daughter",
       "isIncrement": true,
-      "imagePath": "../../../../assets/images/icon_member_daughter.png"
+      "imagePath": "../../../../assets/images/icon_member_daughter.png",
+      "age":null
     }
   ]
 
@@ -103,12 +112,60 @@ export class GetQuoteComponent {
 
   ngOnInit() {
     const formControls: { [key: string]: FormControl } = {};
+    const storedData = localStorage.getItem('quoteFormData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      // Restore selected options (including relationships)
+      this.selectedOptions = parsedData.selectedOptions || [];
+      this.value = parsedData.value || this.value;
+      this.selectedDiseases = parsedData.selectedDiseases || [];
+      this.selectedRelationships = this.selectedOptions[1]?.split(', ') || [];
+      
+      // Restore UI elements
+      this.showCard = parsedData.showCard || false;
+      this.showDropdownsFlag = this.showCard;
+  
+      console.log('Data loaded from LocalStorage:', parsedData);
+    }
     this.quoteForm = this.fb.group(formControls);
     this.loadStoredData();
   }
 
   toggleDropdown(index: number): void {
     this.activeDropdown = this.activeDropdown === index ? null : index;
+  }
+
+  onRelationChange(event: any, relation: any) {
+    const selectedValue = relation.value;
+  
+    if (event.target.checked) {
+      if (!this.selectedRelationships.includes(selectedValue)) {
+        this.selectedRelationships.push(selectedValue);
+      }
+    } else {
+      this.selectedRelationships = this.selectedRelationships.filter(r => r !== selectedValue);
+      relation.age = null;
+    }
+    this.selectedOptions[1] = this.selectedRelationships.length > 0
+      ? this.selectedRelationships.join(', ')
+      : 'Please select members'; 
+  
+    this.saveDataToStorage();
+  }
+
+  onAgeChange(event: any, relation: any) {
+    relation.age = event.target.value; // Capture the entered age
+    this.saveDataToStorage(); // Save after updating the age
+  }
+
+  onRelationshipNext() {
+    this.selectedOptions[1] = this.selectedRelationships.length > 0
+      ? this.selectedRelationships.join(', ')
+      : 'Please select members'; 
+    this.saveDataToStorage();
+    this.activeDropdown = null;
+    
+    console.log('Selected Relationships:', this.selectedRelationships);
   }
 
   selectOption(option: string, index: number): void {
@@ -255,7 +312,9 @@ export class GetQuoteComponent {
       selectedOptions: this.selectedOptions,
       value: this.value,
       selectedDiseases: this.selectedDiseases,
-      showCard: this.showCard 
+      selectedRelationships: this.selectedRelationships,
+      relations: this.relations, // Ensure relations (with age) are saved
+      showCard: this.showCard
     };
     console.log(data);
     localStorage.setItem('quoteFormData', JSON.stringify(data));
@@ -271,6 +330,8 @@ export class GetQuoteComponent {
       this.selectedOptions = parsedData.selectedOptions || [];
       this.value = parsedData.value || this.value;
       this.selectedDiseases = parsedData.selectedDiseases || [];
+      this.selectedRelationships = parsedData.selectedRelationships || [];
+      this.relations = parsedData.relations || this.relations; // Restore relations with age
       this.showCard = parsedData.showCard || false;
       this.showDropdownsFlag = this.showCard;
       console.log('Data loaded from LocalStorage:', parsedData);
