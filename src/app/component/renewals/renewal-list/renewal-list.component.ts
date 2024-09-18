@@ -134,7 +134,7 @@ export class RenewalListComponent {
 
 
   getRenewalsList() {
-    this.spinner.show();
+    // this.spinner.show();
     this.renewalLisRequestBody.pageNumber = this.page;
     this.renewalLisRequestBody.pageSize = this.rows;
   
@@ -147,10 +147,10 @@ export class RenewalListComponent {
           this.countsList = response.data;
           this.totalRecords = this.countsList.totalRecords;
         } else {console.error("API request was not successful.");}
-        this.spinner.hide();
+        // this.spinner.hide();
       },
       (error) => {
-        this.spinner.hide();
+        // this.spinner.hide();
         console.error("Error from API:", error);
       }
     );
