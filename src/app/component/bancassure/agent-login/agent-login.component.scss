@@ -496,8 +496,12 @@
         height: 100%;
         background: #fff;
     }
+   
     .login-formMain {
         padding: 11% 0% 14%;
+        .cursor{
+            cursor: pointer !important;
+        }
         .login-form {
             margin: auto;
             max-width: 433px;
@@ -513,6 +517,74 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            /* otp-input.component.css */
+            .verify-e-p-otp-wrap{
+                .timeLeft_color{
+                    color: #C91429;
+                    font-weight: 600;
+                    font-size: 18px;
+                }
+                .send_otp_again_wrap{
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+                
+.otp-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px auto;
+  }
+  
+  .otp-input {
+    width: 45px !important;
+    margin-right: 14px !important;
+    padding: 10px !important;
+    text-align: center;
+    font-size: 18px;
+  }
+  .otp-text-wrap{
+    color: #000000;
+    opacity: 0.6;
+    position: relative;
+    top: 10px;
+    font-weight: 500;
+  }
+  .error-message {
+    color: red;
+    text-align: center;
+  }
+  .margin-btn-wrap{
+    margin-top: 0px !important;
+  }
+}
+  
+            .bg-white-wrap{
+                .pad-wrap-10{
+                    background-color: #FFFFFF;
+                    border-radius: 12px;
+                    .pad-0{
+                        padding: 0px;
+                        .login-otp-btn-wrap{
+                            background-color: #FFFFFF;
+                            margin: 0px 0px;
+                           
+                        }
+                        .borderlt{ 
+                            border-radius: 12px 0px 0px 12px !important;
+                        }
+                        .bordertl{ 
+                            border-radius: 0px 12px 12px 0px !important;
+                        }
+                        .activeBtn{
+                            background-color: lightpink;
+                            color:#C7222A; 
+                            border-radius: 12px !important;
+                        }
+                      
+                    } 
+                }
+              
+            }
             h1 {
                 font-family: Anek Latin;
                 font-size: 19px;
@@ -527,13 +599,22 @@
 
                 .text-danger {
                     font-size: 12px;
-                    position: absolute;
+                    position: relative;
+                    left: 10px;
                 }
             }
         
             .input-with-icon {
                 position: relative;
             }
+
+            // .input-with-icon label {
+            //     margin-left: 10px;
+            //     margin-bottom: 10px;
+            //     font-weight: 500;   
+            //     font-size: 16px;
+            //     font-family: "Roboto";
+            // }
         
             .input-with-icon input {
                 width: 100%;
