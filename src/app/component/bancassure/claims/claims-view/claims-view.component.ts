@@ -82,14 +82,14 @@ export class ClaimsViewComponent {
       labelName: [],
       documentName: [this.namesVariable ],
       documentType: [this.documentType, [ Validators.pattern(/^(Pdf|jpeg|png)$/)]], // Validate type
-      createdBy: [localStorage.getItem('agentcode'), [Validators.pattern(/^\d+$/)]], // Validate integer
+      createdBy: [localStorage.getItem('agentCode'), [Validators.pattern(/^\d+$/)]], // Validate integer
       file:['/D:/Downloads/ABHI_06_Ma']
 
     });
   }
   createForm(): void {
     this.form = this.fb.group({
-      id: localStorage.getItem('agentcode'),
+      id: localStorage.getItem('agentCode'),
       policyNumber: [''],
       proposalNumber: [''],
       memberName: [''],
@@ -116,10 +116,6 @@ export class ClaimsViewComponent {
     });
   }
  
-  payload = {
-    "sellerId": 5100003,
-  }
-  
   fetchData(): void {
   this.commonService.getProposalDetails().subscribe(
     response => {

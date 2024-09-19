@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { ClaimsInterface } from 'src/app/interface/claims.interface';
   selector: 'app-claims-list-view',
   templateUrl: './claims-list-view.component.html',
   styleUrls: ['./claims-list-view.component.scss'],
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class ClaimsListViewComponent implements OnInit {
   displayedColumns: string[] = ['request', 'policyNo', 'productName', 'memberName', 'memberRelation', 'requestType', 'status', 'raisedDate', 'download'];
@@ -36,11 +37,10 @@ export class ClaimsListViewComponent implements OnInit {
   searchInputControl = new FormControl("");
   selected: string = "";
   userId!: number;
-  agentId!: string
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe){ }
 
   ngOnInit(){
-    this.fetchData();    
+    this.fetchData(); 
   }
 
   claimsView(view:string){
@@ -66,7 +66,7 @@ onPageChange(event:any) {
 
 //---------API Call-------//
 payload =  {
-    "sellerId": localStorage.getItem('agentcode'),
+    "sellerId": localStorage.getItem('agentCode'),
     "sortColumn": "RaisedDate",
     "sortdirection": "DESC",
     "status": "All",
