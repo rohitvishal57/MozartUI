@@ -1,6 +1,6 @@
-.endoresments-list-wrap {
 .main-container {
-    height: 1100px;
+    min-height: 100vh;
+    height: auto;
     width: 94%;
     display: flex;
     justify-content: center;
@@ -40,10 +40,10 @@
     margin: 2% 0%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt {
-    min-height: 200px;
-    max-height: 870px;
-  }
+  // .main-container .all-quotes .main-quotes-cnt {
+  //   min-height: 200px;
+  //   max-height: 870px;
+  // }
 
   .main-container .all-quotes .main-quotes-cnt .quotes-header {
     display: flex;
@@ -798,7 +798,7 @@
     color: #1f874c;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .pages {
+  .main-container .all-quotes .main-quotes-cnt .pagination .pages {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -806,7 +806,7 @@
     width: 100%;
     height: 57px;
     gap: 8px;
-    margin: 0 auto;
+    margin: 15px auto;
   }
 
   .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt {
@@ -1885,4 +1885,3 @@
       justify-content: space-between;
     }
   }
-}
