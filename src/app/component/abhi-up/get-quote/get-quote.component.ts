@@ -1,9 +1,11 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from 'src/app/services/login.service';
 import { Options } from '@angular-slider/ngx-slider';
+import { CommonService } from 'src/app/services/common.service';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-get-quote',
@@ -12,33 +14,67 @@ import { Options } from '@angular-slider/ngx-slider';
 })
 export class GetQuoteComponent {
 
-  quoteForm!: FormGroup;
+  quoteFormGroup!: FormGroup;
   selectedOptions: string[] = [];
-  selectedRelationships: string[] = []; 
+  selectedPolicy: string = "Family Floater";
+  selectedRelationships: string[] = [];
+  selectedRelation: string = "";
   activeDropdown: number | null = null;
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
   showCustomDiv = false;
   selectedDropdown = '';
   relationCountMap: Map<string, number> = new Map([
-    ["R003",0],
-    ["R004",0]
-  ]);  
-  selectedSumInsured: number | null = null;
+    ["R003", 0],
+    ["R004", 0]
+  ]);
+  proposerZone: any;
+  selectedSumInsured: number = 0;
   selectedDiseases: string[] = [];
 
-  value: number = 25;
-  options: Options = {
-    floor: 5,
-    ceil: 200,
-    step: 5,
+  multiIndiReqData: any = {
+    proposerPincode: "",
+    typeOfBusiness: "",
+    isEmpoyee: false,
+    sumInsured: "",
+    noOfMembers: "",
+    familySize: "1A",
+    insuredMemeberDetails: [
+    ]
+  }
+
+  insuredMember: any = {
+    roomCategory: "",
+    memberAge: "",
+    sumInsured: "",
+    isChronic: "",
+    zone: "",
+    gender: "",
+    memberDob: "",
+    memberRelation: "",
+    memberRelationCode: ""
+  }
+
+
+  value: number = 5;
+  sliderOptions: Options = {
     showTicks: true,
-    showTicksValues: true,
-    ticksArray: [5, 7, 10, 15, 20, 25, 50, 100, 200],
+    showTicksValues: false,
+    stepsArray: [
+      { value: 500000 },   // 5L
+      { value: 700000 },   // 7L
+      { value: 1000000 },  // 10L
+      { value: 1500000 },  // 15L
+      { value: 2500000 },  // 25L
+      { value: 5000000 },  // 50L
+      { value: 10000000 },  // 1Cr
+      { value: 20000000 } // 2Cr
+    ],
     translate: (value: number): string => {
-      return '';
+      return ''; // Empty string prevents showing the value above the slider
     }
   };
+  
 
   relations: any[] = [
     {
@@ -47,7 +83,9 @@ export class GetQuoteComponent {
       "name": "Self",
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_self.png",
-      "age":null
+      "age": null,
+      "dob":"",
+      "gender": "M"
     },
     {
       "id": "R002",
@@ -55,7 +93,9 @@ export class GetQuoteComponent {
       "name": "Spouse",
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_spouse.png",
-      "age":null
+      "age": null,
+      "dob":"",
+      "gender": "F"
     },
     {
       "id": "R005",
@@ -63,7 +103,9 @@ export class GetQuoteComponent {
       "name": "Mother",
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_spouse.png",
-      "age":null
+      "age": null,
+      "dob":"",
+      "gender": "F"
     },
     {
       "id": "R006",
@@ -71,7 +113,9 @@ export class GetQuoteComponent {
       "name": "Father",
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_father.png",
-      "age":null
+      "age": null,
+      "dob":"",
+      "gender": "M"
     },
     {
       "id": "R007",
@@ -79,7 +123,9 @@ export class GetQuoteComponent {
       "name": "Mother-In-Law",
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_spouse.png",
-      "age":null
+      "age": null,
+      "dob":"",
+      "gender": "F"
     },
     {
       "id": "R008",
@@ -87,7 +133,9 @@ export class GetQuoteComponent {
       "name": "Father-In-Law",
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_father.png",
-      "age":null
+      "age": null,
+      "dob":"",
+      "gender": "M"
     },
     {
       "id": "R003",
@@ -95,7 +143,9 @@ export class GetQuoteComponent {
       "name": "Son",
       "isIncrement": true,
       "imagePath": "../../../../assets/images/icon_member_son.png",
-      "age":null
+      "age": null,
+      "dob":"",
+      "gender": "M"
     },
     {
       "id": "R004",
@@ -103,15 +153,17 @@ export class GetQuoteComponent {
       "name": "Daughter",
       "isIncrement": true,
       "imagePath": "../../../../assets/images/icon_member_daughter.png",
-      "age":null
+      "age": null,
+      "dob":"",
+      "gender": "F"
     }
   ]
 
   constructor(private fb: FormBuilder, private loginService: LoginService, @Inject(DOCUMENT) private document: Document,
-    private route: Router) { }
+    private route: Router,public service : CommonService,private toast: NgToastService) { }
 
   ngOnInit() {
-    const formControls: { [key: string]: FormControl } = {};
+
     const storedData = localStorage.getItem('quoteFormData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
@@ -120,16 +172,35 @@ export class GetQuoteComponent {
       this.value = parsedData.value || this.value;
       this.selectedDiseases = parsedData.selectedDiseases || [];
       this.selectedRelationships = this.selectedOptions[1]?.split(', ') || [];
-      
+
       // Restore UI elements
       this.showCard = parsedData.showCard || false;
       this.showDropdownsFlag = this.showCard;
-  
+
       console.log('Data loaded from LocalStorage:', parsedData);
     }
-    this.quoteForm = this.fb.group(formControls);
+    // this.quoteForm = this.fb.group(formControls);
+    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value || 0;
+    this.quoteFormGroup = this.fb.group({
+      proposerPincode: [null, [Validators.required]],
+      proposerName: [null, [Validators.required]],
+      proposerMobile: [null, [Validators.required]],
+      typeOfBusiness: ["NB", [Validators.required]],
+      isEmpoyee: [false, [Validators.required]],
+      sumInsured: [this.selectedSumInsured, [Validators.required]],
+      noOfMembers: [null, [Validators.required]],
+      familySize: [null, [Validators.required]],
+      policyType: ['Family Floater', [Validators.required]],
+      insuredMemeberDetails: this.fb.array([]) // This will be initialized with dynamic members
+    });
+    // Object.keys(this.multiIndiReqData).forEach((key: string)=>{
+    //   if(Array.isArray(this.multiIndiReqData[key])){
+
+    //   }
+    // })
     this.loadStoredData();
   }
+
 
   toggleDropdown(index: number): void {
     this.activeDropdown = this.activeDropdown === index ? null : index;
@@ -137,34 +208,66 @@ export class GetQuoteComponent {
 
   onRelationChange(event: any, relation: any) {
     const selectedValue = relation.value;
-  
+
     if (event.target.checked) {
-      if (!this.selectedRelationships.includes(selectedValue)) {
-        this.selectedRelationships.push(selectedValue);
+      if (!this.selectedRelationships.some(
+        (existingRelation: any) => existingRelation.name === relation.name
+      )) {
+        this.selectedRelationships.push(relation);
       }
     } else {
-      this.selectedRelationships = this.selectedRelationships.filter(r => r !== selectedValue);
+      this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
     }
-    this.selectedOptions[1] = this.selectedRelationships.length > 0
-      ? this.selectedRelationships.join(', ')
-      : 'Please select members'; 
-  
+      
     this.saveDataToStorage();
   }
 
   onAgeChange(event: any, relation: any) {
-    relation.age = event.target.value; // Capture the entered age
-    this.saveDataToStorage(); // Save after updating the age
+    const dob = event.target.value;
+    const dobArray = dob.split('-'); // Capture the entered age
+
+    console.log(event.target.value);
+
+    if (dobArray[0] as number >= 1800){
+
+            const age = this.calculateAge(dob);
+            this.selectedRelationships.forEach((selectedRelation : any)=>{
+              if(selectedRelation.name == relation.name){
+                selectedRelation.age = age;
+                selectedRelation.dob = dob;
+              }
+            })
+    }
+    // this.saveDataToStorage(); // Save after updating the age
+  }
+
+  calculateAge(dob: Date): number | string {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    if (age < 1) {
+      const diffInMs = today.getTime() - birthDate.getTime();
+      const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+      return `${diffInDays}days`;
+    }
+
+    return age;
   }
 
   onRelationshipNext() {
-    this.selectedOptions[1] = this.selectedRelationships.length > 0
-      ? this.selectedRelationships.join(', ')
-      : 'Please select members'; 
+    this.selectedRelation = this.selectedRelationships.length > 0
+      ? this.selectedRelationships.map((relation : any)=> relation.value).join(', ')
+      : 'Please select members';
+
+    console.log(this.selectedRelation);
     this.saveDataToStorage();
     this.activeDropdown = null;
-    
+
     console.log('Selected Relationships:', this.selectedRelationships);
   }
 
@@ -175,8 +278,8 @@ export class GetQuoteComponent {
   }
 
   continueSelection(index: number, selectedOption: string) {
-    console.log(index,selectedOption);
-    this.selectedOptions[index] = selectedOption; 
+    console.log(index, selectedOption);
+    this.selectedOptions[index] = selectedOption;
     this.saveDataToStorage();
   }
 
@@ -198,13 +301,23 @@ export class GetQuoteComponent {
     this.activeDropdown = null;
   }
 
-  formatTickLabel(value: number): string {
-    if (value >= 100) {
-      return (value / 100).toFixed(0) + 'Cr';
-    } else {
-      return value + 'L';
+  // formatTickLabel(value: number): string {
+  //   if (value >= 100) {
+  //     return (value / 100).toFixed(0) + 'Cr';
+  //   } else {
+  //     return value + 'L';
+  //   }
+  // }
+
+  formatTickLabel(value: number,forSlider: boolean): string {
+    if (value >= 10000000) {
+      return forSlider == true ?(value / 10000000) + 'Cr' : '₹'+(value / 10000000) + ' Crores' ;
+    } else if (value >= 100000) {
+      return forSlider == true ? (value / 100000) + 'L' : '₹' + (value / 100000) + ' Lakhs';
     }
+    return value.toString();
   }
+  
 
 
   dropdownOptions = [
@@ -235,6 +348,10 @@ export class GetQuoteComponent {
   }
 
   continue() {
+    this.quoteFormGroup.get('noOfMembers')?.setValue(this.selectedRelationships.length);
+    this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length+"A");
+    console.log(this.quoteFormGroup.value);
+
     this.saveDataToStorage();
     this.route.navigate(['portal/abhi/quoteProducts'])
   }
@@ -247,43 +364,51 @@ export class GetQuoteComponent {
     console.log('Selected Sum Insured: ₹', this.selectedOptions[2]);
   }
 
-  incrementMember(relation : any){
-    let index = this.relations.length-2;
+  incrementMember(relation: any) {
+    let index = this.relations.length - 2;
     let baseRelation = JSON.parse(JSON.stringify(relation));
 
     baseRelation.isIncrement = false;
     baseRelation['deletable'] = true;
     baseRelation.name = relation.name + " " + (this.relationCountMap.get(relation.id) as number + 1);
     baseRelation.value = relation.name + " " + (this.relationCountMap.get(relation.id) as number + 1);
-    this.relations.splice(index,0,baseRelation);
-    this.relationCountMap.set(relation.name,((this.relationCountMap.get(relation.id) as number) + 1));
+    this.relations.splice(index, 0, baseRelation);
+    this.relationCountMap.set(relation.id, ((this.relationCountMap.get(relation.id) as number) + 1));
   }
 
   removeMember(relation: any) {
     console.log(relation);
     console.log(this.relations);
   
-    // Filter out the relation that matches the name and value of the provided relation
+    // Filter out the relation from this.relations
     this.relations = this.relations.filter((element: any) => element.name !== relation.name);
-  
     console.log(this.relations);
   
+    // Remove the relation from selectedRelationships
+    this.selectedRelationships = this.selectedRelationships.filter((element: any) => element.name !== relation.name);
+  
+    // Update selectedRelation string by joining the remaining relations' values
+    this.selectedRelation = this.selectedRelationships.length > 0
+      ? this.selectedRelationships.map((rel: any) => rel.value).join(', ')
+      : 'Please select members';
+  
     // Decrease the count of this particular relation in the map
-    const count = this.relationCountMap.get(relation.value) as number;
+    const count = this.relationCountMap.get(relation.id) as number;
     if (count > 1) {
-      this.relationCountMap.set(relation.value, count - 1); // Decrement the count
+      this.relationCountMap.set(relation.id, count - 1); // Decrement the count
     }
   }
+  
 
-   onValueChange(newValue: number) {
-    this.value = newValue; 
+  onValueChange(newValue: number) {
+    this.value = newValue;
     this.saveDataToStorage();
     console.log('Slider value changed to:', newValue);
   }
 
   onDiseaseChange(event: any) {
     const selectedValue = event.target.value;
-  
+
     if (event.target.checked) {
       // Add the value to the array if the checkbox is checked and not already present
       if (!this.selectedDiseases.includes(selectedValue)) {
@@ -309,33 +434,128 @@ export class GetQuoteComponent {
 
   saveDataToStorage() {
     const data = {
-      selectedOptions: this.selectedOptions,
-      value: this.value,
-      selectedDiseases: this.selectedDiseases,
-      selectedRelationships: this.selectedRelationships,
-      relations: this.relations, // Ensure relations (with age) are saved
-      showCard: this.showCard
+      selectedOptions: this.selectedOptions,          // Store selected options (array of strings)
+      selectedPolicy: this.selectedPolicy,            // Store the selected policy type (e.g., Family Floater)
+      selectedRelationships: this.selectedRelationships, // Store selected relationships
+      selectedRelation: this.selectedRelation,         // Store currently selected dropdown
+      relationCountMap: Array.from(this.relationCountMap.entries()),  // Convert Map to array of key-value pairs for storage
+      proposerZone: this.proposerZone,                // Store proposer zone
+      selectedSumInsured: this.selectedSumInsured,    // Store selected sum insured value
+      selectedDiseases: this.selectedDiseases         // Store selected diseases (array of strings)
     };
-    console.log(data);
+  
+    console.log(data);  // Log data object to check the contents before saving
+  
+    // Save the data object to localStorage
     localStorage.setItem('quoteFormData', JSON.stringify(data));
     console.log('Data saved to LocalStorage:', data);
   }
+  
 
   // Load stored data from LocalStorage
   loadStoredData() {
     const storedData = localStorage.getItem('quoteFormData');
-    console.log(storedData);
     if (storedData) {
       const parsedData = JSON.parse(storedData);
+  
       this.selectedOptions = parsedData.selectedOptions || [];
-      this.value = parsedData.value || this.value;
-      this.selectedDiseases = parsedData.selectedDiseases || [];
+      this.selectedPolicy = parsedData.selectedPolicy || "Family Floater";
       this.selectedRelationships = parsedData.selectedRelationships || [];
-      this.relations = parsedData.relations || this.relations; // Restore relations with age
-      this.showCard = parsedData.showCard || false;
-      this.showDropdownsFlag = this.showCard;
+      this.selectedRelation = parsedData.selectedRelation || "";
+      this.relationCountMap = new Map(parsedData.relationCountMap);  // Convert back to Map
+      this.proposerZone = parsedData.proposerZone || null;
+      this.selectedSumInsured = parsedData.selectedSumInsured || this.sliderOptions?.stepsArray?.[0]?.value;
+      this.selectedDiseases = parsedData.selectedDiseases || [];
+  
       console.log('Data loaded from LocalStorage:', parsedData);
     }
+  }
+
+  //my-changes
+
+  onPolicyTypeChange(policyType: string) {
+    this.selectedPolicy = policyType;
+  }
+
+  updatePolicyType() {
+    this.quoteFormGroup.get('policyType')?.setValue(this.selectedPolicy);
+    this.saveDataToStorage();
+    this.activeDropdown = null;
+  }
+
+  onSumInsuredChange(eventValue: any) {
+    this.selectedSumInsured = eventValue;
+  }
+
+  updateSumInsured() {
+    this.quoteFormGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
+
+    const insuredMembersArray = this.quoteFormGroup.get('insuredMemeberDetails') as FormArray;
+
+    insuredMembersArray.controls.forEach((control: AbstractControl) => {
+      const memberGroup = control as FormGroup;
+      memberGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
+    });
+    this.saveDataToStorage();
+
+    this.activeDropdown = null;
+  }
+
+  // Add new member details
+  addInsuredMemberDetails(): void {
+    this.selectedRelationships.forEach((relation: any) => {
+      // Check if the relation is already present in insuredMemeberDetails
+      const isAlreadyAdded = this.insuredMemeberDetails.controls.some((control: AbstractControl) => {
+        const memberGroup = control as FormGroup;
+        return memberGroup.get('memberRelationCode')?.value === relation.id;
+      });
+  
+      if (!isAlreadyAdded) {
+        const memberGroup = this.fb.group({
+          roomCategory: [""],
+          memberAge: [relation.age, [Validators.required]],
+          sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
+          isChronic: ["No"],
+          zone: [this.proposerZone, [Validators.required]],
+          gender: [relation.gender, [Validators.required]],
+          memberDob: [relation.dob, [Validators.required]],
+          memberRelation: [relation.value, [Validators.required]],
+          memberRelationCode: [relation.id, [Validators.required]]
+        });
+        
+        this.insuredMemeberDetails.push(memberGroup);
+      }
+    });
+  
+    this.selectedRelation = this.selectedRelationships.length > 0
+      ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
+      : 'Please select members';
+  
+    console.log(this.selectedRelation);
+    this.saveDataToStorage();
+    this.activeDropdown = null;
+  }
+  
+  get insuredMemeberDetails(): FormArray {
+    return this.quoteFormGroup.get('insuredMemeberDetails') as FormArray;
+  }
+  
+
+  getProposerPincode(event:any){
+
+    console.log(event.target.value,typeof event)
+
+    this.service.getPinCodeByCity(event.target.value).subscribe({
+      next: (res) => {
+        console.log(res)
+        this.proposerZone = res.data.strzone;
+      },
+      error: (err) => {
+        console.error(err)
+        this.toast.warning({ detail: "WARNING", summary: "Could not fetch pincode details.", duration: 1000 });
+      }
+    });
+
   }
 
 }

@@ -1,6 +1,6 @@
 <div class="contentBody dashboard_contentContainer">
   <div style="width: 100%;">
-  <form [formGroup]="quoteForm">
+  <form>
     <div class="card-outer">
       <div class="card">
         <div class="header">
@@ -18,7 +18,7 @@
           </div>
         </div>
 
-        <div class="insurance_optionHUB" *ngIf="showCard">
+        <div class="insurance_optionHUB" *ngIf="showCard" [formGroup]="quoteFormGroup">
           <div class="dropdown-container " *ngIf="showDropdownsFlag">
             <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
               <!-- Label -->
@@ -28,19 +28,19 @@
                 <div class="selected-value">
                   <span>
                     <ng-container *ngIf="dropdown.label === 'Policy Type'">
-                      {{ selectedOptions[i] || 'Family Floater' }}
+                      {{ quoteFormGroup.get('policyType')?.value || 'Please select a policy' }}
                     </ng-container>
 
                     <ng-container *ngIf="dropdown.label === 'Relationship'">
-                      {{ selectedOptions[i] || 'Please select members' }}
+                      {{ selectedRelation != "" ? selectedRelation : 'Please select a relationship'  }}
                     </ng-container>
                     
                     <ng-container *ngIf="dropdown.label === 'Sum Insured'">
-                      {{ selectedOptions[i] || '5 Lakhs' }}
+                      {{ formatTickLabel(selectedSumInsured,false)  || 'Please select sum insured' }}
                     </ng-container>
 
                     <ng-container *ngIf="dropdown.label === 'Diseases'">
-                      {{ selectedOptions[i] || 'No Diseases Selected' }}
+                      {{ quoteFormGroup.get('diseases')?.value || 'No Diseases Selected' }}
                     </ng-container>
 
                   </span><i class="fas fa-chevron-down"></i>
@@ -57,8 +57,8 @@
                      <div class="input-radio-block raido_policyType">
                        <label class="input-radiolabel">
                          <input type="radio" name="policytype" value="familyfloater"
-                           (click)="continueSelection(0, 'Family Floater')"
-                           [checked]="selectedOptions[0] === 'Family Floater'">
+                           (click)="onPolicyTypeChange('Family Floater')"
+                           [checked]="quoteFormGroup.get('policyType')?.value === 'Family Floater'">
                          <span>
                            <em class="pt-head"><img src="../../../../assets/images/icon_familyfloater.svg">Family Floater
                              Policy</em>
@@ -70,8 +70,8 @@
    
                        <label class="input-radiolabel">
                          <input type="radio" name="policytype" value="multiindividual"
-                           (click)="continueSelection(0, 'Multi Individual')"
-                           [checked]="selectedOptions[0] === 'Multi Individual'">
+                           (click)="onPolicyTypeChange('Multi Individual')"
+                           [checked]="quoteFormGroup.get('policyType')?.value === 'Multi Individual'">
                          <span>
                            <em class="pt-head"><img
                                src="../../../../assets/images/icon_multiindividual.svg">Multi-individual Policy</em>
@@ -84,7 +84,7 @@
    
                      <div class="tipInfo_org"><img src="../../../../assets/images/Lightbulb Icon.png">You can edit members
                        to change back to family floater policy.</div>
-                     <button type="button" class="btn_red btn_fullWidth" (click)="closeCustomDiv()">Continue</button>
+                     <button type="button" class="btn_red btn_fullWidth" (click)="updatePolicyType()">Continue</button>
                    </div>
                  </div>
 
@@ -96,21 +96,33 @@
                       <div class="sumInsured_select">
                           <header>
                               <h3>Sum Insured</h3>
-                              <div class="sumInsured_value">₹{{ value }} Lakhs</div>
+                              <div class="sumInsured_value">{{ formatTickLabel(selectedSumInsured,false) }}</div>
                           </header>
                       </div>
-                      <div class="sumInsured_dragBar">
+                      <!-- <div class="sumInsured_dragBar">
                         
                         <div class="slider-container">
-                          <!-- Listen to value change event here -->
-                          <ngx-slider [(value)]="value" [options]="options" (valueChange)="onValueChange($event)"></ngx-slider>
+                          <ngx-slider [(value)]="selectedSumInsured" [options]="sliderOptions" (valueChange)="onSumInsuredChange($event)"></ngx-slider>
                           <div class="tick-labels">
-                            <span *ngFor="let tick of options.ticksArray">{{ formatTickLabel(tick) }}</span>
+                            <span *ngFor="let tick of sliderOptions.stepsArray">{{ formatTickLabel(tick.value) }}</span>
+                          </div>
+                        </div>
+                      </div> -->
+                      <div class="sumInsured_dragBar">
+                        <div class="slider-container">
+                          <!-- ngx-slider component -->
+                          <ngx-slider [(value)]="selectedSumInsured" [options]="sliderOptions" (valueChange)="onSumInsuredChange($event)"></ngx-slider>
+                          
+                          <!-- Tick labels below the slider -->
+                          <div class="tick-labels">
+                            <span *ngFor="let tick of sliderOptions.stepsArray">{{ formatTickLabel(tick.value,true) }}</span>
                           </div>
                         </div>
                       </div>
+                      
+                    
                     </div>
-                    <button class="suminsured-button" (click)="onSumInsuredSelect()">
+                    <button class="suminsured-button" (click)="updateSumInsured()">
                       Continue
                     </button>
                   </div>
@@ -126,21 +138,21 @@
                           <div class="row">
                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                               <div class="input-block input-block-renew input-filed-white">
-                                <input type="text" id="nameproposer" name="nameproposer" value=""
+                                <input type="text" id="nameproposer" formControlName="proposerName" value=""
                                   placeholder="Enter name of proposer" class="input-textBox">
-                                <span class="ui-error">Please enter name of proposer</span>
+                                <span class="ui-error" *ngIf="quoteFormGroup.get('proposerName')?.invalid && quoteFormGroup.get('proposerName')?.touched">Please enter name of proposer</span>
                               </div>
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                               <div class="input-block input-block-renew input-filed-white">
-                                <input type="text" id="pincodeproposer" name="pincodeproposer" value=""
-                                  placeholder="Enter pincode of proposer" class="input-textBox">
+                                <input type="text" id="pincodeproposer" formControlName="proposerPincode" value=""
+                                  placeholder="Enter pincode of proposer" (change)="getProposerPincode($event)" class="input-textBox">
                                 <span class="ui-error">Please enter pincode of proposer</span>
                               </div>
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                               <div class="input-block input-block-renew input-filed-white">
-                                <input type="text" id="mobileproposer" name="mobileproposer" value=""
+                                <input type="text" id="mobileproposer" formControlName="proposerMobile" value=""
                                   placeholder="Enter mobile no of proposer" class="input-textBox">
                                 <span class="ui-error">Please enter mobile no of proposer</span>
                               </div>
@@ -161,14 +173,14 @@
                               </div> -->
                               <ng-container *ngFor="let relation of relations">
                                 <div *ngIf="relation.isIncrement == false" class="input-checkbox-feild">
-                                  <input type="checkbox" id="{{relation.id}}" [checked]="selectedRelationships.includes(relation.value)" 
+                                  <input type="checkbox" id="{{relation.value}}" [checked]="selectedRelation.includes(relation.value)" 
                                   (change)="onRelationChange($event, relation)" value="{{relation.id}}" class="input-check">
-                                  <label for="{{relation.id}}"><img
+                                  <label for="{{relation.value}}"><img
                                       src="{{relation.imagePath}}">{{relation.name}}</label>
                                   <div class="member_extraInfo">
                                     <div class="member_extraInfoSub">
-                                      <input type="text" placeholder="Enter Age" class="member_textbox"
-                                      [value]="relation.age" (input)="onAgeChange($event, relation)">
+                                      <input type="date" placeholder="Enter DOB" class="member_textbox"
+                                      [value]="relation.dob" (input)="onAgeChange($event, relation)">
                                       <span *ngIf="relation.deletable" class="delete_member" (click)="removeMember(relation)"><img
                                         src="../../../../assets/images/icon_delete_red2.svg"></span>
                                     </div>
@@ -257,7 +269,7 @@
                             <img src="../../../../assets/images/icon_right_arrow_black.svg" width="7">
                           </button>
                         </div>
-                        <button type="button" class="btn_red btn_fullWidth" (click)="onRelationshipNext()">Next</button>
+                        <button type="button" class="btn_red btn_fullWidth" (click)="addInsuredMemberDetails()">Next</button>
                       </div>
                 </div>
 

@@ -1147,12 +1147,12 @@ h4 {
 }
 
 .insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild .member_textbox {
-  width: 70px;
+  width: 92px;
   height: 24px;
   background: #fff;
   border-width: 0;
   border-radius: 16px;
-  padding: 0px 8px;
+  padding: 0px 5px;
 }
 
 .insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild .input-check:checked+label {
@@ -1252,12 +1252,12 @@ h4 {
 }
 
 .insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild .member_textbox {
-  width: 70px;
+  width: 92px;
   height: 24px;
   background: #fff;
   border-width: 0;
   border-radius: 16px;
-  padding: 0px 8px;
+  padding: 0px 5px;
 }
 
 .insurer_memberDetails .input-checkbox-withIcon .input-checkbox-feild .input-check+label {
@@ -1351,6 +1351,8 @@ h4 {
 }
 ::ng-deep .ngx-slider .ngx-slider-bar {
   background: #f7a500 !important;
+  height: 6px !important;
+  border-radius: 12px !important;
 }
 ::ng-deep .ngx-slider .ngx-slider-pointer {
   background-color: #c7222a !important;
@@ -1370,6 +1372,11 @@ h4 {
   height: 6px !important;
   background: #797979 !important;
   top:2px !important;
+}
+
+::ng-deep .ngx-slider .ngx-slider-tooltip-wrapper{
+
+  margin-top: 1px !important;
 }
 .tick-labels {
   display: flex;
