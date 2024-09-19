@@ -14,8 +14,8 @@
                     </ul>
                 </div>
                 <div class="quickFilterRight" >
-                    <button type="button" value="download" class="btn_iconGrey"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
-                    <div class="searchWraper" [matMenuTriggerFor]="searchMenu" #menuTrigger="matMenuTrigger">
+                    <button type="button" value="download" class="btn_iconGrey mobile-hide"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
+                    <div class="searchWraper " [matMenuTriggerFor]="searchMenu" #menuTrigger="matMenuTrigger">
                         <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" aria-label="field_searchWraper" data-bs-toggle="dropdown" aria-expanded="false" (click)="toggleSearchDropdown()">
                           <img src="assets/Img/icon_magnify_grey.svg" alt="Search">
                         </button>
@@ -56,8 +56,8 @@
                     </div>
                     <div class="filterWraper">
                         <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" aria-label="filterForm" ><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
-                        <div id="filterForm" class="filterWraperForm" [ngClass]="{'active': toggeledropdown}">
-                            <div class="fw_form">
+                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
+                            <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader">
                                     <header>Filter</header>
                                     <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
@@ -114,11 +114,11 @@
                         </div>
                         
                     </div>
-                    <button type="button" value="gridlist" class="btn_grid jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list" (click)="quotesViews('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
-                    <button type="button" value="gridcard" class="btn_grid jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="quotesViews('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
+                    <button type="button" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list" (click)="quotesViews('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
+                    <button type="button" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="quotesViews('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
             </section>
-            <section id="quotes-list" class="tableMain quoteView block-show" *ngIf="selectedView == 'list'">
+            <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
                 <div class="tableSubMain">
                     <div class="table-responsive">
                         <table class="table table-borderless table-search">
@@ -180,43 +180,56 @@
                                     <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" 
                                     [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     
-                                    <mat-menu #moreMenu="matMenu" class="moreActionItems">
+                                    <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
+                                        <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                         <ul class="actionItemsMain">
                                             <li class="actionItem" (click)="handleAction(row, 'download')">
-                                               <div> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></div>
+                                               <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
                                             </li>
                                             <li class="actionItem" (click)="handleAction(row, 'delete')">
-                                                <div> <img src="assets/Img/icon_delete_grey.svg" alt="Delete"><span>Delete</span></div>
+                                                <a> <img src="assets/Img/icon_delete_grey.svg" alt="Delete"><span>Delete</span></a>
                                             </li>
                                             <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                <div><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via </span></div>
+                                                <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via </span></a>
                                             </li>
                                             <li class="actionItem" (click)="handleAction(row, 'copyPayLink')">
-                                                <div><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>copyPayLink </span></div>
+                                                <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>copyPayLink </span></a>
                                             </li>
                                             <li class="actionItem" (click)="handleAction(row, 'sms')">
-                                                <div> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></div>
+                                                <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
                                             </li>
                                             <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
-                                                <div> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></div>
+                                                <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                             </li>
                                             <li class="actionItem" (click)="handleAction(row, 'notice')">
-                                                <div> <img src="assets/Img/icon_send_renewal_notice_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></div>
+                                                <a> <img src="assets/Img/icon_send_renewal_notice_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
                                             </li>
                                             <li class="actionItem" (click)="handleAction(row, 'autodebit')">
-                                                <div> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></div>
+                                                <a> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></a>
                                             </li>
                                         </ul>
+                                    </div>
                                     </mat-menu>
                                     
                                 </div>
                               </td>
                             </tr>
                           </tbody>
+
+                          <tbody class="table-group-divider tbody-no-data" *ngIf="countsList.totalRecords === 0">
+                            <tr>
+                              <td colspan="10">
+                                <div class="no_dataFound">
+                                    <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                                    <p>No data found</p>
+                                </div>  
+                              </td>
+                            </tr>
+                          </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="tableNav">
+                <div class="tableNav" *ngIf="countsList.totalRecords > 0">
                     <nav>
                       <ul class="pagination">
                         <li class="page-item">
@@ -230,10 +243,10 @@
                         </li>
                       </ul>
                     </nav>
-                  </div>
+                </div>
             </section>
             
-            <section id="quotes-card" class="cardViewMain quoteView " *ngIf="selectedView == 'grid'">
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
                 <div class="cardViewWraper">
                     <div class="cardViewItem" *ngFor="let row of renewalsList; let i = index">
                         <header>
@@ -251,33 +264,35 @@
                                     <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard"
                                     [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     
-                                    <mat-menu #moreMenu="matMenu" class="moreActionItems">
-                                        <ul class="actionItemsMain">
-                                            <li class="actionItem" (click)="handleAction(row, 'download')">
-                                               <div> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></div>
-                                            </li>
-                                            <li class="actionItem" (click)="handleAction(row, 'delete')">
-                                                <div> <img src="assets/Img/icon_delete_grey.svg" alt="Delete"><span>Delete</span></div>
-                                            </li>
-                                            <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                <div><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via </span></div>
-                                            </li>
-                                            <li class="actionItem" (click)="handleAction(row, 'copyPayLink')">
-                                                <div><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>copyPayLink </span></div>
-                                            </li>
-                                            <li class="actionItem" (click)="handleAction(row, 'sms')">
-                                                <div> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></div>
-                                            </li>
-                                            <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
-                                                <div> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></div>
-                                            </li>
-                                            <li class="actionItem" (click)="handleAction(row, 'notice')">
-                                                <div> <img src="assets/Img/icon_send_renewal_notice_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></div>
-                                            </li>
-                                            <li class="actionItem" (click)="handleAction(row, 'autodebit')">
-                                                <div> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></div>
-                                            </li>
-                                        </ul>
+                                    <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
+                                        <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                            <ul class="actionItemsMain">
+                                                <li class="actionItem" (click)="handleAction(row, 'download')">
+                                                <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
+                                                </li>
+                                                <li class="actionItem" (click)="handleAction(row, 'delete')">
+                                                    <a> <img src="assets/Img/icon_delete_grey.svg" alt="Delete"><span>Delete</span></a>
+                                                </li>
+                                                <li class="actionItem" (click)="handleAction(row, 'email')">
+                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via </span></a>
+                                                </li>
+                                                <li class="actionItem" (click)="handleAction(row, 'copyPayLink')">
+                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>copyPayLink </span></a>
+                                                </li>
+                                                <li class="actionItem" (click)="handleAction(row, 'sms')">
+                                                    <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
+                                                </li>
+                                                <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
+                                                    <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
+                                                </li>
+                                                <li class="actionItem" (click)="handleAction(row, 'notice')">
+                                                    <a> <img src="assets/Img/icon_send_renewal_notice_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
+                                                </li>
+                                                <li class="actionItem" (click)="handleAction(row, 'autodebit')">
+                                                    <a> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </mat-menu>
                                     
                                 </div>
@@ -331,11 +346,10 @@
                                 <div class="item_value">{{ row.modification }}</div>
                             </div>
                         </div>
+                        
                     </div>
-
-                    
                 </div>
-                <div class="tableNav">
+                <div class="tableNav" *ngIf="countsList.totalRecords > 0">
                     <nav>
                       <ul class="pagination">
                         <li class="page-item">
@@ -351,6 +365,20 @@
                     </nav>
                   </div>
             </section>
+
+            <!--Create new quote Main start-->
+            <section class="createNewQuoteWraper" *ngIf="countsList.totalRecords === 0">
+                <div class="createNewQuoteMain">
+                    <div class="cnqLeft">
+                        <h5>Hi Ajay, let's get started with new leads</h5>
+                        <h6><img src="assets/Img/icon_lightbulb.svg"> You need 5 leads to hit your goal this month</h6>
+                    </div>
+                    <div class="cnqRight">
+                        <button type="button" value="createnewquote" class="btn_red btn_CN_Quote"><img src="assets/Img/icon_plus_white.svg"> Create New Quote</button>
+                    </div>
+                </div>
+            </section>
+            <!--Create new quote Main end-->
             
         </div>  
     </div>

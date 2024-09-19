@@ -41,52 +41,51 @@ export class RenewalListComponent {
   searchInputControl = new FormControl("");
   isDesktopView:boolean=false
 
-  members = [
-    {
-      quote: "Base Quote",
-      proposer: "Kridhnan",
-      product: "Active User",
-      policyNo: "23-22-0175217-00",
-      renewalPremium: {
-        amount: "₹25558",
-        benefits: "HR benefits of ₹786 added",
-      },
-      mobileNo: "7123456789",
-      dateOfRenewal: "2023-03-15",
-      modification: "Member added tenure 1 year",
-    },
-    {
-      quote: "Sub Quote",
-      proposer: "John Doe",
-      product: "Premium User",
-      policyNo: "45-67-0123456-00",
-      renewalPremium: {
-        amount: "₹35000",
-        benefits: "HR benefits of ₹900 added",
-      },
-      mobileNo: "7890123456",
-      dateOfRenewal: "2023-04-20",
-      modification: "Coverage increased tenure 2 years",
-    },
-    {
-      quote: "Base Quote1",
-      proposer: "krishnavamsi bhavani",
-      product: "Active User",
-      policyNo: "23-22-0175217-00",
-      renewalPremium: {
-        amount: "₹25558",
-        benefits: "HR benefits of ₹786 added",
-      },
-      mobileNo: "7123456789",
-      dateOfRenewal: "2023-03-15",
-      modification: "Member added tenure 1 year",
-    },
-  ];
+  // members = [
+  //   {
+  //     quote: "Base Quote",
+  //     proposer: "Kridhnan",
+  //     product: "Active User",
+  //     policyNo: "23-22-0175217-00",
+  //     renewalPremium: {
+  //       amount: "₹25558",
+  //       benefits: "HR benefits of ₹786 added",
+  //     },
+  //     mobileNo: "7123456789",
+  //     dateOfRenewal: "2023-03-15",
+  //     modification: "Member added tenure 1 year",
+  //   },
+  //   {
+  //     quote: "Sub Quote",
+  //     proposer: "John Doe",
+  //     product: "Premium User",
+  //     policyNo: "45-67-0123456-00",
+  //     renewalPremium: {
+  //       amount: "₹35000",
+  //       benefits: "HR benefits of ₹900 added",
+  //     },
+  //     mobileNo: "7890123456",
+  //     dateOfRenewal: "2023-04-20",
+  //     modification: "Coverage increased tenure 2 years",
+  //   },
+  //   {
+  //     quote: "Base Quote1",
+  //     proposer: "krishnavamsi bhavani",
+  //     product: "Active User",
+  //     policyNo: "23-22-0175217-00",
+  //     renewalPremium: {
+  //       amount: "₹25558",
+  //       benefits: "HR benefits of ₹786 added",
+  //     },
+  //     mobileNo: "7123456789",
+  //     dateOfRenewal: "2023-03-15",
+  //     modification: "Member added tenure 1 year",
+  //   },
+  // ];
 
   private onDestroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    private http: HttpClient,
     private renewalService: RenewalServiceService,
     private router: Router,
     private route: ActivatedRoute,
@@ -97,7 +96,7 @@ export class RenewalListComponent {
   ) {}
 
   renewalLisRequestBody={
-    "agentCode": "",
+    "agentCode": "5100003",
     "proposer": "",
     "productName": "",
     "policyNumber": "",
@@ -111,14 +110,15 @@ export class RenewalListComponent {
   }
 
   ngOnInit(): void {
-    const storedAgentCode = localStorage.getItem('agentCode');
-    if (storedAgentCode) {
-      this.renewalLisRequestBody.agentCode = storedAgentCode;
-      this.getRenewalsList();
-    }
-    else{
-      console.log("agent code is not present in local storege");
-    }
+    // const storedAgentCode = localStorage.getItem('agentCode');
+    // if (storedAgentCode) {
+    //   this.renewalLisRequestBody.agentCode = storedAgentCode;
+    //   this.getRenewalsList();
+    // }
+    // else{
+    //   console.log("agent code is not present in local storege");
+    // }
+    this.getRenewalsList();
     this.getProducts();
     this.route.queryParams.subscribe((params) => {
       this.showSubQuotes = params["showSubQuotes"] === "true";
@@ -134,12 +134,12 @@ export class RenewalListComponent {
 
 
   getRenewalsList() {
-    this.spinner.show();
     this.renewalLisRequestBody.pageNumber = this.page;
     this.renewalLisRequestBody.pageSize = this.rows;
-  
+    // this.spinner.show();
     this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
-      (response) => { console.log(response.data);
+      (response) => { 
+        console.log(response.data);
         if (response.success) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
@@ -147,10 +147,10 @@ export class RenewalListComponent {
           this.countsList = response.data;
           this.totalRecords = this.countsList.totalRecords;
         } else {console.error("API request was not successful.");}
-        this.spinner.hide();
+        // this.spinner.hide();
       },
       (error) => {
-        this.spinner.hide();
+        // this.spinner.hide();
         console.error("Error from API:", error);
       }
     );
@@ -199,11 +199,9 @@ export class RenewalListComponent {
 
   calculateAppliedFiltersCount(): number {
     const selectedProductsCount = this.productsList.filter(
-      (product) => product.selected
-    ).length;
+      (product) => product.selected).length;
     const selectedPolicyTypesCount = this.policyTypes.filter(
-      (policyType) => policyType.selected
-    ).length;
+      (policyType) => policyType.selected).length;
     let count = selectedProductsCount + selectedPolicyTypesCount;
     if (this.startDate && this.endDate) {
       count++;
@@ -216,8 +214,7 @@ export class RenewalListComponent {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
-    console.log("startDate",this.startDate,"endDate",this.endDate);
-    
+    console.log("startDate",this.startDate,"endDate",this.endDate);  
     this.renewalLisRequestBody.startDate=this.startDate;
     console.log("start date taken by request body",this.renewalLisRequestBody.startDate);
     this.renewalLisRequestBody.endDate=this.endDate;
@@ -225,19 +222,15 @@ export class RenewalListComponent {
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
-      console.log("selectedProducts",selectedProducts);
-      
+      console.log("selectedProducts",selectedProducts);     
     this.renewalLisRequestBody.productName = selectedProducts.join(", ");
-     console.log("product names which are taking by request body",this.renewalLisRequestBody.productName);
-     
+     console.log("product names which are taking by request body",this.renewalLisRequestBody.productName);  
     const selectedPolicyTypes = this.policyTypes
       .filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
-      console.log("selecteed policy types",selectedPolicyTypes);
-      
+      console.log("selecteed policy types",selectedPolicyTypes);  
     this.renewalLisRequestBody.policyType = selectedPolicyTypes.join(", ");
-    console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType);
-    
+    console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType); 
     this.getRenewalsList();
     this.toggeledropdown=false;
   }
@@ -328,7 +321,7 @@ export class RenewalListComponent {
         this.renewalLisRequestBody.policyNumber = this.searchInputControl.value!;
       }
       this.getRenewalsList();
-      this.toggeleSearchdropdown = true;
+      // this.toggeleSearchdropdown = true;
       menuTrigger.closeMenu();  
       } 
     else {
@@ -349,7 +342,6 @@ export class RenewalListComponent {
       case 'download':
         break;
       case 'delete':
-        // this.renewalJourney(item);
         break;
       case 'email':
         break;
@@ -439,6 +431,8 @@ export class RenewalListComponent {
   }
   
   renewalJourney(proposerDetail : RenewalList) {
+    console.log("proposerDetail",proposerDetail.policyNumber);
+    this.renewalService.getPolicyNo(proposerDetail.policyNumber);
     this.router.navigate(["/portal/agent/renewalDynamicForm"]);
   }
 
@@ -481,5 +475,4 @@ export class RenewalListComponent {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
   }
-
 }

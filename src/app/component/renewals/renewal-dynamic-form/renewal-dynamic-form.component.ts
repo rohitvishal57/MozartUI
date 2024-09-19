@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IDynamicControl, IFormControl } from 'src/app/interface/form.interface';
+import { RenewalServiceService } from 'src/app/services/renewal/renewal-service.service';
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -13,8 +14,8 @@ export class RenewalDynamicFormComponent implements OnInit {
   @Input() section: any;
   nomineeForm: FormGroup = this.fb.group({});
   formConfig: any;
-  formId: number = 1;
-  mainCnt: number =1;
+  formId: number = 5001;
+  mainCnt: number = 1;
   isEditingEmail = false;
   emailSaved: boolean = false;
   email = 'sujitp1@gmail.com';
@@ -31,12 +32,31 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectedPaymentTypeLabel: string = '';
   isDropdownOpen: boolean = false;
   policySummarys : boolean=false
-  planDetail : boolean = false
+  planDetail : boolean = false;
+  activeSection: string = 'primary';
+  response: any;
+  policyNumber:string='';
+
+  value: number = 25;
+  control = {
+    name: 'sumInsured',
+    label: 'Sum Insured',
+    type: 'range',
+    min: 500000,
+    max: 20000000,
+    step: 500000,
+    value: 500000,
+    class: 'col-md-12'
+  };
+
+  renewalInfo: any;
+
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private renewalService: RenewalServiceService
   ) {}
 
   ngOnInit() {
@@ -44,9 +64,12 @@ export class RenewalDynamicFormComponent implements OnInit {
     this.fetchCoverages();
     this.fetchRoomUpgradeBenefits();
     this.fetchTenureDetails();
-    // this.handleForms(5002);
-    this.planDetail = true
-    // this.selectButton('payment','policySummary');
+    this.planDetail = true;    this.renewalService.policy$.subscribe(policy => {
+      // console.log('Policy Number:', policy.policyNo);
+      this.policyNumber=policy.policyNo;
+    });
+
+    this.getRenewalInfo();
   }
 
   initializeForm() {
@@ -72,42 +95,35 @@ export class RenewalDynamicFormComponent implements OnInit {
       });
     }
     console.log('Nominee form controls:', this.nomineeForm.controls);
+  
   }
-
-  addNominee() {
-    // Logic to add another nominee
-  }
+  handleAction(event: string,item?: any) {
+      switch (event) {
+        case 'addMember':
+          this.formId=5001;
+          break;
+        case 'editMember':
+          this.formId=5001;
+          break;
+        case 'editAddress':
+          this.formId=5001;
+          break;
+        case 'addNominee':
+          this.formId=5001;
+          break;  
+        default:
+          console.warn('Unknown action:', event);
+      }
+    }
 
   onRadioChange(controlName: string, value: string): void {
     this.nomineeForm.get(controlName)?.setValue(value);
   }
 
-  toggleSelect(option: any) {
-    option.selected = !option.selected;
-  }
-
-  hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null): boolean {
-    let controlValue: any;
-    if (parentControl != null) {
-        const formArray = this.nomineeForm.get(parentControl.name) as FormArray;
-        controlValue = formArray.get(control.name)?.value;
-    } else {
-        controlValue = this.nomineeForm.get(control.name)?.value;
-    }
-    return controlValue != null && controlValue !== '';
-}
- 
 rangeValue: { [key: string]: number } = { sumInsured: 500000 };
 
 updateRangeValue(event: any, controlName: string) {
   const value = event.target.value;
-  // if(value == 3000000){
-  //   this.rangeValue[controlName] = (this.rangeValue[controlName]+value)-500000
-  // }
-  // else if(value > 2500000){
-  //   this.rangeValue[controlName] = (this.rangeValue[controlName]+value)
-  // }
-    // const value = event.target.value;
     this.rangeValue[controlName] = +value;
 }
 
@@ -130,85 +146,39 @@ saveEmail() {
     this.emailSaved = true;
   }
 }
-
 selectButton(button: string, value?: any) {
-  this.selectedButton = button; 
-
   if (this.selectedButton === 'primary') {
-      this.mainCnt = 1;
-      this.formConfig = [];
-      this.policySummarys=false;
-      if (value == 5005) {
-        this.planDetail=true
-        this.formId = value;
-        this.initializeForm();
-        this.http.get<any[]>('/assets/jsonValue/renewEditAddress.json').subscribe(data => {
-          this.formConfig = data;
-          this.populateFormControls();
-        });
-  
-      } else if (value == 5004) {
-        this.planDetail=true
-        this.formId = value;
-        this.initializeForm();
-        this.http.get<any[]>('/assets/jsonValue/renewalForms.json').subscribe(data => {
-          this.formConfig = data;
-          this.populateFormControls();
-        });
-  
-      } else if (value == 5003) {
-        this.planDetail=false
-        this.formId = value;
-        this.initializeForm();
-        this.http.get<any[]>('/assets/jsonValue/editMemberDetail.json').subscribe(data => {
-          this.formConfig = data;
-          this.populateFormControls();
-        });
-  
-      } else if (value == 5002) {
-        this.planDetail=false
-        this.formId = value;
-        this.initializeForm();
-        this.http.get<any[]>('/assets/jsonValue/addNewMember.json').subscribe(data => {
-          this.formConfig = data;
-          this.populateFormControls();
-        });
-  
-      } else {
-        this.formId = 1;
-        this.planDetail=true
-      }
-  } 
-  else if (this.selectedButton === 'additional') {
-      this.mainCnt = 3;
-      this.policySummarys=false;
-  } 
-  else if (this.selectedButton == 'payment') {
-    if(value == 'policySummary'){
-       this.policySummarys=true
-       this.planDetail=true
-    }
-    else{
-      this.policySummarys=false;
-      this.mainCnt = 2;
+    if (value == 5005) {
+      this.planDetail=true
+      this.formId = value;
+    }else if (value == 5004) {
+      this.planDetail=true
+      this.formId = value;
+    }else if (value == 5003) {
       this.planDetail=false
+      this.formId = value;
+    }else if (value == 5002) {
+      this.planDetail=false
+      this.formId = value;
+    }else {
+      this.formId = 5001;
+      this.planDetail=true
     }
+  }else if (this.selectedButton === 'additional') {
+    this.policySummarys=false;
+} 
+else if (this.selectedButton == 'payment') {
+  if(value == 'policySummary'){
+     this.policySummarys=true
+     this.planDetail=true
+  }
+  else{
+    this.policySummarys=false;
+    this.planDetail=false
   }
 }
-
-
-updatePrimarycnt(btnControl : any){
-  if(btnControl == 'Add Member'){
-          this.selectButton('primary',5002)
-  }
-  else if(btnControl == 'Save Updates'){
-    this.selectButton('primary',1)
 }
 
-}
-// loadPageContent(mainCnt:any) {
-
-// }
 resendLink() {
   console.log('Resending payment link...');
 }
@@ -277,13 +247,10 @@ fetchRoomUpgradeBenefits(): void {
 }
 
 selectCoverage(coverage: any): void {
-  // Check if the coverage is already selected
   const index = this.selectedCoverages.findIndex(c => c.id === coverage.id);
   if (index > -1) {
-    // If already selected, remove it
     this.selectedCoverages.splice(index, 1);
   } else {
-    // Otherwise, add it to the list
     this.selectedCoverages.push(coverage);
   }
   console.log("Selected Coverages:", this.selectedCoverages);
@@ -319,6 +286,38 @@ applyRoomUpgrade()
 getSubquotes()
 {
   this.router.navigate(['portal/agent/renewalList'],{ queryParams: { showSubQuotes: true } })
+}
+
+setSection(section: string) {
+  this.activeSection = section;
+}
+
+proceed() {
+  if (this.activeSection === 'primary') {
+    this.setSection('additional');
+  } else if (this.activeSection === 'additional') {
+    this.setSection('payment');
+  } else if (this.activeSection === 'payment') {
+    console.log("finished");
+  }
+}
+
+renewNow(){
+  this.setSection('payment')
+}
+
+getRenewalInfo() {
+  // const policyNumber = "asdfgh"; 
+  // const requestBody = {}; 
+  this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
+    (res) => {
+      this.renewalInfo= JSON.parse(res.data)
+      console.log("response", this.policyNumber);
+    },
+    (err) => {
+      console.log("Error", err);
+    }
+  );
 }
 
 }

@@ -217,3 +217,10 @@ h1, h2, h3, h4, h5, h6 {
 .input-block {
     margin-bottom: 5px;
 }
+::ng-deep .mat-mdc-menu-content {
+  padding: 0 !important;
+}
+.moreActionItems ul a {
+  font-size: 13px;
+  letter-spacing: normal;
+}
