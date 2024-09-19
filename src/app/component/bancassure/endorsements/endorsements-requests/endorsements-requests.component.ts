@@ -51,32 +51,23 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   requestsListRequestBody:any = {
-    "agentId": 0,
-    "agentCode": "5100003",
-    "sessionId": "",
-    "userLevel": "",
-    "userRole": "",
-    "superiorId": 0,
-    "designation": "",
-    "intCategory": "",
-    "category": "Request",
-    "eventName": "",
-    "branchCode": "",
-    "start": 0,
-    "length": 0,
-    "fromDate": "2024-01-09",
-    "toDate": "2024-01-29",
-    "sortColumn": "ProductName",
-    "searchColumn": "",
-    "sortDirection": "DESC",
-    "searchString": "",
-    "uiStatus": [
-      "All"
-    ],
-    "viewBy": [
-      "5300001"
-    ]
+      "agentCode": "",
+      "eventName": "",
+      "start": 0,
+      "length": 2,
+      "sortColumn": "",
+      "searchColumn": "",
+      "sortDirection": "Desc",
+      "searchString": "",
+      "uiStatus": [
+        "Active","Resolved","Cancelled"
+      ],
+      "viewBy": [
+        "5100003"
+      ]
   }
+     
+
   getRequestList() {
     this.requestsListRequestBody.agentId = localStorage.getItem('agentCode')
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
@@ -96,7 +87,11 @@ export class EndorsementsRequestsComponent implements OnInit {
     );
   }
   statusFilter(filter: string) {
+   if (filter === "All") {
+    this.requestsListRequestBody.uiStatus = ["Active", "Resolved", "Cancelled"];
+   } else {
     this.requestsListRequestBody.uiStatus = [filter];
+   } 
     this.getRequestList();
     this.activeFilter = filter;
   }
@@ -163,8 +158,8 @@ export class EndorsementsRequestsComponent implements OnInit {
   cancelSearch() {
     this.toggeleSearchdropdown = false;
     this.selected = "";
-    this.requestsListRequestBody.searchColumn = "ProductName";
-    this.requestsListRequestBody.sortColumn = "ProductName";
+    this.requestsListRequestBody.searchColumn = "";
+    this.requestsListRequestBody.sortColumn = "";
     this.requestsListRequestBody.searchString = "";
     this.getRequestList()
   }
