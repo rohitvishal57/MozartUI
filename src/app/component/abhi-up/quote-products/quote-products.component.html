@@ -50,7 +50,7 @@
                                             ₹{{ item.tenure2Premium }}
                                         </div>
                                         <div *ngIf="item.t2DiscountPercentage" class="plan-discount">
-                                           /{{ item.t2DiscountPercentage }}%
+                                            /{{ item.t2DiscountPercentage }}%
                                         </div>
                                         <div *ngIf="item.t2DiscountAmount" class="plan-duration"
                                             [ngClass]="{'highlight': selectedPlans[i] === 2}">
@@ -74,6 +74,63 @@
                                     </div>
 
                                 </div>
+                                <!-- <div class="addon" *ngIf="addonView[i] == true">
+                                    <hr>
+                                    <div class="big-text">Selected Add-Ons</div>
+                                    <div class="add-container">
+                                        <ng-container *ngFor="let addon of item.productFeatures">
+                                            <div class="add-box">
+                                                {{addon.featureName}}
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div> -->
+                                <div class="backdrop" *ngIf="isOverlayVisible"></div>
+
+                                <!-- Popup Overlay -->
+                                <div class="popup-overlay" *ngIf="isOverlayVisible">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
+                                            <i class="fa-solid fa-xmark" (click)="closeOverlay()"></i>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="big-text">Selected Add-Ons</div>
+                                        <!-- <div class="col-md-12 add-container">
+                                            <div *ngFor="let addon of ProductList[popIndex].productFeatures"
+                                            class="add-wrapper col-6 col-md-6 col-lg-3"> -->
+                                                <!-- <div class="add-box"
+                                                [ngClass]="{'selected': isSelected(addon.featureName), 'unselected': !isSelected(addon.featureName)}"> -->
+                                                <!-- <div>
+                                                    <input type="checkbox" [value]="addon.featureName" id="addon.featureName"
+                                                        (change)="onCheckboxChange($event, addon.featureName)"/>
+                                                        <label for="addon.featureName" class="add-checkbox">
+                                                            <span>
+                                                                {{addon.featureName}}
+                                                            </span>
+                                                        </label>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                        <div class="col-md-12 add-container">
+                                            <div *ngFor="let addon of ProductList[popIndex].productFeatures"
+                                                class="add-wrapper"
+                                                [ngClass]="{'selected': addon.isSelected}">
+                                                    <input type="checkbox" [value]="addon.featureName" id="{{addon.featureName}}"
+                                                        (change)="onCheckboxChange($event, addon,i)"/>
+                                                    <label for="{{addon.featureName}}" class="add-checkbox">
+                                                        <span>{{addon.featureName}}</span>
+                                                    </label>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                            <button class="get" (click)="closeOverlay()">Continue</button>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- <p *ngIf="selectedPlan.value" class="mt-4">
                                     You have selected the {{ selectedPlan.value }} year plan.
@@ -84,7 +141,7 @@
                                         <img src="../../../../assets/images/trolley1.svg" alt="">
                                         Add to Cart
                                     </button>
-                                    <button class="get1">View Recommended Add-Ons</button>
+                                    <button class="get1" (click)="showOverlay(i)">View Recommended Add-Ons</button>
                                     <button class="get2">
                                         <img src="../../../../assets/images/left-and-right-arrows1.svg" alt="">
                                         Add to Compare
@@ -123,7 +180,7 @@
                             <div class="cart-productText"><img src="../../../../assets/logo/activeOne.svg"
                                     class="cart-productImage"> {{item.productName}}</div>
                             <input type="button" class="product-remove-btn" value="Remove"
-                                (click)="removeFromCart(item)">
+                                (click)="removeFromCart(i)">
                         </div>
                         <div class="product-features">
                             <div *ngFor="let key of item.keyFeatures">
@@ -136,39 +193,22 @@
 
                         <div class="plan-container">
 
-                            <!-- Plan 1 -->
-                            <div class="plan1" [ngClass]="{ 'highlight': selectedPlans[i] === 1 }"
-                                >
-                                <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 1}">
-                                    ₹{{ item.tenure1Premium }}
-                                </div>
-                                <div class="plan-discount">
-                                    /1
+                            <div class="plan1">
+                                <div class="plan-price" >
+                                    ₹{{ item.selectedPremiumAmount }}
                                 </div>
                             </div>
 
-                            <!-- Plan 2 -->
-                            <div class="plan2" [ngClass]="{ 'highlight': selectedPlans[i] === 2 }"
-                                >
-                                <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 2}">
-                                    ₹{{ item.tenure2Premium }}
-                                </div>
-                                <div class="plan-discount">
-                                   /2
-                                </div>
+                        </div>
+                        <div *ngIf="item.selectedAddon.length > 0">
+                            <div class="add-tag">Selected Addons</div>
+                            <div class="add-container">
+                                <ng-container *ngFor="let addon of item.selectedAddon">
+                                    <div class="add-box">
+                                        {{addon}}
+                                    </div>
+                                </ng-container>
                             </div>
-
-                            <!-- Plan 3 -->
-                            <div class="plan3" [ngClass]="{ 'highlight': selectedPlans[i] === 3 }"
-                                >
-                                <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 3}">
-                                    ₹{{ item.tenure3Premium }}
-                                </div>
-                                <div class="plan-discount">
-                                    /3
-                                </div>
-                            </div>
-
                         </div>
                         <div class="quick-tip">
                             <img src="./../../../../assets/images/lightbulb.svg" alt="">
