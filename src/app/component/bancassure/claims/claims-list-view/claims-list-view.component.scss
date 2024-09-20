@@ -320,28 +320,14 @@
 }
 .main-container .all-claims .main-claims .policy-detail {
   display: flex;
-  gap: 16px;
-  font-size: smaller;
-  white-space: nowrap;
+  font-size: 11px;
+  gap: 10px;
 }
-
-.main-container .all-claims .main-claims .policy-detail2 {
-  display: flex;
-  gap: 27px;;
-  font-size: smaller;
-  white-space: nowrap;
-}
-
-.main-container .all-claims .main-claims .policy-detail3 {
-  display: flex;
-  gap: 8px;
-  font-size: smaller;
-}
-
 
 .main-container .all-claims .main-claims .detail {
   display: flex;
   flex-direction: column;
+  margin-left: 8px;
 }
 
 .main-container .all-claims .main-claims .detail .label{

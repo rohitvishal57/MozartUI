@@ -110,7 +110,7 @@ export class ClaimsViewComponent {
       coPayAmount: [''],
       reasonForCoPay: [''],
       coverName: [''],
-      sellerId: [''],
+      sellerId: localStorage.getItem('agentCode'),
       claimType: [''],
       notes: [''],
       proposerName: ['']
