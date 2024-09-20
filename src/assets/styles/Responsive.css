@@ -1,4 +1,4 @@
-@media (max-width:1024px) {
+/*@media (max-width:1024px) {
     .bodyColumns-1 {
         max-width: 90%;
         margin-left: 9%;
@@ -6,13 +6,27 @@
     .quickFilter .quickFilterHeading {
         display: none;
     }
-}
-@media (max-width:912px) {
-    .mobile-hide {
+}*/
+@media (max-width:1093px) {
+    .siteHeader {
         display: none;
     }
+    .bodyColumn h2 {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .bodyColumns-1 {
+        max-width: 90%;
+        margin-left: 9%;
+    }
+    .quickFilter .quickFilterHeading {
+        display: none;
+    }
+    .mobile-hide {
+        display: none !important;
+    }
     .mobile-block {
-        display: block;
+        display: block !important;
     }
     .siteSidenav {
         display: none;
@@ -22,7 +36,7 @@
         margin: auto;
     }
     .cardViewMain .cardViewWraper .cardViewItem {
-        width: 48%;
+        width: 49%;
         border:1px solid #e6e6e6;
         box-shadow: 0px 2px 4px 0px #D5D7DE33;
         box-shadow: 0px 1px 10px 0px #D5D7DE1F;
@@ -32,13 +46,17 @@
     .quickFilterMain {
         flex-direction: column-reverse;
         gap:24px;
-        padding: 0;
+        padding: 16px 18px;
+        align-items: flex-start
     }
-    .filterWraper {
+    .filterWraper, .quickFilterMain .quickFilterRight {
         width: 100%;
     }
     .filterWraperForm {
         right: 0;
+        border-radius: 0;
+        padding: 0;
+        border-width: 0;
     }
     .btn_filterMobile {
         font-size: 0;
@@ -53,10 +71,10 @@
         display: none;
     }
     .field_searchMain-mobile, .filter_resultsFound_mobile,
-    .mobile_goBack, .moreActionItemsSub h6{
+    .mobile_goBack, .overlay_popupMenu_Sub h6, .btn_backPage {
         display: block;
     }
-    .moreActionItems {
+    .mobile_popupBackdrop {
         width: 100%;
         height: 100%;
         position: fixed;
@@ -64,12 +82,14 @@
         background: rgba(0,0,0,12%);
         backdrop-filter: blur(10px);
     }
-    .moreActionItemsSub {
+    .mobile_popupMain {
+        width: 100%;
         position: absolute;
         bottom: 0;
         border-radius: 40px 40px 0 0;
         padding: 32px 16px;
-        text-align: center;
+        background-color: var(--white-color);
+        box-shadow: 0px 0px 10.67px 0px #0000001A;
     }
     .actionItemsMain .actionItem {
         padding: 16px 8px;
@@ -79,13 +99,38 @@
     .moreActionItems ul a{
         font-size: 16px;
     }
+    .fw_form header {
+        text-align: center;
+    }
+    .filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
+        width: 46%;
+    }
+    .btn_red, .btn_white {
+        border-radius: 60px;
+    }
+    .tableNav .pageCountMain {
+        text-align: center;
+    }
+    .quoteComparisonWraper .qc_item.qc_item2 {
+        overflow-x: auto;
+    }
+    .quoteComparisonWraper .qc_itemSubMain {
+        width: 810px;
+    }
 }
 @media (max-width:767px) {
+    .siteBody {
+        background: var(--white-color);
+    }
     .cardViewMain .cardViewWraper .cardViewItem {
         width: 100%;
     }
+    .quickFilterMain {
+        padding: 0;
+    }
     .quickFilterLeft {
         overflow-x: auto;
+        max-width: 99%;
     }
     .quickFilterLeft .quickFilter {
         flex-wrap: nowrap;
@@ -93,5 +138,21 @@
     }
     .filterWraperForm {
         min-width: 100%;
+    }
+    .tableNav .pagination {
+        gap: 4px;
+    }
+    .createNewQuoteWraper .createNewQuoteMain {
+        flex-direction: column;
+        gap:20px;
+    }
+    .filterWraperForm .fw_form footer {
+        flex-direction: column-reverse;
+    }
+    .createNewQuoteWraper .createNewQuoteMain .cnqLeft h5 {
+        font-size: 18px;
+    }
+    .createNewQuoteWraper .createNewQuoteMain .cnqLeft h6 {
+        font-size: 14px;
     }
 }
