@@ -1,0 +1,4 @@
+{
+    "getRenewalListApi":"https://usp.monocept.ai/renewal/api/renewal/getrenewallist",
+    "getRenewalInfoApi":"https://usp.monocept.ai/renewal/api/renewal/renewalinfo"
+}
