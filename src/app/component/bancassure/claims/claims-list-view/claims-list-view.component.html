@@ -33,13 +33,26 @@
                     <!-- <div class="claims-icon">
                          <i class="fa-solid fa-download"></i> 
                     </div> -->
-                                   
                     <!--Search DropDown-->
-                    <div class="claims-icon" >
-                        <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown($event)">
+                       <div class="search">           
+                    <select class="select-dropdown" [(ngModel)]="selected"  (selectionChange)="onSelectChanges($event)">
+                    
+                        <option value="search" selected>Select an option</option>
+                        <option value="requestType">Request Type</option>
+                        <option value="productName">Product Name</option>
+                        <option value="policyNumber">Policy Number</option>
+                    </select>
+                       
+                    <input class="search-input" type="text" [placeholder]="getPlaceholder()"  [formControl]="searchInputControl">
+                    <div class="search-icon" (click)="applySearch()">
+                        <i class="fa-solid fa-magnifying-glass" aria-expanded="false"></i>
+                    </div>
+                </div> 
+                    <!-- <div class="claims-icon" >
+                        <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown($event)"> -->
 
-                        <i class="fa-solid fa-magnifying-glass" (click)="toggleSearchDropdown($event)"></i>
-                        <mat-menu #searchMenu="matMenu"  [overlapTrigger]="false" hasBackdrop="true" (closed)="menuClosed()">
+                        <!-- <i class="fa-solid fa-magnifying-glass" (click)="toggleSearchDropdown($event)"></i> -->
+                        <!-- <mat-menu #searchMenu="matMenu"  [overlapTrigger]="false" hasBackdrop="true" (closed)="menuClosed()">
                             <div class="search-dropdown-cnt">
                           <div class="search-title">Search</div>
                           <div class="search-dropdown">
@@ -51,7 +64,7 @@
                                 <mat-option value="productName">Product Name</mat-option>
                                 <mat-option value="requestType">Request Type</mat-option>
                                 <!-- <mat-option value="requestId">Request Id</mat-option>
-                                <mat-option value="name">Member Name</mat-option> -->
+                                <mat-option value="name">Member Name</mat-option> 
                               </mat-select>
                             </mat-form-field>
                             <div class="search-input">
@@ -72,7 +85,7 @@
                         </div>
                         </mat-menu>
                       </div>
-                    </div>
+                    </div> -->
                     <div class="claims-list-icon" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')">
                         <i class="fa-solid fa-list"></i>
                     </div>
@@ -94,9 +107,9 @@
                 <mat-card *ngFor="let gridClaims of gridClaimsData| paginate: {itemsPerPage: rows, currentPage: page} " class="grid-view-container" appearance="outlined">
                     <mat-card-title class="top-section">Request
                        
-                        <div class="icon">
+                        <!-- <div class="icon">
                             <i class="fa-solid fa-download"></i>
-                        </div>
+                        </div> -->
                     </mat-card-title>
 
                     <mat-card-subtitle> <span class="value">{{ gridClaims.id }}</span> </mat-card-subtitle>
@@ -115,7 +128,7 @@
                                 <span class="value">{{ gridClaims.memberName }}</span>
                             </div>
                         </div>
-                        <div class="policy-detail">
+                        <div class="policy-detail2">
                             <div class="detail">
                                 <span class="label">Member Relation</span>
                                 <span class="value">{{ gridClaims.memberRelation }}</span>
@@ -125,7 +138,7 @@
                                 <span class="value">{{ gridClaims.requestType }}</span>
                             </div>
                         </div>
-                        <div class="policy-detail">
+                        <div class="policy-detail3">
                             <div class="detail1">
                                 <span class="label">Status</span>
                                 <span class="value">{{ gridClaims.claimStatus }}</span>
@@ -143,44 +156,46 @@
           
             <!------------ list-view ------------------>        
           <br/>        
-<div class="table" *ngIf="selectedView == 'list'">
-    <p-table [value]="claims" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-       currentPageReportTemplate=" {first} - {last} of {totalRecords}"
-        [rowsPerPageOptions]="[10,20]" class="custom-paginator my-paginator">
-        <ng-template pTemplate="header">
-            <tr class="custom-header">
-                <th >Request </th>
-                <th>Policy No.</th>
-                <th>Product Name</th>
-                <th>Member Name</th>
-                <th>Member Relation</th>
-                <th>Request Type</th>
-                <th>Status</th>
-                <th>Raised Date</th>
-                <!-- <th>Download</th> -->
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-data>
-            <tr>
-                <td>{{data.id}}</td>
-                <td>{{data.policyNumber}}</td>
-                <td>{{data.productName}}</td>
-                <td>{{data.memberName}}</td>
-                <td>{{data.memberRelation}}</td>
-                <td>{{data.requestType}}</td>
-                <td>{{data.claimStatus}}</td>
 
-                <td>{{data.raisedDate | date:'yyyy-MM-dd'}}</td>
-
-                <!-- <td>
-                    <mat-icon>download</mat-icon>
-                </td> -->
-            </tr>
-        </ng-template>
-    </p-table>
-</div>  
+<div class="table-format-cnt table-responsive" *ngIf="selectedView == 'list'">
+    <div class="table-inner-cnt">
+        <table class="table tableClaimsList table-borderless">
+            <thead>
+                <tr class="table-headings-row">
+                    <th scope="col">Request</th>
+                    <th scope="col">Policy No.</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Member Name</th>
+                    <th scope="col">Member Relation</th>
+                    <th scope="col">Request Type</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Raised Date</th>
+                    <!-- <th scope="col">Download</th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index"
+                    class="table-values">
+                    <td class="pro-name">{{ row?.id }}</td>
+                    <td class="pro-name">{{ row?.policyNumber }}</td>
+                    <td class="pro-name">{{ row?.productName }}</td>
+                    <td class="pro-name">{{ row?.memberName }}</td>
+                    <td class="pro-name">{{ row?.memberRelation }}</td>
+                    <td class="pro-name">{{ row?.requestType }}</td>
+                    <td class="pro-name">{{ row?.claimStatus }}</td>
+                    <td class="modification">{{ row?.raisedDate | date:'yyyy-MM-dd' }}</td>
+                    <td>
+                        <!-- <div class="icon" (click)="downloadRequest(row)">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                        </div> -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
             
-            <div class="pages custom-paginator-background" *ngIf="selectedView=='grid'">
+            <div class="pages custom-paginator-background">
                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
                   [rowsPerPageOptions]="[10,20]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                 </p-paginator>

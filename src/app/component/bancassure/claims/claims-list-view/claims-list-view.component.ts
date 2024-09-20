@@ -13,7 +13,7 @@ import { ClaimsInterface } from 'src/app/interface/claims.interface';
   selector: 'app-claims-list-view',
   templateUrl: './claims-list-view.component.html',
   styleUrls: ['./claims-list-view.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated
+  //encapsulation: ViewEncapsulation.Emulated,
 })
 export class ClaimsListViewComponent implements OnInit {
   displayedColumns: string[] = ['request', 'policyNo', 'productName', 'memberName', 'memberRelation', 'requestType', 'status', 'raisedDate', 'download'];
@@ -35,7 +35,7 @@ export class ClaimsListViewComponent implements OnInit {
   toggledropdown: boolean = false;
   toggleSearchdropdown: boolean = false;
   searchInputControl = new FormControl("");
-  selected: string = "";
+  selected: string = "search";
   userId!: number;
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe){ }
 
@@ -83,7 +83,7 @@ fetchData(): void {
     this.gridClaimsData = this.claims;
     this.totalRecords = this.gridClaims.length;
   });
-}
+  }
 
   //-----------search dropdown----------//
   toggleSearchDropdown(event: any){
@@ -95,27 +95,37 @@ fetchData(): void {
   }
 
   applySearch(): void {
+    let searchValue = this.searchInputControl.value?.trim();
     console.log("this.searchInputControl.value",this.searchInputControl.value)
-    if (this.searchInputControl.value) {
+    if (searchValue) {
       this.payload.searchType = this.selected;
       console.log("this.payload.searchType",this.payload.searchType)
-      this.payload.searchString = this.searchInputControl.value;
+      this.payload.searchString = searchValue;
       console.log("his.payload.searchString ",this.payload.searchString )
       this.fetchData();
       this.toggleSearchdropdown = false;
-    } else {
-      this.toggleSearchdropdown = true;
-    }
-  }
-
-  cancelSearch(): void {
-    this.toggleSearchdropdown = false;
+    } else if(searchValue === ''){
+      
     this.selected = '';
     this.searchInputControl.setValue('');
     this.payload.searchType = '';
     this.payload.searchString = '';
     this.fetchData();
+      
+    }
+    else{
+      this.fetchData();
+    }
   }
+
+  // cancelSearch(): void {
+  //   this.toggleSearchdropdown = false;
+  //   this.selected = '';
+  //   this.searchInputControl.setValue('');
+  //   this.payload.searchType = '';
+  //   this.payload.searchString = '';
+  //   this.fetchData();
+  // }
   onSelectChanges(event: any): void {
   //  event.stopPropagation(); // Prevents the menu from closing
   this.selected = event.value;
@@ -123,18 +133,12 @@ fetchData(): void {
   this.searchInputControl.setValue('');
   this.searchInputControl.clearValidators();
 
-  if (this.selected === 'policyNumber') {
-    this.searchInputControl.setValidators([
-      Validators.required,
-      Validators.pattern('^[6-9][0-9]{9}$')
-    ]);
-  } else if (this.selected === 'productName' || this.selected === 'requestType') {
+  if (this.selected === 'policyNumber' || this.selected === 'productName' || this.selected === 'requestType') {
     this.searchInputControl.setValidators([
       Validators.required,
       Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$')
     ]);
-  }
-    
+  }    
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched(); 
   }
@@ -146,8 +150,9 @@ fetchData(): void {
       return 'Enter Product Name';
     } else if (this.selected === 'requestType') {
       return 'Enter Request Type';
-    } else {
-      return '';
+    }
+     else {
+      return 'Search...';
     }
   }
   menuClosed(): void {

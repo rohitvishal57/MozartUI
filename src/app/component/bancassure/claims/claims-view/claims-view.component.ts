@@ -7,6 +7,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { NgToastService } from 'ng-angular-popup';
 import { MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -59,7 +60,7 @@ export class ClaimsViewComponent {
     createdBy?: string
   }[] = [];
   
-  constructor(private fb: FormBuilder, private commonService: CommonService,  private cdr: ChangeDetectorRef,
+  constructor(private fb: FormBuilder, private commonService: CommonService,  private cdr: ChangeDetectorRef, private router:Router,
     private toast: NgToastService,@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
 
   ){}
@@ -78,11 +79,11 @@ export class ClaimsViewComponent {
   }
   saveUpload(): void {
     this.saveForm = this.fb.group({
-      policyNumber: [this.form.get('policyNumber')?.value, [ Validators.pattern(/^\d+$/)]], // Validate integer
+      policyNumber: [this.form.get('policyNumber')?.value, [ Validators.pattern(/^\d+$/)]], 
       labelName: [],
       documentName: [this.namesVariable ],
-      documentType: [this.documentType, [ Validators.pattern(/^(Pdf|jpeg|png)$/)]], // Validate type
-      createdBy: [localStorage.getItem('agentCode'), [Validators.pattern(/^\d+$/)]], // Validate integer
+      documentType: [this.documentType, [ Validators.pattern(/^(Pdf|jpeg|png)$/)]], 
+      createdBy: [localStorage.getItem('agentCode'), [Validators.pattern(/^\d+$/)]], 
       file:['/D:/Downloads/ABHI_06_Ma']
 
     });
@@ -90,12 +91,12 @@ export class ClaimsViewComponent {
   createForm(): void {
     this.form = this.fb.group({
       id: localStorage.getItem('agentCode'),
-      policyNumber: [''],
-      proposalNumber: [''],
+      policyNumber: ['',Validators.required],
+      proposalNumber: ['',Validators.required],
       memberName: [''],
       productName: [''],
-      fullName: [''],
-      policyType: [''],
+      fullName: ['',Validators.required],
+      policyType: ['',Validators.required],
       memberRelation: [''],
       requestType: [''],
       claimStatus: [''],
@@ -143,9 +144,7 @@ extractUniqueValues(data: any[], key: string): any[] {
 
 
 handleDropdownChange(event:any){
-  console.log('evenr', event);
   this.form.get('policyNumber')?.setValue(event.value);
-  console.log(this.form.get('policyNumber')?.value);
   
 }
  //-------------- Method to handle file upload------------------//
@@ -216,16 +215,17 @@ uploadFiles(files: File[]): void {
     this.commonService.uploadFiles(formData).subscribe(response => {
     //  const uploadedFile = this.uploadedFiles.find(f => f.file.name === file.name);
       if (response.success) {
-        this.uploadedFile.status = 'success';
+        this.uploadedFiles.map(file => file.status = 'success')
         this.uploadSuccess = true;
         this.uploadedFilesCount++;
-        console.log(this.uploadSuccess);
+        console.log(this.uploadedFile);
         }
       this.updateStatusLabel();
       this.cdr.markForCheck(); // Trigger change detection
     }, error => {
       this.uploadedFile = this.uploadedFiles.find(f => f.file.name === f.file.name);
-      this.uploadedFile.status = 'failed';
+      this.uploadedFiles.map(file => file.status = 'failed')
+      this.uploadSuccess = false;
       this.failedFilesCount++;
       this.updateStatusLabel();
       this.cdr.markForCheck(); // Trigger change detection
@@ -235,7 +235,7 @@ uploadFiles(files: File[]): void {
 
 updateStatusLabel(): void {
  // this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
- this.uploadStatus = `${this.totalFilesCount} of ${this.totalFilesCount} files uploaded`;
+ this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
 }
 deleteFile(fileToDelete: any) {
   this.uploadedFiles = this.uploadedFiles.filter(file => file !== fileToDelete);
@@ -270,27 +270,8 @@ formatUploadDateTime() {
   }
 }
 
-validateFormData(formData: any): boolean {
-  // Basic validation example, extend as needed
-  if (!formData.policyNumber || !/^\d+$/.test(formData.policyNumber)) {
-    return false;
-  }
-  if (!formData.labelName || typeof formData.labelName !== 'string') {
-    return false;
-  }
-  if (!formData.documentName || typeof formData.documentName !== 'string') {
-    return false;
-  }
-  if (!formData.documentType || !/^(Pdf|jpeg)$/.test(formData.documentType)) {
-    return false;
-  }
-  if (!formData.createdBy || !/^\d+$/.test(formData.createdBy)) {
-    return false;
-  }
-  return true;
-}
 
-submitResponse(): void {
+onSubmit(): void{
 if (this.saveForm.valid || this.form.valid) {
   const saveClaimData = this.form.value;
   
@@ -333,41 +314,15 @@ if (this.saveForm.valid || this.form.valid) {
   forkJoin([fileUploadObservable, saveClaimObservable]).subscribe(results => {
     const fileUploadResult = results[0];
     const claimsResult = results[1];
-
-    // Handle file upload response
-    if ('response' in fileUploadResult) {
-      
-      const response = fileUploadResult.response;
-      console.log('resp',response);
-      
-  
-
-      if (response.success) {
-        
-        console.log("isFileUploaded");
-        
-        this.toast.success({ detail: 'Files uploaded successfully' });
-      //  isFileUpload = true
-        this.uploadedFilesCount = this.uploadedFiles.length; // Update count based on files uploaded
-      } else {
-        this.toast.error({ detail: 'Failed to upload files', duration: 3000 });
-        
-      }
-    } else if ('error' in fileUploadResult) {
-      this.toast.error({ detail: 'Error occurred during file upload', duration: 3000 });
-    }
-
     // Handle claims submission response
     if ('response' in claimsResult) {
         this.response = claimsResult.response;
       if (this.response.success === true) {
-        console.log("claimSubmitted");
         this.uploadSuccess = true;
         this.toast.success({ detail: 'Claims submitted successfully' });
+        this.router.navigate(['portal/agent/viewClaims'])
 
       } else {
-        console.log("qwertyuytaer")
-       
         this.toast.error({ detail: 'Failed to submit claims' });
       }
     } else if ('error' in claimsResult) {
