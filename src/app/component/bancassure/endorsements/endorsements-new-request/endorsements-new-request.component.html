@@ -1,16 +1,98 @@
-<div class="endorements-new-request-wrap">
-    <div class="main-container">
-        <div class="all-claims">
-            <div class="header">
-                <div class="header-value">My Endorsement</div>
-            </div>
-            <div class="main-claims">
-                <div class="request-header">
-                    Raise Request
-                </div>
-            </div>
-            <div class="details-section">
-            </div>
+<div class="add-new-endorsement-wrap">
+  <div class="main-container">
+    <div class="all-claims">
+      <div class="header">
+        <div class="header-value">My Endorsement</div>
+      </div>
+      <div class="main-claims">
+        <div class="request-header">
+          Raise Request
         </div>
+      </div>
+      <div class="details-section">
+        <form [formGroup]="form">
+          <div class="dropdowns row">
+            <!-- <div class="col-3">
+              <div class="dropdown-field">
+                <label class="label">Select Proposer</label>
+                <p-dropdown [options]="proposers" placeholder="Select Proposer" formControlName="proposalNumber"
+                  [virtualScroll]="true" [itemSize]="30" />
+              </div>
+            </div> -->
+            <div class="col-4">
+              <div class="dropdown-field">
+                <label class="label"> Select Policy Member</label>
+                <p-dropdown [options]="activePolicyNumbers" formControlName="policyNumber"
+                  placeholder="Select Policy Number" [virtualScroll]="true" [itemSize]="30"
+                  (onChange)="handleDropdownChange($event)" />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="dropdown-field">
+                <label class="label">Select Member</label>
+                <p-dropdown [options]="proposerNames" formControlName="memberName" placeholder="Select Member"
+                  [virtualScroll]="true" [itemSize]="30" (onChange)="selectMember($event)"  />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="dropdown-field">
+                <label class="label">Endorsement Type</label>
+                <p-dropdown [options]="endorsementsTypes" formControlName="endorsementType"
+                  placeholder="Select Endorsement Type" />
+              </div>
+            </div>
+            <div class="col-12 pt-5">
+              <div class="text-area">
+                <label class="label">Current Details In Policy</label>
+                <textarea rows="2" cols="30" formControlName="policyDetails" pInputTextarea>
+                    </textarea>
+              </div>
+            </div>
+            <div class="col-12 pt-4">
+              <div class="text-area">
+                <label class="label">Add Notes</label>
+                <textarea rows="2" formControlName="notes" cols="30" pInputTextarea>
+                    </textarea>
+              </div>
+            </div>
+            <div class="col-12 pt-5">
+              <div class="Documents">
+                <div class="form-group" *ngIf="!showDocInfo">
+                  <div>
+                    <label for="file">Upload Documents</label>
+                    <p class="file-type-wrap">JPG/JPEG/BMP/PNG/PDF Files(upto 10mb)</p>
+                  </div>
+                  <div>
+                    <mat-icon (click)="fileInput.click()" class="upload-icon">upload</mat-icon>
+                    <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple
+                      accept=".jpg, .jpeg, .pdf, .bmp, .png" />
+                    <div class="upload-doc-wrap">Upload</div>
+
+                  </div>
+                </div>
+                <div class="form-group" *ngIf="showDocInfo">
+                  <div class="d-flex">
+                    <div>
+                      <img src="" />
+                    </div>
+                    <div>
+                      <label for="file">{{namesVariable[0]}}</label>
+                      <p class="file-type-wrap">{{documentType[0]}}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <button class="delete-button" (click)="deleteFile()">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button class="submit-button" type="button" (click)="submitResponse()">Submit Request</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
+  </div>
