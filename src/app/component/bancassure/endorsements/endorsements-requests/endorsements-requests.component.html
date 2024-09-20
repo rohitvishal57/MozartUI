@@ -41,7 +41,19 @@
                         </div>
                     </div>
                     <div class="right-header">
-                        <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown()">
+                        <div class="search">                        
+                            <select [(ngModel)]="selected" class="select-dropdown" (ngModelChange)="onSelectChanges($event)">
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="requestId">Request ID</option>
+                                <option value="memberName">Member Name</option>
+                                <option value="policyNumber">Policy Number</option>
+                            </select>
+                            <input class="search-input" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <div class="search-icon" (click)="applySearch()">
+                                <i class="fa-solid fa-magnifying-glass" aria-expanded="false"></i>
+                            </div>
+                        </div>
+                        <!-- <div [matMenuTriggerFor]="searchMenu" class="quotes-icon" (click)="toggleSearchDropdown()">
                             <i class="fa-solid fa-magnifying-glass" data-bs-toggle="dropdown"
                                 aria-expanded="false"></i>
                             <mat-menu #searchMenu="matMenu" [overlapTrigger]="false" hasBackdrop="true"
@@ -65,7 +77,7 @@
                                                 *ngIf="selected !== 'none' && selected !== ''"
                                                 [formControl]="searchInputControl" [placeholder]="getPlaceholder()"
                                                 (click)="$event.stopPropagation()"> <!-- Stop propagation here -->
-                                            <mat-error
+                                            <!-- <mat-error
                                                 *ngIf="searchInputControl.invalid && searchInputControl.touched">
                                                 {{ getErrorMessage() }}
                                             </mat-error>
@@ -79,7 +91,7 @@
                                     </div>
                                 </div>
                             </mat-menu>
-                        </div>
+                        </div> -->
                         <div class="quotes-list-icon" [ngClass]="{'active': selectedView === 'list'}"
                             (click)="quotesViews('list')">
                             <i class="fa-solid fa-list"></i>

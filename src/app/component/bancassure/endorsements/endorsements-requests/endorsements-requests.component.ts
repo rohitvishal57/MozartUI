@@ -51,23 +51,18 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   requestsListRequestBody:any = {
-      "agentCode": "",
-      "eventName": "",
       "start": 0,
-      "length": 2,
-      "sortColumn": "",
+      "length": 270,
+      "sortColumn": "RaisedOn",
       "searchColumn": "",
-      "sortDirection": "Desc",
+      "sortDirection": "DESC",
       "searchString": "",
-      "uiStatus": [
-        "Active","Resolved","Cancelled"
-      ],
+      "uiStatus": [],
       "viewBy": [
         "5100003"
       ]
   }
      
-
   getRequestList() {
     this.requestsListRequestBody.agentId = localStorage.getItem('agentCode')
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
@@ -86,12 +81,13 @@ export class EndorsementsRequestsComponent implements OnInit {
       }
     );
   }
+
   statusFilter(filter: string) {
-   if (filter === "All") {
-    this.requestsListRequestBody.uiStatus = ["Active", "Resolved", "Cancelled"];
-   } else {
+    if (filter === "All") {
+      this.requestsListRequestBody.uiStatus = ["Active", "Resolved", "Cancelled"];
+    } else {
     this.requestsListRequestBody.uiStatus = [filter];
-   } 
+    }
     this.getRequestList();
     this.activeFilter = filter;
   }
@@ -139,7 +135,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       return "Enter Policy Number";
     }
     else {
-      return "";
+      return "Search...";
     }
   }
   getErrorMessage(): string {
@@ -163,6 +159,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.requestsListRequestBody.searchString = "";
     this.getRequestList()
   }
+
   applySearch() {
     if (this.searchInputControl.valid) {
       if (this.selected === "requestId") {
