@@ -34,8 +34,8 @@ export class RenewalDynamicFormComponent implements OnInit {
   policySummarys : boolean=false
   planDetail : boolean = false;
   activeSection: string = 'primary';
-  response: any;
-  policyNumber:string='';
+  response: any = [];
+  policyNumber:string=''; 
 
   value: number = 25;
   control = {
@@ -315,7 +315,6 @@ loadAddressDetails() {
   if (this.renewalInfo?.response?.policyData?.length > 0) {
     this.homeAddress = { ...this.renewalInfo.response.policyData[0].HomeAddress };
     console.log(this.homeAddress);
-    
   }
 }
 
