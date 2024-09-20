@@ -396,7 +396,7 @@
                     left: 50%;
                     transform: translate(-50%, -50%);
                     /* Center the overlay */
-                    background-color: #ebf1e1;
+                    background-color: #ffffff;
                     border-radius: 20px;
                     text-align: center;
                     z-index: 11;
@@ -411,6 +411,15 @@
                         font-size: 16px;
                         font-weight: 700;
                     }
+                    .get {
+                        background: #C7222A;
+                        color: #ffffff;
+                        border: 1px solid #C7222A;
+                        border-radius: 8px;
+                        padding: 1% 5%;
+                        margin: 1% 2%;
+                    }
+
 
                     // .add-container {
                     //     // height: 400px;
@@ -444,8 +453,9 @@
                         // display: flex;
                         // flex-wrap: wrap;
                        height: 400px;
-                        display: grid;
-                        grid-template-columns: repeat(2, 1fr);
+                       overflow-y: scroll;
+                        // display: grid;
+                        // grid-template-columns: repeat(2, 1fr);
                         .add-wrapper {
                             // width: 165px !important;
                             flex: 0 0 auto !important;
@@ -457,28 +467,37 @@
                                 border-radius: 8px;
                                 border: 1px solid #ccc;
                                 background: #F7F7F7;
-                                text-align: center;
+                                text-align: left;
                                 transition: all 0.3s ease;
                                 width: 97%;
                     
                                 span {
                                     font-size: 16px;
                                     color: #000;
+                                    margin: 0 2%;
+                                    font-weight: 600;
                                 }
                             }
                     
-                            input[type="checkbox"] {
-                                position: absolute;
-                                opacity: 0;
-                                cursor: pointer;
+                            // input[type="checkbox"] {
+                            //     position: absolute;
+                            //     opacity: 0;
+                            //     cursor: pointer;
+                            // }
+                            input[type="checkbox"]:checked + span {
+                                color: #C7222A; // Red color
+                                
                             }
-                    
+                        
+                            input[type="checkbox"]:checked {
+                                accent-color: #C7222A; // Changing the checkbox's tick color to red
+                            }
                             &.selected .add-checkbox {
-                                background-color: #C7222A;
-                                border-color: #C7222A;
-                    
-                                span {
-                                    color: #fff;
+                                // border-color: #C7222A;
+                                
+                                input[type="checkbox"]:checked + span {
+                                    background-color: #F7F7F7; // Optional background color
+                                    color: #C7222A; // Change text color
                                 }
                             }
                         }
@@ -659,34 +678,30 @@
                 }
 
                 .plan-container {
-                    display: flex;
-                    gap: 1rem;
-                    width: 344px;
-                    height: 46px;
+                    // display: flex;
+                    // gap: 1rem;
+                    // width: 344px;
+                    // height: 46px;
                     padding: 8px 0px 8px 4px;
-
+                    // justify-content: end;
+                    .plan-label{
+                        font-size: 14px;
+                        padding: 1%;
+                    }
                     .plan1 {
-                        padding: 4px 7px 4px 7px;
-                        border-radius: 8px;
+                        padding: 1%;
+                        /* border-radius: 8px; */
                         border: none;
-                        background: #F7F7F7;
+                        /* background: #F7F7F7; */
                         text-align: center;
                         transition: background-color 0.3s ease, box-shadow 0.3s ease;
-                        width: 123px;
-                        height: 30px;
-                        display: flex;
-                        overflow: hidden;
-                            background-color: #ffe7e5;
-                            border-color: #c7222a;
-                            color: #C7222A;
-                            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-                        
+                        width: fit-content;
 
                         .plan-price {
-                            font-size: 12px;
+                            font-size: 18px;
                             //   color: #c7222a;
                             // width: 91px;
-                            height: 24px;
+                            font-size: 24px;
                             font-weight: 600;
                                 color: #C7222A;
                             
@@ -703,7 +718,7 @@
 
                 .add-tag{
                     font-size: 14px;
-                    font-weight: 600;
+                    font-weight: 500;
                     margin: 0 0 0 2%;
                 }
                 .add-container {
@@ -711,13 +726,16 @@
                     height: 100px;
                     overflow-y: scroll;
                     margin: 0 0 2% 0;
-                    .add-box {
+                    .add-box{
+                        display: flex;
+                    }
+                    .add-text {
                         padding: 4px 7px 4px 7px;
-                        margin: 1% 0 0 7%;
-                        border-radius: 8px;
+                        margin: 1%;
+                        // border-radius: 8px;
                         border: none;
-                        background: #F7F7F7;
-                        text-align: center;
+                        // background: #F7F7F7;
+                        // text-align: center;
                         // width: fit-content
                     }
                 }

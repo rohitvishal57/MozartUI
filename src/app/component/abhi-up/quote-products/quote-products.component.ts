@@ -67,6 +67,7 @@ export class QuoteProductsComponent implements OnInit {
 
   ngOnInit(): void {
     // sessionStorage.clear()
+    this.formData=history.state.formData;
     if(sessionStorage.getItem("cardListProducts")){
       this.cartProductList = this.encryptionService.decrypt(sessionStorage.getItem("cardListProducts") as string);
     }
@@ -195,7 +196,7 @@ export class QuoteProductsComponent implements OnInit {
   }
 
   async insurenow(item: any) {
-    this.formData = { ...this.formData, productName: item.productName }
+    this.formData = { ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount }
     try {
       await this.getFormSequence(item);
       this.removeFromCart(item);

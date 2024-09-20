@@ -95,13 +95,13 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="big-text">Selected Add-Ons</div>
+                                        <div class="big-text">Recommended Add-Ons</div>
                                         <!-- <div class="col-md-12 add-container">
                                             <div *ngFor="let addon of ProductList[popIndex].productFeatures"
                                             class="add-wrapper col-6 col-md-6 col-lg-3"> -->
-                                                <!-- <div class="add-box"
+                                        <!-- <div class="add-box"
                                                 [ngClass]="{'selected': isSelected(addon.featureName), 'unselected': !isSelected(addon.featureName)}"> -->
-                                                <!-- <div>
+                                        <!-- <div>
                                                     <input type="checkbox" [value]="addon.featureName" id="addon.featureName"
                                                         (change)="onCheckboxChange($event, addon.featureName)"/>
                                                         <label for="addon.featureName" class="add-checkbox">
@@ -114,19 +114,19 @@
                                         </div> -->
                                         <div class="col-md-12 add-container">
                                             <div *ngFor="let addon of ProductList[popIndex].productFeatures"
-                                                class="add-wrapper"
-                                                [ngClass]="{'selected': addon.isSelected}">
-                                                    <input type="checkbox" [value]="addon.featureName" id="{{addon.featureName}}"
-                                                        (change)="onCheckboxChange($event, addon,i)"/>
-                                                    <label for="{{addon.featureName}}" class="add-checkbox">
-                                                        <span>{{addon.featureName}}</span>
-                                                    </label>
+                                                class="add-wrapper" [ngClass]="{'selected': addon.isSelected}">
+                                                <label for="{{addon.featureName}}" class="add-checkbox">
+                                                    <input type="checkbox" [value]="addon.featureName"
+                                                        id="{{addon.featureName}}"
+                                                        (change)="onCheckboxChange($event, addon,i)" />
+                                                    <span>{{addon.featureName}}</span>
+                                                </label>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                     <div class="row">
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                             <button class="get" (click)="closeOverlay()">Continue</button>
                                         </div>
                                     </div>
@@ -179,8 +179,7 @@
                         <div class="product-header">
                             <div class="cart-productText"><img src="../../../../assets/logo/activeOne.svg"
                                     class="cart-productImage"> {{item.productName}}</div>
-                            <input type="button" class="product-remove-btn" value="Remove"
-                                (click)="removeFromCart(i)">
+                            <input type="button" class="product-remove-btn" value="Remove" (click)="removeFromCart(i)">
                         </div>
                         <div class="product-features">
                             <div *ngFor="let key of item.keyFeatures">
@@ -193,19 +192,26 @@
 
                         <div class="plan-container">
 
+                            <div class="plan-label">
+                                Premium
+                            </div>
                             <div class="plan1">
-                                <div class="plan-price" >
+                                <div class="plan-price">
                                     ₹{{ item.selectedPremiumAmount }}
                                 </div>
                             </div>
 
                         </div>
                         <div *ngIf="item.selectedAddon.length > 0">
-                            <div class="add-tag">Selected Addons</div>
+                            <hr>
+                            <!-- <div class="add-tag">Selected Addons</div> -->
                             <div class="add-container">
                                 <ng-container *ngFor="let addon of item.selectedAddon">
                                     <div class="add-box">
-                                        {{addon}}
+                                        <img src="./../../../../assets/logo/greenpoint.svg" alt="">
+                                        <div class="add-text">
+                                            {{addon}}
+                                        </div>
                                     </div>
                                 </ng-container>
                             </div>
@@ -227,7 +233,7 @@
     </div>
 </div>
 <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
-  <p style="color: white;font-size: 14px;"> Loading... </p>
+    <p style="color: white;font-size: 14px;"> Loading... </p>
 </ngx-spinner>
 <!-- app.component.html -->
 <!-- <ngx-spinner
