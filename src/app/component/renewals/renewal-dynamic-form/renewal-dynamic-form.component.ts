@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IDynamicControl, IFormControl } from 'src/app/interface/form.interface';
+import { RenewalServiceService } from 'src/app/services/renewal/renewal-service.service';
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -11,10 +12,10 @@ import { IDynamicControl, IFormControl } from 'src/app/interface/form.interface'
 })
 export class RenewalDynamicFormComponent implements OnInit {
   @Input() section: any;
-  nomineeForm: FormGroup = this.fb.group({});
+  form: FormGroup = this.fb.group({});
   formConfig: any;
-  formId: number = 1;
-  mainCnt: number =1;
+  formId: number = 5001;
+  mainCnt: number = 1;
   isEditingEmail = false;
   emailSaved: boolean = false;
   email = 'sujitp1@gmail.com';
@@ -31,12 +32,31 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectedPaymentTypeLabel: string = '';
   isDropdownOpen: boolean = false;
   policySummarys : boolean=false
-  planDetail : boolean = false
+  planDetail : boolean = false;
+  activeSection: string = 'primary';
+  response: any = [];
+  policyNumber:string=''; 
+
+  value: number = 25;
+  control = {
+    name: 'sumInsured',
+    label: 'Sum Insured',
+    type: 'range',
+    min: 500000,
+    max: 20000000,
+    step: 500000,
+    value: 500000,
+    class: 'col-md-12'
+  };
+  renewalInfo: any;
+  homeAddress: any = {};
+
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private renewalService: RenewalServiceService
   ) {}
 
   ngOnInit() {
@@ -44,16 +64,21 @@ export class RenewalDynamicFormComponent implements OnInit {
     this.fetchCoverages();
     this.fetchRoomUpgradeBenefits();
     this.fetchTenureDetails();
-    // this.handleForms(5002);
-    this.planDetail = true
-    // this.selectButton('payment','policySummary');
+     this.renewalService.policy$.subscribe(policy => {
+      if(policy.policyNo){
+      this.policyNumber=policy.policyNo;
+    }
+    });
+    this.getRenewalInfo();
+    this.initializeForm();
   }
 
   initializeForm() {
-    this.nomineeForm = this.fb.group({});
+    this.form = this.fb.group(this.homeAddress);
+    console.log(this.form);
   }
 
-  populateFormControls() {
+  initForm() {
     if (this.formConfig && this.formConfig.formSections) {
       this.formConfig.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
@@ -67,47 +92,51 @@ export class RenewalDynamicFormComponent implements OnInit {
               }
             });
           }
-          this.nomineeForm.addControl(control.name, this.fb.control(control.value, validatorsArray));
+          this.form.addControl(control.name, this.fb.control(control.value, validatorsArray));
         });
       });
     }
-    console.log('Nominee form controls:', this.nomineeForm.controls);
+    console.log('Nominee form controls:', this.form.controls);
+  }
+  
+  proposerObject(){
+    this.renewalService.getRenewalInfo().subscribe((info) => {
+      if (info) {
+        this.renewalInfo=info;
+      }
+    }); 
   }
 
-  addNominee() {
-    // Logic to add another nominee
-  }
+  handleAction(event: string,item?: any) {
+      switch (event) {
+        case 'addMember':
+          this.formId=5001;
+          break;
+        case 'editMember':
+          this.formId=5001;
+          break;
+        case 'editAddress':
+          this.formId=5001;
+          console.log(this.form.value);
+          
+          break;
+        case 'addNominee':
+          this.formId=5001;
+          break;  
+        default:
+          console.warn('Unknown action:', event);
+      }
+      this.proposerObject()
+    }
 
   onRadioChange(controlName: string, value: string): void {
-    this.nomineeForm.get(controlName)?.setValue(value);
+    this.form.get(controlName)?.setValue(value);
   }
 
-  toggleSelect(option: any) {
-    option.selected = !option.selected;
-  }
-
-  hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null): boolean {
-    let controlValue: any;
-    if (parentControl != null) {
-        const formArray = this.nomineeForm.get(parentControl.name) as FormArray;
-        controlValue = formArray.get(control.name)?.value;
-    } else {
-        controlValue = this.nomineeForm.get(control.name)?.value;
-    }
-    return controlValue != null && controlValue !== '';
-}
- 
 rangeValue: { [key: string]: number } = { sumInsured: 500000 };
 
 updateRangeValue(event: any, controlName: string) {
   const value = event.target.value;
-  // if(value == 3000000){
-  //   this.rangeValue[controlName] = (this.rangeValue[controlName]+value)-500000
-  // }
-  // else if(value > 2500000){
-  //   this.rangeValue[controlName] = (this.rangeValue[controlName]+value)
-  // }
-    // const value = event.target.value;
     this.rangeValue[controlName] = +value;
 }
 
@@ -130,85 +159,34 @@ saveEmail() {
     this.emailSaved = true;
   }
 }
-
 selectButton(button: string, value?: any) {
-  this.selectedButton = button; 
-
   if (this.selectedButton === 'primary') {
-      this.mainCnt = 1;
-      this.formConfig = [];
-      this.policySummarys=false;
-      if (value == 5005) {
-        this.planDetail=true
-        this.formId = value;
-        this.initializeForm();
-        this.http.get<any[]>('/assets/jsonValue/renewEditAddress.json').subscribe(data => {
-          this.formConfig = data;
-          this.populateFormControls();
-        });
-  
-      } else if (value == 5004) {
-        this.planDetail=true
-        this.formId = value;
-        this.initializeForm();
-        this.http.get<any[]>('/assets/jsonValue/renewalForms.json').subscribe(data => {
-          this.formConfig = data;
-          this.populateFormControls();
-        });
-  
-      } else if (value == 5003) {
-        this.planDetail=false
-        this.formId = value;
-        this.initializeForm();
-        this.http.get<any[]>('/assets/jsonValue/editMemberDetail.json').subscribe(data => {
-          this.formConfig = data;
-          this.populateFormControls();
-        });
-  
-      } else if (value == 5002) {
-        this.planDetail=false
-        this.formId = value;
-        this.initializeForm();
-        this.http.get<any[]>('/assets/jsonValue/addNewMember.json').subscribe(data => {
-          this.formConfig = data;
-          this.populateFormControls();
-        });
-  
-      } else {
-        this.formId = 1;
-        this.planDetail=true
-      }
-  } 
-  else if (this.selectedButton === 'additional') {
-      this.mainCnt = 3;
-      this.policySummarys=false;
+    if (value == 5005) {//edit address
+      // this.loadAddressDetails();
+      this.formId = value;
+    }else if (value == 5004) {//add nominee
+      this.formId = value;
+    }else if (value == 5003) {//edit detail
+      this.formId = value;
+    }else if (value == 5002) {// add memeber
+      this.formId = value;
+    }else {
+      this.formId = 5001; //main
+    }
+  }else if (this.selectedButton === 'additional') {
+    this.policySummarys=false;
   } 
   else if (this.selectedButton == 'payment') {
     if(value == 'policySummary'){
-       this.policySummarys=true
-       this.planDetail=true
+      this.policySummarys=true
     }
     else{
       this.policySummarys=false;
-      this.mainCnt = 2;
-      this.planDetail=false
     }
   }
+  this.proposerObject();
 }
 
-
-updatePrimarycnt(btnControl : any){
-  if(btnControl == 'Add Member'){
-          this.selectButton('primary',5002)
-  }
-  else if(btnControl == 'Save Updates'){
-    this.selectButton('primary',1)
-}
-
-}
-// loadPageContent(mainCnt:any) {
-
-// }
 resendLink() {
   console.log('Resending payment link...');
 }
@@ -238,55 +216,38 @@ selectPaymentType(option: any) {
    }
  }
 
-
 fetchTenureDetails(): void { 
-  console.log("Fetching Tenure Details");
- 
   this.http.get<any[]>('/assets/jsonValue/tenure-details.json').subscribe(tenureDetailsData => {
     this.tenureDetails = tenureDetailsData;
-    console.log(this.tenureDetails);
   });    
 }
 
-fetchAddOns(): void { 
-  console.log("Fetching health add-ons");
- 
+fetchAddOns(): void {  
   this.http.get<any[]>('/assets/jsonValue/health-add-ons.json').subscribe(healthAddOnsData => {
     this.healthAddOns = healthAddOnsData;
-    console.log(this.healthAddOns);
   });    
 }
 
 
-fetchCoverages(): void {
-  console.log("Fetching coverages");
-  
+fetchCoverages(): void {  
   this.http.get<any[]>('/assets/jsonValue/optional-coverages.json').subscribe(coveragesData => {
     this.coverages = coveragesData;
-    console.log(this.coverages); // Log here after the data is fetched
   });
 }
 
-fetchRoomUpgradeBenefits(): void {
-  console.log("Fetching room upgrade benefits");
-  
+fetchRoomUpgradeBenefits(): void {  
   this.http.get<any[]>('/assets/jsonValue/rooms.json').subscribe(roomUpgradeBenefitsData => {
     this.roomUpgradeBenefits = roomUpgradeBenefitsData;
-    console.log(this.roomUpgradeBenefits); // Log here after the data is fetched
   });
 }
 
 selectCoverage(coverage: any): void {
-  // Check if the coverage is already selected
   const index = this.selectedCoverages.findIndex(c => c.id === coverage.id);
   if (index > -1) {
-    // If already selected, remove it
     this.selectedCoverages.splice(index, 1);
   } else {
-    // Otherwise, add it to the list
     this.selectedCoverages.push(coverage);
   }
-  console.log("Selected Coverages:", this.selectedCoverages);
 }
 
 isCoverageSelected(coverage: any): boolean {
@@ -300,7 +261,6 @@ selectAddOn(addOn: any): void {
   } else {
     this.selectedAddOns.push(addOn);
   }
-  console.log("Selected Add-Ons:", this.selectedAddOns);
 }
 
 isHealthAddOnSelected(addOn: any): boolean {
@@ -320,5 +280,43 @@ getSubquotes()
 {
   this.router.navigate(['portal/agent/renewalList'],{ queryParams: { showSubQuotes: true } })
 }
+
+setSection(section: string) {
+  this.activeSection = section;
+}
+
+proceed() {
+  if (this.activeSection === 'primary') {
+    this.setSection('additional');
+    this.proposerObject();
+  } else if (this.activeSection === 'additional') {
+    this.setSection('payment');
+  } else if (this.activeSection === 'payment') {
+  }
+}
+
+renewNow(){
+  this.setSection('payment')
+}
+
+getRenewalInfo() {
+  this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
+    (res) => {
+      this.renewalInfo = JSON.parse(res.data);
+      this.renewalService.setRenewalInfo( this.renewalInfo);  
+    },
+    (err) => {
+      console.log("Error", err);
+    }
+  );
+}
+
+loadAddressDetails() {
+  if (this.renewalInfo?.response?.policyData?.length > 0) {
+    this.homeAddress = { ...this.renewalInfo.response.policyData[0].HomeAddress };
+    console.log(this.homeAddress);
+  }
+}
+
 
 }

@@ -1,5 +1,5 @@
 .main-container {
-    height: 1100px;
+    height: 105%;
     display: flex;
     justify-content: center;
     margin-left: 6%;
@@ -42,7 +42,6 @@
 .main-container .all-claims .details-section{
     background: #fff;
     margin: 26px 0px 0px -84px;
-    height: 824px;
     border-radius: 8px;
 }
 
@@ -51,14 +50,20 @@
 // .main-container .all-claims .details-section .dropdowns .dropdown-field {
 //   width: 216px; 
 // }
-
+::ng-deep .p-dropdown .p-dropdown-label {
+  color: #999494;
+  background-color: #f3f3f3;
+}
 ::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
-  color: #090a0c;
+  color: #999494;
   background-color: #f3f3f3;
 }
 
 ::ng-deep .p-dropdown {
-  width: 237px; 
+  width: 99%;
+  padding: 6px 7px 7px 13px;
+  height: 2rem !important;
+  font-size: smaller;
   border: none;
   background-color: #f3f3f3;
 }
@@ -100,13 +105,13 @@
 
 .main-container .all-claims .details-section .dropdown-field label {
   position: absolute;
-  top: 2px; 
+  top: 2px;
   left: 3px;
-  padding: 0 0.5rem; 
-  font-size: 1rem;
-  color:#999494;   
+  padding: 0 0.5rem;
+  font-size: 0.7rem;
+  color: #999494;
   transform: translateY(-50%);
-  z-index: 1; 
+  z-index: 1;
 }
 
 .main-container .all-claims .details-section .dropdown-field .p-dropdown {
@@ -126,11 +131,11 @@
 }
 
 .main-container .all-claims .details-section .dropdowns2 .input-field {
-  width: 100%; 
-  border:#999494;    
+  width: 100% !important;
+  border: #999494;
   background-color: #f3f3f3;
   width: 49.2rem;
-  border-radius:8px;
+  border-radius: 8px;
   height: 38px;
   color: #999494;
 }
@@ -145,16 +150,16 @@ input[type="text"]:focus {
 //   padding-left: 6rem;
 // }
 .tick-icon{
-    padding-left: 1px;
-    margin-top: 3px;
-    padding-top: 1px;
-    font-size: 11px;
-    color: #1bb520;
-    border-radius: 11px;
-    border: 1px solid #13bb18;
-    height: 15px;
-    width: 15px;
-    margin-left: -20px;
+  padding-left: 0px;
+  margin-top: 3px;
+  padding-top: 1px;
+  font-size: 11px;
+  color: #1bb520;
+  border-radius: 11px;
+  border: 1px solid #13bb18;
+  height: 15px;
+  width: 15px;
+  margin-left: -25px;
 }
 .cross-icon
 {
@@ -218,8 +223,10 @@ textarea {
   border: none;
   border-radius: 11px;
   padding: 0.5rem;
-  width: 99.2%;
+  width: 100%;
   box-sizing: border-box;
+  color: #999494;
+
 }
 
 
@@ -228,7 +235,7 @@ textarea {
   top: 23px;
   left: 3px;
   padding: 0 0.5rem;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
   color: #999494;
   transform: translateY(-50%);
   z-index: 1;
@@ -236,8 +243,8 @@ textarea {
 .main-container .all-claims .details-section .Documents{
     display: flex;
     flex-direction: column;
-    padding: 1.5rem;
-}
+    padding: 0px 13px 0px 26px;
+  }
 .main-container .all-claims .details-section .Documents .label{
     font-weight: 600;
 }   
@@ -260,15 +267,15 @@ textarea {
 color:rgba(51, 106, 234, 0.7);
 }
 .main-container .all-claims .details-section .form-group{
-    background-color: #f3f3f3; 
-    padding: 2rem;
-    width: 99%;
-    margin-left: 0rem;
-    margin-top: 2rem;
-    border-radius: 26px;
-    border: 3px dotted #e7e7e7;
-    display: flex;
-    justify-content: space-between;
+  background-color: #f3f3f3;
+  padding: 1rem;
+  width: 99%;
+  margin-left: 0rem;
+  margin-top: 2rem;
+  border-radius: 26px;
+  border: 3px dotted #e7e7e7;
+  display: flex;
+  justify-content: space-between;
 }
 .dropdownp{
     width:100px;
@@ -285,15 +292,14 @@ color:rgba(51, 106, 234, 0.7);
     justify-content: center;
 }
 .static-label{
-  padding-left: 1rem;
+  padding-left: 0.5rem;
+
 }
 .main-container .all-claims .submit-button{
   width: 190px;
   height: 44px;
   padding: 10px 24px;
-  gap: 8px;
   border-radius: 12px;
-  opacity: 0px;
   background: #C7222A;
   color: #FFFFFF;
   font-family: Anek Latin;
@@ -303,29 +309,36 @@ color:rgba(51, 106, 234, 0.7);
   text-align: center;
   border: none;
   margin-top: 3rem;
+  margin-bottom: 1rem;
+    &.disabled {
+    background-color: #d3d3d3; 
+    color: #a9a9a9; 
+    cursor: not-allowed; 
+  }
 }
 .uploads-label{
-  display:flex;
-  gap: 78rem;
+  display: flex;
+  gap: 49.5rem;
+  margin-left: -1.5rem;
 }
 .uploaded-files {
   display: flex;
   flex-direction: column;
   padding-left: 2rem;
-  padding-top: 2rem;
+  padding-top: 1rem;
 }
 
 .uploaded-files ul {
-  list-style-type: none;
-  padding-top: 17px;
+  padding-top: 8px;
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap to the next line */
-  gap: 10px; /* Space between items */
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: -4rem;
 }
 
 .uploaded-files li {
   background: #f1f3f6;
-  padding: 10px;
+  padding: 8px 8px 8px 8px;
   border-radius: 13px;
   width: calc(50% - 10px);
   box-sizing: border-box;
@@ -339,8 +352,8 @@ color:rgba(51, 106, 234, 0.7);
   display: flex;
   justify-content: space-between;
   position: relative;
-  top: -40px;
-  margin-bottom: -3rem;
+  top: -36px;
+  margin-bottom: -1.5rem;
 }
 
 .editable-label {
@@ -397,82 +410,18 @@ input[type="text"] {
   margin-right: 8px;
 }
 
-
-// .uploaded-files {
-//   display: flex;
-//   flex-direction: column;
-// }
-
-// .uploaded-files ul {
-//   list-style-type: none;
-//   padding: 0;
-//   display: flex;
-//   flex-wrap: wrap; /* Allows items to wrap to the next line */
-//   gap: 10px; /* Space between items */
-// }
-// .editable-label-flex {
-//   display: flex;
-//   justify-content: space-between;
-//   width: 100%;
-//   margin-top: -9rem;
-// }
-
-// .uploaded-files li {
-//   background: #f1f3f6;
-//   padding: 10px;
-//   border-radius: 13px;
-//   width: calc(50% - 10px); /* Adjust width to fit two items per row and account for gap */
-//   box-sizing: border-box; /* Ensures padding and border are included in the width */
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin-top: 10px;
-// }
-
-
-//   .delete-button{
-//     background-color:#f1f3f6;
-//     border:none;
-//     margin-left:-4rem;
-//     color:#C7222A;
-//   }
-  
-  
-
-//   .file-info {
-//     margin-bottom: 3px;
-//     position: relative;
-//     top: -34px;
-//     display: flex;
-//   }
-
-// .editable-label {
-//     display: flex;
-//     align-items: center;
-//     margin-bottom: 5px; /* Space between label and date */
-// }
-
-// .file-details {
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-// }
-
-//   .label-text {
-//     margin-right: 8px;
-//   }
-  
-//   .edit-button {
-//     background: none;
+// :host {
+//   // Reset styles
+//   html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, ul, li, table, th, td {
+//     margin: 0;
+//     padding: 0;
 //     border: none;
-//     cursor: pointer;
+//     font-size: 100%; // Use 100% to avoid browser default differences
+//     font-family: inherit; // Use inherited font-family
+//     vertical-align: baseline;
 //   }
-  
-//   input[type="text"] {
-//     border: 1px solid #ccc;
-//     padding: 4px;
-//     font-size: 14px;
-//     margin-right: 8px;
-//   }
+//}
+
+
   
   

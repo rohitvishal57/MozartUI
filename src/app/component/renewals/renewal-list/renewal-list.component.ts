@@ -38,55 +38,12 @@ export class RenewalListComponent {
   showSubQuotes: boolean = false;
   showComparison: boolean = false;
   selected: string = "";
-  searchInputControl = new FormControl("");
+  searchInputControl = new FormControl("",Validators.required);
   isDesktopView:boolean=false
-
-  members = [
-    {
-      quote: "Base Quote",
-      proposer: "Kridhnan",
-      product: "Active User",
-      policyNo: "23-22-0175217-00",
-      renewalPremium: {
-        amount: "₹25558",
-        benefits: "HR benefits of ₹786 added",
-      },
-      mobileNo: "7123456789",
-      dateOfRenewal: "2023-03-15",
-      modification: "Member added tenure 1 year",
-    },
-    {
-      quote: "Sub Quote",
-      proposer: "John Doe",
-      product: "Premium User",
-      policyNo: "45-67-0123456-00",
-      renewalPremium: {
-        amount: "₹35000",
-        benefits: "HR benefits of ₹900 added",
-      },
-      mobileNo: "7890123456",
-      dateOfRenewal: "2023-04-20",
-      modification: "Coverage increased tenure 2 years",
-    },
-    {
-      quote: "Base Quote1",
-      proposer: "krishnavamsi bhavani",
-      product: "Active User",
-      policyNo: "23-22-0175217-00",
-      renewalPremium: {
-        amount: "₹25558",
-        benefits: "HR benefits of ₹786 added",
-      },
-      mobileNo: "7123456789",
-      dateOfRenewal: "2023-03-15",
-      modification: "Member added tenure 1 year",
-    },
-  ];
 
   private onDestroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    private http: HttpClient,
     private renewalService: RenewalServiceService,
     private router: Router,
     private route: ActivatedRoute,
@@ -97,7 +54,7 @@ export class RenewalListComponent {
   ) {}
 
   renewalLisRequestBody={
-    "agentCode": "",
+    "agentCode": "5100003",
     "proposer": "",
     "productName": "",
     "policyNumber": "",
@@ -111,14 +68,15 @@ export class RenewalListComponent {
   }
 
   ngOnInit(): void {
-    const storedAgentCode = localStorage.getItem('agentCode');
-    if (storedAgentCode) {
-      this.renewalLisRequestBody.agentCode = storedAgentCode;
-      this.getRenewalsList();
-    }
-    else{
-      console.log("agent code is not present in local storege");
-    }
+    // const storedAgentCode = localStorage.getItem('agentCode');
+    // if (storedAgentCode) {
+    //   this.renewalLisRequestBody.agentCode = storedAgentCode;
+    //   this.getRenewalsList();
+    // }
+    // else{
+    //   console.log("agent code is not present in local storege");
+    // }
+    this.getRenewalsList();
     this.getProducts();
     this.route.queryParams.subscribe((params) => {
       this.showSubQuotes = params["showSubQuotes"] === "true";
@@ -137,9 +95,10 @@ export class RenewalListComponent {
     // this.spinner.show();
     this.renewalLisRequestBody.pageNumber = this.page;
     this.renewalLisRequestBody.pageSize = this.rows;
-  
+    // this.spinner.show();
     this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
-      (response) => { console.log(response.data);
+      (response) => { 
+        console.log(response.data);
         if (response.success) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
@@ -148,8 +107,10 @@ export class RenewalListComponent {
           this.totalRecords = this.countsList.totalRecords;
         } else {console.error("API request was not successful.");}
         // this.spinner.hide();
+        // this.spinner.hide();
       },
       (error) => {
+        // this.spinner.hide();
         // this.spinner.hide();
         console.error("Error from API:", error);
       }
@@ -199,11 +160,9 @@ export class RenewalListComponent {
 
   calculateAppliedFiltersCount(): number {
     const selectedProductsCount = this.productsList.filter(
-      (product) => product.selected
-    ).length;
+      (product) => product.selected).length;
     const selectedPolicyTypesCount = this.policyTypes.filter(
-      (policyType) => policyType.selected
-    ).length;
+      (policyType) => policyType.selected).length;
     let count = selectedProductsCount + selectedPolicyTypesCount;
     if (this.startDate && this.endDate) {
       count++;
@@ -216,8 +175,7 @@ export class RenewalListComponent {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
-    console.log("startDate",this.startDate,"endDate",this.endDate);
-    
+    console.log("startDate",this.startDate,"endDate",this.endDate);  
     this.renewalLisRequestBody.startDate=this.startDate;
     console.log("start date taken by request body",this.renewalLisRequestBody.startDate);
     this.renewalLisRequestBody.endDate=this.endDate;
@@ -225,19 +183,15 @@ export class RenewalListComponent {
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
-      console.log("selectedProducts",selectedProducts);
-      
+      console.log("selectedProducts",selectedProducts);     
     this.renewalLisRequestBody.productName = selectedProducts.join(", ");
-     console.log("product names which are taking by request body",this.renewalLisRequestBody.productName);
-     
+     console.log("product names which are taking by request body",this.renewalLisRequestBody.productName);  
     const selectedPolicyTypes = this.policyTypes
       .filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
-      console.log("selecteed policy types",selectedPolicyTypes);
-      
+      console.log("selecteed policy types",selectedPolicyTypes);  
     this.renewalLisRequestBody.policyType = selectedPolicyTypes.join(", ");
-    console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType);
-    
+    console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType); 
     this.getRenewalsList();
     this.toggeledropdown=false;
   }
@@ -276,25 +230,28 @@ export class RenewalListComponent {
     }
     this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
   }
-
+  
   onSelectChanges(event: any): void {
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
+  
     if (this.selected === "mobileNumber") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[6-9][0-9]{9}$"),
+        Validators.pattern("^[6-9][0-9]{9}$")
       ]);
     } else if (this.selected === "proposerName") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
+        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
       ]);
-    } 
+    } else if (this.selected === "policyNumber") {
+      this.searchInputControl.setValidators([Validators.required]);
+    }
+  
     this.searchInputControl.updateValueAndValidity();
-    this.searchInputControl.markAsUntouched(); 
   }
-
+  
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";
@@ -307,17 +264,18 @@ export class RenewalListComponent {
     }
     return "";
   }
-
+  
   cancelSearch(menuTrigger: MatMenuTrigger) {
     this.toggeleSearchdropdown = false;
     this.selected = "";
     this.renewalLisRequestBody.mobileNumber = "";
     this.renewalLisRequestBody.proposer = "";
     this.renewalLisRequestBody.policyNumber = "";
+    this.searchInputControl.reset();
     this.getRenewalsList();
     menuTrigger.closeMenu();
   }
-
+  
   applySearch(menuTrigger: MatMenuTrigger) {
     if (this.searchInputControl.valid) {
       if (this.selected === "mobileNumber") {
@@ -328,11 +286,7 @@ export class RenewalListComponent {
         this.renewalLisRequestBody.policyNumber = this.searchInputControl.value!;
       }
       this.getRenewalsList();
-      this.toggeleSearchdropdown = true;
-      menuTrigger.closeMenu();  
-      } 
-    else {
-      this.toggeleSearchdropdown = false;
+      menuTrigger.closeMenu();
     }
   }
   
@@ -349,7 +303,6 @@ export class RenewalListComponent {
       case 'download':
         break;
       case 'delete':
-        // this.renewalJourney(item);
         break;
       case 'email':
         break;
@@ -439,6 +392,8 @@ export class RenewalListComponent {
   }
   
   renewalJourney(proposerDetail : RenewalList) {
+    console.log("proposerDetail",proposerDetail.policyNumber);
+    this.renewalService.getPolicyNo(proposerDetail.policyNumber);
     this.router.navigate(["/portal/agent/renewalDynamicForm"]);
   }
 
@@ -481,5 +436,4 @@ export class RenewalListComponent {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
   }
-
 }

@@ -18,7 +18,7 @@ export class LoginService {
     return this.http.post<any>(`${this.baseUrl}Banca/User/Login`, loginData);
   }
   sendAdminLoginRequest(loginData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Admin/Login`, loginData);
+    return this.http.post<any>(`${this.baseUrl}yatra/Banca/Admin/Login`, loginData);
   }
 
   getAllProductsViaBankCode(bankCode: any) {
@@ -50,16 +50,25 @@ export class LoginService {
   //   );
   // }
   Getproductlist(reqData:any){
-    return this.http.post<any>(`https://usp.monocept.ai/Yatra/api/product/getproductlist`,reqData)
+    return this.http.post<any>(`${this.baseUrl}Yatra/api/product/getproductlist`,reqData)
   }
   Getproductlist2(reqData:any){
+    return this.http.post<any>(`https://5765cf9e-4ee6-4c3d-80b9-1b4f14eb4794.mock.pstmn.io/abhi`,reqData)
+  }
+  Getproductlist3(reqData:any){
     return this.http.post<any>(`https://1762f1a5-b8b1-464d-bd9b-f0d6529b1304.mock.pstmn.io/Getproductlist3`,reqData)
   }
   // Getproductlist3(reqData:any){
   //   return this.http.post<any>(`https://1762f1a5-b8b1-464d-bd9b-f0d6529b1304.mock.pstmn.io/Getproductlist3`,reqData)
   // }
   Getformsequence(reqData:any){
-    return this.http.post<any>(`https://usp.monocept.ai/Yatra/api/forms/getformsequence`,reqData)
+    return this.http.post<any>(`${this.baseUrl}Yatra/api/forms/getformsequence`,reqData)
+  }
+  Getagentcartdetails(reqData:any){
+    return this.http.post<any>(`${this.baseUrl}quote/api/cart/getagentcartdetails`,reqData);
+  }
+  Insertorupdateagentcartdetails(reqData:any){
+    return this.http.post<any>(`${this.baseUrl}quote/api/cart/insertorupdateagentcartdetails`,reqData);
   }
 
   storeToken(token: string) {
@@ -77,7 +86,7 @@ export class LoginService {
     this.router.navigate(['']);
   }
   getProposalNumber() {
-    return this.http.get<any>(`${this.baseUrl}Banca/Product/GetProposalNumber`);
+    return this.http.get<any>(`${this.baseUrl}yatra/api/product/getproposalnumber`);
   }
 
   // For Google Login

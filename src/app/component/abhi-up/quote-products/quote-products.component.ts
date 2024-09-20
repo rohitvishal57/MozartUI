@@ -56,7 +56,10 @@ export class QuoteProductsComponent implements OnInit {
   displayNoProductsMessage: boolean = false;
 
   showSpecialForm: boolean = false;
-
+  addonView:any[]=[]
+  isOverlayVisible = false;
+  popIndex:any
+  selectedAddons: string[] = [];
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
     private loginService: LoginService, private router: Router, private toast: NgToastService,
@@ -71,8 +74,9 @@ export class QuoteProductsComponent implements OnInit {
       this.cartProductList = [];
     }
     localStorage.setItem("formIndex", "0")
-    console.log(this.agentCode);
+    console.log(this.agentCode,this.cartProductList);
     this.getPoductList();
+    this.Getagentcartdetails();
   }
 
   getPoductList() {
@@ -99,7 +103,8 @@ export class QuoteProductsComponent implements OnInit {
     //   }
     // })
     this.spinner.show();
-    this.loginService.Getproductlist2(reqData).subscribe({
+    // this.loginService.Getproductlist2(reqData).subscribe({
+    this.loginService.Getproductlist3(reqData).subscribe({
       next: (res) => {
         this.spinner.hide();
         console.log(res)
@@ -109,8 +114,10 @@ export class QuoteProductsComponent implements OnInit {
         this.ProductList.forEach((prod: any) => {
           console.log(prod);
           prod.keyFeatures = JSON.parse(prod.keyFeatures);
+          prod.selectedAddon=[]
         })
         this.selectedPlans = Array(this.ProductList.length).fill(null);
+        this.addonView = Array(this.ProductList.length).fill(false);
       },
       error: (err) => {
         this.spinner.hide();
@@ -138,8 +145,15 @@ export class QuoteProductsComponent implements OnInit {
 
   async getProposalNum() {
     try {
-      const res = await firstValueFrom(this.loginService.getProposalNumber());
-      this.proposalNum = res;
+      await this.loginService.getProposalNumber().subscribe({
+        next:(res)=>{
+          console.log(res);
+          this.proposalNum = res.data;
+        },
+        error:(err)=>{
+          console.error(err);
+        }
+      })
     } catch (error) {
       console.error(error);
     }
@@ -173,9 +187,11 @@ export class QuoteProductsComponent implements OnInit {
   // }
 
   selectPlan(i: number, planNumber: number) {
-    // Update the selected plan for the product at index i
     this.selectedPlans[i] = planNumber;
-    console.log(this.selectedPlans);
+    console.log(planNumber,this.ProductList[i],i,this.ProductList);
+    const premiumKey = `tenure${planNumber}Premium`;
+    this.ProductList[i].selectedPremiumAmount = this.ProductList[i][premiumKey];
+    console.log(this.selectedPlans,i,planNumber,this.ProductList,premiumKey);
   }
 
   async insurenow(item: any) {
@@ -202,12 +218,17 @@ export class QuoteProductsComponent implements OnInit {
 
   addToCart(item: any){
     this.cartProductList.push(item);
-    console.log(this.cartProductList);
+    console.log(item);
     sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
+    this.getProposalNum();
+    // setTimeout(() => {
+    //   this.insertorupdateagentcartdetails(item);
+    // }, 2000);
+    console.log(this.cartProductList);
   }
 
-  removeFromCart(item: any){
-    this.cartProductList = this.cartProductList.filter((element: any) => element.productName !== item.productName);
+  removeFromCart(i: any){
+    this.cartProductList.splice(i,1);
     sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
   }
 
@@ -236,4 +257,96 @@ export class QuoteProductsComponent implements OnInit {
       this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
+  insertorupdateagentcartdetails(item:any){
+    console.log(item);
+    let reqdata = {
+      "id": "",
+      "proposalNum":this.proposalNum,
+      "agentCode": this.agentCode,
+      "productId": item.productId,
+      "productName": item.productName,
+      "productCode": item.productCode,
+      "planCode": item.planCode,
+      "subPlanCode": item.subPlanCode,
+      "productFeatures":JSON.stringify(item.keyFeatures),
+      "proposerName":"Manjunath Saukar",
+      "selectedPremiumAmount":item.selectedPremiumAmount,
+      "t1PremiumAmount": item.tenure1Premium,
+      "t2PremiumAmount": item.tenure2Premium,
+      "t3PremiumAmount": item.tenure3Premium,
+      "t2DiscountAmount": item.t2DiscountAmount,
+      "t3DiscountAmount": item.t3DiscountAmount,
+      "quoteData": "{\n  \"proposerPincode\": \"500013\",\n  \"typeOfBusiness\": \"NB\",\n  \"isEmpoyee\": false,\n  \"sumInsured\": \"5000000\",\n  \"noOfMembers\": \"1\",\n  \"familySize\": \"1A\",\n  \"insuredMemeberDetails\": [\n    {\n      \"roomCategory\": \"\",\n      \"memberAge\": \"43\",\n      \"sumInsured\": \"5000000\",\n      \"isChronic\": \"No\",\n      \"zone\": \"Zone II\",\n      \"gender\": \"M\",\n      \"memberDob\": \"31-12-1980\",\n      \"memberRelation\": \"self\",\n      \"memberRelationCode\": \"24\"\n    }\n  ]\n}\n",
+      "selectedAddons": "string",
+      "isFullQouteComplete":false,
+      "createdBy": this.agentCode,
+      "modifiedBy": this.agentCode,
+  }
+  console.log(reqdata);
+    this.loginService.Insertorupdateagentcartdetails(reqdata).subscribe({
+      next:(res)=>{
+        console.log(res);
+      },
+      error:(err)=>{
+        console.error(err);
+        
+      }
+    })
+  }
+  Getagentcartdetails(){
+    let reqdata = {
+      "agentCode": this.agentCode
+    }
+    this.loginService.Getagentcartdetails(reqdata).subscribe({
+      next:(res)=>{
+        console.log(res);
+      },
+      error:(err)=>{
+        console.error(TypeError);
+        
+      }
+    })
+  }
+  addToView(index:any){
+    if(this.addonView[index] == false){
+      this.addonView[index] = true;
+    }
+    else{
+      this.addonView[index]= false
+    }
+  }
+  closeOverlay(){
+    this.isOverlayVisible = false;
+  }
+  showOverlay(i:any) {
+    this.isOverlayVisible = true;
+    this.popIndex=i
+  }
+  // onCheckboxChange(event: any, featureName: string) {
+  //   if (event.target.checked) {
+  //     this.selectedAddons.push(featureName);
+  //   } else {
+  //     const index = this.selectedAddons.indexOf(featureName);
+  //     if (index > -1) {
+  //       this.selectedAddons.splice(index, 1);
+  //     }
+  //   }
+  // }
+
+  isSelected(featureName: string): boolean {
+    return this.selectedAddons.includes(featureName);
+  }
+  onCheckboxChange(event: any, addon: any,i:any) {
+    addon.isSelected = event.target.checked;
+    if(event.target.checked){
+      this.ProductList[this.popIndex].selectedAddon.push(addon.featureName)
+    }
+    else{
+      this.ProductList[this.popIndex].selectedAddon = this.ProductList[this.popIndex].selectedAddon.filter(
+        (name: string) => name !== addon.featureName
+      );
+    }
+    console.log(addon,this.ProductList,i,this.popIndex);
+}
+
 }

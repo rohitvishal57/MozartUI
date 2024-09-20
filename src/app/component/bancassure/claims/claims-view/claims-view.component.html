@@ -10,7 +10,7 @@
             </div>
          </div>
          <div class="details-section">
-            <form [formGroup]="form" >
+            <form  (ngSubmit)="onSubmit()" [formGroup]="form" >
 
             <div class="dropdowns" >
                <div class="dropdown-field"> 
@@ -74,7 +74,12 @@
               </div> -->
                 <div class="col-sm-6 dropdown-field"> <label class="label"> Hospitals</label>
                   <select class="input-field">
-                    <option></option>
+                    <option>Select Hospitals</option>
+                    <option>AIG</option> 
+                    <option>Apollo</option>
+                    <option>KIMS</option>
+                    <option>AB Orthopedic</option>
+
                   </select>
                 </div>
             </div>
@@ -94,7 +99,7 @@
                 <p>please upload the Documents mentioned below. The files should be in .png/.jpg/.pdf with less than 2mb size for image</p>
             </div>
 
-            <div class="col-sm-12 row fw-bold p-3">
+            <div class="col-sm-12 row fw-bold p-1">
                 <div class="col-sm-4 d-flex">
                     <div><i class="fa-solid fa-address-card" style="color: #54a5e5;"></i></div>
                     <!-- <img src="assets/kycId.png" alt="" class="image-color" style="width: 20px; height: 20px;"> -->
@@ -110,7 +115,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 row fw-bold p-3">
+            <div class="col-sm-12 row fw-bold p-1">
                 <div class="col-sm-4 d-flex">
                   <div> <i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
                     <div> <label class="static-label">Doctor's Prescription</label></div>
@@ -125,7 +130,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 row fw-bold p-3">
+            <div class="col-sm-12 row fw-bold p-1">
                 <div class="col-sm-4 d-flex align-items-center">
                   <div> <i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
                     <div><label class="static-label">Consulation form</label></div>
@@ -187,6 +192,8 @@
                       </div>
                       <div class="flex">
                           <div class="file-align"><span>{{ file.name }}</span></div>
+                          <div class="file-align"><span>{{ file.documentType }}</span></div>
+
                           <div>
                               <button class="delete-button" (click)="deleteFile(file)">
                                   <mat-icon>delete</mat-icon>
@@ -199,7 +206,8 @@
           
            
 <div>
-    <button class="submit-button" type="button" (click)="submitResponse()">Submit Request</button>
+  <button class="submit-button" type="submit"  [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid">Submit Request</button>
+    <!-- <button class="submit-button" type="button" (click)="submitResponse()">Submit Request</button> -->
 </div>
 <!-- <div *ngIf="!showQuickActions" class="quick-actions-header">
     <mat-icon>message</mat-icon>
