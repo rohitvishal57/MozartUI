@@ -38,50 +38,8 @@ export class RenewalListComponent {
   showSubQuotes: boolean = false;
   showComparison: boolean = false;
   selected: string = "";
-  searchInputControl = new FormControl("");
+  searchInputControl = new FormControl("",Validators.required);
   isDesktopView:boolean=false
-
-  // members = [
-  //   {
-  //     quote: "Base Quote",
-  //     proposer: "Kridhnan",
-  //     product: "Active User",
-  //     policyNo: "23-22-0175217-00",
-  //     renewalPremium: {
-  //       amount: "₹25558",
-  //       benefits: "HR benefits of ₹786 added",
-  //     },
-  //     mobileNo: "7123456789",
-  //     dateOfRenewal: "2023-03-15",
-  //     modification: "Member added tenure 1 year",
-  //   },
-  //   {
-  //     quote: "Sub Quote",
-  //     proposer: "John Doe",
-  //     product: "Premium User",
-  //     policyNo: "45-67-0123456-00",
-  //     renewalPremium: {
-  //       amount: "₹35000",
-  //       benefits: "HR benefits of ₹900 added",
-  //     },
-  //     mobileNo: "7890123456",
-  //     dateOfRenewal: "2023-04-20",
-  //     modification: "Coverage increased tenure 2 years",
-  //   },
-  //   {
-  //     quote: "Base Quote1",
-  //     proposer: "krishnavamsi bhavani",
-  //     product: "Active User",
-  //     policyNo: "23-22-0175217-00",
-  //     renewalPremium: {
-  //       amount: "₹25558",
-  //       benefits: "HR benefits of ₹786 added",
-  //     },
-  //     mobileNo: "7123456789",
-  //     dateOfRenewal: "2023-03-15",
-  //     modification: "Member added tenure 1 year",
-  //   },
-  // ];
 
   private onDestroy$: Subject<boolean> = new Subject<boolean>();
 
@@ -269,25 +227,28 @@ export class RenewalListComponent {
     }
     this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
   }
-
+  
   onSelectChanges(event: any): void {
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
+  
     if (this.selected === "mobileNumber") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[6-9][0-9]{9}$"),
+        Validators.pattern("^[6-9][0-9]{9}$")
       ]);
     } else if (this.selected === "proposerName") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
+        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
       ]);
-    } 
+    } else if (this.selected === "policyNumber") {
+      this.searchInputControl.setValidators([Validators.required]);
+    }
+  
     this.searchInputControl.updateValueAndValidity();
-    this.searchInputControl.markAsUntouched(); 
   }
-
+  
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";
@@ -300,17 +261,18 @@ export class RenewalListComponent {
     }
     return "";
   }
-
+  
   cancelSearch(menuTrigger: MatMenuTrigger) {
     this.toggeleSearchdropdown = false;
     this.selected = "";
     this.renewalLisRequestBody.mobileNumber = "";
     this.renewalLisRequestBody.proposer = "";
     this.renewalLisRequestBody.policyNumber = "";
+    this.searchInputControl.reset();
     this.getRenewalsList();
     menuTrigger.closeMenu();
   }
-
+  
   applySearch(menuTrigger: MatMenuTrigger) {
     if (this.searchInputControl.valid) {
       if (this.selected === "mobileNumber") {
@@ -321,11 +283,7 @@ export class RenewalListComponent {
         this.renewalLisRequestBody.policyNumber = this.searchInputControl.value!;
       }
       this.getRenewalsList();
-      // this.toggeleSearchdropdown = true;
-      menuTrigger.closeMenu();  
-      } 
-    else {
-      this.toggeleSearchdropdown = false;
+      menuTrigger.closeMenu();
     }
   }
   

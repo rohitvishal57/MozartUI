@@ -224,3 +224,14 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 13px;
   letter-spacing: normal;
 }
+.btn_search_white {
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #F1F3F6;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: var(--text-black-4c);
+  border: 1px solid var(--white-color);
+  width:100%;
+}

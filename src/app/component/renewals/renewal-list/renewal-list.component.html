@@ -49,7 +49,8 @@
                               </div>
                             </div>
                             <footer style="display: flex;">
-                              <button type="button" value="apply" class="btn_red btn_fullWidth" [class.active]="selected !== 'none' && searchInputControl.valid" (click)="applySearch(menuTrigger)">Apply</button>
+                                <button type="button" value="apply" [ngClass]="{'btn_search_white btn_fullWidth': !searchInputControl.valid,'btn_red btn_fullWidth': searchInputControl.valid}"
+                                 (click)="applySearch(menuTrigger)">Apply</button>
                             </footer>
                           </div>
                         </mat-menu>
@@ -215,17 +216,6 @@
                               </td>
                             </tr>
                           </tbody>
-
-                          <tbody class="table-group-divider tbody-no-data" *ngIf="countsList.totalRecords === 0">
-                            <tr>
-                              <td colspan="10">
-                                <div class="no_dataFound">
-                                    <img src="assets/Img/img_no_data_found.svg" alt="No data found">
-                                    <p>No data found</p>
-                                </div>  
-                              </td>
-                            </tr>
-                          </tbody>
                         </table>
                     </div>
                 </div>
@@ -365,6 +355,16 @@
                     </nav>
                   </div>
             </section>
+             <!--Card view Main start-->
+             <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalRecords === 0">
+                <div class="cardViewWraper">
+                    <div class="no_dataFound">
+                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                        <p>No data found</p>
+                    </div> 
+                </div>
+            </section>
+            <!--Card view Main start-->
 
             <!--Create new quote Main start-->
             <section class="createNewQuoteWraper" *ngIf="countsList.totalRecords === 0">
@@ -382,5 +382,4 @@
             
         </div>  
     </div>
-    <!-- <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-spin-clockwise"></ngx-spinner> -->
   </main>

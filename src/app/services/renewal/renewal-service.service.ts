@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,10 @@ export class RenewalServiceService {
   private policyNo = new BehaviorSubject<{ policyNo: string }>({ policyNo: "" });
   policy$ = this.policyNo.asObservable();
 
+  // Add a BehaviorSubject to store the renewal info
+  private renewalInfoSource = new BehaviorSubject<any>(null); // Initially set to null
+  renewalInfo$ = this.renewalInfoSource.asObservable();
+
   constructor(private http: HttpClient) {}
 
   // Method to update the button state
@@ -26,6 +30,20 @@ export class RenewalServiceService {
   getPolicyNo(policyNo: string) {
     this.policyNo.next({ policyNo });
   }
+
+    // Method to update the renewal info data
+    setRenewalInfo(data: any) {
+      this.renewalInfoSource.next(data);  // Store the data in the BehaviorSubject
+      console.log("setRenewal" + data);
+
+    }
+  
+    // Method to retrieve the renewal info data
+    getRenewalInfo(): Observable<any> {
+      console.log("getRenewal" + this.renewalInfo$);
+      
+      return this.renewalInfo$;  // Return the observable for components to subscribe to
+    }
 
   getRenewalListApi(reqBody: any) {
     return this.http.post<any>(`https://usp.monocept.ai/renewal/api/renewal/getrenewallist`, reqBody);

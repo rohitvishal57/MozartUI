@@ -146,7 +146,7 @@
                   </div>
               </div>
               <div class="accordionMain">
-                      <div class="accordionItem" [formGroup]="nomineeForm" *ngIf="formId == 5002">
+                      <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5002">
                           <header>Add New Member<button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_plus_red.svg"> Add another member</button></header>
                           <div class="accordionBody">
                               <div class="accordionBodyRow">
@@ -204,24 +204,24 @@
                                               <div class="input-block form-floating input-block-renew">
                                                   <select id="idtype" name="idtype" class="form-select input-selectBox">
                                                       <option>Select ID type</option>
-                                                      <option value="male">Male</option>
-                                                      <option value="female">Female</option>
+                                                      <option value="aadhaar">Aadhaar</option>
+                                                      <option value="pan">PAN</option>
                                                   </select>
                                                   <label for="idtype">ID type</label>
-                                                  <span class="ui-error">Please select gender</span>
+                                                  <span class="ui-error">Please select Id</span>
                                               </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                              <div class="input-block form-floating input-block-renew">
-                                                  <select id="idgender" name="gender" class="form-select input-selectBox">
-                                                      <option>Select ID type</option>
-                                                      <option value="male">Male</option>
-                                                      <option value="female">Female</option>
-                                                  </select>
-                                                  <label for="idgender">ID type</label>
-                                                  <span class="ui-error">Please select gender</span>
-                                              </div>
-                                          </div>
+                                            <div class="input-block form-floating input-block-renew">
+                                                <select id="idtype" name="idtype" class="form-select input-selectBox">
+                                                    <option>Select ID type</option>
+                                                    <option value="aadhaar">Aadhaar</option>
+                                                    <option value="pan">PAN</option>
+                                                </select>
+                                                <label for="idtype">ID type</label>
+                                                <span class="ui-error">Please select Id</span>
+                                            </div>
+                                        </div>
                                       </div>
                                       <div class="detailsHeading-12">Sum Insured</div>
                                       <div class="row">
@@ -247,8 +247,8 @@
                                               <div class="input-block form-floating input-block-renew">
                                                   <select id="air" name="air" class="form-select input-selectBox">
                                                       <option>Select Annual income range</option>
-                                                      <option value="male">Male</option>
-                                                      <option value="female">Female</option>
+                                                      <option value="5L"> 5L </option>
+                                                      <option value="5L-10L">5L-10L</option>
                                                   </select>
                                                   <label for="air">Annual income range</label>
                                                   <span class="ui-error">Please select annual income range</span>
@@ -258,8 +258,8 @@
                                               <div class="input-block form-floating input-block-renew">
                                                   <select id="occupation" name="occupation" class="form-select input-selectBox">
                                                       <option>Select Occupation</option>
-                                                      <option value="male">Male</option>
-                                                      <option value="female">Female</option>
+                                                      <option value="engineer">Engineer</option>
+                                                      <option value="doctor">Doctor</option>
                                                   </select>
                                                   <label for="occupation">Occupation</label>
                                                   <span class="ui-error">Please select occupation</span>
@@ -269,8 +269,8 @@
                                               <div class="input-block form-floating input-block-renew">
                                                   <select id="education" name="education" class="form-select input-selectBox">
                                                       <option>Select Education</option>
-                                                      <option value="male">Male</option>
-                                                      <option value="female">Female</option>
+                                                      <option value="Graduate">Graduate</option>
+                                                      <option value="Postgraduate">Postgraduate</option>
                                                   </select>
                                                   <label for="education">Education qualification</label>
                                                   <span class="ui-error">Please select education qualification</span>
@@ -361,68 +361,341 @@
                           </footer>
                       </div>
               </div>
-              <div class="accordionMain"> 
-                      <div class="accordionItem" [formGroup]="nomineeForm" *ngIf="formId == 5003">
-                      <header>
-                      Edit Details of your Son
-                      <button type="button" class=""><i class="fa-solid fa-trash"></i>Delete Member</button>
+              <div class="accordionMain">
+                        
+                <!--Accordion Item start-->
+                <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5003">
+                    <header>
+                        Edit Details of your Son
+                        <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
                     </header>
-                    <div class="form-header">Prior Policies</div>
-                    <div class="bi_right">
-                      <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="handleAction('editMember')">Save Updates</button>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="breadcrumbNav">
+                                <a href="#" class="complete">Member Details</a><img src="assets/Img/icon_right_arrow_red.svg"><a href="#" class="active">Additional Information</a>
+                            </div>
+                            <div class="detailsRow">
+                                <div class="detailsHeading-12">Prior Policies</div>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <span class="para-grey-12">Do any of the Insured members or the proposer have previously owned Insurance policies?</span>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="priorpolicies" value="yes" checked>
+                                                <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="priorpolicies" value="no" >
+                                                <span>No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="pp-son" name="pp-son" class="form-control input-selectBox" disabled>
+                                                <option>Select Relation</option>
+                                                <option value="1" selected>Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <!--<label for="pp-son">Gender</label>-->
+                                            <span class="ui-error">Please select Relation</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="pp-benefit" name="pp-benefit" class="form-control input-selectBox" >
+                                                <option>Select Benefit type</option>
+                                                <option value="1">Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <label for="pp-benefit">Benefit type</label>
+                                            <span class="ui-error">Please select Benefit type</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="pp-policynumber" name="pp-policynumber" value="" placeholder="" class="form-control input-textBox" >
+                                            <label for="pp-policynumber">Policy Number</label>
+                                            <span class="ui-error">Please enter Policy Number</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="pp-sumassured" name="pp-sumassured" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="pp-sumassured">Sum assured</label>
+                                            <span class="ui-error">Please enter Sum assured</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Citizenship</div>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <span class="para-grey-12">Are any of the Insured Members or the Proposer not an Indian citizen? </span>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="citizenship" value="yes" >
+                                                <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="citizenship" value="no" checked>
+                                                <span>No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="citizenship-son" name="citizenship-son" class="form-control input-selectBox" disabled>
+                                                <option>Select Relation</option>
+                                                <option value="1" selected>Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <!--<label for="citizenship-son">Gender</label>-->
+                                            <span class="ui-error">Please select Relation</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="citizenship-benefit" name="citizenship-benefit" class="form-control input-selectBox" >
+                                                <option>Select Benefit type</option>
+                                                <option value="1">Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <label for="citizenship-benefit">Benefit type</label>
+                                            <span class="ui-error">Please select Benefit type</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="citizenship-policynumber" name="citizenship-policynumber" value="" placeholder="" class="form-control input-textBox" >
+                                            <label for="citizenship-policynumber">Policy Number</label>
+                                            <span class="ui-error">Please enter Policy Number</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="citizenship-sumassured" name="citizenship-sumassured" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="citizenship-sumassured">Sum assured</label>
+                                            <span class="ui-error">Please enter Sum assured</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Extraneous conditions</div>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <span class="para-grey-12">Are any of the Insured Members or the Proposer not an Indian citizen?  </span>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="extraneousconditions" value="yes" >
+                                                <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="extraneousconditions" value="no" checked>
+                                                <span>No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="extraneous-son" name="extraneous-son" class="form-control input-selectBox" disabled>
+                                                <option>Select Relation</option>
+                                                <option value="1" selected>Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <!--<label for="extraneous-son">Gender</label>-->
+                                            <span class="ui-error">Please select Relation</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="extraneous-occupation" name="extraneous-occupation" class="form-control input-selectBox" >
+                                                <option>Select Occupation</option>
+                                                <option value="1">Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <label for="extraneous-occupation">Occupation</label>
+                                            <span class="ui-error">Please select Occupation</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Pre-existing conditions</div>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <span class="para-grey-12">Are any of the Insured Members or the Proposerever been diagnosed with or consulted a doctor or advised surgery for any of the following: Paralysis, Epilepsy/Fits, Physical disability / defects, Psychiatric disorder, defect in sight/hearing/speech?  </span>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="preexistingconditions" value="yes" >
+                                                <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="preexistingconditions" value="no" checked>
+                                                <span>No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="para-grey-12">Diabetes  </span>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-radio-block radio_additionalInfo">
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="diabetes" value="yes" >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="diabetes" value="no" checked>
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="para-grey-12">Asthma/ Chronic Pulmonary Obstructive Disease  </span>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-radio-block radio_additionalInfo">
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="asthmadiabetes" value="yes" >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="asthmadiabetes" value="no" checked>
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="para-grey-12">High blood pressure (Hypertension) </span>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-radio-block radio_additionalInfo">
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="hypertension" value="yes" >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="hypertension" value="no" checked>
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="para-grey-12">High cholestrol / High tryglycerides (Hyperlimidemia) </span>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-radio-block radio_additionalInfo">
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="hyperlimidemia" value="yes" >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="hyperlimidemia" value="no" checked>
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
                     </div>
+                    <footer>
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editMember')">Add Member</button>
+                    </footer>
+                </div>
+                <!--Accordion Item end-->
+                
+              </div>
+              <div class="accordionMain">                        
+                <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5005">
+                    <header>
+                        Edit Address
+                    </header>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="detailsRow">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="address1" name="address1" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="address1">Address Line 1</label>
+                                            <span class="ui-error">Please enter Policy Number</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="address2" name="address2" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="address2">Address Line 2</label>
+                                            <span class="ui-error">Please enter Sum assured</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="city" name="city" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="city">City</label>
+                                            <span class="ui-error">Please enter Sum assured</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="state" name="state" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="state">State</label>
+                                            <span class="ui-error">Please enter Sum assured</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="pincode" name="pincode" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="pincode">Pin Code</label>
+                                            <span class="ui-error">Please enter Sum assured</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
                     </div>
-
+                    <footer>
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
+                    </footer>
+                </div>
+                <!--Accordion Item end-->
+                
               </div>
               <div class="accordionMain"> 
-                  <div class="accordionItem" [formGroup]="nomineeForm" *ngIf="formId == 5005">
-                    <header>Edit Address</header>
-                    <div class="inner-cnt">
-                    <div class="row">
-                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block form-floating input-block-renew">
-                            <input type="text" id="name" name="name" value="" placeholder="" class="form-control input-textBox">
-                            <label for="name">Address Line 1</label>
-                            <span class="ui-error">Please enter Address Line 1</span>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block form-floating input-block-renew">
-                            <input type="text" id="name" name="name" value="" placeholder="" class="form-control input-textBox">
-                            <label for="name">Address Line 2</label>
-                            <span class="ui-error">Please enter Address Line 2</span>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <div class="input-block form-floating input-block-renew">
-                            <input type="text" id="name" name="name" value="" placeholder="" class="form-control input-textBox">
-                            <label for="name">City</label>
-                            <span class="ui-error">Please enter City</span>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <div class="input-block form-floating input-block-renew">
-                            <input type="text" id="name" name="name" value="" placeholder="" class="form-control input-textBox">
-                            <label for="name">State</label>
-                            <span class="ui-error">Please enter State</span>
-                        </div>
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <div class="input-block form-floating input-block-renew">
-                            <input type="text" id="name" name="name" value="" placeholder="" class="form-control input-textBox">
-                            <label for="name">PIN Code</label>
-                            <span class="ui-error">Please enter PIN Code</span>
-                        </div>
-                    </div>
-                    </div>
-                    </div>
-                    <div class="bi_right">
-                      <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
-                    </div>
-                  </div>
-              </div>
-              <div class="accordionMain"> 
-                  <div class="accordionItem" [formGroup]="nomineeForm" *ngIf="formId == 5004">
+                  <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5004">
                       <header>Edit Nominee Details<button type="button" value="another" class="btn_iconText" ><img src="assets/Img/icon_plus_red.svg"> Add another nominee</button></header>
                     <div class="inner-cnt">
                     <div class="checkbox-container">
@@ -508,8 +781,7 @@
                     </div>
                 </div>
                  </div>
-              </div>
-              
+              </div>   
           </div>
         </div>
         <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'additional'">
@@ -803,7 +1075,7 @@
           </div>
         </div>   
            
-        <div class="bodyColumns bodyColumnsRight" *ngIf="planDetail === true">
+        <div class="bodyColumns bodyColumnsRight" >
         <div class="bcr_main planDetails">
             <header>
                 <h6>Plan details</h6>
@@ -879,7 +1151,7 @@
      <div class="bi_left">
         <div class="planProductInfo">
            <div class="ppi_img">
-              <img src="images/icon_activeone.svg">
+              <img src="assets/Img/icon_activeone.svg">
            </div>
            <div class="ppi_info">
               <h4>Activ One NXT</h4>

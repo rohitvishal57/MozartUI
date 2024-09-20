@@ -12,7 +12,7 @@ import { RenewalServiceService } from 'src/app/services/renewal/renewal-service.
 })
 export class RenewalDynamicFormComponent implements OnInit {
   @Input() section: any;
-  nomineeForm: FormGroup = this.fb.group({});
+  form: FormGroup = this.fb.group({});
   formConfig: any;
   formId: number = 5001;
   mainCnt: number = 1;
@@ -48,8 +48,8 @@ export class RenewalDynamicFormComponent implements OnInit {
     value: 500000,
     class: 'col-md-12'
   };
-
   renewalInfo: any;
+  homeAddress: any = {};
 
 
   constructor(
@@ -64,19 +64,21 @@ export class RenewalDynamicFormComponent implements OnInit {
     this.fetchCoverages();
     this.fetchRoomUpgradeBenefits();
     this.fetchTenureDetails();
-    this.planDetail = true;    this.renewalService.policy$.subscribe(policy => {
-      // console.log('Policy Number:', policy.policyNo);
+     this.renewalService.policy$.subscribe(policy => {
+      if(policy.policyNo){
       this.policyNumber=policy.policyNo;
+    }
     });
-
     this.getRenewalInfo();
+    this.initializeForm();
   }
 
   initializeForm() {
-    this.nomineeForm = this.fb.group({});
+    this.form = this.fb.group(this.homeAddress);
+    console.log(this.form);
   }
 
-  populateFormControls() {
+  initForm() {
     if (this.formConfig && this.formConfig.formSections) {
       this.formConfig.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
@@ -90,13 +92,21 @@ export class RenewalDynamicFormComponent implements OnInit {
               }
             });
           }
-          this.nomineeForm.addControl(control.name, this.fb.control(control.value, validatorsArray));
+          this.form.addControl(control.name, this.fb.control(control.value, validatorsArray));
         });
       });
     }
-    console.log('Nominee form controls:', this.nomineeForm.controls);
-  
+    console.log('Nominee form controls:', this.form.controls);
   }
+  
+  proposerObject(){
+    this.renewalService.getRenewalInfo().subscribe((info) => {
+      if (info) {
+        this.renewalInfo=info;
+      }
+    }); 
+  }
+
   handleAction(event: string,item?: any) {
       switch (event) {
         case 'addMember':
@@ -107,6 +117,8 @@ export class RenewalDynamicFormComponent implements OnInit {
           break;
         case 'editAddress':
           this.formId=5001;
+          console.log(this.form.value);
+          
           break;
         case 'addNominee':
           this.formId=5001;
@@ -114,10 +126,11 @@ export class RenewalDynamicFormComponent implements OnInit {
         default:
           console.warn('Unknown action:', event);
       }
+      this.proposerObject()
     }
 
   onRadioChange(controlName: string, value: string): void {
-    this.nomineeForm.get(controlName)?.setValue(value);
+    this.form.get(controlName)?.setValue(value);
   }
 
 rangeValue: { [key: string]: number } = { sumInsured: 500000 };
@@ -148,35 +161,30 @@ saveEmail() {
 }
 selectButton(button: string, value?: any) {
   if (this.selectedButton === 'primary') {
-    if (value == 5005) {
-      this.planDetail=true
+    if (value == 5005) {//edit address
+      // this.loadAddressDetails();
       this.formId = value;
-    }else if (value == 5004) {
-      this.planDetail=true
+    }else if (value == 5004) {//add nominee
       this.formId = value;
-    }else if (value == 5003) {
-      this.planDetail=false
+    }else if (value == 5003) {//edit detail
       this.formId = value;
-    }else if (value == 5002) {
-      this.planDetail=false
+    }else if (value == 5002) {// add memeber
       this.formId = value;
     }else {
-      this.formId = 5001;
-      this.planDetail=true
+      this.formId = 5001; //main
     }
   }else if (this.selectedButton === 'additional') {
     this.policySummarys=false;
-} 
-else if (this.selectedButton == 'payment') {
-  if(value == 'policySummary'){
-     this.policySummarys=true
-     this.planDetail=true
+  } 
+  else if (this.selectedButton == 'payment') {
+    if(value == 'policySummary'){
+      this.policySummarys=true
+    }
+    else{
+      this.policySummarys=false;
+    }
   }
-  else{
-    this.policySummarys=false;
-    this.planDetail=false
-  }
-}
+  this.proposerObject();
 }
 
 resendLink() {
@@ -208,41 +216,28 @@ selectPaymentType(option: any) {
    }
  }
 
-
 fetchTenureDetails(): void { 
-  console.log("Fetching Tenure Details");
- 
   this.http.get<any[]>('/assets/jsonValue/tenure-details.json').subscribe(tenureDetailsData => {
     this.tenureDetails = tenureDetailsData;
-    console.log(this.tenureDetails);
   });    
 }
 
-fetchAddOns(): void { 
-  console.log("Fetching health add-ons");
- 
+fetchAddOns(): void {  
   this.http.get<any[]>('/assets/jsonValue/health-add-ons.json').subscribe(healthAddOnsData => {
     this.healthAddOns = healthAddOnsData;
-    console.log(this.healthAddOns);
   });    
 }
 
 
-fetchCoverages(): void {
-  console.log("Fetching coverages");
-  
+fetchCoverages(): void {  
   this.http.get<any[]>('/assets/jsonValue/optional-coverages.json').subscribe(coveragesData => {
     this.coverages = coveragesData;
-    console.log(this.coverages); // Log here after the data is fetched
   });
 }
 
-fetchRoomUpgradeBenefits(): void {
-  console.log("Fetching room upgrade benefits");
-  
+fetchRoomUpgradeBenefits(): void {  
   this.http.get<any[]>('/assets/jsonValue/rooms.json').subscribe(roomUpgradeBenefitsData => {
     this.roomUpgradeBenefits = roomUpgradeBenefitsData;
-    console.log(this.roomUpgradeBenefits); // Log here after the data is fetched
   });
 }
 
@@ -253,7 +248,6 @@ selectCoverage(coverage: any): void {
   } else {
     this.selectedCoverages.push(coverage);
   }
-  console.log("Selected Coverages:", this.selectedCoverages);
 }
 
 isCoverageSelected(coverage: any): boolean {
@@ -267,7 +261,6 @@ selectAddOn(addOn: any): void {
   } else {
     this.selectedAddOns.push(addOn);
   }
-  console.log("Selected Add-Ons:", this.selectedAddOns);
 }
 
 isHealthAddOnSelected(addOn: any): boolean {
@@ -295,10 +288,10 @@ setSection(section: string) {
 proceed() {
   if (this.activeSection === 'primary') {
     this.setSection('additional');
+    this.proposerObject();
   } else if (this.activeSection === 'additional') {
     this.setSection('payment');
   } else if (this.activeSection === 'payment') {
-    console.log("finished");
   }
 }
 
@@ -307,17 +300,24 @@ renewNow(){
 }
 
 getRenewalInfo() {
-  // const policyNumber = "asdfgh"; 
-  // const requestBody = {}; 
   this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
     (res) => {
-      this.renewalInfo= JSON.parse(res.data)
-      console.log("response", this.policyNumber);
+      this.renewalInfo = JSON.parse(res.data);
+      this.renewalService.setRenewalInfo( this.renewalInfo);  
     },
     (err) => {
       console.log("Error", err);
     }
   );
 }
+
+loadAddressDetails() {
+  if (this.renewalInfo?.response?.policyData?.length > 0) {
+    this.homeAddress = { ...this.renewalInfo.response.policyData[0].HomeAddress };
+    console.log(this.homeAddress);
+    
+  }
+}
+
 
 }

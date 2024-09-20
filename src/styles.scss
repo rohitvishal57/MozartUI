@@ -1187,7 +1187,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .input-radio-block {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 15px;
   max-width: 90%;
 }
 
@@ -3042,3 +3042,29 @@ input[type="search"]::-webkit-search-results-decoration {
     transform: rotate(90deg);
 }
 /*Common Popup/Overlay Popup start*/
+
+
+/*Edit details start*/
+.input-radio-block.radio_additionalInfo {
+  max-width: 100%;
+  gap: 10px;
+}
+.radio_additionalInfo .input-radiolabel span:before{
+  display: none;
+}
+.radio_additionalInfo .input-radiolabel span {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--bg-grey-tr);
+  min-width: 80px;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: #6f6f6f;
+}
+.radio_additionalInfo .input-radiolabel input:checked + span {
+ color:var(--primary-red-color);
+ background: var(--white-color);
+ border: 1px solid var(--primary-red-color);
+}
+/*Edit details start*/
