@@ -20,7 +20,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   activeFilter: string = "All";
   page: number = 1;
   first: number = 0;
-  rows: number = 5;
+  rows: number = 10;
   totalRecords: number = 0;
   selectedView: string = "list";
   toggeledropdown: boolean = false;
@@ -67,8 +67,8 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.requestsListRequestBody.agentId = localStorage.getItem('agentCode')
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
-        if (!response.isSuccess) {
-          console.log(response.endorsementDetails);
+        if (response.isSuccess) {
+          // console.log(response.endorsementDetails);
           this.endorsementDetails = [...response.endorsementDetails];
           this.countsList = response.endorsementDetails;
           this.totalRecords = this.endorsementDetails.length;
@@ -101,7 +101,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   onSelectChanges(event: any): void {
     event.stopPropagation(); 
     this.selected !== "none";
-    console.log("selected value", this.selected);
+    // console.log("selected value", this.selected);
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
 
