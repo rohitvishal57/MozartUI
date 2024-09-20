@@ -6,6 +6,7 @@ import { LoginService } from 'src/app/services/login.service';
 import { Options } from '@angular-slider/ngx-slider';
 import { CommonService } from 'src/app/services/common.service';
 import { NgToastService } from 'ng-angular-popup';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-get-quote',
@@ -74,7 +75,7 @@ export class GetQuoteComponent {
       return ''; // Empty string prevents showing the value above the slider
     }
   };
-  
+
 
   relations: any[] = [
     {
@@ -84,7 +85,7 @@ export class GetQuoteComponent {
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_self.png",
       "age": null,
-      "dob":"",
+      "dob": "",
       "gender": "M"
     },
     {
@@ -94,7 +95,7 @@ export class GetQuoteComponent {
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_spouse.png",
       "age": null,
-      "dob":"",
+      "dob": "",
       "gender": "F"
     },
     {
@@ -104,7 +105,7 @@ export class GetQuoteComponent {
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_spouse.png",
       "age": null,
-      "dob":"",
+      "dob": "",
       "gender": "F"
     },
     {
@@ -114,7 +115,7 @@ export class GetQuoteComponent {
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_father.png",
       "age": null,
-      "dob":"",
+      "dob": "",
       "gender": "M"
     },
     {
@@ -124,7 +125,7 @@ export class GetQuoteComponent {
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_spouse.png",
       "age": null,
-      "dob":"",
+      "dob": "",
       "gender": "F"
     },
     {
@@ -134,7 +135,7 @@ export class GetQuoteComponent {
       "isIncrement": false,
       "imagePath": "../../../../assets/images/icon_member_father.png",
       "age": null,
-      "dob":"",
+      "dob": "",
       "gender": "M"
     },
     {
@@ -144,7 +145,7 @@ export class GetQuoteComponent {
       "isIncrement": true,
       "imagePath": "../../../../assets/images/icon_member_son.png",
       "age": null,
-      "dob":"",
+      "dob": "",
       "gender": "M"
     },
     {
@@ -154,13 +155,13 @@ export class GetQuoteComponent {
       "isIncrement": true,
       "imagePath": "../../../../assets/images/icon_member_daughter.png",
       "age": null,
-      "dob":"",
+      "dob": "",
       "gender": "F"
     }
   ]
 
   constructor(private fb: FormBuilder, private loginService: LoginService, @Inject(DOCUMENT) private document: Document,
-    private route: Router,public service : CommonService,private toast: NgToastService) { }
+    private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService) { }
 
   ngOnInit() {
 
@@ -182,15 +183,15 @@ export class GetQuoteComponent {
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value || 0;
     this.quoteFormGroup = this.fb.group({
-      proposerPincode: [null, [Validators.required]],
-      proposerName: [null, [Validators.required]],
-      proposerMobile: [null, [Validators.required]],
-      typeOfBusiness: ["NB", [Validators.required]],
-      isEmpoyee: [false, [Validators.required]],
-      sumInsured: [this.selectedSumInsured, [Validators.required]],
-      noOfMembers: [null, [Validators.required]],
-      familySize: [null, [Validators.required]],
-      policyType: ['Family Floater', [Validators.required]],
+      proposerPincode: ['', [Validators.required]],
+      proposerName: ['', [Validators.required]],
+      proposerMobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      typeOfBusiness: ["NB"],
+      isEmpoyee: [false],
+      sumInsured: [this.selectedSumInsured],
+      noOfMembers: [null],
+      familySize: [null],
+      policyType: ['Family Floater'],
       insuredMemeberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
     // Object.keys(this.multiIndiReqData).forEach((key: string)=>{
@@ -219,7 +220,7 @@ export class GetQuoteComponent {
       this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
     }
-      
+
     this.saveDataToStorage();
   }
 
@@ -229,15 +230,15 @@ export class GetQuoteComponent {
 
     console.log(event.target.value);
 
-    if (dobArray[0] as number >= 1800){
+    if (dobArray[0] as number >= 1800) {
 
-            const age = this.calculateAge(dob);
-            this.selectedRelationships.forEach((selectedRelation : any)=>{
-              if(selectedRelation.name == relation.name){
-                selectedRelation.age = age;
-                selectedRelation.dob = dob;
-              }
-            })
+      const age = this.calculateAge(dob);
+      this.selectedRelationships.forEach((selectedRelation: any) => {
+        if (selectedRelation.name == relation.name) {
+          selectedRelation.age = age;
+          selectedRelation.dob = dob;
+        }
+      })
     }
     // this.saveDataToStorage(); // Save after updating the age
   }
@@ -261,7 +262,7 @@ export class GetQuoteComponent {
 
   onRelationshipNext() {
     this.selectedRelation = this.selectedRelationships.length > 0
-      ? this.selectedRelationships.map((relation : any)=> relation.value).join(', ')
+      ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
       : 'Please select members';
 
     console.log(this.selectedRelation);
@@ -309,15 +310,15 @@ export class GetQuoteComponent {
   //   }
   // }
 
-  formatTickLabel(value: number,forSlider: boolean): string {
+  formatTickLabel(value: number, forSlider: boolean): string {
     if (value >= 10000000) {
-      return forSlider == true ?(value / 10000000) + 'Cr' : '₹'+(value / 10000000) + ' Crores' ;
+      return forSlider == true ? (value / 10000000) + 'Cr' : '₹' + (value / 10000000) + ' Crores';
     } else if (value >= 100000) {
       return forSlider == true ? (value / 100000) + 'L' : '₹' + (value / 100000) + ' Lakhs';
     }
     return value.toString();
   }
-  
+
 
 
   dropdownOptions = [
@@ -349,56 +350,78 @@ export class GetQuoteComponent {
 
   continue() {
     this.quoteFormGroup.get('noOfMembers')?.setValue(this.selectedRelationships.length);
-    this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length+"A");
+    this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length + "A");
     console.log(this.quoteFormGroup.value);
+    if (this.quoteFormGroup.valid) {
+      console.log(this.quoteFormGroup.value);
+      this.saveDataToStorage();
+      this.route.navigate(['portal/abhi/quoteProducts'], {
+        state: { formData: this.quoteFormGroup.value }
+      });
+    } else {
+      this.quoteFormGroup.markAllAsTouched();
+      console.log('Form is invalid. Please correct the errors.');
+      this.showErrorMessage('Please complete all required fields correctly before proceeding.');
+    }
+  }
 
-    this.saveDataToStorage();
-    this.route.navigate(['portal/abhi/quoteProducts'])
+  showErrorMessage(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+    });
   }
 
   onSumInsuredSelect() {
-    const sumInsuredValue = this.value; // Get the current slider value
-    this.selectedOptions[2] = `${sumInsuredValue} Lakhs`; // Assuming 'Sum Insured' is the third option (index 2)
+    const sumInsuredValue = this.value;
+    this.selectedOptions[2] = `${sumInsuredValue} Lakhs`;
     this.activeDropdown = null; // Close the dropdown
     this.saveDataToStorage();
     console.log('Selected Sum Insured: ₹', this.selectedOptions[2]);
   }
 
-  incrementMember(relation: any) {
-    let index = this.relations.length - 2;
-    let baseRelation = JSON.parse(JSON.stringify(relation));
+  // incrementMember(relation: any) {
+  //   let index = this.relations.length - 2;
+  //   let baseRelation = JSON.parse(JSON.stringify(relation));
 
+  //   baseRelation.isIncrement = false;
+  //   baseRelation['deletable'] = true;
+  //   baseRelation.name = relation.name + " " + (this.relationCountMap.get(relation.id) as number + 1);
+  //   baseRelation.value = relation.name + " " + (this.relationCountMap.get(relation.id) as number + 1);
+  //   this.relations.splice(index, 0, baseRelation);
+  //   this.relationCountMap.set(relation.id, ((this.relationCountMap.get(relation.id) as number) + 1));
+  // }
+
+  incrementMember(relation: any) {
+    console.log(relation);
+    let index = this.relations.findIndex((rel) => rel.isIncrement === true);
+    let baseRelation = JSON.parse(JSON.stringify(relation));
     baseRelation.isIncrement = false;
     baseRelation['deletable'] = true;
-    baseRelation.name = relation.name + " " + (this.relationCountMap.get(relation.id) as number + 1);
-    baseRelation.value = relation.name + " " + (this.relationCountMap.get(relation.id) as number + 1);
+    let currentCount = this.relationCountMap.get(relation.id) as number;
+    currentCount += 1;
+    baseRelation.name = `${relation.name} ${currentCount}`;
+    baseRelation.value = `${relation.name} ${currentCount}`;
     this.relations.splice(index, 0, baseRelation);
-    this.relationCountMap.set(relation.id, ((this.relationCountMap.get(relation.id) as number) + 1));
+    this.relationCountMap.set(relation.id, currentCount);
   }
 
   removeMember(relation: any) {
     console.log(relation);
     console.log(this.relations);
-  
-    // Filter out the relation from this.relations
     this.relations = this.relations.filter((element: any) => element.name !== relation.name);
     console.log(this.relations);
-  
-    // Remove the relation from selectedRelationships
     this.selectedRelationships = this.selectedRelationships.filter((element: any) => element.name !== relation.name);
-  
-    // Update selectedRelation string by joining the remaining relations' values
     this.selectedRelation = this.selectedRelationships.length > 0
       ? this.selectedRelationships.map((rel: any) => rel.value).join(', ')
       : 'Please select members';
-  
+
     // Decrease the count of this particular relation in the map
-    const count = this.relationCountMap.get(relation.id) as number;
-    if (count > 1) {
-      this.relationCountMap.set(relation.id, count - 1); // Decrement the count
-    }
+    // const count = this.relationCountMap.get(relation.id) as number;
+    // if (count > 1) {
+    //   this.relationCountMap.set(relation.id, count - 1); // Decrement the count
+    // }
   }
-  
+
 
   onValueChange(newValue: number) {
     this.value = newValue;
@@ -443,21 +466,21 @@ export class GetQuoteComponent {
       selectedSumInsured: this.selectedSumInsured,    // Store selected sum insured value
       selectedDiseases: this.selectedDiseases         // Store selected diseases (array of strings)
     };
-  
+
     console.log(data);  // Log data object to check the contents before saving
-  
+
     // Save the data object to localStorage
     localStorage.setItem('quoteFormData', JSON.stringify(data));
     console.log('Data saved to LocalStorage:', data);
   }
-  
+
 
   // Load stored data from LocalStorage
   loadStoredData() {
     const storedData = localStorage.getItem('quoteFormData');
     if (storedData) {
       const parsedData = JSON.parse(storedData);
-  
+
       this.selectedOptions = parsedData.selectedOptions || [];
       this.selectedPolicy = parsedData.selectedPolicy || "Family Floater";
       this.selectedRelationships = parsedData.selectedRelationships || [];
@@ -466,7 +489,7 @@ export class GetQuoteComponent {
       this.proposerZone = parsedData.proposerZone || null;
       this.selectedSumInsured = parsedData.selectedSumInsured || this.sliderOptions?.stepsArray?.[0]?.value;
       this.selectedDiseases = parsedData.selectedDiseases || [];
-  
+
       console.log('Data loaded from LocalStorage:', parsedData);
     }
   }
@@ -503,47 +526,56 @@ export class GetQuoteComponent {
 
   // Add new member details
   addInsuredMemberDetails(): void {
-    this.selectedRelationships.forEach((relation: any) => {
-      // Check if the relation is already present in insuredMemeberDetails
-      const isAlreadyAdded = this.insuredMemeberDetails.controls.some((control: AbstractControl) => {
-        const memberGroup = control as FormGroup;
-        return memberGroup.get('memberRelationCode')?.value === relation.id;
-      });
-  
-      if (!isAlreadyAdded) {
-        const memberGroup = this.fb.group({
-          roomCategory: [""],
-          memberAge: [relation.age, [Validators.required]],
-          sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
-          isChronic: ["No"],
-          zone: [this.proposerZone, [Validators.required]],
-          gender: [relation.gender, [Validators.required]],
-          memberDob: [relation.dob, [Validators.required]],
-          memberRelation: [relation.value, [Validators.required]],
-          memberRelationCode: [relation.id, [Validators.required]]
+
+    this.quoteFormGroup.get('proposerName')?.markAsTouched();
+    this.quoteFormGroup.get('proposerPincode')?.markAsTouched();
+    this.quoteFormGroup.get('proposerMobile')?.markAsTouched();
+
+    // Check if the form is valid before proceeding
+    if (this.quoteFormGroup.valid) {
+      this.selectedRelationships.forEach((relation: any) => {
+        const isAlreadyAdded = this.insuredMemeberDetails.controls.some((control: AbstractControl) => {
+          const memberGroup = control as FormGroup;
+          return memberGroup.get('memberRelationCode')?.value === relation.id;
         });
-        
-        this.insuredMemeberDetails.push(memberGroup);
-      }
-    });
-  
-    this.selectedRelation = this.selectedRelationships.length > 0
-      ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
-      : 'Please select members';
-  
-    console.log(this.selectedRelation);
-    this.saveDataToStorage();
-    this.activeDropdown = null;
+
+        if (!isAlreadyAdded) {
+          const memberGroup = this.fb.group({
+            roomCategory: [""],
+            memberAge: [relation.age, [Validators.required]],
+            sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
+            isChronic: ["No"],
+            zone: [this.proposerZone, [Validators.required]],
+            gender: [relation.gender, [Validators.required]],
+            memberDob: [relation.dob, [Validators.required]],
+            memberRelation: [relation.value, [Validators.required]],
+            memberRelationCode: [relation.id, [Validators.required]]
+          });
+
+          this.insuredMemeberDetails.push(memberGroup);
+        }
+      });
+
+      this.selectedRelation = this.selectedRelationships.length > 0
+        ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
+        : 'Please select members';
+
+      console.log(this.selectedRelation);
+      this.saveDataToStorage();
+      this.activeDropdown = null;
+    } else {
+      this.toast.error({ detail: "Error", summary: "Please fill all the details before proceeding.", duration: 3000 });
+    }
   }
-  
+
   get insuredMemeberDetails(): FormArray {
     return this.quoteFormGroup.get('insuredMemeberDetails') as FormArray;
   }
-  
 
-  getProposerPincode(event:any){
 
-    console.log(event.target.value,typeof event)
+  getProposerPincode(event: any) {
+
+    console.log(event.target.value, typeof event)
 
     this.service.getPinCodeByCity(event.target.value).subscribe({
       next: (res) => {

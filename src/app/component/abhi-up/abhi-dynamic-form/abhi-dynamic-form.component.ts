@@ -110,7 +110,7 @@ export class AbhiDynamicFormComponent {
 
     this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
     console.log(this.formData)
-    this.formData = { ...this.formData, ...{ productName: this.productName } }
+    // this.formData = { ...this.formData, ...{ productName: this.productName } }
     this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
   }
