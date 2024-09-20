@@ -13,6 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
 import { NgToastService } from 'ng-angular-popup';
 import { map, catchError, of, forkJoin } from 'rxjs';
@@ -27,12 +28,13 @@ import { EndorsementsService } from 'src/app/services/endrosements/endorsements.
 })
 export class EndorsementsNewRequestComponent {
   // uploadedFiles: File[] = [];
+  loadingIcon: boolean = false;
   form!: FormGroup;
   saveForm!: FormGroup;
   activePolicyNumbers: string[] = [];
   proposers: string[] = ['5100003'];
   proposerNames: string[] = [];
-  endorsementsTypes: string[] = ['Aadhar Card Update', 'Email', 'PAN'];
+  endorsementsTypes: string[] = ['Aadhar Card Update', 'Pancard Update', 'Change my Alternate number', 'Change in my E-mail Id', 'Change my name', 'Correction in DOB', 'Correction in Gender', 'Deletion of Member from Policy'];
   showDocInfo: boolean = false;
   fileID: string = 'djsdhjdsvh';
   responseData:any = [];
@@ -115,7 +117,8 @@ export class EndorsementsNewRequestComponent {
     private fb: FormBuilder,
     private endorsementService: EndorsementsService,
     private toast: NgToastService,
-    private router:Router
+    private router:Router,
+    private spinner: NgxSpinnerService
   ) {}
   ngOnInit(): void {
     this.createForm();
@@ -210,6 +213,7 @@ export class EndorsementsNewRequestComponent {
   }
   submitResponse(): void {
     if (true) {
+      this.spinner.show();
       console.log(this.form.value, this.payload,this.endorsementInfo,'hh')
       this.form.value.doc = this.fileID;
       let data:any = {};
@@ -226,11 +230,15 @@ export class EndorsementsNewRequestComponent {
       this.endorsementService.endorsementCreateRequest(data).subscribe(
         (response: any) => {
           if (response.isSuccess) {
+            this.spinner.hide();
             this.toast.success({ detail: `Your request ${response.response.caseId} has been registered`});
             this.router.navigate(['portal/agent/requests'])
           }
         },
-        (error) => console.error('Error fetching dropdown data', error)
+        (error) => {
+          this.spinner.hide();
+          console.error('Error fetching dropdown data', error);
+        }
       );
     } // else {
     //   this.toast.error({ detail: 'Please fill in the required form fields.' });

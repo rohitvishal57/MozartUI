@@ -17,13 +17,14 @@ export class EndorsementsService {
     }
       // Method to upload files
   endorsementUploadFiles(formData: FormData): Observable<any> {
-        return this.http.post<any>(this.baseUrl+'api/endorsement/endorsementfileuploadtoomnidocs', formData);
+        return this.http.post<any>(this.baseUrl+'claims/api/endorsement/endorsementfileuploadtoomnidocs', formData);
   }
   endorsementCreateRequest(formData: FormData): Observable<any> {
-    return this.http.post<any>(this.baseUrl+'api/endorsement/endorsementcreaterequest', formData);
+    return this.http.post<any>(this.baseUrl+'claims/api/endorsement/endorsementcreaterequest', formData);
     // return this.http.post<any>('https://localhost:7026/api/endorsement/endorsementcreaterequest' ,formData)
-}
-getEndorsementPolicyInfo(formData: any){
-  return this.http.post<any>(this.baseUrl+'/claims/api/endorsement/getpolicyinfodetails', formData);
-}
+  }
+  
+  getEndorsementPolicyInfo(formData: any){
+    return this.http.post<any>(this.baseUrl+'claims/api/endorsement/getpolicyinfodetails', formData);
+  }
 }
