@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-
+import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -40,28 +40,32 @@ export class RenewalServiceService {
   
     // Method to retrieve the renewal info data
     getRenewalInfo(): Observable<any> {
-      console.log("getRenewal" + this.renewalInfo$);
-      
+      console.log("getRenewal" + this.renewalInfo$);      
       return this.renewalInfo$;  // Return the observable for components to subscribe to
     }
 
-  getRenewalListApi(reqBody: any) {
-    return this.http.post<any>(`https://usp.monocept.ai/renewal/api/renewal/getrenewallist`, reqBody);
+  getRenewalListApi(reqBody: any) {    
+    const getRenewalListApi = environment.baseUrl+environment.getRenewalListApi;
+    return this.http.post<any>(getRenewalListApi, reqBody);
   }
 
   sendrenewalwhatappsms(reqBody: any) {
-    return this.http.post<any>(`https://usp.monocept.ai/renewal/api/renewal/sendrenewalwhatappsms`, reqBody);
+    const sendrenewalwhatappsms = environment.baseUrl+environment.sendrenewalwhatappsms;
+    return this.http.post<any>(sendrenewalwhatappsms, reqBody);
   }
 
   sendrenewalsms(reqBody: any) {
-    return this.http.post<any>(`https://usp.monocept.ai/renewal/api/renewal/sendrenewalsms`, reqBody);
+    const sendrenewalsms = environment.baseUrl+environment.sendrenewalsms;
+    return this.http.post<any>(sendrenewalsms, reqBody);
   }
   
   generatepaymentlink(reqBody: any) {
-    return this.http.post<any>(`https://usp.monocept.ai/renewal/api/renewal/generatepaymentlink`, reqBody);
+    const generatepaymentlink = environment.baseUrl+environment.generatepaymentlink;
+    return this.http.post<any>(generatepaymentlink, reqBody);
   }
-  getRenewalInfoApi(policyNumber: string, requestBody: any) {
-    return this.http.post<any>(`https://usp.monocept.ai/renewal/api/renewal/renewalinfo?policyNumber=${policyNumber}`, requestBody);
+  getRenewalInfoApi(policyNumber: string, requestBody: any) {    
+    const getRenewalInfoApi = `${environment.baseUrl+environment.getRenewalInfoApi}?policyNumber=${policyNumber}`; 
+    return this.http.post<any>(getRenewalInfoApi, requestBody);
   }
   
 

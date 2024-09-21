@@ -1,0 +1,11 @@
+export const environment = {
+    production: false,
+    baseUrl:"https://usp.monocept.ai/",    
+    getRenewalListApi: "renewal/api/renewal/getrenewallist",
+    getRenewalInfoApi:"renewal/api/renewal/renewalinfo",
+    sendrenewalwhatappsms:"renewal/api/renewal/sendrenewalwhatappsms",
+    sendrenewalsms:"renewal/api/renewal/sendrenewalsms",
+    generatepaymentlink:"renewal/api/renewal/generatepaymentlink"
+    
+    // other variables
+  };

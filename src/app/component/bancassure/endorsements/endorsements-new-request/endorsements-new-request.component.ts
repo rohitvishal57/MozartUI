@@ -28,7 +28,6 @@ import { EndorsementsService } from 'src/app/services/endrosements/endorsements.
 })
 export class EndorsementsNewRequestComponent {
   // uploadedFiles: File[] = [];
-  loadingIcon: boolean = false;
   form!: FormGroup;
   saveForm!: FormGroup;
   activePolicyNumbers: string[] = [];
@@ -38,6 +37,7 @@ export class EndorsementsNewRequestComponent {
   showDocInfo: boolean = false;
   fileID: string = 'djsdhjdsvh';
   responseData:any = [];
+  selectMemberData: any = {};
   payload: any = {
     agentCode: '',
     eventName: '',
@@ -141,7 +141,7 @@ export class EndorsementsNewRequestComponent {
     };
     this.endorsementService.getEndorsementsPolicies(data).subscribe(
       (response: any) => {
-        if (response.statusCode == 0) {
+        if (response.isSuccess) {
           this.responseData =  response;
           this.activePolicyNumbers = this.extractUniqueValues(
             response.getPolicydetails,
@@ -178,14 +178,13 @@ export class EndorsementsNewRequestComponent {
     console.log(event.value, this.responseData)
     const result = this.responseData.getPolicydetails.filter((person:any) => person.policynumber == event.value);
     this.proposerNames = this.extractUniqueValues(result,'membername');
-    
   }
   selectMember(data:any){
-      const result:any = this.responseData.getPolicydetails.find((person:any) => person.membername == data.value);
-      console.log(result,'wdbhwecd', result.policynumber)
+      this.selectMemberData = this.responseData.getPolicydetails.find((person:any) => person.membername == data.value);
+      console.log(this.selectMemberData,'wdbhwecd', this.selectMemberData.policynumber)
       let payload:any = {
-          policyNumber: result.policynumber,
-          memberId : result.memberid
+          policyNumber: this.selectMemberData.policynumber,
+          memberId : this.selectMemberData.memberid
       }
       this.endorsementService.getEndorsementPolicyInfo(payload).subscribe(
         (response) => {
@@ -221,7 +220,7 @@ export class EndorsementsNewRequestComponent {
       data.agentCode = localStorage.getItem('agentCode');
       data.memberName = this.endorsementInfo.policyDetails.membername;
       data.mobileNumber = this.endorsementInfo.policyDetails.primaryMobile;
-      data.memberRelation = "Brother";
+      data.memberRelation = this.selectMemberData.relationwithproposer;
       data.endorsementRequest.policy = this.endorsementInfo.policyDetails.policynumber;
       data.endorsementRequest.caseSubSubType = this.form.value.endorsementType;
       data.endorsementRequest.comments = this.form.value.notes;
