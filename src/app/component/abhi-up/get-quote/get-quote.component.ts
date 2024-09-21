@@ -40,7 +40,7 @@ export class GetQuoteComponent {
     sumInsured: "",
     noOfMembers: "",
     familySize: "1A",
-    insuredMemeberDetails: [
+    insuredMemberDetails: [
     ]
   }
 
@@ -183,16 +183,16 @@ export class GetQuoteComponent {
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value || 0;
     this.quoteFormGroup = this.fb.group({
-      proposerPincode: ['', [Validators.required]],
-      proposerName: ['', [Validators.required]],
-      proposerMobile: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      typeOfBusiness: ["NB"],
-      isEmpoyee: [false],
-      sumInsured: [this.selectedSumInsured],
-      noOfMembers: [null],
+      proposerPincode: [null, [Validators.required]],
+      proposerName: [null, [Validators.required]],
+      mobileNumber: [null, [Validators.required]],
+      typeOfBusiness: ["NB", [Validators.required]],
+      isEmpoyee: [false, [Validators.required]],
+      sumInsured: [this.selectedSumInsured, [Validators.required]],
+      numberOfInsuredMembers: [null],
       familySize: [null],
-      policyType: ['Family Floater'],
-      insuredMemeberDetails: this.fb.array([]) // This will be initialized with dynamic members
+      memberPolicyType: ['Family Floater', [Validators.required]],
+      insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
     // Object.keys(this.multiIndiReqData).forEach((key: string)=>{
     //   if(Array.isArray(this.multiIndiReqData[key])){
@@ -349,8 +349,8 @@ export class GetQuoteComponent {
   }
 
   continue() {
-    this.quoteFormGroup.get('noOfMembers')?.setValue(this.selectedRelationships.length);
-    this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length + "A");
+    this.quoteFormGroup.get('numberOfInsuredMembers')?.setValue(this.selectedRelationships.length);
+    this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length+"A");
     console.log(this.quoteFormGroup.value);
     if (this.quoteFormGroup.valid) {
       console.log(this.quoteFormGroup.value);
@@ -501,7 +501,7 @@ export class GetQuoteComponent {
   }
 
   updatePolicyType() {
-    this.quoteFormGroup.get('policyType')?.setValue(this.selectedPolicy);
+    this.quoteFormGroup.get('memberPolicyType')?.setValue(this.selectedPolicy);
     this.saveDataToStorage();
     this.activeDropdown = null;
   }
@@ -513,7 +513,7 @@ export class GetQuoteComponent {
   updateSumInsured() {
     this.quoteFormGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
 
-    const insuredMembersArray = this.quoteFormGroup.get('insuredMemeberDetails') as FormArray;
+    const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
 
     insuredMembersArray.controls.forEach((control: AbstractControl) => {
       const memberGroup = control as FormGroup;
@@ -529,12 +529,13 @@ export class GetQuoteComponent {
 
     this.quoteFormGroup.get('proposerName')?.markAsTouched();
     this.quoteFormGroup.get('proposerPincode')?.markAsTouched();
-    this.quoteFormGroup.get('proposerMobile')?.markAsTouched();
+    this.quoteFormGroup.get('mobileNumber')?.markAsTouched();
 
     // Check if the form is valid before proceeding
+    console.log(this.quoteFormGroup);
     if (this.quoteFormGroup.valid) {
       this.selectedRelationships.forEach((relation: any) => {
-        const isAlreadyAdded = this.insuredMemeberDetails.controls.some((control: AbstractControl) => {
+        const isAlreadyAdded = this.insuredMemberDetails.controls.some((control: AbstractControl) => {
           const memberGroup = control as FormGroup;
           return memberGroup.get('memberRelationCode')?.value === relation.id;
         });
@@ -552,7 +553,7 @@ export class GetQuoteComponent {
             memberRelationCode: [relation.id, [Validators.required]]
           });
 
-          this.insuredMemeberDetails.push(memberGroup);
+          this.insuredMemberDetails.push(memberGroup);
         }
       });
 
@@ -568,8 +569,8 @@ export class GetQuoteComponent {
     }
   }
 
-  get insuredMemeberDetails(): FormArray {
-    return this.quoteFormGroup.get('insuredMemeberDetails') as FormArray;
+  get insuredMemberDetails(): FormArray {
+    return this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
   }
 
 

@@ -238,7 +238,15 @@ export class AbhiDynamicFormComponent {
     this.dynamciallyLoadCSS(this.form);
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((control: any) => {
-        if (control.dynamicControls && control.visible == true && this.formData[control.name]) {
+        // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.memberPolicyType);
+        // console.log(policyindex);
+        if (control.dynamicControls  && this.formData[control.name]) {
+          control.dynamicControls[0].forEach((item:any)=>{
+            if(item.value == this.formData.memberPolicyType){
+              console.log('anekant');
+            }
+          })
+          console.log(control.dynamicControls[0] , this.formData.memberPolicyType);
           if (this.formData[control.name]) {
             control.value = this.formData[control.name].length;
           }
@@ -285,7 +293,7 @@ export class AbhiDynamicFormComponent {
       });
     });
 
-
+    console.log(this.form);
     if (this.form?.formSections) {
       this.dynamicFormGroup = this.fb.group({});
       this.form.formSections.forEach((section) => {

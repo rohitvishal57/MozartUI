@@ -28,7 +28,7 @@
                 <div class="selected-value">
                   <span>
                     <ng-container *ngIf="dropdown.label === 'Policy Type'">
-                      {{ quoteFormGroup.get('policyType')?.value || 'Please select a policy' }}
+                      {{ quoteFormGroup.get('memberPolicyType')?.value || 'Please select a policy' }}
                     </ng-container>
 
                     <ng-container *ngIf="dropdown.label === 'Relationship'">
@@ -56,9 +56,9 @@
                    <div class="option_policyType" >
                      <div class="input-radio-block raido_policyType">
                        <label class="input-radiolabel">
-                         <input type="radio" name="policytype" value="familyfloater"
+                         <input type="radio" name="memberPolicyType" value="familyfloater"
                            (click)="onPolicyTypeChange('Family Floater')"
-                           [checked]="quoteFormGroup.get('policyType')?.value === 'Family Floater'">
+                           [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater'">
                          <span>
                            <em class="pt-head"><img src="../../../../assets/images/icon_familyfloater.svg">Family Floater
                              Policy</em>
@@ -69,9 +69,9 @@
                        </label>
    
                        <label class="input-radiolabel">
-                         <input type="radio" name="policytype" value="multiindividual"
+                         <input type="radio" name="memberPolicyType" value="multiindividual"
                            (click)="onPolicyTypeChange('Multi Individual')"
-                           [checked]="quoteFormGroup.get('policyType')?.value === 'Multi Individual'">
+                           [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual'">
                          <span>
                            <em class="pt-head"><img
                                src="../../../../assets/images/icon_multiindividual.svg">Multi-individual Policy</em>
@@ -152,9 +152,9 @@
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                               <div class="input-block input-block-renew input-filed-white">
-                                <input type="text" id="mobileproposer" formControlName="proposerMobile" value=""
+                                <input type="text" id="mobileNumber" formControlName="mobileNumber" value=""
                                   placeholder="Enter mobile no of proposer" class="input-textBox">
-                                <span class="ui-error" *ngIf="quoteFormGroup.get('proposerMobile')?.invalid && quoteFormGroup.get('proposerMobile')?.markAsDirty">Please enter mobile no of proposer</span>
+                                <span class="ui-error" *ngIf="quoteFormGroup.get('mobileNumber')?.invalid && quoteFormGroup.get('mobileNumber')?.markAsDirty">Please enter mobile no of proposer</span>
                               </div>
                             </div>
                           </div>

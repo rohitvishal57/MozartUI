@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { LoginService } from 'src/app/services/login.service';
+import { totalpremium } from 'src/assets/styles/config/totalPremium';
 
 @Component({
   selector: 'app-quote-products',
@@ -30,16 +31,6 @@ export class QuoteProductsComponent implements OnInit {
   products: any[] = []
   ProductList: any[] = []
   cartProductList: any[] = [];
-  // agentCode=localStorage.getItem('agentCode')
-  // partnerId:any
-  // productId:any
-
-  // plans = [
-  //   { price: 6863, duration: 1, discount: 0 },
-  //   { price: 12863, duration: 2, discount: 0 },
-  //   { price: 22863, duration: 3, discount: 15 }
-  // ];
-  // selectedPlan: number | null = null;
   agentCode = localStorage.getItem('agentCode')
   partnerId: any
   productId: any
@@ -75,7 +66,7 @@ export class QuoteProductsComponent implements OnInit {
       this.cartProductList = [];
     }
     localStorage.setItem("formIndex", "0")
-    console.log(this.agentCode,this.cartProductList);
+    console.log(this.formData,this.agentCode,this.cartProductList);
     this.getPoductList();
     this.Getagentcartdetails();
   }
@@ -196,7 +187,11 @@ export class QuoteProductsComponent implements OnInit {
   }
 
   async insurenow(item: any) {
-    this.formData = { ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount }
+    console.log(item);
+    this.formData = { ...this.formData, productName: item.productName ,totalPremium: item.selectedPremiumAmount,
+      firstName:this.formData.proposerName
+    }
+    console.log(this.formData);
     try {
       await this.getFormSequence(item);
       this.removeFromCart(item);
