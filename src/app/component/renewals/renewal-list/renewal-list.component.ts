@@ -1,4 +1,4 @@
-import { Component,ElementRef,HostListener,OnInit } from '@angular/core';
+import { Component,ElementRef,HostListener,OnInit,ViewEncapsulation  } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";

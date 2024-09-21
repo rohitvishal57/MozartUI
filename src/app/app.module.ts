@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,7 +22,11 @@ import {BrowserUtils, IPublicClientApplication, InteractionType, LogLevel, Publi
 import { ADConfig } from 'src/configuration';
 import { MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalBroadcastService, MsalGuard, MsalGuardConfiguration, MsalInterceptorConfiguration, MsalModule, MsalRedirectComponent, MsalService } from '@azure/msal-angular';
 import { withDisabledInitialNavigation, withEnabledBlockingInitialNavigation } from '@angular/router';
+import { ConfigService } from './config.service';
 
+export function loadConfig(configService: ConfigService) {
+  return () => configService.loadConfig().toPromise();
+}
 // Form MSAL Login
 export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
@@ -94,6 +98,13 @@ const initialNavigation = !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup(
     MsalModule
   ],
   providers: [
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadConfig,
+      deps: [ConfigService],
+      multi: true,
+    },
     DatePipe,
     {
       provide:HTTP_INTERCEPTORS,
