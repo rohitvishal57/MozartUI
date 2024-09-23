@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { CommonService } from 'src/app/services/common.service';
 import { ClaimData } from 'src/app/interface/claims.interface';
 import { formatDate } from '@angular/common';
 import { forkJoin, of } from 'rxjs';
@@ -8,12 +7,14 @@ import { catchError, map } from 'rxjs/operators';
 import { NgToastService } from 'ng-angular-popup';
 import { MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
 import { Router } from '@angular/router';
+import { ClaimsService } from 'src/app/services/claims/claims.service';
 
 
 @Component({
   selector: 'app-claims-view',
   templateUrl: './claims-view.component.html',
   styleUrls: ['./claims-view.component.scss'],
+  encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -44,6 +45,7 @@ export class ClaimsViewComponent {
   documentType:any
   response:any
   uploadedFile:any
+  agentCode: any;
   @Input() uploadedFiles: { 
     name: string,
     label: string,
@@ -60,7 +62,7 @@ export class ClaimsViewComponent {
     createdBy?: string
   }[] = [];
   
-  constructor(private fb: FormBuilder, private commonService: CommonService,  private cdr: ChangeDetectorRef, private router:Router,
+  constructor(private fb: FormBuilder, private claimsService: ClaimsService,  private cdr: ChangeDetectorRef, private router:Router,
     private toast: NgToastService,@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
 
   ){}
@@ -93,9 +95,9 @@ export class ClaimsViewComponent {
       id: localStorage.getItem('agentCode'),
       policyNumber: ['',Validators.required],
       proposalNumber: ['',Validators.required],
-      memberName: [''],
+      memberName: ['', Validators.required],
       productName: [''],
-      fullName: ['',Validators.required],
+      fullName: [''],
       policyType: ['',Validators.required],
       memberRelation: [''],
       requestType: [''],
@@ -118,7 +120,8 @@ export class ClaimsViewComponent {
   }
  
   fetchData(): void {
-  this.commonService.getProposalDetails().subscribe(
+     this.agentCode = localStorage.getItem('agentCode');
+     this.claimsService.getProposalDetails(this.agentCode).subscribe(
     response => {
       if (response.success) {
         const allData: ClaimData[] = response.data;
@@ -212,7 +215,7 @@ uploadFiles(files: File[]): void {
     formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
   });
     
-    this.commonService.uploadFiles(formData).subscribe(response => {
+    this.claimsService.uploadFiles(formData).subscribe(response => {
     //  const uploadedFile = this.uploadedFiles.find(f => f.file.name === file.name);
       if (response.success) {
         this.uploadedFiles.map(file => file.status = 'success')
@@ -300,12 +303,12 @@ if (this.saveForm.valid || this.form.valid) {
   });
 
   // Prepare observables for API calls
-  const fileUploadObservable = this.commonService.uploadFiles(fileUploadFormData).pipe(
+  const fileUploadObservable = this.claimsService.uploadFiles(fileUploadFormData).pipe(
     map(response => ({ response })),
     catchError(error => of({ error }))
   );
 
-  const saveClaimObservable = this.commonService.saveClaims(saveClaimData).pipe(
+  const saveClaimObservable = this.claimsService.saveClaims(saveClaimData).pipe(
     map(response => ({ response })),
     catchError(error => of({ error }))
   );

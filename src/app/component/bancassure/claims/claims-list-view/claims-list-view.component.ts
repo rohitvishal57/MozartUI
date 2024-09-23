@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { ClaimsInterface } from 'src/app/interface/claims.interface';
+import { ClaimsService } from 'src/app/services/claims/claims.service';
 
 
 
@@ -37,7 +38,7 @@ export class ClaimsListViewComponent implements OnInit {
   searchInputControl = new FormControl("");
   selected: string = "search";
   userId!: number;
-  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe){ }
+  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsService){ }
 
   ngOnInit(){
     this.fetchData(); 
@@ -76,7 +77,7 @@ payload =  {
     "pageSize": 10
   }
 fetchData(): void {
-  this.commonService.getClaimsList(this.payload).subscribe(res => {
+  this.claimsService.getClaimsList(this.payload).subscribe(res => {
     this.gridClaims = res.data;   
     this.gridClaimsData = res.data; 
     this.claims = [...this.gridClaims]; 

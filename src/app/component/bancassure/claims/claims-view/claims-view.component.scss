@@ -1,3 +1,4 @@
+
 .main-container {
     height: 105%;
     display: flex;
@@ -50,42 +51,73 @@
 // .main-container .all-claims .details-section .dropdowns .dropdown-field {
 //   width: 216px; 
 // }
-::ng-deep .p-dropdown .p-dropdown-label {
-  color: #999494;
-  background-color: #f3f3f3;
-}
-::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
-  color: #999494;
-  background-color: #f3f3f3;
-}
+// ::ng-deep .p-dropdown .p-dropdown-label {
+//   color: #999494;
+//   background-color: #f3f3f3;
+// }
+// ::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
+//   color: #999494;
+//   background-color: #f3f3f3;
+// }
 
-::ng-deep .p-dropdown {
+// ::ng-deep .p-dropdown{
+//   width: 99%;
+//   padding: 6px 7px 7px 13px;
+//   font-size: smaller;
+//   border: none;
+//   background-color: #f3f3f3;
+// }
+.select-pdropdown{
+
+::ng-deep .p-dropdown{
   width: 99%;
-  padding: 6px 7px 7px 13px;
-  height: 2rem !important;
+  padding: 8px 7px 0px 13px;
   font-size: smaller;
   border: none;
+  height: 3.5rem;
   background-color: #f3f3f3;
 }
-
-::ng-deep .dropdownp1 {
-  width: 468px !important;
-  cursor: pointer;
-  border: none;
-  background-color: #f3f3f3;
-  border-radius: 8px;
+::ng-deep .p-dropdown .p-dropdown-label {
+  height: 100%;  /* Ensure label takes full height */
 }
-//
-::ng-deep .dropdownp1 .p-dropdown-trigger {
-  cursor: pointer;
-  position: absolute;
-  top: 1rem;
-  left: 44rem;
+::ng-deep .p-dropdown .p-dropdown-trigger {
+  height: 100%;  /* Ensure trigger takes full height */
+   }
+
 }
 
-::ng-deep .dropdownp1 .p-scroller{
-  width: 500px !important;
-}
+// .dropdowns .dropdown-field .select-pdropdown .p-dropdown {
+//   width: 250px;  
+//   height: 40px;  
+// }
+
+// .select-dropdown .p-dropdown .p-dropdown-label {
+//   height: 100%;  /* Ensure label takes full height */
+//   line-height: 40px; /* Center text vertically */
+// }
+
+// .select-dropdown .p-dropdown .p-dropdown-trigger {
+//   height: 100%;  /* Ensure trigger takes full height */
+// }
+
+// ::ng-deep .dropdownp1 {
+//   width: 468px !important;
+//   cursor: pointer;
+//   border: none;
+//   background-color: #f3f3f3;
+//   border-radius: 8px;
+// }
+// //
+// ::ng-deep .dropdownp1 .p-dropdown-trigger {
+//   cursor: pointer;
+//   position: absolute;
+//   top: 1rem;
+//   left: 44rem;
+// }
+
+// ::ng-deep .dropdownp1 .p-scroller{
+//   width: 500px !important;
+// }
 
 .main-container .all-claims .details-section .dropdowns {
   display: flex;
@@ -105,10 +137,10 @@
 
 .main-container .all-claims .details-section .dropdown-field label {
   position: absolute;
-  top: 2px;
+  top: 3px;
   left: 3px;
   padding: 0 0.5rem;
-  font-size: 0.7rem;
+  font-size: 1rem;
   color: #999494;
   transform: translateY(-50%);
   z-index: 1;
@@ -235,7 +267,7 @@ textarea {
   top: 23px;
   left: 3px;
   padding: 0 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #999494;
   transform: translateY(-50%);
   z-index: 1;
@@ -318,7 +350,7 @@ color:rgba(51, 106, 234, 0.7);
 }
 .uploads-label{
   display: flex;
-  gap: 49.5rem;
+  gap: 79.5rem;
   margin-left: -1.5rem;
 }
 .uploaded-files {

@@ -360,7 +360,7 @@
 
 ::ng-deep .p-paginator{
   background-color: transparent;
-  padding-top: 2rem;
+//  padding-top: 2rem;
 }
 
 ::ng-deep .p-paginator .p-paginator-page {
@@ -400,8 +400,9 @@
 ::ng-deep .p-paginator .p-paginator-prev:hover,
 ::ng-deep .p-paginator .p-paginator-next:hover,
 ::ng-deep .p-paginator .p-paginator-last:hover {
-  background-color: #f5f5f5 !important; 
-  border-color: #cccccc !important;
+  background-color: #C7222A !important;
+  border-color: #C7222A !important;
+  color: #fff !important;
 }
   
 ::ng-deep .my-paginator .p-highlight {
@@ -420,18 +421,36 @@
   display: flex;
   align-items: center !important;
   justify-content: center !important;
-  height: 30px;
-  width: 83px;
 }
-// ::ng-deep .my-paginator .p-dropdown-label {
-//   text-align: center !important;
-// }
+::ng-deep .my-paginator .p-dropdown-label {
+  text-align: center !important;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page,
+::ng-deep .p-paginator .p-paginator-first, 
+::ng-deep .p-paginator .p-paginator-prev, 
+::ng-deep .p-paginator .p-paginator-next, 
+::ng-deep .p-paginator .p-paginator-last {
+  min-width: initial;
+  padding: 4px;
+  width: 32px;
+  height: 32px;
+}
+::ng-deep .p-paginator .p-dropdown {
+  height: 32px;
+}
+::ng-deep .p-dropdown .p-dropdown-trigger {
+width:2rem;
+}
+::ng-deep .p-dropdown-label {
+padding:0 0 0 10px !important;
+}
 .pagination-info{
-  padding-left: 17rem;
+  padding-left: 27rem;
   color:#999494;
 }
 
-.table-format-cnt {
+.table-format-cont {
   width: 100%;
   height: 100%;
   font-size: 11px;
@@ -442,7 +461,7 @@
   background: #FFFFFF;
 }
 
-.table-inner-cnt{
+.table-inner-cont{
   width: 99%;
   height: 98%;
   margin: 0.5% 0;
@@ -461,7 +480,7 @@
   background: #FFF7F5  !important;
 }
 
-.table-format-cnt .table-headings-row th {
+.table-format-cont .table-headings-row th {
   white-space: nowrap;
   background: #F7F7F7;
   padding: 12px; 
@@ -474,15 +493,15 @@
   color: #222222;
 }
 
-.table-format-cnt .table-headings-row th:first-child {
+.table-format-cont .table-headings-row th:first-child {
   border-top-left-radius: 12px; 
  }
 
-.table-format-cnt .table-headings-row th:last-child {
+.table-format-cont .table-headings-row th:last-child {
   border-top-right-radius: 12px; 
  }
 
-.table-format-cnt .table-inner-cnt .table-values>* {
+.table-format-cont .table-inner-cont .table-values>* {
   color: #797979;
   font-family: Anek Latin;
   font-size: 10px;
@@ -493,7 +512,7 @@
   padding:1.5% 0% 1% 1.2%;
 }
 
- .table-format-cnt .table-inner-cnt .table-values .pro-name{
+ .table-format-cont .table-inner-cont .table-values .pro-name{
   font-family: Anek Latin;
   font-size: 12px;
   font-weight: 400;
@@ -504,12 +523,13 @@
   word-wrap: break-word;
  }
 
- ::ng-deep [type=button], [type=reset], [type=submit], button {
-  min-width: initial;
-  padding: 4px;
-  // width: 32px;
-  height: 32px;
-}
+//  ::ng-deep .button {
+//   min-width: initial;
+//   padding: 4px;
+//   // width: 32px;
+//   height: 32px;
+// }
+
 .select-dropdown{
   border-radius: 14px;
   padding-left: 10px;

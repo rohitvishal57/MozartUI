@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs';
+import { ConfigService } from '../config.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -14,7 +15,7 @@ export class CommonService {
   private apiUrl = './assets/health-plans.json';
   private apiUrl1 = './assets/occupations.json';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
   getFormConfig(bankCode: number, insuranceTypeCode: number, productId: any) {
     return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetFormConfig?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}`);
@@ -223,24 +224,6 @@ export class CommonService {
   getInsurerData(){
     return this.http.get<any>(`${this.baseUrl}Agent/GetInsurerData`);
   }
-  
-  //claims
-  getClaimsList(data: any): Observable<any>{
-    return this.http.post('https://usp.monocept.ai/claims/api/claim/getclaimlist',data);
-    }
-
-    getProposalDetails(){
-    return this.http.get<any>(`https://usp.monocept.ai/claims/api/claim/getproposaldetails?AgentCode=5100003`)
-    }
-
-    saveClaims(saveData:any){
-    return this.http.post('https://usp.monocept.ai/claims/api/claim/saveclaim', saveData)
-    }
-      // Method to upload files
-    uploadFiles(formData: FormData): Observable<any> {
-      return this.http.post<any>('https://usp.monocept.ai/claims/api/claim/saveuploadfiledetails', formData);
-    }
-
    //yatra
    Getform(reqData:any){
     return this.http.post<any>(`${this.yatraUrl}api/forms/getform`,reqData)
