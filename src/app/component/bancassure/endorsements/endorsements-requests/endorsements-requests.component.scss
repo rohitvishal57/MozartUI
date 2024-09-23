@@ -1,4 +1,4 @@
-.main-container {
+.endorsements-main-container {
     min-height: 100vh;
     height: auto;
     width: 94%;
@@ -24,12 +24,12 @@
     width: 150px;
   }
 
-  .main-container .all-quotes {
+  .endorsements-main-container .all-quotes {
     height: auto;
     width: 75%;
   }
 
-  .main-container .all-quotes .header-val {
+  .endorsements-main-container .all-quotes .header-val {
     width: 100%;
     height: 24px;
     gap: 0px;
@@ -40,12 +40,7 @@
     margin: 2% 0%;
   }
 
-  // .main-container .all-quotes .main-quotes-cnt {
-  //   min-height: 200px;
-  //   max-height: 870px;
-  // }
-
-  .main-container .all-quotes .main-quotes-cnt .quotes-header {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header {
     display: flex;
     justify-content: center;
     width: Fill 88%;
@@ -58,7 +53,7 @@
     background: #fff;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter {
     width: 96%;
     height: 32px;
     display: flex;
@@ -66,14 +61,14 @@
     cursor: pointer;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header {
     display: flex;
     height: 29px;
     width: 63%;
     gap: 1.3%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .left-value1 {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .left-value1 {
     width: 12%;
     height: 24px;
     font-size: 11px;
@@ -83,12 +78,12 @@
     color: #797979;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types {
     display: flex;
     gap: 8px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types div {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types div {
     width: Hug 18%;
     height: Hug 29px px;
     padding: 4px 7px;
@@ -100,29 +95,29 @@
     border-radius: 16px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types p {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types p {
     font-size: 11px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types div.active {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types div.active {
     background: #ffe7e5;
     color: #fff;
     border: 1px solid #c7222a;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types div:hover {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types div:hover {
     background: #ffe7e5;
     border: 1px solid #c7222a;
     color: #c7222a;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header {
     display: flex;
     height: 32px;
     gap: 8px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .quotes-icon {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .quotes-icon {
     width: Hug 13%;
     height: Hug 32px px;
     padding: 6px 8px;
@@ -132,7 +127,7 @@
     background: #f1f3f6;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .filter-icon {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .filter-icon {
     display: flex;
     width: 50%;
     height: Hug 32px px;
@@ -143,7 +138,7 @@
     border: 1px solid #e3e3e4;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .filter-icon p {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .filter-icon p {
     width: 20%;
     height: 24px;
     gap: 0px;
@@ -154,7 +149,7 @@
     color: #c7222a;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .quotes-list-icon {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .quotes-list-icon {
     width: Hug 13%;
     height: Hug 32px px;
     padding: 6px 8px;
@@ -163,17 +158,17 @@
     opacity: 0px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .quotes-list-icon.active {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header .quotes-list-icon.active {
     background-color: #c7222a;
     color: white;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .quotes-list-icon:hover {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .quotes-list-icon:hover {
     background-color: #c7222a;
     color: white;
   }
   
-  .main-container .all-quotes .main-quotes-cnt .filter-dropdown {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .filter-dropdown {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -298,7 +293,7 @@
     cursor: pointer;
   }
 
-  .filter-dropdown .filters-buttons .apply-button:hover, .main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-buttons .apply-btn-red {
+  .filter-dropdown .filters-buttons .apply-button:hover, .endorsements-main-container .all-quotes .main-quotes-cnt .filter-dropdown .filters-buttons .apply-btn-red {
     background-color: #c7222a;
     color: white;
     cursor: pointer;
@@ -410,7 +405,7 @@
     cursor: pointer;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .card-cnt .card-outer-cnt .card .top-section .icons .icon .more-values{
+  .endorsements-main-container .all-quotes .main-quotes-cnt .card-cnt .card-outer-cnt .card .top-section .icons .icon .more-values{
     width: 174px;
     height: fit-content;
     padding: 8px 12px 8px 8px;
@@ -460,7 +455,7 @@
     word-wrap: break-word;
   }
   
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt {
     width: 100%;
     height: 100%;
     font-size: 11px;
@@ -471,7 +466,7 @@
     background: #FFFFFF;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-inner-cnt{
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-inner-cnt{
     width: 99%;
     height: 98%;
     margin: 0.5% 0;
@@ -490,7 +485,7 @@
     background: #FFF7F5  !important;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-headings-row th {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-headings-row th {
     white-space: nowrap;
     background: #F7F7F7;
     padding: 12px; 
@@ -503,15 +498,15 @@
     color: #222222;
   }
 
-   .main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-headings-row th:first-child {
+   .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-headings-row th:first-child {
        border-top-left-radius: 12px; 
    }
 
-   .main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-headings-row th:last-child {
+   .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-headings-row th:last-child {
        border-top-right-radius: 12px; 
    }
 
-   .main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-inner-cnt .table-values>* {
+   .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-inner-cnt .table-values>* {
     color: #797979;
     font-family: Anek Latin;
     font-size: 10px;
@@ -522,7 +517,7 @@
     padding:1.5% 0% 1% 1.2%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-inner-cnt .table-values .pro-name{
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .table-inner-cnt .table-values .pro-name{
     font-family: Anek Latin;
     font-size: 12px;
     font-weight: 400;
@@ -533,20 +528,20 @@
     word-wrap: break-word;
   }
   
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .star-icon {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .star-icon {
     color: goldenrod;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .total-premium,
-   .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .renewal-premium ,
-    .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .total-premium,
+   .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .renewal-premium ,
+    .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits {
     display: flex;
     justify-content: space-between;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .total-premium :nth-child(1),
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .renewal-premium :nth-child(1),
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits :nth-child(1){
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .total-premium :nth-child(1),
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .renewal-premium :nth-child(1),
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits :nth-child(1){
     color: #2E2E2E;
     font-family: Anek Latin;
     font-size: 8px;
@@ -556,9 +551,9 @@
     text-align: left;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .total-premium :nth-child(2),
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .renewal-premium :nth-child(2),
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits :nth-child(2){
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .total-premium :nth-child(2),
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .renewal-premium :nth-child(2),
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits :nth-child(2){
     color: #2E2E2E;
     font-family: Anek Latin;
     font-size: 10px;
@@ -568,23 +563,23 @@
     text-align: left;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits :nth-child(1),
-    .main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits :nth-child(2){
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits :nth-child(1),
+    .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .renewal .hr-benefits :nth-child(2){
     color: green;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .modification {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .modification {
     max-width: 100px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .table-format-cnt .notice-icons {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .table-format-cnt .notice-icons {
     display: flex;
     flex-direction: row;
     gap: 7px;
     font-size: 15px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data {
     width: 100%;
     height: 100%;
     display: flex;
@@ -593,24 +588,24 @@
     margin: 10% 0%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data img {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data img {
     max-width: 100%;
     max-height: 100%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .card-cnt {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .card-cnt {
     width: 100%;
     margin: 2% 0% 0% 0%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .card-outer-cnt {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .card-outer-cnt {
     width: 100%;
     height: 100%;
     gap: 20px;
     justify-content: center;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .card-outer-cnt .card {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .card-outer-cnt .card {
     padding: 12px;
     border-radius: 16px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -620,7 +615,7 @@
     margin-bottom: 15px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .card-outer-cnt .card .top-section {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .card-outer-cnt .card .top-section {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -632,7 +627,7 @@
     width:50%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .name-and-rating {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .name-and-rating {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -640,34 +635,34 @@
     gap: 20px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .name {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .name {
     font-size: 16px;
     font-weight: bold;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .rating {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .rating {
     display: flex;
     align-items: center;
     gap: 4px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .star {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .star {
     font-size: 12px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .green-star {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .green-star {
     color: green;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .yellow-star {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .yellow-star {
     color: goldenrod;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .red-star {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .red-star {
     color: red;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .rating-value {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .rating-value {
     font-family: Anek Latin;
     font-size: 11px;
     font-weight: 400;
@@ -676,13 +671,13 @@
     text-align: left;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .card-outer-cnt .card .top-section .icons {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .card-outer-cnt .card .top-section .icons {
     width: 40%;
     display: flex;
     gap: 8px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .icon {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .icon {
     width: 22px;
     height: 22px;
     padding: 5px;
@@ -696,7 +691,7 @@
     justify-content: center;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .icon:hover {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .icon:hover {
     background: #c7222a;
     color: white ;
   }
@@ -711,29 +706,29 @@
     color: white !important; 
   }
 
-  .main-container .all-quotes .main-quotes-cnt .details-section {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .details-section {
     display: flex;
     flex-direction: column;
     gap: 12px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .policy-detail {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .policy-detail {
     display: flex;
     gap: 16px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .detail {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .detail {
     display: flex;
     flex-direction: column;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .policy-detail div:nth-child(1) {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .policy-detail div:nth-child(1) {
     display: flex;
     flex-direction: column;
     width: 80px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .label {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .label {
     font-family: Anek Latin;
     font-size: 10px;
     font-weight: 400;
@@ -742,7 +737,7 @@
     color: #4c4c4c;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .value {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .value {
     font-family: Anek Latin;
     font-size: 12px;
     font-weight: 600;
@@ -751,17 +746,17 @@
     color: #4c4c4c;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .policy-detail2 {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .policy-detail2 {
     display: flex;
     flex-direction: row;
     gap: 16px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .widths {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .widths {
     width: 50%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .value1 {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .value1 {
     font-family: Anek Latin;
     font-size: 10px;
     font-weight: 500;
@@ -771,7 +766,7 @@
     color: #2E2E2E;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .sub-detail {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .sub-detail {
     font-family: Anek Latin;
     font-size: 8px;
     font-weight: 500;
@@ -785,7 +780,7 @@
     margin: 5% 10% 5% 0%;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .sub-detail div:nth-child(2) {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .sub-detail div:nth-child(2) {
     font-family: Anek Latin;
     font-size: 10px;
     font-weight: 500;
@@ -794,11 +789,11 @@
     text-align: left;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .benifit {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .benifit {
     color: #1f874c;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .pagination .pages {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .pagination .pages {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -809,26 +804,26 @@
     margin: 15px auto;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt {
     width: 100%;
     height: Hug 102px px;
     padding: 24px 16px 24px 16px;
     background-color: white;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom {
     display: flex;
     height: Hug 54px px;
     justify-content: space-between;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .left-cnt {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .left-cnt {
     width: 40%;
     height: Hug 70px px;
     gap: 8px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .left-cnt .text-message1 {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .left-cnt .text-message1 {
     width: 100%;
     height: 22px;
     font-family: Anek Latin;
@@ -839,7 +834,7 @@
     color: #000;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .left-cnt .text-message2 {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .left-cnt .text-message2 {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -849,7 +844,7 @@
     gap: 8px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .left-cnt .text-message2 .message {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .left-cnt .text-message2 .message {
     width: 100%;
     height: 18px;
     font-family: Anek Latin;
@@ -860,7 +855,7 @@
     color: #d99202;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .right-cnt {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .right-cnt {
     width: 20%;
     display: flex;
     justify-content: center;
@@ -873,7 +868,7 @@
     border-radius: 10px;
   }
 
-  .main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .right-cnt .plus-symbol {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .no-data-bottom-section-cnt .no-data-bottom .right-cnt .plus-symbol {
     font-size: 30px;
   }
   
@@ -945,7 +940,7 @@
     text-align: center !important;
   }
   
-  .main-container .all-quotes .main-quotes-cnt .pages .pagination-info {
+  .endorsements-main-container .all-quotes .main-quotes-cnt .pages .pagination-info {
     color: #797979;
     font-family: Anek Latin;
     font-size: 13px;
@@ -955,7 +950,7 @@
     text-align: left;  
   }
   
-  .main-container .sub-quotes-main-cnt
+  .endorsements-main-container .sub-quotes-main-cnt
   {
     width: 75%;
     top: 114px;
@@ -966,7 +961,7 @@
     margin: 2% 0% 0% 0%;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt
   {
     display: flex;
     width:100%;
@@ -975,7 +970,7 @@
     justify-content: space-between;   
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .left-header{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .left-header{
     display: flex;
     flex-direction: row;
     gap:8px;
@@ -985,7 +980,7 @@
     align-items: center;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .customer-name
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .customer-name
   {
     font-family: Anek Latin;
     font-size: 20px;
@@ -996,7 +991,7 @@
     color: #2E2E2E;
   }
   
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header{
     width: 30%;
     height: 32px;
     gap: 24px;  
@@ -1005,7 +1000,7 @@
     gap:24px
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .download-icon{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .download-icon{
     display: flex;
     width: 15%;
     height: Hug (32px)px;
@@ -1016,7 +1011,7 @@
     box-shadow: 2px 2px 10px 0px #5680B31F;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views
   {
     display: flex;
     width: 82%;
@@ -1024,7 +1019,7 @@
     gap: 16px;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .grid-view{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .grid-view{
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -1036,8 +1031,8 @@
     background-color: #FFFFFF;
   }
   
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .grid-view.active,
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .list-view.active{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .grid-view.active,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .list-view.active{
     background-color: #c7222a;
     color: white;
     span{
@@ -1045,8 +1040,8 @@
     }
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .grid-view:hover,
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .list-view.hover{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .grid-view:hover,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .list-view.hover{
     background-color: #c7222a;
     color: white;
     span{
@@ -1054,7 +1049,7 @@
     }  
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .grid-view .grid-view-title{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .grid-view .grid-view-title{
     font-family: Anek Latin;
     font-size: 14px;
     font-weight: 500;
@@ -1064,7 +1059,7 @@
     color: #4C4C4C;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .list-view{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .list-view{
     display: flex;
     flex-direction: row;
     width: 46%;
@@ -1076,7 +1071,7 @@
     align-items: center;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .list-view .list-view-title
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-header-cnt .right-header .grid-list-views .list-view .list-view-title
   {
     font-family: Anek Latin;
     font-size: 14px;
@@ -1087,7 +1082,7 @@
     color: #4C4C4C;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt{
     display: flex;
     flex-direction: column;
     width:100%;
@@ -1095,7 +1090,7 @@
     border-radius: 16px;  
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes{
     display:flex;
     flex-direction: row;
     width: 100%;
@@ -1105,14 +1100,14 @@
     border: 2px solid #FFFFFF;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes  .quote-type-cnt{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes  .quote-type-cnt{
     display: flex;
     flex-direction: column;
     width: 13%;
     gap:5px;   
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-type-cnt .quote-type-title{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-type-cnt .quote-type-title{
     display: flex;
     width: 100%;
     height: 45px;  
@@ -1131,7 +1126,7 @@
     text-align: left;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-type-cnt .quote-type-names{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-type-cnt .quote-type-names{
     display: flex;
     align-items: center;
     width: 100%;
@@ -1147,17 +1142,17 @@
     color: #4C4C4C;
   
   }
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-type-cnt input{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-type-cnt input{
     accent-color: red;
   }
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt{
     display: flex;
     flex-direction: column;
     width: 87%;
     gap: 5px;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings{
     display: flex;
     width:100%;
     height: 45px;
@@ -1167,43 +1162,43 @@
     background-color: #F7F7F7;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .proposer-title,
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .proposer-value{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .proposer-title,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .proposer-value{
     width: 7%;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .product-title,
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .product-value{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .product-title,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .product-value{
     width: 7%;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .policyno-title,
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .policyno-value{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .policyno-title,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .policyno-value{
     width: 9%;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .renewal-premium-title,
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .renewal{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .renewal-premium-title,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .renewal{
     width: 14%;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .mobileno-title,
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .mobileno-value{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .mobileno-title,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .mobileno-value{
     width: 8%;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .renewal-date-title,
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .renewal-date-value{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .renewal-date-title,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .renewal-date-value{
     width: 13%;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .modification-title,
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .modification{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .modification-title,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .modification{
     width: 13%;
   }
 
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .notice-title,
-  .main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .notice-icons{
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details-headings .notice-title,
+  .endorsements-main-container .sub-quotes-main-cnt .sub-quotes-cnt .sub-quotes .quote-details-cnt .quote-details .quote-details-data .notice-icons{
     width: 12%;
     .icon{
       font-size: 15px;
@@ -1836,22 +1831,22 @@
   }
  
   @media (max-width: 1280px) {
-    .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types div p {
+    .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .filter-types div p {
       font-size: 9px;
       font-weight: 400;
     }
 
-    .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .left-value1 {
+    .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .left-value1 {
       font-size: 9px;
     }
   }
   @media (max-width: 1115px) {
-    .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter {
+    .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter {
       justify-content: flex-start;
       cursor: pointer;
     }
 
-    .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header {
+    .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header {
       display: flex;
       height: 29px;
       width: fit-content;
@@ -1861,7 +1856,7 @@
   }
 
   @media (max-width: 767px) {
-    .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter {
+    .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter {
       width: 96%;
       height: fit-content;
       display: flex;
@@ -1870,15 +1865,15 @@
       flex-direction: column;
     }
 
-    .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header {
+    .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header {
       height: fit-content;
     }
 
-    .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .left-value1 {
+    .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .left-header .left-value1 {
       height: fit-content;
     }
 
-    .main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header {
+    .endorsements-main-container .all-quotes .main-quotes-cnt .quotes-header .list-of-filter .right-header {
       display: flex;
       height: 32px; 
       width: 100%;
