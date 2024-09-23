@@ -4,5 +4,11 @@
     "getRenewalInfoApi":"renewal/api/renewal/renewalinfo",
     "sendrenewalwhatappsms":"renewal/api/renewal/sendrenewalwhatappsms",
     "sendrenewalsms":"renewal/api/renewal/sendrenewalsms",
-    "generatepaymentlink":"renewal/api/renewal/generatepaymentlink"
+    "generatepaymentlink":"renewal/api/renewal/generatepaymentlink",
+
+    "endorsementdetails":"claims/api/endorsement/endorsementdetails",
+    "getactivepolicynumbers":"claims/api/endorsement/getactivepolicynumbers",
+    "endorsementfileuploadtoomnidocs":"claims/api/endorsement/endorsementfileuploadtoomnidocs",
+    "endorsementcreaterequest":"claims/api/endorsement/endorsementcreaterequest",
+    "getpolicyinfodetails":"claims/api/endorsement/getpolicyinfodetails"
 }

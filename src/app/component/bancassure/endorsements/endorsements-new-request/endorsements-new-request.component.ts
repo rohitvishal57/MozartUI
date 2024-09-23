@@ -127,7 +127,7 @@ export class EndorsementsNewRequestComponent {
   createForm(): void {
     this.form = this.fb.group({
       policyNumber: ['', Validators.required],
-      proposalNumber: ['', Validators.required],
+      // proposalNumber: ['', Validators.required],
       memberName: ['', Validators.required],
       endorsementType: ['', Validators.required],
       notes: ['', Validators.required],
@@ -139,7 +139,7 @@ export class EndorsementsNewRequestComponent {
     let data: any = {
       userId: ['5100003'],
     };
-    this.endorsementService.getEndorsementsPolicies(data).subscribe(
+    this.endorsementService.getactivepolicynumbersApi(data).subscribe(
       (response: any) => {
         if (response.isSuccess) {
           this.responseData =  response;
@@ -186,22 +186,22 @@ export class EndorsementsNewRequestComponent {
           policyNumber: this.selectMemberData.policynumber,
           memberId : this.selectMemberData.memberid
       }
-      this.endorsementService.getEndorsementPolicyInfo(payload).subscribe(
+      this.endorsementService.getEndorsementPolicyInfoApi(payload).subscribe(
         (response) => {
-          if (response.statusCode == 0) {
+          if (response.statusCode == 200) {
            this.endorsementInfo = response;
           }
         },
         (error) => {}
       );
   }
+
   uploadFiles(files: File[]): void {
     const fileNames: string[] = files.map((file) => file.name);
     const fileTypes: string[] = files.map((file) => file.type);
     this.documentType = fileTypes;
     this.namesVariable = fileNames;
     this.showDocInfo = true;
-   
   }
 
   deleteFile() {
@@ -211,7 +211,7 @@ export class EndorsementsNewRequestComponent {
     this.fileID = '';
   }
   submitResponse(): void {
-    if (true) {
+    if (this.form.valid) {
       this.spinner.show();
       console.log(this.form.value, this.payload,this.endorsementInfo,'hh')
       this.form.value.doc = this.fileID;
@@ -226,12 +226,16 @@ export class EndorsementsNewRequestComponent {
       data.endorsementRequest.comments = this.form.value.notes;
       data.endorsementRequest.endorsementRequest = this.form.value.doc;
       data.endorsementRequest.customerID = this.form.value.proposalNumber;
-      this.endorsementService.endorsementCreateRequest(data).subscribe(
+      this.endorsementService.endorsementCreateRequestApi(data).subscribe(
         (response: any) => {
           if (response.isSuccess) {
             this.spinner.hide();
+            const endorsementType = this.form.value.endorsementType;
+            if(endorsementType === 'Aadhar Card Update' || endorsementType === 'Pancard Update') {
+              this.fileUploadApi(response.response.caseId);
+            }
             this.toast.success({ detail: `Your request ${response.response.caseId} has been registered`});
-            this.router.navigate(['portal/agent/requests'])
+            this.router.navigate(['portal/agent/requests']);
           }
         },
         (error) => {
@@ -239,8 +243,30 @@ export class EndorsementsNewRequestComponent {
           console.error('Error fetching dropdown data', error);
         }
       );
-    } // else {
-    //   this.toast.error({ detail: 'Please fill in the required form fields.' });
-    // }
+    } else {
+      this.toast.error({ detail: 'Please fill in the required form fields.' });
+    }
   }
+
+  fileUploadApi(caseId : string) : any {
+    const newCaseId = caseId.replace(/-/g, ''); 
+    const formData = new FormData();
+    let id: any = localStorage.getItem('agentCode');
+    this.uploadedFiles.forEach((file, index) => {
+      formData.append(`AgentCode`, id);
+      formData.append(`ReferenceId`, this.endorsementInfo.policyDetails.qouteId);
+      formData.append(`CaseId`, newCaseId);
+      formData.append(`Files`, file.file, file.file.name);
+    });
+    this.endorsementService.endorsementUploadFilesApi(formData).subscribe(
+      (response) => {
+        if (response.success) {
+          this.fileID = 'ewufuye7f28784y8747';
+        }
+      },
+      (error) => {
+        console.error('File Upload was Failed', error);
+      }
+    );
+}
 }
