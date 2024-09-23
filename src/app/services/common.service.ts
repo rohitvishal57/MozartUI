@@ -1,77 +1,286 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ConfigService } from '../config.service';
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
   private baseUrl: string = 'https://usp.monocept.ai/api/';
-  private yatraUrl: string = 'https://usp.monocept.ai/Yatra/';
+  private yatraUrl: string = 'https://usp.monocept.ai/yatra/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
   public baseCssUrl= 	'https://usp.monocept.ai/ABHI/' 
+  getproduct = {
+    "success": true,
+    "message": "Quote Generated Successfully",
+    "data": {
+      "partnerId": 1,
+      "partnerName": "HDFC Bank",
+      "partnerCode": null,
+      "products": [
+        {
+          "productId": 1,
+          "productName": "Activ One Max",
+          "productCode": "7200",
+          "planCode": "MassMarket",
+          "subPlanCode": "MassMarket",
+          "productDescription": "The Active One Max plan offers exceptional health coverage with a range of robust features designed to provide maximum protection and financial flexibility. Earn up to 100% HealthReturns™ by maintaining a healthy lifestyle, rewarding you for prioritizing your well-being. The plan includes Claim Protect, which waives non-medical expenses, ensuring that unexpected costs are covered. Benefit from Super Reload, which automatically restores your sum insured up to 100% after a claim, ensuring continuous coverage",
+          "keyFeatures": "[\"No restrictions on the type of hospital room you choose\",\"Covers non-medical expenses or the cost of consumables such as gloves, oxygen masks, nebulization kits, etc.\",\"100% discount on renewal premiums\"]",
+          "imageUrl": "../../../../assets/logo/activeOne.svg",
+          "tenure1Premium": "24379.83",
+          "tenure2Premium": "45102.68",
+          "tenure3Premium": "65825.53",
+          "t2DiscountAmount": "3099.13",
+          "t3DiscountAmount": "6198.26",
+          "t2DiscountPercentage": 7.50,
+          "t3DiscountPercentage": 10.00,
+          "productFeatures": [
+            {
+              "featureName": "Vaccine Cover",
+              "categoryName": "Health Add On",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Tele-OPD Consultation",
+              "categoryName": "Health Add On",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Personal Accident",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Critical Illness",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Durable Equipment Cover",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Second Medical Opinion for listed Major Illness",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Annual Screening Package for Cancer Diagnosed Patients",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Per Claim Deductable",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Preferred Provider Network",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Compassionate Visit",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Room Rent Type Options",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Cancer Booster",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "HLTH Meter",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            }
+          ]
+        },
+        {
+          "productId": 2,
+          "productName": "Activ One Max Plus",
+          "productCode": "7200",
+          "planCode": "MassMarket_Plus",
+          "subPlanCode": "MassMarket_Plus",
+          "productDescription": "The Active One Max + plan offers exceptional health coverage with a range of robust features designed to provide maximum protection and financial flexibility. Earn up to 100% HealthReturns™ by maintaining a healthy lifestyle, rewarding you for prioritizing your well-being. The plan includes Claim Protect, which waives non-medical expenses, ensuring that unexpected costs are covered. Benefit from Super Reload, which automatically restores your sum insured up to 100% after a claim, ensuring continuous coverage",
+          "keyFeatures": "[\"Unlimited Restoration Benifit\",\"Day Care treatments are covered\",\"Full Coverage even if you are hospitalize at home\"]",
+          "imageUrl": "../../../../assets/logo/activeOne.svg",
+          "tenure1Premium": "28239.76",
+          "tenure2Premium": "52243.56",
+          "tenure3Premium": "76247.35",
+          "t2DiscountAmount": "3589.80",
+          "t3DiscountAmount": "7179.60",
+          "t2DiscountPercentage": 7.50,
+          "t3DiscountPercentage": 10.00,
+          "productFeatures": [
+            {
+              "featureName": "Vaccine Cover",
+              "categoryName": "Health Add On",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Tele-OPD Consultation",
+              "categoryName": "Health Add On",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Personal Accident",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Critical Illness",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Second Medical Opinion for listed Major Illness",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Annual Screening Package for Cancer Diagnosed Patients",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Reduction In Specific Disease Waiting Period",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Reduction In Pre-Existing Disease Waiting Period",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Per Claim Deductable",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Preferred Provider Network",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Compassionate Visit",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Room Rent Type Options",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Cancer Booster",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "HLTH Meter",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            }
+          ]
+        },
+        {
+          "productId": 3,
+          "productName": "Activ One VIP",
+          "productCode": "7200",
+          "planCode": "VIP",
+          "subPlanCode": "VIP",
+          "productDescription": "The Active One VIP Plan is a premium health insurance plan designed to offer comprehensive coverage with a range of exclusive benefits for those seeking top-tier healthcare protection. This plan provides extensive coverage with high sum insured options and additional features tailored to meet the needs of discerning policyholders.",
+          "keyFeatures": "[\"Option to cover costs of durable equipments like wheelchair, ventilator, etc.\",\"Covers expenses incurred for undergoing HIV / AIDS treatment\",\"Covers expenses associated with pregnancy\"]",
+          "imageUrl": "../../../../assets/logo/activeOne.svg",
+          "tenure1Premium": "30219.80",
+          "tenure2Premium": "55906.63",
+          "tenure3Premium": "81593.46",
+          "t2DiscountAmount": "3841.50",
+          "t3DiscountAmount": "7683.00",
+          "t2DiscountPercentage": 7.50,
+          "t3DiscountPercentage": 10.00,
+          "productFeatures": [
+            {
+              "featureName": "Vaccine Cover",
+              "categoryName": "Health Add On",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Tele-OPD Consultation",
+              "categoryName": "Health Add On",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Personal Accident",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Critical Illness",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Durable Equipment Cover",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Second Medical Opinion for listed Major Illness",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Annual Screening Package for Cancer Diagnosed Patients",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Reduction In Specific Disease Waiting Period",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Reduction In Pre-Existing Disease Waiting Period",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Compassionate Visit",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "Cancer Booster",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "\"Geographical extension to include USA and Canada\" for Global Cover (Emergency Only)",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            },
+            {
+              "featureName": "HLTH Meter",
+              "categoryName": "Optional Covers",
+              "featureDescription": null
+            }
+          ]
+        }
+      ]
+    }
+  }
+  constructor(private http: HttpClient,private configService: ConfigService) { }
 
-  private apiUrl = './assets/health-plans.json';
-  private apiUrl1 = './assets/occupations.json';
-
-  constructor(private http: HttpClient, private configService: ConfigService) { }
-
-  getFormConfig(bankCode: number, insuranceTypeCode: number, productId: any) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetFormConfig?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}`);
-  }
-  getJSONForm(bankCode: any, insuranceTypeCode: number, productId: any, formId: number) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetJSONForm?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}`);
-  }
-  insertFormConfig(formConfig: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertFormConfigViaVerticalCode`, formConfig);
-  }
-  insertJSONForm(jsonForm: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertJSONFormViaVerticalCode`, jsonForm);
-  }
-  // insertOrUpdateFormData(formData: any) {
-  //   return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateFormData`, formData);
-  // }
-  getFormData(bankCode: any, insuranceTypeCode: number, productId: any, formId: number, proposalNumber: any) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetFormData?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}&proposalNumber=${proposalNumber}`);
-  }
-  getAllFormData(bankCode: any) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetAllFormData?bankCode=${bankCode}`);
-  }
-  //Agents
-
-  getFormConfigViaVerticalCode(verticalCode: number, Code: number, insuranceTypeCode: number, productId: string) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetFormConfigViaVerticalCode?verticalCode=${verticalCode}&Code=${Code}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}`);
-  }
-
-  getJSONFormViaVerticalCode(verticalCode: any, Code: number, insuranceTypeCode: number, productId: string, formId: number) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetJSONFormViaVerticalCode?verticalCode=${verticalCode}&Code=${Code}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}`);
-  }
-
-  insertOrUpdateFormDataViaVertical(formData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateFormDataViaVerticalCode`, formData);
-  }
-
-  getAllFormDataViaVerticalCode(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/GetAllFormDataViaVerticalCode`, reqData);
-  }
-
-  insertOrUpdateJourneyDetailsViaVerticalCode(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateJourneyDetailsViaVerticalCode`, reqData);
-  }
-  getJourneyDetailsByProposalNum(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/GetJourneyDetailsByProposalNum`, reqData);
-  }
-  getJourneyDetailsViaVerticalCode(verticalCode:any,code:any,agentCode:any){
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetJourneyDetailsViaVerticalCode?verticalCode=${verticalCode}&Code=${code}&AgentCode=${agentCode}`);
-  }
-  resumeJourneyViaFormName(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/ResumeJourneyViaFormName`,reqData);
-  }
-
-  //For ABHI
-
-  //Agent Forms Api's
 
   // For All PartnerApi
    getQoute(reqData: any) {
@@ -84,35 +293,35 @@ export class CommonService {
     return this.http.post<any>(`${this.baseUrl}getHealthQuoteForAF`, reqData);
   }
   getAllStates() {
-    return this.http.post<any>(`${this.baseUrl}getStates`, {});
+    return this.http.post<any>(`${this.yatraUrl}getStates`, {});
   }
   getAllRelationship(){
-    return this.http.post<any>(`${this.baseUrl}getRelationShip`,{});
+    return this.http.post<any>(`${this.yatraUrl}getRelationShip`,{});
   }
   getCityByPinCode(pinCode: any) {
     const headers = { 'content-type': 'application/json' };
-    return this.http.post<any>(`${this.baseUrl}getPinCode`, pinCode, { 'headers': headers });
+    return this.http.post<any>(`${this.yatraUrl}getPinCode`, pinCode, { 'headers': headers });
   }
   getPinCodeByCity(response: any) {
     return this.http.get<any>(`${this.yatraUrl}api/agent/getpincodedetails?pincode=${response}`);
   }
 
-  getHealthPlans(year: any, adultCount: any, childCount: any) {
-    return this.http.get<any>(`${this.apiUrl}`);
-  }
+  // getHealthPlans(year: any, adultCount: any, childCount: any) {
+  //   return this.http.get<any>(`${this.apiUrl}`);
+  // }
 
-  CreateProposal(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/PartnerApi/CreateProposal`, reqData);
-  }
-  convertToRDBMS(data: any) {
-    const data1 = JSON.stringify(data);
-    const headers = { 'content-type': 'application/json' }
-    return this.http.post(`${this.baseUrl}Banca/Forms/ConvertToRDBMS`, data1, { 'headers': headers });
-  }
+  // CreateProposal(reqData: any) {
+  //   return this.http.post<any>(`${this.baseUrl}Banca/PartnerApi/CreateProposal`, reqData);
+  // }
+  // convertToRDBMS(data: any) {
+  //   const data1 = JSON.stringify(data);
+  //   const headers = { 'content-type': 'application/json' }
+  //   return this.http.post(`${this.baseUrl}Banca/Forms/ConvertToRDBMS`, data1, { 'headers': headers });
+  // }
   //For ICICI
-  getOccupations() {
-    return this.http.get<any>(`${this.apiUrl1}`);
-  }
+  // getOccupations() {
+  //   return this.http.get<any>(`${this.apiUrl1}`);
+  // }
 
   //For ABHI
   getAllOccupation(){
@@ -120,7 +329,7 @@ export class CommonService {
   }
 
   getAllOccupationRisk(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getRiskOccupation`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getRiskOccupation`);
   }
 
   getAllBankDetails(){
@@ -135,37 +344,8 @@ export class CommonService {
     return this.http.post<any>(`${this.yatraUrl}getBranchDetails`,reqBody);
   }
 
-  convertData(reqData: any,reqType: number){
-    return this.http.post<any>(`${this.baseUrl}Agent/ConvertData?dataType=${reqType}`,reqData);
-
-  }
-
-  draftSave(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}draftSave`,reqData);
-  }
-
-  saveLeadDetails(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}saveLeadDetails`,reqData);
-  }
-  insertLeadDetails(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Agent/Agency/InsertLeadDetails`, reqData);
-  }
-
-  commonDraftSave(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}commonDraftSave`,reqData);
-  }
-
-  getTotalPremiumEncrypted(reqData: number){
-    console.log(reqData);
-    let res = this.http.post<any>(`${this.baseUrl}encrypt`,reqData,{responseType: 'text' as 'json'});
-    console.log(res);
-    
-    return res;
-    
-  }
-
   getAddOnPremium(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Agent/CalculateAddonValue`,reqData);
+    return this.http.post<any>(`${this.yatraUrl}Agent/CalculateAddonValue`,reqData);
   }
 
   getIdentification(){
@@ -209,20 +389,20 @@ export class CommonService {
   }
 
   getRelationship(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getRelationship`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/getRelationship`);
   }
 
   getHalfQuotation(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}getHalfQuote`,reqData);
+    return this.http.post<any>(`${this.yatraUrl}getHalfQuote`,reqData);
   }
   getHalfQuote(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Agent/Agency/GetHalfQuote`,reqData);
+    return this.http.post<any>(`${this.yatraUrl}Agent/Agency/GetHalfQuote`,reqData);
   }
   getFullQuote(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Agent/Agency/GetHalfQuote`,reqData);
+    return this.http.post<any>(`${this.yatraUrl}Agent/Agency/GetHalfQuote`,reqData);
   }
   getInsurerData(){
-    return this.http.get<any>(`${this.baseUrl}Agent/GetInsurerData`);
+    return this.http.get<any>(`${this.yatraUrl}Agent/GetInsurerData`);
   }
    //yatra
    Getform(reqData:any){
@@ -248,5 +428,24 @@ export class CommonService {
   }
   GetAllFormData(reqData: any) {
     return this.http.post<any>(`${this.yatraUrl}Banca/Forms/GetAllFormDataViaVerticalCode`, reqData);
+  }
+
+  getProposalNumber() {
+    return this.http.get<any>(`${this.yatraUrl}api/product/getproposalnumber`);
+  }
+  Getproductlist(reqData:any){
+    return this.http.post<any>(`${this.yatraUrl}api/product/getproductlist`,reqData)
+  }
+  Getproductlist2(reqData:any){
+    return this.http.post<any>(`https://5765cf9e-4ee6-4c3d-80b9-1b4f14eb4794.mock.pstmn.io/abhi`,reqData)
+  }
+  Getproductlist3(reqData:any){
+    return of(this.getproduct)
+  }
+  // Getproductlist3(reqData:any){
+  //   return this.http.post<any>(`https://1762f1a5-b8b1-464d-bd9b-f0d6529b1304.mock.pstmn.io/Getproductlist3`,reqData)
+  // }
+  Getformsequence(reqData:any){
+    return this.http.post<any>(`${this.yatraUrl}api/forms/getformsequence`,reqData)
   }
 }

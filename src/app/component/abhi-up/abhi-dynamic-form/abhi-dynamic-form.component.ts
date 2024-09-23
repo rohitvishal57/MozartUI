@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { Router } from '@angular/router';
 import { concatMap, of, tap } from 'rxjs';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
   selector: 'app-abhi-dynamic-form',
@@ -86,7 +87,7 @@ export class AbhiDynamicFormComponent {
   isOverlayVisible = false;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
-    public service: CommonService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
+    public service: CommonService,private adminService: AdminService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
     private toast: NgToastService, private datePipe: DatePipe, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document) { }
 
@@ -1962,7 +1963,7 @@ export class AbhiDynamicFormComponent {
         "leadMobileNo": this.dynamicFormGroup.get('leadMobileNo')?.value,
         "leadEmailId": this.dynamicFormGroup.get('leadEmailId')?.value,
       }
-      this.service.insertLeadDetails(reqData).subscribe({
+      this.adminService.insertLeadDetails(reqData).subscribe({
         next: (res) => {
           this.leadId = res.leadId;
           this.proposalId = res.proposalId;

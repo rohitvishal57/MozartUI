@@ -12,26 +12,7 @@ export class LoginService {
 
   constructor(private http: HttpClient, private router: Router, private configService: ConfigService) {}
 
-  getAllBankDetails() {
-    return this.http.get<any>(`${this.baseUrl}Banca/User/GetAllBankDetails`);
-  }
-  sendLoginRequest(loginData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/User/Login`, loginData);
-  }
-  sendAdminLoginRequest(loginData: any) {
-    return this.http.post<any>(`${this.baseUrl}yatra/Banca/Admin/Login`, loginData);
-  }
-
-  getAllProductsViaBankCode(bankCode: any) {
-    return this.http.get<any>(
-      `${this.baseUrl}Banca/Product/GetAllProductsViaBankCode?bankCode=${bankCode}`
-    );
-  }
-  getAllProductListViaBankCode(bankCode: number, insuranceTypeCode: number) {
-    return this.http.get<any>(
-      `${this.baseUrl}Banca/Product/GetAllProductListViaBankCode?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}`
-    );
-  }
+  
 
  
   //Agent APi's
@@ -40,32 +21,6 @@ export class LoginService {
     return this.http.post<any>(sendAgentLoginRequestApi, loginData);
   }
 
-  getAllProducts(verticalCode: any, code: any) {
-    return this.http.get<any>(
-      `${this.baseUrl}Banca/Product/GetProduct?verticalCode=${verticalCode}&code=${code}`
-    );
-  }
-
-  // getAllProductList(verticalCode: any, code: any, insuranceTypeCode: any) {
-  //   return this.http.get<any>(
-  //     `${this.baseUrl}Banca/Product/GetProductList?verticalCode=${verticalCode}&code=${code}&insuranceTypeCode=${insuranceTypeCode}`
-  //   );
-  // }
-  Getproductlist(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}Yatra/api/product/getproductlist`,reqData)
-  }
-  Getproductlist2(reqData:any){
-    return this.http.post<any>(`https://5765cf9e-4ee6-4c3d-80b9-1b4f14eb4794.mock.pstmn.io/abhi`,reqData)
-  }
-  Getproductlist3(reqData:any){
-    return this.http.post<any>(`https://1762f1a5-b8b1-464d-bd9b-f0d6529b1304.mock.pstmn.io/Getproductlist3`,reqData)
-  }
-  // Getproductlist3(reqData:any){
-  //   return this.http.post<any>(`https://1762f1a5-b8b1-464d-bd9b-f0d6529b1304.mock.pstmn.io/Getproductlist3`,reqData)
-  // }
-  Getformsequence(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}Yatra/api/forms/getformsequence`,reqData)
-  }
   Getagentcartdetails(reqData:any){
     return this.http.post<any>(`${this.baseUrl}quote/api/cart/getagentcartdetails`,reqData);
   }
@@ -87,11 +42,9 @@ export class LoginService {
     sessionStorage.clear();
     this.router.navigate(['']);
   }
-  getProposalNumber() {
-    return this.http.get<any>(`${this.baseUrl}yatra/api/product/getproposalnumber`);
-  }
+  
 
-  // For Google Login
+  // For Google Login 
   sendGoogleLoginRequest(reqBody: any) {
     return this.http.post<any>(`${this.baseUrl}Banca/User/GoogleLogin`, reqBody);
   }

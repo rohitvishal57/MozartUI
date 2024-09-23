@@ -96,7 +96,7 @@ export class QuoteProductsComponent implements OnInit {
     // })
     this.spinner.show();
     // this.loginService.Getproductlist2(reqData).subscribe({
-    this.loginService.Getproductlist3(reqData).subscribe({
+    this.service.Getproductlist3({}).subscribe({
       next: (res) => {
         this.spinner.hide();
         console.log(res)
@@ -137,7 +137,7 @@ export class QuoteProductsComponent implements OnInit {
 
   async getProposalNum() {
     try {
-      await this.loginService.getProposalNumber().subscribe({
+      await this.service.getProposalNumber().subscribe({
         next:(res)=>{
           console.log(res);
           this.proposalNum = res.data;
@@ -237,7 +237,7 @@ export class QuoteProductsComponent implements OnInit {
         "productId": item.productId
 
       }
-      const res = await firstValueFrom(this.loginService.Getformsequence(reqData));
+      const res = await firstValueFrom(this.service.Getformsequence(reqData));
       console.log(res);
       this.formSequence = JSON.parse(res.data.formSequence);
       console.log(this.formSequence);

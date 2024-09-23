@@ -6,6 +6,7 @@ import { NgToastService } from 'ng-angular-popup';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IValidator } from 'src/app/interface/form.interface';
+import { AdminService } from 'src/app/services/admin.service';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -49,7 +50,7 @@ export class CustomerFormComponent {
   private radioOptionsSubscription: Subscription | undefined;
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
-    private service: CommonService, private loginService: LoginService, private toast: NgToastService,
+    private service: CommonService, private adminService: AdminService, private toast: NgToastService,
     private router: Router,private encryptionService:EncryptionService,private spinner:NgxSpinnerService) { }
 
   ngOnInit(): void {
@@ -94,7 +95,7 @@ export class CustomerFormComponent {
       this.initializeForm();
     }
     else{
-      this.service.getJSONFormViaVerticalCode(this.verticalCode,this.bankCode,this.insuranceTypeCode,this.productId,formSeq).subscribe({
+      this.adminService.getJSONFormViaVerticalCode(this.verticalCode,this.bankCode,this.insuranceTypeCode,this.productId,formSeq).subscribe({
         next :(res)=>{
           this.form = JSON.parse(res.jsonformdata);
           this.initializeForm();
@@ -108,7 +109,7 @@ export class CustomerFormComponent {
   getPopupFormDataFromFormSequence(formSeq: any) {
     console.log(this.bankCode, this.insuranceTypeCode, formSeq);
     let formId = this.allformSequence[formSeq].formId
-    this.service.getJSONFormViaVerticalCode(this.verticalCode,this.bankCode, this.insuranceTypeCode,this.productId, formId).subscribe({
+    this.adminService.getJSONFormViaVerticalCode(this.verticalCode,this.bankCode, this.insuranceTypeCode,this.productId, formId).subscribe({
       next: (res) => {
         this.popUpForm = JSON.parse(res.jsonformdata);
         this.initializaPopupForm();
