@@ -6,6 +6,12 @@
     "sendrenewalsms":"renewal/api/renewal/sendrenewalsms",
     "generatepaymentlink":"renewal/api/renewal/generatepaymentlink",
 
+    "getClaimsList":"claims/api/claim/getclaimlist",
+    "getProposalDetails":"claims/api/claim/getproposaldetails?AgentCode",
+    "saveClaims":"claims/api/claim/saveclaim",
+    "uploadFiles":"claims/api/claim/saveuploadfiledetails"
+
+
 
     "partnerlogin":"auth/api/login/partnerlogin",
     "getContactDetailsByAgentCode":"auth/api/user/getcontactdetailsbyagentcode",
@@ -17,5 +23,6 @@
     "endorsementfileuploadtoomnidocs":"claims/api/endorsement/endorsementfileuploadtoomnidocs",
     "endorsementcreaterequest":"claims/api/endorsement/endorsementcreaterequest",
     "getpolicyinfodetails":"claims/api/endorsement/getpolicyinfodetails"
+
 
 }

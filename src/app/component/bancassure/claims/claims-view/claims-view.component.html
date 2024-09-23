@@ -10,12 +10,44 @@
             </div>
          </div>
          <div class="details-section">
-            <form  (ngSubmit)="onSubmit()" [formGroup]="form" >
-
+          <form (ngSubmit)="onSubmit()" [formGroup]="form">
+            <!-- <div class="col-sm-12 dropdowns2 pt-2">
+              <div class="col-sm-3 dropdown-field">
+                <label class="label">Select Proposer</label>
+                <select class="input-field" formControlName="proposalNumber">
+                  <option class="dropdown-options" *ngFor="let proposal of proposalNumbers" [value]="proposal">{{ proposal }}</option>
+                </select>
+              </div>
+            
+              
+              <div class="col-sm-3 dropdown-field">
+                <label class="label">Select Policy Member</label>
+                <select class="input-field" formControlName="policyNumber" (onChange)="handleDropdownChange($event)">
+                  <option class="dropdown-options" *ngFor="let policy of policyNumbers" [value]="policy">{{ policy }}</option>
+                </select>
+              </div>
+              
+              <div class="col-sm-3 dropdown-field">
+                <label class="label">Select Member</label>
+                <select class="input-field" formControlName="fullName">
+                  <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
+                </select>
+              </div>
+              
+              <div class="col-sm-3 dropdown-field">
+                <label class="label">Claim Type</label>
+                <select class="input-field" formControlName="policyType">
+                  <option class="dropdown-options" *ngFor="let claim of claimTypes" [value]="claim">{{ claim }}</option>
+                </select>
+              </div>
+            </div>
+     -->
+          
             <div class="dropdowns" >
                <div class="dropdown-field"> 
                 <label class="label">Select Proposer</label>
                     <p-dropdown 
+                        class="select-pdropdown"
                         [options]="proposalNumbers" 
                         placeholder="Select a Proposal"
                         formControlName="proposalNumber"
@@ -26,7 +58,8 @@
                 <div class="dropdown-field" > 
                   <label class="label"> Select Policy Member</label>
                     <p-dropdown 
-                       [options]="policyNumbers" 
+                        class="select-pdropdown"
+                        [options]="policyNumbers" 
                         formControlName="policyNumber"
                         placeholder="Select a Policy Number"
                         [virtualScroll]="true"
@@ -36,8 +69,9 @@
                 <div class="dropdown-field"> 
                   <label class="label">Select Member</label>
                     <p-dropdown 
+                        class="select-pdropdown"
                         [options]="memberNames"
-                        formControlName="fullName"
+                        formControlName="memberName"
                         placeholder="Select a Member Name"
                         [virtualScroll]="true"
                         [itemSize]="30"                          />
@@ -46,6 +80,7 @@
                 <div class="dropdown-field"> 
                   <label class="label">Claim Type</label>
                     <p-dropdown 
+                        class="select-pdropdown"
                         [options]="claimTypes"
                         formControlName="policyType"
                         placeholder="Select Claim Type"
