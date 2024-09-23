@@ -261,8 +261,6 @@ export class AgentLoginComponent implements OnInit{
   }
 
   contactDetailsReqBody: any = {
-    "agentCode": "",
-    "eventName": "",
     "userId": ""
   }
   
@@ -271,7 +269,7 @@ export class AgentLoginComponent implements OnInit{
       console.log(this.codeForm.value.verify);
       this.contactDetailsReqBody.userId = this.codeForm.value.verify;
       localStorage.setItem("agentCode", this.codeForm.value.verify);
-      this.loginService.getContactDetailsByAgentCode(this.contactDetailsReqBody)
+      this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
         .subscribe({  
           next: (res)=>{
             console.log(res.contactInfo);
@@ -324,7 +322,7 @@ export class AgentLoginComponent implements OnInit{
     this.sendOtpReqBody.agentCode = localStorage.getItem("agentCode");
     this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
 
-    this.loginService.sendOtpRequest(this.sendOtpReqBody)
+    this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
           next: (res)=>{
             console.log(res);
@@ -364,7 +362,7 @@ export class AgentLoginComponent implements OnInit{
   onSubmit(){
     if(this.loginForm.valid){
       console.log(this.loginForm.value);
-      this.loginService.sendAgentLoginRequest(this.loginForm.value)
+      this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
         .subscribe({  
           next: (res)=>{
             console.log(res); 
@@ -446,7 +444,7 @@ export class AgentLoginComponent implements OnInit{
 
       console.log(this.validateOtpReqBody);
 
-      this.loginService.validateOtpRequest(this.validateOtpReqBody)
+      this.loginService.validateOtpRequestApi(this.validateOtpReqBody)
         .subscribe({  
           next: (res)=>{
             console.log(res);

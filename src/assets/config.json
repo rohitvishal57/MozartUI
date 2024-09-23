@@ -5,8 +5,24 @@
     "sendrenewalwhatappsms":"renewal/api/renewal/sendrenewalwhatappsms",
     "sendrenewalsms":"renewal/api/renewal/sendrenewalsms",
     "generatepaymentlink":"renewal/api/renewal/generatepaymentlink",
+
     "getClaimsList":"claims/api/claim/getclaimlist",
     "getProposalDetails":"claims/api/claim/getproposaldetails?AgentCode",
     "saveClaims":"claims/api/claim/saveclaim",
     "uploadFiles":"claims/api/claim/saveuploadfiledetails"
+
+
+
+    "partnerlogin":"auth/api/login/partnerlogin",
+    "getContactDetailsByAgentCode":"auth/api/user/getcontactdetailsbyagentcode",
+    "sendotp":"auth/api/communication/sendotp",
+    "validateotp":"auth/api/communication/validateotp"
+
+    "endorsementdetails":"claims/api/endorsement/endorsementdetails",
+    "getactivepolicynumbers":"claims/api/endorsement/getactivepolicynumbers",
+    "endorsementfileuploadtoomnidocs":"claims/api/endorsement/endorsementfileuploadtoomnidocs",
+    "endorsementcreaterequest":"claims/api/endorsement/endorsementcreaterequest",
+    "getpolicyinfodetails":"claims/api/endorsement/getpolicyinfodetails"
+
+
 }
