@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { ConfigService } from '../config.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,7 @@ export class LoginService {
   private baseUrl: string = 'https://usp.monocept.ai/';
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private configService: ConfigService) {}
 
   getAllBankDetails() {
     return this.http.get<any>(`${this.baseUrl}Banca/User/GetAllBankDetails`);
@@ -34,8 +35,9 @@ export class LoginService {
 
  
   //Agent APi's
-  sendAgentLoginRequest(loginData: any) {
-    return this.http.post<any>(`${this.baseUrl}auth/api/login/partnerlogin`, loginData);
+  sendAgentLoginRequestApi(loginData: any) {
+    const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;
+    return this.http.post<any>(sendAgentLoginRequestApi, loginData);
   }
 
   getAllProducts(verticalCode: any, code: any) {
@@ -95,15 +97,18 @@ export class LoginService {
   }
 
     // For Send OTP Login
-    validateOtpRequest(validateOtpReqBody: any) {
-      return this.http.post<any>(`${this.baseUrl}auth/api/communication/validateotp`, validateOtpReqBody);
+    validateOtpRequestApi(validateOtpReqBody: any) {
+      const validateOtpRequestApi = this.configService.config.baseUrl + this.configService.config.validateotp;
+      return this.http.post<any>(validateOtpRequestApi, validateOtpReqBody);
     }
 
-    sendOtpRequest(OtpReqBody: any) {
-      return this.http.post<any>(`${this.baseUrl}auth/api/communication/sendotp`, OtpReqBody);
+    sendOtpRequestApi(OtpReqBody: any) {
+      const sendOtpRequestApi = this.configService.config.baseUrl + this.configService.config.sendotp;
+      return this.http.post<any>(sendOtpRequestApi, OtpReqBody);
     }
 
-    getContactDetailsByAgentCode(contactDetailsReqBody: any) {
-      return this.http.post<any>(`${this.baseUrl}auth/api/user/getcontactdetailsbyagentcode`, contactDetailsReqBody);
+    getContactDetailsByAgentCodeApi(contactDetailsReqBody: any) {
+      const getContactDetailsByAgentCodeApi = this.configService.config.baseUrl + this.configService.config.getcontactdetailsbyagentcode;
+      return this.http.post<any>(getContactDetailsByAgentCodeApi, contactDetailsReqBody);
     }
 }

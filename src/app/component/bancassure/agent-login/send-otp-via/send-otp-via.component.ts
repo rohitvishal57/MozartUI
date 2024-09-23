@@ -65,7 +65,7 @@ export class SendOtpViaComponent implements OnInit{
     this.sendOtpReqBody.agentCode = localStorage.getItem("agentCode");
     this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
 
-    this.loginService.sendOtpRequest(this.sendOtpReqBody)
+    this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
           next: (res)=>{
             console.log(res);
