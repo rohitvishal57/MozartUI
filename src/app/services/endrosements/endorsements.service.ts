@@ -1,30 +1,37 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ConfigService } from 'src/app/config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EndorsementsService {
-  private baseUrl: string = 'https://usp.monocept.ai/';
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private configService: ConfigService) { }
+
   getEndorsementDetailsApi(reqBody: any) {
-  return this.http.post<any>(this.baseUrl+'claims/api/endorsement/endorsementdetails', reqBody);
+    const getEndorsementDetailsApi = this.configService.config.baseUrl + this.configService.config.endorsementdetails;
+    return this.http.post<any>(getEndorsementDetailsApi, reqBody);
   }
 
-  getEndorsementsPolicies(reqBody: any) {
-    return this.http.post<any>(this.baseUrl+'claims/api/endorsement/getactivepolicynumbers', reqBody);
+  getactivepolicynumbersApi(reqBody: any) {
+    const getactivepolicynumbersApi = this.configService.config.baseUrl + this.configService.config.getactivepolicynumbers;
+    return this.http.post<any>(getactivepolicynumbersApi, reqBody);
     }
-      // Method to upload files
-  endorsementUploadFiles(formData: FormData): Observable<any> {
-        return this.http.post<any>(this.baseUrl+'claims/api/endorsement/endorsementfileuploadtoomnidocs', formData);
+    
+  endorsementUploadFilesApi(formData: FormData): Observable<any> {
+    const endorsementUploadFilesApi = this.configService.config.baseUrl + this.configService.config.endorsementfileuploadtoomnidocs;
+    return this.http.post<any>(endorsementUploadFilesApi, formData);
   }
-  endorsementCreateRequest(formData: FormData): Observable<any> {
-    return this.http.post<any>(this.baseUrl+'claims/api/endorsement/endorsementcreaterequest', formData);
+
+  endorsementCreateRequestApi(formData: FormData): Observable<any> {
+    const endorsementCreateRequestApi = this.configService.config.baseUrl + this.configService.config.endorsementcreaterequest;
+    return this.http.post<any>(endorsementCreateRequestApi, formData);
     // return this.http.post<any>('https://localhost:7026/api/endorsement/endorsementcreaterequest' ,formData)
   }
   
-  getEndorsementPolicyInfo(formData: any){
-    return this.http.post<any>(this.baseUrl+'claims/api/endorsement/getpolicyinfodetails', formData);
+  getEndorsementPolicyInfoApi(formData: any){
+    const getEndorsementPolicyInfoApi = this.configService.config.baseUrl + this.configService.config.getpolicyinfodetails;
+    return this.http.post<any>(getEndorsementPolicyInfoApi, formData);
   }
 }
