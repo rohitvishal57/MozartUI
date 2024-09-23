@@ -1,0 +1,51 @@
+<div class="main">
+    <div class="sub-mainNav"></div>
+    <div class="sub-main">
+        <div class="logo">
+            <img [src]="common.baseCssUrl+'assets/logo/ABHI_Logo.svg'" alt="abhi-logo">
+        </div>
+        <div class="header">
+            <div class="header2">
+                <div class="header-left-cnt">
+                    <div class="toolbar">
+                        <button *ngIf="!isDesktopView" class="menu-button" (click)="toggleSidenav()">☰</button>
+                        <div *ngIf="isDesktopView" class="menu">
+                            <div (click)="redirect('viewdashboard')" routerLinkActive="active-link">Dashboard</div>
+                            <div (click)="redirect('viewProposals')" routerLinkActive="active-link">Proposals</div>
+                            <div (click)="redirect('viewproducts')" routerLinkActive="active-link">Products</div>
+                            <div (click)="redirect('renewalList')" routerLinkActive="active-link">
+                                <div class="nav-text">Renewals</div>
+                            </div>
+                            <div (click)="redirect('viewClaims')" routerLinkActive="active-link">Claims</div>
+                            <div (click)="redirect('requests')" routerLinkActive="active-link">Endorsements</div>
+                        </div>    
+                    </div>
+                </div>
+                <div class="header-right-cnt">
+                    <div class="language-selector">
+                        <select (change)="setLanguage($event)" [value]="currentLanguage">
+                          <option value="en">English</option>
+                          <option value="hi">Hindi</option>
+                          <option value="te">Telugu</option>
+                        </select>
+                    </div>  
+                    <!-- <button class="logout-button" (click)="logOut()">Log Out</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="abhifont">Aditya Birla Health Insurance</div>
+</div>
+<div class="sideNavMain">
+    <div class="sideNavSub">
+        <div class="navMain">
+            <div class="hilight" (click)="redirect('viewproducts')"><img
+                    [src]="common.baseCssUrl+'assets/images/icon_menu_boxes_grey.svg'"></div>
+            <div class="active"><img [src]="common.baseCssUrl+'assets/images/icon_healthcare_grey.svg'"></div>
+            <div class="hilight"><img [src]="common.baseCssUrl+'assets/images/icon_bullet_list_grey.svg'"></div>
+            <div class="hilight"><img [src]="common.baseCssUrl+'assets/images/icon_paper_grey.svg'"></div>
+            <div class="hilight"><img src='../../../../assets/images/logout.svg' (click)="logOut()"></div>
+
+        </div>
+    </div>
+</div>
