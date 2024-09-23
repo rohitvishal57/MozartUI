@@ -235,7 +235,7 @@ export class EndorsementsNewRequestComponent {
               this.fileUploadApi(response.response.caseId);
             }
             if(response.response.caseId === null) {
-              this.toast.success({ detail: 'Your request is not created. Please try again after some time'});
+              this.toast.success({ detail: `${response.response.statusMessage}`});
             } else {
               this.toast.success({ detail: `Your request ${response.response.caseId} has been registered`});
             }
