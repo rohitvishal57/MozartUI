@@ -108,7 +108,7 @@ export class LoginService {
     }
 
     getContactDetailsByAgentCodeApi(contactDetailsReqBody: any) {
-      const getContactDetailsByAgentCodeApi = this.configService.config.baseUrl + this.configService.config.getcontactdetailsbyagentcode;
+      const getContactDetailsByAgentCodeApi = this.configService.config.baseUrl + this.configService.config.getContactDetailsByAgentCode;
       return this.http.post<any>(getContactDetailsByAgentCodeApi, contactDetailsReqBody);
     }
 }
