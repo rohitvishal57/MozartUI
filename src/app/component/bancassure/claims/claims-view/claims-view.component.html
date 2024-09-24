@@ -135,104 +135,36 @@
             </div>
          </div>
          <div class="details-section">
-          <form (ngSubmit)="onSubmit()" [formGroup]="form">
-            <!-- <div class="col-sm-12 dropdowns2 pt-2">
-              <div class="col-sm-3 dropdown-field">
-                <label class="label">Select Proposer</label>
-                <select class="input-field" formControlName="proposalNumber">
-                  <option class="dropdown-options" *ngFor="let proposal of proposalNumbers" [value]="proposal">{{ proposal }}</option>
-                </select>
+          <form (ngSubmit)="onSubmit()" [formGroup]="form">      
+            <div class="col-sm-12 dropdowns pt-2">
+              <div class="col-sm-4 dropdown-field">
+              <label class="label">Select Policy Number</label>
+              <select class="input-field" formControlName="policyNumber" (change)="handleDropdownChange($event)">
+              <option class="dropdown-options"value="" disabled selected>Select Policy Number</option>
+              <option class="dropdown-options" *ngFor="let policy of policyNumbers" [value]="policy">{{ policy }}</option>
+              </select>
               </div>
-            
-              
-              <div class="col-sm-3 dropdown-field">
-                <label class="label">Select Policy Member</label>
-                <select class="input-field" formControlName="policyNumber" (onChange)="handleDropdownChange($event)">
-                  <option class="dropdown-options" *ngFor="let policy of policyNumbers" [value]="policy">{{ policy }}</option>
-                </select>
+               
+              <div class="col-sm-4 dropdown-field">
+              <label class="label">Select Member</label>
+              <select class="input-field" formControlName="memberName">
+              <option class="dropdown-options" value="" disabled selected>Select Member</option>
+              <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
+              </select>
               </div>
-              
-              <div class="col-sm-3 dropdown-field">
-                <label class="label">Select Member</label>
-                <select class="input-field" formControlName="fullName">
-                  <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
-                </select>
+               
+              <div class="col-sm-4 dropdown-field">
+              <label class="label">Claim Type</label>
+              <select class="input-field" formControlName="policyType">
+              <option class="dropdown-options"value="" disabled selected>Select Claim Type</option>
+              <option  class="dropdown-options" *ngFor="let claim of claimTypes" [value]="claim">{{ claim }}</option>
+              </select>
               </div>
-              
-              <div class="col-sm-3 dropdown-field">
-                <label class="label">Claim Type</label>
-                <select class="input-field" formControlName="policyType">
-                  <option class="dropdown-options" *ngFor="let claim of claimTypes" [value]="claim">{{ claim }}</option>
-                </select>
-              </div>
-            </div>
-     -->
-          
-            <div class="dropdowns" >
-               <!-- <div class="dropdown-field"> 
-                <label class="label">Select Proposer</label>
-                    <p-dropdown 
-                        class="select-pdropdown"
-                        [options]="proposalNumbers" 
-                        placeholder="Select a Proposal"
-                        formControlName="proposalNumber"
-                        [virtualScroll]="true"
-                        [itemSize]="30" 
-                       />
-                </div> -->
-                <div class="dropdown-field" > 
-                  <label class="label"> Select Policy Member</label>
-                    <p-dropdown 
-                        class="select-pdropdown"
-                        [options]="policyNumbers" 
-                        formControlName="policyNumber"
-                        placeholder="Select a Policy Number"
-                        [virtualScroll]="true"
-                        [itemSize]="30"  
-                        (onChange)="handleDropdownChange($event)"                   />
-                </div>
-                <div class="dropdown-field"> 
-                  <label class="label">Select Member</label>
-                    <p-dropdown 
-                        class="select-pdropdown"
-                        [options]="memberNames"
-                        formControlName="memberName"
-                        placeholder="Select a Member Name"
-                        [virtualScroll]="true"
-                        [itemSize]="30"  
-                                               />
-                </div>
-                
-                <div class="dropdown-field"> 
-                  <label class="label">Claim Type</label>
-                    <p-dropdown 
-                        class="select-pdropdown"
-                        [options]="claimTypes"
-                        formControlName="policyType"
-                        placeholder="Select Claim Type"
-                      
-                         />
-                </div>
-            </div>  
-            
-            <div class="col-sm-12 dropdowns2 pt-2">
+        </div>
+            <div class="col-sm-12 dropdowns pt-2">
                 <div class="col-sm-6 dropdown-field"> <label class="label">Claim Amount</label>
                    <input class="input-field" formControlName="claimedAmount" type="text">
                 </div>
-                <!-- <div class="dropdowns2">
-                  <div class="dropdown-field"> <label class="label">Claim Amount</label>
-                     <input class="input-field" type="text">
-                  </div>
-                  <div class="dropdown-field"> <label class="label"> Hospitals</label>
-                      <p-dropdown
-                          class="dropdownp1" 
-                          [options]="" 
-                          optionLabel="name"
-                          placeholder="Select a City"
-                           [virtualScroll]="true"
-                          [itemSize]="30"  />
-                  </div>
-              </div> -->
                 <div class="col-sm-6 dropdown-field"> <label class="label"> Hospitals</label>
                   <select class="input-field" formControlName="hospitalName">
                     <option>Select Hospitals</option>
@@ -316,16 +248,14 @@
                        
             </div>
             </div>
-  
-        
-          
-            <div *ngIf="uploadedFiles.length > 0" class="uploaded-files">
-             <div class="uploads-label">
-              <div>Uploads:</div>
-              <div class="upload-status">
-                {{ uploadStatus }}
-              </div>
-            </div>
+         
+          <div *ngIf="uploadedFiles.length > 0" class="uploaded-files">
+              <div class="uploads-label">
+                <div>Uploads:</div>
+                <div class="upload-status">
+                  {{ uploadStatus }}
+                </div>
+          </div>
               <ul class="upload">
                   <li *ngFor="let file of uploadedFiles">
                       <div class="editable-label-flex">
