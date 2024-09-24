@@ -1,10 +1,10 @@
 {
     "baseUrl":"https://usp.monocept.ai/",    
-    "getRenewalListApi": "renewal/api/renewal/getrenewallist",
-    "getRenewalInfoApi":"renewal/api/renewal/renewalinfo",
-    "sendrenewalwhatappsms":"renewal/api/renewal/sendrenewalwhatappsms",
-    "sendrenewalsms":"renewal/api/renewal/sendrenewalsms",
-    "generatepaymentlink":"renewal/api/renewal/generatepaymentlink",
+    "getRenewalListApi": "renewal/api/getrenewallist",
+    "getRenewalInfoApi":"renewal/api/renewalinfo",
+    "sendrenewalwhatappsms":"renewal/api/sendrenewalwhatappsms",
+    "sendrenewalsms":"renewal/api/sendrenewalsms",
+    "generatepaymentlink":"renewal/api/generatepaymentlink",
 
     "getClaimsList":"claims/api/getclaimlist",
     "getProposalDetails":"claims/api/getproposaldetails?AgentCode",
