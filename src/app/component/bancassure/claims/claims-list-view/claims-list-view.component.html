@@ -55,13 +55,13 @@
                           <tbody class="table-group-divider" >
                             <tr *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index"
                     class="table-values">
-                                <td >{{ row?.id }}</td>
+                                <td class="td-text-bold">{{ row?.id }}</td>
                                 <td >{{ row?.policyNumber }}</td>
-                                <td >{{ row?.productName }}</td>
+                                <td ><span class="text-break-w100">{{ row?.productName }}</span></td>
                                 <td >{{ row?.memberName }}</td>
                                 <td >{{ row?.memberRelation }}</td>
                                 <td >{{ row?.requestType }}</td>
-                                <td >{{ row?.claimStatus }}</td>
+                                <td ><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
                                 <td >{{ row?.raisedDate | date:'yyyy-MM-dd' }}</td>
                                 <!--<td>
                                      <div class="icon" (click)="downloadRequest(row)">
@@ -106,15 +106,15 @@
                                 <div class="item_lable">Member Relation</div>
                                 <div class="item_value">{{ gridClaims.memberRelation }}</div>
                             </div>
-                            <div class="cv_bodyItems">
+                            <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Request Type</div>
                                 <div class="item_value">{{ gridClaims.requestType }}</div>
                             </div>
-                            <div class="cv_bodyItems">
+                            <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Raised Date</div>
                                 <div class="item_value">{{ gridClaims.raisedDate | datepipe }}</div>
                             </div>
-                            <div class="cv_bodyItems">
+                            <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Status</div>
                                 <div class="item_value">{{ gridClaims.claimStatus }}</div>
                             </div>
