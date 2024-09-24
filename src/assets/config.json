@@ -20,5 +20,36 @@
     "getactivepolicynumbers":"claims/api/getactivepolicynumbers",
     "endorsementfileuploadtoomnidocs":"claims/api/endorsementfileuploadtoomnidocs",
     "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
-    "getpolicyinfodetails":"claims/api/getpolicyinfodetails"
+    "getpolicyinfodetails":"claims/api/getpolicyinfodetails",
+
+
+    "agentcartdetails":"quote/api/getagentcartdetails",
+    "insertorupdateagentcartdetails":"quote/api/insertorupdateagentcartdetails",
+    "productlist":"yatra/api/getproductlist",
+    "pincodedetails":"yatra/api/getpincodedetails",
+    "proposalnumber":"yatra/api/getproposalnumber",
+    "formsequence":"yatra/api/getformsequence",
+    "getform":"yatra/api/getform",
+    "getsalutation":"yatra/Agent/getSalutation",
+    "getNatureOfWork":"yatra/Agent/GetNatureOfWork",
+    "getInsurerData":"yatra/Agent/GetInsurerData",
+    "getOccupation":"yatra/Agent/getOccupation",
+    "getProposerOccupation":"yatra/Agent/getProposerOccupation",
+    "getId":"yatra/Agent/getId",
+    "getNationality":"yatra/Agent/getNationality",
+    "getGstRegistrationStatus":"yatra/Agent/getGstRegistrationStatus",
+    "getMaritalStatus":"yatra/Agent/getMaritalStatus",
+    "getEducationType":"yatra/Agent/getEducationType",
+    "getNomineeRelationShip":"yatra/Agent/getNomineeRelationShip",
+    "getAllBankDetails":"yatra/Agent/getAllBankDetails",
+    "getBankCity":"",
+    "getBranchDetails":"",
+    "getRelationship":"yatra/Agent/getRelationship",
+    "GetProposerRelationships":"yatra/Agent/GetProposerRelationships",
+    "insertorupdateformdata":"yatra/api/insertorupdateformdata",
+    "insertorupdatejourneydetails":"yatra/api/insertorupdatejourneydetails",
+    "CalculateAddonValue":"yatra/Agent/CalculateAddonValue",
+    "GetHalfQuote":"yatra/api/gethalfquote",
+    "getproductdetailsandfeatures":"yatra/api/getproductdetailsandfeatures"
+
 }

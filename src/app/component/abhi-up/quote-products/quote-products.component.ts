@@ -73,7 +73,9 @@ export class QuoteProductsComponent implements OnInit {
   getPoductList() {
     // this.selectedToggle = item.insuranceType
     const reqData = {
-      "agentCode": this.agentCode
+      agentCode: this.agentCode,
+      sumInsured: String(this.formData.sumInsured),
+      quoteData: JSON.stringify(this.formData)
     }
     // this.loginService.Getproductlist(reqData).subscribe({
     //   next: (res) => {
@@ -93,9 +95,10 @@ export class QuoteProductsComponent implements OnInit {
     //     }
     //   }
     // })
+    console.log(reqData);
     this.spinner.show();
-    // this.loginService.Getproductlist2(reqData).subscribe({
     this.service.Getproductlist3({}).subscribe({
+    // this.service.Getproductlist2(reqData).subscribe({
       next: (res) => {
         this.spinner.hide();
         console.log(res)
