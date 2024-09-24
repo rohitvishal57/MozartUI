@@ -92,11 +92,12 @@ export class ClaimsViewComponent {
 
     });
   }
+
   createForm(): void {
     this.form = this.fb.group({
       id: localStorage.getItem('agentCode'),
       policyNumber: ['',Validators.required],
-      proposalNumber: ['',Validators.required],
+      proposalNumber: [''],
       memberName: ['', Validators.required],
       productName: [''],
       fullName: [''],
@@ -151,14 +152,15 @@ extractUniqueValues(data: any[], key: string): any[] {
   return [...new Set(data.map(item => item[key]).filter(val => val))];
 
 }
-handleDropdownChange(event: any): void {
-  const selectedPolicyNumber = event.value;
+
+handleDropdownChange(event: any): void { 
+  const selectedPolicyNumber = event.target.value;
+  console.log(selectedPolicyNumber);
   // Filter the response data to find members for the selected policy number
   const filteredMembers = this.response.data.filter((item: any) => item.policyNumber === selectedPolicyNumber);
-  
   // Extract unique member names from the filtered members
   this.memberNames = this.extractUniqueValues(filteredMembers, 'fullName');
-
+  console.log('memberName',this.memberNames);
   // Reset memberName form control
   this.form.get('memberName')?.setValue('');
   this.cdr.markForCheck(); // Ensure the view updates
@@ -336,7 +338,7 @@ if (this.saveForm.valid || this.form.valid) {
       if (this.response.success === true) {
         this.uploadSuccess = true;
         this.toast.success({ detail: 'Claims submitted successfully' });
-        this.router.navigate(['portal/agent/viewClaims'])
+        this.router.navigate(['portal/agent/claimsList'])
 
       } else {
         this.toast.error({ detail: 'Failed to submit claims' });

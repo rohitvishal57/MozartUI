@@ -11,8 +11,6 @@
     "saveClaims":"claims/api/saveclaim",
     "uploadFiles":"claims/api/saveuploadfiledetails",
 
-
-
     "partnerlogin":"auth/api/partnerlogin",
     "getContactDetailsByAgentCode":"auth/api/getcontactdetailsbyagentcode",
     "sendotp":"auth/api/sendotp",
@@ -23,6 +21,4 @@
     "endorsementfileuploadtoomnidocs":"claims/api/endorsementfileuploadtoomnidocs",
     "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
     "getpolicyinfodetails":"claims/api/getpolicyinfodetails"
-
-
 }
