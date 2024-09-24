@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ConfigService } from '../config.service';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class LoginService {
 
   
 
- 
+
   //Agent APi's
   sendAgentLoginRequestApi(loginData: any) {
     const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;
@@ -24,8 +25,8 @@ export class LoginService {
   Getagentcartdetails(reqData:any){
     return this.http.post<any>(`${this.baseUrl}quote/api/cart/getagentcartdetails`,reqData);
   }
-  Insertorupdateagentcartdetails(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}quote/api/cart/insertorupdateagentcartdetails`,reqData);
+  Insertorupdateagentcartdetails(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl}quote/api/cart/insertorupdateagentcartdetails`, reqData);
   }
 
   storeToken(token: string) {

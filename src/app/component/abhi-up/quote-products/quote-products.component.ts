@@ -7,7 +7,6 @@ import { firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { LoginService } from 'src/app/services/login.service';
-import { totalpremium } from 'src/assets/styles/config/totalPremium';
 
 @Component({
   selector: 'app-quote-products',
@@ -198,7 +197,8 @@ export class QuoteProductsComponent implements OnInit {
       console.log(item)
       const productData = {
         partnerId : this.partnerId,
-        productId : item.productId
+        productId : item.productId,
+        isQuote : true
 
       }
       console.log(productData)

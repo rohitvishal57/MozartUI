@@ -28,7 +28,7 @@
                 <div class="selected-value">
                   <span>
                     <ng-container *ngIf="dropdown.label === 'Policy Type'">
-                      {{ quoteFormGroup.get('memberPolicyType')?.value || 'Please select a policy' }}
+                      {{ quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater' ? 'Family Floater' : (quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual' ? 'Multi Individual' : 'Please select a policy') }}
                     </ng-container>
 
                     <ng-container *ngIf="dropdown.label === 'Relationship'">
@@ -40,7 +40,7 @@
                     </ng-container>
 
                     <ng-container *ngIf="dropdown.label === 'Diseases'">
-                      {{ quoteFormGroup.get('diseases')?.value || 'No Diseases Selected' }}
+                      {{ diseaseNames != "" ? diseaseNames : 'No Diseases Selected' }}
                     </ng-container>
 
                   </span><i class="fas fa-chevron-down"></i>
@@ -56,8 +56,8 @@
                    <div class="option_policyType" >
                      <div class="input-radio-block raido_policyType">
                        <label class="input-radiolabel">
-                         <input type="radio" name="memberPolicyType" value="familyfloater"
-                           (click)="onPolicyTypeChange('Family Floater')"
+                         <input type="radio" name="policytype" value="Family Floater"
+                           (click)="onPlanTypeChange('Family FLoater')"
                            [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater'">
                          <span>
                            <em class="pt-head"><img src="../../../../assets/images/icon_familyfloater.svg">Family Floater
@@ -69,8 +69,8 @@
                        </label>
    
                        <label class="input-radiolabel">
-                         <input type="radio" name="memberPolicyType" value="multiindividual"
-                           (click)="onPolicyTypeChange('Multi Individual')"
+                         <input type="radio" name="policytype" value="Multi Individual"
+                           (click)="onPlanTypeChange('Multi Individual')"
                            [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual'">
                          <span>
                            <em class="pt-head"><img
@@ -84,7 +84,7 @@
    
                      <div class="tipInfo_org"><img src="../../../../assets/images/Lightbulb Icon.png">You can edit members
                        to change back to family floater policy.</div>
-                     <button type="button" class="btn_red btn_fullWidth" (click)="updatePolicyType()">Continue</button>
+                     <button type="button" class="btn_red btn_fullWidth" (click)="updatePlanType()">Continue</button>
                    </div>
                  </div>
 
@@ -275,7 +275,7 @@
 
                 <!-- Disease Dropdown -->
 
-                <div class="overlay_popupMain overlay_dropdown_w360 " *ngIf="selectedDropdown === 'Diseases'">
+                <!-- <div class="overlay_popupMain overlay_dropdown_w360 " *ngIf="selectedDropdown === 'Diseases'">
                   <div class="option_policyType">
                       <div class="overlay_body checkbox_disease_scroll">
                           <div class="input-checkbox-block checkbox_disease">
@@ -313,7 +313,29 @@
                       </div>
                       <button type="button" class="btn_red btn_fullWidth" (click)="diseaseSelection()">Continue</button>
                   </div>
+                </div> -->
+
+                <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Diseases'">
+                  <div class="option_policyType">
+                    <div class="overlay_body checkbox_disease_scroll">
+                      <div class="input-checkbox-block checkbox_disease">
+                        <div class="input-checkbox-feild" *ngFor="let disease of diseases">
+                          <input 
+                            type="checkbox" 
+                            [id]="disease.id" 
+                            [value]="disease.value" 
+                            (change)="onDiseaseChange($event)" 
+                            [checked]="isDiseaseSelected(disease.value)" 
+                            class="input-check">
+                          <label [for]="disease.id">{{ disease.label }}</label>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="button" class="btn_red btn_fullWidth" (click)="diseaseSelection()">Continue</button>
+                  </div>
                 </div>
+                
+                
 
               </div>
             </div>
