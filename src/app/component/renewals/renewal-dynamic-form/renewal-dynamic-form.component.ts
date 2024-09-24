@@ -22,11 +22,11 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectedButton: string = 'primary'; 
   selectedTenure: string = "tenure3";
   tenureDetails:any[]=[]; 
-  coverages:any[]=[]
+  // coverages:any[]=[]
   selectedCoverages: any[] = []; 
-  healthAddOns: any[] = [];
+  // healthAddOns: any[] = [];
   selectedAddOns: any[] = []; 
-  roomUpgradeBenefits: any[] = [];
+  // roomUpgradeBenefits: any[] = [];
   isRadioSelected = false;
   selectedPaymentType: string = '';
   selectedPaymentTypeLabel: string = '';
@@ -49,7 +49,7 @@ export class RenewalDynamicFormComponent implements OnInit {
     class: 'col-md-12'
   };
   renewalInfo: any;
-  homeAddress: any = {};
+  formObject: any = {};
 
 
   constructor(
@@ -60,9 +60,9 @@ export class RenewalDynamicFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.fetchAddOns()
-    this.fetchCoverages();
-    this.fetchRoomUpgradeBenefits();
+    // this.fetchAddOns()
+    // this.fetchCoverages();
+    // this.fetchRoomUpgradeBenefits();
     this.fetchTenureDetails();
      this.renewalService.policy$.subscribe(policy => {
       if(policy.policyNo){
@@ -71,39 +71,24 @@ export class RenewalDynamicFormComponent implements OnInit {
     });
     this.getRenewalInfo();
     this.initializeForm();
+    console.log("tenure",this.renewalInfo?.response?.policyData[0]?.Tenure);
+    
   }
 
   initializeForm() {
-    this.form = this.fb.group(this.homeAddress);
-    console.log(this.form);
-  }
-
-  initForm() {
-    if (this.formConfig && this.formConfig.formSections) {
-      this.formConfig.formSections.forEach((section: any) => {
-        section.formControls.forEach((control: any) => {
-          let validatorsArray: any[] = [];
-          if (control.validators) {
-            control.validators.forEach((validator: any) => {
-              if (validator.validatorName === 'required') {
-                validatorsArray.push(Validators.required);
-              } else if (validator.validatorName === 'pattern') {
-                validatorsArray.push(Validators.pattern(validator.pattern));
-              }
-            });
-          }
-          this.form.addControl(control.name, this.fb.control(control.value, validatorsArray));
-        });
-      });
-    }
-    console.log('Nominee form controls:', this.form.controls);
+    const group: any = {};
+    
+    Object.keys(this.formObject).forEach(key => {
+      group[key] = [this.formObject[key] || '']; // Apply validators dynamically if needed
+    });
+  
+    this.form = this.fb.group(group);
+    console.log('Dynamic form:', this.form);
   }
   
   proposerObject(){
     this.renewalService.getRenewalInfo().subscribe((info) => {
-      if (info) {
-        this.renewalInfo=info;
-      }
+      if (info) {this.renewalInfo=info;}
     }); 
   }
 
@@ -117,11 +102,21 @@ export class RenewalDynamicFormComponent implements OnInit {
           break;
         case 'editAddress':
           this.formId=5001;
-          console.log(this.form.value);
-          
+          if (event === 'editAddress') {
+            const updatedAddress = { ...this.form.value };
+            console.log('Updated address object to be sent:', updatedAddress);
+          } else {
+            console.log('Form is invalid');
+          }          
           break;
         case 'addNominee':
           this.formId=5001;
+          if (event === 'addNominee') {
+            const nominee = { ...this.form.value };
+            console.log('Updated nominee object to be sent:', nominee);
+          } else {
+            console.log('Form is invalid');
+          } 
           break;  
         default:
           console.warn('Unknown action:', event);
@@ -159,14 +154,35 @@ saveEmail() {
     this.emailSaved = true;
   }
 }
-selectButton(button: string, value?: any) {
+selectButton(button: string, value?: any,content? : any) {
   if (this.selectedButton === 'primary') {
     if (value == 5005) {//edit address
-      // this.loadAddressDetails();
+      if (this.renewalInfo?.response?.policyData?.length > 0) {
+        this.formObject = { ...this.renewalInfo.response.policyData[0].HomeAddress };
+        console.log('Existing address loaded:', this.formObject);
+      } this.initializeForm();
       this.formId = value;
     }else if (value == 5004) {//add nominee
+      if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
+        const nomineeDetails = this.renewalInfo.response.policyData[0].Nominee_Details;
+        this.formObject = {...nomineeDetails,
+          nominee_middle_name: nomineeDetails.nominee_middle_name || '',
+          nominee_mobile_number: nomineeDetails.nominee_mobile_number || '',
+          nominee_emergency_phone_number: nomineeDetails.nominee_emergency_phone_number || '',
+          nominee_email_address: nomineeDetails.nominee_email_address || ''
+        };
+        console.log('Existing address loaded:', this.formObject);
+      } else if (content === 'addNominee') {
+        this.formObject = Object.keys(this.renewalInfo.response.policyData[0].Nominee_Details)
+          .reduce((acc:any, key:any) => { acc[key] = ''; return acc; }, {});
+          this.formObject.nominee_middle_name = '';
+          this.formObject.nominee_mobile_number = '';
+          this.formObject.nominee_emergency_phone_number = '';
+          this.formObject.nominee_email_address = '';  
+      }
+      this.initializeForm();
       this.formId = value;
-    }else if (value == 5003) {//edit detail
+    }else if (value == 5003) {//edit member detail
       this.formId = value;
     }else if (value == 5002) {// add memeber
       this.formId = value;
@@ -216,30 +232,54 @@ selectPaymentType(option: any) {
    }
  }
 
-fetchTenureDetails(): void { 
-  this.http.get<any[]>('/assets/jsonValue/tenure-details.json').subscribe(tenureDetailsData => {
-    this.tenureDetails = tenureDetailsData;
-  });    
+ // Function to fetch Tenure Details
+ fetchTenureDetails(): void { 
+  this.http.get<any[]>('/assets/jsonValue/tenure-details.json').subscribe(
+    (tenureDetailsData) => {
+      this.tenureDetails = tenureDetailsData;
+    },
+    (error) => {
+      console.error('Error fetching Tenure Details:', error);
+    }
+  );    
 }
 
-fetchAddOns(): void {  
-  this.http.get<any[]>('/assets/jsonValue/health-add-ons.json').subscribe(healthAddOnsData => {
-    this.healthAddOns = healthAddOnsData;
-  });    
-}
+  // Function to fetch Add-Ons Data
+  // fetchAddOns(): void {  
+  //   this.http.get<any[]>('/assets/jsonValue/health-add-ons.json').subscribe(
+  //     (healthAddOnsData) => {
+  //       this.healthAddOns = healthAddOnsData;
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching Health Add-Ons:', error);
+  //     }
+  //   );    
+  // }
 
 
-fetchCoverages(): void {  
-  this.http.get<any[]>('/assets/jsonValue/optional-coverages.json').subscribe(coveragesData => {
-    this.coverages = coveragesData;
-  });
-}
+ // Function to fetch Coverages Data
+//  fetchCoverages(): void {  
+//   this.http.get<any[]>('/assets/jsonValue/optional-coverages.json').subscribe(
+//     (coveragesData) => {
+//       this.coverages = coveragesData;
+//     },
+//     (error) => {
+//       console.error('Error fetching Coverages:', error);
+//     }
+//   );
+// }
 
-fetchRoomUpgradeBenefits(): void {  
-  this.http.get<any[]>('/assets/jsonValue/rooms.json').subscribe(roomUpgradeBenefitsData => {
-    this.roomUpgradeBenefits = roomUpgradeBenefitsData;
-  });
-}
+// fetchRoomUpgradeBenefits(): void {  
+//   this.http.get<any[]>('/assets/jsonValue/rooms.json').subscribe(
+//     (roomUpgradeBenefitsData) => {
+//       this.roomUpgradeBenefits = roomUpgradeBenefitsData;
+//     },
+//     (error) => {
+//       console.error('Error fetching Room Upgrade Benefits:', error);
+//     }
+//   );
+// }
+
 
 selectCoverage(coverage: any): void {
   const index = this.selectedCoverages.findIndex(c => c.id === coverage.id);
@@ -270,14 +310,12 @@ isHealthAddOnSelected(addOn: any): boolean {
 onRadioChanges() {
   this.isRadioSelected = true;
 }
-applyRoomUpgrade()
-{
+applyRoomUpgrade() {
   this.isRadioSelected = false;
 
 }
 
-getSubquotes()
-{
+getSubquotes() {
   this.router.navigate(['portal/agent/renewalList'],{ queryParams: { showSubQuotes: true } })
 }
 
@@ -295,11 +333,12 @@ proceed() {
   }
 }
 
-renewNow(){
+renewNow() {
   this.setSection('payment')
 }
 
 getRenewalInfo() {
+  // '21-24-0002334-00' 
   this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
     (res) => {
       this.renewalInfo = JSON.parse(res.data);
@@ -309,13 +348,6 @@ getRenewalInfo() {
       console.log("Error", err);
     }
   );
-}
-
-loadAddressDetails() {
-  if (this.renewalInfo?.response?.policyData?.length > 0) {
-    this.homeAddress = { ...this.renewalInfo.response.policyData[0].HomeAddress };
-    console.log(this.homeAddress);
-  }
 }
 
 

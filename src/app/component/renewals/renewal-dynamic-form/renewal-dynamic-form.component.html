@@ -111,7 +111,7 @@
                       </div>
                   </div>
                   <div class="accordionItem" *ngIf="formId == 5001">
-                      <header>Nominee Details<button type="button" value="another" class="btn_iconText" (click)="selectButton('primary',5004)"><img src="assets/Img/icon_plus_red.svg"> Add another member</button></header>
+                      <header>Nominee Details<button type="button" value="another" class="btn_iconText" (click)="selectButton('primary',5004,'addNominee')"><img src="assets/Img/icon_plus_red.svg"> Add another member</button></header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                            <!-- <ng-container *ngFor="let nominee of response?.response?.policyData[0]?.Nominee_Details"> -->
@@ -134,7 +134,7 @@
                             <label>Relation to Nominee</label>
                             <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.Relationship || 'N/A' }}</h6>
                           </div>
-                          <div class="data-item data-item-10 data-itemEdit">
+                          <div class="data-item data-item-10 data-itemEdit" (click)="selectButton('primary',5004,'editNominee')">
                             <button type="button" value="dataedit" class="btn_editGrey"></button>
                           </div>
                         </div>
@@ -640,148 +640,185 @@
               <div class="accordionMain">                        
                 <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5005">
                     <header>
-                        Edit Address
+                      Edit Address
+                    </header>
+                    <div class="accordionBody">
+                      <div class="accordionBodyRow">
+                        <div class="detailsRow">
+                          <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="address1" name="address1" placeholder="" class="form-control input-textBox" formControlName="Home_Address_1">
+                                <label for="address1">Address Line 1</label>
+                                <span class="ui-error" *ngIf="form?.get('address1')?.invalid && form?.get('address1')?.touched">Please enter Address Line 1</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="address2" name="address2" placeholder="" class="form-control input-textBox" formControlName="Home_Address_2">
+                                <label for="address2">Address Line 2</label>
+                                <span class="ui-error" *ngIf="form?.get('address2')?.invalid && form?.get('address2')?.touched">Please enter Address Line 2</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="city" name="city" placeholder="" class="form-control input-textBox" formControlName="Home_City">
+                                <label for="city">City</label>
+                                <span class="ui-error" *ngIf="form?.get('city')?.invalid && form?.get('city')?.touched">Please enter City</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="state" name="state" placeholder="" class="form-control input-textBox" formControlName="Home_State">
+                                <label for="state">State</label>
+                                <span class="ui-error" *ngIf="form?.get('state')?.invalid && form?.get('state')?.touched">Please enter State</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="pincode" name="pincode" placeholder="" class="form-control input-textBox" formControlName="Home_Pincode">
+                                <label for="pincode">Pin Code</label>
+                                <span class="ui-error" *ngIf="form?.get('pincode')?.invalid && form?.get('pincode')?.touched">Please enter Pin Code</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <footer>
+                      <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
+                    </footer>
+                  </div>
+                  
+                  
+                <!--Accordion Item end-->
+                
+              </div>
+              <div class="accordionMain">
+                        
+                <!--Accordion Item start-->
+                <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5004">
+                    <header>
+                        Edit Nominee Details
+                        <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
+                                <div class="row mb-2">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <div class="input-checkbox-block">
+                                            <div class="input-checkbox-feild no-radius-checkbox">
+                                                <input type="checkbox" id="nominee-spouse" value="" class="input-check">
+                                                <label for="nominee-spouse">Make your spouse a nominee</label>
+                                              </div>
+                                          </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Nominee Personal Details</div>
                                 <div class="row">
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="address1" name="address1" value="" placeholder="" class="form-control input-textBox">
-                                            <label for="address1">Address Line 1</label>
-                                            <span class="ui-error">Please enter Policy Number</span>
+                                            <input type="text" id="nomine-fname" name="nomine-fname" formControlName="nominee_first_name" placeholder="" class="form-control input-textBox" >
+                                            <label for="nomine-fname">First Name</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">
+                                                Please enter First Name
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="address2" name="address2" value="" placeholder="" class="form-control input-textBox">
-                                            <label for="address2">Address Line 2</label>
-                                            <span class="ui-error">Please enter Sum assured</span>
+                                            <input type="text" id="nomine-mname" formControlName="nominee_middle_name" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-mname">Middle Name</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_middle_name')?.invalid && form?.get('nominee_middle_name')?.touched">
+                                                Please enter Middle Name
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-lname">Last Name</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_last_name')?.invalid && form?.get('nominee_last_name')?.touched">
+                                                Please enter Last Name
+                                            </span>
+                                         </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="date" id="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-dob">DOB</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_dob')?.invalid && form?.get('nominee_dob')?.touched">
+                                            Please enter DOB
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="city" name="city" value="" placeholder="" class="form-control input-textBox">
-                                            <label for="city">City</label>
-                                            <span class="ui-error">Please enter Sum assured</span>
+                                            <select id="nomine-relation" formControlName="nominee_relationship_code" class="form-control input-selectBox">
+                                                <option value="">Select Relation</option>
+                                                <option value="Son">Son</option>
+                                                <option value="Spouse">Spouse</option>
+                                                <option value="Father">Father</option>
+                                                <option value="Mother">Mother</option>
+                                                <option value="Daughter">Daughter</option>
+                                            </select>
+                                            <label for="nomine-relation">Relation with Nominee</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_relationship_code')?.invalid && form?.get('nominee_relationship_code')?.touched">
+                                                Please select Relation with Nominee
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="state" name="state" value="" placeholder="" class="form-control input-textBox">
-                                            <label for="state">State</label>
-                                            <span class="ui-error">Please enter Sum assured</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="pincode" name="pincode" value="" placeholder="" class="form-control input-textBox">
-                                            <label for="pincode">Pin Code</label>
-                                            <span class="ui-error">Please enter Sum assured</span>
+                                            <input type="text" id="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-contactno">Nominee Contact No.</label>
+                                            <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">
+                                                Please enter Nominee contact no.
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <div class="detailsHeading-12">Nominee Contact Details</div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-mobileno" formControlName="nominee_mobile_number" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-mobileno">Mobile Number</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_mobile_number')?.invalid && form?.get('nominee_mobile_number')?.touched">
+                                                Please enter Mobile Number
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-emergencymobileno" formControlName="nominee_emergency_phone_number" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-emergencymobileno">Emergency phone number</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_emergency_phone_number')?.invalid && form?.get('nominee_emergency_phone_number')?.touched">
+                                                Please enter Mobile Number
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-emailid" formControlName="nominee_email_address" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-emailid">Email Address</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_email_address')?.invalid && form?.get('nominee_email_address')?.touched">
+                                                Please enter Email Address
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            
                         </div>
                     </div>
-                    <footer>
-                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
-                    </footer>
+                    <div class="bi_right">
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('addNominee')">Save Updates</button>
+                    </div>
                 </div>
                 <!--Accordion Item end-->
                 
-              </div>
-              <div class="accordionMain"> 
-                  <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5004">
-                      <header>Edit Nominee Details<button type="button" value="another" class="btn_iconText" ><img src="assets/Img/icon_plus_red.svg"> Add another nominee</button></header>
-                    <div class="inner-cnt">
-                    <div class="checkbox-container">
-                      <input type="checkbox" formControlName="spouseNominee">
-                      <label>Make your spouse a nominee</label>
-                  </div>
-                  <h4>Nominee Personal Details</h4>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                          <div class="input-block form-floating input-block-renew">
-                              <input type="text" id="name" name="firstName" value="" placeholder="" class="form-control input-textBox">
-                              <label for="name">First Name</label>
-                              <span class="ui-error">Please enter FirstName</span>
-                          </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                          <div class="input-block form-floating input-block-renew">
-                              <input type="text" id="name" name="firstName" value="" placeholder="" class="form-control input-textBox">
-                              <label for="name">Middle Name</label>
-                              <span class="ui-error">Please enter MiddleName</span>
-                          </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                          <div class="input-block form-floating input-block-renew">
-                              <input type="text" id="name" name="firstName" value="" placeholder="" class="form-control input-textBox">
-                              <label for="name">Last Name</label>
-                              <span class="ui-error">Please enter LastName</span>
-                          </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                          <div class="input-block form-floating input-block-renew">
-                              <input type="date" id="dob" name="name" value="" placeholder="" class="form-control input-textBox">
-                              <label for="dob">Date of birth</label>
-                              <span class="ui-error">Please enter date of birth</span>
-                          </div>
-                      </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                          <div class="input-block form-floating input-block-renew">
-                              <select id="relation" name="relation" class="form-select input-selectBox">
-                                  <option>Select Relation</option>
-                                  <option value="spouse">Spouse</option>
-                                  <option value="parent">Parent</option>
-                                  <option value="child">Child</option>
-                              </select>
-                              <label for="Relation">Relation with Nominee</label>
-                              <span class="ui-error">Please select relation qualification</span>
-                          </div>
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                        <div class="input-block form-floating input-block-renew">
-                            <input type="number" id="name" name="firstName" value="" placeholder="" class="form-control input-textBox">
-                            <label for="name">Nominee Contact No.</label>
-                            <span class="ui-error">Please enter Nominee Contact No.</span>
-                        </div>
-                      </div>
-                        <h4>Nominee Contact Details</h4>
-                        <div class="input-cnt">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                          <div class="input-block form-floating input-block-renew">
-                              <input type="number" id="name" name="firstName" value="" placeholder="" class="form-control input-textBox">
-                              <label for="name">Mobile Number</label>
-                              <span class="ui-error">Please enter Mobile Number</span>
-                          </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                          <div class="input-block form-floating input-block-renew">
-                              <input type="number" id="name" name="firstName" value="" placeholder="" class="form-control input-textBox">
-                              <label for="name">Emergency phone number</label>
-                              <span class="ui-error">Please enter Emergency phone number</span>
-                          </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                          <div class="input-block form-floating input-block-renew">
-                              <input type="number" id="name" name="firstName" value="" placeholder="" class="form-control input-textBox">
-                              <label for="name">Email Address</label>
-                              <span class="ui-error">Please enter Email Address</span>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
-                    <div class="bi_right">
-                      <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="handleAction('addNominee')">Save Updates</button>
-                    </div>
-                </div>
-                 </div>
-              </div>   
+            </div> 
           </div>
         </div>
         <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'additional'">
@@ -791,9 +828,9 @@
               <div class="tenure-details">
                   <div class="premium-values">
                       <div class="year-premium-details" *ngFor="let tenure of tenureDetails"  [ngClass]="{'active-border': selectedTenure === tenure.id}" (click)="selectedTenure=tenure.id">
-                          <div class="year-value">{{ tenure.tenure }}</div>
-                          <div class="premium-value">{{ tenure.premium }}<span>/yr</span></div>
-                          <div class="offer-percentage-value">{{ tenure.offerPercentage }}</div>
+                          <div class="year-value">{{ tenure?.tenure }}</div>
+                          <div class="premium-value">{{ tenure?.premium }}<span>/yr</span></div>
+                          <div class="offer-percentage-value">{{ tenure?.offerPercentage }}</div>
                       </div>
                   </div>
                   <div class="premium-offer-details">
@@ -805,23 +842,23 @@
           <div class="optional-coverages-cnt">
               <div class="optional-coverages-title">Optional Coverages</div>
               <div class="optional-coverages-list">
-                  <div *ngFor="let coverage of coverages" class="coverage" [ngClass]="{'active-border': isCoverageSelected(coverage)}" (click)="selectCoverage(coverage)">
+                  <!-- <div *ngFor="let coverage of coverages" class="coverage" [ngClass]="{'active-border': isCoverageSelected(coverage)}" (click)="selectCoverage(coverage)">
                       <div class="coverage-logo">
-                          <img [src]="coverage.image" alt="coverage image" width="30px" height="30px" />
+                          <img [src]="coverage?.image" alt="coverage image" width="30px" height="30px" />
                       </div>
-                      <div class="coverage-name">{{ coverage.name }}</div>
-                      <div class="coverage-description">{{ coverage.description }}</div>
-                  </div>
+                      <div class="coverage-name">{{ coverage?.name }}</div>
+                      <div class="coverage-description">{{ coverage?.description }}</div>
+                  </div> -->
               </div>
           </div>
           <div class="health-add-ons-cnt">
               <div class="health-add-ons-title">Health add-ons</div>
               <div class="health-add-ons-list">
-                  <div *ngFor="let addOn of healthAddOns" class="health-add-on" [ngClass]="{'active-border': isHealthAddOnSelected(addOn)}" (click)="selectAddOn(addOn)">
-                      <div class="health-add-on-logo"><img [src]="addOn.image" alt="No Data Found" /></div>
-                      <div class="health-add-on-name">{{addOn.name}}</div>
-                      <div class="health-add-on-description">{{addOn.description}}</div>
-                  </div>
+                  <!-- <div *ngFor="let addOn of healthAddOns" class="health-add-on" [ngClass]="{'active-border': isHealthAddOnSelected(addOn)}" (click)="selectAddOn(addOn)">
+                      <div class="health-add-on-logo"><img [src]="addOn?.image" alt="No Data Found" /></div>
+                      <div class="health-add-on-name">{{addOn?.name}}</div>
+                      <div class="health-add-on-description">{{addOn?.description}}</div>
+                  </div> -->
               </div>
           </div>
         </div>
@@ -1095,7 +1132,7 @@
                 </div>
                 <div class="planProductQuote">
                     <div class="label">Term</div>
-                    <div class="value">1 Year</div>
+                    <div class="value">{{ renewalInfo?.response?.policyData[0]?.Tenure }} Year</div>
                 </div>
             </header>
             <hr>
@@ -1167,7 +1204,7 @@
      <div class="bi_right">
         <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()">Proceed</button>
         <button type="button" value="renewnow" class="btn_red btn_redRenew" *ngIf="activeSection != 'payment' " (click)="renewNow()">Renew Now</button>
-        <button type="button" value="renewnow" class="btn_red btn_redRenew" *ngIf="activeSection === 'payment'" (click)="setSection('policySummery')">Next</button>
+        <button type="button" value="renewnow" class="btn_red " *ngIf="activeSection === 'payment'" (click)="setSection('policySummery')">Next</button>
      </div>
   </div>
     </div>
@@ -1212,20 +1249,20 @@
                       <div class="room-upgrade-benefits-cnt">
                           <div class="room-upgrade-benefits-title">Upgrade benefits</div>
                           <div class="upgrade-rooms-list">
-                              <div *ngFor="let plan of roomUpgradeBenefits" class="upgrade-rooms">
+                              <!-- <div *ngFor="let plan of roomUpgradeBenefits" class="upgrade-rooms">
                                   <input type="radio" id="plan1" name="plan" class="plan-radio" (change)="onRadioChanges()" />
-                                  <label [for]="plan.id" class="plan-label">
-                                      <div class="plan-details" *ngIf="plan.type !== 'No Upgrade'">
-                                          <div class="plan-type">{{ plan.type }}</div>
-                                          <div class="plan-price">{{ plan.price }}</div>
+                                  <label [for]="plan?.id" class="plan-label">
+                                      <div class="plan-details" *ngIf="plan?.type !== 'No Upgrade'">
+                                          <div class="plan-type">{{ plan?.type }}</div>
+                                          <div class="plan-price">{{ plan?.price }}</div>
                                       </div>
-                                      <div class="plan-premium" *ngIf="plan.type !== 'No Upgrade'">
+                                      <div class="plan-premium" *ngIf="plan?.type !== 'No Upgrade'">
                                           <div class="premium-title">Premium</div>
-                                          <div>{{ plan.premium }}</div>
+                                          <div>{{ plan?.premium }}</div>
                                       </div>
-                                      <span *ngIf="plan.type === 'No Upgrade'" class="no-need-upgrade">{{ plan.label }}</span>
+                                      <span *ngIf="plan?.type === 'No Upgrade'" class="no-need-upgrade">{{ plan?.label }}</span>
                                   </label>
-                              </div>
+                              </div> -->
                           </div>
                       </div>
                   </div>
