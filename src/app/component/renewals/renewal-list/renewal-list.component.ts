@@ -136,7 +136,7 @@ export class RenewalListComponent {
   }
   
   getProducts() {
-    this.adminService.getAllProductList().subscribe({
+    this.adminService.getAllProductsList().subscribe({
       next: (res) => {
         this.productsList = res;        
         const uniquePolicyTypes = Array.from(new Set(this.productsList

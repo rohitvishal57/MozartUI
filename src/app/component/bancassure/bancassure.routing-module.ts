@@ -26,8 +26,8 @@ const routes: Routes = [
         {path: "agentForm",component:AgentDynamicFormComponent,canActivate:[AuthGuard]},
         {path: "renewalList", component: RenewalListComponent},
         {path: "renewalDynamicForm", component: RenewalDynamicFormComponent},
-        {path: "viewClaims", component: ClaimsComponent},
-        {path: "list", component:ClaimsViewComponent},
+        {path: "claimsList", component: ClaimsComponent},
+        {path: "createClaims", component:ClaimsViewComponent},
         {
           path: "requests",
           loadChildren: () => import('../bancassure/endorsements/endorsements.module').then((m) => m.EndorsementsModule)

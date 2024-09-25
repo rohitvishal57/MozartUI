@@ -8,24 +8,24 @@
     background-color: #f3f3f3;
     font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
-.main-container .all-claims {
+.main-container .all-endorsements {
     height: auto;
     width: 75%;
 }
 
-.main-container .all-claims .header{
+.main-container .all-endorsements .header{
     display:flex;
     justify-content: space-between;
 }
 
-.main-container .all-claims .header-value {
+.main-container .all-endorsements .header-value {
     height: 24px;
     color: #000;
     font-size: 24px;
     font-weight: 500;
     margin: 3% 0% 0% -9%
 }
-.main-container .main-claims{
+.main-container .main-endorsements{
     display: flex;
     justify-content: flex-start;
     background-color: white;
@@ -35,13 +35,13 @@
     padding: 1%;
     font-family: Anek Latin;
 }
-.main-container .main-claims .request-header{
+.main-container .main-endorsements .request-header{
     height: 24px;
     font-size: 17px;
     font-weight: 500;
     color: #c91429;
 }
-.main-container .all-claims .details-section{
+.main-container .all-endorsements .endorsements-details-section{
     background: #fff;
     margin: 26px 0px 0px -84px;
     // height: 824px;
@@ -49,20 +49,20 @@
 }
 
 
-
-// .main-container .all-claims .details-section .dropdowns .dropdown-field {
-//   width: 216px; 
-// }
-
 ::ng-deep .p-dropdown .p-dropdown-label.p-placeholder {
   color: #090a0c;
   background-color: #f3f3f3;
 }
 
+.endorsements-p-dropdown{
 ::ng-deep .p-dropdown {
-  width: 100%; 
+  width: 99%;
+  padding: 8px 7px 0px 13px;
+  font-size: smaller;
   border: none;
+  height: 3.5rem;
   background-color: #f3f3f3;
+}
 }
 
 ::ng-deep .dropdownp1 {
@@ -84,18 +84,18 @@
   width: 500px !important;
 }
 
-.main-container .all-claims .details-section .dropdowns {
+.main-container .all-endorsements .endorsements-details-section .dropdowns {
    padding:2rem;
 }
 
-.main-container .all-claims .details-section .dropdown-field {
+.main-container .all-endorsements .endorsements-details-section .endorsements-dropdown-field {
   display: flex;
   flex-direction: column;
   flex: 1;
   position: relative; 
 }
 
-.main-container .all-claims .details-section .dropdown-field label {
+.main-container .all-endorsements .endorsements-details-section .endorsements-dropdown-field label {
   position: absolute;
   top: 2px; 
   left: 3px;
@@ -106,23 +106,23 @@
   z-index: 1; 
 }
 
-.main-container .all-claims .details-section .dropdown-field .p-dropdown {
+.main-container .all-endorsements .endorsements-details-section .endorsements-dropdown-field .p-dropdown {
   width: 100%;
   padding-top: 1.5rem; 
 }
 
-.main-container .all-claims .details-section .dropdowns2 {
+.main-container .all-endorsements .endorsements-details-section .dropdowns2 {
   display: flex;
   padding: 1.5rem;
   width: 100%; 
   gap: 1rem;
 }
 
-.main-container .all-claims .details-section .dropdowns2 .dropdown-field {
+.main-container .all-endorsements .endorsements-details-section .dropdowns2 .endorsements-dropdown-field {
   flex: 1; 
 }
 
-.main-container .all-claims .details-section .dropdowns2 .input-field {
+.main-container .all-endorsements .endorsements-details-section .dropdowns2 .input-field {
   width: 100%; 
   border:#999494;    
   background-color: #f3f3f3;
@@ -200,13 +200,10 @@ input[type="text"]:focus {
   pointer-events: none; /* Ensure the chevron does not interfere with user interaction */
 }
 
-.main-container .all-claims .details-section .dropdowns2 .dropdownp {
+.main-container .all-endorsements .endorsements-details-section .dropdowns2 .dropdownp {
   width: 100%; /* Ensures the dropdown takes full width */
 }
 
-.main-container .all-claims .details-section .text-area{
-  
-}
 textarea {
   background-color: #f3f3f3;
   border: none;
@@ -223,7 +220,7 @@ textarea {
 }
 
 
-.main-container .all-claims .details-section .text-area .label{
+.main-container .all-endorsements .endorsements-details-section .text-area .label{
   position: relative;
   top: 22px;
   left: 13px;
@@ -260,32 +257,32 @@ textarea {
 .Documents{
   width: 100%;
 }
-.main-container .all-claims .details-section .Documents{
+.main-container .all-endorsements .endorsements-details-section .Documents{
     display: flex;
     flex-direction: column;
 }
-.main-container .all-claims .details-section .Documents .label{
+.main-container .all-endorsements .endorsements-details-section .Documents .label{
     font-weight: 600;
 }   
-.main-container .all-claims .details-section .doc-label{
+.main-container .all-endorsements .endorsements-details-section .doc-label{
     display:flex;
     justify-content: space-evenly;
     padding-right: 53rem;
 } 
-.main-container .all-claims .details-section .doc-label2{
+.main-container .all-endorsements .endorsements-details-section .doc-label2{
     display:flex;
     justify-content: space-evenly;
     padding-right: 38rem;
 } 
-.main-container .all-claims .details-section .doc-label3{
+.main-container .all-endorsements .endorsements-details-section .doc-label3{
     display:flex;
     justify-content: space-evenly;
     padding-right: 75rem;
 } 
-.main-container .all-claims .details-section .doc-label .image-color{
+.main-container .all-endorsements .endorsements-details-section .doc-label .image-color{
 color:rgba(51, 106, 234, 0.7);
 }
-.main-container .all-claims .details-section .form-group{
+.main-container .all-endorsements .endorsements-details-section .form-group{
     background-color: #f3f3f3; 
     padding: 2rem;
     margin-left: 0rem;
@@ -297,7 +294,7 @@ color:rgba(51, 106, 234, 0.7);
 .dropdownp{
     width:100px;
 }
-.main-container .all-claims .upload-icon {
+.main-container .all-endorsements .upload-icon {
     font-size: 15px;
     cursor: pointer;
     color: white; 
@@ -311,7 +308,7 @@ color:rgba(51, 106, 234, 0.7);
 .static-label{
   padding-left: 1rem;
 }
-.main-container .all-claims .submit-button{
+.main-container .all-endorsements .submit-button{
   width: 190px;
   height: 44px;
   padding: 10px 24px;

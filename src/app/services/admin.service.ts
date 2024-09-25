@@ -6,8 +6,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AdminService {
   private baseUrl: string = 'https://usp.monocept.ai/ABHIUPAPI/Banca/Admin/';
+  private baseUrl1: string = 'https://usp.monocept.ai/api/';
   // private baseUrl: string = 'http://20.235.250.168:8086/Banca/Admin/';
-
+  private apiUrl = './assets/health-plans.json';
+  private apiUrl1 = './assets/occupations.json';
   constructor(private http: HttpClient) {}
 
   getAllChannelList() {
@@ -52,7 +54,7 @@ export class AdminService {
   updateUser(userDetails: any) {
     return this.http.post<any>(`${this.baseUrl}UpdateUser`, userDetails);
   }
-  getAllProductList() {
+  getAllProductsList() {
     return this.http.get<any>(`${this.baseUrl}GetAllProduct`);
   }
   addProduct(productDetails: any) {
@@ -148,5 +150,131 @@ export class AdminService {
   }
   GetMasterFormNames(){
     return this.http.get<any>(`${this.baseUrl}GetMasterFormNames`)
+  }
+  convertData(reqData: any,reqType: number){
+    return this.http.post<any>(`${this.baseUrl1}Agent/ConvertData?dataType=${reqType}`,reqData);
+
+  }
+
+  draftSave(reqData: any){
+    return this.http.post<any>(`${this.baseUrl1}draftSave`,reqData);
+  }
+
+  saveLeadDetails(reqData: any){
+    return this.http.post<any>(`${this.baseUrl1}saveLeadDetails`,reqData);
+  }
+  insertLeadDetails(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl1}Agent/Agency/InsertLeadDetails`, reqData);
+  }
+
+  commonDraftSave(reqData:any){
+    return this.http.post<any>(`${this.baseUrl1}commonDraftSave`,reqData);
+  }
+
+  getTotalPremiumEncrypted(reqData: number){
+    console.log(reqData);
+    let res = this.http.post<any>(`${this.baseUrl1}encrypt`,reqData,{responseType: 'text' as 'json'});
+    console.log(res);
+    
+    return res;
+    
+  }
+  getFormConfig(bankCode: number, insuranceTypeCode: number, productId: any) {
+    return this.http.get<any>(`${this.baseUrl1}Banca/Forms/GetFormConfig?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}`);
+  }
+  getJSONForm(bankCode: any, insuranceTypeCode: number, productId: any, formId: number) {
+    return this.http.get<any>(`${this.baseUrl1}Banca/Forms/GetJSONForm?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}`);
+  }
+  insertFormConfig(formConfig: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/Forms/InsertFormConfigViaVerticalCode`, formConfig);
+  }
+  insertJSONForm(jsonForm: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/Forms/InsertJSONFormViaVerticalCode`, jsonForm);
+  }
+  insertOrUpdateFormData(formData: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/Forms/InsertOrUpdateFormData`, formData);
+  }
+  getFormData(bankCode: any, insuranceTypeCode: number, productId: any, formId: number, proposalNumber: any) {
+    return this.http.get<any>(`${this.baseUrl1}Banca/Forms/GetFormData?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}&proposalNumber=${proposalNumber}`);
+  }
+  getAllFormData(bankCode: any) {
+    return this.http.get<any>(`${this.baseUrl1}Banca/Forms/GetAllFormData?bankCode=${bankCode}`);
+  }
+  //Agents
+
+  getFormConfigViaVerticalCode(verticalCode: number, Code: number, insuranceTypeCode: number, productId: string) {
+    return this.http.get<any>(`${this.baseUrl1}Banca/Forms/GetFormConfigViaVerticalCode?verticalCode=${verticalCode}&Code=${Code}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}`);
+  }
+
+  getJSONFormViaVerticalCode(verticalCode: any, Code: number, insuranceTypeCode: number, productId: string, formId: number) {
+    return this.http.get<any>(`${this.baseUrl1}Banca/Forms/GetJSONFormViaVerticalCode?verticalCode=${verticalCode}&Code=${Code}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}`);
+  }
+
+  insertOrUpdateFormDataViaVertical(formData: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/Forms/InsertOrUpdateFormDataViaVerticalCode`, formData);
+  }
+
+  getAllFormDataViaVerticalCode(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/Forms/GetAllFormDataViaVerticalCode`, reqData);
+  }
+
+  insertOrUpdateJourneyDetailsViaVerticalCode(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/Forms/InsertOrUpdateJourneyDetailsViaVerticalCode`, reqData);
+  }
+  getJourneyDetailsByProposalNum(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/Forms/GetJourneyDetailsByProposalNum`, reqData);
+  }
+  getJourneyDetailsViaVerticalCode(verticalCode:any,code:any,agentCode:any){
+    return this.http.get<any>(`${this.baseUrl1}Banca/Forms/GetJourneyDetailsViaVerticalCode?verticalCode=${verticalCode}&Code=${code}&AgentCode=${agentCode}`);
+  }
+  resumeJourneyViaFormName(reqData: any){
+    return this.http.post<any>(`${this.baseUrl1}Banca/Forms/ResumeJourneyViaFormName`,reqData);
+  }
+  getAllBankDetails() {
+    return this.http.get<any>(`${this.baseUrl1}Banca/User/GetAllBankDetails`);
+  }
+  sendLoginRequest(loginData: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/User/Login`, loginData);
+  }
+  sendAdminLoginRequest(loginData: any) {
+    return this.http.post<any>(`${this.baseUrl1}yatra/Banca/Admin/Login`, loginData);
+  }
+
+  getAllProductsViaBankCode(bankCode: any) {
+    return this.http.get<any>(
+      `${this.baseUrl1}Banca/Product/GetAllProductsViaBankCode?bankCode=${bankCode}`
+    );
+  }
+  getAllProductListViaBankCode(bankCode: number, insuranceTypeCode: number) {
+    return this.http.get<any>(
+      `${this.baseUrl1}Banca/Product/GetAllProductListViaBankCode?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}`
+    );
+  }
+  getAllProducts(verticalCode: any, code: any) {
+    return this.http.get<any>(
+      `${this.baseUrl1}Banca/Product/GetProduct?verticalCode=${verticalCode}&code=${code}`
+    );
+  }
+
+  getAllProductList(verticalCode: any, code: any, insuranceTypeCode: any) {
+    return this.http.get<any>(
+      `${this.baseUrl1}Banca/Product/GetProductList?verticalCode=${verticalCode}&code=${code}&insuranceTypeCode=${insuranceTypeCode}`
+    );
+  }
+  getHealthPlans(year: any, adultCount: any, childCount: any) {
+    return this.http.get<any>(`${this.apiUrl}`);
+  }
+
+  CreateProposal(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl1}Banca/PartnerApi/CreateProposal`, reqData);
+  }
+  convertToRDBMS(data: any) {
+    const data1 = JSON.stringify(data);
+    const headers = { 'content-type': 'application/json' }
+    return this.http.post(`${this.baseUrl1}Banca/Forms/ConvertToRDBMS`, data1, { 'headers': headers });
+  }
+  // For ICICI
+  getOccupations() {
+    return this.http.get<any>(`${this.apiUrl1}`);
   }
 }

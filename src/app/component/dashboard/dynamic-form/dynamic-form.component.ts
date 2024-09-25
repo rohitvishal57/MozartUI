@@ -11,6 +11,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { NgToastService } from 'ng-angular-popup';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -74,7 +75,7 @@ export class DynamicFormComponent implements OnDestroy{
 
 
   constructor(private renderer: Renderer2,private el: ElementRef, @Inject(DOCUMENT) private document: Document,
-  private service:CommonService,private loginService:LoginService, private router:Router,
+  private service:CommonService,private adminService: AdminService, private router:Router,
   private encryptionService:EncryptionService,private http:HttpClient,private spinner:NgxSpinnerService,
   private toast:NgToastService,private datePipe: DatePipe) {}
 
@@ -121,7 +122,7 @@ export class DynamicFormComponent implements OnDestroy{
       this.dynamciallyLoadCSS(this.form);
     }
     else{
-      this.service.getJSONFormViaVerticalCode(this.verticalCode,this.bankCode,this.insuranceTypeCode,this.productId,formSeq).subscribe({
+      this.adminService.getJSONFormViaVerticalCode(this.verticalCode,this.bankCode,this.insuranceTypeCode,this.productId,formSeq).subscribe({
         next :(res)=>{
           this.form = JSON.parse(res.jsonformdata);
           this.initializeForm();
@@ -377,7 +378,7 @@ export class DynamicFormComponent implements OnDestroy{
     const adultCount = this.dynamicFormGroup.get('numberOfAdults')?.value.toString();
     const childCount = this.dynamicFormGroup.get('numberOfChildren')?.value.toString();
 
-    this.service.getHealthPlans(selectedYear, adultCount, childCount).subscribe({
+    this.adminService.getHealthPlans(selectedYear, adultCount, childCount).subscribe({
       next: (res: any) => {
         const yearData = res[healthAdvantageKey][selectedYear] || {};
         const subProductCode = yearData.subProductCode || '';
@@ -482,7 +483,7 @@ export class DynamicFormComponent implements OnDestroy{
       }
       console.log(reqData);
       console.log(JSON.stringify(reqData));
-      this.service.insertOrUpdateFormDataViaVertical(reqData).subscribe({
+      this.adminService.insertOrUpdateFormDataViaVertical(reqData).subscribe({
         next :(res) =>{  
           this.toast.success({detail:"SUCCESS",summary:"Form Data Saved Successfully.",duration:3000})
         },
@@ -619,7 +620,7 @@ export class DynamicFormComponent implements OnDestroy{
     console.log(JSON.stringify(this.formData));
     // this.spinner.hide();
     //this.visible=true;
-    this.service.CreateProposal(reqdata).subscribe({
+    this.adminService.CreateProposal(reqdata).subscribe({
       next:(res)=>{
         console.log(res);
         this.visible=true;
@@ -662,7 +663,7 @@ export class DynamicFormComponent implements OnDestroy{
   }
   sendCustomer(){
     this.spinner.show();
-    this.service.convertToRDBMS(JSON.stringify(this.formData)).subscribe({
+    this.adminService.convertToRDBMS(JSON.stringify(this.formData)).subscribe({
       next:(res)=>{
         console.log(res);
         this.spinner.hide();
@@ -684,7 +685,7 @@ export class DynamicFormComponent implements OnDestroy{
 
   getPopupFormDataFromFormSequence(formSeq: any) {
     console.log(this.bankCode, this.insuranceTypeCode, formSeq);
-    this.service.getJSONFormViaVerticalCode(this.verticalCode,this.bankCode, this.insuranceTypeCode,this.productId,formSeq).subscribe({
+    this.adminService.getJSONFormViaVerticalCode(this.verticalCode,this.bankCode, this.insuranceTypeCode,this.productId,formSeq).subscribe({
       next: (res) => {
         console.log(res);
         this.popUpForm = JSON.parse(res.jsonformdata);
@@ -758,7 +759,7 @@ export class DynamicFormComponent implements OnDestroy{
   getAllOccupations(otherControl:IFormControl){
     this.spinner.show();
     if(otherControl.options?.length==0){
-      this.service.getOccupations().subscribe({
+      this.adminService.getOccupations().subscribe({
         next:(res)=>{
           console.log(res);
           otherControl.options=Object.keys(res).map((key) => ({

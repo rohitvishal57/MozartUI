@@ -1,28 +1,24 @@
 {
     "baseUrl":"https://usp.monocept.ai/",    
-    "getRenewalListApi": "renewal/api/renewal/getrenewallist",
-    "getRenewalInfoApi":"renewal/api/renewal/renewalinfo",
-    "sendrenewalwhatappsms":"renewal/api/renewal/sendrenewalwhatappsms",
-    "sendrenewalsms":"renewal/api/renewal/sendrenewalsms",
-    "generatepaymentlink":"renewal/api/renewal/generatepaymentlink",
+    "getRenewalListApi": "renewal/api/getrenewallist",
+    "getRenewalInfoApi":"renewal/api/renewalinfo",
+    "sendrenewalwhatappsms":"renewal/api/sendrenewalwhatappsms",
+    "sendrenewalsms":"renewal/api/sendrenewalsms",
+    "generatepaymentlink":"renewal/api/generatepaymentlink",
 
-    "getClaimsList":"claims/api/claim/getclaimlist",
-    "getProposalDetails":"claims/api/claim/getproposaldetails?AgentCode",
-    "saveClaims":"claims/api/claim/saveclaim",
-    "uploadFiles":"claims/api/claim/saveuploadfiledetails",
+    "getClaimsList":"claims/api/getclaimlist",
+    "getProposalDetails":"claims/api/getproposaldetails?AgentCode",
+    "saveClaims":"claims/api/saveclaim",
+    "uploadFiles":"claims/api/saveuploadfiledetails",
 
+    "partnerlogin":"auth/api/partnerlogin",
+    "getContactDetailsByAgentCode":"auth/api/getcontactdetailsbyagentcode",
+    "sendotp":"auth/api/sendotp",
+    "validateotp":"auth/api/validateotp",
 
-
-    "partnerlogin":"auth/api/login/partnerlogin",
-    "getContactDetailsByAgentCode":"auth/api/user/getcontactdetailsbyagentcode",
-    "sendotp":"auth/api/communication/sendotp",
-    "validateotp":"auth/api/communication/validateotp",
-
-    "endorsementdetails":"claims/api/endorsement/endorsementdetails",
-    "getactivepolicynumbers":"claims/api/endorsement/getactivepolicynumbers",
-    "endorsementfileuploadtoomnidocs":"claims/api/endorsement/endorsementfileuploadtoomnidocs",
-    "endorsementcreaterequest":"claims/api/endorsement/endorsementcreaterequest",
-    "getpolicyinfodetails":"claims/api/endorsement/getpolicyinfodetails"
-
-
+    "endorsementdetails":"claims/api/endorsementdetails",
+    "getactivepolicynumbers":"claims/api/getactivepolicynumbers",
+    "endorsementfileuploadtoomnidocs":"claims/api/endorsementfileuploadtoomnidocs",
+    "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
+    "getpolicyinfodetails":"claims/api/getpolicyinfodetails"
 }

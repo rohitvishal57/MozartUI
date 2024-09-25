@@ -22,6 +22,7 @@ import { ClaimsService } from 'src/app/services/claims/claims.service';
 export class ClaimsViewComponent {
   // uploadedFiles: File[] = [];
   form!: FormGroup;
+  activePolicyNumbers: string[] = [];
   saveForm!: FormGroup; 
   proposalNumbers: string[] = [];
   policyNumbers: string[] = [];
@@ -46,6 +47,7 @@ export class ClaimsViewComponent {
   response:any
   uploadedFile:any
   agentCode: any;
+  selectMemberData: any = {};
   @Input() uploadedFiles: { 
     name: string,
     label: string,
@@ -90,11 +92,12 @@ export class ClaimsViewComponent {
 
     });
   }
+
   createForm(): void {
     this.form = this.fb.group({
       id: localStorage.getItem('agentCode'),
       policyNumber: ['',Validators.required],
-      proposalNumber: ['',Validators.required],
+      proposalNumber: [''],
       memberName: ['', Validators.required],
       productName: [''],
       fullName: [''],
@@ -124,13 +127,15 @@ export class ClaimsViewComponent {
      this.claimsService.getProposalDetails(this.agentCode).subscribe(
     response => {
       if (response.success) {
-        const allData: ClaimData[] = response.data;
-
+        this.response = response;
+          
+        const allData: ClaimData[] = response.data;    
         // Extract unique values for dropdowns
-        this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');
+        //this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');
         this.policyNumbers = this.extractUniqueValues(allData, 'policyNumber');
-        this.memberNames = this.extractUniqueValues(allData, 'fullName');
+        // this.memberNames = this.extractUniqueValues(allData, 'fullName');
         this.claimTypes = this.extractUniqueValues(allData, 'policyType');
+       
         this.cdr.markForCheck();
       } else {
         console.error('Failed to fetch dropdown data', response.message);
@@ -142,14 +147,25 @@ export class ClaimsViewComponent {
 
 // Helper function to extract unique values
 extractUniqueValues(data: any[], key: string): any[] {
-  return [...new Set(data.map(item => item[key]).filter(val => val))];
-}
-
-
-handleDropdownChange(event:any){
-  this.form.get('policyNumber')?.setValue(event.value);
+  console.log('datakey',data,key);
   
+  return [...new Set(data.map(item => item[key]).filter(val => val))];
+
 }
+
+handleDropdownChange(event: any): void { 
+  const selectedPolicyNumber = event.target.value;
+  console.log(selectedPolicyNumber);
+  // Filter the response data to find members for the selected policy number
+  const filteredMembers = this.response.data.filter((item: any) => item.policyNumber === selectedPolicyNumber);
+  // Extract unique member names from the filtered members
+  this.memberNames = this.extractUniqueValues(filteredMembers, 'fullName');
+  console.log('memberName',this.memberNames);
+  // Reset memberName form control
+  this.form.get('memberName')?.setValue('');
+  this.cdr.markForCheck(); // Ensure the view updates
+}
+
  //-------------- Method to handle file upload------------------//
  formatDate(date: Date): string {
   return formatDate(date, 'd MMMM yyyy, hh:mma', 'en-US');
@@ -197,7 +213,6 @@ uploadFiles(files: File[]): void {
   this.namesVariable = fileNames;
   const formData = new FormData();
   this.uploadedFiles.forEach((file, index) => {
-    console.log("File",file)
     const metadata = {
       policyNumber: this.form.get('policyNumber')?.value || '',
       labelName: file.label || '',
@@ -261,7 +276,7 @@ if (!file.editableControl) {
 // Method to Stop editing changes
 stopEditing(file:any) {
     if (this.editableControl.value !== this.label) {
-      file.label = this.editableControl.value; // Update the label with the edited value
+    file.label = this.editableControl.value; // Update the label with the edited value
   }
   file.isEditing = false;
   file.isEdited = true;
@@ -323,7 +338,7 @@ if (this.saveForm.valid || this.form.valid) {
       if (this.response.success === true) {
         this.uploadSuccess = true;
         this.toast.success({ detail: 'Claims submitted successfully' });
-        this.router.navigate(['portal/agent/viewClaims'])
+        this.router.navigate(['portal/agent/claimsList'])
 
       } else {
         this.toast.error({ detail: 'Failed to submit claims' });
@@ -341,9 +356,6 @@ if (this.saveForm.valid || this.form.valid) {
   this.toast.error({ detail: 'Please fill in the required form fields.' });
 }
 }
-
-
-
 }
 
 

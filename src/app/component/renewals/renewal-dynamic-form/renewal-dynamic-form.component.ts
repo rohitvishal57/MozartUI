@@ -104,7 +104,11 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.formId=5001;
           if (event === 'editAddress') {
             const updatedAddress = { ...this.form.value };
-            console.log('Updated address object to be sent:', updatedAddress);
+            Object.keys(updatedAddress).forEach((key) => {
+              if (updatedAddress[key] !== null && updatedAddress[key] !== undefined && updatedAddress[key] !== '') {
+                this.renewalInfo.response.policyData[0].HomeAddress[key] = updatedAddress[key];
+              }
+          });
           } else {
             console.log('Form is invalid');
           }          
@@ -113,7 +117,16 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.formId=5001;
           if (event === 'addNominee') {
             const nominee = { ...this.form.value };
-            console.log('Updated nominee object to be sent:', nominee);
+            const nomineeDetails = this.renewalInfo.response.policyData[0].Nominee_Details;
+            Object.keys(nominee).forEach((key) => {nomineeDetails[key] = nominee[key];});
+            const additionalKeys = {
+                nominee_middle_name: nomineeDetails.nominee_middle_name || '',
+                nominee_mobile_number: nomineeDetails.nominee_mobile_number || '',
+                nominee_emergency_phone_number: nomineeDetails.nominee_emergency_phone_number || '',
+                nominee_email_address: nomineeDetails.nominee_email_address || ''
+            };
+            Object.assign(nomineeDetails, additionalKeys);
+            this.renewalInfo.response.policyData[0].Nominee_Details = nomineeDetails;
           } else {
             console.log('Form is invalid');
           } 
@@ -338,7 +351,7 @@ renewNow() {
 }
 
 getRenewalInfo() {
-  // '21-24-0002334-00' 
+  //  '21-24-0002334-00'
   this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
     (res) => {
       this.renewalInfo = JSON.parse(res.data);

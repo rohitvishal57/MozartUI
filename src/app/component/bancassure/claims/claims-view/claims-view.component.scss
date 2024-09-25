@@ -151,18 +151,18 @@
   padding-top: 1.5rem; 
 }
 
-.main-container .all-claims .details-section .dropdowns2 {
+.main-container .all-claims .details-section .dropdowns {
   display: flex;
   padding: 1.5rem;
   width: 100%; 
   gap: 1rem;
 }
 
-.main-container .all-claims .details-section .dropdowns2 .dropdown-field {
+.main-container .all-claims .details-section .dropdowns .dropdown-field {
   flex: 1; 
 }
 
-.main-container .all-claims .details-section .dropdowns2 .input-field {
+.main-container .all-claims .details-section .dropdowns .input-field {
   width: 100% !important;
   border: #999494;
   background-color: #f3f3f3;
@@ -171,11 +171,7 @@
   height: 38px;
   color: #999494;
 }
-input[type="text"]:focus {
-  border-color: #007bff; 
-  outline: none; /* Remove default outline */
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); 
-}
+
 
 // .upload-success,
 // .upload-fail{
@@ -442,18 +438,10 @@ input[type="text"] {
   margin-right: 8px;
 }
 
-// :host {
-//   // Reset styles
-//   html, body, div, span, h1, h2, h3, h4, h5, h6, p, a, ul, li, table, th, td {
-//     margin: 0;
-//     padding: 0;
-//     border: none;
-//     font-size: 100%; // Use 100% to avoid browser default differences
-//     font-family: inherit; // Use inherited font-family
-//     vertical-align: baseline;
-//   }
-//}
-
-
+/*---Common css start---*/
+.btn_red {
+  padding: 10px 32px;
+}
+/*---Common css end---*/
   
   

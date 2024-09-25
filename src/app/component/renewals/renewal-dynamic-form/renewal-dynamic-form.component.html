@@ -116,15 +116,15 @@
                           <div class="accordionBodyRow">
                            <!-- <ng-container *ngFor="let nominee of response?.response?.policyData[0]?.Nominee_Details"> -->
                       <div class="detailsRow">
-                        <div class="detailsHeading">{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.Relationship | titlecase }}</div>
+                        <div class="detailsHeading">{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code | titlecase }}</div>
                         <div class="data-row">
                           <div class="data-item data-item-28">
                             <label>Name</label>
-                            <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.Nominee_Name }}</h6>
+                            <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_first_name }}</h6>
                           </div>
                           <div class="data-item data-item-20">
                             <label>ID No.</label>
-                            <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_dob || 'N/A' }}</h6>
+                            <h6>{{ 'N/A' }}</h6>
                           </div>
                           <div class="data-item data-item-20">
                             <label>D.O.B</label>
@@ -132,7 +132,7 @@
                           </div>
                           <div class="data-item data-item-20">
                             <label>Relation to Nominee</label>
-                            <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.Relationship || 'N/A' }}</h6>
+                            <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code || 'N/A' }}</h6>
                           </div>
                           <div class="data-item data-item-10 data-itemEdit" (click)="selectButton('primary',5004,'editNominee')">
                             <button type="button" value="dataedit" class="btn_editGrey"></button>
@@ -631,7 +631,7 @@
                         </div>
                     </div>
                     <footer>
-                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editMember')">Add Member</button>
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editMember')">Update Details</button>
                     </footer>
                 </div>
                 <!--Accordion Item end-->

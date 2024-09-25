@@ -26,7 +26,7 @@ export class ProductDetailsComponent {
   
 
   constructor(private services: CommonService,private router: Router,private toast: NgToastService,
-    private loginService:LoginService,private encryptionService: EncryptionService
+    private loginService:LoginService,private encryptionService: EncryptionService,private commonService:CommonService
   ) {
 
   }
@@ -101,7 +101,7 @@ export class ProductDetailsComponent {
 
       }
       console.log(reqData);
-      const res = await firstValueFrom(this.loginService.Getformsequence(reqData));
+      const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
       console.log(res);
       this.formSequence = JSON.parse(res.data.formSequence);
       console.log(this.formSequence);

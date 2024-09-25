@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { concatMap } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
+import { AdminService } from 'src/app/services/admin.service';
 
 
 @Component({
@@ -102,7 +103,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
   // leadCreated = false;
   // isLeadCreationPage = false;
   constructor(private renderer: Renderer2, private el: ElementRef, @Inject(DOCUMENT) private document: Document,
-    private service: CommonService, private loginService: LoginService, private router: Router,
+    private service: CommonService, private adminService: AdminService, private router: Router,
     private encryptionService: EncryptionService, private http: HttpClient, private spinner: NgxSpinnerService,
     private toast: NgToastService, private datePipe: DatePipe, private changeDetectorRef: ChangeDetectorRef) { }
 
@@ -197,7 +198,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
       this.initializeForm();
     }
     else {
-      this.service.getJSONFormViaVerticalCode(this.verticalCode, this.Code, this.insurancetypecode, this.productid, formSeq).subscribe({
+      this.adminService.getJSONFormViaVerticalCode(this.verticalCode, this.Code, this.insurancetypecode, this.productid, formSeq).subscribe({
         next: (res) => {
           this.form = JSON.parse(res.jsonformdata);
           console.log(this.form);
@@ -1352,7 +1353,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
       };
       console.log(reqData);
 
-      this.service.insertOrUpdateFormDataViaVertical(reqData).subscribe({
+      this.adminService.insertOrUpdateFormDataViaVertical(reqData).subscribe({
         next: (res) => {
           this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
         },
@@ -1464,7 +1465,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
 
 
   getPopupFormDataFromFormSequence(formSeq: any) {
-    this.service.getJSONFormViaVerticalCode(this.verticalCode, this.Code, this.insurancetypecode, this.productid, formSeq).subscribe({
+    this.adminService.getJSONFormViaVerticalCode(this.verticalCode, this.Code, this.insurancetypecode, this.productid, formSeq).subscribe({
       next: (res) => {
         console.log(res);
         this.popUpForm = JSON.parse(res.jsonformdata);
@@ -2024,7 +2025,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
     }
     console.log("HELLO",reqData);
 
-    this.service.insertLeadDetails(reqData).subscribe({
+    this.adminService.insertLeadDetails(reqData).subscribe({
       next: (res) => {
         this.leadId = res.leadId;
         this.proposalId = res.proposalId;
@@ -2057,7 +2058,7 @@ export class AgentDynamicFormComponent implements OnDestroy {
 
   getEncryptedPremiumAmount(tempData: any) {
     // Get encrypted premium amount and add it to tempData
-    return this.service.getTotalPremiumEncrypted(this.formData['totalPremium']).pipe(
+    return this.adminService.getTotalPremiumEncrypted(this.formData['totalPremium']).pipe(
       concatMap((encryptedPremium) => {
         return of({
           ...tempData,

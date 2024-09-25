@@ -103,7 +103,7 @@ export class EditFormComponent {
     }
 
     getAllBankDetails(){
-      this.loginService.getAllBankDetails().subscribe({
+      this.adminService.getAllBankDetails().subscribe({
         next: (res: any) => {
           this.allBank = res;
         },
@@ -122,7 +122,7 @@ export class EditFormComponent {
   onselectAgency(event:any){
     this.agencycode = event;
 
-    this.loginService.getAllProducts(this.channelcode,this.agencycode).subscribe({
+    this.adminService.getAllProducts(this.channelcode,this.agencycode).subscribe({
       next: (res) => {
         console.log(res);
         this.allInsuranceType = res;  
@@ -137,7 +137,7 @@ export class EditFormComponent {
         this.selectedBank=this.allBank.find((bank) => bank.bankCode == event);
         console.log(this.selectedBank);
         
-        this.loginService.getAllProducts(this.channelcode,this.agencycode).subscribe({
+        this.adminService.getAllProducts(this.channelcode,this.agencycode).subscribe({
             next: (res) => {
               console.log(res);
               this.allInsuranceType = res;  
@@ -166,7 +166,7 @@ export class EditFormComponent {
     onSelectProduct(event: string){
       this.productid = event;
       
-      this.commonService.getFormConfigViaVerticalCode(this.channelcode,this.agencycode,this.selectedInsuranceType.insurancetypecode,event).subscribe({
+      this.adminService.getFormConfigViaVerticalCode(this.channelcode,this.agencycode,this.selectedInsuranceType.insurancetypecode,event).subscribe({
         next: (res) => {
           this.formSequence = JSON.parse(res.insureformconfiguration);
           this.allAgencyInsuranceMapData=res;          
@@ -177,7 +177,7 @@ export class EditFormComponent {
       });
     }
     getFormDataFromFormSequence(formSeq: any) {
-      this.commonService.getJSONFormViaVerticalCode(this.channelcode,this.agencycode,this.selectedInsuranceType.insurancetypecode,this.productid,formSeq.formId).subscribe({
+      this.adminService.getJSONFormViaVerticalCode(this.channelcode,this.agencycode,this.selectedInsuranceType.insurancetypecode,this.productid,formSeq.formId).subscribe({
         next: (res) => {
           this.jsonFormData =JSON.parse(res.jsonformdata);
           this.jsonForm.get('formName').setValue(formSeq.formName);
@@ -204,7 +204,7 @@ export class EditFormComponent {
           this.jsonForm.value.jsonFormData = JSON.stringify(
             this.jsonForm.value.jsonFormData
           );
-          this.commonService.insertJSONForm(this.jsonForm.value).subscribe({
+          this.adminService.insertJSONForm(this.jsonForm.value).subscribe({
             next: (res)=>{
             },
             error: (err) =>{
@@ -283,7 +283,7 @@ export class EditFormComponent {
       productId: this.selectedProduct.productId,
       insureFormConfiguration: JSON.stringify(this.formSequence),
     };
-    this.commonService.insertFormConfig(req).subscribe({
+    this.adminService.insertFormConfig(req).subscribe({
       next: (res) => {
         this.messageService.add({
           severity: 'info',
