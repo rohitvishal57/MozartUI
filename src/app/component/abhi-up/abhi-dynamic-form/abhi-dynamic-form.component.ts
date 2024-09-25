@@ -9,6 +9,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { Router } from '@angular/router';
 import { concatMap, of, tap } from 'rxjs';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
   selector: 'app-abhi-dynamic-form',
@@ -84,9 +85,10 @@ export class AbhiDynamicFormComponent {
   selectedButton: string | null = null;
   collapsedSections: { [key: string]: boolean } = {};
   isOverlayVisible = false;
+  isQuote: any;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
-    public service: CommonService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
+    public service: CommonService,private adminService: AdminService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
     private toast: NgToastService, private datePipe: DatePipe, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document) { }
 
@@ -107,6 +109,7 @@ export class AbhiDynamicFormComponent {
     // this.agencyCode = history.state.productData.agencyCode;
     this.productId = history.state.productData.productId;
     this.partnerId = history.state.productData.partnerId;
+    this.isQuote = history.state.productData.isQuote;
 
     this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
     console.log(this.formData)
@@ -232,36 +235,35 @@ export class AbhiDynamicFormComponent {
     console.log(this.form);
   }
 
-  initializeForm() {
+  async initializeForm() {
     console.log(this.form, this.formData);
     this.showHtmlContent = false;
     this.dynamciallyLoadCSS(this.form);
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((control: any) => {
-        // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.memberPolicyType);
+        // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
         // console.log(policyindex);
-        if (control.dynamicControls  && this.formData[control.name]) {
-          control.dynamicControls[0].forEach((item:any)=>{
-            if(item.value == this.formData.memberPolicyType){
-              console.log('anekant');
+        if (control.dynamicControls) {
+          console.log(control.name, control,this.formData);
+
+          if (this.formData[control.name] && control.visible == true) {
+            console.log(control.dynamicControls[0], this.formData.planType);
+            if (this.formData[control.name]) {
+              control.value = this.formData[control.name].length;
             }
-          })
-          console.log(control.dynamicControls[0] , this.formData.memberPolicyType);
-          if (this.formData[control.name]) {
-            control.value = this.formData[control.name].length;
-          }
-          console.log(control.value);
-          control.dynamicControls = control.dynamicControls.slice(0, 1)
-          this.formData[control.name].forEach((member: any, index: number) => {
-            let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
-            console.log(tempDynamicControl);
-            control.dynamicControls.push(tempDynamicControl)
-            control.dynamicControls[index + 1].forEach((innerControl: any) => {
-              if (innerControl.name == 'relation') {
-                innerControl.value = member.relation
-              }
+            console.log(control.value);
+            control.dynamicControls = control.dynamicControls.slice(0, 1)
+            this.formData[control.name].forEach((member: any, index: number) => {
+              let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
+              console.log(tempDynamicControl);
+              control.dynamicControls.push(tempDynamicControl)
+              control.dynamicControls[index + 1].forEach((innerControl: any) => {
+                if (innerControl.name == 'relation') {
+                  innerControl.value = member.relation
+                }
+              })
             })
-          })
+          }
         }
         // else if (control.subControls && this.formData[control.name]) {
         //   console.log(this.formData[control.name], control);
@@ -293,11 +295,11 @@ export class AbhiDynamicFormComponent {
       });
     });
 
-    console.log(this.form);
+    console.log(this.form, this.formData);
     if (this.form?.formSections) {
       this.dynamicFormGroup = this.fb.group({});
       this.form.formSections.forEach((section) => {
-        section.formControls.forEach((control: IFormControl) => {
+        section.formControls.forEach(async (control: IFormControl) => {
           if (control.dynamicControls) {
             if (control.visible == true) {
               let tempFormArray = this.fb.array([]);
@@ -376,14 +378,17 @@ export class AbhiDynamicFormComponent {
             //   this.callMethod(control.methodName,control);
             // }
             if (control.type === 'multiSelectCheckbox' && control.selectCheckboxOptions) {
+              // Only call resolveMethod if selectCheckboxOptions is empty
+              if (control.selectCheckboxOptions.length === 0) {
+                await this.resolveMethod(control.methodName, control);
 
-              // this.callMethod(control.methodName, control);
+              }
+              // After resolving, add the control to the dynamic form group
               const controlGroup = this.fb.group({});
               control.selectCheckboxOptions.forEach(option => {
                 controlGroup.addControl(option.value, new FormControl(false));
               });
               this.dynamicFormGroup.addControl(control.name, controlGroup);
-
             }
             if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
               if (control.otherControlName) {
@@ -399,6 +404,8 @@ export class AbhiDynamicFormComponent {
                 this.callMethod(control.getAllOption, control);
               }
 
+              console.log(this.form, control.value, this.isQuote, control.name);
+
               // If the control's value is empty, set it based on the selected options
               if (control.value === "") {
                 // Set control value if any option is selected
@@ -412,8 +419,21 @@ export class AbhiDynamicFormComponent {
 
                 // Call the methodName method after setting the value if defined
                 if (control.methodName) {
-                  this.resolveMethod(control.methodName, control);
+                  await this.resolveMethod(control.methodName, control);
                 }
+              }
+              else if (control.value != "" && this.isQuote === true) {
+                await this.resolveMethod(control.methodName, control);
+                // if (control.name == 'insuredMembers') {
+                //   //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
+                //   control.selectCheckboxOptions?.forEach((option: any) => {
+                //     if (this.formData.insuredMembers[option.value] === true) {
+                //       // Call logSelection function (pass null for event if not triggering through UI)
+                //       this.logSelection(null, option, control);
+                //     }
+                //   })
+                // }
+
               }
             }
 
@@ -452,16 +472,19 @@ export class AbhiDynamicFormComponent {
                 });
               }
             }
+
           }
         });
       });
       //dynamic css
       // this.showHtmlContent = true;
       console.log(this.form);
+      console.log(this.dynamicFormGroup);
+
+
 
       this.flattenObject(this.formData);
       this.spinner.hide();
-      console.log(this.dynamicFormGroup);
     }
   }
 
@@ -552,7 +575,7 @@ export class AbhiDynamicFormComponent {
 
         if (control.type === 'multiSelectCheckbox' && control.selectCheckboxOptions) {
 
-          // this.callMethod(control.methodName, control);
+          this.resolveMethod(control.methodName, control);
           const controlGroup = this.fb.group({});
           control.selectCheckboxOptions.forEach(option => {
             controlGroup.addControl(option.value, new FormControl(false));
@@ -621,7 +644,7 @@ export class AbhiDynamicFormComponent {
     control.validators?.forEach((val) => {
       if (myFormControl?.hasError(val.validatorName as string)) {
         if (control.name == 'insuredMembers' && val.validatorName == 'required') {
-          if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
+          if (this.dynamicFormGroup.get('planType')?.value == 'Multi Individual') {
             errorMessage = val.message as string + 'one'
           }
           else {
@@ -1077,7 +1100,7 @@ export class AbhiDynamicFormComponent {
       if (control.type === 'radio') {
         const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
         console.log(selectedValue);
-        
+
         eventValue = selectedValue === 'yes' ? true : false;
 
         // Find the selected option by value
@@ -1251,36 +1274,84 @@ export class AbhiDynamicFormComponent {
     return age;
   }
 
+  // async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
+  //   console.log(methodName);
+  //   let filteredArgs = args.filter(arg => arg !== undefined && arg !== null);
+
+  //   if (methodName == 'addOrRemoveAdditionalInsuredMember') {
+  //     filteredArgs = filteredArgs.slice(-1);
+
+  //   } else if (filteredArgs[filteredArgs.length - 1] == 'add' || filteredArgs[filteredArgs.length - 1] == 'remove') {
+  //     filteredArgs.pop();
+  //   }
+
+  //   console.log(filteredArgs);
+
+  //   const method = (this as any)[methodName] as Function;
+  //   if (method && typeof method === 'function') {
+  //     // method.bind(this)(...filteredArgs);
+  //     await Promise.resolve(method.bind(this)(...filteredArgs));
+  //     if (methodName == 'getProposerRelationship') {
+  //       console.log("blehhhh");
+
+  //     }
+  //   } else {
+  //     console.error(`Method ${methodName} not found`);
+  //   }
+  // }
+
   async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
     console.log(methodName);
+
+    // Filter out undefined and null arguments
     let filteredArgs = args.filter(arg => arg !== undefined && arg !== null);
 
-    if (methodName == 'addOrRemoveAdditionalInsuredMember') {
+    // Specific logic for handling certain method names
+    if (methodName === 'addOrRemoveAdditionalInsuredMember') {
       filteredArgs = filteredArgs.slice(-1);
-
-    } else if (filteredArgs[filteredArgs.length - 1] == 'add' || filteredArgs[filteredArgs.length - 1] == 'remove') {
+    } else if (filteredArgs[filteredArgs.length - 1] === 'add' || filteredArgs[filteredArgs.length - 1] === 'remove') {
       filteredArgs.pop();
     }
 
     console.log(filteredArgs);
 
+    // Resolve the method dynamically
     const method = (this as any)[methodName] as Function;
     if (method && typeof method === 'function') {
-      // method.bind(this)(...filteredArgs);
-      await Promise.resolve(method.bind(this)(...filteredArgs));
+      try {
+        // Call the method with filtered arguments
+        const result = method.bind(this)(...filteredArgs);
+
+        // If the result is a Promise, await it; otherwise, wrap it in Promise.resolve()
+        if (result && typeof result.then === 'function') {
+          await result; // It's already a Promise, so await it
+        } else {
+          await Promise.resolve(result); // Wrap non-Promise results into a Promise
+        }
+
+        // Example logic specific to 'getProposerRelationship'
+        if (methodName === 'getProposerRelationship') {
+          console.log("blehhhh");
+        }
+      } catch (error) {
+        console.error(`Error in method ${methodName}:`, error);
+      }
     } else {
       console.error(`Method ${methodName} not found`);
     }
   }
 
-  handlePolicyTypeChange(control: any, memberPolicyType: string | null = null): void {
+
+
+  handlePolicyTypeChange(control: any, planType: string | null = null): void {
     // const sumInsuredControl = this.dynamicFormGroup.get('memberSumInsured');
     // const pincodeControl = this.dynamicFormGroup.get('pincode');
     // if (sumInsuredControl || pincodeControl) {
-    console.log(memberPolicyType, control);
+    console.log(this.form);
+    console.log(planType, control);
 
-    if (memberPolicyType == null)
-      memberPolicyType = control.value;
+    if (planType == null)
+      planType = control.value;
     console.log(control);
     setTimeout(() => {
 
@@ -1290,7 +1361,9 @@ export class AbhiDynamicFormComponent {
             console.log(this.formData, this.form);
 
             if (((this.formData.productType == 'GHS' || this.formData.productType == 'AS') && formControl.selectCheckboxOptions?.length == 0) || (this.formData.productType != 'GHS' && this.formData.productType != 'AS')) {
-              this.resetInsuredMembers(control, memberPolicyType);
+              console.log(planType);
+
+              this.resetInsuredMembers(control, planType);
               this.getProposerRelationship(formControl);
             }
             section.visible = true;
@@ -1307,12 +1380,12 @@ export class AbhiDynamicFormComponent {
 
   }
 
-  resetInsuredMembers(control: any, memberPolicyType: any) {
-    console.log(this.form);
+  resetInsuredMembers(control: any, planType: any) {
+    console.log(this.form, control, planType);
 
     this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(0);
-    this.dynamicFormGroup.removeControl('insuredMemberDetails');
-    if (memberPolicyType === 'Multi Individual' || memberPolicyType === 'Individual') {
+    // this.dynamicFormGroup.removeControl('insuredMemberDetails');
+    if (planType === 'Multi Individual') {
 
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, false, control.name);
@@ -1331,7 +1404,7 @@ export class AbhiDynamicFormComponent {
         }
       });
     }
-    else if (memberPolicyType === 'Family Floater') {
+    else if (planType === 'Family Floater') {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, true, control.name);
       console.log(this.form);
@@ -1486,55 +1559,147 @@ export class AbhiDynamicFormComponent {
     });
   }
 
-  getProposerRelationship(control: IFormControl) {
+  getProposerRelationship(control: IFormControl): Promise<any> {
+    // Showing the spinner before making the API call
     this.spinner.show();
-    const reqData = {
-      agencyCode: this.partnerId,
-      insuranceTypeCode: 101,
-      productId: this.productId,
-      policyType: this.dynamicFormGroup.get('memberPolicyType')?.value,
-    }
-    console.log(reqData);
-    this.service.GetProposerRelationships(reqData).subscribe({
-      next: (res) => {
-        const controlGroup = this.fb.group({});
-        res.relationShip.forEach((option: any) => {
-          controlGroup.addControl(option.value, new FormControl(false));
-          // this.dynamicFormGroup.get('insuredMembers')?.get(option.value)?.setValue(false);
-        });
 
-        this.dynamicFormGroup.removeControl('insuredMembers');
-        let controlValidators: any = [];
-        control.validators?.forEach((val: IValidator) => {
-          if (val.validatorName === 'required') controlValidators.push(Validators.required);
-          if (val.validatorName === 'email') controlValidators.push(Validators.email);
-          if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
-          if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
-          if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
-        })
-        controlGroup.setValidators([...controlValidators, this.addCustomValidation()]);
-        controlGroup.updateValueAndValidity();
+    // Wrapping the asynchronous operation in a promise
+    return new Promise((resolve, reject) => {
+      const reqData = {
+        agencyCode: this.partnerId,
+        insuranceTypeCode: 101,
+        productId: this.productId,
+        policyType: this.dynamicFormGroup.get('memberPolicyType')?.value,
+      };
 
-        controlGroup.setErrors({ required: true });
-        this.dynamicFormGroup.addControl(control.name, controlGroup);
+      console.log(reqData);
 
-        if (control.name == 'insuredMembers')
-          console.log(this.dynamicFormGroup.get('insuredMembers'));
+      // Calling the API service
+      this.service.GetProposerRelationships(reqData).subscribe({
+        next: (res) => {
+          console.log(res, "API Response Received");
 
-        control.selectCheckboxOptions = res.relationShip;
-        this.spinner.hide();
-      },
-      error: (err) => {
-        console.error(err);
-        this.spinner.hide();
-      }
+          // Prepare form group
+          const controlGroup = this.fb.group({});
+
+          // For each relationship option, add a control
+          res.relationShip.forEach((option: any) => {
+            controlGroup.addControl(option.value, new FormControl(false));
+          });
+
+          // Remove previous insuredMembers control
+          this.dynamicFormGroup.removeControl('insuredMembers');
+
+          // Add validators
+          let controlValidators: any = [];
+          control.validators?.forEach((val: IValidator) => {
+            if (val.validatorName === 'required') controlValidators.push(Validators.required);
+            if (val.validatorName === 'email') controlValidators.push(Validators.email);
+            if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+            if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+            if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+          });
+
+          // controlGroup.setValidators([...controlValidators, this.addCustomValidation()]);
+          // controlGroup.updateValueAndValidity();
+          // controlGroup.setErrors({ required: true });
+
+          // Add the new insuredMembers control
+          this.dynamicFormGroup.addControl(control.name, controlGroup);
+
+
+          // Update control with the fetched options
+          control.selectCheckboxOptions = res.relationShip;
+
+          if(this.isQuote){
+            this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((control: any) => {
+                  if (control.name == 'insuredMembers') {
+                    //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
+                    control.selectCheckboxOptions.forEach((option: any) => {
+                      if (this.formData.insuredMembers[option.value] === true) {
+                        // Call logSelection function (pass null for event if not triggering through UI)
+                        this.logSelection(null, option, control);
+                      }
+                    })
+                  }
+                })
+    
+              })
+          }
+          // Hide the spinner once the response is processed
+          this.spinner.hide();
+          this.flattenObject(this.formData);
+          console.log(this.formData, this.form);
+
+
+
+          // Resolve the promise when API response is processed successfully
+          resolve(res);
+        },
+        error: (err) => {
+          console.error(err);
+          this.spinner.hide();
+
+          // Reject the promise on error
+          reject(err);
+        }
+      });
     });
   }
+
+
+
+  //   async getProposerRelationship(control: IFormControl) {
+  //     this.spinner.show();
+  //     const reqData = {
+  //         agencyCode: this.partnerId,
+  //         insuranceTypeCode: 101,
+  //         productId: this.productId,
+  //         policyType: this.dynamicFormGroup.get('planType')?.value,
+  //     };
+
+  //     try {
+  //         const res = await this.service.GetProposerRelationships(reqData).toPromise();
+  //         console.log("being human",res);
+
+  //         const controlGroup = this.fb.group({});
+
+  //         res.relationShip.forEach((option: any) => {
+  //             controlGroup.addControl(option.value, new FormControl(false));
+  //         });
+
+  //         this.dynamicFormGroup.removeControl('insuredMembers');
+  //         controlGroup.setValidators([...this.getValidators(control)]);
+  //         controlGroup.updateValueAndValidity();
+  //         controlGroup.setErrors({ required: true });
+
+  //         this.dynamicFormGroup.addControl(control.name, controlGroup);
+  //         control.selectCheckboxOptions = res.relationShip;
+  //     } catch (err) {
+  //         console.error(err);
+  //     } finally {
+  //         this.spinner.hide();
+  //     }
+  // }
+
+  private getValidators(control: IFormControl) {
+    let controlValidators: any = [];
+    control.validators?.forEach((val: IValidator) => {
+      if (val.validatorName === 'required') controlValidators.push(Validators.required);
+      if (val.validatorName === 'email') controlValidators.push(Validators.email);
+      if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+      if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+      if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+    });
+    return controlValidators;
+  }
+
 
   addCustomValidation(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const controlGroup = this.dynamicFormGroup.get('insuredMembers') as FormGroup;
-      if (controlGroup && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual') {
+      if (controlGroup && this.dynamicFormGroup.get('planType')?.value == 'Multi Individual') {
         const hasAtLeastOneSelected = Object.keys(controlGroup.controls).some(
           key => controlGroup.controls[key].value === true
         );
@@ -1556,10 +1721,90 @@ export class AbhiDynamicFormComponent {
     };
   }
 
-  logSelection(event: Event, option: any, controls: any) {
-    const checkbox = event.target as HTMLInputElement;
+  logSelection(event: Event | null, option: any, controls: any) {
+    // const checkbox = event.target as HTMLInputElement;
+    const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     this.form.formSections.forEach(formsection => {
       formsection.formControls.forEach(formControl => {
+        // if (checkbox.checked == true) {
+        //   if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
+        //     formsection.visible = true;
+        //     let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+        //     tempControl[1].value = option.value;
+        //     tempControl[0].value = JSON.stringify(option);
+
+        //     let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+
+        //     console.log(formArr, this.dynamicFormGroup.value, this.form);
+
+        //     // Check if the form group already exists in the FormArray
+        //     let existingIndex = formArr.controls.findIndex((control: AbstractControl) => {
+        //       const group = control as FormGroup; // Cast the control to FormGroup
+        //       return group.get('relation')?.value === option.value;
+        //     });
+
+        //     // if (existingIndex !== -1 && existingIndex !== undefined) {
+        //     //   // Update existing form group with the new controls/values
+        //     //   let existingGroup = formArr.controls[existingIndex] as FormGroup;
+
+        //     //   // Iterate through tempControl and update the existingGroup
+        //     //   tempControl.forEach((control: any) => {
+        //     //     if (existingGroup.contains(control.name)) {
+        //     //       // If the control exists, update the value
+        //     //       existingGroup.get(control.name)?.setValue(control.value);
+        //     //     } else {
+        //     //       // If the control doesn't exist, add the control
+        //     //       existingGroup.addControl(control.name, this.fb.control(control.value));
+        //     //     }
+        //     //   });
+
+        //     // } 
+        //     // else {
+        //     //   // If the form group doesn't exist, create a new one
+        //     //   if (!formArr) {
+        //     //     formArr = this.fb.array([]);
+        //     //     this.dynamicFormGroup.addControl(controls.idProperty, formArr);
+        //     //   }
+
+        //     //   // Initialize the new form group and add it to the array
+        //     //   let newFormGroup = this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1);
+        //     //   formArr.push(newFormGroup);
+        //     // }
+
+        //     // Special handling for the 'Self' option
+        //     // if (option.value === 'Self') {
+        //     //   let index = formArr.controls.findIndex((control: AbstractControl) => {
+        //     //     const group = control as FormGroup; // Cast the control to FormGroup
+        //     //     return group.get('relation')?.value === option.value;
+        //     //   });
+
+        //     //   if (index !== -1) {
+        //     //     let selfGroup = formArr.controls[index] as FormGroup;
+        //     //     selfGroup.get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
+        //     //     selfGroup.get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+        //     //     selfGroup.get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+        //     //     selfGroup.get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+        //     //     selfGroup.get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+        //     //     selfGroup.get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
+        //     //     selfGroup.get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+        //     //     selfGroup.get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+        //     //     selfGroup.get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
+        //     //     selfGroup.get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
+        //     //     selfGroup.get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
+        //     //     selfGroup.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+        //     //   }
+        //     // }
+
+        //     // Handle 'Family Floater' plan type by setting 'sumInsured' for all insured members
+        //     // if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+        //     //   formArr.controls.forEach((control: any) => {
+        //     //     control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+        //     //   });
+        //     // }
+
+        //     // this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(formArr.length);
+        //   }
+        // }
         if (checkbox.checked == true) {
           if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
             formsection.visible = true;
@@ -1567,10 +1812,12 @@ export class AbhiDynamicFormComponent {
             tempControl[1].value = option.value;
             tempControl[0].value = JSON.stringify(option);
             formControl.dynamicControls?.push(tempControl);
-            // let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
-            let formArr;
+            console.log(this.formData);
+            
+            let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+            // let formArr;
 
-            if (this.dynamicFormGroup.get(controls.idProperty) != null) {
+            if (formArr != null) {
               formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
               formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
             }
@@ -1732,7 +1979,7 @@ export class AbhiDynamicFormComponent {
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
 
     if (this.dynamicFormGroup.get('numberOfInsuredMembers')?.value < 2 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-      this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Floater policy", duration: 3000 });
+      this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
       return;
     }
     else {
@@ -1962,7 +2209,7 @@ export class AbhiDynamicFormComponent {
         "leadMobileNo": this.dynamicFormGroup.get('leadMobileNo')?.value,
         "leadEmailId": this.dynamicFormGroup.get('leadEmailId')?.value,
       }
-      this.service.insertLeadDetails(reqData).subscribe({
+      this.adminService.insertLeadDetails(reqData).subscribe({
         next: (res) => {
           this.leadId = res.leadId;
           this.proposalId = res.proposalId;
@@ -2007,7 +2254,7 @@ export class AbhiDynamicFormComponent {
     var relationShip: string = '';
     var maxAge: number = 0;
 
-    if (this.formData.memberPolicyType === 'Multi Individual' || this.formData.memberPolicyType === 'Individual') {
+    if (this.formData.planType === 'Multi Individual' || this.formData.planType === 'Individual') {
       relationShip = 'Multi Individual'
     }
     else {
@@ -2117,7 +2364,7 @@ export class AbhiDynamicFormComponent {
           });
         }
 
-        if (this.formData.memberPolicyType == 'Multi Individual' || this.formData.memberPolicyType == 'Individual') {
+        if (this.formData.planType == 'Multi Individual' || this.formData.planType == 'Individual') {
           quoteResponse.forEach((element: any) => {
             element.prmMemDtlSecureEntity.forEach((member: any) => {
               let tempArray: number[] = [];
@@ -2198,7 +2445,7 @@ export class AbhiDynamicFormComponent {
           addOnList: this.addOnList
         };
 
-        if (this.formData['numberOfInsuredMembers'] > 1 && this.formData['memberPolicyType'] == 'Multi Individual') {
+        if (this.formData['numberOfInsuredMembers'] > 1 && this.formData['planType'] == 'Multi Individual') {
           reqData2.memberDiscount = 5;
         }
         this.spinner.show();
@@ -2264,6 +2511,7 @@ export class AbhiDynamicFormComponent {
   }
 
   flattenObject(obj: any, prefix = '') {
+    console.log(obj);
 
     Object.keys(obj).forEach(key => {
       const value = obj[key];
@@ -2271,7 +2519,17 @@ export class AbhiDynamicFormComponent {
       if (typeof value === 'object' && value !== null && Object.keys(value).length > 0) {
         if (typeof value === 'object' && value !== null && 'id' in value) {
           this.dynamicFormGroup.get(newKey)?.patchValue(value);
-        } else {
+        }
+        else if (this.dynamicFormGroup.get(newKey) instanceof FormGroup) {
+          const formGroup = this.dynamicFormGroup.get(newKey);
+          Object.keys(value).forEach((key2) => {
+            console.log(value[key2]);
+
+            formGroup?.get(key2)?.setValue(value[key2]);
+          })
+
+        }
+        else {
           this.flattenObject(value, newKey + '.');
         }
       }
@@ -2281,6 +2539,8 @@ export class AbhiDynamicFormComponent {
         }
       }
     });
+    console.log(this.dynamicFormGroup.value);
+
   }
 
   async halfQuotation() {
@@ -2907,7 +3167,7 @@ export class AbhiDynamicFormComponent {
   }
 
   setProposerPincode() {
-    if (this.formData.memberPolicyType == 'Multi Individual' || this.formData.memberPolicyType == 'Individual') {
+    if (this.formData.planType == 'Multi Individual' || this.formData.planType == 'Individual') {
       this.formData.insuredMemberDetails.forEach((member: any) => {
         if (member.relation == 'Self') {
 
@@ -2944,7 +3204,7 @@ export class AbhiDynamicFormComponent {
 
       }
     }
-    else if (this.formData.memberPolicyType == 'Family Floater') {
+    else if (this.formData.planType == 'Family Floater') {
 
       this.form.formSections.forEach((section: IFormSections) => {
         if (section.sectionTitle == 'Product Information') {

@@ -90,7 +90,7 @@ export class AgencyInsuranceProductMapComponent {
       })
   }
   getAllProduct(){
-    this.adminService.getAllProductList()
+    this.adminService.getAllProductsList()
       .subscribe({  
         next: (res)=>{
           this.allProduct=res.filter((product:any)=>product.status==true);

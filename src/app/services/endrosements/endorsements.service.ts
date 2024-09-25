@@ -27,7 +27,6 @@ export class EndorsementsService {
   endorsementCreateRequestApi(formData: FormData): Observable<any> {
     const endorsementCreateRequestApi = this.configService.config.baseUrl + this.configService.config.endorsementcreaterequest;
     return this.http.post<any>(endorsementCreateRequestApi, formData);
-    // return this.http.post<any>('https://localhost:7026/api/endorsement/endorsementcreaterequest' ,formData)
   }
   
   getEndorsementPolicyInfoApi(formData: any){

@@ -40,7 +40,7 @@ export class BancaAgentDashboardComponent {
       "code": this.code,
     }
     console.log(reqData);
-    this.commonSerivce.getAllFormDataViaVerticalCode(reqData).subscribe({
+    this.adminService.getAllFormDataViaVerticalCode(reqData).subscribe({
       next: (response) => {
         this.groupProposals(response);
       },
@@ -74,7 +74,7 @@ export class BancaAgentDashboardComponent {
     })
   }
   getAllProducts(){
-    this.adminService.getAllProductList().subscribe({
+    this.adminService.getAllProductsList().subscribe({
       next: (response) => {
         this.allProducts=response;
         console.log(this.allProducts); 

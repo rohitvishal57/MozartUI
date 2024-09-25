@@ -7,7 +7,6 @@ import { firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { LoginService } from 'src/app/services/login.service';
-import { totalpremium } from 'src/assets/styles/config/totalPremium';
 
 @Component({
   selector: 'app-quote-products',
@@ -74,7 +73,9 @@ export class QuoteProductsComponent implements OnInit {
   getPoductList() {
     // this.selectedToggle = item.insuranceType
     const reqData = {
-      "agentCode": this.agentCode
+      agentCode: this.agentCode,
+      sumInsured: String(this.formData.sumInsured),
+      quoteData: JSON.stringify(this.formData)
     }
     // this.loginService.Getproductlist(reqData).subscribe({
     //   next: (res) => {
@@ -94,9 +95,10 @@ export class QuoteProductsComponent implements OnInit {
     //     }
     //   }
     // })
+    console.log(reqData);
     this.spinner.show();
-    // this.loginService.Getproductlist2(reqData).subscribe({
-    this.loginService.Getproductlist3(reqData).subscribe({
+    this.service.Getproductlist3({}).subscribe({
+    // this.service.Getproductlist2(reqData).subscribe({
       next: (res) => {
         this.spinner.hide();
         console.log(res)
@@ -137,7 +139,7 @@ export class QuoteProductsComponent implements OnInit {
 
   async getProposalNum() {
     try {
-      await this.loginService.getProposalNumber().subscribe({
+      await this.service.getProposalNumber().subscribe({
         next:(res)=>{
           console.log(res);
           this.proposalNum = res.data;
@@ -198,7 +200,8 @@ export class QuoteProductsComponent implements OnInit {
       console.log(item)
       const productData = {
         partnerId : this.partnerId,
-        productId : item.productId
+        productId : item.productId,
+        isQuote : true
 
       }
       console.log(productData)
@@ -237,7 +240,7 @@ export class QuoteProductsComponent implements OnInit {
         "productId": item.productId
 
       }
-      const res = await firstValueFrom(this.loginService.Getformsequence(reqData));
+      const res = await firstValueFrom(this.service.Getformsequence(reqData));
       console.log(res);
       this.formSequence = JSON.parse(res.data.formSequence);
       console.log(this.formSequence);

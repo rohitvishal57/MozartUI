@@ -1,15 +1,15 @@
 <div class="add-new-endorsement-wrap">
   <div class="main-container">
-    <div class="all-claims">
+    <div class="all-endorsements">
       <div class="header">
         <div class="header-value">My Endorsement</div>
       </div>
-      <div class="main-claims">
+      <div class="main-endorsements">
         <div class="request-header">
           Raise Request
         </div>
       </div>
-      <div class="details-section">
+      <div class="endorsements-details-section">
         <form [formGroup]="form">
           <div class="dropdowns row">
             <!-- <div class="col-3">
@@ -20,24 +20,24 @@
               </div>
             </div> -->
             <div class="col-4">
-              <div class="dropdown-field">
+              <div class="endorsements-dropdown-field">
                 <label class="label"> Select Policy Member</label>
-                <p-dropdown [options]="activePolicyNumbers" formControlName="policyNumber"
+                <p-dropdown class="endorsements-p-dropdown" [options]="activePolicyNumbers" formControlName="policyNumber"
                   placeholder="Select Policy Number" [virtualScroll]="true" [itemSize]="30"
                   (onChange)="handleDropdownChange($event)" />
               </div>
             </div>
             <div class="col-4">
-              <div class="dropdown-field">
+              <div class="endorsements-dropdown-field">
                 <label class="label">Select Member</label>
-                <p-dropdown [options]="proposerNames" formControlName="memberName" placeholder="Select Member"
+                <p-dropdown class="endorsements-p-dropdown" [options]="proposerNames" formControlName="memberName" placeholder="Select Member"
                   [virtualScroll]="true" [itemSize]="30" (onChange)="selectMember($event)"  />
               </div>
             </div>
             <div class="col-4">
-              <div class="dropdown-field">
+              <div class="endorsements-dropdown-field">
                 <label class="label">Endorsement Type</label>
-                <p-dropdown [options]="endorsementsTypes" formControlName="endorsementType"
+                <p-dropdown class="endorsements-p-dropdown" [options]="endorsementsTypes" formControlName="endorsementType"
                   placeholder="Select Endorsement Type" />
               </div>
             </div>
@@ -96,6 +96,6 @@
       </div>
     </div>
   </div>
-  <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-scale-multiple" [fullScreen]="true">
+  <ngx-spinner bdColor="rgba(128, 128, 128, 0.1)" size="large" color="#fff" type="ball-clip-rotate" [fullScreen]="true">
     <p style="color: white;font-size: 14px;"> Loading... </p>
   </ngx-spinner>

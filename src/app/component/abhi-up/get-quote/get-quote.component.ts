@@ -17,7 +17,7 @@ export class GetQuoteComponent {
 
   quoteFormGroup!: FormGroup;
   selectedOptions: string[] = [];
-  selectedPolicy: string = "Family Floater";
+  selectedPlan: string = "Family Floater";
   selectedRelationships: string[] = [];
   selectedRelation: string = "";
   activeDropdown: number | null = null;
@@ -29,35 +29,6 @@ export class GetQuoteComponent {
     ["R003", 0],
     ["R004", 0]
   ]);
-  proposerZone: any;
-  selectedSumInsured: number = 0;
-  selectedDiseases: string[] = [];
-
-  multiIndiReqData: any = {
-    proposerPincode: "",
-    typeOfBusiness: "",
-    isEmpoyee: false,
-    sumInsured: "",
-    noOfMembers: "",
-    familySize: "1A",
-    insuredMemberDetails: [
-    ]
-  }
-
-  insuredMember: any = {
-    roomCategory: "",
-    memberAge: "",
-    sumInsured: "",
-    isChronic: "",
-    zone: "",
-    gender: "",
-    memberDob: "",
-    memberRelation: "",
-    memberRelationCode: ""
-  }
-
-
-  value: number = 5;
   sliderOptions: Options = {
     showTicks: true,
     showTicksValues: false,
@@ -76,6 +47,52 @@ export class GetQuoteComponent {
     }
   };
 
+  diseases = [
+    { id: 'hypertension', value: 'hypertension', label: 'Hypertension' },
+    { id: 'bloodpressure', value: 'bloodpressure', label: 'Blood-Pressure' },
+    { id: 'cholesterol', value: 'cholesterol', label: 'Cholesterol' },
+    { id: 'diabetes', value: 'diabetes', label: 'Diabetes' }
+  ];
+  
+  proposerZone: any;
+  proposerZoneValue: any;
+  proposerCity: any;
+  proposerState:any;
+  selectedSumInsured: any;
+  selectedDiseases: string[] = [];
+  diseaseNames: string = "";
+
+  multiIndiReqData: any = {
+    proposerPincode: "",
+    typeOfBusiness: "",
+    isEmpoyee: false,
+    sumInsured: "",
+    noOfMembers: "",
+    familySize: "1A",
+    insuredMemberDetails: [
+    ]
+  }
+
+  insuredMember: any = {
+    relation: "",
+    roomCategory: "",
+    memberAge: "",
+    sumInsured: "",
+    isChronic: "",
+    chronicDiseases: "",
+    zone: "",
+    memberGender: "",
+    memberdob: "",
+    memberRelationCode: "",
+    pincode: "",
+    city: "",
+    zoneValue: "",
+    state: ""
+  }
+
+
+  value: number = 5;
+  
 
   relations: any[] = [
     {
@@ -164,34 +181,19 @@ export class GetQuoteComponent {
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService) { }
 
   ngOnInit() {
-
-    const storedData = localStorage.getItem('quoteFormData');
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      // Restore selected options (including relationships)
-      this.selectedOptions = parsedData.selectedOptions || [];
-      this.value = parsedData.value || this.value;
-      this.selectedDiseases = parsedData.selectedDiseases || [];
-      this.selectedRelationships = this.selectedOptions[1]?.split(', ') || [];
-
-      // Restore UI elements
-      this.showCard = parsedData.showCard || false;
-      this.showDropdownsFlag = this.showCard;
-
-      console.log('Data loaded from LocalStorage:', parsedData);
-    }
     // this.quoteForm = this.fb.group(formControls);
-    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value || 0;
+    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     this.quoteFormGroup = this.fb.group({
       proposerPincode: [null, [Validators.required]],
       proposerName: [null, [Validators.required]],
       mobileNumber: [null, [Validators.required]],
-      typeOfBusiness: ["NB", [Validators.required]],
-      isEmpoyee: [false, [Validators.required]],
+      typeOfBusiness: ["NB"],
+      isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
       numberOfInsuredMembers: [null],
       familySize: [null],
-      memberPolicyType: ['Family Floater', [Validators.required]],
+      memberPolicyType: [this.selectedPlan],
+      insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
     // Object.keys(this.multiIndiReqData).forEach((key: string)=>{
@@ -199,7 +201,7 @@ export class GetQuoteComponent {
 
     //   }
     // })
-    this.loadStoredData();
+    // this.loadStoredData();
   }
 
 
@@ -220,8 +222,8 @@ export class GetQuoteComponent {
       this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
     }
-
-    this.saveDataToStorage();
+      
+    // this.saveDataToStorage();
   }
 
   onAgeChange(event: any, relation: any) {
@@ -236,7 +238,8 @@ export class GetQuoteComponent {
       this.selectedRelationships.forEach((selectedRelation: any) => {
         if (selectedRelation.name == relation.name) {
           selectedRelation.age = age;
-          selectedRelation.dob = dob;
+          selectedRelation.dob = new Date(dob).toLocaleDateString('en-GB').split('/').join('-');
+          console.log(selectedRelation);
         }
       })
     }
@@ -266,7 +269,7 @@ export class GetQuoteComponent {
       : 'Please select members';
 
     console.log(this.selectedRelation);
-    this.saveDataToStorage();
+    // this.saveDataToStorage();
     this.activeDropdown = null;
 
     console.log('Selected Relationships:', this.selectedRelationships);
@@ -275,13 +278,13 @@ export class GetQuoteComponent {
   selectOption(option: string, index: number): void {
     this.selectedOptions[index] = option;
     this.showCustomDiv = false;
-    this.saveDataToStorage();
+    // this.saveDataToStorage();
   }
 
   continueSelection(index: number, selectedOption: string) {
     console.log(index, selectedOption);
     this.selectedOptions[index] = selectedOption;
-    this.saveDataToStorage();
+    // this.saveDataToStorage();
   }
 
   openCustomDiv(label: string, index: number) {
@@ -345,7 +348,7 @@ export class GetQuoteComponent {
     this.showCard = true;
     this.showDropdownsFlag = true;
     console.log('showCard:', this.showCard);
-    this.saveDataToStorage();
+    // this.saveDataToStorage();
   }
 
   continue() {
@@ -354,13 +357,13 @@ export class GetQuoteComponent {
     console.log(this.quoteFormGroup.value);
     if (this.quoteFormGroup.valid) {
       console.log(this.quoteFormGroup.value);
-      this.saveDataToStorage();
+      // this.saveDataToStorage();
       this.route.navigate(['portal/abhi/quoteProducts'], {
         state: { formData: this.quoteFormGroup.value }
       });
     } else {
       this.quoteFormGroup.markAllAsTouched();
-      console.log('Form is invalid. Please correct the errors.');
+      console.log('Form is invalid. Please correct the errors.',this.quoteFormGroup);
       this.showErrorMessage('Please complete all required fields correctly before proceeding.');
     }
   }
@@ -375,7 +378,7 @@ export class GetQuoteComponent {
     const sumInsuredValue = this.value;
     this.selectedOptions[2] = `${sumInsuredValue} Lakhs`;
     this.activeDropdown = null; // Close the dropdown
-    this.saveDataToStorage();
+    // this.saveDataToStorage();
     console.log('Selected Sum Insured: ₹', this.selectedOptions[2]);
   }
 
@@ -425,13 +428,14 @@ export class GetQuoteComponent {
 
   onValueChange(newValue: number) {
     this.value = newValue;
-    this.saveDataToStorage();
+    // this.saveDataToStorage();
     console.log('Slider value changed to:', newValue);
   }
 
   onDiseaseChange(event: any) {
     const selectedValue = event.target.value;
-
+    console.log(selectedValue);
+    
     if (event.target.checked) {
       // Add the value to the array if the checkbox is checked and not already present
       if (!this.selectedDiseases.includes(selectedValue)) {
@@ -442,67 +446,76 @@ export class GetQuoteComponent {
       this.selectedDiseases = this.selectedDiseases.filter(disease => disease !== selectedValue);
     }
     console.log('Selected Diseases:', this.selectedDiseases);
-    this.saveDataToStorage();
+    // this.saveDataToStorage();
   }
 
   diseaseSelection() {
-    this.selectedOptions[3] = this.selectedDiseases.length > 0 ? this.selectedDiseases.join(', ') : 'No Diseases Selected';
+    this.diseaseNames = this.selectedDiseases.length > 0 ? this.selectedDiseases.join(', ') : '';
+    const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
+
+    console.log(insuredMembersArray);
+    
+    insuredMembersArray.controls.forEach((control: AbstractControl) => {
+      const memberGroup = control as FormGroup;
+      memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames != "" ? this.diseaseNames :  null);
+      memberGroup.get('isChronic')?.setValue(this.diseaseNames != "" ? "Yes" :  "No");
+    });
     this.activeDropdown = null;
-    this.saveDataToStorage();
+    // this.saveDataToStorage();
   }
 
   isDiseaseSelected(disease: string): boolean {
     return this.selectedDiseases.includes(disease);
   }
 
-  saveDataToStorage() {
-    const data = {
-      selectedOptions: this.selectedOptions,          // Store selected options (array of strings)
-      selectedPolicy: this.selectedPolicy,            // Store the selected policy type (e.g., Family Floater)
-      selectedRelationships: this.selectedRelationships, // Store selected relationships
-      selectedRelation: this.selectedRelation,         // Store currently selected dropdown
-      relationCountMap: Array.from(this.relationCountMap.entries()),  // Convert Map to array of key-value pairs for storage
-      proposerZone: this.proposerZone,                // Store proposer zone
-      selectedSumInsured: this.selectedSumInsured,    // Store selected sum insured value
-      selectedDiseases: this.selectedDiseases         // Store selected diseases (array of strings)
-    };
-
-    console.log(data);  // Log data object to check the contents before saving
-
-    // Save the data object to localStorage
-    localStorage.setItem('quoteFormData', JSON.stringify(data));
-    console.log('Data saved to LocalStorage:', data);
-  }
-
+  // saveDataToStorage() {
+  //   const data = {
+  //     selectedOptions: this.selectedOptions,          // Store selected options (array of strings)
+  //     selectedPolicy: this.selectedPolicy,            // Store the selected policy type (e.g., Family Floater)
+  //     selectedRelationships: this.selectedRelationships, // Store selected relationships
+  //     selectedRelation: this.selectedRelation,         // Store currently selected dropdown
+  //     relationCountMap: Array.from(this.relationCountMap.entries()),  // Convert Map to array of key-value pairs for storage
+  //     proposerZone: this.proposerZone,                // Store proposer zone
+  //     selectedSumInsured: this.selectedSumInsured,    // Store selected sum insured value
+  //     selectedDiseases: this.selectedDiseases         // Store selected diseases (array of strings)
+  //   };
+  
+  //   console.log(data);  // Log data object to check the contents before saving
+  
+  //   // Save the data object to localStorage
+  //   localStorage.setItem('quoteFormData', JSON.stringify(data));
+  //   console.log('Data saved to LocalStorage:', data);
+  // }
+  
 
   // Load stored data from LocalStorage
-  loadStoredData() {
-    const storedData = localStorage.getItem('quoteFormData');
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-
-      this.selectedOptions = parsedData.selectedOptions || [];
-      this.selectedPolicy = parsedData.selectedPolicy || "Family Floater";
-      this.selectedRelationships = parsedData.selectedRelationships || [];
-      this.selectedRelation = parsedData.selectedRelation || "";
-      this.relationCountMap = new Map(parsedData.relationCountMap);  // Convert back to Map
-      this.proposerZone = parsedData.proposerZone || null;
-      this.selectedSumInsured = parsedData.selectedSumInsured || this.sliderOptions?.stepsArray?.[0]?.value;
-      this.selectedDiseases = parsedData.selectedDiseases || [];
-
-      console.log('Data loaded from LocalStorage:', parsedData);
-    }
-  }
+  // loadStoredData() {
+  //   const storedData = localStorage.getItem('quoteFormData');
+  //   if (storedData) {
+  //     const parsedData = JSON.parse(storedData);
+  
+  //     this.selectedOptions = parsedData.selectedOptions || [];
+  //     this.selectedPolicy = parsedData.selectedPolicy || "Family Floater";
+  //     this.selectedRelationships = parsedData.selectedRelationships || [];
+  //     this.selectedRelation = parsedData.selectedRelation || "";
+  //     this.relationCountMap = new Map(parsedData.relationCountMap);  // Convert back to Map
+  //     this.proposerZone = parsedData.proposerZone || null;
+  //     this.selectedSumInsured = parsedData.selectedSumInsured || this.sliderOptions?.stepsArray?.[0]?.value;
+  //     this.selectedDiseases = parsedData.selectedDiseases || [];
+  
+  //     console.log('Data loaded from LocalStorage:', parsedData);
+  //   }
+  // }
 
   //my-changes
 
-  onPolicyTypeChange(policyType: string) {
-    this.selectedPolicy = policyType;
+  onPlanTypeChange(planType: string) {
+    this.selectedPlan = planType;
   }
 
-  updatePolicyType() {
-    this.quoteFormGroup.get('memberPolicyType')?.setValue(this.selectedPolicy);
-    this.saveDataToStorage();
+  updatePlanType() {
+    this.quoteFormGroup.get('memberPolicyType')?.setValue(this.selectedPlan);
+    // this.saveDataToStorage();
     this.activeDropdown = null;
   }
 
@@ -514,60 +527,77 @@ export class GetQuoteComponent {
     this.quoteFormGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
 
     const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
-
-    insuredMembersArray.controls.forEach((control: AbstractControl) => {
-      const memberGroup = control as FormGroup;
-      memberGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
-    });
-    this.saveDataToStorage();
-
-    this.activeDropdown = null;
+    if(insuredMembersArray){
+      insuredMembersArray.controls.forEach((control: AbstractControl) => {
+        const memberGroup = control as FormGroup;
+        memberGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
+      });
+      // this.saveDataToStorage();
+  
+      this.activeDropdown = null;
+    }
   }
 
   // Add new member details
   addInsuredMemberDetails(): void {
-
+    // Mark required fields as touched
     this.quoteFormGroup.get('proposerName')?.markAsTouched();
     this.quoteFormGroup.get('proposerPincode')?.markAsTouched();
     this.quoteFormGroup.get('mobileNumber')?.markAsTouched();
-
+  
     // Check if the form is valid before proceeding
-    console.log(this.quoteFormGroup);
     if (this.quoteFormGroup.valid) {
+      // Reset the insuredMembers group
+      const insuredMembersGroup = this.fb.group({});
+      this.quoteFormGroup.setControl('insuredMembers', insuredMembersGroup);
+  
+      // Reset the insuredMemberDetails array
+      const insuredMemberDetailsArray = this.fb.array([]) as FormArray;
+      this.quoteFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
+  
+      // Add controls for the currently selected relationships
       this.selectedRelationships.forEach((relation: any) => {
-        const isAlreadyAdded = this.insuredMemberDetails.controls.some((control: AbstractControl) => {
-          const memberGroup = control as FormGroup;
-          return memberGroup.get('memberRelationCode')?.value === relation.id;
+        insuredMembersGroup.addControl(relation.value, this.fb.control(true));
+  
+        const memberGroup = this.fb.group({
+          relation: [relation.value],
+          roomCategory: [""],
+          memberAge: [relation.age, [Validators.required]],
+          sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
+          isChronic: ["No"],
+          chronicDiseases: [this.diseaseNames],
+          zone: [this.proposerZone],
+          memberGender: [relation.gender, [Validators.required]],
+          memberdob: [relation.dob, [Validators.required]],
+          memberRelationCode: [24, [Validators.required]],
+          pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
+          city:[this.proposerCity],
+          zoneValue: [this.proposerZone],
+          state: [this.proposerState]
         });
-
-        if (!isAlreadyAdded) {
-          const memberGroup = this.fb.group({
-            roomCategory: [""],
-            memberAge: [relation.age, [Validators.required]],
-            sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
-            isChronic: ["No"],
-            zone: [this.proposerZone, [Validators.required]],
-            gender: [relation.gender, [Validators.required]],
-            memberDob: [relation.dob, [Validators.required]],
-            memberRelation: [relation.value, [Validators.required]],
-            memberRelationCode: [relation.id, [Validators.required]]
-          });
-
-          this.insuredMemberDetails.push(memberGroup);
-        }
+  
+        insuredMemberDetailsArray.push(memberGroup);
       });
-
+  
+      // Update selectedRelation string for display
       this.selectedRelation = this.selectedRelationships.length > 0
         ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
         : 'Please select members';
-
+  
       console.log(this.selectedRelation);
-      this.saveDataToStorage();
+      // Optionally save data to storage
+      // this.saveDataToStorage();
       this.activeDropdown = null;
     } else {
-      this.toast.error({ detail: "Error", summary: "Please fill all the details before proceeding.", duration: 3000 });
+      // Show error toast if form is invalid
+      this.toast.error({
+        detail: "Error",
+        summary: "Please fill all the details before proceeding.",
+        duration: 3000
+      });
     }
   }
+  
 
   get insuredMemberDetails(): FormArray {
     return this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
@@ -582,6 +612,9 @@ export class GetQuoteComponent {
       next: (res) => {
         console.log(res)
         this.proposerZone = res.data.strzone;
+        this.proposerCity = res.data.strcity;
+        this.proposerState = res.data.strstate;
+        this.proposerZoneValue = res.data.strzonemapping;
       },
       error: (err) => {
         console.error(err)

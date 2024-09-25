@@ -280,7 +280,7 @@ export class BankLoginComponent implements OnInit {
       this.loginForm.removeControl('otp');
       this.loginForm.removeControl('mobileNumber');
       console.log(this.loginForm.value);
-      this.loginService.sendLoginRequest(this.loginForm.value).subscribe({
+      this.adminService.sendLoginRequest(this.loginForm.value).subscribe({
         next: (res) => {
           console.log(res);
           this.loginService.storeToken(res.token);
@@ -307,7 +307,7 @@ export class BankLoginComponent implements OnInit {
   }
   sendOtp() {
     if (this.loginForm.valid) {
-      this.loginService.sendLoginRequest(this.loginForm.value).subscribe({
+      this.adminService.sendLoginRequest(this.loginForm.value).subscribe({
         next: (res) => {
           this.response = res;
           let mobileNumber = this.response.mobileNumber;

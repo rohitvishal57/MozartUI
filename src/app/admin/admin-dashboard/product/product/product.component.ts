@@ -41,7 +41,7 @@ export class ProductComponent {
     return data;
   }
   getAllProduct() {
-    return this.adminService.getAllProductList().subscribe({
+    return this.adminService.getAllProductsList().subscribe({
       next: (res)=>{ 
         this.allProduct=res;
       },

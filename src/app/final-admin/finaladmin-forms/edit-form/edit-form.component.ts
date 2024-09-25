@@ -1006,7 +1006,7 @@ export class EditFormComponent {
     //   });
   }
   getFormSequence() {
-    this.commonService
+    this.adminService
       .getFormConfigViaVerticalCode(
         this.verticalCode,
         this.bankCode,
@@ -1041,7 +1041,7 @@ export class EditFormComponent {
             this.jsonForm.value.jsonFormData
           );
           console.log(this.jsonForm.value);
-          this.commonService.insertJSONForm(this.jsonForm.value).subscribe({
+          this.adminService.insertJSONForm(this.jsonForm.value).subscribe({
             next: (res) => {
               console.log(res);
             },
@@ -1126,7 +1126,7 @@ export class EditFormComponent {
       insureFormConfiguration: JSON.stringify(this.formSequence),
       verticalCode: this.verticalCode
     };
-    this.commonService.insertFormConfig(req).subscribe({
+    this.adminService.insertFormConfig(req).subscribe({
       next: (res) => {
         this.messageService.add({
           severity: 'info',
@@ -1254,7 +1254,7 @@ export class EditFormComponent {
     console.log(form);
     console.log(this.bankCode, this.verticalCode, this.insuranceTypeCode, this.productId);
     console.log(form.formId, form.formName);
-    this.commonService.getJSONFormViaVerticalCode(
+    this.adminService.getJSONFormViaVerticalCode(
       this.verticalCode,
       this.bankCode,
       this.insuranceTypeCode,
@@ -1288,7 +1288,7 @@ export class EditFormComponent {
   }
   async getFormDataFromFormSequence(formSeq: any) {
     try {
-      const res = await this.commonService.getJSONFormViaVerticalCode(
+      const res = await this.adminService.getJSONFormViaVerticalCode(
         this.verticalCode,
         this.bankCode,
         this.insuranceTypeCode,

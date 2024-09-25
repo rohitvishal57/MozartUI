@@ -227,7 +227,7 @@ export class FinaladminTablesComponent implements OnInit{
       })
   }
   getAllProduct() {
-    return this.adminService.getAllProductList().subscribe({
+    return this.adminService.getAllProductsList().subscribe({
       next: (res) => {
         this.allProduct = res;
       },

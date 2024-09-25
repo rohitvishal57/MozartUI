@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
+import { AdminService } from 'src/app/services/admin.service';
 import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
 import ValidateForm from 'src/app/validation/validateForm';
@@ -13,7 +14,8 @@ import ValidateForm from 'src/app/validation/validateForm';
 })
 export class AdminLoginComponent {
   loginForm!: FormGroup;
-  constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,public common:CommonService,
+  constructor(private fb: FormBuilder, private loginService: LoginService,private adminService: AdminService,
+     private router: Router,public common:CommonService,
   private toast: NgToastService){
   }
   ngOnInit(){
@@ -29,7 +31,7 @@ export class AdminLoginComponent {
   }
   onSubmit(){
     if(this.loginForm.valid){
-      this.loginService.sendAdminLoginRequest(this.loginForm.value)
+      this.adminService.sendAdminLoginRequest(this.loginForm.value)
         .subscribe({  
           next: (res)=>{
             console.log(res);

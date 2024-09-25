@@ -133,7 +133,7 @@ export class AddAgencyComponent {
       })
   }
   async getAllProduct() {
-    await this.adminService.getAllProductList()
+    await this.adminService.getAllProductsList()
       .subscribe({
         next: (res) => {
           this.allProduct = res.filter((product: any) => product.status == true);

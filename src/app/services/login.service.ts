@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ConfigService } from '../config.service';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -12,65 +13,22 @@ export class LoginService {
 
   constructor(private http: HttpClient, private router: Router, private configService: ConfigService) {}
 
-  getAllBankDetails() {
-    return this.http.get<any>(`${this.baseUrl}Banca/User/GetAllBankDetails`);
-  }
-  sendLoginRequest(loginData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/User/Login`, loginData);
-  }
-  sendAdminLoginRequest(loginData: any) {
-    return this.http.post<any>(`${this.baseUrl}yatra/Banca/Admin/Login`, loginData);
-  }
+  
 
-  getAllProductsViaBankCode(bankCode: any) {
-    return this.http.get<any>(
-      `${this.baseUrl}Banca/Product/GetAllProductsViaBankCode?bankCode=${bankCode}`
-    );
-  }
-  getAllProductListViaBankCode(bankCode: number, insuranceTypeCode: number) {
-    return this.http.get<any>(
-      `${this.baseUrl}Banca/Product/GetAllProductListViaBankCode?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}`
-    );
-  }
 
- 
   //Agent APi's
   sendAgentLoginRequestApi(loginData: any) {
     const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;
     return this.http.post<any>(sendAgentLoginRequestApi, loginData);
   }
 
-  getAllProducts(verticalCode: any, code: any) {
-    return this.http.get<any>(
-      `${this.baseUrl}Banca/Product/GetProduct?verticalCode=${verticalCode}&code=${code}`
-    );
-  }
-
-  // getAllProductList(verticalCode: any, code: any, insuranceTypeCode: any) {
-  //   return this.http.get<any>(
-  //     `${this.baseUrl}Banca/Product/GetProductList?verticalCode=${verticalCode}&code=${code}&insuranceTypeCode=${insuranceTypeCode}`
-  //   );
-  // }
-  Getproductlist(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}Yatra/api/product/getproductlist`,reqData)
-  }
-  Getproductlist2(reqData:any){
-    return this.http.post<any>(`https://5765cf9e-4ee6-4c3d-80b9-1b4f14eb4794.mock.pstmn.io/abhi`,reqData)
-  }
-  Getproductlist3(reqData:any){
-    return this.http.post<any>(`https://1762f1a5-b8b1-464d-bd9b-f0d6529b1304.mock.pstmn.io/Getproductlist3`,reqData)
-  }
-  // Getproductlist3(reqData:any){
-  //   return this.http.post<any>(`https://1762f1a5-b8b1-464d-bd9b-f0d6529b1304.mock.pstmn.io/Getproductlist3`,reqData)
-  // }
-  Getformsequence(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}Yatra/api/forms/getformsequence`,reqData)
-  }
   Getagentcartdetails(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}quote/api/cart/getagentcartdetails`,reqData);
+    const agentcartdetails = this.configService.config.baseUrl + this.configService.config.agentcartdetails 
+    return this.http.post<any>(agentcartdetails,reqData);
   }
-  Insertorupdateagentcartdetails(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}quote/api/cart/insertorupdateagentcartdetails`,reqData);
+  Insertorupdateagentcartdetails(reqData: any) {
+    const insertorupdateagentcartdetails = this.configService.config.baseUrl + this.configService.config.insertorupdateagentcartdetails
+    return this.http.post<any>(insertorupdateagentcartdetails, reqData);
   }
 
   storeToken(token: string) {
@@ -87,11 +45,9 @@ export class LoginService {
     sessionStorage.clear();
     this.router.navigate(['']);
   }
-  getProposalNumber() {
-    return this.http.get<any>(`${this.baseUrl}yatra/api/product/getproposalnumber`);
-  }
+  
 
-  // For Google Login
+  // For Google Login 
   sendGoogleLoginRequest(reqBody: any) {
     return this.http.post<any>(`${this.baseUrl}Banca/User/GoogleLogin`, reqBody);
   }
@@ -108,7 +64,7 @@ export class LoginService {
     }
 
     getContactDetailsByAgentCodeApi(contactDetailsReqBody: any) {
-      const getContactDetailsByAgentCodeApi = this.configService.config.baseUrl + this.configService.config.getcontactdetailsbyagentcode;
+      const getContactDetailsByAgentCodeApi = this.configService.config.baseUrl + this.configService.config.getContactDetailsByAgentCode;
       return this.http.post<any>(getContactDetailsByAgentCodeApi, contactDetailsReqBody);
     }
 }

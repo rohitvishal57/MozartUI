@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
+import { AdminService } from 'src/app/services/admin.service';
 import { CommonService } from 'src/app/services/common.service';
 
 
@@ -28,8 +29,8 @@ export class FormSequenceComponent {
     private commonService: CommonService,
     private fb: FormBuilder,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
-
+    private messageService: MessageService,
+    private adminService: AdminService
   ) { }
 
   ngOnInit() {
@@ -50,7 +51,7 @@ export class FormSequenceComponent {
   }
 
   getFormSequence() {
-    this.commonService
+    this.adminService
       .getFormConfig(
         this.bankCode,
         this.insuranceTypeCode,
@@ -73,7 +74,7 @@ export class FormSequenceComponent {
 
   async getFormDataFromFormSequence(formSeq: any) {
     try {
-      const res = await this.commonService.getJSONForm(
+      const res = await this.adminService.getJSONForm(
         this.bankCode,
         this.insuranceTypeCode,
         this.productId,
@@ -130,7 +131,7 @@ export class FormSequenceComponent {
       productId: this.productId,
       insureFormConfiguration: JSON.stringify(this.formSequence),
     };
-    this.commonService.insertFormConfig(req).subscribe({
+    this.adminService.insertFormConfig(req).subscribe({
       next: (res) => {
         this.messageService.add({
           severity: 'info',
@@ -194,7 +195,7 @@ export class FormSequenceComponent {
     console.log(form);
     console.log(this.bankCode, this.verticalCode, this.insuranceTypeCode, this.productId);
     console.log(form.formId, form.formName);
-    this.commonService.getJSONForm(
+    this.adminService.getJSONForm(
       this.bankCode,
       this.insuranceTypeCode,
       this.productId,

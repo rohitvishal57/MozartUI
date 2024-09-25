@@ -3,6 +3,7 @@ import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { firstValueFrom } from 'rxjs';
+import { AdminService } from 'src/app/services/admin.service';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { LoginService } from 'src/app/services/login.service';
@@ -44,7 +45,7 @@ export class ViewproductsComponent implements OnInit {
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
     private loginService: LoginService, private router: Router, private toast: NgToastService,
-    private service: CommonService, private encryptionService: EncryptionService,public common:CommonService,) { 
+    private adminService: AdminService, private encryptionService: EncryptionService,public common:CommonService,) { 
       
     }
 
@@ -63,7 +64,7 @@ export class ViewproductsComponent implements OnInit {
     const reqData={
       "agentCode": this.agentCode
     }
-    this.loginService.Getproductlist(reqData).subscribe({
+    this.common.Getproductlist(reqData).subscribe({
       next: (res) => {
         this.ProductList = res.data;
         console.log(this.ProductList)
@@ -124,7 +125,7 @@ export class ViewproductsComponent implements OnInit {
   //   }
   // }
   getProducts() {
-    this.loginService.getAllProducts(this.verticalCode, this.code).subscribe({
+    this.adminService.getAllProducts(this.verticalCode, this.code).subscribe({
       next: (res) => {
         this.products = res;
         console.log(this.products)
@@ -140,7 +141,7 @@ export class ViewproductsComponent implements OnInit {
 
   async getProposalNum() {
     try {
-      const res = await firstValueFrom(this.loginService.getProposalNumber());
+      const res = await firstValueFrom(this.common.getProposalNumber());
       this.proposalNum = res;
     } catch (error) {
       console.error(error);
@@ -187,7 +188,7 @@ export class ViewproductsComponent implements OnInit {
 
       }
       console.log(reqData);
-      const res = await firstValueFrom(this.loginService.Getformsequence(reqData));
+      const res = await firstValueFrom(this.common.Getformsequence(reqData));
       console.log(res);
       this.formSequence = JSON.parse(res.data.formSequence);
       console.log(this.formSequence);

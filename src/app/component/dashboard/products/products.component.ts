@@ -7,6 +7,7 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { DOCUMENT } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
   selector: 'app-products',
@@ -39,7 +40,7 @@ export class ProductsComponent implements OnInit {
   finelcss:boolean=false;
   
   constructor(private renderer: Renderer2,  @Inject(DOCUMENT) private document: Document,
-    private loginService:LoginService,private router: Router,private toast:NgToastService,
+    private loginService:LoginService,private adminService: AdminService,private router: Router,private toast:NgToastService,
     private service:CommonService,private encryptionService:EncryptionService,private spinner:NgxSpinnerService)
   {}
 
@@ -72,7 +73,7 @@ export class ProductsComponent implements OnInit {
     }
   }
   getProducts(){
-    this.loginService.getAllProducts(this.verticalCode,this.bankCode).subscribe({
+    this.adminService.getAllProducts(this.verticalCode,this.bankCode).subscribe({
       next: (res) => {
         console.log(res)
         this.products = res;
@@ -144,7 +145,7 @@ export class ProductsComponent implements OnInit {
   }  
   async getProposalNum(){
     try{
-      const res = await firstValueFrom(this.loginService.getProposalNumber());
+      const res = await firstValueFrom(this.service.getProposalNumber());
       this.proposalNum = res;
     }catch(error){
       console.error(error);
@@ -153,7 +154,7 @@ export class ProductsComponent implements OnInit {
   async getFormSequence(item: any) {
     try {
       sessionStorage.clear();
-      const res = await firstValueFrom(this.service.getFormConfigViaVerticalCode(item.verticalcode, item.bankcode,item.insurancetypecode, item.productid));
+      const res = await firstValueFrom(this.adminService.getFormConfigViaVerticalCode(item.verticalcode, item.bankcode,item.insurancetypecode, item.productid));
       this.formSequence = JSON.parse(res.insureformconfiguration);
       this.quoteFormSequence = JSON.parse(res.quoteformconfiguration);
 
