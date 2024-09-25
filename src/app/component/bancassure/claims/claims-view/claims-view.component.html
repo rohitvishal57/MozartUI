@@ -11,9 +11,66 @@
         <section class="white_container">
           <form (ngSubmit)="onSubmit()" [formGroup]="form">
             <div class="row mb-3">
-              <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                Form fields
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <select class="form-select input-selectBox" formControlName="policyNumber" (change)="handleDropdownChange($event)">
+                    <option class="dropdown-options"value="" disabled selected>Select Policy Number</option>
+                    <option class="dropdown-options" *ngFor="let policy of policyNumbers" [value]="policy">{{ policy }}</option>
+                  </select>
+                  <label for="idgender">Select Policy Number</label>
+                  <span class="ui-error">Please select policy number</span>
+                </div>
               </div>
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <select class="form-select input-selectBox" formControlName="memberName">
+                    <option class="dropdown-options" value="" disabled selected>Select Member</option>
+                    <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
+                  </select>
+                  <label for="member">Select Member</label>
+                  <span class="ui-error">Please select member</span>
+                </div>
+              </div>
+              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                <div class="input-block form-floating input-block-renew">
+                  <select class="form-select input-selectBox" formControlName="policyType">
+                    <option class="dropdown-options"value="" disabled selected>Select Claim Type</option>
+                    <option  class="dropdown-options" *ngFor="let claim of claimTypes" [value]="claim">{{ claim }}</option>
+                  </select>
+                  <label for="claimtype">Claim Type</label>
+                  <span class="ui-error">Please select claim type</span>
+                </div>
+              </div>
+              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div class="input-block form-floating input-block-renew">
+                  <input class="form-control input-textBox" formControlName="claimedAmount" type="text" id="claimamount" placeholder="Claim Amount">
+                  <label for="claimamount">Claim Amount</label>
+                  <span class="ui-error">Please enter claim amount</span>
+                </div>
+              </div>
+              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                <div class="input-block form-floating input-block-renew">
+                  <select class="form-select input-selectBox" formControlName="hospitalName">
+                    <option value="" selected>Select Hospitals</option>
+                    <option value="AIG">AIG</option> 
+                    <option value="Apollo">Apollo</option>
+                    <option value="KIMS">KIMS</option>
+                    <option value="Orthopedic">AB Orthopedic</option>
+                  </select>
+                  <label for="claimtype">Hospitals</label>
+                  <span class="ui-error">Please select hospitals</span>
+                </div>
+              </div>
+              <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <div class="input-block form-floating input-block-renew">
+                  <textarea class="form-control input-textBox input-textarea" placeholder="Leave a comment here" id="addnotes" rows="2"
+                  cols="30" 
+                  formControlName="notes"
+                  pInputTextarea ></textarea>
+                  <label for="addnotes">Add Notes</label>
+                </div>
+              </div>
+              
             </div>
             <div class="body_flex_column gap-32">
                 <div class="uploadDocument_head body_flex_column gap-2">
@@ -123,232 +180,4 @@
       </div>
     </div>
   </div>
-</main>
-<div class="main-container" >
-    <div class="all-claims">
-        <div class="header">
-            <div class="header-value">My Claims</div>
-        </div>
-        <div class="main-claims">
-            <div class="request-header">
-                Raise Request
-            </div>
-         </div>
-         <div class="details-section">
-          <form (ngSubmit)="onSubmit()" [formGroup]="form">      
-            <div class="col-sm-12 dropdowns pt-2">
-              <div class="col-sm-4 dropdown-field">
-              <label class="label">Select Policy Number</label>
-              <select class="input-field" formControlName="policyNumber" (change)="handleDropdownChange($event)">
-              <option class="dropdown-options"value="" disabled selected>Select Policy Number</option>
-              <option class="dropdown-options" *ngFor="let policy of policyNumbers" [value]="policy">{{ policy }}</option>
-              </select>
-              </div>
-               
-              <div class="col-sm-4 dropdown-field">
-              <label class="label">Select Member</label>
-              <select class="input-field" formControlName="memberName">
-              <option class="dropdown-options" value="" disabled selected>Select Member</option>
-              <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
-              </select>
-              </div>
-               
-              <div class="col-sm-4 dropdown-field">
-              <label class="label">Claim Type</label>
-              <select class="input-field" formControlName="policyType">
-              <option class="dropdown-options"value="" disabled selected>Select Claim Type</option>
-              <option  class="dropdown-options" *ngFor="let claim of claimTypes" [value]="claim">{{ claim }}</option>
-              </select>
-              </div>
-        </div>
-            <div class="col-sm-12 dropdowns pt-2">
-                <div class="col-sm-6 dropdown-field"> <label class="label">Claim Amount</label>
-                   <input class="input-field" formControlName="claimedAmount" type="text">
-                </div>
-                <div class="col-sm-6 dropdown-field"> <label class="label"> Hospitals</label>
-                  <select class="input-field" formControlName="hospitalName">
-                    <option>Select Hospitals</option>
-                    <option>AIG</option> 
-                    <option>Apollo</option>
-                    <option>KIMS</option>
-                    <option>AB Orthopedic</option>
-
-                  </select>
-                </div>
-            </div>
-
-            <div class="text-area">
-                <label class="label"> Add note</label>
-                <textarea 
-                rows="2"
-                cols="30" 
-                formControlName="notes"
-                pInputTextarea 
-                >
-                </textarea>
-            </div>
-
-            <div class="Documents">
-              <div>  <label class="label">Upload Documents</label>
-                <p>please upload the Documents mentioned below. The files should be in .png/.jpg/.pdf with less than 2mb size for image</p>
-            </div>
-
-            <div class="col-sm-12 row fw-bold p-1">
-                <div class="col-sm-4 d-flex">
-                    <div><i class="fa-solid fa-address-card" style="color: #54a5e5;"></i></div>
-                    <!-- <img src="assets/kycId.png" alt="" class="image-color" style="width: 20px; height: 20px;"> -->
-                   <div> <label class="static-label">Any govt/KYC ID</label></div>
-                </div>
-                <div class="col-sm-4 d-flex">
-                  <div> <i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
-                  <div> <label class="static-label">Hospital bill invoice</label></div>
-                </div>
-                <div class="col-sm-4 d-flex">
-                  <div><i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
-                    <div> <label class="static-label">Investigation Report</label></div>
-                </div>
-            </div>
-
-            <div class="col-sm-12 row fw-bold p-1">
-                <div class="col-sm-4 d-flex">
-                  <div> <i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
-                    <div> <label class="static-label">Doctor's Prescription</label></div>
-                </div>
-                <div class="col-sm-4 d-flex">
-                  <div> <i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
-                    <div> <label class="static-label">NEFT/ Cancelled cheque/ Passbook</label></div>
-                </div>
-                <div class="col-sm-4 d-flex">
-                  <div> <i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
-                    <div>  <label class="static-label">Hospital Discharge Form</label></div>
-                </div>
-            </div>
-
-            <div class="col-sm-12 row fw-bold p-1">
-                <div class="col-sm-4 d-flex align-items-center">
-                  <div> <i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
-                    <div><label class="static-label">Consulation form</label></div>
-                </div>
-                <div class="col-sm-4 d-flex">
-                   <div> <i class="fa-solid fa-file-lines" style="color: #54a5e5;"></i></div>
-                    <div><label class="static-label">Claim form</label></div>
-                </div>
-             
-            </div>
-            <div class="form-group">
-                <div>
-                <label for="file">Upload Documents</label>
-                <p>JPG/JPEG/BMP/PNG/PDF Files(upto 10mb)</p>
-                </div>
-            <div>
-                <mat-icon (click)="fileInput.click()" class="upload-icon">upload</mat-icon>
-                <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple 
-                accept=".jpg, .jpeg, .pdf, .bmp, .png"/>
-                      <div>Upload</div>
-                       
-            </div>
-            </div>
-         
-          <div *ngIf="uploadedFiles.length > 0" class="uploaded-files">
-              <div class="uploads-label">
-                <div>Uploads:</div>
-                <div class="upload-status">
-                  {{ uploadStatus }}
-                </div>
-          </div>
-              <ul class="upload">
-                  <li *ngFor="let file of uploadedFiles">
-                      <div class="editable-label-flex">
-                        <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
-                          <ng-container  *ngIf="!file.isEditing">
-                              <span class="label-text">{{ file.label }}</span>
-                              <button (click)="startEditing(file)" class="edit-button">
-                                  <i class="fa fa-pencil"></i>
-                              </button>
-                          </ng-container>
-                          <ng-container *ngIf="file.isEditing">
-                              <input
-                                  type="text"
-                                  [formControl]="editableControl"
-                                  (blur)="stopEditing(file)"
-                                  autofocus
-                              />
-                          </ng-container>
-                      </div>
-                       <div class="upload-success" *ngIf="uploadSuccess"><mat-icon  class="tick-icon">check</mat-icon><span  class="success-text">Success</span></div> 
-                       <div class="upload-fail" *ngIf="!uploadSuccess"><mat-icon class="cross-icon">close</mat-icon><span class="failed-text">Failed</span></div> 
-
-                          <div *ngIf="file.uploadDateTime">
-                              <p class="date-time">{{ file.formattedUploadDateTime }}</p>
-                          </div>
-                      </div>
-                      <div class="flex">
-                          <div class="file-align"><span>{{ file.name }}</span></div>
-                          <div class="file-align"><span>{{ file.documentType }}</span></div>
-
-                          <div>
-                              <button class="delete-button" (click)="deleteFile(file)">
-                                  <mat-icon>delete</mat-icon>
-                              </button>
-                          </div>
-                      </div>
-                  </li>
-              </ul>
-          </div>
-          
-           
-<div>
-  <button class="submit-button" type="submit"  [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid">Submit Request</button>
-    <!-- <button class="submit-button" type="button" (click)="submitResponse()">Submit Request</button> -->
-</div>
-<!-- <div *ngIf="!showQuickActions" class="quick-actions-header">
-    <mat-icon>message</mat-icon>
-    <span>Saathi</span>
-    <mat-icon class="anchor-icon" (click)="toggleQuickActions()">expand_less</mat-icon>
-  </div>
-
-  <div *ngIf="showQuickActions" class="quick-actions-panel">
-    <div class="quick-actions-header1">
-    <h3>My Quick Actions</h3>
-    <mat-icon class="anchor-icon" (click)="toggleQuickActions()">expand_more</mat-icon>
-</div>
-    <div class="actions-list">
-      <button mat-button>
-        <mat-icon>thumb_up</mat-icon>
-        Birthday Reminders (9)
-      </button>
-      <button mat-button>
-        <mat-icon>folder</mat-icon>
-        Customer Complaints (15)
-      </button>
-      <button mat-button>
-        <mat-icon>assignment</mat-icon>
-        Digital MER Completion
-      </button>
-      <button mat-button>
-        <mat-icon>school</mat-icon>
-        New Product Training
-      </button>
-      <button mat-button>
-        <mat-icon>help</mat-icon>
-        FAQs
-      </button>
-      <button mat-button>
-        <mat-icon>folder</mat-icon>
-        Customer Complaints (15)
-      </button>
-      <button mat-button>
-        <mat-icon>shield</mat-icon>
-        Black-listed Hospitals (15)
-      </button>
-    </div>
-
-  </div>
-   -->
-         </div> 
-
-        </form>
-   
-     </div>
- 
-</div> 
+</main> 

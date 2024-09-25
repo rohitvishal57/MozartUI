@@ -842,7 +842,7 @@ button:disabled, .disabled {
     border-bottom: 1px solid #EB0000 ;*/
 }
 
-input:focus, select:focus {
+input:focus, select:focus, .form-control:focus {
   border: 1px solid var(--site-body-bg) !important;
   outline: none;
 }
@@ -1054,7 +1054,9 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-floating>.form-control-plaintext~label::after, .form-floating>.form-control:focus~label::after, .form-floating>.form-control:not(:placeholder-shown)~label::after, .form-floating>.form-select~label::after {
     display: none;
 }
- 
+.input-block-renew .input-textarea {
+  padding: 24px 16px !important;
+}
 
 /*----Checkbox buttons----*/
 .input-checkbox-block {
