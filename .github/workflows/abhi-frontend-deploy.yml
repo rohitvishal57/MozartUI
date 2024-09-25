@@ -135,6 +135,13 @@ jobs:
     - name: Add VM to known hosts
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+    # Download version.txt if it exists
+    - name: Download version.txt if exists
+      uses: actions/download-artifact@v3
+      with:
+        name: version
+        path: ./version.txt
+
     - name: Read and Increment Version
       id: version
       run: |
@@ -149,7 +156,14 @@ jobs:
         echo "VERSION=${NEXT_VERSION}" >> $GITHUB_ENV
         echo "New version is: $NEXT_VERSION"
       shell: bash
-      
+
+    # Upload version.txt
+    - name: Upload version.txt
+      uses: actions/upload-artifact@v3
+      with:
+        name: version
+        path: version.txt
+
     - name: Debug:Show generated version
       run: |
         echo "Generated version: ${{ env.VERSION }}"
