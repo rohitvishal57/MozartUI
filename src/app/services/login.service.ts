@@ -23,10 +23,12 @@ export class LoginService {
   }
 
   Getagentcartdetails(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}quote/api/cart/getagentcartdetails`,reqData);
+    const agentcartdetails = this.configService.config.baseUrl + this.configService.config.agentcartdetails 
+    return this.http.post<any>(agentcartdetails,reqData);
   }
   Insertorupdateagentcartdetails(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}quote/api/cart/insertorupdateagentcartdetails`, reqData);
+    const insertorupdateagentcartdetails = this.configService.config.baseUrl + this.configService.config.insertorupdateagentcartdetails
+    return this.http.post<any>(insertorupdateagentcartdetails, reqData);
   }
 
   storeToken(token: string) {

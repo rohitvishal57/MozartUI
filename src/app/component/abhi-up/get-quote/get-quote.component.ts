@@ -187,12 +187,12 @@ export class GetQuoteComponent {
       proposerPincode: [null, [Validators.required]],
       proposerName: [null, [Validators.required]],
       mobileNumber: [null, [Validators.required]],
-      typeOfBusiness: ["NB", [Validators.required]],
-      isEmpoyee: [false, [Validators.required]],
+      typeOfBusiness: ["NB"],
+      isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
       numberOfInsuredMembers: [null],
       familySize: [null],
-      memberPolicyType: [this.selectedPlan, [Validators.required]],
+      memberPolicyType: [this.selectedPlan],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
@@ -238,7 +238,8 @@ export class GetQuoteComponent {
       this.selectedRelationships.forEach((selectedRelation: any) => {
         if (selectedRelation.name == relation.name) {
           selectedRelation.age = age;
-          selectedRelation.dob = dob;
+          selectedRelation.dob = new Date(dob).toLocaleDateString('en-GB').split('/').join('-');
+          console.log(selectedRelation);
         }
       })
     }
@@ -362,7 +363,7 @@ export class GetQuoteComponent {
       });
     } else {
       this.quoteFormGroup.markAllAsTouched();
-      console.log('Form is invalid. Please correct the errors.');
+      console.log('Form is invalid. Please correct the errors.',this.quoteFormGroup);
       this.showErrorMessage('Please complete all required fields correctly before proceeding.');
     }
   }
@@ -526,14 +527,15 @@ export class GetQuoteComponent {
     this.quoteFormGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
 
     const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
-
-    insuredMembersArray.controls.forEach((control: AbstractControl) => {
-      const memberGroup = control as FormGroup;
-      memberGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
-    });
-    // this.saveDataToStorage();
-
-    this.activeDropdown = null;
+    if(insuredMembersArray){
+      insuredMembersArray.controls.forEach((control: AbstractControl) => {
+        const memberGroup = control as FormGroup;
+        memberGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
+      });
+      // this.saveDataToStorage();
+  
+      this.activeDropdown = null;
+    }
   }
 
   // Add new member details
@@ -564,10 +566,10 @@ export class GetQuoteComponent {
           sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
           isChronic: ["No"],
           chronicDiseases: [this.diseaseNames],
-          zone: [this.proposerZone, [Validators.required]],
+          zone: [this.proposerZone],
           memberGender: [relation.gender, [Validators.required]],
           memberdob: [relation.dob, [Validators.required]],
-          memberRelationCode: [relation.id, [Validators.required]],
+          memberRelationCode: [24, [Validators.required]],
           pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
           city:[this.proposerCity],
           zoneValue: [this.proposerZone],
