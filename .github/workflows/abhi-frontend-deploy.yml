@@ -135,8 +135,29 @@ jobs:
     - name: Add VM to known hosts
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Create deployment directory on VM
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA')) { New-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA' -ItemType Directory }\""
+    # Increment and Read Version
+    - name: Read and Increment Version
+      id: version
+      run: |
+        if [ ! -f version.txt ]; then
+          echo "v1" > version.txt
+        fi
+        VERSION=$(cat version.txt)
+        NEXT_VERSION=v$(( ${VERSION#v} + 1 ))
+        echo "$NEXT_VERSION" > version.txt
+        echo "VERSION=${NEXT_VERSION}" >> $GITHUB_ENV
+        echo "New version is: $NEXT_VERSION"
+      shell: bash
+
+    - name: Debug:Show generated version
+      run: |
+        echo "Generated version: ${{ env.VERSION }}"
+
+    - name: Create deployment directory on VM with version
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}')) { New-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}' -ItemType Directory }\""
+
+    # - name: Create deployment directory on VM
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA')) { New-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA' -ItemType Directory }\""
 
     - name: Manage Previous Deployments (Keep Last 3)
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
@@ -153,8 +174,11 @@ jobs:
     - name: Debug:List files after downloading artifacts
       run: ls -l ./my-artifacts
 
-    - name: Upload artifact to VM
-      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
+    - name: Upload artifact to VM with versioning
+      run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
+
+    # - name: Upload artifact to VM
+    #   run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
     
     - name: Create or Update Application Pool
       run: |
@@ -189,7 +213,10 @@ jobs:
     #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
   
     - name: Copy Latest Build to IIS web root directory
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse -Force\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}/*' -Destination '$WEB_ROOT' -Recurse -Force\""
+    
+    # - name: Copy Latest Build to IIS web root directory
+    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse -Force\""
   
     - name: Deploy application on IIS
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\bancaassurance-frontend' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
