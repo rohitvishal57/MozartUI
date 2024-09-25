@@ -53,7 +53,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   requestsListRequestBody:any = {
       "start": 0,
       "length": 270,
-      "sortColumn": "RaisedOn",
+      "sortColumn": "RequestedOn",
       "searchColumn": "",
       "sortDirection": "DESC",
       "searchString": "",
@@ -62,7 +62,7 @@ export class EndorsementsRequestsComponent implements OnInit {
         "5100003"
       ]
   }
-     
+   
   getRequestList() {
     this.requestsListRequestBody.agentId = localStorage.getItem('agentCode')
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
