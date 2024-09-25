@@ -1,3 +1,4 @@
+/* Required Css Start */
 ::ng-deep .table>:not(caption)>*>* {
   background: hidden;
 }
@@ -103,26 +104,6 @@ padding:0 0 0 10px !important;
 
 
 /*---Common css start---*/
-.body_flex_row {
-  display: flex;
-  width: 100%;
-  gap: 16px;
-}
-.btn_newRequest {
-  padding: 8px;
-  border-radius: 12px;
-  text-transform: capitalize;
-  font-weight: 600;
-  font-size: 14px;
-  color: #c7222a;
-  height: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  &:hover {
-    border: 1px solid #c7222a;
-  }
-}
 .btn_quickFilter {
   &.btn_quickFilterClaim {
     height: auto !important;
@@ -162,11 +143,6 @@ padding:0 0 0 10px !important;
   vertical-align: top;
   color: #2e2e2e;
 }
-.td-text-bold {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color:#4c4c4c !important;
-}
 .tableNav .pagination {
   flex-direction: column;
 }
@@ -182,10 +158,5 @@ padding:0 0 0 10px !important;
     filter: brightness(0) invert(1);
   }
 }
-.text-break-w100 {
-  max-width: 100px;
-  display: inline-block;
-  word-wrap: break-word !important;
-  word-break: break-word !important;
-}
 /*---Common css end---*/
+/* Required Css End */
