@@ -56,6 +56,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
   showNote: boolean = false;
   formCntrlVal: any;
   policies: any;
+  namesVariable: any;
+  documentType: any;
+  showDocInfo: boolean = false;
   policiesListData: any[] = [];
   endorsementTypes = [
     {
@@ -338,8 +341,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       return arr.map((mapObj:any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
     });
   }
-  onChange(value:any) {
-    this.caseCreationForm.get('endorsementType').reset();
+  onChange(event:any) {
+    const value = event.target.value;
+    // this.caseCreationForm.get('endorsementType').reset();
     this.caseCreationForm.get('asignedTeam').reset();
     this.caseCreationForm.get('asignedTeam').setValue('Endorsement - Non financial');
     this.caseCreationForm.get('endorsementDetails').reset();
@@ -387,7 +391,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
   _removealphabets(value: any) {
     return value.replace(/[^\d.-]/g, '');
   }
-  endorsementChange(value:any) {
+  endorsementChange(event:any) {
+    const value = event.target.value;
     // this.caseCreationForm.get('endorsementDetails').setValue("");
     this.caseCreationForm.get('endorsementDetails').reset();
     this.caseCreationForm.get('addNotes').reset();
@@ -722,9 +727,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       fileExt = this.selectedFile.name.replace(/^.*\./, '');
       e.target.value = '';
     }
+    this.namesVariable = file.name;
+    this.documentType = file.type;
 
     if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png') {
       this.showNote = false;
+      this.showDocInfo = true;
     } else {
       this.showNote = true;
     }
@@ -839,9 +847,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     //   }
     // );
   }
-  meberIdChange(member:any) {
-    debugger;
-    console.log(member);
+  memberIdChange(event:any) {
+    const member = event.target.value;
     this.selectedMember = this.policies.find((obj:any) => {
       return obj.memberid === member;
     });
@@ -950,4 +957,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
   onOtpChange(data:any,count:any){
 
   }
+ 
+  deleteFile() {
+    this.namesVariable = "";
+    this.documentType = "";
+    this.showDocInfo = false;
+  }
+  
 }
