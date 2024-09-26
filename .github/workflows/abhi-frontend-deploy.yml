@@ -156,15 +156,15 @@ jobs:
       run: |
         echo "Generated version: ${{ env.VERSION }}"
 
-    - name: Commit updated version.txt back to repository
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add version.txt
-        git commit -m "Update version to ${{ env.VERSION }}"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Commit updated version.txt back to repository
+    #   run: |
+    #     git config --global user.name "github-actions[bot]"
+    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    #     git add version.txt
+    #     git commit -m "Update version to ${{ env.VERSION }}"
+    #     git push
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create deployment directory on VM with version
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}')) { New-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}' -ItemType Directory }\""
@@ -233,6 +233,55 @@ jobs:
   
     - name: Deploy application on IIS
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\bancaassurance-frontend' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+    
+    # After successful deployment, update version.txt and commit it
+    - name: Commit and push updated version.txt after successful deployment
+      if: ${{ success() }}
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Update the version in version.txt
+        echo "${{ env.VERSION }}" > version.txt
+        
+        # Commit and push the changes
+        git add version.txt
+        git commit -m "Update version to ${{ env.VERSION }}"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure GITHUB_TOKEN is available
+
+    - name: Set environment variable based on branch
+      run: |
+        branch_name="${GITHUB_REF#refs/heads/}" # Strip out 'refs/heads/' from branch name
+        environment=${branch_name}
+        if [ "$environment" == "main" ]; then
+          environment="prod"
+        fi
+        echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
+
+    - name: Tag the commit
+      if: ${{ success() }}  # Only tag if the workflow is successful
+      run: |
+        TAG="${{ env.ENVIRONMENT }}-v${{ env.VERSION }}"
+        git tag $TAG
+        git push origin $TAG
+
+    # Tag the commit with the environment and version after successful deployment
+    # - name: Tag the release
+    #   if: ${{ success() }}
+    #   run: |
+    #     ENVIRONMENT="dev"  # Change this value dynamically for each environment (dev, uat, prod)
+    #     TAG_NAME="${ENVIRONMENT}-${{ env.VERSION }}"
+        
+    #     # Create a new tag
+    #     git tag -a "$TAG_NAME" -m "Deployed $TAG_NAME"
+        
+    #     # Push the tag to the repository
+    #     git push origin "$TAG_NAME"
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
     # - name: Convert slashes in WEB_ROOT path
     #   id: convert-path
     #   run: |
