@@ -16,7 +16,7 @@ import { LoginService } from 'src/app/services/login.service';
 export class QuoteProductsComponent implements OnInit {
 
   stylesList: any[] = [];
-  private formData: any = {}
+  formData: any = {}
   private allJsonFormData: any[] = []
 
   proposalNum: any;
@@ -97,8 +97,8 @@ export class QuoteProductsComponent implements OnInit {
     // })
     console.log(reqData);
     this.spinner.show();
-    this.service.Getproductlist3({}).subscribe({
-    // this.service.Getproductlist2(reqData).subscribe({
+    // this.service.Getproductlist3({}).subscribe({
+    this.service.Getproductlist2(reqData).subscribe({
       next: (res) => {
         this.spinner.hide();
         console.log(res)
@@ -320,6 +320,12 @@ export class QuoteProductsComponent implements OnInit {
   showOverlay(i:any) {
     this.isOverlayVisible = true;
     this.popIndex=i
+
+    const selectedAddons = this.ProductList[this.popIndex].selectedAddon || [];
+    this.ProductList[this.popIndex].productFeatures.forEach((addon: any) => {
+      addon.isSelected = selectedAddons.includes(addon.featureName);
+    });
+
   }
   // onCheckboxChange(event: any, featureName: string) {
   //   if (event.target.checked) {

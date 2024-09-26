@@ -100,7 +100,7 @@ export class GetQuoteComponent {
       "value": "Self",
       "name": "Self",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_self.png",
+      "imagePath": "assets/images/icon_member_self.png",
       "age": null,
       "dob": "",
       "gender": "M"
@@ -110,7 +110,7 @@ export class GetQuoteComponent {
       "value": "Spouse",
       "name": "Spouse",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_spouse.png",
+      "imagePath": "assets/images/icon_member_spouse.png",
       "age": null,
       "dob": "",
       "gender": "F"
@@ -120,7 +120,7 @@ export class GetQuoteComponent {
       "value": "Mother",
       "name": "Mother",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_spouse.png",
+      "imagePath": "assets/images/icon_member_spouse.png",
       "age": null,
       "dob": "",
       "gender": "F"
@@ -130,7 +130,7 @@ export class GetQuoteComponent {
       "value": "Father",
       "name": "Father",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_father.png",
+      "imagePath": "assets/images/icon_member_father.png",
       "age": null,
       "dob": "",
       "gender": "M"
@@ -140,7 +140,7 @@ export class GetQuoteComponent {
       "value": "Mother-In-Law",
       "name": "Mother-In-Law",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_spouse.png",
+      "imagePath": "assets/images/icon_member_spouse.png",
       "age": null,
       "dob": "",
       "gender": "F"
@@ -150,7 +150,7 @@ export class GetQuoteComponent {
       "value": "Father-In-Law",
       "name": "Father-In-Law",
       "isIncrement": false,
-      "imagePath": "../../../../assets/images/icon_member_father.png",
+      "imagePath": "assets/images/icon_member_father.png",
       "age": null,
       "dob": "",
       "gender": "M"
@@ -160,7 +160,7 @@ export class GetQuoteComponent {
       "value": "Son",
       "name": "Son",
       "isIncrement": true,
-      "imagePath": "../../../../assets/images/icon_member_son.png",
+      "imagePath": "assets/images/icon_member_son.png",
       "age": null,
       "dob": "",
       "gender": "M"
@@ -170,7 +170,7 @@ export class GetQuoteComponent {
       "value": "Daughter",
       "name": "Daughter",
       "isIncrement": true,
-      "imagePath": "../../../../assets/images/icon_member_daughter.png",
+      "imagePath": "assets/images/icon_member_daughter.png",
       "age": null,
       "dob": "",
       "gender": "F"
@@ -238,7 +238,7 @@ export class GetQuoteComponent {
       this.selectedRelationships.forEach((selectedRelation: any) => {
         if (selectedRelation.name == relation.name) {
           selectedRelation.age = age;
-          selectedRelation.dob = new Date(dob).toLocaleDateString('en-GB').split('/').join('-');
+          selectedRelation.dob = dob;
           console.log(selectedRelation);
         }
       })

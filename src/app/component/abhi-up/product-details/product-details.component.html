@@ -1,14 +1,14 @@
 <div class="main-container">
     <div class="cardItem box">
         <div class="product-item">
-            <img src="../../../../assets/logo/activeOne.svg">
+            <img src="assets/logo/activeOne.svg">
             {{state.productName}}
         </div>
         <!-- <p>{{state.productDescription}}</p> -->
         <div class="key" >
           <div *ngFor="let key of state.keyFeatures">
               <div class="keypoint">
-                  <img src="../../../../assets/logo/keypoint.svg">
+                  <img src="assets/logo/keypoint.svg">
                   {{ key }}
               </div>
           </div>
@@ -64,7 +64,7 @@
                       </li> -->
                       <div class="key">
                         <div *ngFor="let feature of section.value" class="keypoint">
-                          <img src="../../../../assets/logo/greenpoint.svg" alt="checkmark" class="icon">
+                          <img src="assets/logo/greenpoint.svg" alt="checkmark" class="icon">
                           <div class="feature-text">
                             {{ feature.featureName }}
                           </div>

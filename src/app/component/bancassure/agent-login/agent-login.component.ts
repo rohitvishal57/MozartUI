@@ -65,7 +65,7 @@ export class AgentLoginComponent implements OnInit{
       map(value => this._filter(value || '')),
     );
     
-    this.backgroundImageUrl = "common.baseCssUrl + 'assets/logo/Backgroundimage_ABHI.jpg'"; 
+    this.backgroundImageUrl = "assets/logo/Backgroundimage_ABHI.jpg"; 
     localStorage.clear()
     sessionStorage.clear()
     this.loginForm = this.fb.group({

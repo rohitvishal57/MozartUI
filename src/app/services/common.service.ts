@@ -303,7 +303,7 @@ export class CommonService {
     return this.http.post<any>(`${this.yatraUrl}getPinCode`, pinCode, { 'headers': headers });
   }
   getPinCodeByCity(response: any) {
-    const PinCodeByCity = this.configService.config.baseUrl + this.configService.config.pincodedetails;
+    const PinCodeByCity = this.configService.config.baseUrl + this.configService.config.pinCodeDetails;
     return this.http.get<any>(`${PinCodeByCity}?pincode=${response}`);
   }
 
@@ -348,7 +348,7 @@ export class CommonService {
   }
 
   getAddOnPremium(reqData: any){
-    const  CalculateAddonValue = this.configService.config.baseUrl + this.configService.config.CalculateAddonValue;
+    const  CalculateAddonValue = this.configService.config.baseUrl + this.configService.config.calculateAddOnValue;
     return this.http.post<any>(CalculateAddonValue,reqData);
   }
 
@@ -383,6 +383,7 @@ export class CommonService {
 
   getSalutation(){
     const  Salutation = this.configService.config.baseUrl + this.configService.config.getSalutation;
+    console.log(Salutation);
     return this.http.get<any>(Salutation);
   }
 
@@ -407,11 +408,11 @@ export class CommonService {
   }
 
   getHalfQuote(reqData: any){
-    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.GetHalfQuote;
+    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
     return this.http.post<any>(GetHalfQuote,reqData);
   }
   getFullQuote(reqData: any){
-    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.GetHalfQuote;
+    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
     return this.http.post<any>(GetHalfQuote,reqData);
   }
   getInsurerData(){
@@ -420,15 +421,15 @@ export class CommonService {
   }
    //yatra
    Getform(reqData:any){
-    const getform = this.configService.config.baseUrl + this.configService.config.getform
+    const getform = this.configService.config.baseUrl + this.configService.config.getForm
     return this.http.post<any>(getform,reqData)
   }
   Getproductdetailsandfeatures(reqData:any){
-    const  getproductdetailsandfeatures = this.configService.config.baseUrl + this.configService.config.getproductdetailsandfeatures;
+    const  getproductdetailsandfeatures = this.configService.config.baseUrl + this.configService.config.getProductDetailsAndFeatures;
     return this.http.post<any>(getproductdetailsandfeatures,reqData)
   }
   Insertorupdatejourneydetails(reqData:any){
-    const  insertorupdatejourneydetails = this.configService.config.baseUrl + this.configService.config.insertorupdatejourneydetails;
+    const  insertorupdatejourneydetails = this.configService.config.baseUrl + this.configService.config.insertOrUpdateJourneyDetails;
     return this.http.post<any>(insertorupdatejourneydetails,reqData)
   }
   Insertorupdateformconfig(reqData:any){
@@ -438,24 +439,24 @@ export class CommonService {
     return this.http.post<any>(`${this.yatraUrl}api/`,reqdata)
   }
   Insertorupdateformdata(reqdata:any){
-    const  insertorupdateformdata = this.configService.config.baseUrl + this.configService.config.insertorupdateformdata;
+    const  insertorupdateformdata = this.configService.config.baseUrl + this.configService.config.insertOrUpdateFormData;
     return this.http.post<any>(insertorupdateformdata,reqdata)
   }
   GetProposerRelationships(reqData:any){
-    const  GetProposerRelationships = this.configService.config.baseUrl + this.configService.config.GetProposerRelationships;
+    const  GetProposerRelationships = this.configService.config.baseUrl + this.configService.config.getProposerRelationships;
     return this.http.post<any>(GetProposerRelationships,reqData)
   }
 
   getProposalNumber() {
-    const proposalnumber = this.configService.config.baseUrl + this.configService.config.proposalnumber;
+    const proposalnumber = this.configService.config.baseUrl + this.configService.config.proposalNumber;
     return this.http.get<any>(proposalnumber);
   }
   Getproductlist(reqData:any){
-    const productList = this.configService.config.baseUrl + this.configService.config.productlist;
+    const productList = this.configService.config.baseUrl + this.configService.config.productList;
     return this.http.post<any>(productList,reqData)
   }
   Getproductlist2(reqData:any){
-    return this.http.post<any>(`https://localhost:7188/api/quote/getquotefortopsellingproducts`,reqData)
+    return this.http.post<any>(`https://localhost:7188/api/getquotefortopsellingproducts`,reqData)
   }
   Getproductlist3(reqData:any){
     return of(this.getproduct)
@@ -464,7 +465,22 @@ export class CommonService {
   //   return this.http.post<any>(`https://1762f1a5-b8b1-464d-bd9b-f0d6529b1304.mock.pstmn.io/Getproductlist3`,reqData)
   // }
   Getformsequence(reqData:any){
-    const formSequence = this.configService.config.baseUrl + this.configService.config.formsequence;
+    const formSequence = this.configService.config.baseUrl + this.configService.config.formSequence;
     return this.http.post<any>(formSequence,reqData)
+  }
+
+  GetSingleProductQuote(reqData:any){
+    const singleProductQuote=this.configService.config.baseUrl+this.configService.config.getSingleProductQuote;
+    return this.http.post<any>(singleProductQuote,reqData);
+  }
+
+  GetKycDetails(reqData:any){
+    // const kycDetails=this.configService.config.baseUrl+this.configService.config.GetKycDetails;
+    return this.http.post<any>(`https://localhost:7188/api/getkycdetails`,reqData);
+  }
+
+  GetCustomerDetailsViaPolicyNumber(reqData:any){
+    const policyNumber=this.configService.config.baseUrl+this.configService.config.getPolicyNumberDetails;
+    return this.http.post<any>(policyNumber,reqData);
   }
 }

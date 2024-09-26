@@ -287,7 +287,7 @@
                         <input type="checkbox" [formControlName]="option.value" id="{{option.value}}"
                           (change)="logSelection($event, option, control)">
                         <label for="{{option.value}}" class="custom-checkbox">
-                          <img [src]="service.baseCssUrl + option.imagePath" alt="{{option.label}}">
+                          <img [src]="option.imagePath" alt="{{option.label}}">
                           <span>{{option.value?(option.value|translate):''}}</span>
                         </label>
                         <input *ngIf="option.isIncrement" type="button" (click)="incrementMember($event,control,option)"
@@ -710,7 +710,7 @@
 
                 <div *ngIf="control.type == 'image'">
                   <div *ngFor="let image of control.images" class="{{control.class}}">
-                    <img class="img1Popup" [src]="service.baseCssUrl + image.src" alt="{{image.alt}}"
+                    <img class="img1Popup" [src]="image.src" alt="{{image.alt}}"
                       width="{{image.width}}" height="{{image.height}}">
                   </div>
                 </div>

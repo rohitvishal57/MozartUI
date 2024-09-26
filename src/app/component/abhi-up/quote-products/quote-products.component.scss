@@ -616,6 +616,26 @@
                 background-color: rgb(255, 255, 255);
                 padding: 16px;
                 gap: 16px;
+                
+                .cart-info-container {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                  }
+                  
+                  .proposer-info, .mobile-info {
+                    display: flex;
+                    flex-direction: column;
+                  }
+                  
+                  .proposer-info h5, .mobile-info h5 {
+                    margin: 0;
+                    font-weight: bold;
+                  }
+                  
+                  .proposer-info p, .mobile-info p {
+                    margin: 0;
+                  }
 
                 .product-header {
                     display: flex;

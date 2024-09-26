@@ -1331,7 +1331,7 @@ export class AbhiDynamicFormComponent {
 
         // Example logic specific to 'getProposerRelationship'
         if (methodName === 'getProposerRelationship') {
-          console.log("blehhhh");
+          console.log("Proposer Relationship");
         }
       } catch (error) {
         console.error(`Error in method ${methodName}:`, error);
@@ -3493,4 +3493,69 @@ export class AbhiDynamicFormComponent {
 
     this.isOverlayVisible = true;
   }
+
+  verifyKYC() {
+    const proposerDOB = this.dynamicFormGroup.get('memberDobProposer')?.value;
+    const panNumber = this.dynamicFormGroup.get('panNo')?.value; 
+  
+    const reqData = {
+      dateOfBirth: proposerDOB,
+      panNumber: panNumber
+    };
+    console.log(reqData);
+
+    this.spinner.show();
+  
+    this.service.GetKycDetails(reqData).subscribe({
+      next: (response:any) => {
+        console.log('KYC details:', response);
+        this.toast.success({detail:"SUCCESS", summary:"KYC Details Fetched Successfully", duration:3000});
+        this.spinner.hide();
+        if (typeof response.data === 'object' && response.data !== null) {
+          Object.keys(response.data).forEach((key:any)=>{
+              this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+          })
+        } else {
+          console.error('Expected response.data to be an object, but received:', response.data);
+        }
+      },
+      error: (error) => {
+        this.spinner.hide();
+        this.toast.warning({ detail: "WARNING", summary: "Failed to fetch KYC Details", duration: 3000 });
+        console.error('Error fetching KYC details:', error);
+      }
+    });
+  }
+
+  getPolicyDetails() {
+    const policyNumberDetails = this.dynamicFormGroup.get('policyNumber')?.value;
+  
+    const reqData = {
+      policyNumber: policyNumberDetails
+    };
+    console.log(reqData);
+
+    this.spinner.show();
+  
+    this.service.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
+      next: (response:any) => {
+        console.log('Policy details:', response);
+        this.toast.success({detail:"SUCCESS", summary:"Policy Details Fetched Successfully", duration:3000});
+        this.spinner.hide();
+        if (typeof response.data === 'object' && response.data !== null) {
+          Object.keys(response.data).forEach((key:any)=>{
+              this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+          })
+        } else {
+          console.error('Expected response.data to be an object, but received:', response.data);
+        }
+      },
+      error: (error) => {
+        this.spinner.hide();
+        this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
+        console.error('Error fetching Policy details:', error);
+      }
+    });
+  }
+  
 }

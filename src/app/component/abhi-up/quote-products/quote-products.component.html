@@ -14,14 +14,14 @@
                             <div class="cardItem box">
                                 <!-- {{ item | json}}  -->
                                 <div class="product-item">
-                                    <img src="../../../../assets/logo/activeOne.svg">
+                                    <img src="assets/logo/activeOne.svg">
                                     {{item.productName}}
                                 </div>
                                 <!-- <p>{{item.productDescription}}</p> -->
                                 <div class="key">
                                     <div *ngFor="let key of item.keyFeatures">
                                         <div class="keypoint">
-                                            <img src="../../../../assets/logo/keypoint.svg">
+                                            <img src="assets/logo/keypoint.svg">
                                             {{ key }}
                                         </div>
                                     </div>
@@ -118,6 +118,7 @@
                                                 <label for="{{addon.featureName}}" class="add-checkbox">
                                                     <input type="checkbox" [value]="addon.featureName"
                                                         id="{{addon.featureName}}"
+                                                        [checked]="addon.isSelected"
                                                         (change)="onCheckboxChange($event, addon,i)" />
                                                     <span>{{addon.featureName}}</span>
                                                 </label>
@@ -138,12 +139,12 @@
                                 <div class="product-button">
                                     <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
                                     <button class="get" (click)="addToCart(item)">
-                                        <img src="../../../../assets/images/trolley1.svg" alt="">
+                                        <img src="assets/images/trolley1.svg" alt="">
                                         Add to Cart
                                     </button>
                                     <button class="get1" (click)="showOverlay(i)">View Recommended Add-Ons</button>
                                     <button class="get2">
-                                        <img src="../../../../assets/images/left-and-right-arrows1.svg" alt="">
+                                        <img src="assets/images/left-and-right-arrows1.svg" alt="">
                                         Add to Compare
                                     </button>
                                 </div>
@@ -166,7 +167,7 @@
         <div class="cardItem box " [ngClass]="{'center-elements': cartProductList.length === 0}">
             <div *ngIf="cartProductList.length == 0" class="no-product">
                 <!-- <div> -->
-                <img src="./../../../../assets/images/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
+                <img src="assets/images/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
                 <p class="no-prod-para">No product added in the cart</p>
                 <!-- </div> -->
             </div>
@@ -176,15 +177,25 @@
                 </div> -->
                 <div *ngFor="let item of cartProductList; let i = index">
                     <div class="cart-cardItem">
+                        <div class="cart-info-container">
+                            <div class="proposer-info">
+                              <h5>Proposer Name:</h5>
+                              <p>{{formData.proposerName}}</p>
+                            </div>
+                            <div class="mobile-info">
+                              <h5>Mobile Number:</h5>
+                              <p>{{formData.mobileNumber}}</p>
+                            </div>
+                          </div>
                         <div class="product-header">
-                            <div class="cart-productText"><img src="../../../../assets/logo/activeOne.svg"
+                            <div class="cart-productText"><img src="assets/logo/activeOne.svg"
                                     class="cart-productImage"> {{item.productName}}</div>
                             <input type="button" class="product-remove-btn" value="Remove" (click)="removeFromCart(i)">
                         </div>
                         <div class="product-features">
                             <div *ngFor="let key of item.keyFeatures">
                                 <div class="feature-element">
-                                    <img src="./../../../../assets/images/Frame2.svg" alt="">
+                                    <img src="assets/images/Frame2.svg" alt="">
                                     <div class="feature"> {{ key }}</div>
                                 </div>
                             </div>
@@ -208,7 +219,7 @@
                             <div class="add-container">
                                 <ng-container *ngFor="let addon of item.selectedAddon">
                                     <div class="add-box">
-                                        <img src="./../../../../assets/logo/greenpoint.svg" alt="">
+                                        <img src="assets/logo/greenpoint.svg" alt="">
                                         <div class="add-text">
                                             {{addon}}
                                         </div>
@@ -217,7 +228,7 @@
                             </div>
                         </div>
                         <div class="quick-tip">
-                            <img src="./../../../../assets/images/lightbulb.svg" alt="">
+                            <img src="assets/images/lightbulb.svg" alt="">
                             Premium might increase based on the addOns.
                         </div>
                         <!-- <div class=""> -->
@@ -243,7 +254,7 @@
   [fullScreen]="true"
 >
   <div class="simple-loader">
-    <img src="../../../../assets/Loader.gif" alt="Loading..." style="width: 700px; height: 500px;" />
+    <img src="assets/Loader.gif" alt="Loading..." style="width: 700px; height: 500px;" />
     <p>Loading...</p>
   </div>
 </ngx-spinner> -->

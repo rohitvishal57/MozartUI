@@ -23,11 +23,11 @@ export class LoginService {
   }
 
   Getagentcartdetails(reqData:any){
-    const agentcartdetails = this.configService.config.baseUrl + this.configService.config.agentcartdetails 
+    const agentcartdetails = this.configService.config.baseUrl + this.configService.config.agentCartDetails 
     return this.http.post<any>(agentcartdetails,reqData);
   }
   Insertorupdateagentcartdetails(reqData: any) {
-    const insertorupdateagentcartdetails = this.configService.config.baseUrl + this.configService.config.insertorupdateagentcartdetails
+    const insertorupdateagentcartdetails = this.configService.config.baseUrl + this.configService.config.insertOrUpdateAgentCartDetails
     return this.http.post<any>(insertorupdateagentcartdetails, reqData);
   }
 

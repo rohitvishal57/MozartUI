@@ -24,14 +24,14 @@
     "getpolicyinfodetails":"claims/api/getpolicyinfodetails",
 
 
-    "agentcartdetails":"quote/api/getagentcartdetails",
-    "insertorupdateagentcartdetails":"quote/api/insertorupdateagentcartdetails",
-    "productlist":"yatra/api/getproductlist",
-    "pincodedetails":"yatra/api/getpincodedetails",
-    "proposalnumber":"yatra/api/getproposalnumber",
-    "formsequence":"yatra/api/getformsequence",
-    "getform":"yatra/api/getform",
-    "getsalutation":"yatra/Agent/getSalutation",
+    "agentCartDetails":"quote/api/getagentcartdetails",
+    "insertOrUpdateAgentCartDetails":"quote/api/insertorupdateagentcartdetails",
+    "productList":"yatra/api/getproductlist",
+    "pinCodeDetails":"yatra/api/getpincodedetails",
+    "proposalNumber":"yatra/api/getproposalnumber",
+    "formSequence":"yatra/api/getformsequence",
+    "getForm":"yatra/api/getform",
+    "getSalutation":"yatra/Agent/getSalutation",
     "getNatureOfWork":"yatra/Agent/GetNatureOfWork",
     "getInsurerData":"yatra/Agent/GetInsurerData",
     "getOccupation":"yatra/Agent/getOccupation",
@@ -46,11 +46,14 @@
     "getBankCity":"",
     "getBranchDetails":"",
     "getRelationship":"yatra/Agent/getRelationship",
-    "GetProposerRelationships":"yatra/Agent/GetProposerRelationships",
-    "insertorupdateformdata":"yatra/api/insertorupdateformdata",
-    "insertorupdatejourneydetails":"yatra/api/insertorupdatejourneydetails",
-    "CalculateAddonValue":"yatra/Agent/CalculateAddonValue",
-    "GetHalfQuote":"yatra/api/gethalfquote",
-    "getproductdetailsandfeatures":"yatra/api/getproductdetailsandfeatures"
+    "getProposerRelationships":"yatra/Agent/GetProposerRelationships",
+    "insertOrUpdateFormData":"yatra/api/insertorupdateformdata",
+    "insertOrUpdateJourneyDetails":"yatra/api/insertorupdatejourneydetails",
+    "calculateAddOnValue":"yatra/Agent/CalculateAddonValue",
+    "getHalfQuote":"yatra/api/gethalfquote",
+    "getProductDetailsAndFeatures":"yatra/api/getproductdetailsandfeatures",
+    "getSingleProductQuote":"https://localhost:7188/api/getquoteforsingleproduct",
+    "getKycDetails":"https://localhost:7188/api/getkycdetails",
+    "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails"
 
 }
