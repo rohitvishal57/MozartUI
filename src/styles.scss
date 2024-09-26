@@ -598,7 +598,7 @@ button {
   color: var(--text-black-2e);
 }
 
-.btn_quickFilter:hover, .btn_quickFilter.active {
+.btn_quickFilter:hover,.btn_quickFilter.active {
   background: var(--site-pink);
   border: 1px solid var(--primary-red-color);
   color: var(--text-dark-red);

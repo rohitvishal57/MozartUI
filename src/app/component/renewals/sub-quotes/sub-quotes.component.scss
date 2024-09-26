@@ -1,0 +1,12 @@
+.tableSubMain .table thead tr, .tableSubMain .table thead tr th,
+.tableSubMain .table tbody td {
+  background: transparent;
+}
+.tableSubMain .table td {
+  font-size: 10px;
+  vertical-align: top;
+  color: #2e2e2e;
+}
+.tableSubMain .table .base_quoteRow td {
+    background: var(--site-basequote-bg) !important;
+}

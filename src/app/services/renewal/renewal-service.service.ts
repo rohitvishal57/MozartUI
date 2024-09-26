@@ -7,15 +7,12 @@ import { ConfigService } from '../../config.service';
   providedIn: 'root'
 })
 export class RenewalServiceService { 
-  // Define BehaviorSubject with an initial value
   private stateSource = new BehaviorSubject<{ button: string, value?: any }>({ button: 'primary' });
   state$ = this.stateSource.asObservable();
 
-  // Initialize policyNo BehaviorSubject with a default value (for example, 0 or any initial number)
   private policyNo = new BehaviorSubject<{ policyNo: string }>({ policyNo: "" });
   policy$ = this.policyNo.asObservable();
 
-  // Add a BehaviorSubject to store the renewal info
   private renewalInfoSource = new BehaviorSubject<any>(null); // Initially set to null
   renewalInfo$ = this.renewalInfoSource.asObservable();
 

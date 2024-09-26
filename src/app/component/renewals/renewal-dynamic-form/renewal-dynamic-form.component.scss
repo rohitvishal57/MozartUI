@@ -493,8 +493,7 @@ border-radius: 16px;
 display: flex;
 flex-direction: column;
 width: 100%;
-height: 570px;
-gap: 32px;
+gap: 17px;
 }
 .modal-dialog .modal-content .modal-body .room-update-details-cnt .room-update-title {
 width: 100%;
@@ -623,7 +622,7 @@ color: #4c4c4c;
 display: flex;
 flex-direction: column;
 width: 100%;
-height: 342px;
+// height: 342px;
 gap: 16px;
 }
 .modal-dialog .modal-content .modal-body .room-update-details-cnt .room-upgrade-benefits-cnt .room-upgrade-benefits-title {
@@ -640,7 +639,7 @@ color: #000;
 display: flex;
 flex-direction: column;
 width: 100%;
-height: 302px;
+// height: 302px;
 gap: 8px;
 }
 .modal-dialog .modal-content .modal-body .room-update-details-cnt .room-upgrade-benefits-cnt .upgrade-rooms-list .upgrade-rooms {
@@ -713,11 +712,10 @@ color: #000;
 display: flex;
 align-items: center;
 width: 100%;
-height: 56px;
-padding: 16px;
+// height: 56px;
+padding: 5px 16px;
 gap: 10px;
 border-radius: 14px;
-border: 1px solid #e6e6e6;
 }
 .modal-dialog .modal-content .modal-body .room-update-details-cnt .room-upgrade-benefits-cnt .upgrade-rooms-list .no-need-upgrade .plan-radio {
 margin-right: 10px;
@@ -1022,7 +1020,7 @@ background: #f1f3f6;
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 316px;
+  // height: 316px;
   border-radius: 16px;
   gap: 22px;
   background-color: #fff;
@@ -1049,7 +1047,7 @@ background: #f1f3f6;
   flex-wrap: nowrap;
   overflow-x: auto;
   width: 100%;
-  height: 236px;
+  // height: 236px;
   padding: 0px 16px 24px 16px;
   gap: 24px;
   align-items: flex-start;
@@ -1095,7 +1093,7 @@ background: #f1f3f6;
   flex-direction: column;
   border-radius: 16px;
   width: 100%;
-  height: 513px;
+  // height: 513px;
   gap: 22px;
   background-color: #fff;
   }
@@ -1122,7 +1120,7 @@ background: #f1f3f6;
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  height: 433px;
+  // height: 433px;
   padding: 0px 16px 24px 16px;
   gap: 24px;
   overflow-x: auto;
@@ -1131,7 +1129,7 @@ background: #f1f3f6;
   display: flex;
   flex-direction: column;
   width: 47%;
-  height: 244px;
+  // height: 244px;
   padding: 12px;
   gap: 4px;
   border-radius: 16px;
