@@ -42,6 +42,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   policyNumberValue: FormControl | any;
   policiesListDataValue: Observable<any[]> | any;
   policyNumberList:any = [123, 3345, 456456];
+  otp: string[] = ['', '', '', '', '', ''];  // Initialize OTP array
   endorseMentList: [
     {
       name: "Fresh";
@@ -687,7 +688,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   this.caseCreationForm.reset();
                   this.caseCreationForm.get('asignedTeam').setValue('Endorsement - Non financial');
                   this.selctedFileName = "";
-                  this._router.navigate(["/my-requests"]);
+                  this._router.navigate(["/new-request"]);
                 }
               });
             }
@@ -703,7 +704,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
   backToEndorsment() {
-    this._router.navigate(["/my-requests"]);
+    this._router.navigate(["/new-request"]);
   }
   initiateKyc() {
     console.log(this.caseCreationForm.value);
@@ -962,6 +963,30 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.namesVariable = "";
     this.documentType = "";
     this.showDocInfo = false;
+  }
+
+   // Handle key events for OTP input
+   onKey(event: KeyboardEvent, index: number) {
+    event.preventDefault();
+    const target = event.target as HTMLInputElement;
+
+    // Move to the next box when a number is entered
+    if (event.key >= '0' && event.key <= '9') {
+      this.otp[index] = event.key;  // Store digit
+      if (index < 5) {
+        const nextInput = document.getElementsByClassName('otp-input')[index+1] as HTMLInputElement;
+        nextInput.focus();
+      }
+    }
+
+    // Handle backspace
+    else if (event.key === 'Backspace') {
+      this.otp[index] = '';  // Clear current box
+      if (index > 0) {
+        const previousInput = document.getElementsByClassName('otp-input')[index-1] as HTMLInputElement;
+        previousInput.focus();
+      }
+    }
   }
   
 }
