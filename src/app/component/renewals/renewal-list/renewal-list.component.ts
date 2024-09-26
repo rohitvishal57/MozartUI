@@ -10,7 +10,6 @@ import { Subject } from "rxjs";
 import { MatMenuTrigger } from '@angular/material/menu';
 import { NgxSpinnerService } from "ngx-spinner";
 
-
 @Component({
   selector: 'app-renewal-list',
   templateUrl: './renewal-list.component.html',
@@ -54,7 +53,7 @@ export class RenewalListComponent {
   ) {}
 
   renewalLisRequestBody={
-    "agentCode": "5100003",
+    "agentCode": "",
     "proposer": "",
     "productName": "",
     "policyNumber": "",
@@ -68,15 +67,14 @@ export class RenewalListComponent {
   }
 
   ngOnInit(): void {
-    // const storedAgentCode = localStorage.getItem('agentCode');
-    // if (storedAgentCode) {
-    //   this.renewalLisRequestBody.agentCode = storedAgentCode;
-    //   this.getRenewalsList();
-    // }
-    // else{
-    //   console.log("agent code is not present in local storege");
-    // }
-    this.getRenewalsList();
+    const storedAgentCode = localStorage.getItem('agentCode');
+    if (storedAgentCode) {
+      this.renewalLisRequestBody.agentCode = storedAgentCode;
+      this.getRenewalsList();
+    }
+    else{
+      console.log("agent code is not present in local storege");
+    }
     this.getProducts();
     this.route.queryParams.subscribe((params) => {
       this.showSubQuotes = params["showSubQuotes"] === "true";
@@ -158,7 +156,7 @@ export class RenewalListComponent {
     this.toggeledropdown = !this.toggeledropdown;    
   }
 
-  calculateAppliedFiltersCount(): number {
+  calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(
       (product) => product.selected).length;
     const selectedPolicyTypesCount = this.policyTypes.filter(
@@ -168,7 +166,7 @@ export class RenewalListComponent {
       count++;
     }
     this.appliedFiltersCount = count;
-    return this.appliedFiltersCount;
+     this.appliedFiltersCount;
   }
 
   applyFilter() {

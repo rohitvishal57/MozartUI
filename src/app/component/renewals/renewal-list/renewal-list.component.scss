@@ -49,9 +49,15 @@ h1, h2, h3, h4, h5, h6 {
 .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 {
     line-height: 16px;
 }
-::ng-deep .p-paginator{
+//pagination css start
+.tableNav .pagination {
+  flex-direction: column;
+
+  ::ng-deep .p-paginator{
     background-color: transparent;
-  }  ::ng-deep .p-paginator .p-paginator-page {
+  }  
+  
+  ::ng-deep .p-paginator .p-paginator-page {
     border-radius: 8px !important;
     font-family: Anek Latin;
     font-size: 14px;
@@ -110,9 +116,9 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center !important;
   }
   
-  ::ng-deep .my-paginator .p-dropdown-label {
-    text-align: center !important;
-  }
+  // ::ng-deep .my-paginator .p-dropdown-label {
+  //   text-align: center !important;
+  // }
   ::ng-deep .p-paginator .p-paginator-pages .p-paginator-page,
   ::ng-deep .p-paginator .p-paginator-first, 
   ::ng-deep .p-paginator .p-paginator-prev, 
@@ -125,23 +131,26 @@ h1, h2, h3, h4, h5, h6 {
   }
   ::ng-deep .p-paginator .p-dropdown {
     height: 32px;
+    width: fit-content;
   }
   ::ng-deep .p-dropdown .p-dropdown-trigger {
-	width:2rem;
-}
-::ng-deep .p-dropdown-label {
-	padding:0 0 0 10px !important;
-}
-::ng-deep .p-icon {
+    width:2rem;
+  }
+  ::ng-deep .p-dropdown-label {
+    padding:0 0 0 10px !important;
+  }
+  ::ng-deep .p-icon {
     width: 0.85rem;
     height: 0.85rem;
 }
 ::ng-deep .mat-mdc-menu-panel {
     overflow: hidden !important;
 }
-.tableNav .pagination {
- flex-direction: column;
-}
+ }
+ //pagination css end
+
+
+
 .form-floating>.form-control, 
 .form-floating>.form-control-plaintext, 
 .form-floating>.form-select {
@@ -153,6 +162,7 @@ h1, h2, h3, h4, h5, h6 {
 .btn_iconGrey img {
     float: left;
 }
+//star rating css start
 .star {
     width: 8px;    
     height: 8px;  
@@ -198,6 +208,8 @@ h1, h2, h3, h4, h5, h6 {
     background-color: lightgray; 
     border-color: lightgray; 
   }
+  //star rating css end
+
 
   .filterWraperForm {
     padding: 15px 24px;
