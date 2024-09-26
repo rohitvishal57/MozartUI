@@ -1128,7 +1128,7 @@
                 </div>
                 <div class="planProductQuote">
                     <div class="label">Base Quote/ incl tax</div>
-                    <div class="value">₹6,863</div>
+                    <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
                 </div>
                 <div class="planProductQuote">
                     <div class="label">Term</div>
@@ -1169,7 +1169,7 @@
                         </div>
                         <span>Use my Health Returns</span>
                     </span>
-                    <label class="value">₹600</label>
+                    <label class="value">₹{{renewalInfo?.response?.policyData[0]?.healthReturn}}</label>
                 </div>
             </div>
             <footer>
@@ -1178,12 +1178,13 @@
                     <label>₹8,361</label>
                 </div>
                 <button type="button" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
-                <button type="button" value="viewall" class="btn_iconText btn_viewAll">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
+                <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/portal/agent/subquotes']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
             </footer>
         </div>
         </div>
     </div>
     <div class="bottomInfoMain">
+        <div class="room-update" style="text-align: center;">RoomUpdate</div>
   <div class="bottomInfoSubMain">
      <div class="bi_left">
         <div class="planProductInfo">
@@ -1198,7 +1199,7 @@
         </div>
         <div class="planProductQuote">
            <div class="label">Total Premium/ incl tax</div>
-           <div class="value">₹6,863</div>
+           <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
         </div>
      </div>
      <div class="bi_right">
@@ -1228,7 +1229,7 @@
                               </div>
                               <div class="premium-details">
                                   <div class="premium-title">Total Premium/Incl tax</div>
-                                  <div class="premium">₹6,863</div>
+                                  <div class="premium">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
                               </div>
                           </div>
                           <div class="rooms">

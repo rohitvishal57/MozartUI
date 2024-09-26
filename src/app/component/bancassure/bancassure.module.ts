@@ -26,7 +26,7 @@ import { EndorsementsModule } from './endorsements/endorsements.module';
 import { AbhiDashboardComponent } from '../abhi-up/abhi-dashboard/abhi-dashboard.component';
 import { GetQuoteComponent } from '../abhi-up/get-quote/get-quote.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
-
+import { SubQuotesComponent } from '../renewals/sub-quotes/sub-quotes.component';
 @NgModule({
   declarations: [
     // Your components
@@ -56,7 +56,8 @@ export class AppModule { }
     RenewalListComponent,
     DatepipePipe,
     AbhiDashboardComponent,
-    GetQuoteComponent
+    GetQuoteComponent,
+    SubQuotesComponent
   ],
   imports: [
     CommonModule,
