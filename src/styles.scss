@@ -239,11 +239,11 @@ button {
 }
 
 .block-show {
-  display: block;
+  display: block !important;
 }
 
 .block-hide {
-  display: none;
+  display: none !important;
 }
 .detailsRow {
   gap: 12px;
@@ -873,6 +873,9 @@ button:disabled, .disabled {
 input:focus, select:focus, .form-control:focus {
   border: 1px solid var(--site-body-bg) !important;
   outline: none;
+}
+.form-control.is-invalid, .was-validated .form-control:invalid {
+  border-color: var(--site-body-bg) !important;
 }
 
 input:disabled, select:disabled, .input-block .input-textBox:disabled:hover, .input-block .input-selectBox:disabled:hover,
