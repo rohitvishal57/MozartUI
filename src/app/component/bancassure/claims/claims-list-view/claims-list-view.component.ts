@@ -67,17 +67,17 @@ onPageChange(event:any) {
 //---------API Call-------//
 claimsReqBody =  {
     "sellerId": localStorage.getItem('agentCode'),
-    "sortColumn": "RaisedDate",
+    "sortColumn": "ReportedDateTime",
     "sortdirection": "DESC",
     "status": "All",
-    "searchType": "",
-    "searchString": "",
+    "searchType": "string",
+    "searchString": "string",
     "pageNumber": 1,
-    "pageSize": 10
+    "pageSize": 10 
   }
 fetchData(): void {
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe(res => {
-    this.claims = res.data;   
+    this.claims = res.data;       
     this.gridClaimsData = res.data; 
     this.totalRecords = this.claims.length;    
   });
@@ -129,16 +129,15 @@ onSelectChanges(event: any): void {
   }
 
 getPlaceholder(): string {
-    if (this.selected === 'policyNumber') {
+  if (this.selected === 'policyNumber') {
       return 'Enter Policy Number';
     } else if (this.selected === 'productName') {
       return 'Enter Product Name';
     } else if (this.selected === 'requestType') {
       return 'Enter Request Type';
     }
-     else {
+  else {
       return 'Search...';
     }
-  }
-   
+  } 
 }
