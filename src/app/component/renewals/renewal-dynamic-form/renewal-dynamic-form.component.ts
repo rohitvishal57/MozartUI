@@ -79,69 +79,33 @@ export class RenewalDynamicFormComponent implements OnInit {
 
   //render forms
   initializeForm() {
-    const group: any = {};
-    Object.keys(this.formObject).forEach(key => {
-      group[key] = [this.formObject[key] || '']; // Apply validators dynamically if needed
+    const group: { [key: string]: any } = {}; 
+  
+    Object.keys(this.formObject).forEach((key: string) => {
+      const controlValue = this.formObject[key];
+  
+      if (controlValue instanceof Object && !(controlValue instanceof Array)) {
+        group[key] = this.fb.group(
+          Object.keys(controlValue).reduce((acc: { [nestedKey: string]: any }, nestedKey: string) => {
+            acc[nestedKey] = [controlValue[nestedKey]]; 
+            return acc;
+          }, {})
+        );
+      } else {
+        group[key] = [controlValue];
+      }
     });
-  
-    this.form = this.fb.group(group);
-    console.log('Dynamic form:', this.form);
+      this.form = this.fb.group(group);
+    console.log('Dynamic form:', this.form.value);
   }
   
-  selectButton(button: string, value?: any,content? : any) {
-    if (this.selectedButton === 'primary') {
-      if (value == 5005) {//edit address
-        if (this.renewalInfo?.response?.policyData?.length > 0) {
-          this.formObject = { ...this.renewalInfo.response.policyData[0].HomeAddress };
-          console.log('Existing address loaded:', this.formObject);
-        } this.initializeForm();
-        this.formId = value;
-      }else if (value == 5004) {//add nominee
-        if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
-          const nomineeDetails = this.renewalInfo.response.policyData[0].Nominee_Details;
-          this.formObject = {...nomineeDetails,
-            nominee_middle_name: nomineeDetails.nominee_middle_name || '',
-            nominee_mobile_number: nomineeDetails.nominee_mobile_number || '',
-            nominee_emergency_phone_number: nomineeDetails.nominee_emergency_phone_number || '',
-            nominee_email_address: nomineeDetails.nominee_email_address || ''
-          };
-          console.log('Existing address loaded:', this.formObject);
-        } else if (content === 'addNominee') {
-          this.formObject = Object.keys(this.renewalInfo.response.policyData[0].Nominee_Details)
-            .reduce((acc:any, key:any) => { acc[key] = ''; return acc; }, {});
-            this.formObject.nominee_middle_name = '';
-            this.formObject.nominee_mobile_number = '';
-            this.formObject.nominee_emergency_phone_number = '';
-            this.formObject.nominee_email_address = '';  
-        }
-        this.initializeForm();
-        this.formId = value;
-      }else if (value == 5003) {//edit member detail
-        this.formId = value;
-      }else if (value == 5002) {// add memeber
-        this.formId = value;
-      }else {
-        this.formId = 5001; //main
-      }
-    }else if (this.selectedButton === 'additional') {
-      this.policySummarys=false;
-    } 
-    else if (this.selectedButton == 'payment') {
-      if(value == 'policySummary'){
-        this.policySummarys=true
-      }
-      else{
-        this.policySummarys=false;
-      }
-    }
-    // this.proposerObject();
-  }
   
-  // proposerObject(){
-  //   this.renewalService.getRenewalInfo().subscribe((info) => {
-  //     if (info) {this.renewalInfo=info;}
-  //   }); 
-  // }
+  
+  proposerObject(){
+    this.renewalService.getRenewalInfo().subscribe((info) => {
+      if (info) {this.renewalInfo=info;}
+    }); 
+  }
 
   handleAction(event: string,item?: any) {
       switch (event) {
@@ -216,6 +180,83 @@ saveEmail() {
     this.isEditingEmail = false;
     this.emailSaved = true;
   }
+}
+selectButton(button: string, value?: any,content? : any) {
+  if (this.selectedButton === 'primary') {
+    if (value == 5005) {//edit address
+      if (this.renewalInfo?.response?.policyData?.length > 0) {
+        this.formObject = { ...this.renewalInfo.response.policyData[0].HomeAddress };
+        console.log('Existing address loaded:', this.formObject);
+      } this.initializeForm();
+      this.formId = value;
+    }else if (value == 5004) {//add nominee
+      if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
+        const nomineeDetails = this.renewalInfo.response.policyData[0].Nominee_Details;
+        this.formObject = {...nomineeDetails,
+          nominee_middle_name: nomineeDetails.nominee_middle_name || '',
+          nominee_mobile_number: nomineeDetails.nominee_mobile_number || '',
+          nominee_emergency_phone_number: nomineeDetails.nominee_emergency_phone_number || '',
+          nominee_email_address: nomineeDetails.nominee_email_address || ''
+        };
+        console.log('Existing address loaded:', this.formObject);
+      } else if (content === 'addNominee') {
+        this.formObject = Object.keys(this.renewalInfo.response.policyData[0].Nominee_Details)
+          .reduce((acc:any, key:any) => { acc[key] = ''; return acc; }, {});
+          this.formObject.nominee_middle_name = '';
+          this.formObject.nominee_mobile_number = '';
+          this.formObject.nominee_emergency_phone_number = '';
+          this.formObject.nominee_email_address = '';  
+      }
+      this.initializeForm();
+      this.formId = value;
+    }else if (value == 5003) {//edit member detail
+      this.formId = value;
+    }else if (value == 5002) {// add memeber
+      this.formObject = {
+        name: [''],
+        weight: [''],
+        heightft: [''],
+        heightin: [''],
+        gender: [''],
+        dob: [''],
+        idtype: [''],
+        air: [''],
+        occupation: [''],
+        education: [''],
+        
+        conditions: this.fb.group({
+          alcohol: [false],
+          tobacco: [false],
+          panmasala: [false],
+          smoking: [false],
+          other: [false],
+        }),
+      
+        healthConditions: this.fb.group({
+          highblood: [false],
+          asthma: [false],
+          diabetes: [false],
+        })
+      };
+      
+      this.initializeForm();
+      
+      this.formId = value;
+    }else {
+      this.formId = 5001; //main
+    }
+  }else if (this.selectedButton === 'additional') {
+    this.policySummarys=false;
+  } 
+  else if (this.selectedButton == 'payment') {
+    if(value == 'policySummary'){
+      this.policySummarys=true
+    }
+    else{
+      this.policySummarys=false;
+    }
+  }
+  this.proposerObject();
 }
 
 resendLink() {
