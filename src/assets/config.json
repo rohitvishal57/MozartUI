@@ -11,7 +11,7 @@
     "saveClaims":"claims/api/saveclaim",
     "uploadFiles":"claims/api/saveuploadfiledetails",
 
-    "partnerlogin":"auth/api/partnerlogin",
+    "partnerlogin":"auth/api/login",
     "getContactDetailsByAgentCode":"auth/api/getcontactdetailsbyagentcode",
     "sendotp":"auth/api/sendotp",
     "validateotp":"auth/api/validateotp",
@@ -20,6 +20,7 @@
     "getactivepolicynumbers":"claims/api/getactivepolicynumbers",
     "endorsementfileuploadtoomnidocs":"claims/api/endorsementfileuploadtoomnidocs",
     "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
+    "endorsementGetOTP":"api/endorsementsendotp",
     "getpolicyinfodetails":"claims/api/getpolicyinfodetails",
 
 
