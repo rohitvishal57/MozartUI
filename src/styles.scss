@@ -620,6 +620,19 @@ button {
   height: 20px;
     float: left;
 }
+.btn_icon {
+  background: #F9FAFB;
+  border-width: 0;
+  border-radius: 5px;
+  padding: 6px 6px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+}
+
+.btn_icon:hover {
+  background: #ffffff;
+}
 
 .btn_grid {
   background: var(--white-color);
@@ -799,6 +812,21 @@ button {
     box-shadow: -2px -12px 24px 15px #CECECE29;
     box-shadow: -2px -12px 24px 15px #CECECE29, 7px 15px 19px -9px #0000001C;
     display: none;
+}
+.btn_newRequest {
+  padding: 8px;
+  border-radius: 12px;
+  text-transform: capitalize;
+  font-weight: 600;
+  font-size: 14px;
+  color: #c7222a;
+  height: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn_newRequest:hover {
+    border: 1px solid #c7222a;
 }
 button:disabled, .disabled {
   background: #F1F3F6 !important;
@@ -3428,3 +3456,9 @@ input[type="search"]::-webkit-search-results-decoration {
   height: 18px;
 }
 /*Upload document start*/
+/*Table th,td space start*/
+.tableSubMain .table th, 
+.tableSubMain .table td {
+  padding: 8px 12px;
+}
+/*Table th,td space end*/
