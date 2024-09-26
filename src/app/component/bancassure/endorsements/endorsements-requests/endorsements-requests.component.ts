@@ -111,7 +111,7 @@ export class EndorsementsRequestsComponent implements OnInit {
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
       ]);
     }
-    else if (this.selected === "requestId") {
+    else if (this.selected === "EndorsementID") {
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
@@ -162,18 +162,15 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   applySearch() {
     if (this.searchInputControl.valid) {
-      if (this.selected === "requestId") {
-        this.requestsListRequestBody.sortColumn = "requestId";
-        this.requestsListRequestBody.searchColumn = "requestId";
+      if (this.selected === "EndorsementID") {
+        this.requestsListRequestBody.searchColumn = "EndorsementID";
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
       }
       else if (this.selected === "memberName") {
-        this.requestsListRequestBody.sortColumn = "memberName";
         this.requestsListRequestBody.searchColumn = "memberName";
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
       }
       else if (this.selected === "policyNumber") {
-        this.requestsListRequestBody.sortColumn = "policyNumber";
         this.requestsListRequestBody.searchColumn = "policyNumber";
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
       }

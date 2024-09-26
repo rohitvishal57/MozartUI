@@ -209,6 +209,18 @@
                             </div>
                           </div>
                           <!--Alternate number- member end-->
+                          <!--AInternational No start-->
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'internationalContactNumber'">
+                            <div class="input-block form-floating input-block-renew">
+                              <input class="form-control input-textBox" id="internationalContactNumber" placeholder="" formControlName="internationalContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'internationalContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['internationalContactNumber'].errors }">
+                              <label for="internationalContactNumber">International No</label>
+                              <span class="invalid-feedback" *ngIf="f['internationalContactNumber'].errors">
+                                <span class="ui-error block-show" *ngIf="f['internationalContactNumber'].errors['required']">Field cannot be blank</span>
+                                <span class="ui-error block-show" *ngIf="f['internationalContactNumber'].errors['pattern']">Enter valid number</span>
+                              </span>
+                            </div>
+                          </div>
+                          <!--International No end-->
 
                           <!--OPT Button start-->
                           <div class="col-xs-12 col-sm-4 col-lg-3 col-md-3 mb-30" *ngIf="showOtpSection">
@@ -287,377 +299,7 @@
           
         </div>
       </div>
-  </main>
-            <div class="create-endorsement-section-wrap">
-                <form (ngSubmit)="onSubmit()" [formGroup]="caseCreationForm" novalidate autocomplete="false">
-                    <div class="tab-leadDetailsBlock">
-                        <div id="LeadDet">
-
-                            <div class="mb-0">
-                                <div class="row mb-0">
-
-                                    <!-- Policy Number Selection -->
-                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 mb-30">
-                                        <label class="label label-height label-form-builder">Select Policy Number*</label>
-                                        <div class="col-12 search">
-                                            <!-- <input
-                                    class="cursor search-input-dropdown"
-                                    type="input"
-                                    placeholder="Search Policy Number"
-                                    formControlName="policyNumber"
-                                    autocomplete="off"
-                                    (input)="filterPolicyNumbers($event.target.value)"
-                                  /> -->
-                                            <select class="form-control option-form-builder" formControlName="policyNumber" (change)="onChange($event)">
-                                                <option value="" disabled selected>Search Policy Number</option>
-                                                <option *ngFor="let item of filteredActivity | async" [value]="item.policynumber">
-                                                    {{ item.policynumber }}
-                                                </option>
-                                                <option *ngIf="filteredActivity?.length === 0">No Record Found</option>
-                                            </select>
-                                            <div *ngIf="submitted && caseCreationForm.get('policyNumber').invalid" class="font-base text-brick error-form-build">
-                                                Please select a Policy Number
-                                            </div>
-                                        </div>
-                                    </div>
-                                      
-                                    <!-- Member Selection -->
-                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 mb-30">
-                                        <label class="label label-height label-form-builder">Select Member*</label>
-                                        <select class="form-control option-form-builder" formControlName="member" (change)="memberIdChange($event)">
-                                            <option value="" disabled selected>Select Member</option>
-                                            <option *ngFor="let opt of MemberIdList" [value]="opt.memberid">
-                                                {{ opt.membername }} ({{ opt.relationwithproposer }})
-                                            </option>
-                                        </select>
-                                        <div *ngIf="submitted && caseCreationForm.get('member').invalid" class="font-base text-brick error-form-build">
-                                            Please select a Member
-                                        </div>
-                                    </div>
-
-                                    <!-- Endorsement Type Selection -->
-                                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 mb-30">
-                                        <label class="label label-height label-form-builder">Endorsement Type*</label>
-                                        <select class="form-control option-form-builder" formControlName="endorsementType" (change)="endorsementChange($event)">
-                                            <option value="" disabled selected>Select Endorsement Type</option>
-                                            <option *ngFor="let opt of endorsementTypes" [value]="opt.value">
-                                                {{ opt.name }}
-                                            </option>
-                                        </select>
-                                        <div *ngIf="submitted && caseCreationForm.get('endorsementType').invalid" class="font-base text-brick error-form-build">
-                                            Please select Endorsement Type
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <div id="AddressDet">
-                            <!-- <h2 class="sub-title mb-30 font-weight-bold">Address</h2> -->
-                            <div class="mb-0">
-                                <div class="row mb-0">
-                                    <div class="col-xs-12 col-sm-4 col-lg-3 col-md-3 mb-30">
-                                        <label class="text-faded-gray text-capitalize label">Current Details in Policy:
-                                        </label>
-                                        <textarea formControlName="currentPolicyDetails" rows="4" cols="50" class="form-control text-area" style="height: 70px !important;" readonly></textarea>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-4 col-lg-9 col-md-9 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'ChangeinInternationalAddress'">
-                                        <label class="text-faded-gray text-capitalize label">New Address to be update:
-                                        </label>
-                                        <div>
-                                            <div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 mb-30">
-                                                <label class="label label-height label-form-builder">Address 1</label>
-                                                <input class="form-control option-form-builder" formControlName="address1" type="text" />
-                                            </div>
-                                            <div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 mb-30">
-                                                <label class="label label-height label-form-builder">Address 2</label>
-                                                <input class="form-control option-form-builder" formControlName="address2" type="text" />
-                                            </div>
-                                            <div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 mb-30">
-                                                <label class="label label-height label-form-builder">Pin Code</label>
-                                                <input class="form-control option-form-builder" formControlName="pincode" type="text" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div formGroupName="endorsementDetails">
-                                        <div class="col-xs-12 col-sm-4 col-lg-12 col-md-12 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'aadharNumber'">
-                                            <label class="text-faded-gray text-capitalize label">New Details to be update:
-                                            </label>
-                                            <div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-12 col-md-12 mb-30">
-                                                    <label class="label label-height label-form-builder">Aadhar card Number
-                                                    </label>
-                                                    <input class="form-control option-form-builder" formControlName="aadharNumber" type="tel" maxlength="12" minlength="12" (keydown)="onKeydown($event)" [ngClass]="{ 'is-invalid': submitted && f['aadharNumber'].errors }" />
-                                                    <div *ngIf="f['aadharNumber'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['aadharNumber'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['aadharNumber'].errors['pattern']">Enter valid number
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-xs-12 col-sm-4 col-lg-12 col-md-12 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'nomineeContact'">
-                                            <label class="text-faded-gray text-capitalize label">New Details to be update:
-                                            </label>
-                                            <div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 mb-30">
-                                                    <label class="label label-height label-form-builder">Nominee Name
-                                                    </label>
-                                                    <input class="form-control option-form-builder" formControlName="nomineeName" type="text" OnlyCharacter [ngClass]="{ 'is-invalid': submitted && f['nomineeName'].errors }" />
-                                                    <div *ngIf="f['nomineeName'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['nomineeName'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 mb-30">
-                                                    <label class="label label-height label-form-builder">Nominee Relationship
-                                                    </label>
-                                                    <input class="form-control option-form-builder" formControlName="nomineeRelationship" type="text" OnlyCharacter [ngClass]="{ 'is-invalid': submitted && f['nomineeRelationship'].errors }" />
-                                                    <div *ngIf="f['nomineeRelationship'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['nomineeRelationship'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 mb-30">
-                                                    <label class="label label-height label-form-builder">Nominee Contact
-                                                    </label>
-                                                    <input class="form-control option-form-builder" maxlength="10" minlength="10" formControlName="nomineeContact" type="tel" (keydown)="onKeydown($event)" [ngClass]="{ 'is-invalid': submitted && f['nomineeContact'].errors }" />
-                                                    <div *ngIf="f['nomineeContact'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['nomineeContact'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['nomineeContact'].errors['pattern']">Enter valid number
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-4 col-lg-12 col-md-12 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'panNumber'">
-                                            <label class="text-faded-gray text-capitalize label">New Details to be update:
-                                            </label>
-                                            <div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-12 col-md-12 mb-30">
-                                                    <label class="label label-height label-form-builder">Pancard Number
-                                                    </label>
-                                                    <input class="form-control option-form-builder" formControlName="panNumber" type="text" (keypress)="omit_special_char($event)" oninput="this.value = this.value.toUpperCase()" maxlength="10" minlength="10" [ngClass]="{ 'is-invalid': submitted && f['panNumber'].errors }"
-                                                    />
-                                                    <div *ngIf="f['panNumber'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['panNumber'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['panNumber'].errors['pattern']">Enter valid PAN number
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-4 col-lg-12 col-md-12 mb-30" *ngIf="showOtpSection">
-                                            <label class="text-faded-gray text-capitalize label">New Details to be update:
-                                            </label>
-                                            <div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-6 col-md-6 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'primaryContactNumber'">
-                                                    <label class="label label-height label-form-builder">Primary Number
-                                                    </label>
-                                                    <input class="form-control option-form-builder" formControlName="primaryContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'primaryContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['primaryContactNumber'].errors }"
-                                                    />
-                                                    <div *ngIf="f['primaryContactNumber'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['primaryContactNumber'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['primaryContactNumber'].errors['pattern']">Enter valid number
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-9 col-md-9 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value === 'memberPrimaryContactNumber'">
-                                                    <label class="label label-height label-form-builder">Primary Registered Number- Member</label>
-                                                    <input class="form-control option-form-builder" formControlName="memberPrimaryContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'memberPrimaryContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['memberPrimaryContactNumber'].errors }"
-                                                    />
-                                                    <div *ngIf="f['memberPrimaryContactNumber'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['memberPrimaryContactNumber'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['memberPrimaryContactNumber'].errors['pattern']">Enter valid number
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-9 col-md-9 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value === 'memberAlternateContactNumber'">
-                                                    <label class="label label-height label-form-builder">Alternate number- member</label>
-                                                    <input class="form-control option-form-builder" formControlName="memberAlternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateContactNumber'].errors }"
-                                                    />
-                                                    <div *ngIf="f['memberAlternateContactNumber'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['memberAlternateContactNumber'].errors['required']">
-                                                            Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['memberAlternateContactNumber'].errors['pattern']">
-                                                            Enter valid number
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-6 col-md-6 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'internationalContactNumber'">
-                                                    <label class="label label-height label-form-builder">International No
-                                                    </label>
-                                                    <input class="form-control option-form-builder" formControlName="internationalContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'internationalContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['internationalContactNumber'].errors }"
-                                                    />
-                                                    <div *ngIf="f['internationalContactNumber'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['internationalContactNumber'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['internationalContactNumber'].errors['pattern']">Enter valid number
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-6 col-md-6 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'alternateContactNumber'">
-                                                    <label class="label label-height label-form-builder">Alternate No</label>
-                                                    <input class="form-control option-form-builder" formControlName="alternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'alternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['alternateContactNumber'].errors }"
-                                                    />
-                                                    <div *ngIf="f['alternateContactNumber'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['alternateContactNumber'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['alternateContactNumber'].errors['pattern']">Enter valid number
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-6 col-md-6 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'email'">
-                                                    <label class="label label-height label-form-builder">Email</label>
-                                                    <input class="form-control option-form-builder" formControlName="email" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'email')" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
-                                                    <div *ngIf="f['email'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['email'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['email'].errors['pattern']">Email must be a valid email address
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-6 col-md-6 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value == 'CorrectionintheemailID'">
-                                                    <label class="label label-height label-form-builder">Correction in the emailId</label>
-                                                    <input class="form-control option-form-builder" formControlName="CorrectionintheemailID" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'CorrectionintheemailID')" [ngClass]="{ 'is-invalid': submitted && f['CorrectionintheemailID'].errors }"
-                                                    />
-                                                    <div *ngIf="f['CorrectionintheemailID'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['CorrectionintheemailID'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['CorrectionintheemailID'].errors['pattern']">Email must be a valid email address
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-9 col-md-9 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value === 'alternateEmail'">
-                                                    <label class="label label-height label-form-builder">Alternate Email ID
-                                                    </label>
-                                                    <input class="form-control option-form-builder" formControlName="alternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'alternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['alternateEmail'].errors }" />
-                                                    <div *ngIf="f['alternateEmail'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['alternateEmail'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['alternateEmail'].errors['pattern']">Email must be a valid email address
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-6 col-md-6 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value === 'memberEmail'">
-                                                    <label class="label label-height label-form-builder">Email ID-member
-                                                    </label>
-                                                    <input class="form-control option-form-builder" formControlName="memberEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberEmail'].errors }" />
-                                                    <div *ngIf="f['memberEmail'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['memberEmail'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['memberEmail'].errors['pattern']">Email must be a valid email address
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-9 col-md-9 mb-30" *ngIf="this.caseCreationForm.get('endorsementType').value === 'memberAlternateEmail'">
-                                                    <label class="label label-height label-form-builder">Alternate Email ID - member</label>
-                                                    <input class="form-control option-form-builder" formControlName="memberAlternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateEmail'].errors }" />
-                                                    <div *ngIf="f['memberAlternateEmail'].errors" class="invalid-feedback">
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['memberAlternateEmail'].errors['required']">Field cannot be blank
-                                                        </div>
-                                                        <div class="font-base text-brick error-form-build" *ngIf="f['memberAlternateEmail'].errors['pattern']">Email must be a valid email address
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-sm-4 col-lg-3 col-md-3 mb-30" *ngIf="showOtpSection">
-                                                    <label class="label label-height label-form-builder"></label>
-                                                    <button class="btn btn-primary" type="button" (click)="sendOTP()" style="margin-top: 6px;" [disabled]="sendOtptDisabled">Send OTP</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="AddressDet">
-                            <div class="mb-0">
-                                <div class="row mb-0">
-                                    <div class="col-xs-12 col-sm-4 col-lg-4 col-md-4 mb-30">
-                                        <label class="label label-height label-form-builder">Assigned Team*</label>
-                                        <select tabindex="2" (change)="campnoSelected()" formControlName="asignedTeam" class="form-control option-form-builder" style="padding: 5px;">
-                                            <option value="" disabled selected>Choose Option</option>
-                                            <option value="Endorsement - Non financial">Endorsement - Non financial</option>
-                                            <!-- Add more options as needed -->
-                                        </select>
-                                        <div *ngIf="submitted && caseCreationForm.get('asignedTeam').invalid" class="font-base text-brick error-form-build">
-                                            Please select Assigned Team
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 pt-5"></div>
-                        <div class="Documents">
-                            <div class="form-group" *ngIf="!showDocInfo">
-                                <div>
-                                    <label for="file">Upload Documents</label>
-                                    <p class="file-type-wrap">JPG/JPEG/BMP/PNG/PDF Files (upto 10mb)</p>
-                                </div>
-                                <div>
-                                    <div class="font-base font-bulk-upload text-tuna">{{selctedFileName}}</div>
-                                    <mat-icon (click)="fileInput.click()" class="upload-icon">upload</mat-icon>
-                                    <input type="file" id="file" #fileInput (change)="newfile($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
-                                    <div class="upload-doc-wrap">Upload</div>
-                                </div>
-                            </div>
-
-                            <div class="error">
-                                <p *ngIf="isFilenotSelected" class="font-base font-bulk-upload text-brick">
-                                    Please select a file to continue.
-                                </p>
-                                <div class="font-base font-bulk-upload text-brick" *ngIf="showNote">
-                                    File format not supported! Please upload .gif, .png, .jpeg, or .pdf files.
-                                </div>
-                            </div>
-
-                            <div class="form-group" *ngIf="showDocInfo">
-                                <div class="d-flex">
-                                    <div>
-                                        <img src="" />
-                                    </div>
-                                    <div>
-                                        <label for="file">{{namesVariable}}</label>
-                                        <p class="file-type-wrap">{{documentType}}</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="delete-button" (click)="deleteFile()">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="AddressDet">
-                        <div class="mb-0">
-                            <div class="row mb-0">
-                                <div class="col-xs-12 col-sm-4 col-lg-8 col-md-8 mb-30">
-                                    <label class="text-faded-gray text-capitalize label">Add Notes:</label>
-                                    <textarea formControlName="addNotes" rows="4" cols="50" maxlength="1000" class="form-control text-area" style="height: 90px !important;"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row justify-content-end btn-hold py-15 px-20 stick-footer button-form-wrapper">
-                        <div class="col-xs-12 col-sm-4 col-lg-8 col-md-8 mb-30" style="display: flex; justify-content: end;">
-                            <button class="btn btn-primary button-form-build" type="submit" [disabled]="isDisabled">Submit Request</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+</main>
 <ngx-spinner bdColor="rgba(128, 128, 128, 0.1)" size="large" color="#fff" type="ball-clip-rotate" [fullScreen]="true">
     <p style="color: white;font-size: 14px;"> Loading... </p>
 </ngx-spinner>
@@ -671,12 +313,14 @@
                 <br />Please enter it here to continue.</p>
             <div class="otp-class">
                 <small>Enter OTP</small>
-                <input type="number" id="otp_1" (input)="onOtpChange($event, 1)" />
-                <input type="number" id="otp_2" (input)="onOtpChange($event, 2)" />
-                <input type="number" id="otp_3" (input)="onOtpChange($event, 3)" />
-                <input type="number" id="otp_4" (input)="onOtpChange($event, 4)" />
-                <input type="number" id="otp_5" (input)="onOtpChange($event, 5)" />
-                <input type="number" id="otp_6" (input)="onOtpChange($event, 6)" />
+                <div class="otp-container">
+                    <input type="text" #otp0 class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
+                    <input type="text" #otp1 class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
+                    <input type="text" #otp2 class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
+                    <input type="text" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
+                    <input type="text" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
+                    <input type="text" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
+                  </div>        
             </div>
             <div class="text-center">
                 <button type="button" (click)="validateOTP()" class="verify-btn">Verify</button>
