@@ -20,6 +20,7 @@
     "getactivepolicynumbers":"claims/api/getactivepolicynumbers",
     "endorsementfileuploadtoomnidocs":"claims/api/endorsementfileuploadtoomnidocs",
     "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
+    "endorsementGetOTP":"api/endorsementsendotp",
     "getpolicyinfodetails":"claims/api/getpolicyinfodetails",
 
 
