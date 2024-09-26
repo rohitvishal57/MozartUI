@@ -158,68 +158,68 @@
                                       <div class="row">
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block form-floating input-block-renew">
-                                                  <input type="text" id="name" name="name" value="" placeholder="" class="form-control input-textBox">
-                                                  <label for="name">Name</label>
-                                                  <span class="ui-error">Please enter name</span>
+                                                <input type="text" id="name" formControlName="name" class="form-control input-textBox">
+                                                <label for="name">Name</label>
+                                                <span class="ui-error" *ngIf="form?.get('name')?.invalid && form.get('name')?.touched">Please enter name</span>                                
                                               </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block form-floating input-block-renew">
-                                                  <input type="text" id="weight" name="name" value="" placeholder="" class="form-control input-textBox">
-                                                  <label for="weight">Weight</label>
-                                                  <span class="ui-error">Please enter weight</span>
-                                                  <span class="ui-prefix">kg</span>
+                                                <input type="text" id="weight" formControlName="weight" class="form-control input-textBox">
+                                                <label for="weight">Weight</label>
+                                                <span class="ui-error" *ngIf="form.get('weight')?.invalid && form.get('weight')?.touched">Please enter weight</span>
+                                                <span class="ui-prefix">kg</span>
                                               </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block input-block-renew focus">
                                                   <div class="fields-blockHeight">
-                                                      <input type="text" name="heightft" value="" placeholder="Enter height" class="input-textBox">
-                                                      <input type="text" name="heightin" value="" placeholder="Enter height" class="input-textBox">
-                                                      <span class="ui-prefix ft-prefix">ft</span>
-                                                      <span class="ui-prefix in-prefix">in</span>
+                                                    <input type="text" formControlName="heightft" placeholder="Enter height" class="input-textBox">
+                                                    <input type="text" formControlName="heightin" placeholder="Enter height" class="input-textBox">
+                                                    <span class="ui-prefix ft-prefix">ft</span>
+                                                    <span class="ui-prefix in-prefix">in</span>
                                                   </div>
-                                                  <span class="ui-error">Please enter height</span>
-                                              </div>
+                                                  <span class="ui-error" *ngIf="form.get('heightft')?.invalid || form.get('heightin')?.invalid">Please enter height</span>
+                                               </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block form-floating input-block-renew">
-                                                  <select id="gender" name="gender" class="form-control input-selectBox">
-                                                      <option>Select gender</option>
-                                                      <option value="male">Male</option>
-                                                      <option value="female">Female</option>
+                                                <select id="gender" formControlName="gender" class="form-control input-selectBox">
+                                                    <option>Select gender</option>
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
                                                   </select>
                                                   <label for="gender">Gender</label>
-                                                  <span class="ui-error">Please select gender</span>
-                                              </div>
+                                                  <span class="ui-error" *ngIf="form.get('gender')?.invalid && form.get('gender')?.touched">Please select gender</span>
+                                               </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block form-floating input-block-renew">
-                                                  <input type="date" id="dob" name="name" value="" placeholder="" class="form-control input-textBox">
-                                                  <label for="dob">Date of birth</label>
-                                                  <span class="ui-error">Please enter date of birth</span>
-                                              </div>
+                                                <input type="date" id="dob" formControlName="dob" class="form-control input-textBox">
+                                                <label for="dob">Date of birth</label>
+                                                <span class="ui-error" *ngIf="form.get('dob')?.invalid && form.get('dob')?.touched">Please enter date of birth</span>
+                                             </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block form-floating input-block-renew">
-                                                  <select id="idtype" name="idtype" class="form-select input-selectBox">
-                                                      <option>Select ID type</option>
-                                                      <option value="aadhaar">Aadhaar</option>
-                                                      <option value="pan">PAN</option>
+                                                <select id="idtype" formControlName="idtype" class="form-select input-selectBox">
+                                                    <option>Select ID type</option>
+                                                    <option value="aadhaar">Aadhaar</option>
+                                                    <option value="pan">PAN</option>
                                                   </select>
                                                   <label for="idtype">ID type</label>
-                                                  <span class="ui-error">Please select Id</span>
-                                              </div>
+                                                  <span class="ui-error" *ngIf="form.get('idtype')?.invalid && form.get('idtype')?.touched">Please select ID</span>
+                                                </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                             <div class="input-block form-floating input-block-renew">
-                                                <select id="idtype" name="idtype" class="form-select input-selectBox">
+                                                <select id="idtype" formControlName="idtype" class="form-select input-selectBox">
                                                     <option>Select ID type</option>
                                                     <option value="aadhaar">Aadhaar</option>
                                                     <option value="pan">PAN</option>
                                                 </select>
                                                 <label for="idtype">ID type</label>
-                                                <span class="ui-error">Please select Id</span>
+                                                <span class="ui-error" *ngIf="form.get('idtype')?.invalid && form.get('idtype')?.touched">Please select ID</span>
                                             </div>
                                         </div>
                                       </div>
@@ -245,67 +245,69 @@
                                       <div class="row">
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block form-floating input-block-renew">
-                                                  <select id="air" name="air" class="form-select input-selectBox">
-                                                      <option>Select Annual income range</option>
-                                                      <option value="5L"> 5L </option>
-                                                      <option value="5L-10L">5L-10L</option>
+                                                <select id="air" formControlName="air" class="form-select input-selectBox">
+                                                    <option>Select Annual income range</option>
+                                                    <option value="5L">5L</option>
+                                                    <option value="5L-10L">5L-10L</option>
                                                   </select>
                                                   <label for="air">Annual income range</label>
-                                                  <span class="ui-error">Please select annual income range</span>
-                                              </div>
+                                                  <span class="ui-error" *ngIf="form.get('air')?.invalid && form.get('air')?.touched">Please select annual income range</span>
+                                               </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block form-floating input-block-renew">
-                                                  <select id="occupation" name="occupation" class="form-select input-selectBox">
-                                                      <option>Select Occupation</option>
-                                                      <option value="engineer">Engineer</option>
-                                                      <option value="doctor">Doctor</option>
+                                                <select id="occupation" formControlName="occupation" class="form-select input-selectBox">
+                                                    <option>Select occupation</option>
+                                                    <option value="salaried">Salaried</option>
+                                                    <option value="selfemployed">Self-employed</option>
                                                   </select>
                                                   <label for="occupation">Occupation</label>
-                                                  <span class="ui-error">Please select occupation</span>
-                                              </div>
+                                                  <span class="ui-error" *ngIf="form.get('occupation')?.invalid && form.get('occupation')?.touched">Please select occupation</span>
+                                               </div>
                                           </div>
                                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="input-block form-floating input-block-renew">
-                                                  <select id="education" name="education" class="form-select input-selectBox">
-                                                      <option>Select Education</option>
-                                                      <option value="Graduate">Graduate</option>
-                                                      <option value="Postgraduate">Postgraduate</option>
+                                                <select id="education" formControlName="education" class="form-select input-selectBox">
+                                                    <option>Select education</option>
+                                                    <option value="graduate">Graduate</option>
+                                                    <option value="postgraduate">Postgraduate</option>
                                                   </select>
-                                                  <label for="education">Education qualification</label>
-                                                  <span class="ui-error">Please select education qualification</span>
-                                              </div>
+                                                  <label for="education">Education</label>
+                                                  <span class="ui-error" *ngIf="form.get('education')?.invalid && form.get('education')?.touched">Please select education</span>
+                                               </div>
                                           </div>
                                       </div>
                                       <div class="detailsHeading-12">Please select any conditions that apply</div>
                                       <div class="row">
-                                          <div class="col-12">
-                                              <div class="input-checkbox-condition">
-                                                  <div class="input-checkbox-block input-checkbox-withIcon">
-                                                      <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-alcohol" value="alcohol" class="input-check" checked>
-                                                          <label for="condition-alcohol"><img src="assets/Img/icon_alcohol.svg">Alcohol</label>
-                                                      </div>
-                                                      <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-tobacco" value="tobacco" class="input-check" >
-                                                          <label for="condition-tobacco"><img src="assets/Img/icon_tabacco.svg">Tobacco</label>
-                                                      </div>
-                                                      <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-panmasala" value="panmasala" class="input-check" >
-                                                          <label for="condition-panmasala"><img src="assets/Img/icon_alcohol.svg">Pan masala/Guthka</label>
-                                                      </div>
-                                                      <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-smoking" value="smoking" class="input-check" >
-                                                          <label for="condition-smoking"><img src="assets/Img/icon_smoking.svg">Smoking</label>
-                                                      </div>
-                                                      <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-other" value="other" class="input-check" >
-                                                          <label for="condition-other"><img src="assets/Img/icon_other.svg">Other</label>
-                                                      </div>
-                                                  </div>
+                                        <div class="col-12">
+                                          <div class="input-checkbox-condition">
+                                            <div class="input-checkbox-block input-checkbox-withIcon">
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-alcohol" class="input-check" />
+                                                <label for="condition-alcohol"><img src="assets/Img/icon_alcohol.svg">Alcohol</label>
                                               </div>
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-tobacco" class="input-check" />
+                                                <label for="condition-tobacco"><img src="assets/Img/icon_tabacco.svg">Tobacco</label>
+                                              </div>
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-panmasala" class="input-check" />
+                                                <label for="condition-panmasala"><img src="assets/Img/icon_alcohol.svg">Pan Masala/Guthka</label>
+                                              </div>
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-smoking" class="input-check" />
+                                                <label for="condition-smoking"><img src="assets/Img/icon_smoking.svg">Smoking</label>
+                                              </div>
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-other" class="input-check" />
+                                                <label for="condition-other"><img src="assets/Img/icon_other.svg">Other</label>
+                                              </div>
+                                            </div>
                                           </div>
+                                        </div>
                                       </div>
+                                      
+                                      
                                       <div class="searchConditionWraper">
                                           <h6>Do you have any health conditions?</h6>
                                           <p>We require to know this data to provide you with the best solution possible.</p>
@@ -324,40 +326,44 @@
                                               </ul>
                                           </div>
                                           <div class="tabsMainContent">
-                                              <div id="chronicCondition" class="main_tabContent active">
-                                                  <div class="input-checkbox-condition">
-                                                      <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft ">
-                                                          <div class="input-checkbox-feild">
-                                                              <input type="checkbox" id="condition-highblood" value="highblood" class="input-check" checked>
-                                                              <label for="condition-highblood"><img src="assets/Img/icon_alcohol.svg">High Blood Pressure (Hypertension)</label>
-                                                          </div>
-                                                          <div class="input-checkbox-feild">
-                                                              <input type="checkbox" id="condition-asthma" value="asthma" class="input-check" >
-                                                              <label for="condition-asthma"><img src="assets/Img/icon_tabacco.svg">Asthma/Chronic Pulmonary Obstructive Disease</label>
-                                                          </div>
-                                                          <div class="input-checkbox-feild">
-                                                              <input type="checkbox" id="condition-diabetes" value="diabetes" class="input-check" >
-                                                              <label for="condition-diabetes"><img src="assets/Img/icon_alcohol.svg">Diabetes</label>
-                                                          </div>
-                                                      </div>
+                                            <div id="chronicCondition" class="main_tabContent active">
+                                              <div class="input-checkbox-condition">
+                                                <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft" formGroupName=>
+                                                  <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="condition-highblood"  class="input-check" />
+                                                    <label for="condition-highblood"><img src="assets/Img/icon_alcohol.svg">High Blood Pressure (Hypertension)</label>
                                                   </div>
+                                                  <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="condition-asthma"  class="input-check" />
+                                                    <label for="condition-asthma"><img src="assets/Img/icon_tabacco.svg">Asthma/Chronic Pulmonary Obstructive Disease</label>
+                                                  </div>
+                                                  <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="condition-diabetes"  class="input-check" />
+                                                    <label for="condition-diabetes"><img src="assets/Img/icon_alcohol.svg">Diabetes</label>
+                                                  </div>
+                                                </div>
                                               </div>
-                                              <div id="organCondition" class="main_tabContent in-active">
-                                                  Organ Related Condition
-                                              </div>
-                                              <div id="majorCondition" class="main_tabContent in-active">
-                                                  Major Procedure/Conditions
-                                              </div>
-                                              <div id="otherCondition" class="main_tabContent in-active">
-                                                  Other Conditions
-                                              </div>
+                                            </div>
+                                            
+                                            <div id="organCondition" class="main_tabContent in-active">
+                                              Organ Related Condition
+                                            </div>
+                                            
+                                            <div id="majorCondition" class="main_tabContent in-active">
+                                              Major Procedure/Conditions
+                                            </div>
+                                            
+                                            <div id="otherCondition" class="main_tabContent in-active">
+                                              Other Conditions
+                                            </div>
                                           </div>
+                                          
                                       </div>
                                   </div>
                               </div>
                           </div>
                           <footer>
-                              <button type="button" value="next" class="btn_pink btn_pinkNext" (click)="handleAction('addMember')">Next</button>
+                              <button type="button" value="next" class="btn_pink btn_pinkNext" (click)="handleAction('addMember')">Add Member</button>
                           </footer>
                       </div>
               </div>
