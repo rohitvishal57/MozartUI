@@ -180,7 +180,7 @@
                                   <div class="member_extraInfo">
                                     <div class="member_extraInfoSub">
                                       <input type="date" placeholder="Enter DOB" class="member_textbox"
-                                      [value]="(relation.dob)" (input)="onAgeChange($event, relation)">
+                                      [value]="relation.dob" (input)="onAgeChange($event, relation)">
                                       <span *ngIf="relation.deletable" class="delete_member" (click)="removeMember(relation)"><img
                                         src="assets/images/icon_delete_red2.svg"></span>
                                     </div>

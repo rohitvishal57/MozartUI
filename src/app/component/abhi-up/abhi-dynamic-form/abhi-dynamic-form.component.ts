@@ -76,6 +76,7 @@ export class AbhiDynamicFormComponent {
   AHPARiskValue: any;
   showPopup: boolean = false;
   showDoneButton = true;
+  changesMade : boolean = false;
 
   partnerId: any
   productId: any
@@ -422,7 +423,7 @@ export class AbhiDynamicFormComponent {
                   await this.resolveMethod(control.methodName, control);
                 }
               }
-              else if (control.value != "" && this.isQuote === true) {
+              else if (control.value != "" && this.isQuote === true && control.methodName) {
                 await this.resolveMethod(control.methodName, control);
                 // if (control.name == 'insuredMembers') {
                 //   //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
@@ -1384,7 +1385,7 @@ export class AbhiDynamicFormComponent {
     console.log(this.form, control, planType);
 
     this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(0);
-    // this.dynamicFormGroup.removeControl('insuredMemberDetails');
+    this.dynamicFormGroup.removeControl('insuredMemberDetails');
     if (planType === 'Multi Individual') {
 
       if (control.dependentControls)
@@ -2086,6 +2087,10 @@ export class AbhiDynamicFormComponent {
           this.incrementIndex();
           this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
         }
+
+        if(this.isQuote){
+          this.isQuote = !this.isQuote;
+        }
       }
       else {
         console.log('Form is invalid', this.dynamicFormGroup);
@@ -2240,12 +2245,6 @@ export class AbhiDynamicFormComponent {
 
   async getPremiumAmount(control: IFormControl) {
     this.spinner.show();
-    // this.tenureAmount.forEach((element) => {
-    //   element = 0;
-    // })
-    for (let i = 0; i < this.tenureAmount.length; i++) {
-      this.tenureAmount[i] = 0;
-    }
     console.log(this.tenureAmount);
 
 

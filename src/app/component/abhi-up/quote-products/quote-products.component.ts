@@ -216,8 +216,16 @@ export class QuoteProductsComponent implements OnInit {
   }
 
   addToCart(item: any){
+    item.tenureAmounts=[]
+    for(let i =1 ;i<=3;i++){
+      const premiumKey = `tenure${i}Premium`;
+      console.log(item[premiumKey]);
+      item.tenureAmounts[i-1]=item[premiumKey]
+    }
+    console.log(item);
     this.cartProductList.push(item);
     console.log(item);
+    
     sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
     this.getProposalNum();
     // setTimeout(() => {
