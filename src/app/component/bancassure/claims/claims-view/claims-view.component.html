@@ -9,7 +9,7 @@
             <h6 class="heading-16-red">Raise Request</h6>
         </section>
         <section class="white_container">
-          <form (ngSubmit)="onSubmit()" [formGroup]="form">
+          <form [formGroup]="form">
             <div class="row mb-3">
               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                 <div class="input-block form-floating input-block-renew">
@@ -122,7 +122,7 @@
                         </div>
                         <div class="filesList_body">
                           <ul class="uploadedFiles_main">
-                            <li class="uploadedFiles_item" *ngFor="let file of uploadedFiles">
+                            <li class="uploadedFiles_item" *ngFor="let file of uploadedFiles; let i=index;">
                                 <div class="uploadedFiles_headInfo">
                                     <div class="headInfo_item">
                                       <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
@@ -152,13 +152,17 @@
                                 </div>
                                 <div class="uploadedFiles_info">
                                     <div class="uploadedFiles_infoItem">
+                                      <span class="file-index">{{i+ 1}}</span>
                                         <h6>{{ file.name }}</h6>
-                                        <p>{{ file.documentType }}</p>
+                                        <p>{{ file.type }}</p>
                                     </div>
                                     <div class="uploadedFiles_infoItem">
                                       <button class="delete-button" (click)="deleteFile(file)">
                                         <img src="../../../../../assets/Img/icon_delete_red2.svg">
                                       </button>
+                                       <div class="size-align">  <p>{{ convertBytesToKB(file.size) }}</p>
+                              </div>
+
                                     </div>
                                 </div>
                               </li>
@@ -175,7 +179,7 @@
       </section>
       <div class="row">
         <div class="col-12">
-          <button type="button" class="btn_red" [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid">Submit Request</button>
+          <button type="button" class="btn_red" [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid" (click)="submitRequest()">Submit Request</button>
         </div>
       </div>
     </div>

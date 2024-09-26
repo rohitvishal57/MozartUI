@@ -50,6 +50,8 @@ export class ClaimsViewComponent {
   selectMemberData: any = {};
   @Input() uploadedFiles: { 
     name: string,
+    type: string,
+    size: number,
     label: string,
     isEditing?: boolean,
     isEdited?: boolean,
@@ -78,7 +80,7 @@ export class ClaimsViewComponent {
   ngOnInit(): void {
     this.createForm();
     this.saveUpload();
-    this.fetchData();
+    this.getProposalDetails();
    
   }
   saveUpload(): void {
@@ -122,20 +124,18 @@ export class ClaimsViewComponent {
     });
   }
  
-  fetchData(): void {
+  getProposalDetails(): void {
      this.agentCode = localStorage.getItem('agentCode');
      this.claimsService.getProposalDetails(this.agentCode).subscribe(
     response => {
       if (response.success) {
-        this.response = response;
-          
+        this.response = response;         
         const allData: ClaimData[] = response.data;    
         // Extract unique values for dropdowns
         //this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');
         this.policyNumbers = this.extractUniqueValues(allData, 'policyNumber');
         // this.memberNames = this.extractUniqueValues(allData, 'fullName');
         this.claimTypes = this.extractUniqueValues(allData, 'policyType');
-       
         this.cdr.markForCheck();
       } else {
         console.error('Failed to fetch dropdown data', response.message);
@@ -146,21 +146,16 @@ export class ClaimsViewComponent {
 }
 
 // Helper function to extract unique values
-extractUniqueValues(data: any[], key: string): any[] {
-  console.log('datakey',data,key);
-  
+extractUniqueValues(data: any[], key: string): any[] {  
   return [...new Set(data.map(item => item[key]).filter(val => val))];
-
 }
 
 handleDropdownChange(event: any): void { 
   const selectedPolicyNumber = event.target.value;
-  console.log(selectedPolicyNumber);
   // Filter the response data to find members for the selected policy number
   const filteredMembers = this.response.data.filter((item: any) => item.policyNumber === selectedPolicyNumber);
   // Extract unique member names from the filtered members
   this.memberNames = this.extractUniqueValues(filteredMembers, 'fullName');
-  console.log('memberName',this.memberNames);
   // Reset memberName form control
   this.form.get('memberName')?.setValue('');
   this.cdr.markForCheck(); // Ensure the view updates
@@ -181,6 +176,8 @@ for (let i = 0; i < files.length; i++) {
   const file = files[i];
   this.uploadedFiles.push({
     name: file.name,
+    type: file.type,
+    size: file.size,
     label: 'Label this document',
     isEditing: false,
     editableControl: new FormControl('Label this document'),
@@ -191,9 +188,8 @@ for (let i = 0; i < files.length; i++) {
     policyNumber: this.saveForm.value.policyNumber,
     documentName: this.saveForm.value.documentName,
     documentType: this.saveForm.value.documentType,
-    createdBy: this.saveForm.value.createdBy
+    createdBy: this.saveForm.value.createdBy,   
   });
-  
 }
   // Update the saveForm with the latest file info
   if (this.uploadedFiles.length > 0) {
@@ -204,6 +200,10 @@ for (let i = 0; i < files.length; i++) {
 
 this.updateStatusLabel();
 this.uploadFiles(Array.from(files));
+}
+convertBytesToKB(bytes: number): string {
+  const kb = bytes / 1024;
+  return `${kb.toFixed(2)} KB`; // Format to 2 decimal places
 }
 
 uploadFiles(files: File[]): void {
@@ -236,11 +236,10 @@ uploadFiles(files: File[]): void {
         this.uploadedFiles.map(file => file.status = 'success')
         this.uploadSuccess = true;
         this.uploadedFilesCount++;
-        console.log(this.uploadedFile);
         }
       this.updateStatusLabel();
       this.cdr.markForCheck(); // Trigger change detection
-    }, error => {
+    }, _error => {
       this.uploadedFile = this.uploadedFiles.find(f => f.file.name === f.file.name);
       this.uploadedFiles.map(file => file.status = 'failed')
       this.uploadSuccess = false;
@@ -266,7 +265,6 @@ this.updateStatusLabel();
 
  // Method to start editing a file
 startEditing(file: any) {
-  console.log('edit');
   file.isEditing = true;
 if (!file.editableControl) {
   file.editableControl = new FormControl(file.label);
@@ -289,7 +287,7 @@ formatUploadDateTime() {
 }
 
 
-onSubmit(): void{
+submitRequest(): void{
 if (this.saveForm.valid || this.form.valid) {
   const saveClaimData = this.form.value;
   
@@ -298,7 +296,6 @@ if (this.saveForm.valid || this.form.valid) {
   
   // Collect metadata and files into FormData
   this.uploadedFiles.forEach((file, index) => {
-    console.log("File",file)
     const metadata = {
       policyNumber: this.form.get('policyNumber')?.value || '',
       labelName: file.label || '',
@@ -328,9 +325,8 @@ if (this.saveForm.valid || this.form.valid) {
     catchError(error => of({ error }))
   );
 
-  // Use forkJoin to run both observables in parallel
+  // forkJoin to run both observables in parallel
   forkJoin([fileUploadObservable, saveClaimObservable]).subscribe(results => {
-    const fileUploadResult = results[0];
     const claimsResult = results[1];
     // Handle claims submission response
     if ('response' in claimsResult) {
