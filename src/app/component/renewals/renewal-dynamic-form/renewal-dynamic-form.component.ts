@@ -26,7 +26,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectedCoverages: any[] = []; 
   // healthAddOns: any[] = [];
   selectedAddOns: any[] = []; 
-  // roomUpgradeBenefits: any[] = [];
+  roomUpgradeBenefits: any[] = [];
   isRadioSelected = false;
   selectedPaymentType: string = '';
   selectedPaymentTypeLabel: string = '';
@@ -64,7 +64,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   ngOnInit() {
     // this.fetchAddOns()
     // this.fetchCoverages();
-    // this.fetchRoomUpgradeBenefits();
+    this.fetchRoomUpgradeBenefits();
     this.fetchTenureDetails();
      this.renewalService.policy$.subscribe(policy => {
       if(policy.policyNo){
@@ -325,16 +325,16 @@ selectPaymentType(option: any) {
 //   );
 // }
 
-// fetchRoomUpgradeBenefits(): void {  
-//   this.http.get<any[]>('/assets/jsonValue/rooms.json').subscribe(
-//     (roomUpgradeBenefitsData) => {
-//       this.roomUpgradeBenefits = roomUpgradeBenefitsData;
-//     },
-//     (error) => {
-//       console.error('Error fetching Room Upgrade Benefits:', error);
-//     }
-//   );
-// }
+fetchRoomUpgradeBenefits(): void {  
+  this.http.get<any[]>('/assets/jsonValue/rooms.json').subscribe(
+    (roomUpgradeBenefitsData) => {
+      this.roomUpgradeBenefits = roomUpgradeBenefitsData;
+    },
+    (error) => {
+      console.error('Error fetching Room Upgrade Benefits:', error);
+    }
+  );
+}
 
 
 //Additinal page related methods

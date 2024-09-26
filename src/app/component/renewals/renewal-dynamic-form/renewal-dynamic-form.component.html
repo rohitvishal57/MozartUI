@@ -840,7 +840,7 @@
                       </div>
                   </div>
                   <div class="premium-offer-details">
-                      <div class="lightbulb-icon"><img src="assets/renewalLogos/Lightbulb Icon.jpg" alt="No Data Found" /></div>
+                      <div class="lightbulb-icon"><img src="assets/Img/icon_lightbulb.svg" alt="No Data Found" /></div>
                       <div class="discount-value">You can potentially earn 10,000 more with just 2 more years</div>
                   </div>
               </div>
@@ -1190,8 +1190,8 @@
         </div>
     </div>
     <div class="bottomInfoMain">
-        <div class="room-update" style="text-align: center;">RoomUpdate</div>
-  <div class="bottomInfoSubMain">
+        <div class="room-update" style="text-align: center;" data-bs-toggle="modal" data-bs-target="#exampleModal" *ngIf="activeSection == 'additional' ">RoomUpdate</div>
+        <div class="bottomInfoSubMain">
      <div class="bi_left">
         <div class="planProductInfo">
            <div class="ppi_img">
@@ -1224,8 +1224,8 @@
                       <div class="product-details-cnt">
                           <div class="product-premium-details">
                               <div class="product-details">
-                                  <div class="product-logo">
-                                      <img src="" alt="no image" width="40px" height="45px" />
+                                  <div class="ppi_img">
+                                      <img src="assets/Img/icon_activeone.svg" alt="no image" width="40px" height="45px" />
                                   </div>
                                   <div class="product-name-details">
                                       <div class="product-name">Active One Next</div>
@@ -1256,7 +1256,7 @@
                       <div class="room-upgrade-benefits-cnt">
                           <div class="room-upgrade-benefits-title">Upgrade benefits</div>
                           <div class="upgrade-rooms-list">
-                              <!-- <div *ngFor="let plan of roomUpgradeBenefits" class="upgrade-rooms">
+                                <div *ngFor="let plan of roomUpgradeBenefits" class="upgrade-rooms">
                                   <input type="radio" id="plan1" name="plan" class="plan-radio" (change)="onRadioChanges()" />
                                   <label [for]="plan?.id" class="plan-label">
                                       <div class="plan-details" *ngIf="plan?.type !== 'No Upgrade'">
@@ -1269,7 +1269,7 @@
                                       </div>
                                       <span *ngIf="plan?.type === 'No Upgrade'" class="no-need-upgrade">{{ plan?.label }}</span>
                                   </label>
-                              </div> -->
+                              </div> 
                           </div>
                       </div>
                   </div>
