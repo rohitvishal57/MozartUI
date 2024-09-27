@@ -828,6 +828,19 @@ button {
 .btn_newRequest:hover {
     border: 1px solid #c7222a;
 }
+.btn_md {
+  font-size: 14px;
+  padding: 12px 20px !important;
+  line-height: 15px;
+  border-radius: 16px;
+}
+.btn_sm {
+  font-size: 12px;
+  padding: 12px 20px !important;
+  line-height: 14px;
+  border-radius: 16px;
+  font-weight: 600;
+}
 button:disabled, .disabled {
   background: #F1F3F6 !important;
   color:#767D93 !important;
@@ -3465,3 +3478,25 @@ input[type="search"]::-webkit-search-results-decoration {
   padding: 8px 12px;
 }
 /*Table th,td space end*/
+/*Popup Modal start*/
+.modal-backdrop.show {
+  opacity: 0.4 !important;
+}
+.popupModalMain.modal-content {
+  padding: 24px 24px 0 24px;
+  border-radius: 16px;
+  background: rgba(245, 245, 245, 0.98);
+  border: 2px solid #FFFFFF;
+  box-shadow: 0px 12px 20px 0px #00000026;
+}
+.popupModalMain .modal-body {
+  padding: 32px 0 24px;
+}
+.popupModalMain .modal-header, .popupModalMain .modal-footer {
+  padding: 0;
+  border-width: 0;
+}
+.popupModalMain .modal-footer {
+  padding: 24px 0;
+}
+/*Popup Modal start*/
