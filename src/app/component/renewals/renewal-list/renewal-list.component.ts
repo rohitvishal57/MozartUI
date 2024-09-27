@@ -1,5 +1,4 @@
 import { Component,ElementRef,HostListener,OnInit,ViewEncapsulation  } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
 import { FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
@@ -25,7 +24,6 @@ export class RenewalListComponent {
   rows: number = 10;
   totalRecords: number = 0;
   selectedView: string = "list";
-  selectedQuotesView: string = "quotesGrid";
   showEllipsisDropdown: number | null = null;
   productsList: any[] = [];
   policyTypes: any[] = [];
@@ -34,22 +32,16 @@ export class RenewalListComponent {
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
-  showSubQuotes: boolean = false;
-  showComparison: boolean = false;
   selected: string = "";
   searchInputControl = new FormControl("",Validators.required);
   isDesktopView:boolean=false
-
   private onDestroy$: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private renewalService: RenewalServiceService,
     private router: Router,
-    private route: ActivatedRoute,
     private datePipe: DatePipe,
     private adminService:AdminService,
-    private eRef: ElementRef,
-    private spinner: NgxSpinnerService
   ) {}
 
   renewalLisRequestBody={
@@ -76,55 +68,42 @@ export class RenewalListComponent {
       console.log("agent code is not present in local storege");
     }
     this.getProducts();
-    this.route.queryParams.subscribe((params) => {
-      this.showSubQuotes = params["showSubQuotes"] === "true";
-    });
   }
-
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
     this.getRenewalsList();
   }
-
-
   getRenewalsList() {
-    // this.spinner.show();
     this.renewalLisRequestBody.pageNumber = this.page;
     this.renewalLisRequestBody.pageSize = this.rows;
-    // this.spinner.show();
     this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
       (response) => { 
         console.log(response.data);
         if (response.success) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
-          })); console.log(this.renewalsList);
+          })); 
+          console.log("Renewal List",this.renewalsList);
           this.countsList = response.data;
           this.totalRecords = this.countsList.totalRecords;
-        } else {console.error("API request was not successful.");}
-        // this.spinner.hide();
-        // this.spinner.hide();
+        } 
+        else {console.error("API request was not successful.");}
       },
       (error) => {
-        // this.spinner.hide();
-        // this.spinner.hide();
-        console.error("Error from API:", error);
+        console.error("Error from getRenewalsList API:", error);
       }
     );
   }
-
   formatRenewedDate(datetime: string): string {
     return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
   }
-
   filterQuotes(filter: string) {
     this.renewalLisRequestBody.filterType = filter;
     this.getRenewalsList();
     this.activeFilter = filter;
   }
-
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
       this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
@@ -132,7 +111,6 @@ export class RenewalListComponent {
       this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
     }
   }
-  
   getProducts() {
     this.adminService.getAllProductsList().subscribe({
       next: (res) => {
@@ -143,11 +121,10 @@ export class RenewalListComponent {
         this.policyTypes = uniquePolicyTypes;
       },
       error: (err) => {
-        console.log("error", err);
+        console.log("error from getProducts API", err);
       },
     });
   }
-
   toggleFilterDropdown() {
     if(this.toggeleSearchdropdown==true)
     {
@@ -155,7 +132,6 @@ export class RenewalListComponent {
     }
     this.toggeledropdown = !this.toggeledropdown;    
   }
-
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(
       (product) => product.selected).length;
@@ -168,7 +144,6 @@ export class RenewalListComponent {
     this.appliedFiltersCount = count;
      this.appliedFiltersCount;
   }
-
   applyFilter() {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
@@ -193,7 +168,6 @@ export class RenewalListComponent {
     this.getRenewalsList();
     this.toggeledropdown=false;
   }
-
   cancel() {
     this.productsList.forEach((product) => (product.selected = false));
     this.policyTypes.forEach((policyType) => (policyType.selected = false));
@@ -207,7 +181,6 @@ export class RenewalListComponent {
     this.toggeledropdown = false;
     this.getRenewalsList();
   }
-
   clear(){
     this.productsList.forEach((product) => (product.selected = false));
     this.policyTypes.forEach((policyType) => (policyType.selected = false));
@@ -220,7 +193,6 @@ export class RenewalListComponent {
     this.renewalLisRequestBody.endDate = null;
     this.getRenewalsList();
   }
-
   toggleSearchDropdown() {
     if(this.toggeledropdown==true)
     {
@@ -228,11 +200,9 @@ export class RenewalListComponent {
     }
     this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
   }
-  
   onSelectChanges(event: any): void {
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
-  
     if (this.selected === "mobileNumber") {
       this.searchInputControl.setValidators([
         Validators.required,
@@ -246,14 +216,14 @@ export class RenewalListComponent {
     } else if (this.selected === "policyNumber") {
       this.searchInputControl.setValidators([Validators.required]);
     }
-  
     this.searchInputControl.updateValueAndValidity();
   }
   
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";
-    } else if (this.searchInputControl.hasError("pattern")) {
+    } 
+    else if (this.searchInputControl.hasError("pattern")) {
       if (this.selected === "mobileNumber") {
         return "Invalid Mobile Number";
       } else if (this.selected === "proposerName") {
@@ -287,15 +257,9 @@ export class RenewalListComponent {
       menuTrigger.closeMenu();
     }
   }
-  
-  quotesViews(view: string) {
+  renewalListView(view: string) {
     this.selectedView = view;
   }
-
-  subQuotesViews(view: string) {
-    this.selectedQuotesView = view;
-  }
-
   handleAction(item: RenewalList, event: string) {
     switch (event) {
       case 'download':
@@ -388,22 +352,14 @@ export class RenewalListComponent {
         console.warn('Unknown action:', event);
     }
   }
-  
   renewalJourney(proposerDetail : RenewalList) {
-    console.log("proposerDetail",proposerDetail.policyNumber);
-    this.renewalService.getPolicyNo(proposerDetail.policyNumber);
+    console.log("proposer PolicyNumber",proposerDetail.policyNumber);
+    this.renewalService.setPolicyNo(proposerDetail.policyNumber);
     this.router.navigate(["/portal/agent/renewalDynamicForm"]);
   }
-
-  compareSelectedQuotes() {
-    this.showSubQuotes = false;
-    this.showComparison = true;
-  }
-
   getFixedStarArray(): number[] {
     return Array.from({ length: 5 }, (_, i) => i); 
   }
-
   getStarClasses(index: number, rating: number): string[] {
     const starClasses = ['star'];
     const fullStars = Math.floor(rating);
@@ -419,7 +375,6 @@ export class RenewalListComponent {
     }
     return starClasses;
   }
-
   getColorClass(rating: number): string {
     if (rating <= 1.5) {
       return 'red-color';
@@ -429,9 +384,9 @@ export class RenewalListComponent {
       return 'green-color';
     }
   }
-  
   ngOnDestroy(): void {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
   }
+
 }
