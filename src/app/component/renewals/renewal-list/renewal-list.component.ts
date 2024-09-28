@@ -8,6 +8,8 @@ import { AdminService } from "src/app/services/admin.service";
 import { Subject } from "rxjs";
 import { MatMenuTrigger } from '@angular/material/menu';
 import { NgxSpinnerService } from "ngx-spinner";
+import { LoginService } from 'src/app/services/login.service';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-renewal-list',
@@ -24,7 +26,6 @@ export class RenewalListComponent {
   rows: number = 10;
   totalRecords: number = 0;
   selectedView: string = "list";
-  showEllipsisDropdown: number | null = null;
   productsList: any[] = [];
   policyTypes: any[] = [];
   startDate: any;
@@ -36,16 +37,18 @@ export class RenewalListComponent {
   searchInputControl = new FormControl("",Validators.required);
   isDesktopView:boolean=false
   private onDestroy$: Subject<boolean> = new Subject<boolean>();
+  agentCode=localStorage.getItem('agentCode');
+
 
   constructor(
     private renewalService: RenewalServiceService,
     private router: Router,
     private datePipe: DatePipe,
-    private adminService:AdminService,
+    private commonService:CommonService,
   ) {}
 
   renewalLisRequestBody={
-    "agentCode": "",
+    "agentCode": this.agentCode,
     "proposer": "",
     "productName": "",
     "policyNumber": "",
@@ -59,14 +62,7 @@ export class RenewalListComponent {
   }
 
   ngOnInit(): void {
-    const storedAgentCode = localStorage.getItem('agentCode');
-    if (storedAgentCode) {
-      this.renewalLisRequestBody.agentCode = storedAgentCode;
-      this.getRenewalsList();
-    }
-    else{
-      console.log("agent code is not present in local storege");
-    }
+    this.getRenewalsList();
     this.getProducts();
   }
   onPageChange(event: any) {
@@ -96,6 +92,24 @@ export class RenewalListComponent {
       }
     );
   }
+  getProducts() {
+    const reqData={
+      "agentCode": this.agentCode
+    }
+    this.commonService.Getproductlist(reqData).subscribe({
+      next: (res) => {
+        this.productsList = res.data;
+        console.log("product list",this.productsList)
+        const uniquePolicyTypes = Array.from(new Set(this.productsList
+         .map((product) => product.familyPlan)))
+         .map((policyType) => ({ name: policyType, selected: false }));
+         this.policyTypes = uniquePolicyTypes;
+      },
+      error: (err) => {
+         console.log("error coming form getproduct list API");
+      }
+    })
+  }
   formatRenewedDate(datetime: string): string {
     return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
   }
@@ -110,20 +124,6 @@ export class RenewalListComponent {
     } else if (dateType === "endDate" && this.endDate) {
       this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
     }
-  }
-  getProducts() {
-    this.adminService.getAllProductsList().subscribe({
-      next: (res) => {
-        this.productsList = res;        
-        const uniquePolicyTypes = Array.from(new Set(this.productsList
-        .map((product) => product.familyPlan)))
-        .map((policyType) => ({ name: policyType, selected: false }));
-        this.policyTypes = uniquePolicyTypes;
-      },
-      error: (err) => {
-        console.log("error from getProducts API", err);
-      },
-    });
   }
   toggleFilterDropdown() {
     if(this.toggeleSearchdropdown==true)
@@ -248,10 +248,16 @@ export class RenewalListComponent {
     if (this.searchInputControl.valid) {
       if (this.selected === "mobileNumber") {
         this.renewalLisRequestBody.mobileNumber = this.searchInputControl.value!;
+        this.renewalLisRequestBody.proposer = "";
+        this.renewalLisRequestBody.policyNumber = "";
       } else if (this.selected === "proposerName") {
         this.renewalLisRequestBody.proposer = this.searchInputControl.value!;
+        this.renewalLisRequestBody.mobileNumber = "";
+        this.renewalLisRequestBody.policyNumber = "";
       } else if (this.selected === "policyNumber") {
         this.renewalLisRequestBody.policyNumber = this.searchInputControl.value!;
+        this.renewalLisRequestBody.mobileNumber = "";
+        this.renewalLisRequestBody.proposer = "";
       }
       this.getRenewalsList();
       menuTrigger.closeMenu();
