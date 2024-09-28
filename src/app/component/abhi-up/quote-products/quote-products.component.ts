@@ -106,10 +106,19 @@ export class QuoteProductsComponent implements OnInit {
         this.ProductList = res.data.products
         console.log(this.ProductList);
         this.ProductList.forEach((prod: any) => {
-          console.log(prod);
+          // Parse keyFeatures and initialize selectedAddon
           prod.keyFeatures = JSON.parse(prod.keyFeatures);
-          prod.selectedAddon=[]
-        })
+          prod.selectedAddon = [];
+        
+          // Round tenure premiums
+          prod.tenure1Premium = Math.round(prod.tenure1Premium);
+          prod.tenure2Premium = Math.round(prod.tenure2Premium);
+          prod.tenure3Premium = Math.round(prod.tenure3Premium);
+        
+          // Optionally, log the updated product
+          console.log(prod);
+        });
+        
         this.selectedPlans = Array(this.ProductList.length).fill(null);
         this.addonView = Array(this.ProductList.length).fill(false);
       },
@@ -201,9 +210,9 @@ export class QuoteProductsComponent implements OnInit {
       const productData = {
         partnerId : this.partnerId,
         productId : item.productId,
-        isQuote : true
-
+        tenureAmounts : item.tenureAmounts
       }
+      sessionStorage.setItem("isQuote",true.toString());
       console.log(productData)
       if (this.formSequence != null && this.formSequence.length > 0) {
         this.router.navigate(['portal/abhi/forms'], {
