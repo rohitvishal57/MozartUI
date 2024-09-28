@@ -283,11 +283,6 @@ p {
   margin-bottom: 0px;
 }
 
-.input-block .input-textBox:hover,
-.input-block .input-selectBox:hover {
-  /*border-bottom: solid 1px #EB0000;
-    border-bottom: 1px solid #EB0000 ;*/
-}
 
 input:focus,
 select:focus {
@@ -318,7 +313,7 @@ input[type="checkbox"]:focus+label:before {
   color: #282828;
   font-size: 14px;
   line-height: 20px;
-  -webkit-appearance: none;
+  // -webkit-appearance: none;
   position: relative;
   background: url(../../../../assets/images/down_arrow.svg) no-repeat 96% 50%;
   border: 1px solid #E2E2E2;
@@ -394,7 +389,7 @@ input[type="checkbox"]:focus+label:before {
   color: #282828;
   font-size: 14px;
   line-height: 20px;
-  -webkit-appearance: none;
+  // -webkit-appearance: none;
   position: relative;
   background: var(--site-body-bg) url(../../../../assets/images/down_arrow.svg) no-repeat 96% 50%;
   border: 1px solid var(--site-body-bg);
@@ -977,8 +972,6 @@ h4 {
 .raido_policyType .input-radiolabel input:checked+span .pt-head {
   color: #C7222A;
 }
-
-.raido_policyType .input-radiolabel input:checked+span:after {}
 
 .checkbox_disease .input-checkbox-feild {
   background: #fff;

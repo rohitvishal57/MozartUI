@@ -60,7 +60,7 @@ export class GetQuoteComponent {
   proposerState:any;
   selectedSumInsured: any;
   selectedDiseases: string[] = [];
-  diseaseNames: string = "";
+  diseaseNames: string | null = null;
 
   multiIndiReqData: any = {
     proposerPincode: "",
@@ -611,10 +611,10 @@ export class GetQuoteComponent {
     this.service.getPinCodeByCity(event.target.value).subscribe({
       next: (res) => {
         console.log(res)
-        this.proposerZone = res.data.strzone;
-        this.proposerCity = res.data.strcity;
-        this.proposerState = res.data.strstate;
-        this.proposerZoneValue = res.data.strzonemapping;
+        this.proposerZone = res.data.zone;
+        this.proposerCity = res.data.city;
+        this.proposerState = res.data.state;
+        this.proposerZoneValue = res.data.zoneCode;
       },
       error: (err) => {
         console.error(err)

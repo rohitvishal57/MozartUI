@@ -40,7 +40,7 @@
                     </ng-container>
 
                     <ng-container *ngIf="dropdown.label === 'Diseases'">
-                      {{ diseaseNames != "" ? diseaseNames : 'No Diseases Selected' }}
+                      {{ diseaseNames != null ? diseaseNames : 'No Diseases Selected' }}
                     </ng-container>
 
                   </span><i class="fas fa-chevron-down"></i>

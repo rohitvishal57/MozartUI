@@ -302,9 +302,9 @@ export class CommonService {
     const headers = { 'content-type': 'application/json' };
     return this.http.post<any>(`${this.yatraUrl}getPinCode`, pinCode, { 'headers': headers });
   }
-  getPinCodeByCity(response: any) {
+  getPinCodeByCity(pincode: string) {
     const PinCodeByCity = this.configService.config.baseUrl + this.configService.config.pinCodeDetails;
-    return this.http.get<any>(`${PinCodeByCity}?pincode=${response}`);
+    return this.http.post<any>(PinCodeByCity,{pincode});
   }
 
   // getHealthPlans(year: any, adultCount: any, childCount: any) {
@@ -470,7 +470,7 @@ export class CommonService {
   }
 
   GetSingleProductQuote(reqData:any){
-    const singleProductQuote=this.configService.config.baseUrl+this.configService.config.getSingleProductQuote;
+    const singleProductQuote=this.configService.config.getSingleProductQuote;
     return this.http.post<any>(singleProductQuote,reqData);
   }
 
