@@ -76,7 +76,7 @@ export class AbhiDynamicFormComponent {
   AHPARiskValue: any;
   showPopup: boolean = false;
   showDoneButton = true;
-  changesMade : boolean = false;
+  changesMade: boolean = false;
 
   partnerId: any
   productId: any
@@ -87,9 +87,10 @@ export class AbhiDynamicFormComponent {
   collapsedSections: { [key: string]: boolean } = {};
   isOverlayVisible = false;
   isQuote: any;
+  isPolicyDetailsFetch: boolean = true;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
-    public service: CommonService,private adminService: AdminService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
+    public service: CommonService, private adminService: AdminService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
     private toast: NgToastService, private datePipe: DatePipe, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document) { }
 
@@ -245,7 +246,7 @@ export class AbhiDynamicFormComponent {
         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
         // console.log(policyindex);
         if (control.dynamicControls) {
-          console.log(control.name, control,this.formData);
+          console.log(control.name, control, this.formData);
 
           if (this.formData[control.name] && control.visible == true) {
             console.log(control.dynamicControls[0], this.formData.planType);
@@ -1163,9 +1164,9 @@ export class AbhiDynamicFormComponent {
       this.service.getPinCodeByCity(reqData).subscribe({
         next: (res) => {
           console.log(res)
-          this.dynamicFormGroup.get('city')?.setValue(res.data.strcity);
-          this.dynamicFormGroup.get('state')?.setValue(res.data.strstate);
-          this.dynamicFormGroup.get('zone')?.setValue(res.data.strzone);
+          this.dynamicFormGroup.get('city')?.setValue(res.data.city);
+          this.dynamicFormGroup.get('state')?.setValue(res.data.state);
+          this.dynamicFormGroup.get('zone')?.setValue(res.data.zone);
         },
         error: (err) => {
           console.error(err)
@@ -1188,10 +1189,10 @@ export class AbhiDynamicFormComponent {
 
                 const patchObject: { [key: string]: any } = {};
 
-                patchObject['city' as string] = res.data.strcity;
-                patchObject['zone' as string] = res.data.strzone;
-                patchObject['zoneValue' as string] = res.data.strzonemapping;
-                patchObject['state' as string] = res.data.strstate;
+                patchObject['city' as string] = res.data.city;
+                patchObject['zone' as string] = res.data.zone;
+                patchObject['zoneValue' as string] = res.data.zoneCode;
+                patchObject['state' as string] = res.data.state;
 
                 let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
 
@@ -1612,21 +1613,21 @@ export class AbhiDynamicFormComponent {
           // Update control with the fetched options
           control.selectCheckboxOptions = res.relationShip;
 
-          if(this.isQuote){
+          if (this.isQuote) {
             this.form.formSections.forEach((section: any) => {
-                section.formControls.forEach((control: any) => {
-                  if (control.name == 'insuredMembers') {
-                    //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
-                    control.selectCheckboxOptions.forEach((option: any) => {
-                      if (this.formData.insuredMembers[option.value] === true) {
-                        // Call logSelection function (pass null for event if not triggering through UI)
-                        this.logSelection(null, option, control);
-                      }
-                    })
-                  }
-                })
-    
+              section.formControls.forEach((control: any) => {
+                if (control.name == 'insuredMembers') {
+                  //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
+                  control.selectCheckboxOptions.forEach((option: any) => {
+                    if (this.formData.insuredMembers[option.value] === true) {
+                      // Call logSelection function (pass null for event if not triggering through UI)
+                      this.logSelection(null, option, control);
+                    }
+                  })
+                }
               })
+
+            })
           }
           // Hide the spinner once the response is processed
           this.spinner.hide();
@@ -1814,7 +1815,7 @@ export class AbhiDynamicFormComponent {
             tempControl[0].value = JSON.stringify(option);
             formControl.dynamicControls?.push(tempControl);
             console.log(this.formData);
-            
+
             let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
             // let formArr;
 
@@ -2088,7 +2089,7 @@ export class AbhiDynamicFormComponent {
           this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
         }
 
-        if(this.isQuote){
+        if (this.isQuote) {
           this.isQuote = !this.isQuote;
         }
       }
@@ -3193,8 +3194,8 @@ export class AbhiDynamicFormComponent {
         this.service.getPinCodeByCity(this.dynamicFormGroup.get('proposerPincode')?.value).subscribe({
           next: (res) => {
             console.log(res)
-            this.dynamicFormGroup.get('proposerCity')?.setValue(res.strcity);
-            this.dynamicFormGroup.get('proposerState')?.setValue(res.strstate);
+            this.dynamicFormGroup.get('proposerCity')?.setValue(res.data.city);
+            this.dynamicFormGroup.get('proposerState')?.setValue(res.data.state);
           },
           error: (err) => {
             console.error(err)
@@ -3495,8 +3496,8 @@ export class AbhiDynamicFormComponent {
 
   verifyKYC() {
     const proposerDOB = this.dynamicFormGroup.get('memberDobProposer')?.value;
-    const panNumber = this.dynamicFormGroup.get('panNo')?.value; 
-  
+    const panNumber = this.dynamicFormGroup.get('panNo')?.value;
+
     const reqData = {
       dateOfBirth: proposerDOB,
       panNumber: panNumber
@@ -3504,15 +3505,15 @@ export class AbhiDynamicFormComponent {
     console.log(reqData);
 
     this.spinner.show();
-  
+
     this.service.GetKycDetails(reqData).subscribe({
-      next: (response:any) => {
+      next: (response: any) => {
         console.log('KYC details:', response);
-        this.toast.success({detail:"SUCCESS", summary:"KYC Details Fetched Successfully", duration:3000});
+        this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
         this.spinner.hide();
         if (typeof response.data === 'object' && response.data !== null) {
-          Object.keys(response.data).forEach((key:any)=>{
-              this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+          Object.keys(response.data).forEach((key: any) => {
+            this.dynamicFormGroup.get(key)?.setValue(response.data[key])
           })
         } else {
           console.error('Expected response.data to be an object, but received:', response.data);
@@ -3526,35 +3527,66 @@ export class AbhiDynamicFormComponent {
     });
   }
 
-  getPolicyDetails() {
+  getPolicyDetails(control: IFormControl) {
     const policyNumberDetails = this.dynamicFormGroup.get('policyNumber')?.value;
-  
-    const reqData = {
-      policyNumber: policyNumberDetails
-    };
-    console.log(reqData);
+      const reqData = {
+        policyNumber: policyNumberDetails
+      };
+      console.log(reqData);
 
-    this.spinner.show();
-  
-    this.service.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
-      next: (response:any) => {
-        console.log('Policy details:', response);
-        this.toast.success({detail:"SUCCESS", summary:"Policy Details Fetched Successfully", duration:3000});
-        this.spinner.hide();
-        if (typeof response.data === 'object' && response.data !== null) {
-          Object.keys(response.data).forEach((key:any)=>{
+      this.spinner.show();
+
+      this.service.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
+        next: (response: any) => {
+          console.log('Policy details:', response);
+          this.toast.success({ detail: "SUCCESS", summary: "Policy Details Fetched Successfully", duration: 3000 });
+          this.spinner.hide();
+
+          console.log(this.dynamicFormGroup.get('insuredMembers')); 
+
+          control.selectCheckboxOptions = response.data.relation;
+          console.log(control.selectCheckboxOptions);
+
+          if (typeof response.data === 'object' && response.data !== null) {
+            Object.keys(response.data).forEach((key: any) => {
               this.dynamicFormGroup.get(key)?.setValue(response.data[key])
-          })
-        } else {
-          console.error('Expected response.data to be an object, but received:', response.data);
+            })
+
+            
+            if (this.isPolicyDetailsFetch) {
+              const insuredMemberDetails = response.data.insuredMemberDetails || [];
+              console.log(insuredMemberDetails);
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((control: any) => {
+                  if (control.name == 'insuredMembers') {
+                    const selectedRelations = insuredMemberDetails.map((member: any) => member.relation);
+                    console.log(selectedRelations);
+                    control.selectCheckboxOptions.forEach((option: any) => {
+                      const matchedMember = insuredMemberDetails.find((member: any) => member.relation === option.value);
+                      console.log(matchedMember);
+                      if (matchedMember) {
+                        this.logSelection(null, option, control);
+                        const memberDOB = matchedMember.memberdob;
+                        const calculatedAge = this.calculateAge(new Date(memberDOB));
+                        matchedMember.memberAge = calculatedAge;
+                        console.log(`Calculated age for ${matchedMember.firstName}: ${calculatedAge}`);
+                      }
+                    })
+                  }
+                })
+
+              })
+            }
+          } else {
+            console.error('Expected response.data to be an object, but received:', response.data);
+          }
+        },
+        error: (error) => {
+          this.spinner.hide();
+          this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
+          console.error('Error fetching Policy details:', error);
         }
-      },
-      error: (error) => {
-        this.spinner.hide();
-        this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
-        console.error('Error fetching Policy details:', error);
-      }
-    });
+      });
   }
-  
+
 }

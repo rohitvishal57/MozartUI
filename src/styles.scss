@@ -776,7 +776,7 @@ button {
   background: var(--site-pink);
   border: 1px solid var(--site-pink);
   border-radius: 12px;
-  padding: 10px 16;
+  padding: 10px 16px;
   font-weight: 500;
   font-size: 18px;
   line-height: 24px;
@@ -1487,7 +1487,20 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 500;
   font-size: 18px;
 }
-
+.btn_darkGrey {
+  padding: 10px 24px;
+  font-weight: 500;
+  font-size: 18px;
+  background: #767D93;
+  color: #ffffff;
+  border-color: #767D93;
+}
+.btn_darkGrey:hover {
+  color: #767D93;   
+}
+.btn_w_120{
+    min-width: 120px;
+}
 
 .btn_pinkNext {
   padding: 10px 24px;
@@ -3717,7 +3730,7 @@ input[type="search"]::-webkit-search-results-decoration {
   background-color: transparent;
   box-shadow: inset 0 0 0 0.125em #797979;
 }
-.radio_roomInfo .input-radiolabel span, .input-radiolabel input:checked + span {
+.radio_roomInfo .input-radiolabel span, .radio_roomInfo .input-radiolabel input:checked + span {
   border-radius: 14px;
   padding: 16px;
   border: 1px solid #e6e6e6;
