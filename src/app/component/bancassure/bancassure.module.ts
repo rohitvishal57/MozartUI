@@ -27,9 +27,12 @@ import { AbhiDashboardComponent } from '../abhi-up/abhi-dashboard/abhi-dashboard
 import { GetQuoteComponent } from '../abhi-up/get-quote/get-quote.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { SubQuotesComponent } from '../renewals/sub-quotes/sub-quotes.component';
+import { StatusValidationComponent } from '../status-validation/status-validation.component';
 @NgModule({
   declarations: [
     // Your components
+  
+    StatusValidationComponent
   ],
   imports: [
     // Other Angular modules

@@ -13,6 +13,7 @@ import { ClaimsComponent } from './claims/claims.component';
 import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
 import { RenewalListComponent } from '../renewals/renewal-list/renewal-list.component';
 import { SubQuotesComponent } from '../renewals/sub-quotes/sub-quotes.component';
+import { StatusValidationComponent } from '../status-validation/status-validation.component';
 
 const routes: Routes = [
     {
@@ -31,7 +32,7 @@ const routes: Routes = [
         {path: "createClaims", component:ClaimsViewComponent},
         {path:"subquotes",component:SubQuotesComponent},
         {
-          path: "requests",
+          path: "my-requests",
           loadChildren: () => import('../bancassure/endorsements/endorsements.module').then((m) => m.EndorsementsModule)
         },
       ]
