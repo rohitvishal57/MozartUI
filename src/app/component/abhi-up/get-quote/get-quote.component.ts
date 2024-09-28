@@ -60,7 +60,7 @@ export class GetQuoteComponent {
   proposerState:any;
   selectedSumInsured: any;
   selectedDiseases: string[] = [];
-  diseaseNames: string = "";
+  diseaseNames: string | null = null;
 
   multiIndiReqData: any = {
     proposerPincode: "",
