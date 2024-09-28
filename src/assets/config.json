@@ -8,6 +8,8 @@
 
     "getProposalListApi":"yatra/api/getproposallist",
 
+    "getLeadsListApi":"yatra/api/getLeadDetailsList",
+
     "getCustomerDetailsList":"yatra/api/getCustomerDetailsList",
 
     "getClaimsList":"claims/api/getclaimlist",

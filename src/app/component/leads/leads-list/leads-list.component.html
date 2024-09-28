@@ -9,7 +9,7 @@
                         <li>
                             <button type="button" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Leads({{countsList.totalRecords}})</button>
                         </li>
-                        <li>
+                        <!-- <li>
                             <button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('createdInLessThan30DaysCount')">< 30 Days ({{countsList.createdInLessThan30DaysCount}})</button>
                         </li>
                         <li>
@@ -17,7 +17,7 @@
                         </li>
                         <li>
                             <button type="button" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('createdIn60To90DaysCount')">60-90 Days ({{countsList.createdIn60To90DaysCount}})</button>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
                 <div class="quickFilterRight">
