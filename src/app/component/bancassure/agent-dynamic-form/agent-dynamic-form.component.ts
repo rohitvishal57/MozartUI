@@ -1177,9 +1177,9 @@ export class AgentDynamicFormComponent implements OnDestroy {
       this.service.getPinCodeByCity(reqData).subscribe({
         next: (res) => {
           console.log(res)
-          this.dynamicFormGroup.get('city')?.setValue(res.strcity);
-          this.dynamicFormGroup.get('state')?.setValue(res.strstate);
-          this.dynamicFormGroup.get('zone')?.setValue(res.strzone);
+          this.dynamicFormGroup.get('city')?.setValue(res.data.city);
+          this.dynamicFormGroup.get('state')?.setValue(res.data.state);
+          this.dynamicFormGroup.get('zone')?.setValue(res.data.zone);
         },
         error: (err) => {
           console.error(err)
@@ -1201,10 +1201,10 @@ export class AgentDynamicFormComponent implements OnDestroy {
 
                 const patchObject: { [key: string]: any } = {};
 
-                patchObject['city' as string] = res.strcity;
-                patchObject['zone' as string] = res.strzone;
-                patchObject['zoneValue' as string] = res.strzonemapping;
-                patchObject['state' as string] = res.strstate;
+                patchObject['city' as string] = res.data.city;
+                patchObject['zone' as string] = res.data.zone;
+                patchObject['zoneValue' as string] = res.data.zoneCode;
+                patchObject['state' as string] = res.data.state;
 
                 let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
 

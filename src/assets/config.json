@@ -27,7 +27,7 @@
     "agentCartDetails":"quote/api/getagentcartdetails",
     "insertOrUpdateAgentCartDetails":"quote/api/insertorupdateagentcartdetails",
     "productList":"yatra/api/getproductlist",
-    "pinCodeDetails":"yatra/api/getpincodedetails",
+    "pinCodeDetails":"Yatra/api/getpincodedetails",
     "proposalNumber":"yatra/api/getproposalnumber",
     "formSequence":"yatra/api/getformsequence",
     "getForm":"yatra/api/getform",
