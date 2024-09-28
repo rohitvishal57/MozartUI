@@ -221,78 +221,6 @@
                             </div>
                           </div>
                           <!--International No end-->
-                          <!--Alternate No start-->
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'alternateContactNumber'">
-                            <div class="input-block form-floating input-block-renew">
-                              <input class="form-control input-textBox" id="alternateContactNumber" placeholder="" formControlName="alternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'alternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['alternateContactNumber'].errors }">
-                              <label for="alternateContactNumber">Alternate No</label>
-                              <span class="invalid-feedback" *ngIf="f['alternateContactNumber'].errors">
-                                <span class="ui-error block-show" *ngIf="f['alternateContactNumber'].errors['required']">Field cannot be blank</span>
-                                <span class="ui-error block-show" *ngIf="f['alternateContactNumber'].errors['pattern']">Enter valid number</span>
-                              </span>
-                            </div>
-                          </div>
-                          <!--Alternate No end-->
-                          <!--Email start-->
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'email'">
-                            <div class="input-block form-floating input-block-renew">
-                              <input class="form-control input-textBox" id="email" placeholder="" formControlName="email" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'email')" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
-                              <label for="email">Email</label>
-                              <span class="invalid-feedback" *ngIf="f['email'].errors">
-                                <span class="ui-error block-show" *ngIf="f['email'].errors['required']">Field cannot be blank</span>
-                                <span class="ui-error block-show" *ngIf="f['email'].errors['pattern']">Email must be a valid email address</span>
-                              </span>
-                            </div>
-                          </div>
-                          <!--Email end-->
-                          <!--Correction in the emailId start-->
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'CorrectionintheemailID'">
-                            <div class="input-block form-floating input-block-renew">
-                              <input class="form-control input-textBox" id="CorrectionintheemailID" placeholder="" formControlName="CorrectionintheemailID" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'CorrectionintheemailID')" [ngClass]="{ 'is-invalid': submitted && f['CorrectionintheemailID'].errors }">
-                              <label for="CorrectionintheemailID">Correction in the emailId</label>
-                              <span class="invalid-feedback" *ngIf="f['CorrectionintheemailID'].errors">
-                                <span class="ui-error block-show" *ngIf="f['CorrectionintheemailID'].errors['required']">Field cannot be blank</span>
-                                <span class="ui-error block-show" *ngIf="f['CorrectionintheemailID'].errors['pattern']">Email must be a valid email address</span>
-                              </span>
-                            </div>
-                          </div>
-                          <!--Correction in the emailId end-->
-                          <!--Alternate Email ID start-->
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'alternateEmail'">
-                            <div class="input-block form-floating input-block-renew">
-                              <input class="form-control input-textBox" id="alternateEmail" placeholder="" formControlName="alternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'alternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['alternateEmail'].errors }">
-                              <label for="alternateEmail">Alternate Email ID</label>
-                              <span class="invalid-feedback" *ngIf="f['alternateEmail'].errors">
-                                <span class="ui-error block-show" *ngIf="f['alternateEmail'].errors['required']">Field cannot be blank</span>
-                                <span class="ui-error block-show" *ngIf="f['alternateEmail'].errors['pattern']">Email must be a valid email address</span>
-                              </span>
-                            </div>
-                          </div>
-                          <!--Alternate Email ID end-->
-                          <!--Email ID-member start-->
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'memberEmail'">
-                            <div class="input-block form-floating input-block-renew">
-                              <input class="form-control input-textBox" id="memberEmail" placeholder="" formControlName="memberEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberEmail'].errors }">
-                              <label for="memberEmail">Email ID-member</label>
-                              <span class="invalid-feedback" *ngIf="f['memberEmail'].errors">
-                                <span class="ui-error block-show" *ngIf="f['memberEmail'].errors['required']">Field cannot be blank</span>
-                                <span class="ui-error block-show" *ngIf="f['memberEmail'].errors['pattern']">Email must be a valid email address</span>
-                              </span>
-                            </div>
-                          </div>
-                          <!--Email ID-member end-->
-                          <!--Alternate Email ID - member start-->
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'memberAlternateEmail'">
-                            <div class="input-block form-floating input-block-renew">
-                              <input class="form-control input-textBox" id="memberAlternateEmail" placeholder="" formControlName="memberAlternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateEmail'].errors }">
-                              <label for="memberAlternateEmail">Alternate Email ID - member</label>
-                              <span class="invalid-feedback" *ngIf="f['memberAlternateEmail'].errors">
-                                <span class="ui-error block-show" *ngIf="f['memberAlternateEmail'].errors['required']">Field cannot be blank</span>
-                                <span class="ui-error block-show" *ngIf="f['memberAlternateEmail'].errors['pattern']">Email must be a valid email address</span>
-                              </span>
-                            </div>
-                          </div>
-                          <!--Alternate Email ID - member end-->
 
                           <!--OPT Button start-->
                           <div class="col-xs-12 col-sm-4 col-lg-3 col-md-3 mb-30" *ngIf="showOtpSection">
@@ -332,12 +260,7 @@
                             <input type="file" id="file" #fileInput (change)="newfile($event)" style="display:none;" />
                         </div>
                       </div>
-                      <span *ngIf="isFilenotSelected" class="ui-error block-show">
-                          Please select a file to continue.
-                      </span>
-                      <span class="ui-error block-show" *ngIf="showNote">
-                          File format not supported! Please upload .gif, .png, .jpeg, or .pdf files.
-                      </span>
+                      
                       <div *ngIf="showDocInfo">
                         <div class="uploadDocument_area uploadedDocument_info">
                             <div class="ud_area_left">
@@ -351,6 +274,12 @@
                             </div>
                         </div>
                       </div>
+                      <span *ngIf="isFilenotSelected" class="ui-error block-show">
+                        Please select a file to continue.
+                    </span>
+                    <span class="ui-error block-show" *ngIf="showNote">
+                        File format not supported! Please upload .gif, .png, .jpeg, or .pdf files.
+                    </span>
                     </div>
                   </div>
                   <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -392,11 +321,14 @@
                     <input type="text" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
                     <input type="text" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
                     <input type="text" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
-                  </div>        
+                </div>        
             </div>
             <div class="text-center">
                 <button type="button" (click)="validateOTP()" class="verify-btn">Verify</button>
-                <p class="opt-p">Didn’t get an OTP?<span (click)="sendOTP()" style="color: #c7222a; margin-left: 13px; cursor: pointer">Resend it</span></p>
+            </div>
+            <div class="d-flex justify-content-center">
+              <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds</label>
+              <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">Resend OTP</label>
             </div>
         </div>
     </div>
