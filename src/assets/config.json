@@ -6,6 +6,10 @@
     "sendrenewalsms":"renewal/api/sendrenewalsms",
     "generatepaymentlink":"renewal/api/generatepaymentlink",
 
+    "getProposalListApi":"yatra/api/getproposallist",
+
+    "getCustomerDetailsList":"yatra/api/getCustomerDetailsList",
+
     "getClaimsList":"claims/api/getclaimlist",
     "getProposalDetails":"claims/api/getproposaldetails?AgentCode",
     "saveClaims":"claims/api/saveclaim",

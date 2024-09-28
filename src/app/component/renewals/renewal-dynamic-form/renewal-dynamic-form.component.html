@@ -165,14 +165,14 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="name" formControlName="name" class="form-control input-textBox">
+                                              <input type="text" id="name" name="name" formControlName="name" placeholder="" class="form-control input-textBox">
                                               <label for="name">Name</label>
                                               <span class="ui-error" *ngIf="form?.get('name')?.invalid && form.get('name')?.touched">Please enter name</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="weight" formControlName="weight" class="form-control input-textBox">
+                                              <input type="text" id="weight" formControlName="weight" placeholder="" class="form-control input-textBox">
                                               <label for="weight">Weight</label>
                                               <span class="ui-error" *ngIf="form.get('weight')?.invalid && form.get('weight')?.touched">Please enter weight</span>
                                               <span class="ui-prefix">kg</span>
@@ -191,8 +191,8 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="gender" formControlName="gender" class="form-control input-selectBox">
-                                                  <option>Select gender</option>
+                                              <select id="gender" name="gender" formControlName="gender" placeholder="" class="form-control input-selectBox">
+                                                  <option value="">Select gender</option>
                                                   <option value="male">Male</option>
                                                   <option value="female">Female</option>
                                               </select>
@@ -202,15 +202,15 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="date" id="dob" formControlName="dob" class="form-control input-textBox">
+                                              <input type="date" id="dob" formControlName="dob" placeholder="" class="form-control input-textBox">
                                               <label for="dob">Date of birth</label>
                                               <span class="ui-error" *ngIf="form.get('dob')?.invalid && form.get('dob')?.touched">Please enter date of birth</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="idtype" formControlName="idtype" class="form-select input-selectBox">
-                                                  <option>Select ID type</option>
+                                              <select id="idtype" name="idtype" formControlName="idtype" placeholder="" class="form-select input-selectBox">
+                                                  <option value="">Select ID type</option>
                                                   <option value="aadhaar">Aadhaar</option>
                                                   <option value="pan">PAN</option>
                                               </select>
@@ -220,8 +220,8 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="idtype" formControlName="idtype" class="form-select input-selectBox">
-                                                  <option>Select ID type</option>
+                                              <select id="idtype" name="idtype" formControlName="idtype" placeholder="" class="form-select input-selectBox">
+                                                  <option value="">Select ID type</option>
                                                   <option value="aadhaar">Aadhaar</option>
                                                   <option value="pan">PAN</option>
                                               </select>
@@ -250,8 +250,8 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="air" formControlName="air" class="form-select input-selectBox">
-                                                  <option>Select Annual income range</option>
+                                              <select id="air" name="air" formControlName="air" placeholder="" class="form-select input-selectBox">
+                                                  <option value="">Select Annual income range</option>
                                                   <option value="5L">5L</option>
                                                   <option value="5L-10L">5L-10L</option>
                                               </select>
@@ -261,8 +261,8 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="occupation" formControlName="occupation" class="form-select input-selectBox">
-                                                  <option>Select occupation</option>
+                                              <select id="occupation" name="occupation" formControlName="occupation" placeholder="" class="form-select input-selectBox">
+                                                  <option value="">Select occupation</option>
                                                   <option value="salaried">Salaried</option>
                                                   <option value="selfemployed">Self-employed</option>
                                               </select>
@@ -272,8 +272,8 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="education" formControlName="education" class="form-select input-selectBox">
-                                                  <option>Select education</option>
+                                              <select id="education" name="education" formControlName="education" placeholder="" class="form-select input-selectBox">
+                                                  <option value="">Select education</option>
                                                   <option value="graduate">Graduate</option>
                                                   <option value="postgraduate">Postgraduate</option>
                                               </select>
@@ -649,7 +649,7 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="address1" name="address1" placeholder="" class="form-control input-textBox" formControlName="Home_Address_1">
+                                              <input type="text" id="address1" name="address1" formControlName="Home_Address_1" placeholder="" class="form-control input-textBox" >
                                               <label for="address1">Address Line 1</label>
                                               <span class="ui-error" *ngIf="form?.get('address1')?.invalid && form?.get('address1')?.touched">Please enter Address Line 1</span>
                                           </div>
@@ -752,7 +752,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="nomine-relation" formControlName="nominee_relationship_code" class="form-control input-selectBox">
+                                              <select id="nomine-relation" name="nomine-relation" formControlName="nominee_relationship_code" placeholder="" class="form-control input-selectBox">
                                                   <option value="">Select Relation</option>
                                                   <option value="Son">Son</option>
                                                   <option value="Spouse">Spouse</option>
@@ -809,9 +809,9 @@
                               </div>
                           </div>
                       </div>
-                      <div class="bi_right">
-                          <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('addNominee')">Save Updates</button>
-                      </div>
+                      <footer>
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('addNominee')">Save Updates</button>
+                      </footer>
                   </div>
                   <!--Accordion Item end-->
               </div>
@@ -1035,26 +1035,22 @@
                       </div>
                   </div>
                   <div class="message-send-cnt" *ngIf="!emailSaved">
-                      <div class="send-link-btn">
-                          <button [ngClass]="{'disabled-btn': isEditingEmail}" [disabled]="isEditingEmail">Send Link</button>
-                      </div>
+                        <button type="button" value="renewnow" class="btn_red btn_redRenew" [ngClass]="{'disabled-btn': isEditingEmail}" [disabled]="isEditingEmail">Send Link</button>
                       <div class="separator" *ngIf="!isEditingEmail">
                           <span>OR</span>
                       </div>
                       <div class="payment-select" *ngIf="!isEditingEmail">
-                          <div>Make payment online</div>
-                          <div class="custom-dropdown" (click)="toggleDropdown()">
-                              <div class="selected-option">
-                                  {{ selectedPaymentTypeLabel || 'Select payment type' }}
-                              </div>
-                              <div class="dropdown-options" *ngIf="isDropdownOpen">
-                                  <div class="payment-option" *ngFor="let option of paymentTypes" [ngClass]="{'selected': selectedPaymentType === option.value}" (click)="selectPaymentType(option)">
-                                      <div>{{ option.label }}</div>
-                                      <div *ngIf="option.isFasterProcess" class="faster-process">Faster process</div>
-                                  </div>
-                              </div>
+                        <div>Make payment online</div>
+                        <div class="custom-dropdown">
+                          <div class="dropdown-options">
+                            <div class="payment-option" *ngFor="let option of paymentTypes" [ngClass]="{'selected': selectedPaymentType === option.value}" 
+                              (click)="selectPaymentType(option)">
+                              <div>{{ option.label }}</div>
+                              <div *ngIf="option.isFasterProcess" class="faster-process">Faster process</div>
+                            </div>
                           </div>
-                      </div>
+                        </div>
+                      </div> 
                   </div>
                   <div class="message-sent-container" *ngIf="emailSaved">
                       <div class="payment-responce">
@@ -1397,7 +1393,7 @@
           <div class="bi_right">
               <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()">Proceed</button>
               <button type="button" value="renewnow" class="btn_red btn_redRenew" *ngIf="activeSection != 'payment' " (click)="renewNow()">Renew Now</button>
-              <button type="button" value="renewnow" class="btn_red " *ngIf="activeSection === 'payment'" (click)="setSection('policySummery')">Next</button>
+              <button type="button" value="renewnow" class="btn_red next_btn" *ngIf="activeSection === 'payment'" (click)="setSection('policySummery')">Next</button>
           </div>
       </div>
   </div>

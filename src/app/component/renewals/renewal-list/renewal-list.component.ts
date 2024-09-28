@@ -38,7 +38,7 @@ export class RenewalListComponent {
   isDesktopView:boolean=false
   private onDestroy$: Subject<boolean> = new Subject<boolean>();
   agentCode=localStorage.getItem('agentCode');
-
+  filterType: string = "totalRecords";
 
   constructor(
     private renewalService: RenewalServiceService,
@@ -83,14 +83,30 @@ export class RenewalListComponent {
           })); 
           console.log("Renewal List",this.renewalsList);
           this.countsList = response.data;
-          this.totalRecords = this.countsList.totalRecords;
-        } 
+          this.totalRecords = response.data[this.filterType];         } 
         else {console.error("API request was not successful.");}
       },
       (error) => {
         console.error("Error from getRenewalsList API:", error);
       }
     );
+  }
+
+  formatRenewedDate(datetime: string): string {
+    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
+  }
+  filterQuotes(filter: string,filterRange: string) {
+    this.renewalLisRequestBody.filterType = filter;
+    this.getRenewalsList();
+    this.activeFilter = filter;
+    this.filterType = filterRange;
+  }
+  formatDate(dateType: "startDate" | "endDate") {
+    if (dateType === "startDate" && this.startDate) {
+      this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
+    } else if (dateType === "endDate" && this.endDate) {
+      this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
+    }
   }
   getProducts() {
     const reqData={
@@ -109,21 +125,6 @@ export class RenewalListComponent {
          console.log("error coming form getproduct list API");
       }
     })
-  }
-  formatRenewedDate(datetime: string): string {
-    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
-  }
-  filterQuotes(filter: string) {
-    this.renewalLisRequestBody.filterType = filter;
-    this.getRenewalsList();
-    this.activeFilter = filter;
-  }
-  formatDate(dateType: "startDate" | "endDate") {
-    if (dateType === "startDate" && this.startDate) {
-      this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
-    } else if (dateType === "endDate" && this.endDate) {
-      this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
-    }
   }
   toggleFilterDropdown() {
     if(this.toggeleSearchdropdown==true)

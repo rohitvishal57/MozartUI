@@ -7,19 +7,19 @@
                     <ul class="quickFilter">
                         <li class="quickFilterHeading">Quick filter</li>
                         <li>
-                            <button type="button" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Policies({{countsList.totalRecords}})</button>
+                            <button type="button" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">All Policies({{countsList.totalRecords}})</button>
                         </li>
                         <li>
-                            <button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired')">< 30 Days ({{countsList.expiringInLessThan30DaysCount}})</button>
+                            <button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')">< 30 Days ({{countsList.expiringInLessThan30DaysCount}})</button>
                         </li>
                         <li>
-                            <button type="button" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days')">30-60 Days ({{countsList.expiringIn30To60DaysCount}})</button>
+                            <button type="button" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">30-60 Days ({{countsList.expiringIn30To60DaysCount}})</button>
                         </li>
                         <li>
-                            <button type="button" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days')">60-90 Days ({{countsList.expiringIn60To90DaysCount}})</button>
+                            <button type="button" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days','expiringIn60To90DaysCount')">60-90 Days ({{countsList.expiringIn60To90DaysCount}})</button>
                         </li>
                         <li>
-                            <button type="button" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies')">Expired ({{countsList.expiredCount}})</button>
+                            <button type="button" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">Expired ({{countsList.expiredCount}})</button>
                         </li>
                     </ul>
                 </div>
@@ -227,15 +227,15 @@
                         </table>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                <div class="tableNav" *ngIf="totalRecords > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords ? countsList.totalRecords : first + rows}}</span> of <span class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> of <span class="pageCountTotal">{{totalRecords}} entries</span>
                             </li>
                         </ul>
                     </nav>
@@ -342,21 +342,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                <div class="tableNav" *ngIf="totalRecords > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords ? countsList.totalRecords : first + rows}}</span> of <span class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> of <span class="pageCountTotal">{{totalRecords}} entries</span>
                             </li>
                         </ul>
                     </nav>
                 </div>
             </section>
-            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalRecords === 0">
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords === 0">
                 <div class="cardViewWraper">
                     <div class="no_dataFound">
                         <img src="assets/Img/img_no_data_found.svg" alt="No data found">
@@ -365,7 +365,7 @@
                 </div>
             </section>
             <!--Create new quote Main start-->
-            <section class="createNewQuoteWraper" *ngIf="countsList.totalRecords === 0">
+            <section class="createNewQuoteWraper" *ngIf="totalRecords === 0">
                 <div class="createNewQuoteMain">
                     <div class="cnqLeft">
                         <!-- <h5>Hi {{ row.proposerFirstName }} , let's get started with new leads</h5> -->
