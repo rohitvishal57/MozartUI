@@ -1,7 +1,7 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MSAL_GUARD_CONFIG, MsalBroadcastService, MsalGuardConfiguration, MsalService } from '@azure/msal-angular';
 import { AuthenticationResult, EventMessage, EventType, InteractionStatus, PopupRequest, RedirectRequest } from '@azure/msal-browser';
 import { NgToastService } from 'ng-angular-popup';
@@ -51,26 +51,25 @@ export class AgentLoginComponent implements OnInit{
   isTimerRunning: boolean = false; 
   AgentcContactDetails: any = [];
   contactInfoData: string[] = [];
-
-
   constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,
     private toast: NgToastService,@Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private msalAuthService: MsalService,
     private msalBroadcastService: MsalBroadcastService,public common:CommonService,
+    private route: ActivatedRoute,
     public dialog: MatDialog){
   }
+
   ngOnInit(){
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
     );
-    
     this.backgroundImageUrl = "assets/logo/Backgroundimage_ABHI.jpg"; 
     localStorage.clear()
     sessionStorage.clear()
     this.loginForm = this.fb.group({
-      agentUserName: ['', [Validators.required]],
-      agentPassword: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(20),Validators.minLength(5)]]
+      userName: ['', [Validators.required]],
+      // agentPassword: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(20),Validators.minLength(5)]]
     })
     this.codeForm = this.fb.group({
       verify: ['', [Validators.required]],
@@ -114,6 +113,20 @@ export class AgentLoginComponent implements OnInit{
         this.checkAndSetActiveAccount();
       });
   }
+
+  handleRedirectResponse(fragment: any) {
+    const hashParams = new URLSearchParams(fragment);
+    const clientRequestId = hashParams.get('client-request-id');
+    const idToken = hashParams.get('id_token');
+
+    console.log('Client Request ID:', clientRequestId);
+    console.log('ID Token:', idToken);
+
+    // Store in session storage or handle as needed
+    sessionStorage.setItem('client-request-id', clientRequestId || '');
+    sessionStorage.setItem('id_token', idToken || '');
+  }
+
   selectFormType(data:any){
     this.activeBtn = data;
     if(data == 'Login with User Code'){
@@ -131,8 +144,8 @@ export class AgentLoginComponent implements OnInit{
       this.loginWithUserOTP = true;
       this.loginWithUsername = false;
       this.loginForm = this.fb.group({
-        agentUserName: ['', [Validators.required]],
-        agentPassword: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(20),Validators.minLength(5)]]
+        userName: ['', [Validators.required]],
+        // agentPassword: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(20),Validators.minLength(5)]]
       })
     }
   }
@@ -205,7 +218,7 @@ export class AgentLoginComponent implements OnInit{
         const username:any= response.idTokenClaims;
         console.log(username);
         this.loginService.storeToken(idToken);
-        localStorage.setItem('agentUserName',username.name);
+        localStorage.setItem('userName',username.name);
         localStorage.setItem('verticalCode', this.verticalCode);
         localStorage.setItem('code', '2001');
         this.router.navigate(['portal/agent/viewdashboard']);
@@ -365,12 +378,13 @@ export class AgentLoginComponent implements OnInit{
       this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
         .subscribe({  
           next: (res)=>{
-            console.log(res); 
+            const authWindow = window.open(res.data.redirectUrl, "_blank");
+            this.getResponseUrl(authWindow);
             this.loginService.storeToken(res.token);
             localStorage.setItem('agentCode', res.agentcode);
             localStorage.setItem('verticalCode', this.verticalCode);
             // this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 5000 })
-            this.router.navigate(['portal/agent/viewdashboard']);
+            // this.router.navigate(['portal/agent/viewdashboard']);
           },
           error: (err => {
             console.log(err);
@@ -397,6 +411,36 @@ export class AgentLoginComponent implements OnInit{
       else if (this.loginForm.get('nationality') && this.loginForm.get('nationality')?.value !== 'Indian')
         this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
     }
+  }
+
+  getResponseUrl(authWindow: any){
+  debugger;
+    const interval = setInterval(() => {
+          try {
+            if (authWindow?.location.href && authWindow.location.href.includes('id_token')) {
+              const returnUrl = authWindow.location.href;
+              console.log(returnUrl);
+
+              this.handleAuthResponse(returnUrl);
+
+              clearInterval(interval);
+            }
+          } catch (error) {
+            console.log('Error:', error);
+          }
+        }, 1000);
+  }
+
+   handleAuthResponse(returnUrl: string) {
+   debugger;
+    const urlParams = new URL(returnUrl);
+    const hashParams = new URLSearchParams(urlParams.hash.substring(1));
+    
+    const idToken = hashParams.get('id_token');
+    const clientRequestId = urlParams.searchParams.get('client-request-id');
+    
+    console.log('ID Token:', idToken);
+    console.log('Client Request ID:', clientRequestId);
   }
 
    // Handle key events for OTP input
@@ -513,3 +557,7 @@ export class AgentLoginComponent implements OnInit{
     this.codeForm.patchValue(data);
   }
 }
+function handleRedirectResponse(fragment: any, string: any) {
+  throw new Error('Function not implemented.');
+}
+

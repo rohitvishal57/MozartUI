@@ -7,6 +7,7 @@ import { BancassureComponent } from './component/bancassure/bancassure.component
 import { AgentLoginComponent } from './component/bancassure/agent-login/agent-login.component';
 import { BrowserUtils } from '@azure/msal-browser';
 import { RouterModule, Routes } from '@angular/router';
+import { StatusValidationComponent } from './component/status-validation/status-validation.component';
 
 const routes: Routes=[
   // {path:"",component:LoginComponent},
@@ -19,6 +20,7 @@ const routes: Routes=[
     loadChildren: () => import('./portal/portal.module').then((m) => m.PortalModule  ),
     canActivate: [AuthGuard]
   },
+  {path:":status/loginstatus", component: StatusValidationComponent},
   {path:'**',redirectTo:"",pathMatch:'full'},
 ];
 

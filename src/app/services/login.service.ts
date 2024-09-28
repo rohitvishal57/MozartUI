@@ -18,8 +18,8 @@ export class LoginService {
 
   //Agent APi's
   sendAgentLoginRequestApi(loginData: any) {
-    const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;
-    return this.http.post<any>(sendAgentLoginRequestApi, loginData);
+    // const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;
+    return this.http.post<any>("https://localhost:7253/api/login", loginData);
   }
 
   Getagentcartdetails(reqData:any){
