@@ -17,22 +17,33 @@
 
 /*---Common css end---*/
 
-.close {
-    float: right;
-    border: none;
-}
 
-.otp-container {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px auto;
-    .otp-input {
-        width: 45px;
-        // margin-right: 10px;
-        padding: 10px;
-        text-align: center;
-        font-size: 18px;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-      }
-  }
+.modal-body {
+    .close {
+        float: right;
+        border: none;
+    }
+    .otp-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px auto;
+        .otp-input {
+            width: 45px;
+            // margin-right: 10px;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+    }
+    .send_otp_again_wrap{
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .timeLeft_color{
+        color: #C91429;
+        font-weight: 600;
+        // font-size: 18px;
+    }
+}
