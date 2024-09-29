@@ -32,11 +32,10 @@ export class StatusValidationComponent implements OnInit {
         console.log( url,'fragment')
         if(url[1] == 'adfs'){
             data.Idtoken = idToken;
-            this.adfsService.checkADFSLogin(data).subscribe({
+            this.adfsService.checkADFSLogin(data,data.Idtoken).subscribe({
               next: (res:any) => {
-                this.loginService.storeToken(res.token);
-                localStorage.setItem('username', res.userName);
-                localStorage.setItem('verticalCode', res.verticalCode);
+                this.loginService.storeToken(res.data.token);
+                localStorage.setItem('username', res.data.agentcode);
                 localStorage.setItem('code', '2001');
                 this.toast.success({
                   detail: 'SUCCESS',
@@ -56,11 +55,10 @@ export class StatusValidationComponent implements OnInit {
             });
         }else{
           data.Idtoken = idToken;
-          this.adfsService.checkCyberArkLogin(data).subscribe({
+          this.adfsService.checkCyberArkLogin(data,data.Idtoken).subscribe({
             next: (res:any) => {
-              this.loginService.storeToken(res.token);
-              localStorage.setItem('username', res.userName);
-              localStorage.setItem('verticalCode', res.verticalCode);
+              this.loginService.storeToken(res.data.token);
+              localStorage.setItem('username', res.data.agentcode);
               localStorage.setItem('code', '2001');
               this.toast.success({
                 detail: 'SUCCESS',
