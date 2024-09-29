@@ -19,7 +19,7 @@ export class LoginService {
   //Agent APi's
   sendAgentLoginRequestApi(loginData: any) {
     // const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;
-    return this.http.post<any>("https://localhost:7253/api/login", loginData);
+    return this.http.post<any>("https://usp.monocept.ai/auth/api/login", loginData);
   }
 
   Getagentcartdetails(reqData:any){
