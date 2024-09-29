@@ -20,7 +20,7 @@ const routes: Routes=[
     loadChildren: () => import('./portal/portal.module').then((m) => m.PortalModule  ),
     canActivate: [AuthGuard]
   },
-  {path:":status/loginstatus", component: StatusValidationComponent},
+  {path:"ABHI/:status/loginstatus", component: StatusValidationComponent},
   {path:'**',redirectTo:"",pathMatch:'full'},
 ];
 
