@@ -114,19 +114,6 @@ export class AgentLoginComponent implements OnInit{
       });
   }
 
-  handleRedirectResponse(fragment: any) {
-    const hashParams = new URLSearchParams(fragment);
-    const clientRequestId = hashParams.get('client-request-id');
-    const idToken = hashParams.get('id_token');
-
-    console.log('Client Request ID:', clientRequestId);
-    console.log('ID Token:', idToken);
-
-    // Store in session storage or handle as needed
-    sessionStorage.setItem('client-request-id', clientRequestId || '');
-    sessionStorage.setItem('id_token', idToken || '');
-  }
-
   selectFormType(data:any){
     this.activeBtn = data;
     if(data == 'Login with User Code'){
@@ -181,7 +168,6 @@ export class AgentLoginComponent implements OnInit{
     this.loginService.sendGoogleLoginRequest(reqBody).subscribe({
       next: (res) => {
         console.log(res);
-        
         this.loginService.storeToken(res.token);
         localStorage.setItem('username', res.userName);
         localStorage.setItem('verticalCode', this.verticalCode);
@@ -378,8 +364,7 @@ export class AgentLoginComponent implements OnInit{
       this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
         .subscribe({  
           next: (res)=>{
-            const authWindow = window.open(res.data.redirectUrl, "_blank");
-            this.getResponseUrl(authWindow);
+            window.open(res.data.redirectUrl, "_blank");
             this.loginService.storeToken(res.token);
             localStorage.setItem('agentCode', res.agentcode);
             localStorage.setItem('verticalCode', this.verticalCode);
@@ -411,36 +396,6 @@ export class AgentLoginComponent implements OnInit{
       else if (this.loginForm.get('nationality') && this.loginForm.get('nationality')?.value !== 'Indian')
         this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
     }
-  }
-
-  getResponseUrl(authWindow: any){
-  debugger;
-    const interval = setInterval(() => {
-          try {
-            if (authWindow?.location.href && authWindow.location.href.includes('id_token')) {
-              const returnUrl = authWindow.location.href;
-              console.log(returnUrl);
-
-              this.handleAuthResponse(returnUrl);
-
-              clearInterval(interval);
-            }
-          } catch (error) {
-            console.log('Error:', error);
-          }
-        }, 1000);
-  }
-
-   handleAuthResponse(returnUrl: string) {
-   debugger;
-    const urlParams = new URL(returnUrl);
-    const hashParams = new URLSearchParams(urlParams.hash.substring(1));
-    
-    const idToken = hashParams.get('id_token');
-    const clientRequestId = urlParams.searchParams.get('client-request-id');
-    
-    console.log('ID Token:', idToken);
-    console.log('Client Request ID:', clientRequestId);
   }
 
    // Handle key events for OTP input
@@ -557,7 +512,5 @@ export class AgentLoginComponent implements OnInit{
     this.codeForm.patchValue(data);
   }
 }
-function handleRedirectResponse(fragment: any, string: any) {
-  throw new Error('Function not implemented.');
-}
+
 

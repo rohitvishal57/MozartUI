@@ -30,7 +30,7 @@ export class StatusValidationComponent implements OnInit {
         if (fragment) {
           idToken = this.extractIdToken(fragment);
         console.log( url,'fragment')
-        if(url[1] == 'adfs'){
+        if(url.includes('adfs')){
             data.Idtoken = idToken;
             this.adfsService.checkADFSLogin(data,data.Idtoken).subscribe({
               next: (res:any) => {
@@ -91,5 +91,4 @@ export class StatusValidationComponent implements OnInit {
     const params = new URLSearchParams(fragment);
     return params.get('id_token'); // Extracts id_token from fragment
   }
-
 }
