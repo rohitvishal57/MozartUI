@@ -376,6 +376,46 @@
 
 /*====New Styles August 18-2024===*/
 .login-mainContainer {
+    &.agentLoginMain {
+        .main {
+            position: absolute;
+            top: 0;
+            background: transparent;
+            .sub-main {
+                border-width: 0;
+                .header {
+                    display: none;
+                }
+            }
+        }
+        .login-formMain{
+            padding: 11% 0 0;
+            @media (max-width: 1024px) {
+                padding: 20% 0 0;
+            }
+            @media (max-width: 540px) {
+                padding: 30% 0 0;
+            }
+            .login-form {
+                border: 5px none;
+            }
+            .background-image {
+                position: fixed;
+                top: 0;
+                object-fit: fill;
+                @media (max-width: 1024px) {
+                    top: 20%;
+                }
+                @media (max-width: 540px) {
+                    top: auto;
+                    bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+.login-mainContainer {
     width: 100%;
     min-height: 100vh;
     /*background: url(../../../../assets/images/img_login_mainbg.svg) no-repeat bottom center;
@@ -524,7 +564,7 @@
                     font-size: 18px;
                 }
                 .send_otp_again_wrap{
-                    text-decoration: underline;
+                    text-decoration: none;
                     cursor: pointer;
                 }
                 
@@ -535,18 +575,18 @@
   }
   
   .otp-input {
-    width: 45px !important;
+    width: 47px !important;
     margin-right: 14px !important;
     padding: 10px !important;
     text-align: center;
     font-size: 18px;
   }
   .otp-text-wrap{
-    color: #000000;
-    opacity: 0.6;
+    color: #2e2e2e;
     position: relative;
     top: 10px;
     font-weight: 500;
+    font-size: 16px;
   }
   .error-message {
     color: red;
@@ -569,15 +609,15 @@
                            
                         }
                         .borderlt{ 
-                            border-radius: 12px 0px 0px 12px !important;
+                            border-radius: 8px 0px 0px 8px !important;
                         }
                         .bordertl{ 
-                            border-radius: 0px 12px 12px 0px !important;
+                            border-radius: 0px 8px 8px 0px !important;
                         }
                         .activeBtn{
-                            background-color: lightpink;
+                            background-color: #FFE7E5;
                             color:#C7222A; 
-                            border-radius: 12px !important;
+                            border-radius: 8px !important;
                         }
                       
                     } 
@@ -651,7 +691,7 @@
                 font-family: Anek latin, sans-serif;
                 height: 40px;
                 font-size: medium;
-                border-radius: 12px;
+                border-radius: 8px;
                 border: 1px solid #f1f3f6;
                 width: 100%;
                 background-color: #FFFFFF;
@@ -686,7 +726,7 @@
                 border: 0px;
                 width: 100%;
                 font-size: medium;
-                margin: 15px 0px;
+                margin: 15px 0px 0px;
                 background-color: #C7222A;
                 padding: 10px 16px;
             }
@@ -714,5 +754,11 @@
             bottom: 0;
         }
     }
+}
+.resend_otp_link {
+    font-weight: 400;
+    font-size: 14px;
+    color: #C7222A;
+    text-decoration: none !important;
 }
 /*====New Styles August 18-2024===*/
