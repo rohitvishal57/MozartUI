@@ -1,0 +1,114 @@
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .claim-info h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .claim-info p {
+    margin: 5px 0;
+    color: #777;
+  }
+  
+  .claim-amount {
+    text-align: right;
+  }
+  
+  .claim-amount p {
+    margin: 0;
+    font-size: 14px;
+    color: #777;
+  }
+  
+  .claim-amount h3 {
+    margin: 5px 0;
+    color: green;
+  }
+  
+  .under-deficiency {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fbe9e7;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .deficiency-text {
+    font-weight: bold;
+    color: red;
+  }
+  .upload-documents{
+    display: flex;
+  }
+  .upload-btn {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .upload-btn:hover {
+    background-color: #e65100;
+  }
+  
+  .view-details,
+  .care-manager {
+    color: #d90032;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+  
+  .view-details:hover,
+  .care-manager:hover {
+    text-decoration: underline;
+  }
+  
+  .claims-info {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .member-policy,
+  .claim-details {
+    width: 45%;
+    background:linear-gradient(to top right, white, #d5d7de);;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .member-policy h4,
+  .claim-details h4 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .member-policy p,
+  .claim-details p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .mat-tab-group {
+    margin-top: 20px;
+  }
+  

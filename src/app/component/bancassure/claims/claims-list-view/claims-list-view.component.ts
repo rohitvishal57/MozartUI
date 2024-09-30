@@ -34,6 +34,7 @@ export class ClaimsListViewComponent implements OnInit {
   searchInputControl = new FormControl("");
   selected: string = "";
   userId!: number;
+  selectedClaim: any = null;
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsService){ }
 
   ngOnInit(){
@@ -140,4 +141,28 @@ getPlaceholder(): string {
       return 'Search...';
     }
   } 
+  
+  toggleDropdown(row: any) {
+    if (this.selectedClaim && this.selectedClaim.id === row.id) {
+      this.selectedClaim = null; 
+    } else {
+      this.selectedClaim = row;
+    }
+  }
+  maskPhoneNumber(policyNumber: string): string {
+    if (!policyNumber || policyNumber.length < 4) {
+      return policyNumber; 
+    }
+    
+    const start = policyNumber.slice(0, 4); 
+    const end = policyNumber.slice(-2);
+    const masked = '******';
+    
+    return `${start}${masked}${end}`;
+  }
+  navigateToViewClaim(row:any){
+    debugger
+    this.router.navigate([`/portal/agent/claimsDetails/${row.id}`]);
+   // this.router.navigateByUrl(`/portal/agent/claimsDetails`);
+  }
 }
