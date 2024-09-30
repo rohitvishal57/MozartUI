@@ -48,10 +48,7 @@ export class SendOtpViaComponent implements OnInit{
 
   sendOtpReqBody: any = {
     "agentCode": "",
-    "eventName": "",
-    "requestId": "",
-    "otpNumber": "",
-    "mobileNumber": "",
+    "mobileNumber": "9160082999",
     "eMailId": ""
   }
 
@@ -63,7 +60,7 @@ export class SendOtpViaComponent implements OnInit{
   onSelect(data:any){
     localStorage.setItem("sendOTP", data);
     this.sendOtpReqBody.agentCode = localStorage.getItem("agentCode");
-    this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
+    // this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
 
     this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
