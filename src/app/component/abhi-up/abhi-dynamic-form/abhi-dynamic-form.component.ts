@@ -3731,31 +3731,85 @@ export class AbhiDynamicFormComponent {
             this.dynamicFormGroup.get(key)?.setValue(response.data[key])
           })
 
-
           if (this.isPolicyDetailsFetch) {
             const insuredMemberDetails = response.data.insuredMemberDetails || [];
             console.log(insuredMemberDetails);
+            
+            // Loop through each form section and control to find 'insuredMembers'
             this.form.formSections.forEach((section: any) => {
               section.formControls.forEach((control: any) => {
-                if (control.name == 'insuredMembers') {
+                if (control.name === 'insuredMembers') {
                   const selectedRelations = insuredMemberDetails.map((member: any) => member.relation);
                   console.log(selectedRelations);
+                  
+                  // Iterate over selectCheckboxOptions and check if they match the insured members
                   control.selectCheckboxOptions.forEach((option: any) => {
                     const matchedMember = insuredMemberDetails.find((member: any) => member.relation === option.value);
-                    console.log(matchedMember);
-                    if (matchedMember) {
+                    const control = this.dynamicFormGroup.get(`insuredMembers.${option.value}`);
+                    console.log(`Matching member for option ${option.value}:`, matchedMember);
+                    
+                    if (matchedMember && control) {
+                      control.setValue(true);
                       this.logSelection(null, option, control);
+          
+                      // Extract member details
                       const memberDOB = matchedMember.memberdob;
+                      const memberPin = response.data.pincode; // Assuming pincode is from response data
                       const calculatedAge = this.calculateAge(new Date(memberDOB));
-                      matchedMember.memberAge = calculatedAge;
                       console.log(`Calculated age for ${matchedMember.firstName}: ${calculatedAge}`);
+          
+                      // Set form control values dynamically
+                      const dobControl = this.dynamicFormGroup.get(`memberdob_${option.value}`);
+                      const pincodeControl = this.dynamicFormGroup.get(`pincode_${option.value}`);
+                      const ageControl = this.dynamicFormGroup.get(`memberAge_${option.value}`);
+                      
+                      // Set DOB, Pincode, and Age if controls exist
+                      if (dobControl) {
+                        dobControl.setValue(memberDOB);
+                        console.log(`DOB for ${option.value} set to: ${memberDOB}`);
+                      }
+          
+                      if (pincodeControl) {
+                        pincodeControl.setValue(memberPin);
+                        console.log(`Pincode for ${option.value} set to: ${memberPin}`);
+                      }
+          
+                      if (ageControl) {
+                        ageControl.setValue(calculatedAge);
+                        console.log(`Age for ${option.value} set to: ${calculatedAge}`);
+                      }
                     }
-                  })
+                  });
                 }
-              })
-
-            })
+              });
+            });
           }
+          
+
+          // if (this.isPolicyDetailsFetch) {
+          //   const insuredMemberDetails = response.data.insuredMemberDetails || [];
+          //   console.log(insuredMemberDetails);
+          //   this.form.formSections.forEach((section: any) => {
+          //     section.formControls.forEach((control: any) => {
+          //       if (control.name == 'insuredMembers') {
+          //         const selectedRelations = insuredMemberDetails.map((member: any) => member.relation);
+          //         console.log(selectedRelations);
+          //         control.selectCheckboxOptions.forEach((option: any) => {
+          //           const matchedMember = insuredMemberDetails.find((member: any) => member.relation === option.value);
+          //           console.log(matchedMember);
+          //           if (matchedMember) {
+          //             this.logSelection(null, option, control);
+          //             const memberDOB = matchedMember.memberdob;
+          //             const calculatedAge = this.calculateAge(new Date(memberDOB));
+          //             matchedMember.memberAge = calculatedAge;
+          //             console.log(`Calculated age for ${matchedMember.firstName}: ${calculatedAge}`);
+          //           }
+          //         })
+          //       }
+          //     })
+
+          //   })
+          // }
         } else {
           console.error('Expected response.data to be an object, but received:', response.data);
         }
