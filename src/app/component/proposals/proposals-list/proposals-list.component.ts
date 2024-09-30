@@ -34,7 +34,12 @@ export class ProposalsListComponent {
   isDesktopView:boolean=false
   filterType: string = "totalRecords";
   agentCode :any =localStorage.getItem('agentCode'); 
-
+  StaticPolicyTypes = [
+    { name: 'Individual', selected: false },
+    { name: 'RUG', selected: false },
+    { name: 'Family Floater', selected: false },
+    { name: 'Groups', selected: false }
+  ];
 
   constructor(
     private proposalService: ProposalService,
@@ -91,7 +96,6 @@ export class ProposalsListComponent {
       }
     );
   }
-
   filterQuotes(filter: string,filterRange: string) {
     this.proposalListRequestBody.filterType = filter;
     this.getProposalList();
@@ -157,7 +161,7 @@ export class ProposalsListComponent {
       console.log("selectedProducts",selectedProducts);     
     this.proposalListRequestBody.productVarientName = selectedProducts.join(", ");
      console.log("product names which are taking by request body",this.proposalListRequestBody.productVarientName);  
-    const selectedPolicyTypes = this.policyTypes
+    const selectedPolicyTypes = this.StaticPolicyTypes
       .filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
       console.log("selecteed policy types",selectedPolicyTypes);  
@@ -231,7 +235,6 @@ export class ProposalsListComponent {
     }
     return "";
   }
-  
   cancelSearch(menuTrigger: MatMenuTrigger) {
     this.toggeleSearchdropdown = false;
     this.selected = "";
@@ -243,17 +246,28 @@ export class ProposalsListComponent {
     this.getProposalList();
     menuTrigger.closeMenu();
   }
-  
   applySearch(menuTrigger: MatMenuTrigger) {
     if (this.searchInputControl.valid) {
       if (this.selected === "mobileNumber") {
         this.proposalListRequestBody.mobileNumber = this.searchInputControl.value!;
+        this.proposalListRequestBody.proposer = "";
+        this.proposalListRequestBody.policyNumber = "";
+        this.proposalListRequestBody.proposalNumber =""
       } else if (this.selected === "proposerName") {
         this.proposalListRequestBody.proposer = this.searchInputControl.value!;
+        this.proposalListRequestBody.mobileNumber = "";
+        this.proposalListRequestBody.policyNumber = "";
+        this.proposalListRequestBody.proposalNumber =""
       } else if (this.selected === "policyNumber") {
         this.proposalListRequestBody.policyNumber = this.searchInputControl.value!;
+        this.proposalListRequestBody.mobileNumber = "";
+        this.proposalListRequestBody.proposer = "";
+        this.proposalListRequestBody.proposalNumber =""
       }else if (this.selected === "proposalNumber") {
         this.proposalListRequestBody.proposalNumber = this.searchInputControl.value!;
+        this.proposalListRequestBody.mobileNumber = "";
+        this.proposalListRequestBody.proposer = "";
+        this.proposalListRequestBody.policyNumber = "";
       }
       this.getProposalList();
       menuTrigger.closeMenu();
