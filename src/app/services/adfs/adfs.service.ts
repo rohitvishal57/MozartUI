@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ConfigService } from 'src/app/config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdfsService {
-  private baseUrl: string = 'https://usp.monocept.ai/auth/api/';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private configService: ConfigService) {}
   checkADFSLogin(loginData: any, token:any) {
-    return this.http.post<any>(this.baseUrl+'validateadfstoken?Idtoken='+token, loginData);
+    return this.http.post<any>(this.configService.config.baseUrl+this.configService.config.validateadfstoken+token, loginData);
   }
   checkCyberArkLogin(loginData: any, token:any) {
-    return this.http.post<any>(this.baseUrl+'validatecyberarktoken?Idtoken='+token, loginData);
+    return this.http.post<any>(this.configService.config.baseUrl+this.configService.config.validatecyberarktoken+token, loginData);
   }
 }

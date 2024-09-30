@@ -365,9 +365,6 @@ export class AgentLoginComponent implements OnInit{
         .subscribe({  
           next: (res)=>{
             window.open(res.data.redirectUrl, "_blank");
-            this.loginService.storeToken(res.token);
-            localStorage.setItem('agentCode', res.agentcode);
-            localStorage.setItem('verticalCode', this.verticalCode);
             // this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 5000 })
             // this.router.navigate(['portal/agent/viewdashboard']);
           },

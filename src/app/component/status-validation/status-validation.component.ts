@@ -35,7 +35,7 @@ export class StatusValidationComponent implements OnInit {
             this.adfsService.checkADFSLogin(data,data.Idtoken).subscribe({
               next: (res:any) => {
                 this.loginService.storeToken(res.data.token);
-                localStorage.setItem('username', res.data.agentcode);
+                localStorage.setItem('agentCode', res.data.agentcode);
                 localStorage.setItem('code', '2001');
                 this.toast.success({
                   detail: 'SUCCESS',
@@ -58,7 +58,7 @@ export class StatusValidationComponent implements OnInit {
           this.adfsService.checkCyberArkLogin(data,data.Idtoken).subscribe({
             next: (res:any) => {
               this.loginService.storeToken(res.data.token);
-              localStorage.setItem('username', res.data.agentcode);
+              localStorage.setItem('agentCode', res.data.agentcode);
               localStorage.setItem('code', '2001');
               this.toast.success({
                 detail: 'SUCCESS',
