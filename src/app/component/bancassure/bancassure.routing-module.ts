@@ -19,7 +19,6 @@ import { ProposalsListComponent } from '../proposals/proposals-list/proposals-li
 import { CustomerListComponent } from '../customers/customer-list/customer-list.component';
 import { StatusValidationComponent } from '../status-validation/status-validation.component';
 
-
 const routes: Routes = [
     {
       path: '',
@@ -39,7 +38,7 @@ const routes: Routes = [
         {path:"leadsList",component:LeadsListComponent},
         {path: "viewcustomer",component:CustomerListComponent, canActivate:[AuthGuard]},
         {
-          path: "my-requests",
+          path: "endorsements",
           loadChildren: () => import('../bancassure/endorsements/endorsements.module').then((m) => m.EndorsementsModule)
         },
       ]
