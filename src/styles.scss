@@ -901,7 +901,7 @@ input:focus, select:focus, .form-control:focus {
 }
 
 input:disabled, select:disabled, .input-block .input-textBox:disabled:hover, .input-block .input-selectBox:disabled:hover,
-.input-block .input-textBox:disabled, .input-block .input-selectBox:disabled, input:read-only, select:read-only {
+.input-block .input-textBox:disabled, .input-block .input-selectBox:disabled, select:read-only {
   background: var(--site-body-bg);
   border: 1px solid var(--site-body-bg);
   color: var(--black-28-color);
