@@ -114,19 +114,6 @@ export class AgentLoginComponent implements OnInit{
       });
   }
 
-  handleRedirectResponse(fragment: any) {
-    const hashParams = new URLSearchParams(fragment);
-    const clientRequestId = hashParams.get('client-request-id');
-    const idToken = hashParams.get('id_token');
-
-    console.log('Client Request ID:', clientRequestId);
-    console.log('ID Token:', idToken);
-
-    // Store in session storage or handle as needed
-    sessionStorage.setItem('client-request-id', clientRequestId || '');
-    sessionStorage.setItem('id_token', idToken || '');
-  }
-
   selectFormType(data:any){
     this.activeBtn = data;
     if(data == 'Login with User Code'){
@@ -181,7 +168,6 @@ export class AgentLoginComponent implements OnInit{
     this.loginService.sendGoogleLoginRequest(reqBody).subscribe({
       next: (res) => {
         console.log(res);
-        
         this.loginService.storeToken(res.token);
         localStorage.setItem('username', res.userName);
         localStorage.setItem('verticalCode', this.verticalCode);
@@ -526,7 +512,5 @@ export class AgentLoginComponent implements OnInit{
     this.codeForm.patchValue(data);
   }
 }
-function handleRedirectResponse(fragment: any, string: any) {
-  throw new Error('Function not implemented.');
-}
+
 
