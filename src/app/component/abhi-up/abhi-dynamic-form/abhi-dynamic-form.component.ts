@@ -105,6 +105,7 @@ export class AbhiDynamicFormComponent {
 
     this.productId = history.state.productData.productId;
     this.partnerId = history.state.productData.partnerId;
+    this.proposalNum=history.state.productData.proposalNum;
     if (history.state.productData.tenureAmounts) {
       this.tenureAmount = history.state.productData.tenureAmounts
     }
@@ -310,14 +311,16 @@ export class AbhiDynamicFormComponent {
     if (this.form?.formSections) {
       this.dynamicFormGroup = this.fb.group({});
       this.form.formSections.forEach((section) => {
-        section.formControls.forEach(async (control: IFormControl) => {
+        section.formControls.forEach((control: IFormControl) => {
           if (control.dynamicControls) {
             if (control.visible == true) {
+              console.log(control);
               let tempFormArray = this.fb.array([]);
               for (let i = 1; i < control.dynamicControls.length; i++) {
                 tempFormArray.push(this.initializeDynamicFormControls(control.dynamicControls[i], i));
               }
               this.dynamicFormGroup.addControl(control.name, tempFormArray);
+              console.log(this.dynamicFormGroup.value);
             }
           }
           else if (control.subControls) {
@@ -391,7 +394,7 @@ export class AbhiDynamicFormComponent {
             if (control.type === 'multiSelectCheckbox' && control.selectCheckboxOptions) {
               // Only call resolveMethod if selectCheckboxOptions is empty
               if (control.selectCheckboxOptions.length === 0) {
-                await this.resolveMethod(control.methodName, control);
+                this.resolveMethod(control.methodName, control);
 
               }
               // After resolving, add the control to the dynamic form group
@@ -430,11 +433,11 @@ export class AbhiDynamicFormComponent {
 
                 // Call the methodName method after setting the value if defined
                 if (control.methodName) {
-                  await this.resolveMethod(control.methodName, control);
+                  this.resolveMethod(control.methodName, control);
                 }
               }
               else if (control.value != "" && this.isQuote === true && control.methodName) {
-                await this.resolveMethod(control.methodName, control);
+                this.resolveMethod(control.methodName, control);
                 // if (control.name == 'insuredMembers') {
                 //   //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
                 //   control.selectCheckboxOptions?.forEach((option: any) => {
@@ -2047,10 +2050,6 @@ export class AbhiDynamicFormComponent {
           "proposalNum": this.proposalNum,
           "partnerId": this.partnerId,
           "agentCode": this.agentCode,
-          "code": this.Code,
-          "verticalCode": this.verticalCode,
-          "insuranceTypeCode": this.insurancetypecode,
-          "formType": this.formSequence[this.getFormIndexValue()].formName,
           "formData": JSON.stringify(this.dynamicFormGroup.value),
           "formName": this.formSequence[this.getFormIndexValue()].formName,
           "formConfig": JSON.stringify(this.formSequence),
@@ -3757,13 +3756,16 @@ export class AbhiDynamicFormComponent {
 
         console.log(this.dynamicFormGroup.get('insuredMembers'));
 
-        control.selectCheckboxOptions = response.data.relation;
-        console.log(control.selectCheckboxOptions);
+        console.log(this.dynamicFormGroup.value, this.form);
 
-        if (typeof response.data === 'object' && response.data !== null) {
-          Object.keys(response.data).forEach((key: any) => {
-            this.dynamicFormGroup.get(key)?.setValue(response.data[key])
-          })
+        // control.selectCheckboxOptions = response.data.relation;
+        // console.log(control.selectCheckboxOptions);
+
+        // if (typeof response.data === 'object' && response.data !== null) {
+        //   Object.keys(response.data).forEach((key: any) => {
+        //     this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+        //   })
+        //   console.log(this.dynamicFormGroup.value);
 
           if (this.isPolicyDetailsFetch) {
             const insuredMemberDetails = response.data.insuredMemberDetails || [];
@@ -3820,33 +3822,33 @@ export class AbhiDynamicFormComponent {
           }
 
 
-          // if (this.isPolicyDetailsFetch) {
-          //   const insuredMemberDetails = response.data.insuredMemberDetails || [];
-          //   console.log(insuredMemberDetails);
-          //   this.form.formSections.forEach((section: any) => {
-          //     section.formControls.forEach((control: any) => {
-          //       if (control.name == 'insuredMembers') {
-          //         const selectedRelations = insuredMemberDetails.map((member: any) => member.relation);
-          //         console.log(selectedRelations);
-          //         control.selectCheckboxOptions.forEach((option: any) => {
-          //           const matchedMember = insuredMemberDetails.find((member: any) => member.relation === option.value);
-          //           console.log(matchedMember);
-          //           if (matchedMember) {
-          //             this.logSelection(null, option, control);
-          //             const memberDOB = matchedMember.memberdob;
-          //             const calculatedAge = this.calculateAge(new Date(memberDOB));
-          //             matchedMember.memberAge = calculatedAge;
-          //             console.log(`Calculated age for ${matchedMember.firstName}: ${calculatedAge}`);
-          //           }
-          //         })
-          //       }
-          //     })
+        //   // if (this.isPolicyDetailsFetch) {
+        //   //   const insuredMemberDetails = response.data.insuredMemberDetails || [];
+        //   //   console.log(insuredMemberDetails);
+        //   //   this.form.formSections.forEach((section: any) => {
+        //   //     section.formControls.forEach((control: any) => {
+        //   //       if (control.name == 'insuredMembers') {
+        //   //         const selectedRelations = insuredMemberDetails.map((member: any) => member.relation);
+        //   //         console.log(selectedRelations);
+        //   //         control.selectCheckboxOptions.forEach((option: any) => {
+        //   //           const matchedMember = insuredMemberDetails.find((member: any) => member.relation === option.value);
+        //   //           console.log(matchedMember);
+        //   //           if (matchedMember) {
+        //   //             this.logSelection(null, option, control);
+        //   //             const memberDOB = matchedMember.memberdob;
+        //   //             const calculatedAge = this.calculateAge(new Date(memberDOB));
+        //   //             matchedMember.memberAge = calculatedAge;
+        //   //             console.log(`Calculated age for ${matchedMember.firstName}: ${calculatedAge}`);
+        //   //           }
+        //   //         })
+        //   //       }
+        //   //     })
 
-          //   })
-          // }
-        } else {
-          console.error('Expected response.data to be an object, but received:', response.data);
-        }
+        //   //   })
+        //   // }
+        // } else {
+        //   console.error('Expected response.data to be an object, but received:', response.data);
+        // }
       },
       error: (error) => {
         this.spinner.hide();
