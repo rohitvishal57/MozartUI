@@ -8,18 +8,12 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class LoginService {
-  private baseUrl: string = 'https://usp.monocept.ai/';
-  // private baseUrl: string = 'http://20.235.250.168:8086/';
-
   constructor(private http: HttpClient, private router: Router, private configService: ConfigService) {}
-
-  
-
 
   //Agent APi's
   sendAgentLoginRequestApi(loginData: any) {
-    // const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;
-    return this.http.post<any>("https://usp.monocept.ai/auth/api/login", loginData);
+    const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;
+    return this.http.post<any>(sendAgentLoginRequestApi, loginData);
   }
 
   Getagentcartdetails(reqData:any){
@@ -44,12 +38,11 @@ export class LoginService {
     localStorage.clear();
     sessionStorage.clear();
     this.router.navigate(['']);
-  }
-  
+  }  
 
   // For Google Login 
   sendGoogleLoginRequest(reqBody: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/User/GoogleLogin`, reqBody);
+    return this.http.post<any>(this.configService.config.baseUrl + 'Banca/User/GoogleLogin', reqBody);
   }
 
     // For Send OTP Login
