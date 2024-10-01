@@ -299,20 +299,29 @@ button {
   width: 20%;
   gap: 5px;
 }
+.data-row .data-item-45 {
+  width: 45%;
+  gap: 5px;
+}
+.data-row .data-item-100 {
+  width: 100%;
+  gap: 5px;
+}
+
 
 .data-row .data-item.data-itemEdit {
   align-items: flex-end;
   justify-content: center;
 }
 
-.data-row .data-item label {
+.data-row .data-item label, .data-item label {
   font-weight: 300;
   font-size: 14px;
   line-height: 16px;
   color: var(--text-grey-79);
 }
 
-.data-row .data-item h6 {
+.data-row .data-item h6, .data-item h6 {
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
