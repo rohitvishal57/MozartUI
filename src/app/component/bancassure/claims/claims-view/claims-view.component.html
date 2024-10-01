@@ -80,22 +80,22 @@
                 <div class="uploadDocument_optionsInfo row">
                   <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                     <ul class="unorderList ul_withIcon">
-                      <li><img src="../../../../../assets/Img/icon_ud_kycid.svg">Any govt/KYC ID</li>
-                      <li><img src="../../../../../assets/Img/icon_ud_doctor_prescription.svg">Doctor’s Prescription</li>
-                      <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Consultation form</li>
+                      <li><img src="assets/Img/icon_ud_kycid.svg">Any govt/KYC ID</li>
+                      <li><img src="assets/Img/icon_ud_doctor_prescription.svg">Doctor’s Prescription</li>
+                      <li><img src="assets/Img/icon_ud_consultation_form.svg">Consultation form</li>
                     </ul>
                   </div>
                   <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                     <ul class="unorderList ul_withIcon">
-                      <li><img src="../../../../../assets/Img/icon_ud_hospital_bill.svg">Hospital bill invoice</li>
-                      <li><img src="../../../../../assets/Img/icon_ud_neft.svg">NEFT/ Cancelled cheque/ Passbook</li>
-                      <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Claim form</li>
+                      <li><img src="assets/Img/icon_ud_hospital_bill.svg">Hospital bill invoice</li>
+                      <li><img src="assets/Img/icon_ud_neft.svg">NEFT/ Cancelled cheque/ Passbook</li>
+                      <li><img src="assets/Img/icon_ud_consultation_form.svg">Claim form</li>
                     </ul>
                   </div>
                   <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                     <ul class="unorderList ul_withIcon">
-                      <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Investigation report</li>
-                      <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Hospital discharge form</li>
+                      <li><img src="assets/Img/icon_ud_consultation_form.svg">Investigation report</li>
+                      <li><img src="assets/Img/icon_ud_consultation_form.svg">Hospital discharge form</li>
                     </ul>
                   </div>
                 </div>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="ud_area_right">
                            <button type="button" class="btn_uploadDocument">
-                              <span class="upload_icon"><img src="../../../../../assets/Img/icon_upload_white.svg"></span>
+                              <span class="upload_icon"><img src="assets/Img/icon_upload_white.svg"></span>
                               Upload
                            </button>
                         </div>
@@ -129,7 +129,7 @@
                                         <ng-container  *ngIf="!file.isEditing">
                                             <span class="label-text">{{ file.label }}</span>
                                             <button (click)="startEditing(file)" class="edit-button">
-                                              <img src="../../../../../assets/Img/icon_pencil_blue.svg">
+                                              <img src="assets/Img/icon_pencil_blue.svg">
                                             </button>
                                         </ng-container>
                                         <ng-container *ngIf="file.isEditing">
@@ -143,8 +143,8 @@
                                       </div>
                                     </div>
                                     <div class="headInfo_item">
-                                      <div class="upload-success" *ngIf="uploadSuccess"><img src="../../../../../assets/Img/icon_check_circle.svg"><span  class="success-text">Success</span></div> 
-                                      <div class="upload-fail" *ngIf="!uploadSuccess"><img src="../../../../../assets/Img/icon_failure.svg"><span class="failed-text">Failed</span></div> 
+                                      <div class="upload-success" *ngIf="uploadSuccess"><img src="assets/Img/icon_check_circle.svg"><span  class="success-text">Success</span></div> 
+                                      <div class="upload-fail" *ngIf="!uploadSuccess"><img src="assets/Img/icon_failure.svg"><span class="failed-text">Failed</span></div> 
                                       <div *ngIf="file.uploadDateTime">
                                           <span class="date-time">{{ file.formattedUploadDateTime }}</span>
                                       </div>
@@ -158,7 +158,7 @@
                                     </div>
                                     <div class="uploadedFiles_infoItem">
                                       <button class="delete-button" (click)="deleteFile(file)">
-                                        <img src="../../../../../assets/Img/icon_delete_red2.svg">
+                                        <img src="assets/Img/icon_delete_red2.svg">
                                       </button>
                                        <div class="size-align">  <p>{{ convertBytesToKB(file.size) }}</p>
                               </div>
