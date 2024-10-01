@@ -265,6 +265,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
   selectedFormControlVal: any;
   screenSize: number | any;
   isDesktop: boolean = false;
+  otpPopupRef: BsModalRef<unknown> | any;
+  documentSize: any;
   constructor(private formBuilder: FormBuilder,
     private modalService: BsModalService,
     private endorsement_service: EndorsementsService,
@@ -536,7 +538,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
     // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
   }
   onSubmit() {
-    this.spinner.show();
     this.submitted = true;
     if (!this.caseCreationForm.valid) {
       return;
@@ -618,6 +619,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
       }
     }
+    this.spinner.show();
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
       (resp) => {
         if (resp && resp.statusCode == "200" && resp.isSuccess) {
@@ -678,7 +680,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
   backToEndorsment() {
-    this._router.navigate(['portal/agent/requests']);
+    this._router.navigate(['portal/agent/endorsements']);
   }
   initiateKyc() {
     console.log(this.caseCreationForm.value);
@@ -704,6 +706,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.namesVariable = file.name;
     this.documentType = file.type;
+    this.documentSize = this.convertBytesToKB(file.size);
 
     if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png') {
       this.showNote = false;
@@ -712,11 +715,27 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showNote = true;
     }
   }
+
+  convertBytesToKB(bytes: number): string {
+    const kb = bytes / 1024;
+    return `${kb.toFixed(2)} KB`;
+  }
+
   campnoSelected() {
     //  console.log('campid :>> ', campid);   
   }
+  openOtpPopup() {
+    this.otpPopupRef = this.modalService.show(this.otpPopup);
+  }
+
+  closeOtpPopup() {
+    if (this.otpPopupRef) {
+      this.otpPopupRef.hide();
+    }
+  }
+
   sendOTP() {
-    //this.modalService.show(this.otpPopup);
+    this.spinner.show();
     let selectedType = this.caseCreationForm.get('endorsementType').value;
     this.otpObj = {
       agentCode: this.agentCode,
@@ -735,15 +754,18 @@ export class EndorsementsNewRequestComponent implements OnInit {
             requestId: resp.requestId,
             otp: "",
           };
-          this.modalService.show(this.otpPopup);
+          this.spinner.hide();
+          this.openOtpPopup();
           this.startTimer();
           this.sendOtptDisabled = true;
         }
         else {
+          this.spinner.hide();
           this.sendOtptDisabled = false;
         }
       },
       (err) => {
+        this.spinner.hide();
         console.log(err);
         this.sendOtptDisabled = false;
       });
@@ -756,10 +778,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       emailId: this.otpObj.EmailId,
       Mobile: this.otpObj.MobileNumber,
     };
+    this.spinner.show();
     this.loginservice.validateOtpRequestApi(modal).subscribe(
       (resp:any) => {
         if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 0) {
-          this.modalService.hide(this.otpPopup);
+          this.spinner.hide();
+          this.closeOtpPopup();
           if (resp && resp.statusMessage) {
             this.toast.success({ detail: resp.statusMessage});
           } else {
@@ -768,7 +792,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.isDisabled = false;
           this.sendOtptDisabled = true;
         } else if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 1) {
-          this.modalService.hide(this.otpPopup);
+          this.spinner.hide();
+          this.closeOtpPopup();
           if (resp && resp.statusMessage) {
             this.toast.success({ detail: resp.statusMessage});
           } else {
@@ -777,6 +802,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.sendOtptDisabled = false;
         }
         else {
+          this.spinner.hide();
+          this.closeOtpPopup();
           if (resp && resp.errorMessage) {
             this.toast.error({ detail: resp.errorMessage});
           } else {
@@ -788,7 +815,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       (err:any) => {
           this.otpInfoObject = null;
           this.sendOtptDisabled = false;
-          this.toast.error({detail: "Something went wrong, please try again"})
+          this.spinner.hide();
+          this.closeOtpPopup();
+          this.toast.error({detail: "Something went wrong, please try again"});
       }
     );
   }
@@ -825,15 +854,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
     }
   }
-  // otpValueChange(otpVal) {
-  //   debugger;
-  //   console.log(otpVal);
-  //   if (otpVal != "" && this.caseCreationForm.get("endorsementDetails").get('otpValue').valid) {
-  //     this.isOtpSubmitDisabled = false;
-  //   } else {
-  //     this.isOtpSubmitDisabled = true;
-  //   }
-  // }
+
   mobAndEmailValueChange(enteredValue:any, formControlName:any){
     if (enteredValue != "" && this.caseCreationForm.get("endorsementDetails").get(formControlName).valid) {
       this.sendOtptDisabled = false;
@@ -841,47 +862,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.sendOtptDisabled = true;
     }
   }
-     //To check OTP length
-    //  checkLength(field:any, evt:any) {
-    //   let otpSelector = "#otp_";
-    //   var key = evt.keyCode || evt.charCode;
-    //   if (key == 8 || key == 46) {
-    //     field--;
-    //     $(otpSelector + field).focus();
-    //     return false;
-    //   }
-    //   let value = evt.target.value;
-    //   if (field != 6) {
-    //     if (value.length == 1) {
-    //       field++;
-    //       $(otpSelector + field).focus();
-    //     } else if (value.length > 1) {
-    //       let vals = value.split("");
-    //       vals.forEach((val:any) => {
-    //         if (field <= 6) {
-    //           $(otpSelector + field).val(val);
-    //           $(otpSelector + field).focus();
-    //           field++;
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     if (value.length > 1) {
-    //       $(otpSelector + field).val(value[0]);
-    //     }
-    //   }
-    //   let fullVal = "";
-    //   for (let i = 1; i <= 6; i++) {
-    //     fullVal = fullVal + $(otpSelector + i).val();
-    //   }
-    //   this.otpInfoObject.otp = fullVal;
-    // }
-    resendOTP(){}
-    continueToEnterOTP(){
-      //this._modalService.dismissAll();
-      this.startTimer();
-      this.modalService.show(this.otpPopup); 
-    }
+  
+  resendOTP(){
+    this.sendOTP();
+  }
+
   //Start OTP timer
   startTimer() {
     this.timeLeft = 60;
@@ -910,9 +895,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
     k = event.charCode;  //         k = event.keyCode;  (Both can be used)
     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
   }
-  onOtpChange(data:any,count:any){
-
-  }
  
   deleteFile() {
     this.namesVariable = "";
@@ -920,8 +902,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.showDocInfo = false;
   }
 
-   // Handle key events for OTP input
-   onKey(event: KeyboardEvent, index: number) {
+  // Handle key events for OTP input
+  onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
     const target = event.target as HTMLInputElement;
 

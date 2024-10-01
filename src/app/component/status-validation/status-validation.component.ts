@@ -30,12 +30,12 @@ export class StatusValidationComponent implements OnInit {
         if (fragment) {
           idToken = this.extractIdToken(fragment);
         console.log( url,'fragment')
-        if(url[1] == 'adfs'){
+        if(url.includes('adfs')){
             data.Idtoken = idToken;
             this.adfsService.checkADFSLogin(data,data.Idtoken).subscribe({
               next: (res:any) => {
                 this.loginService.storeToken(res.data.token);
-                localStorage.setItem('username', res.data.agentcode);
+                localStorage.setItem('agentCode', res.data.agentcode);
                 localStorage.setItem('code', '2001');
                 this.toast.success({
                   detail: 'SUCCESS',
@@ -58,7 +58,7 @@ export class StatusValidationComponent implements OnInit {
           this.adfsService.checkCyberArkLogin(data,data.Idtoken).subscribe({
             next: (res:any) => {
               this.loginService.storeToken(res.data.token);
-              localStorage.setItem('username', res.data.agentcode);
+              localStorage.setItem('agentCode', res.data.agentcode);
               localStorage.setItem('code', '2001');
               this.toast.success({
                 detail: 'SUCCESS',
@@ -91,5 +91,4 @@ export class StatusValidationComponent implements OnInit {
     const params = new URLSearchParams(fragment);
     return params.get('id_token'); // Extracts id_token from fragment
   }
-
 }

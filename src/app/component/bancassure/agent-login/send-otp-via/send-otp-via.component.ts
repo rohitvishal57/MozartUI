@@ -17,16 +17,14 @@ export class SendOtpViaComponent implements OnInit{
 
   }
 
-  ngOnInit(): void {
-    this.filteredContacts = this.data.data;
+  ngOnInit(): void {    
+    this.filteredContacts = this.fitlerCommunicationValue(this.data.data);
   }
 
-  // onSearch() {
-  //   const query = this.searchQuery.toLowerCase(); 
-  //   this.filteredContacts = this.data.data.filter((contact:any) => {
-  //     return contact.toLowerCase().includes(query);
-  //   });  
-  // }
+  fitlerCommunicationValue(arr: any) {
+    return arr.filter((str : any) => str !== '' && str !== null);
+  }
+
 
   maskUserCode(input: string): string {
     if (!input) return '';
@@ -48,7 +46,7 @@ export class SendOtpViaComponent implements OnInit{
 
   sendOtpReqBody: any = {
     "agentCode": "",
-    "mobileNumber": "9160082999",
+    "mobileNumber": "",
     "eMailId": ""
   }
 
@@ -60,7 +58,7 @@ export class SendOtpViaComponent implements OnInit{
   onSelect(data:any){
     localStorage.setItem("sendOTP", data);
     this.sendOtpReqBody.agentCode = localStorage.getItem("agentCode");
-    // this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
+    this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
 
     this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  

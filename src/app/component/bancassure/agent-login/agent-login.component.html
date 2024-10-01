@@ -1,4 +1,4 @@
-<div class="login-mainContainer">
+<div class="login-mainContainer agentLoginMain">
   <div class="main">
     <div class="sub-mainNav"></div>
     <div class="sub-main">
@@ -191,7 +191,7 @@
         <p class="text-danger text-center">{{errorMessage}}</p>
         <div class="d-flex justify-content-center">
           <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds</label>
-          <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">Resend OTP</label>
+          <label *ngIf="timeLeft == 0" class="send_otp_again_wrap resend_otp_link" (click)="resendOTP()">Resend OTP</label>
         </div>
         <!-- <div class="d-flex justify-content-center">
           <small

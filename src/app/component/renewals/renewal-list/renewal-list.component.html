@@ -94,9 +94,19 @@
                                                     <label for="policyType{{i}}">{{policyType.name}}</label>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div> -->
+                                    <div class="fw_formRow">
+                                        <h6>Policy Type</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                  <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <label for="policytype{{i}}">{{policyType.name}}</label>
+                                                </div>
+                                              </div>                                              
+                                        </div>
+                                    </div>
                                     <div class="fw_formRow">
                                         <h6>Date Range</h6>
                                         <div class="row">

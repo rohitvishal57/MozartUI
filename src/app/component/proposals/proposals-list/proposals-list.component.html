@@ -76,17 +76,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="fw_formRow">
+                                    <div class="fw_formRow">
                                         <h6>Policy Type</h6>
                                         <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let policyType of policyTypes; let i = index">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="policyType{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                                    <label for="policyType{{i}}">{{policyType.name}}</label>
+                                                  <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <label for="policytype{{i}}">{{policyType.name}}</label>
                                                 </div>
-                                            </div>
+                                              </div>                                              
                                         </div>
-                                    </div> -->
+                                    </div>
                                     <div class="fw_formRow">
                                         <h6>Date Range</h6>
                                         <div class="row">
@@ -125,7 +125,7 @@
                                     <th scope="col">Proposal No</th>
                                     <th scope="col">Proposer</th>
                                     <th scope="col">Product</th>
-                                    <th scope="col" nowrap>Policy Type</th>
+                                    <th scope="col" nowrap>Policy Type & No</th>
                                     <th scope="col" nowrap>Premium</th>
                                     <th scope="col">Status</th>
                                     <th scope="col" nowrap>Created On</th>
@@ -142,6 +142,7 @@
                                         <div class="table-policyType">
                                             <div class="row-policyType">
                                                 <span class="lable">{{ row.policyType }}</span>
+                                                <span class="value">{{ row.policyNumber }}</span>
                                             </div>
                                         </div>
                                     </td>

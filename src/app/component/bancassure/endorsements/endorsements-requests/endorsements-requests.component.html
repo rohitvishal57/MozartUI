@@ -5,7 +5,7 @@
             <div class="body_flex_row justify-content-between">
                 <h2>All Requests</h2>
                 <button type="button" class="btn_white btn_newRequest" routerLink="new-request">
-                    <img src="../../../../../assets/Img/icon_plus_red.svg">New Requests
+                    <img src="assets/Img/icon_plus_red.svg">New Requests
                 </button>
             </div>
             <section class="quickFilterMain">
@@ -29,7 +29,7 @@
                                 <option value="policyNumber">Policy Number</option>
                             </select>
                             <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button type="button" class="btn_text" (click)="applySearch()"><img src="../../../../../assets/Img/icon_magnify_grey.svg"></button>
+                            <button type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <!--Search section end-->
@@ -67,7 +67,7 @@
                                 <td >{{ row?.raisedOn }}</td>
                                 <!--<td>
                                     <button type="button" class="btn_icon" (click)="downloadRequest(row)">
-                                        <img src="../../../../../assets/Img/icon_download_grey.svg" width="9" height="9">
+                                        <img src="assets/Img/icon_download_grey.svg" width="9" height="9">
                                     </button> 
                                 </td>-->
                             </tr>
@@ -96,9 +96,9 @@
                                 </h6>
                                 <div class="item_productName">{{ row?.caseId }}</div>
                             </div>
-                            <div class="card_btnGroup">
-                                <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadRequest(row)"><img src="../../../../../assets/Img/icon_download_grey.svg"></button>
-                            </div>
+                            <!-- <div class="card_btnGroup">
+                                <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadRequest(row)"><img src="assets/Img/icon_download_grey.svg"></button>
+                            </div> -->
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">

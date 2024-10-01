@@ -153,7 +153,7 @@ a:not(href) {
   cursor: pointer;
 }
 a {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 .siteHeader, .siteSidenav .sidenavMenu, .body_flex_column, .tableSubMain .table .table-policyType, .tableSubMain .table .table-renewalPremium, .tableSubMain .table .row-policyType, .moreActionItems ul, .filterWraperForm .fw_form, .filterWraperForm .fw_form .fw_formBody, .filterWraperForm .fw_form .fw_formRow, .createNewQuoteWraper .createNewQuoteMain .cnqLeft, .cardViewMain .cardViewWraper .cardViewItem, .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo, .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems, .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems .item_value .table-renewalPremium, .userQuotes, .quoteComparisonWraper .qc_item header, .quoteComparisonWraper .qc_item header .heading, .quoteComparisonWraper .qc_item .qc_info ul, .bcl_main, .bcl_main .processBtnGroup, .bcc_main, .accordionMain, .accordionMain .accordionItem, .accordionMain .accordionItem .accordionBody .accordionBodyRow, .planDetails, .planDetails header, .planDetails header .planProductInfo .ppi_info, .planDetails header .planProductQuote, .planDetails .planProductBody, .planDetails .planProductBody .benefitCoverMain .bc_info, .planDetails footer, .detailsRow, .data-row .data-item, .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info, .bottomInfoMain .bottomInfoSubMain .planProductQuote, .searchConditionWraper, .tabsMain {
@@ -299,20 +299,29 @@ button {
   width: 20%;
   gap: 5px;
 }
+.data-row .data-item-45 {
+  width: 45%;
+  gap: 5px;
+}
+.data-row .data-item-100 {
+  width: 100%;
+  gap: 5px;
+}
+
 
 .data-row .data-item.data-itemEdit {
   align-items: flex-end;
   justify-content: center;
 }
 
-.data-row .data-item label {
+.data-row .data-item label, .data-item label {
   font-weight: 300;
   font-size: 14px;
   line-height: 16px;
   color: var(--text-grey-79);
 }
 
-.data-row .data-item h6 {
+.data-row .data-item h6, .data-item h6 {
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
@@ -901,7 +910,7 @@ input:focus, select:focus, .form-control:focus {
 }
 
 input:disabled, select:disabled, .input-block .input-textBox:disabled:hover, .input-block .input-selectBox:disabled:hover,
-.input-block .input-textBox:disabled, .input-block .input-selectBox:disabled {
+.input-block .input-textBox:disabled, .input-block .input-selectBox:disabled, select:read-only {
   background: var(--site-body-bg);
   border: 1px solid var(--site-body-bg);
   color: var(--black-28-color);
@@ -3795,3 +3804,156 @@ input[type="search"]::-webkit-search-results-decoration {
   color: var(--black-color);
 }
 /*Popup Modal start*/
+
+/*Share Payment link start*/
+.sharePyment_mobileNumber_info {
+  gap:18px;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--black-color);
+  padding: 10px 0;
+}
+.info_text span {
+  font-weight: 500;
+}
+.info_button {
+  cursor: pointer;
+}
+.info_button img {
+  width: 16px;
+  height: 16px;
+}
+.sharePyment_mobileNumber_info .input-textBox {
+  background: #F1F3F6;
+  border: 1px solid #F1F3F6;
+  border-radius: 12px;
+  padding: 8px 6px 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+.sharePyment_mobileNumber_info .btn_darkGrey {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 13px;
+  padding: 10px 46px;
+}
+.btn_sendLink {
+  padding: 9px 46px;
+  line-height: 19px;
+}
+.block_or_line {
+  position: relative;
+  font-weight: 700;
+  font-size: 18px;
+  color: #797979;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.block_or_line:before{
+  content: "";
+  width: 100%;
+  height: 1px;
+  position: absolute;
+  background: #E6E6E6;
+}
+.block_or_line span {
+  display: flex;
+  background: #fff;
+  padding: 10px;
+  z-index: 1;
+}
+.btn_disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+.paymentMessage {
+  background: #E9E9E9;
+  border-radius: 10px;
+  padding: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #000;
+}
+.paymentMessage .paymentMessage_info {
+  gap:10px;
+}
+.btn_resendLink {
+  border-width: 0;
+  background: #FBFBFB;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.btn_resendLink:hover {
+  background: #fff;
+  color: #c7222a;
+}
+.btn_resendLinkIcon {
+  padding: 6px 9px;
+  border-radius: 19px;
+}
+.bottomInfoMessage {
+  position: fixed;
+  left: 19.85%;
+  bottom: 18%;
+  max-width: 800px;
+  width: 100%;
+  padding: 12px 17px;
+}
+.makePaymentOnline {
+  max-width: 240px;
+  width: 100%;
+  position: relative;
+}
+.makePaymentOnline .btn_makePaymentOnline {
+  border: 1px solid #F1F3F6;
+  background: #F1F3F6;
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: 500;
+  font-size: 12px;
+  color: #979CAE;
+}
+.makePaymentOnline .btn_makePaymentOnline img {
+  transform: rotate(-90deg);
+  width: 8px;
+  height: 8px;
+}
+.dropdown_makePaymentOnline {
+  width: 272px;
+  position: absolute;
+  top:38px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px 16px;
+  border: 2px solid #F1F3F6;
+  box-shadow: 0px -16px 16px 0px #0000000A;
+  box-shadow: 0px -4px 12px 0px #AEAEB70A;
+}
+.raido_paymentType {
+  flex-direction: column;
+}
+.raido_paymentType .input-radiolabel span {
+  flex-direction: row;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #D5D7DE;
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #000;
+}
+.raido_paymentType .input-radiolabel span img {
+  width: 100px;
+}
+.raido_paymentType .input-radiolabel input:checked + span {
+  border: 1px solid var(--primary-red-color);
+}
+/*Share Payment link end*/

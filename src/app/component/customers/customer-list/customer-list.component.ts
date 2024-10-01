@@ -14,8 +14,6 @@ import { CommonService } from 'src/app/services/common.service';
 })
 export class CustomerListComponent {
   customerList: CustomerList[] = [];
-  countsList: any = [];
-  activeFilter: string = "all";
   page: number = 1;
   first: number = 0;
   rows: number = 10;
@@ -34,9 +32,13 @@ export class CustomerListComponent {
   isDesktopView:boolean=false
   filterType: string = "totalRecords";
   agentCode :any =localStorage.getItem('agentCode'); 
-
+  StaticPolicyTypes = [
+    { name: 'Individual', selected: false },
+    { name: 'RuG', selected: false },
+    { name: 'Family Floater', selected: false },
+    { name: 'Groups', selected: false }
+  ];
   
-
   constructor(
     private customerService: CustomerService ,
     private datePipe: DatePipe,
@@ -45,20 +47,23 @@ export class CustomerListComponent {
   ) {}
 
   customerListRequestBody={
-     "agentCode":"5100003",
-     "policyNumber": "",
-     "startDate": null as string | null,
-     "endDate":null as string | null,
-     "pageNumber": this.page,
-     "pageSize": this.rows,
-     "receiptNo": "",
-     "name": "",
-     "emailID": "",
-     "mobileNumber": "",
-     "proposalNumber": "",
-     "pincode": "",
-     "filterType": ""
+    "agentCode": this.agentCode,
+    "policyNumber": "",
+    "policyType": "",
+    "productName": "",
+    "startDate": null, 
+    "endDate": null, 
+    "pageNumber": 1,
+    "pageSize": 10,
+    "receiptNo": "",
+    "name": "",
+    "emailID": "",
+    "mobileNumber": "",
+    "proposalNumber": "",
+    "pincode": "",
+    "filterType": ""
   }
+   
 
   ngOnInit(): void {
     this.getCustomerList();
@@ -73,16 +78,18 @@ export class CustomerListComponent {
   getCustomerList() {
     this.customerListRequestBody.pageNumber = this.page;
     this.customerListRequestBody.pageSize = this.rows;
+    console.log(this.customerListRequestBody);
     this.customerService.getCustomerDetailsListApi(this.customerListRequestBody).subscribe(
       (response) => { 
         console.log(response.data);
         if (response.success) {
           this.customerList = response.data.customerList.map((item: any) => ({
-            ...item
+            ...item,policyStartDate:this.formatPolicyStartDate(item.policyStartDate)
           })); 
           console.log("proposal List",this.customerList);
-          this.countsList = response.data;
-          this.totalRecords = response.data[this.filterType]; 
+          this.totalRecords = response.data.totalRecords
+          console.log(this.totalRecords);
+          
         } 
         else {console.error("API request was not successful.");}
       },
@@ -91,19 +98,15 @@ export class CustomerListComponent {
       }
     );
   }
-
-  filterQuotes(filter: string,filterRange: string) {
-    this.customerListRequestBody.filterType = filter;
-    this.getCustomerList();
-    this.activeFilter = filter;
-    this.filterType = filterRange;
-  }
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
       this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
     } else if (dateType === "endDate" && this.endDate) {
       this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
     }
+  }
+  formatPolicyStartDate(datetime: string): string {
+    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
   }
   getProducts() {
     const reqData={
@@ -153,15 +156,15 @@ export class CustomerListComponent {
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
-      console.log("selectedProducts",selectedProducts);     
-    // this.customerListRequestBody.productName = selectedProducts.join(", ");
-    //  console.log("product names which are taking by request body",this.customerListRequestBody.productName);  
-    const selectedPolicyTypes = this.policyTypes
+      console.log("selectedProducts",selectedProducts);  
+       this.customerListRequestBody.productName = selectedProducts.join(", ");  
+    console.log("product names which are taking by request body",this.customerListRequestBody.productName);  
+    const selectedPolicyTypes = this.StaticPolicyTypes
       .filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
       console.log("selecteed policy types",selectedPolicyTypes);  
-    // this.customerListRequestBody.policyType = selectedPolicyTypes.join(", ");
-    // console.log("policy types which are taking by request body",this.customerListRequestBody.policyType); 
+    this.customerListRequestBody.policyType = selectedPolicyTypes.join(", ");
+    console.log("policy types which are taking by request body",this.customerListRequestBody.policyType); 
     this.getCustomerList();
     this.toggeledropdown=false;
   }
@@ -171,8 +174,8 @@ export class CustomerListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
-    // this.customerListRequestBody.productName = "";
-    // this.customerListRequestBody.policyType = "";
+    this.customerListRequestBody.productName = "";
+    this.customerListRequestBody.policyType = "";
     this.customerListRequestBody.startDate = null;
     this.customerListRequestBody.endDate = null;
     this.toggeledropdown = false;
@@ -184,8 +187,8 @@ export class CustomerListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
-    // this.customerListRequestBody.productName = "";
-    // this.customerListRequestBody.policyType = "";
+    this.customerListRequestBody.productName = "";
+    this.customerListRequestBody.policyType = "";
     this.customerListRequestBody.startDate = null;
     this.customerListRequestBody.endDate = null;
     this.getCustomerList();
@@ -210,9 +213,11 @@ export class CustomerListComponent {
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
       ]);
-    } else if (this.selected === "policyNumber") {
+    } 
+    else if (this.selected === "policyNumber") {
       this.searchInputControl.setValidators([Validators.required]);
-    }else if (this.selected === "proposalNumber") {
+    }
+    else if (this.selected === "proposalNumber") {
       this.searchInputControl.setValidators([Validators.required]);
     }
     this.searchInputControl.updateValueAndValidity();
@@ -248,12 +253,24 @@ export class CustomerListComponent {
     if (this.searchInputControl.valid) {
       if (this.selected === "mobileNumber") {
         this.customerListRequestBody.mobileNumber = this.searchInputControl.value!;
+        this.customerListRequestBody.name = "";
+        this.customerListRequestBody.policyNumber = "";
+        this.customerListRequestBody.proposalNumber =""
       } else if (this.selected === "proposerName") {
         this.customerListRequestBody. name = this.searchInputControl.value!;
+        this.customerListRequestBody.mobileNumber = "";
+        this.customerListRequestBody.policyNumber = "";
+        this.customerListRequestBody.proposalNumber =""
       } else if (this.selected === "policyNumber") {
         this.customerListRequestBody.policyNumber = this.searchInputControl.value!;
+        this.customerListRequestBody.mobileNumber = "";
+        this.customerListRequestBody.name = "";
+        this.customerListRequestBody.proposalNumber =""
       }else if (this.selected === "proposalNumber") {
         this.customerListRequestBody.proposalNumber = this.searchInputControl.value!;
+        this.customerListRequestBody.mobileNumber = "";
+        this.customerListRequestBody.name = "";
+        this.customerListRequestBody.policyNumber = "";
       }
       this.getCustomerList();
       menuTrigger.closeMenu();

@@ -18,6 +18,8 @@
     "uploadFiles":"claims/api/saveuploadfiledetails",
 
     "partnerlogin":"auth/api/login",
+    "validateadfstoken":"auth/api/validateadfstoken?Idtoken=",
+    "validatecyberarktoken":"auth/api/validatecyberarktoken?Idtoken=",
     "getContactDetailsByAgentCode":"auth/api/getcontactdetailsbyagentcode",
     "sendotp":"auth/api/sendotp",
     "validateotp":"auth/api/validateotp",
@@ -28,7 +30,6 @@
     "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
     "endorsementsendotp":"claims/api/endorsementsendotp",
     "getpolicyinfodetails":"claims/api/getpolicyinfodetails",
-
 
     "agentCartDetails":"quote/api/getagentcartdetails",
     "insertOrUpdateAgentCartDetails":"quote/api/insertorupdateagentcartdetails",
