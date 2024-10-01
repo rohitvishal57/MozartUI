@@ -690,7 +690,6 @@
                           <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
                       </footer>
                   </div>
-                  <!--Accordion Item end-->
               </div>
               <div class="accordionMain">
                   <!--Accordion Item start-->
@@ -1003,70 +1002,93 @@
         </div>
       </div>
       <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'payment'">
-          <div class="formSections">
-              <div class="payment-header">
-                  <span>Share payment link</span>
-                  <i class="fa fa-chevron-down"></i>
-              </div>
-              <div class="message-cnt">
-                  <div class="payment-details">
-                      <div class="detail-item">
-                          <i class="fa fa-phone"></i>
-                          <span class="detail-label">Customer Mobile Number :</span>
-                          <span class="detail-value">91 8659378459</span>
-                          <div class="edit-icon"><i class="fa-regular fa-pen-to-square"></i></div>
-                      </div>
-                      <div class="detail-item">
-                          <i class="fa fa-envelope" *ngIf="!isEditingEmail"></i>
-                          <span class="detail-label" *ngIf="!isEditingEmail">Email Address :</span>
-                          <ng-container *ngIf="!isEditingEmail; else editEmailField">
-                              <span class="detail-value">{{ email }}</span>
-                              <div class="edit-icon" (click)="toggleEditEmail()"><i class="fa-regular fa-pen-to-square"></i></div>
-                          </ng-container>
-                          <ng-template #editEmailField>
-                              <div class="email-input">
-                                  <div class="input-container">
-                                      <input type="email" [(ngModel)]="email" class="inputField_Text" [ngClass]="{'has-value': email && email !== ''}">
-                                      <label>Email Address</label>
-                                  </div>
-                              </div>
-                              <button class="save-btn" (click)="saveEmail()">Save and send</button>
-                          </ng-template>
-                      </div>
-                  </div>
-                  <div class="message-send-cnt" *ngIf="!emailSaved">
-                        <button type="button" value="renewnow" class="btn_red btn_redRenew" [ngClass]="{'disabled-btn': isEditingEmail}" [disabled]="isEditingEmail">Send Link</button>
-                      <div class="separator" *ngIf="!isEditingEmail">
-                          <span>OR</span>
-                      </div>
-                      <div class="payment-select" *ngIf="!isEditingEmail">
-                        <div>Make payment online</div>
-                        <div class="custom-dropdown">
-                          <div class="dropdown-options">
-                            <div class="payment-option" *ngFor="let option of paymentTypes" [ngClass]="{'selected': selectedPaymentType === option.value}" 
-                              (click)="selectPaymentType(option)">
-                              <div>{{ option.label }}</div>
-                              <div *ngIf="option.isFasterProcess" class="faster-process">Faster process</div>
+        <div class="bcc_main">
+            <div class="accordionMain">
+                
+                <div class="accordionItem">
+                    <header>
+                        Share payment link
+                        <!-- <button type="button" value="sectionedit" class="btn_iconText accordionArrow"><img src="assets/Img/icon_arrow_back_mobile.svg"></button> -->
+                    </header>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="detailsRow">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <div class="sharePyment_link">
+                                            <div class="sharePyment_phoneInfo" *ngIf="!isEditMobile">
+                                                <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
+                                                    <span class="info_img"><img src="assets/Img/icon_phone_call.svg"></span>
+                                                    <span class="info_text">Customer Mobile Number : <span>91 {{mobileNo}}</span></span>
+                                                    <span class="btn_iconGrey info_button edit_cmn" (click)="toggleEditPaymentOption('mobileNo')"><img src="assets/Img/icon_edit_grey.svg"></span>
+                                                </div>
+                                            </div>
+                                            <div class="sharePyment_phoneInfoEdit" *ngIf="isEditMobile">
+                                                <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
+                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                                        <input type="tel" id="cmnumber" name="cmnumber" [(ngModel)]="mobileNo" placeholder="Customer Mobile Number" class="input-textBox btn_fullWidth" >
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                                        <button type="button" class="btn_red btn_darkGrey edit_cmn_save" (click)="handlePaymentEvent('mobileNo')">Save and send</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <div class="sharePyment_link">
+                                            <div class="sharePyment_mobileNumber" *ngIf="!isEditEmail">
+                                                <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
+                                                    <span class="info_img"><img src="assets/Img/icon_email.svg"></span>
+                                                    <span class="info_text">Email Address : <span>{{ email }}</span></span>
+                                                    <span class="btn_iconGrey info_button edit_cme"  (click)="toggleEditPaymentOption('email')"><img src="assets/Img/icon_edit_grey.svg"></span>
+                                                </div>
+                                            </div>
+                                            <div class="sharePyment_phoneInfoEdit" *ngIf="isEditEmail">
+                                                <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
+                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                                        <input type="email" id="cmemail" name="cmemail" [(ngModel)]="email" placeholder="Email Address" class="input-textBox btn_fullWidth" >
+                                                    </div>
+                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                                        <button type="button" class="btn_red btn_darkGrey edit_cme_save" (click)="handlePaymentEvent('email')">Save and send</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <button type="button" class="btn_red btn_sendLink" [ngClass]="{'btn_disabled': isEditEmail || isEditMobile}">Send Link</button></div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <div class="block_or_line"><span>OR</span></div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <div class="detailsHeading mb-3">Make payment online</div>
+                                        <div class="row">
+                                            <div class="raido_policyTenure raido_paymentType radio_format">
+                                             <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                                 <input type="radio" name="paymentType" value="E - Nach">
+                                                 <span><em class="label">E - Nach</em><img src="assets/Img/icon_faster_process.svg"></span>
+                                             </div>
+                                             <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                                 <input type="radio" name="paymentType" value="E - Mandate" >
+                                                 <span><em class="label">E - Mandate</em><img src="assets/Img/icon_faster_process.svg"></span>
+                                             </div>
+                                             <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                                 <input type="radio" name="paymentType" value="Auto Debit" ><span><em class="label">Auto Debit</em></span>
+                                             </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </div>
-                          </div>
+                            
                         </div>
-                      </div> 
-                  </div>
-                  <div class="message-sent-container" *ngIf="emailSaved">
-                      <div class="payment-responce">
-                          <div class="message-icon">
-                              <i class="fa fa-check-circle"></i>
-                          </div>
-                          <div class="message-text">
-                              Payment link is sent to customer’s mobile number and email ID
-                          </div>
-                      </div>
-                      <div class="resend-link-btn">
-                          <button (click)="resendLink()">Resend Link</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
       </div>
       <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'policySummery'">
           <div class="bcc_main accordionpro">
@@ -1372,7 +1394,12 @@
       </div>
   </div>
   <div class="bottomInfoMain">
-      <div class="room-update" style="text-align: center;" data-bs-toggle="modal" data-bs-target="#exampleModal" *ngIf="activeSection == 'additional' ">RoomUpdate</div>
+        <div class="bottomInfoArrow" *ngIf="activeSection == 'additional' ">
+            <button type="button" class="btn_iconText btn_updateRoom" data-bs-toggle="modal" data-bs-target="#roomModal">
+                <img src="assets/Img/icon_plan_details_arrow.svg">
+                Update Room
+            </button>
+        </div>
       <div class="bottomInfoSubMain">
           <div class="bi_left">
               <div class="planProductInfo">
@@ -1391,75 +1418,118 @@
               </div>
           </div>
           <div class="bi_right">
-              <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()">Proceed</button>
+              <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection != 'payment' ">Proceed</button>
               <button type="button" value="renewnow" class="btn_red btn_redRenew" *ngIf="activeSection != 'payment' " (click)="renewNow()">Renew Now</button>
-              <button type="button" value="renewnow" class="btn_red next_btn" *ngIf="activeSection === 'payment'" (click)="setSection('policySummery')">Next</button>
+              <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" *ngIf="activeSection === 'payment'"  (click)="proceed('back')">Back</button>
+              <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" *ngIf="activeSection === 'payment'" (click)="setSection('policySummery')">Next</button>
           </div>
       </div>
   </div>
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-              <div class="modal-body">
-                  <div class="room-update-details-cnt">
-                      <div class="room-update-title">Would you like to upgrade your room?</div>
-                      <div class="product-details-cnt">
-                          <div class="product-premium-details">
-                              <div class="product-details">
-                                  <div class="ppi_img">
-                                      <img src="assets/Img/icon_activeone.svg" alt="no image" width="40px" height="45px" />
-                                  </div>
-                                  <div class="product-name-details">
-                                      <div class="product-name">Active One Next</div>
-                                      <div class="company-name">Aditya Birla Health Insurance</div>
-                                      <div class="policy-no">23-22-0175217-0</div>
-                                  </div>
-                              </div>
-                              <div class="premium-details">
-                                  <div class="premium-title">Total Premium/Incl tax</div>
-                                  <div class="premium">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
-                              </div>
+
+<div class="modal popupModalMain fade" id="roomModal" tabindex="-1" aria-labelledby="roomModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="roomModalLabel">Would you like to upgrade your room?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+              <div class="col-12">
+                  <div class="productInfoDetails">
+                      <div class="planProductInfo">
+                          <div class="ppi_img">
+                              <img src="assets/Img/icon_activeone.svg">
                           </div>
-                          <div class="rooms">
-                              <div class="room">
-                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
-                                  <div class="room-name">Semi-Delux Room</div>
-                              </div>
-                              <div class="room">
-                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
-                                  <div class="room-name">Semi-Delux Room</div>
-                              </div>
-                              <div class="room">
-                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
-                                  <div class="room-name">Semi-Delux Room</div>
-                              </div>
+                          <div class="ppi_info">
+                              <h4>Activ One NXT</h4>
+                              <h5>Aditya Birla Health Insurance</h5>
+                              <h6>23-22-0175217-00</h6>
                           </div>
                       </div>
-                      <div class="room-upgrade-benefits-cnt">
-                          <div class="room-upgrade-benefits-title">Upgrade benefits</div>
-                          <div class="upgrade-rooms-list">
-                              <div *ngFor="let plan of roomUpgradeBenefits" class="upgrade-rooms">
-                                  <input type="radio" id="plan1" name="plan" class="plan-radio" (change)="onRadioChanges()" />
-                                  <label [for]="plan?.id" class="plan-label">
-                                      <div class="plan-details" *ngIf="plan?.type !== 'No Upgrade'">
-                                          <div class="plan-type">{{ plan?.type }}</div>
-                                          <div class="plan-price">{{ plan?.price }}</div>
-                                      </div>
-                                      <div class="plan-premium" *ngIf="plan?.type !== 'No Upgrade'">
-                                          <div class="premium-title">Premium</div>
-                                          <div>{{ plan?.premium }}</div>
-                                      </div>
-                                      <span *ngIf="plan?.type === 'No Upgrade'" class="no-need-upgrade">{{ plan?.label }}</span>
-                                  </label>
-                              </div>
-                          </div>
+                      <div class="planProductQuote">
+                          <div class="label">Total Premium/ incl tax</div>
+                          <div class="value">₹6,863</div>
                       </div>
                   </div>
-                  <div class="apply-button-cnt">
-                      <button class="apply-button" [class.active]="isRadioSelected" data-bs-dismiss="modal">Apply</button>
+              </div>
+              <div class="col-12 mt-3">
+                  <ul class="tick_round">
+                      <li><img src="assets/Img/icon_tick_whitebg.svg">Semi-DeluX Room</li>
+                      <li><img src="assets/Img/icon_tick_whitebg.svg">Nunc vulputate libero et velit</li>
+                      <li><img src="assets/Img/icon_tick_whitebg.svg">Class aptent taciti sociosqu</li>
+                  </ul>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-12">
+                  <h4>Upgrade benefits</h4>
+              </div>
+              <div class="col-12">
+                  <div class="input-radio-block radio_roomInfo">
+                      <label class="input-radiolabel ">
+                          <input type="radio" name="roomtype" value="delux"  (change)="onRadioChanges()">
+                          <span>
+                              <em class="main_RI">
+                                  <em class="main_RI_item">
+                                      <em class="head">Delux</em>
+                                      <em class="value">₹ 900</em>
+                                  </em>
+                                  <em class="main_RI_item">
+                                      <em class="head">Premium</em>
+                                      <em class="value">₹ 6,863</em>
+                                  </em>
+                              </em>
+                          </span>
+                      </label>
+                      <label class="input-radiolabel ">
+                          <input type="radio" name="roomtype" value="deluxac" (change)="onRadioChanges()">
+                          <span>
+                              <em class="main_RI">
+                                  <em class="main_RI_item">
+                                      <em class="head">Delux AC</em>
+                                      <em class="value">₹ 1,100</em>
+                                  </em>
+                                  <em class="main_RI_item">
+                                      <em class="head">Premium</em>
+                                      <em class="value">₹ 7,463</em>
+                                  </em>
+                              </em>
+                          </span>
+                      </label>
+                      <label class="input-radiolabel ">
+                          <input type="radio" name="roomtype" value="superdeluxac" (change)="onRadioChanges()">
+                          <span>
+                              <em class="main_RI">
+                                  <em class="main_RI_item">
+                                      <em class="head">Super Delux AC</em>
+                                      <em class="value">₹ 1,500</em>
+                                  </em>
+                                  <em class="main_RI_item">
+                                      <em class="head">Premium</em>
+                                      <em class="value">₹ 7,063</em>
+                                  </em>
+                              </em>
+                          </span>
+                      </label>
+                      <label class="input-radiolabel ">
+                          <input type="radio" name="roomtype" value="no" (change)="onRadioChanges()">
+                          <span>
+                              <em class="main_RI">
+                                  <em class="main_RI_item">
+                                      <em class="value">No, I don’t want to upgrade my room</em>
+                                  </em>
+                              </em>
+                          </span>
+                      </label>
                   </div>
               </div>
           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn_red btn_fullWidth" [class.active]="isRadioSelected">Apply</button>
+        </div>
       </div>
+    </div>
   </div>
 </div>

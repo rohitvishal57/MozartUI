@@ -12,17 +12,12 @@ import { RenewalServiceService } from 'src/app/services/renewal/renewal-service.
 export class RenewalDynamicFormComponent implements OnInit {
   form: FormGroup = this.fb.group({});
   formId: number = 5001;
-  isEditingEmail = false;
-  emailSaved: boolean = false;
+  isEditEmail = false;
+  isEditMobile =false;
   email = 'sujitp1@gmail.com';
+  mobileNo = 9833474737;
   selectedButton: string = 'primary'; 
-  selectedTenure: string = "tenure3";
-  tenureDetails:any[]=[]; 
-  // coverages:any[]=[]
   selectedCoverages: any[] = []; 
-  // healthAddOns: any[] = [];
-  selectedAddOns: any[] = []; 
-  roomUpgradeBenefits: any[] = [];
   isRadioSelected = false;
   selectedPaymentType: string = '';
   selectedPaymentTypeLabel: string = '';
@@ -46,19 +41,13 @@ export class RenewalDynamicFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
-    private http: HttpClient,
     private renewalService: RenewalServiceService
   ) {}
 
   ngOnInit() {
-    // this.fetchAddOns()
-    // this.fetchCoverages();
-    this.fetchRoomUpgradeBenefits();
      this.renewalService.policy$.subscribe(policy => {
       if(policy.policyNo){
-      this.policyNumber=policy.policyNo;
-    }
+      this.policyNumber=policy.policyNo;}
     });
     this.getRenewalInfo();
     this.initializeForm();
@@ -136,13 +125,20 @@ export class RenewalDynamicFormComponent implements OnInit {
   formatValue(value: number): string {
     return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(value);
   }
-  toggleEditEmail() {
-    this.isEditingEmail = !this.isEditingEmail;
+  toggleEditPaymentOption(value: any) {
+    if(value == 'email'){
+    this.isEditEmail = !this.isEditEmail;
+    this.isEditMobile = false;
+    } else if(value == 'mobileNo'){
+      this.isEditMobile = !this.isEditMobile;
+      this.isEditEmail=false;
+      }
   }
-  saveEmail() {
-    if (this.email && this.email !== '') {
-      this.isEditingEmail = false;
-      this.emailSaved = true;
+  handlePaymentEvent(value: any) {
+    if (this.email && this.email !== '' && value == 'email') {
+      this.isEditEmail = false;
+    }else if (this.mobileNo && this.mobileNo !== null && value == 'mobileNo') {
+      this.isEditMobile = false;
     }
   }
   selectButton(button: string, value?: any,content? : any) {
@@ -221,18 +217,6 @@ export class RenewalDynamicFormComponent implements OnInit {
       }
     }
   }
-
-  resendLink() {
-    console.log('Resending payment link...');
-  }
-  paymentTypes = [
-    { value: 'e-nach', label: 'E - Nach', isFasterProcess: true },
-    { value: 'e-mandate', label: 'E - Mandate', isFasterProcess: true },
-    { value: 'auto-debit', label: 'Auto Debit', isFasterProcess: false }
-  ];
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
   selectPaymentType(option: any) {
     this.selectedPaymentType = option.value;
     this.selectedPaymentTypeLabel = option.label;
@@ -247,38 +231,6 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.isDropdownOpen = false;
     }
   }
-  // Function to fetch Add-Ons Data
-  // fetchAddOns(): void {  
-  //   this.http.get<any[]>('/assets/jsonValue/health-add-ons.json').subscribe(
-  //     (healthAddOnsData) => {
-  //       this.healthAddOns = healthAddOnsData;
-  //     },
-  //     (error) => {
-  //       console.error('Error fetching Health Add-Ons:', error);
-  //     }
-  //   );    
-  // }
- // Function to fetch Coverages Data
-//  fetchCoverages(): void {  
-//   this.http.get<any[]>('/assets/jsonValue/optional-coverages.json').subscribe(
-//     (coveragesData) => {
-//       this.coverages = coveragesData;
-//     },
-//     (error) => {
-//       console.error('Error fetching Coverages:', error);
-//     }
-//   );
-// }
-  fetchRoomUpgradeBenefits(): void {  
-    this.http.get<any[]>('/assets/jsonValue/rooms.json').subscribe(
-      (roomUpgradeBenefitsData) => {
-        this.roomUpgradeBenefits = roomUpgradeBenefitsData;
-      },
-      (error) => {
-        console.error('Error came from fetching Room Upgrade Benefits:', error);
-      }
-    );
-  }
   selectCoverage(coverage: any): void {
     const index = this.selectedCoverages.findIndex(c => c.id === coverage.id);
     if (index > -1) {
@@ -290,17 +242,6 @@ export class RenewalDynamicFormComponent implements OnInit {
   isCoverageSelected(coverage: any): boolean {
     return this.selectedCoverages.some(c => c.id === coverage.id);
   }
-  selectAddOn(addOn: any): void {
-    const index = this.selectedAddOns.findIndex(a => a.id === addOn.id);
-    if (index > -1) {
-      this.selectedAddOns.splice(index, 1);
-    } else {
-      this.selectedAddOns.push(addOn);
-    }
-  }
-  isHealthAddOnSelected(addOn: any): boolean {
-    return this.selectedAddOns.some(a => a.id === addOn.id);
-  }
   onRadioChanges() {
     this.isRadioSelected = true;
     }
@@ -310,7 +251,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   setSection(section: string) {
     this.activeSection = section;
   }
-  proceed() {
+  proceed(value? :any) {
     if (this.activeSection === 'primary') {
       this.setSection('additional');
     } 
@@ -318,6 +259,7 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.setSection('payment');
     } 
     else if (this.activeSection === 'payment') {
+      if(value == 'back') this.setSection('additional')
     }
   }
   renewNow() {
