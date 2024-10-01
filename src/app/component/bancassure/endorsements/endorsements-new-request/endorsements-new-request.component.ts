@@ -266,6 +266,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   screenSize: number | any;
   isDesktop: boolean = false;
   otpPopupRef: BsModalRef<unknown> | any;
+  documentSize: any;
   constructor(private formBuilder: FormBuilder,
     private modalService: BsModalService,
     private endorsement_service: EndorsementsService,
@@ -705,6 +706,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.namesVariable = file.name;
     this.documentType = file.type;
+    this.documentSize = this.convertBytesToKB(file.size);
 
     if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png') {
       this.showNote = false;
@@ -713,6 +715,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showNote = true;
     }
   }
+
+  convertBytesToKB(bytes: number): string {
+    const kb = bytes / 1024;
+    return `${kb.toFixed(2)} KB`;
+  }
+
   campnoSelected() {
     //  console.log('campid :>> ', campid);   
   }
