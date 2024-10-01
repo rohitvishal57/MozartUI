@@ -13,11 +13,12 @@ import { ClaimsComponent } from './claims/claims.component';
 import { ClaimsViewComponent } from './claims/claims-view/claims-view.component';
 import { RenewalListComponent } from '../renewals/renewal-list/renewal-list.component';
 import { SubQuotesComponent } from '../renewals/sub-quotes/sub-quotes.component';
-
 import { LeadsListComponent } from '../leads/leads-list/leads-list.component';
 import { ProposalsListComponent } from '../proposals/proposals-list/proposals-list.component';
 import { CustomerListComponent } from '../customers/customer-list/customer-list.component';
 import { StatusValidationComponent } from '../status-validation/status-validation.component';
+import { ClaimsDetailsComponent } from './claims/claims-details/claims-details.component';
+
 
 const routes: Routes = [
     {
@@ -37,6 +38,7 @@ const routes: Routes = [
         {path:"subquotes",component:SubQuotesComponent},
         {path:"leadsList",component:LeadsListComponent},
         {path: "viewcustomer",component:CustomerListComponent, canActivate:[AuthGuard]},
+        {path: "claimsDetails/:id", component:ClaimsDetailsComponent},
         {
           path: "endorsements",
           loadChildren: () => import('../bancassure/endorsements/endorsements.module').then((m) => m.EndorsementsModule)

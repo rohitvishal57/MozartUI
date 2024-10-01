@@ -52,24 +52,30 @@
                                 <th scope="col">Raised Date</th>
                             </tr>
                           </thead>
-                          <tbody class="table-group-divider" >
-                            <tr *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index"
-                    class="table-values">
-                                <td class="td-text-bold">{{ row?.id }}</td>
-                                <td >{{ row?.policyNumber }}</td>
-                                <td ><span class="text-break-w100">{{ row?.productName }}</span></td>
-                                <td >{{ row?.memberName }}</td>
-                                <td >{{ row?.memberRelation }}</td>
-                                <td >{{ row?.requestType }}</td>
-                                <td ><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
-                                <td >{{ row?.raisedDate | datepipe }}</td>
-                                <!--<td>
-                                     <div class="icon" (click)="downloadRequest(row)">
-                                        <i class="fa fa-download" aria-hidden="true"></i>
-                                    </div> 
-                                </td>-->
-                            
-                            </tr>
+                          <tbody class="table-group-divider">
+                            <ng-container *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index">
+                              <tr class="table-values" (click)="toggleDropdown(row)">
+                                <td class="card_insureInfo">{{ row?.claimInfoId }}</td>
+                                <td>{{ row?.policyNumber }}</td>
+                                <td><span class="text-break-w100">{{ row?.productName }}</span></td>
+                                <td>{{ row?.memberName }}</td>
+                                <td>{{ row?.memberRelation }}</td>
+                                <td>{{ row?.requestType }}</td>
+                                <td><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
+                                <td>{{ row?.reportedDateTime | date }}</td>
+                              </tr>
+                              
+                              <tr *ngIf="selectedClaim?.id === row.id" class="details-row visible-row">
+                                <td [attr.colspan]="8">
+                                  <div class="additional-info">
+                                    <p><strong>Mobile No:</strong> <span>{{ maskPhoneNumber(row?.policyNumber) }}</span></p>
+                                    <p><strong>Email ID:</strong> {{ row?.email }}</p>
+                                    <button class="claimDetails_btn" (click)="navigateToViewClaim(row)">View Claim Details</button>
+                                  </div>
+                                </td>
+                              </tr>
+                            </ng-container>           
+                 
                           </tbody>
                         </table>
                     </div>
@@ -79,13 +85,13 @@
                 <div class="cardViewWraper">
                     <div class="cardViewItem" *ngFor="let gridClaims of gridClaimsData| paginate: {itemsPerPage: rows, currentPage: page} ">
                         <header>
-                            <!-- <div class="card_insureInfo"> -->
-                                <!-- <h6>
-                                    <div class="insureName">Request </div>
+                            <div class="card_insureInfo">
+                                 <h6>
+                                    <div class="insureName">{{ gridClaims.claimInfoId }} </div>
                                     
-                                </h6> -->
-                                <div class="item_value">{{ gridClaims.id }}</div>
-                            <!-- </div> -->
+                                </h6>
+                                <!-- <div class="item_value">{{ gridClaims.id }}</div> -->
+                            </div>
                             <div class="card_btnGroup">
                                 <!--<button type="button" class="btn_iconGrey btn_cardDownload"><img src="../../../../../assets/Img/icon_download_grey.svg"></button>-->
                             </div>
@@ -113,7 +119,7 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Raised Date</div>
-                                <div class="item_value">{{ gridClaims.raisedDate | datepipe }}</div>
+                                <div class="item_value">{{ gridClaims.reportedDateTime | datepipe }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_100">
                                 <div class="item_lable">Status</div>
@@ -142,4 +148,3 @@
         </div>
     </div>
 </main>
-<!--Claims End-->

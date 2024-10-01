@@ -32,6 +32,7 @@ import { LeadsListComponent } from '../leads/leads-list/leads-list.component';
 import { ProposalsListComponent } from '../proposals/proposals-list/proposals-list.component';
 import { CustomerListComponent } from '../customers/customer-list/customer-list.component';
 import { StatusValidationComponent } from '../status-validation/status-validation.component';
+import { ClaimsDetailsComponent } from './claims/claims-details/claims-details.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ export class AppModule { }
     ClaimsComponent,
     ClaimsViewComponent,
     ClaimsListViewComponent,
+    ClaimsDetailsComponent,
     RenewalListComponent,
     DatepipePipe,
     AbhiDashboardComponent,
@@ -68,7 +70,7 @@ export class AppModule { }
     SubQuotesComponent,
     LeadsListComponent,
     ProposalsListComponent,
-    CustomerListComponent
+    CustomerListComponent,
   ],
   imports: [
     CommonModule,

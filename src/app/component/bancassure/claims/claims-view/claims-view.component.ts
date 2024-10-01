@@ -203,7 +203,7 @@ this.uploadFiles(Array.from(files));
 }
 convertBytesToKB(bytes: number): string {
   const kb = bytes / 1024;
-  return `${kb.toFixed(2)} KB`; // Format to 2 decimal places
+  return `${kb.toFixed(2)} KB`;
 }
 
 uploadFiles(files: File[]): void {

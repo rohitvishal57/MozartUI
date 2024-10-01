@@ -1,0 +1,76 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>Claims</h2>
+                <button type="button" class="btn_white btn_newRequest" (click)="navigateToCreateClaim()">
+                    <img src="../../../../../assets/Img/icon_plus_red.svg">New Requests
+                </button>
+            </div>
+<div class="container">
+    <div class="header">
+      <div class="claim-info">
+        <h2>{{ claim?.memberName }} <span>{{ claim?.policyNumber }}</span></h2>
+        <p>{{ claim?.productName }} • {{ claim?.requestType }} • {{ claim?.claimStatus }}</p>
+      </div>
+      <div class="claim-amount">
+        <p>Claim Amount</p>
+        <h3>₹{{ claimAmount }}</h3>
+      </div>
+      <div class="approved-amount">
+      <p>Approved Amount:</p>
+      <h3>₹</h3>
+  
+    </div>
+    </div>
+  
+    <div class="under-deficiency">
+        <div class="deficiency">
+            <p class="deficiency-text">Under Deficiency</p>
+            <p>Kindly provide Aadhaar card and doctor's prescription</p>
+        </div>
+        <div class="upload-documents"> 
+            <div><button class="upload-btn">Upload Documents</button></div>
+           <div> <a href="#" class="view-details">View Details</a>
+            <a href="#" class="care-manager">Care Manager</a>
+        </div>
+    </div>
+    </div>
+  
+    <!-- Tabs -->
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+      <mat-tab label="Claims Info">
+        <div class="claims-info">
+          <div class="member-policy">
+            <h4>Member and Policy</h4>
+            <p>Member Name: {{claim?.memberName}} </p>
+            <p>Member ID: </p>
+            <p>Policy No.: </p>
+            <p>Cover Type: </p>
+          </div>
+          <div class="claim-details">
+            <h4>Claim Details</h4>
+            <p>Raised On: </p>
+            <p>Document Recv. Date: </p>
+            <p>Coverage Name: </p>
+            <p>Hospital Name:</p>
+            <p>Date of Recommendation: </p>
+            <p>Date of Admission: </p>
+            <p>Date of Discharge: </p>
+            <p>Opted Room: </p>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Documents">
+        <p>Document tab content goes here...</p>
+      </mat-tab>
+      <mat-tab label="Tracker">
+        <p>Tracker tab content goes here...</p>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  </div>
+  </div>
+  </main>
+  
