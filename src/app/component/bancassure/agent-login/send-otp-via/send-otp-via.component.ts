@@ -17,16 +17,14 @@ export class SendOtpViaComponent implements OnInit{
 
   }
 
-  ngOnInit(): void {
-    this.filteredContacts = this.data.data;
+  ngOnInit(): void {    
+    this.filteredContacts = this.fitlerCommunicationValue(this.data.data);
   }
 
-  // onSearch() {
-  //   const query = this.searchQuery.toLowerCase(); 
-  //   this.filteredContacts = this.data.data.filter((contact:any) => {
-  //     return contact.toLowerCase().includes(query);
-  //   });  
-  // }
+  fitlerCommunicationValue(arr: any) {
+    return arr.filter((str : any) => str !== '' && str !== null);
+  }
+
 
   maskUserCode(input: string): string {
     if (!input) return '';
