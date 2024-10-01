@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
+import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
 import { firstValueFrom } from 'rxjs';
 import { AdminService } from 'src/app/services/admin.service';
 import { CommonService } from 'src/app/services/common.service';
@@ -45,9 +46,8 @@ export class ViewproductsComponent implements OnInit {
 
   constructor(private renderer: Renderer2, @Inject(DOCUMENT) private document: Document,
     private loginService: LoginService, private router: Router, private toast: NgToastService,
-    private adminService: AdminService, private encryptionService: EncryptionService,public common:CommonService,) { 
-      
-    }
+    private adminService: AdminService, private encryptionService: EncryptionService,public common:CommonService,private spinner: NgxSpinnerService) 
+    { }
 
   ngOnInit(): void {
     // sessionStorage.clear()
@@ -61,16 +61,19 @@ export class ViewproductsComponent implements OnInit {
 
   getPoductList() {
     // this.selectedToggle = item.insuranceType
+    this.spinner.show();
     const reqData={
       "agentCode": this.agentCode
     }
     this.common.Getproductlist(reqData).subscribe({
       next: (res) => {
         this.ProductList = res.data;
+        this.spinner.hide();
         console.log(this.ProductList)
       },
       error: (err) => {
         console.error(err);
+        this.spinner.hide();
         if (err.status === 404) {
           this.displayNoProductsMessage = true;
         }
@@ -142,7 +145,8 @@ export class ViewproductsComponent implements OnInit {
   async getProposalNum() {
     try {
       const res = await firstValueFrom(this.common.getProposalNumber());
-      this.proposalNum = res;
+      this.proposalNum = res.data.proposalNumber;
+      console.log(this.proposalNum);
     } catch (error) {
       console.error(error);
     }
@@ -161,11 +165,13 @@ export class ViewproductsComponent implements OnInit {
   async buyNow(item: any) {
     this.formData = { ...this.formData, productName: item.productName }
     try {
+      await this.getProposalNum();
       await this.getFormSequence(item);
       console.log(item)
       const productData = {
         partnerId : item.partnerId,
-        productId : item.productId
+        productId : item.productId,
+        proposalNum: this.proposalNum
 
       }
       console.log(productData)
