@@ -137,7 +137,7 @@ export class ProposalsListComponent {
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(
       (product) => product.selected).length;
-    const selectedPolicyTypesCount = this.policyTypes.filter(
+    const selectedPolicyTypesCount = this.StaticPolicyTypes.filter(
       (policyType) => policyType.selected).length;
     let count = selectedProductsCount + selectedPolicyTypesCount;
     if (this.startDate && this.endDate) {
@@ -172,7 +172,7 @@ export class ProposalsListComponent {
   }
   cancel() {
     this.productsList.forEach((product) => (product.selected = false));
-    this.policyTypes.forEach((policyType) => (policyType.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
@@ -185,7 +185,7 @@ export class ProposalsListComponent {
   }
   clear(){
     this.productsList.forEach((product) => (product.selected = false));
-    this.policyTypes.forEach((policyType) => (policyType.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;

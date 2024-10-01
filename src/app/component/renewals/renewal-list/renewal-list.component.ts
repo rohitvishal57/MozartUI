@@ -141,7 +141,7 @@ export class RenewalListComponent {
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(
       (product) => product.selected).length;
-    const selectedPolicyTypesCount = this.policyTypes.filter(
+    const selectedPolicyTypesCount = this.StaticPolicyTypes.filter(
       (policyType) => policyType.selected).length;
     let count = selectedProductsCount + selectedPolicyTypesCount;
     if (this.startDate && this.endDate) {
@@ -164,11 +164,7 @@ export class RenewalListComponent {
       .map((product) => product.productName);
       console.log("selectedProducts",selectedProducts);     
     this.renewalLisRequestBody.productName = selectedProducts.join(", ");
-     console.log("product names which are taking by request body",this.renewalLisRequestBody.productName);  
-    // const selectedPolicyTypes = this.policyTypes
-    //   .filter((policyType) => policyType.selected)
-    //   .map((policyType) => policyType.name);
-    //   console.log("selecteed policy types",selectedPolicyTypes);  
+     console.log("product names which are taking by request body",this.renewalLisRequestBody.productName);    
     const selectedPolicyTypes = this.StaticPolicyTypes
     .filter((policyType) => policyType.selected)
     .map((policyType) => policyType.name);
@@ -179,7 +175,7 @@ export class RenewalListComponent {
   }
   cancel() {
     this.productsList.forEach((product) => (product.selected = false));
-    this.policyTypes.forEach((policyType) => (policyType.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
@@ -192,7 +188,7 @@ export class RenewalListComponent {
   }
   clear(){
     this.productsList.forEach((product) => (product.selected = false));
-    this.policyTypes.forEach((policyType) => (policyType.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;

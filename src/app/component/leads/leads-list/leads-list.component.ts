@@ -2,15 +2,10 @@ import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { LeadsList } from 'src/app/interface/leads-list.interface';
-import { RenewalList } from 'src/app/interface/renewal-list.interface';
 import { AdminService } from 'src/app/services/admin.service';
 import { CommonService } from 'src/app/services/common.service';
 import { LeadsService } from 'src/app/services/leads.service';
-import { RenewalServiceService } from 'src/app/services/renewal/renewal-service.service';
 
 @Component({
   selector: 'app-leads-list',
