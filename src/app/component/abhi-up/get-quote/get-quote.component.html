@@ -140,14 +140,14 @@
                               <div class="input-block input-block-renew input-filed-white">
                                 <input type="text" id="nameproposer" formControlName="proposerName" value=""
                                   placeholder="Enter name of proposer" class="input-textBox">
-                                <span class="ui-error" *ngIf="quoteFormGroup.get('proposerName')?.invalid && quoteFormGroup.get('proposerName')?.markAsDirty">Please enter name of proposer</span>
+                                <span class="ui-error" *ngIf="quoteFormGroup.get('proposerName')?.invalid && (quoteFormGroup.get('proposerName')?.touched || quoteFormGroup.get('proposerName')?.dirty) ">Please enter name of proposer</span>
                               </div>
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                               <div class="input-block input-block-renew input-filed-white">
-                                <input type="text" id="pincodeproposer" formControlName="proposerPincode" value=""
-                                  placeholder="Enter pincode of proposer" (change)="getProposerPincode($event)" class="input-textBox">
-                                <span class="ui-error" *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && quoteFormGroup.get('proposerPincode')?.markAsDirty">Please enter pincode of proposer</span>
+                                <input type="text" id="pincodeproposer" [required]="true" formControlName="proposerPincode" value=""
+                                  placeholder="Enter your 6 digit pincode" (change)="getProposerPincode($event)" class="input-textBox">
+                                <span class="ui-error" *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && (quoteFormGroup.get('proposerPincode')?.touched || quoteFormGroup.get('proposerPincode')?.dirty)">Please enter pincode of proposer</span>
                               </div>
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">

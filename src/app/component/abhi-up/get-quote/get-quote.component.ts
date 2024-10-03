@@ -184,9 +184,9 @@ export class GetQuoteComponent {
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     this.quoteFormGroup = this.fb.group({
-      proposerPincode: [null, [Validators.required]],
-      proposerName: [null, [Validators.required]],
-      mobileNumber: [null, [Validators.required]],
+      proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$')]],
+      proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]],
+      mobileNumber: [null, [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       typeOfBusiness: ["NB"],
       isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
