@@ -210,7 +210,8 @@ export class QuoteProductsComponent implements OnInit {
       const productData = {
         partnerId : this.partnerId,
         productId : item.productId,
-        tenureAmounts : item.tenureAmounts
+        tenureAmounts : item.tenureAmounts,
+        selectedAddons : item.selectedAddon
       }
       sessionStorage.setItem("isQuote",true.toString());
       console.log(productData)

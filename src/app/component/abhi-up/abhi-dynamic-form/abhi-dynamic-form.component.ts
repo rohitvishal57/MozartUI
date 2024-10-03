@@ -88,6 +88,7 @@ export class AbhiDynamicFormComponent {
   isOverlayVisible = false;
   isQuote: any;
   isPolicyDetailsFetch: boolean = false;
+  selectedAddons: any;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public service: CommonService, private adminService: AdminService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
@@ -108,6 +109,10 @@ export class AbhiDynamicFormComponent {
     this.proposalNum = history.state.productData.proposalNum;
     if (history.state.productData.tenureAmounts) {
       this.tenureAmount = history.state.productData.tenureAmounts
+    }
+
+    if (history.state.productData.selectedAddons) {
+      this.selectedAddons = history.state.productData.selectedAddons
     }
 
     // this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
@@ -373,7 +378,7 @@ export class AbhiDynamicFormComponent {
             });
 
 
-            console.log(this.initializeSubControls(control.subControls));
+            // console.log(this.initializeSubControls(control.subControls));
 
             this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
           }
@@ -536,7 +541,11 @@ export class AbhiDynamicFormComponent {
           formGroup.addControl(control.name, tempFormArray);
         }
         else if (!control.displayOnly || control.displayOnly === false)
-          formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
+          if (this.selectedAddons.find((addon: any) => addon === control.label) && control.type === 'checkbox') {
+            formGroup.addControl(control.name, new FormControl(true, controlValidators));
+          } else {
+            formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
+          }
       });
     }
     else {
