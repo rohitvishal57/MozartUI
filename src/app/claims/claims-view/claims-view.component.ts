@@ -8,7 +8,6 @@ import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { ClaimsViewService } from './claims-view.service';
 
-
 @Component({
   selector: 'app-claims-view',
   templateUrl: './claims-view.component.html',

@@ -8,7 +8,6 @@ import { ClaimsInterface } from 'src/app/interface/claims.interface';
 import { ClaimsViewService } from '../claims-view/claims-view.service';
 
 
-
 @Component({
   selector: 'app-claims-list-view',
   templateUrl: './claims-list-view.component.html',
@@ -34,6 +33,7 @@ export class ClaimsListViewComponent implements OnInit {
   searchInputControl = new FormControl("");
   selected: string = "";
   userId!: number;
+  selectedClaim: any = null;
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
 
   ngOnInit(){
@@ -73,10 +73,10 @@ claimsReqBody =  {
     "searchType": "string",
     "searchString": "string",
     "pageNumber": 1,
-    "pageSize": 10 
+    "pageSize": 270 
   }
 fetchData(): void {
-  this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res:any) => {
+  this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => {    
     this.claims = res.data;       
     this.gridClaimsData = res.data; 
     this.totalRecords = this.claims.length;    
@@ -140,4 +140,27 @@ getPlaceholder(): string {
       return 'Search...';
     }
   } 
+  
+  toggleDropdown(row: any) {
+    if (this.selectedClaim && this.selectedClaim.id === row.id) {
+      this.selectedClaim = null; 
+    } else {
+      this.selectedClaim = row;
+    }
+  }
+  maskPhoneNumber(policyNumber: string) {
+    // if (!policyNumber || policyNumber.length < 4) {
+    //   return policyNumber; 
+    // }
+    
+    // const start = policyNumber.slice(0, 4); 
+    // const end = policyNumber.slice(-2);
+    // const masked = '******';
+    
+    // return `${start}${masked}${end}`;
+  }
+  navigateToViewClaim(row:any){
+    this.router.navigate([`/claims/detailsView/${row.id}`]);
+   // this.router.navigateByUrl(`/portal/agent/claimsDetails`);
+  }
 }

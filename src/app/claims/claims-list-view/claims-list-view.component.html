@@ -1,17 +1,16 @@
-<!--Claims Start-->
 <main class="siteBody">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
                 <h2>Claims</h2>
                 <button type="button" class="btn_white btn_newRequest" (click)="navigateToCreateClaim()">
-                    <img src="../../../../../assets/Img/icon_plus_red.svg">New Requests
+                    <img src="assets/Img/icon_plus_red.svg">New Requests
                 </button>
             </div>
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li class="quickFilterHeading">Claim Staus</li>
+                        <li class="quickFilterHeading">Claim Status</li>
                         <li><button type="button" value="all" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('all')"  [ngClass]="{'active': selectedStatus === 'all'}">All </button></li>
                         <li><button type="button" value="active" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('active')" [ngClass]="{'active': selectedStatus === 'active'}">Active </button></li>
                         <li><button type="button" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">Resolved </button></li>
@@ -29,7 +28,7 @@
                                 <option value="policyNumber">Policy Number</option>
                             </select>
                             <input type="search" id="filterSearch" value="" class="filterSearch" [placeholder]="getPlaceholder()"  [formControl]="searchInputControl">
-                            <button type="button" class="btn_text" (click)="applySearch()"><img src="../../../../../assets/Img/icon_magnify_grey.svg"></button>
+                            <button type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <!--Search section end-->
@@ -53,24 +52,30 @@
                                 <th scope="col">Raised Date</th>
                             </tr>
                           </thead>
-                          <tbody class="table-group-divider" >
-                            <tr *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index"
-                    class="table-values">
-                                <td class="td-text-bold">{{ row?.id }}</td>
-                                <td >{{ row?.policyNumber }}</td>
-                                <td ><span class="text-break-w100">{{ row?.productName }}</span></td>
-                                <td >{{ row?.memberName }}</td>
-                                <td >{{ row?.memberRelation }}</td>
-                                <td >{{ row?.requestType }}</td>
-                                <td ><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
-                                <td >{{ row?.raisedDate | datepipe }}</td>
-                                <!--<td>
-                                     <div class="icon" (click)="downloadRequest(row)">
-                                        <i class="fa fa-download" aria-hidden="true"></i>
-                                    </div> 
-                                </td>-->
-                                       
-                            </tr>
+                          <tbody class="table-group-divider">
+                            <ng-container *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index">
+                              <tr class="table-values" (click)="toggleDropdown(row)">
+                                <td class="card_insureInfo">{{ row?.claimInfoId }}</td>
+                                <td>{{ row?.policyNumber }}</td>
+                                <td><span class="text-break-w100">{{ row?.productName }}</span></td>
+                                <td>{{ row?.memberName }}</td>
+                                <td>{{ row?.memberRelation }}</td>
+                                <td>{{ row?.requestType }}</td>
+                                <td><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
+                                <td>{{ row?.reportedDateTime | datepipe }}</td>
+                              </tr>
+                              
+                              <tr *ngIf="selectedClaim?.id === row.id" class="details-row visible-row">
+                                <td [attr.colspan]="8">
+                                  <div class="additional-info">
+                                    <p><strong>Mobile No:987****456</strong> <span>{{ maskPhoneNumber(row?.policyNumber) }}</span></p>
+                                    <p><strong>Email ID:vvs***k@gmail.com</strong> {{ row?.email }}</p>
+                                    <button class="claimDetails_btn" (click)="navigateToViewClaim(row)">View Claim Details</button>
+                                  </div>
+                                </td>
+                              </tr>
+                            </ng-container>           
+                 
                           </tbody>
                         </table>
                     </div>
@@ -80,13 +85,13 @@
                 <div class="cardViewWraper">
                     <div class="cardViewItem" *ngFor="let gridClaims of gridClaimsData| paginate: {itemsPerPage: rows, currentPage: page} ">
                         <header>
-                            <!-- <div class="card_insureInfo"> -->
-                                <!-- <h6>
-                                    <div class="insureName">Request </div>
+                            <div class="card_insureInfo">
+                                 <h6>
+                                    <div class="insureName">{{ gridClaims.claimInfoId }} </div>
                                     
-                                </h6> -->
-                                <div class="item_value">{{ gridClaims.id }}</div>
-                            <!-- </div> -->
+                                </h6>
+                                <!-- <div class="item_value">{{ gridClaims.id }}</div> -->
+                            </div>
                             <div class="card_btnGroup">
                                 <!--<button type="button" class="btn_iconGrey btn_cardDownload"><img src="../../../../../assets/Img/icon_download_grey.svg"></button>-->
                             </div>
@@ -114,7 +119,7 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Raised Date</div>
-                                <div class="item_value">{{ gridClaims.raisedDate | datepipe }}</div>
+                                <div class="item_value">{{ gridClaims.reportedDateTime | datepipe }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_100">
                                 <div class="item_lable">Status</div>
@@ -143,4 +148,3 @@
         </div>
     </div>
 </main>
-<!--Claims End-->

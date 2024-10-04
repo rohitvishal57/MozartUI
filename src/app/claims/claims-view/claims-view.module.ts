@@ -9,16 +9,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DatepipePipe } from 'src/app/utilities/pipe/datepipe.pipe';
 import { ClaimsRoutingModule } from './claims-view-routing.module';
-
+import { ClaimsDetailsComponent } from '../claims-details/claims-details.component';
+import { MyMaterialModule } from 'src/app/material.module';
 @NgModule({
-  declarations: [ClaimsViewComponent,ClaimsListViewComponent,DatepipePipe],
+  declarations: [ClaimsViewComponent,ClaimsListViewComponent,DatepipePipe,ClaimsDetailsComponent],
   imports: [
     CommonModule,
     PrimeNgModule,
     NgxSpinnerModule,
     ReactiveFormsModule,
     NgxPaginationModule,
-    ClaimsRoutingModule
+    ClaimsRoutingModule,
+    MyMaterialModule
   ]
 })
 export class ClaimsViewModule { }
