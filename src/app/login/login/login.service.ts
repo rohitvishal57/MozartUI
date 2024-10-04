@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConfigService } from 'src/app/config.service';
+import { ConfigService } from 'src/app/services/config.service';
 import { HttpService } from 'src/app/services/http.service';
 
 @Injectable({
@@ -10,9 +10,6 @@ export class LoginService {
   constructor(private configService: ConfigService,
     private httpService: HttpService
   ) { }
-
-
-
 
   //Agent APi's
   sendAgentLoginRequestApi(loginData: any) {

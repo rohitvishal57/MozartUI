@@ -12,12 +12,15 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { map, Observable, startWith } from 'rxjs';
-import { Helper } from 'src/app/helper';
+import { interval, map, Observable, startWith, take } from 'rxjs';
+import { Helper } from 'src/app/utilities/helper/helper';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { EndorsementsRequestsService } from '../endorsements-requests/endorsements-requests.service';
+import { NgToastService } from 'ng-angular-popup';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { LoginService } from 'src/app/login/login/login.service';
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -33,6 +36,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
   policiesListDataValue: Observable<any[]> | any;
   policyNumberList:any = [123, 3345, 456456];
   otp: string[] = ['', '', '', '', '', ''];  // Initialize OTP array
+  timeLeft: number = 60;
+  isTimerRunning: boolean = false;
   endorseMentList: [
     {
       name: "Fresh";
@@ -225,7 +230,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
       value: "ChangeinInternationalAddress"
     }, 
   ];
-  agentCode = localStorage.getItem('agentCode');
   filteredActivity: Observable<any[]> | any;
   MemberfilteredActivity: Observable<any[]> | undefined;
   selectedPolicyNumber: any;
@@ -235,7 +239,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   submitted = false;
   validatedMobileNumber: any;
   CaseSubSubTypeValue: any;
-  AgentCode: any = '';
+  agentCode: any = '';
   // otpValue = new FormControl;
   showOtpSection: boolean = false;
   enteredOtp: any
@@ -253,20 +257,25 @@ export class EndorsementsNewRequestComponent implements OnInit {
   selectedFormControlVal: any;
   screenSize: number | any;
   isDesktop: boolean = false;
+  otpPopupRef: BsModalRef<unknown> | any;
+  documentSize: any;
   constructor(private formBuilder: FormBuilder,
     private modalService: BsModalService,
     private endorsement_service: EndorsementsRequestsService,
+    private loginservice : LoginService,
+    private toast: NgToastService,
+    private spinner: NgxSpinnerService,
+    // private confirmationDialogService: ConfirmationDialogService,
+   // private _ngxService: NgxUiLoaderService,
     private _router: Router,
+    // private _utilities: UtilitiesService,
+    // private _proposals: ProposalService,
+    // private _modalService: NgbModal, 
     private dialog: MatDialog) {
-      console.log('object');
   }
   ngOnInit() {
-    console.log('asdfgh');
     this.isDesktop = this.screenSize > 768;
-    let user = localStorage.getItem('agentCode');
-    this.AgentCode = user;
-    this.userData = JSON.parse(localStorage.getItem("USERDATA") || '{}');
-    // this.caseCreationForm.get('currentAddressDetails').setValue("hyderbad,Telangana,500008");
+    this.agentCode = localStorage.getItem('agentCode');
     this.getPolicyNumbers();
     this.initForm();
   }
@@ -413,7 +422,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No);
+      if(this.externalPolicyData?.policyData?.length > 0){
+        this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No);
+      }
     }
     if (value == 'primaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
@@ -600,12 +611,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
       }
     }
+    this.spinner.show();
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
-      (resp:any) => {
+      (resp) => {
         if (resp && resp.statusCode == "200" && resp.isSuccess) {
           if (resp.response.caseId != null) {
             if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
               if (!this.selectedFile) {
+                this.spinner.hide();
                 this.isFilenotSelected = true;
                 return;
               }
@@ -619,44 +632,20 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   data.append('Files', file)
                   data.append('CaseId', ccID)
                   data.append('ReferenceId', this.policyInfoDetails?.policyDetails?.qouteId)
-                  data.append('AgentCode', this.AgentCode)
+                  data.append('agentCode', this.agentCode)
                 }
                 this.endorsement_service.endorsementUploadFilesApi(data)
                   .pipe()
                   .subscribe((Respevent:any) => {
                     let event: any = Respevent;
                     if (Respevent && Respevent.statusCode == "200" && Respevent.isSuccess) {
-                      const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-                        data: {
-                          title: 'Confirm Case creation',
-                          message: "Your request " + resp.response.caseId + " has been registered",
-                        }
-                      });
-                      confirmDialog.afterClosed().subscribe(result => {
-                        if (result === true) {
-                          this.caseCreationForm.reset();
-                          this.caseCreationForm.get('asignedTeam').setValue('Endorsement - Non financial');
-                          this.selctedFileName = "";
-                          this._router.navigate(["Endorsements/Endorsements-new-request"]);
-                        }
-                      });
-                    }
+                      this.spinner.hide();
+                      this.toast.success({ detail: `Your request ${resp.response.caseId} has been registered`});
+                      this.backToEndorsment();
+                    } 
                     else {
-                      const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-                        data: {
-                          title: 'Confirm Case creation',
-                          message: "Your request " + resp.response.caseId + " has been registered",
-                        }
-                      });
-                      confirmDialog.afterClosed().subscribe(result => {
-                        if (result === true) {
-                          this.caseCreationForm.reset();
-                          this.caseCreationForm.get('asignedTeam').setValue('Endorsement - Non financial');
-                          this.selctedFileName = "";
-                          this._router.navigate(["/my-requests"]);
-                        }
-                      });
-                      // this.confirmationDialogService.confirm("Confirm Text", "File is not uploaded successfully, Please try again later.");
+                      this.toast.error({ detail: `${resp.response.statusMessage}`});
+                      this.backToEndorsment();
                     }
                   }, (error:any) => {
                     console.log(error);
@@ -664,34 +653,26 @@ export class EndorsementsNewRequestComponent implements OnInit {
               }
             }
             else {
-              const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-                data: {
-                  title: 'Confirm Case creation',
-                  message: "Your request " + resp.response.caseId + " has been registered"
-                }
-              });
-              confirmDialog.afterClosed().subscribe(result => {
-                if (result === true) {
-                  this.caseCreationForm.reset();
-                  this.caseCreationForm.get('asignedTeam').setValue('Endorsement - Non financial');
-                  this.selctedFileName = "";
-                  this._router.navigate(["Endorsements/Endorsements-new-request"]);
-                }
-              });
+              this.spinner.hide();
+              this.toast.success({ detail: `Your request ${resp.response.caseId} has been registered`});
+              this.backToEndorsment();
             }
           }
           else {
-           // this.confirmationDialogService.confirm("Confirm Text", resp.response.statusMessage);
+            this.spinner.hide();
+            this.toast.error({ detail: `${resp.response.statusMessage}`});
+            this.backToEndorsment();
           }
         }
       },
-      (err:any) => {
+      (err) => {
+        this.spinner.hide();
         console.log(err);
         this.selctedFileName = "";
       });
   }
   backToEndorsment() {
-    this._router.navigate(["Endorsements/Endorsements-new-request"]);
+    this._router.navigate(["endorsements/Endorsements-new-request"]);
   }
   initiateKyc() {
     console.log(this.caseCreationForm.value);
@@ -717,6 +698,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.namesVariable = file.name;
     this.documentType = file.type;
+    this.documentSize = this.convertBytesToKB(file.size);
 
     if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png') {
       this.showNote = false;
@@ -725,15 +707,30 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showNote = true;
     }
   }
+
+  convertBytesToKB(bytes: number): string {
+    const kb = bytes / 1024;
+    return `${kb.toFixed(2)} KB`;
+  }
+
   campnoSelected() {
     //  console.log('campid :>> ', campid);   
   }
+  openOtpPopup() {
+    this.otpPopupRef = this.modalService.show(this.otpPopup);
+  }
+
+  closeOtpPopup() {
+    if (this.otpPopupRef) {
+      this.otpPopupRef.hide();
+    }
+  }
+
   sendOTP() {
-    this.modalRef = this.modalService.show(this.otpPopup);
-    //this.modalService.show(this.otpPopup);
+    this.spinner.show();
     let selectedType = this.caseCreationForm.get('endorsementType').value;
     this.otpObj = {
-      AgentCode: this.AgentCode,
+      agentCode: this.agentCode,
       EmailId: null,
       MobileNumber: null
     }
@@ -742,98 +739,81 @@ export class EndorsementsNewRequestComponent implements OnInit {
     } else {
       this.otpObj.EmailId = this.caseCreationForm.get("endorsementDetails").get(selectedType).value;
     }
-    this.endorsement_service.endorsementSendOTPService(this.otpObj).subscribe(
-      (resp:any) => {
+    this.endorsement_service.endorsementSendOtpApi(this.otpObj).subscribe(
+      (resp : any) => {
         if (resp && resp.statusCode == "200" && resp.isSuccess) {
           this.otpInfoObject = {
             requestId: resp.requestId,
             otp: "",
           };
-          // this.confirmationDialogService.confirm(
-          //   "Confirm Text",
-          //   resp && resp.statusMessage ? resp.statusMessage : "something went wrong, please try again."
-
-          // );
-          const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-            data: {
-              title: 'Confirm message',
-              message: resp && resp.statusMessage ? resp.statusMessage : "something went wrong, please try again.",
-            },
-          });
-          confirmDialog.afterClosed().subscribe(result => {
-            if (result === true) {
-             // this._modalService.dismissAll();
-              this.startTimer();
-              this.modalService.show(this.otpPopup);
-              //this._utilities.openModel(this.otpPopup); 
-              this.sendOtptDisabled = true;
-            }
-          });
+          this.spinner.hide();
+          this.openOtpPopup();
+          this.startTimer();
+          this.sendOtptDisabled = true;
         }
         else {
-          // this.confirmationDialogService.confirm(
-          //   "Confirm Text",
-          //   resp && resp.errorMessage ? resp.errorMessage : "something went wrong, please try again."
-
-          // );
+          this.spinner.hide();
           this.sendOtptDisabled = false;
+          this.toast.error({ detail: resp.errorMessage});
         }
       },
       (err) => {
+        this.spinner.hide();
         console.log(err);
         this.sendOtptDisabled = false;
+        this.toast.error({ detail: "Something went wrong! Please try again later."});
       });
   }
   validateOTP() {
-    // this.enteredOtp = this.caseCreationForm.get("endorsementDetails").get('otpValue').value;
-    // console.log(this.enteredOtp);
+    const otpCode = this.otp.join('');
     let modal = {
       RequestId: this.otpInfoObject.requestId,
-      OTPNumber: this.otpInfoObject.otp,
+      OTPNumber: otpCode,
       emailId: this.otpObj.EmailId,
       Mobile: this.otpObj.MobileNumber,
     };
-   // this._ngxService.start();
-    // this._proposals.validateOTP(modal).subscribe(
-    //   (resp:any) => {
-    //     if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 0) {
-    //       //this._modalService.dismissAll();
-    //       const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-    //         data: {
-    //           title: 'Confirm Text',
-    //           message: resp && resp.statusMessage ? resp.statusMessage : "something went wrong, please try again.",
-    //         },
-    //       });
-    //       this.isDisabled = false;
-    //       this.sendOtptDisabled = true;
-    //       // this.selectedFormControlVal =  this.caseCreationForm.get('endorsementType').value;
-    //       // this.caseCreationForm.get("endorsementDetails").get(this.selectedFormControlVal).disable();
-    //     } else if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 1) {
-    //       // this._modalService.dismissAll();
-    //       // this.confirmationDialogService.confirm(
-    //       //   "Confirm Text",
-    //       //   resp && resp.statusMessage ? resp.statusMessage : "something went wrong, please try again."
-    //       // );
-    //       this.sendOtptDisabled = false;
-    //     }
-    //     else {
-    //       // this._modalService.dismissAll();
-    //       // this.confirmationDialogService.confirm(
-    //       //   "Confirm Text",
-    //       //   resp && resp.errorMessage ? resp.errorMessage : "something went wrong, please try again."
-    //       // );
-    //       this.sendOtptDisabled = false;
-    //     }
-    //    // this._ngxService.stopAll();
-    //   },
-    //   (err:any) => {
-    //     // this.confirmationDialogService.confirm(
-    //     //   "Confirm Text", "Something went wrong! please try again.");
-    //       this.otpInfoObject = null;
-    //       this.sendOtptDisabled = false;
-    //      // this._ngxService.stopAll();
-    //   }
-    // );
+    this.spinner.show();
+    this.loginservice.validateOtpRequestApi(modal).subscribe(
+      (resp:any) => {
+        if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 0) {
+          this.spinner.hide();
+          this.closeOtpPopup();
+          if (resp && resp.statusMessage) {
+            this.toast.success({ detail: resp.statusMessage});
+          } else {
+            this.toast.error({detail: "Something went wrong, please try again"})
+          }
+          this.isDisabled = false;
+          this.sendOtptDisabled = true;
+        } else if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 1) {
+          this.spinner.hide();
+          this.closeOtpPopup();
+          if (resp && resp.statusMessage) {
+            this.toast.success({ detail: resp.statusMessage});
+          } else {
+            this.toast.error({detail: "Something went wrong, please try again"})
+          }
+          this.sendOtptDisabled = false;
+        }
+        else {
+          this.spinner.hide();
+          this.closeOtpPopup();
+          if (resp && resp.errorMessage) {
+            this.toast.error({ detail: resp.errorMessage});
+          } else {
+            this.toast.error({detail: "Something went wrong, please try again"})
+          }
+          this.sendOtptDisabled = false;
+        }
+      },
+      (err:any) => {
+          this.otpInfoObject = null;
+          this.sendOtptDisabled = false;
+          this.spinner.hide();
+          this.closeOtpPopup();
+          this.toast.error({detail: "Something went wrong, please try again"});
+      }
+    );
   }
   memberIdChange(event:any) {
     const member = event.target.value;
@@ -868,15 +848,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
     }
   }
-  // otpValueChange(otpVal) {
-  //   debugger;
-  //   console.log(otpVal);
-  //   if (otpVal != "" && this.caseCreationForm.get("endorsementDetails").get('otpValue').valid) {
-  //     this.isOtpSubmitDisabled = false;
-  //   } else {
-  //     this.isOtpSubmitDisabled = true;
-  //   }
-  // }
+
   mobAndEmailValueChange(enteredValue:any, formControlName:any){
     if (enteredValue != "" && this.caseCreationForm.get("endorsementDetails").get(formControlName).valid) {
       this.sendOtptDisabled = false;
@@ -884,66 +856,38 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.sendOtptDisabled = true;
     }
   }
-     //To check OTP length
-    //  checkLength(field:any, evt:any) {
-    //   let otpSelector = "#otp_";
-    //   var key = evt.keyCode || evt.charCode;
-    //   if (key == 8 || key == 46) {
-    //     field--;
-    //     $(otpSelector + field).focus();
-    //     return false;
-    //   }
-    //   let value = evt.target.value;
-    //   if (field != 6) {
-    //     if (value.length == 1) {
-    //       field++;
-    //       $(otpSelector + field).focus();
-    //     } else if (value.length > 1) {
-    //       let vals = value.split("");
-    //       vals.forEach((val:any) => {
-    //         if (field <= 6) {
-    //           $(otpSelector + field).val(val);
-    //           $(otpSelector + field).focus();
-    //           field++;
-    //         }
-    //       });
-    //     }
-    //   } else {
-    //     if (value.length > 1) {
-    //       $(otpSelector + field).val(value[0]);
-    //     }
-    //   }
-    //   let fullVal = "";
-    //   for (let i = 1; i <= 6; i++) {
-    //     fullVal = fullVal + $(otpSelector + i).val();
-    //   }
-    //   this.otpInfoObject.otp = fullVal;
-    // }
-    resendOTP(){}
-    continueToEnterOTP(){
-      //this._modalService.dismissAll();
-      this.startTimer();
-      this.modalService.show(this.otpPopup); 
-    }
-      //Start OTP timer
-  startTimer() {
-    this.timerCounter = { min: 1, sec: 0 }; // choose whatever you want
-    let intervalId = setInterval(() => {
-      if (this.timerCounter.sec - 1 == -1) {
-        this.timerCounter.min -= 1;
-        this.timerCounter.sec = 59;
-      } else this.timerCounter.sec -= 1;
-      if (this.timerCounter.min === 0 && this.timerCounter.sec == 0)
-        clearInterval(intervalId);
-    }, 1000);
+  
+  resendOTP(){
+    this.sendOTP();
   }
+
+  //Start OTP timer
+  startTimer() {
+    this.timeLeft = 60;
+    this.isTimerRunning = false;
+    if (this.isTimerRunning) return; // Prevent multiple timers from starting
+    this.isTimerRunning = true;
+
+    // RxJS interval emits every second (1000ms)
+    const timer$ = interval(1000).pipe(
+      take(this.timeLeft) // Complete the observable after 'timeLeft' seconds
+    );
+
+    // Subscribe to the interval
+    timer$.subscribe({
+      next: () => {
+        this.timeLeft--; // Decrease the time left by 1 every second
+      },
+      complete: () => {
+        this.isTimerRunning = false; // Reset once the timer completes
+      }
+    });
+  }
+  
   omit_special_char(event:any) {
     var k;
     k = event.charCode;  //         k = event.keyCode;  (Both can be used)
     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-  }
-  onOtpChange(data:any,count:any){
-
   }
  
   deleteFile() {
@@ -952,8 +896,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.showDocInfo = false;
   }
 
-   // Handle key events for OTP input
-   onKey(event: KeyboardEvent, index: number) {
+  // Handle key events for OTP input
+  onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
     const target = event.target as HTMLInputElement;
 
@@ -975,5 +919,4 @@ export class EndorsementsNewRequestComponent implements OnInit {
       }
     }
   }
-  
 }

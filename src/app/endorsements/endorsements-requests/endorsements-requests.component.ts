@@ -48,7 +48,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   requestsListRequestBody:any = {
       "start": 0,
-      "length": 270,
+      "length": "10",
       "sortColumn": "RequestedOn",
       "searchColumn": "",
       "sortDirection": "DESC",
@@ -60,14 +60,14 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
    
   getRequestList() {
-    this.requestsListRequestBody.agentId = localStorage.getItem('agentCode')
+    this.requestsListRequestBody.agentId = localStorage.getItem('agentCode');
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          // console.log(response.endorsementDetails);
+          console.log(response.endorsementDetails);
           this.endorsementDetails = [...response.endorsementDetails];
           this.countsList = response.endorsementDetails;
-          this.totalRecords = this.endorsementDetails.length;
+          this.totalRecords = response.totalRecords;
         } else {
           console.error("API request was not successful.");
         }

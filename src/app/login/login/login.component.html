@@ -176,12 +176,12 @@
       <div class="verify-e-p-otp-wrap" *ngIf="verifyOtpEnable">
         <label class="otp-text-wrap">The OTP has been to {{ maskedUserCode }}</label>
         <div class="otp-container">
-          <input type="text" #otp0 class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
-          <input type="text" #otp1 class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
-          <input type="text" #otp2 class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
-          <input type="text" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
-          <input type="text" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
-          <input type="text" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
+          <input type="password" #otp0 class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
+          <input type="password" #otp1 class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
+          <input type="password" #otp2 class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
+          <input type="password" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
+          <input type="password" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
+          <input type="password" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
         </div>        
         <div class="submit-button margin-btn-wrap">
           <button type="submit" class="login-button" (click)="onVerifyOTP()">
