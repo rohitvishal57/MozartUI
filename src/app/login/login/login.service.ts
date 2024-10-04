@@ -11,9 +11,6 @@ export class LoginService {
     private httpService: HttpService
   ) { }
 
-
-
-
   //Agent APi's
   sendAgentLoginRequestApi(loginData: any) {
     const sendAgentLoginRequestApi = this.configService.config.baseUrl + this.configService.config.partnerlogin;

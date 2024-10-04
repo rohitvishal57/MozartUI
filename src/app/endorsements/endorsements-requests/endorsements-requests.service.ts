@@ -34,8 +34,9 @@ export class EndorsementsRequestsService {
     const getEndorsementPolicyInfoApi = this.configService.config.baseUrl + this.configService.config.getpolicyinfodetails;
     return this.httpService.post(getEndorsementPolicyInfoApi, formData);
   }
-  endorsementSendOTPService(formData:any){
-    const endorsementCreateRequestApi = this.configService.config.baseUrl + this.configService.config.endorsementGetOTP;
-    return this.httpService.post(endorsementCreateRequestApi, formData);
+  
+  endorsementSendOtpApi(formData:any){
+    const endorsementSendOtpApi = this.configService.config.baseUrl + this.configService.config.endorsementGetOTP;
+    return this.httpService.post(endorsementSendOtpApi, formData);
   }
 }

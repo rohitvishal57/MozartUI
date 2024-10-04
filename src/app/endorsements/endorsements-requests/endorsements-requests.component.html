@@ -4,8 +4,8 @@
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
                 <h2>All Requests</h2>
-                <button type="button" class="btn_white btn_newRequest" (click)="redirect('endorsements/Endorsements-new-request')">
-                    <img src="../../../../../assets/Img/icon_plus_red.svg">New Requests
+                <button type="button" class="btn_white btn_newRequest" (click)="redirect('Endorsements/Endorsements-new-request')">
+                    <img src="assets/Img/icon_plus_red.svg">New Requests
                 </button>
             </div>
             <section class="quickFilterMain">
@@ -29,7 +29,7 @@
                                 <option value="policyNumber">Policy Number</option>
                             </select>
                             <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button type="button" class="btn_text" (click)="applySearch()"><img src="../../../../../assets/Img/icon_magnify_grey.svg"></button>
+                            <button type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <!--Search section end-->
@@ -96,9 +96,9 @@
                                 </h6>
                                 <div class="item_productName">{{ row?.caseId }}</div>
                             </div>
-                            <div class="card_btnGroup">
-                                <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadRequest(row)"><img src="../../../../../assets/Img/icon_download_grey.svg"></button>
-                            </div>
+                            <!-- <div class="card_btnGroup">
+                                <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadRequest(row)"><img src="assets/Img/icon_download_grey.svg"></button>
+                            </div> -->
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">
