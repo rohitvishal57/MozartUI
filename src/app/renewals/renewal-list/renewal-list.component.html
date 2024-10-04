@@ -24,9 +24,9 @@
                     </ul>
                 </div>
                 <div class="quickFilterRight">
-                    <button type="button" value="download" class="btn_iconGrey mobile-hide"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
+                    <button type="button" value="download" class="btn_iconGrey mobile-hide "><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
                     <div class="searchWraper " [matMenuTriggerFor]="searchMenu" #menuTrigger="matMenuTrigger">
-                        <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" aria-label="field_searchWraper" data-bs-toggle="dropdown" aria-expanded="false" (click)="toggleSearchDropdown()">
+                        <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" aria-label="field_searchWraper" data-bs-toggle="dropdown" aria-expanded="false" (click)="toggleSearchDropdown()" [ngClass]="{'active': selected != ''}">
                             <img src="assets/Img/icon_magnify_grey.svg" alt="Search">
                         </button>
                         <mat-menu #searchMenu="matMenu">
@@ -64,10 +64,10 @@
                         </mat-menu>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
-                                <div class="filterHeader">
+                                <div class="filterHeader" >
                                     <header>Filter</header>
                                     <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
                                         <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
@@ -85,18 +85,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="fw_formRow">
+                                    <div class="fw_formRow">
                                         <h6>Policy Type</h6>
                                         <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let policyType of policyTypes; let i = index">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="individual" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                                    <label for="policyType{{i}}">{{policyType.name}}</label>
+                                                  <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <label for="policytype{{i}}">{{policyType.name}}</label>
                                                 </div>
-                                            </div>
-
+                                              </div>                                              
                                         </div>
-                                    </div> -->
+                                    </div>
                                     <div class="fw_formRow">
                                         <h6>Date Range</h6>
                                         <div class="row">
@@ -186,9 +185,8 @@
                                     <td>
                                         <div class="btn_groupAction">
                                             <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="renewalJourney(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(row, 'renew')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                            <!-- <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(row, 'renew')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button> -->
                                             <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
@@ -213,13 +211,12 @@
                                                         <li class="actionItem" (click)="handleAction(row, 'notice')">
                                                             <a> <img src="assets/Img/icon_send_renewal_notice_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
                                                         </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'autodebit')">
+                                                        <!-- <li class="actionItem" (click)="handleAction(row, 'autodebit')">
                                                             <a> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></a>
-                                                        </li>
+                                                        </li> -->
                                                     </ul>
                                                 </div>
                                             </mat-menu>
-
                                         </div>
                                     </td>
                                 </tr>
@@ -255,7 +252,7 @@
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
                                     <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="renewalJourney(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <!-- <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button> -->
                                     <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
 
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
@@ -282,9 +279,9 @@
                                                 <li class="actionItem" (click)="handleAction(row, 'notice')">
                                                     <a> <img src="assets/Img/icon_send_renewal_notice_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
                                                 </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'autodebit')">
+                                                <!-- <li class="actionItem" (click)="handleAction(row, 'autodebit')">
                                                     <a> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></a>
-                                                </li>
+                                                </li> -->
                                             </ul>
                                         </div>
                                     </mat-menu>
@@ -364,11 +361,10 @@
                     </div>
                 </div>
             </section>
-            <!--Create new quote Main start-->
             <section class="createNewQuoteWraper" *ngIf="totalRecords === 0">
                 <div class="createNewQuoteMain">
                     <div class="cnqLeft">
-                        <!-- <h5>Hi {{ row.proposerFirstName }} , let's get started with new leads</h5> -->
+                        <h5>Hi let's get started with new leads</h5>
                         <h6><img src="assets/Img/icon_lightbulb.svg"> You need 5 leads to hit your goal this month</h6>
                     </div>
                     <div class="cnqRight">
@@ -376,7 +372,6 @@
                     </div>
                 </div>
             </section>
-            <!--Create new quote Main end-->
         </div>
     </div>
 </main>
