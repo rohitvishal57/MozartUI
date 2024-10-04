@@ -11,7 +11,7 @@ const routes: Routes = [
    { path: 'claims', 
     loadChildren:() => import('./claims/claims-view/claims-view.module').then((m)=>m.ClaimsViewModule)
    },
-   { path: 'Endorsements', 
+   { path: 'endorsements', 
     loadChildren:() => import('./endorsements/endorsements-requests/endorsements-requests.module').then((m)=>m.EndorsementsRequestsModule)
    },
    { path: 'products', 

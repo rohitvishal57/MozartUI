@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
@@ -9,10 +9,46 @@ import { CommonService } from 'src/app/services/common.service';
   styleUrls: ['./side-navbar.component.scss']
 })
 export class SideNavbarComponent {
-
+  isExpanded = false;
+  isActive = false;
+  
   constructor(private router:Router,
     private loginService: CommonService,private toast: NgToastService){
 
+  }
+  toggleMobileNav(event: Event): void {
+    const target = (event.target as HTMLElement).getAttribute('aria-label');
+    const element = document.getElementById(target || '');
+    if (element) {
+      this.isActive = !this.isActive;
+    }
+  }
+
+  // Expand and collapse side navigation on hover
+  expandSideNav(): void {
+    this.isExpanded = true;
+  }
+
+  collapseSideNav(): void {
+    this.isExpanded = false;
+  }
+
+  // Add class on smaller screens (mobile view)
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    const width = (event.target as Window).innerWidth;
+    if (width < 1024) {
+      this.isExpanded = true;
+    } else {
+      this.isExpanded = false;
+    }
+  }
+
+  // Initialize on component load
+  ngOnInit(): void {
+    if (window.innerWidth < 1024) {
+      this.isExpanded = true;
+    }
   }
   logOut() {
     this.toast.success({ detail: "SUCCESS", summary: "Agent Logout successfully!!", duration: 2000 });

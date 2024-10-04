@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConfigService } from './config.service';
+import { ConfigService } from './services/config.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MyMaterialModule } from './material.module';
 import { PrimeNgModule } from './prime-ng.module';

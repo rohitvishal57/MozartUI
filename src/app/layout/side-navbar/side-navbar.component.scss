@@ -1,26 +1,32 @@
-.parent-container {
-    position: relative;
-}
 .sideNavMain {
     position: absolute;
     left: 0;
-    // top: 9.7rem;
     height: 100vh;
-}
-.sideNavSub {
+    &.active {
+      display: block;
+    }
+    &.expand .link-text {
+      display: inline;
+    }
+  }
+  
+  .sideNavSub {
     width: 76px;
     height: 100%;
     background: #fff;
-}
-.navMain {
+    transition: width 0.3s;
+  }
+  
+  .navMain {
     width: 26px;
     display: flex;
     flex-direction: column;
-    gap:22px;
+    gap: 22px;
     margin: auto;
     padding: 32px 0;
-}
-.navMain div {
+  }
+  
+  .navMain div {
     width: 26px;
     height: 26px;
     padding: 5px;
@@ -28,10 +34,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-.navMain div:hover, .navMain div.active {
+    cursor: pointer;
+  }
+  
+  .navMain .link-text {
+    display: none;
+    margin-left: 10px;
+  }
+  
+  .navMain div:hover, .navMain div.active {
     background: #C7222A;
-}
-.navMain div:hover img, .navMain div.active img {
-    filter:brightness(0) invert(1);
-}
+  }
+  
+  .navMain div:hover img, .navMain div.active img {
+    filter: brightness(0) invert(1);
+  }
+  
+  .navMain div:hover .link-text, .navMain div.active .link-text {
+    display: inline;
+  }
+  
+  @media (max-width: 1024px) {
+    .sideNavMain.expand {
+      width: auto;
+    }
+  }
+  

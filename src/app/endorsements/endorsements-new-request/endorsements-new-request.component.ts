@@ -13,7 +13,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
-import { Helper } from 'src/app/helper';
+import { Helper } from 'src/app/utilities/helper/helper';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -637,7 +637,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
                           this.caseCreationForm.reset();
                           this.caseCreationForm.get('asignedTeam').setValue('Endorsement - Non financial');
                           this.selctedFileName = "";
-                          this._router.navigate(["Endorsements/Endorsements-new-request"]);
+                          this._router.navigate(["endorsements/Endorsements-new-request"]);
                         }
                       });
                     }
@@ -675,7 +675,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   this.caseCreationForm.reset();
                   this.caseCreationForm.get('asignedTeam').setValue('Endorsement - Non financial');
                   this.selctedFileName = "";
-                  this._router.navigate(["Endorsements/Endorsements-new-request"]);
+                  this._router.navigate(["endorsements/Endorsements-new-request"]);
                 }
               });
             }
@@ -691,7 +691,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
   backToEndorsment() {
-    this._router.navigate(["Endorsements/Endorsements-new-request"]);
+    this._router.navigate(["endorsements/Endorsements-new-request"]);
   }
   initiateKyc() {
     console.log(this.caseCreationForm.value);

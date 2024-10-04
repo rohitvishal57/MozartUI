@@ -1,26 +1,39 @@
-<div class="main">
-    <div class="sub-mainNav"></div>
-    <div class="sub-main">
-        <div class="logo">
-            <img src="assets/logo/ABHI_Logo.svg" alt="abhi-logo">
+<!--Header start-->
+<header class="siteHeader">
+          
+    <!--ABC Links start-->
+      <div class="abcLinksMain">
+        <div class="abcTopLinks">
+            <div class="abcHome">
+                <a href="#" target="_blank"><img src="assets/Img/icon_home_white.svg">ABC Home<img src="assets/Img/icon_arrow_up_right_white.svg" class="homeArrow"></a>
+            </div>
+            <div class="abcSolution">
+                <a href="#">ABC Solutions <img src="assets/Img/icon_arrow_down_red.svg"></a>
+            </div>
+            <div class="abcHelpLine">
+                <a href="tel:+1800-270-7000"><img src="assets/Img/icon_phone_red.svg"> 1800-270-7000</a>
+            </div>
         </div>
-        <div class="header">
-            <div class="header2">
-                <div class="header-left-cnt">
-                    <div class="toolbar">
-                        <button *ngIf="!isDesktopView" class="menu-button" (click)="toggleSidenav()">☰</button>
-                        <div *ngIf="isDesktopView" class="menu">
-                            <div (click)="redirect('dashboard')" routerLinkActive="active-link">Dashboard</div>
-                            <div (click)="redirect('dashboard')" routerLinkActive="active-link">Proposals</div>
-                            <div (click)="redirect('products')" routerLinkActive="active-link">Products</div>
-                            <div (click)="redirect('renewals/renewalList')" routerLinkActive="active-link">
-                                <div class="nav-text">Renewals</div>
-                            </div>
-                            <div (click)="redirect('claims/claimsList')" routerLinkActive="active-link">Claims</div>
-                            <div (click)="redirect('Endorsements')" routerLinkActive="active-link">Endorsements</div>
-                        </div>    
-                    </div>
-                </div>
+      </div>
+    <!--ABC Links end-->
+    
+    <!--Logo Main start-->
+      <div class="logoMain">
+        <div class="logoMainLeft">
+            <a href="#"><img src="assets/Img/abhi_logo.svg" alt="ABHI"></a>
+        </div>
+        <div class="logoMainRight">
+            <div class="logoLeftNav">
+                <!-- <div class="icon_menuMobile">
+                    <button type="button" class="btn_menuMobile" aria-label="siteSidenav">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div> -->
+            </div>
+            <div class="logoRightNav">
+                <!-- <div class="headerSearchMain">
+                    <button type="button" class="btn_headerSearch"><img src="assests/Img/icon_magnify_grey.svg"></button>
+                </div> -->
                 <div class="header-right-cnt">
                     <div class="language-selector">
                         <select (change)="setLanguage($event)" [value]="currentLanguage">
@@ -28,11 +41,20 @@
                           <option value="hi">Hindi</option>
                           <option value="te">Telugu</option>
                         </select>
-                    </div>  
-                    <!-- <button class="logout-button" (click)="logOut()">Log Out</button> -->
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="abhifont">Aditya Birla Health Insurance</div>
-</div>
+      </div>
+    <!--Logo Main end-->
+    
+    <!--Logo Tag start-->
+      <div class="logoTagMain">
+        <div class="logoTagText">Aditya Birla Health Insurance</div>
+      </div>
+    <!--Logo Tag end-->
+
+
+      
+  </header>
+  <!--Header end-->

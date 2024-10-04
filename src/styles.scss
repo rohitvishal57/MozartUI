@@ -3,7 +3,6 @@
 @import "primeng/resources/primeng.css";
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import '~bootstrap/dist/css/bootstrap.min.css'; 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 html, body { height: 100%;font-size: 10px; }
@@ -19,7 +18,9 @@ input::-webkit-inner-spin-button {
 }
 
 /* Works for Firefox */
-
+input[type="number"] {
+  -moz-appearance: textfield;
+}
 // html, body { height: 100%; }
 // body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -928,10 +929,13 @@ button:focus {
   margin-bottom: 0px;
 }
 
+<<<<<<< Updated upstream
 .input-block .input-textBox:hover, .input-block .input-selectBox:hover {
   /*border-bottom: solid 1px #EB0000;
     border-bottom: 1px solid #EB0000 ;*/
 }
+=======
+>>>>>>> Stashed changes
 
 input:focus, select:focus, .form-control:focus {
   border: 1px solid var(--site-body-bg) !important;
@@ -1716,7 +1720,11 @@ input[type="search"]::-webkit-search-results-decoration {
   width: 100%;
   padding: 23px;
   padding-bottom: 9rem;
+<<<<<<< Updated upstream
   // padding-top: 7.5rem;
+=======
+  padding-top: 11rem;
+>>>>>>> Stashed changes
   background: var(--bg-verylight-grey);
     min-height: 100vh;
 }
@@ -3797,8 +3805,11 @@ input[type="search"]::-webkit-search-results-decoration {
 .radio_roomInfo .main_RI .main_RI_item .head {
   font-weight: 600;
 }
+<<<<<<< Updated upstream
 .radio_roomInfo .main_RI .main_RI_item .value {}
 /*Room type Radio styles End*/
+=======
+>>>>>>> Stashed changes
 
 /*Popup Modal start*/
 .modal-backdrop.show {
