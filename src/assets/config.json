@@ -6,20 +6,12 @@
     "sendrenewalsms":"renewal/api/sendrenewalsms",
     "generatepaymentlink":"renewal/api/generatepaymentlink",
 
-    "getProposalListApi":"yatra/api/getproposallist",
-
-    "getLeadsListApi":"yatra/api/getLeadDetailsList",
-
-    "getCustomerDetailsList":"yatra/api/getCustomerDetailsList",
-
     "getClaimsList":"claims/api/getclaimlist",
     "getProposalDetails":"claims/api/getproposaldetails?AgentCode",
     "saveClaims":"claims/api/saveclaim",
     "uploadFiles":"claims/api/saveuploadfiledetails",
 
     "partnerlogin":"auth/api/login",
-    "validateadfstoken":"auth/api/validateadfstoken?Idtoken=",
-    "validatecyberarktoken":"auth/api/validatecyberarktoken?Idtoken=",
     "getContactDetailsByAgentCode":"auth/api/getcontactdetailsbyagentcode",
     "sendotp":"auth/api/sendotp",
     "validateotp":"auth/api/validateotp",
@@ -28,13 +20,14 @@
     "getactivepolicynumbers":"claims/api/getactivepolicynumbers",
     "endorsementfileuploadtoomnidocs":"claims/api/endorsementfileuploadtoomnidocs",
     "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
-    "endorsementsendotp":"claims/api/endorsementsendotp",
+    "endorsementGetOTP":"api/endorsementsendotp",
     "getpolicyinfodetails":"claims/api/getpolicyinfodetails",
+
 
     "agentCartDetails":"quote/api/getagentcartdetails",
     "insertOrUpdateAgentCartDetails":"quote/api/insertorupdateagentcartdetails",
     "productList":"yatra/api/getproductlist",
-    "pinCodeDetails":"Yatra/api/getpincodedetails",
+    "pinCodeDetails":"yatra/api/getpincodedetails",
     "proposalNumber":"yatra/api/getproposalnumber",
     "formSequence":"yatra/api/getformsequence",
     "getForm":"yatra/api/getform",

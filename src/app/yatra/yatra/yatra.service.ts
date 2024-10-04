@@ -1,0 +1,105 @@
+import { Injectable } from '@angular/core';
+import { ConfigService } from 'src/app/config.service';
+import { HttpService } from 'src/app/services/http.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class YatraService {
+
+  constructor(private configService: ConfigService,
+    private httpService: HttpService) { }
+
+  Getform(reqData: any) {
+    const getform = this.configService.config.baseUrl + this.configService.config.getForm
+    return this.httpService.post(getform, reqData)
+  }
+  getSalutation(){
+    const  Salutation = this.configService.config.baseUrl + this.configService.config.getSalutation;
+    console.log(Salutation);
+    return this.httpService.get(Salutation);
+  }
+  getNatureOfOccupation(){
+    const Occupation = this.configService.config.baseUrl + this.configService.config.getNatureOfWork;
+    return this.httpService.get(Occupation);
+  }
+  getInsurerData(){
+    const getInsurerData = this.configService.config.baseUrl + this.configService.config.getInsurerData;
+    return this.httpService.get(getInsurerData);
+  }
+  getAllOccupation(){
+    const getOccupation = this.configService.config.baseUrl + this.configService.config.getOccupation;
+    return this.httpService.get(getOccupation);
+  }
+  getIdentification(){
+    const getId = this.configService.config.baseUrl + this.configService.config.getId;
+    return this.httpService.get(getId);
+  }
+  getProposerOccupation(){
+    const getProposerOccupation = this.configService.config.baseUrl + this.configService.config.getProposerOccupation;
+    return this.httpService.get(getProposerOccupation);
+  }
+  getNationality(){
+    const getNationality = this.configService.config.baseUrl + this.configService.config.getNationality;
+    return this.httpService.get(getNationality);
+  }
+  getGstRegistrationStatus(){
+    const getGstRegistrationStatus = this.configService.config.baseUrl + this.configService.config.getGstRegistrationStatus;
+    return this.httpService.get(getGstRegistrationStatus);
+  }
+  getMaritalStatus(){
+    const  getMaritalStatus = this.configService.config.baseUrl + this.configService.config.getMaritalStatus;
+    return this.httpService.get(getMaritalStatus);
+  }
+  getEducationType(){
+    const  getEducationType = this.configService.config.baseUrl + this.configService.config.getEducationType;
+    return this.httpService.get(getEducationType);
+  }
+
+  getNomineeRelationship(){
+    const  getNomineeRelationShip = this.configService.config.baseUrl + this.configService.config.getNomineeRelationShip;
+    return this.httpService.get(getNomineeRelationShip);
+  }
+  getAllBankDetails(){
+    const  getAllBankDetails = this.configService.config.baseUrl + this.configService.config.getAllBankDetails;
+    return this.httpService.get(getAllBankDetails);
+  }
+
+  getRelationship(){
+    const  getRelationship = this.configService.config.baseUrl + this.configService.config.getRelationship;
+    return this.httpService.get(getRelationship);
+  }
+  GetProposerRelationships(reqData:any){
+    const  GetProposerRelationships = this.configService.config.baseUrl + this.configService.config.getProposerRelationships;
+    return this.httpService.post(GetProposerRelationships,reqData)
+  }
+  Insertorupdateformdata(reqdata:any){
+    const  insertorupdateformdata = this.configService.config.baseUrl + this.configService.config.insertOrUpdateFormData;
+    return this.httpService.post(insertorupdateformdata,reqdata)
+  }
+  Insertorupdatejourneydetails(reqData:any){
+    const  insertorupdatejourneydetails = this.configService.config.baseUrl + this.configService.config.insertOrUpdateJourneyDetails;
+    return this.httpService.post(insertorupdatejourneydetails,reqData)
+  }
+
+  getAddOnPremium(reqData: any){
+    const  CalculateAddonValue = this.configService.config.baseUrl + this.configService.config.calculateAddOnValue;
+    return this.httpService.post(CalculateAddonValue,reqData);
+  }
+  getHalfQuote(reqData: any){
+    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
+    return this.httpService.post(GetHalfQuote,reqData);
+  }
+  getFullQuote(reqData: any){
+    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
+    return this.httpService.post(GetHalfQuote,reqData);
+  }
+  GetKycDetails(reqData:any){
+    // const kycDetails=this.configService.config.baseUrl+this.configService.config.GetKycDetails;
+    return this.httpService.post(`https://localhost:7188/api/getkycdetails`,reqData);
+  }
+  GetCustomerDetailsViaPolicyNumber(reqData:any){
+    const policyNumber=this.configService.config.baseUrl+this.configService.config.getPolicyNumberDetails;
+    return this.httpService.post(policyNumber,reqData);
+  }
+}

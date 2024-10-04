@@ -40,12 +40,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-
-### SonarQube ###
-# SonarQube ignore files.
-#
-# https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner
-# Sonar Scanner working directories
-.sonar/
-.sonarqube/
-.scannerwork/

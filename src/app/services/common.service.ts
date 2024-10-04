@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Observable, of } from 'rxjs';
 import { ConfigService } from '../config.service';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
@@ -279,19 +280,15 @@ export class CommonService {
       ]
     }
   }
-  constructor(private http: HttpClient,private configService: ConfigService) { }
+  constructor(private http: HttpClient,private configService: ConfigService,
+    private router: Router
+  ) { }
 
 
   // For All PartnerApi
-   getQoute(reqData: any) {
-    console.log(reqData);
+   
 
-    return this.http.post<any>(`${this.baseUrl}getHealthQuote`, reqData);
-  }
-
-  getActiveFitQoute(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}getHealthQuoteForAF`, reqData);
-  }
+  
   getAllStates() {
     return this.http.post<any>(`${this.yatraUrl}getStates`, {});
   }
@@ -302,9 +299,9 @@ export class CommonService {
     const headers = { 'content-type': 'application/json' };
     return this.http.post<any>(`${this.yatraUrl}getPinCode`, pinCode, { 'headers': headers });
   }
-  getPinCodeByCity(pincode: string) {
+  getPinCodeByCity(reqdata: any) {
     const PinCodeByCity = this.configService.config.baseUrl + this.configService.config.pinCodeDetails;
-    return this.http.post<any>(PinCodeByCity,{pincode});
+    return this.http.post<any>(PinCodeByCity,reqdata);
   }
 
   // getHealthPlans(year: any, adultCount: any, childCount: any) {
@@ -325,139 +322,58 @@ export class CommonService {
   // }
 
   //For ABHI
-  getAllOccupation(){
-    const getOccupation = this.configService.config.baseUrl + this.configService.config.getOccupation;
-    return this.http.get<any>(getOccupation);
-  }
+  
 
   getAllOccupationRisk(){
     return this.http.get<any>(`${this.yatraUrl}Agent/getRiskOccupation`);
   }
-
-  getAllBankDetails(){
-    const  getAllBankDetails = this.configService.config.baseUrl + this.configService.config.getAllBankDetails;
-    return this.http.get<any>(getAllBankDetails);
-  }
-
   getBankCity(reqBody:any){
     return this.http.post<any>(`${this.yatraUrl}getBankCity`,reqBody);
   }
-
   getBranchDetails(reqBody:any){
     return this.http.post<any>(`${this.yatraUrl}getBranchDetails`,reqBody);
   }
+  getActiveFitQoute(reqData: any) {
+    return this.http.post<any>(`${this.baseUrl}getHealthQuoteForAF`, reqData);
+  }
+  getQoute(reqData: any) {
+    console.log(reqData);
 
-  getAddOnPremium(reqData: any){
-    const  CalculateAddonValue = this.configService.config.baseUrl + this.configService.config.calculateAddOnValue;
-    return this.http.post<any>(CalculateAddonValue,reqData);
+    return this.http.post<any>(`${this.baseUrl}getHealthQuote`, reqData);
   }
 
-  getIdentification(){
-    const getId = this.configService.config.baseUrl + this.configService.config.getId;
-    return this.http.get<any>(getId);
-  }
+ 
 
-  getProposerOccupation(){
-    const getProposerOccupation = this.configService.config.baseUrl + this.configService.config.getProposerOccupation;
-    return this.http.get<any>(getProposerOccupation);
-  }
 
-  // getProposerRelationships(reqData: any){
-  //   return this.http.post<any>(`${this.baseUrl}Agent/getProposerRelationships`,reqData);
-  // }
+
   
-  getNatureOfOccupation(){
-    const Occupation = this.configService.config.baseUrl + this.configService.config.getNatureOfWork;
-    return this.http.get<any>(Occupation);
-  }
 
-  getNationality(){
-    const getNationality = this.configService.config.baseUrl + this.configService.config.getNationality;
-    return this.http.get<any>(getNationality);
-  }
+ 
 
-  getGstRegistrationStatus(){
-    const getGstRegistrationStatus = this.configService.config.baseUrl + this.configService.config.getGstRegistrationStatus;
-    return this.http.get<any>(getGstRegistrationStatus);
-  }
-
-  getSalutation(){
-    const  Salutation = this.configService.config.baseUrl + this.configService.config.getSalutation;
-    console.log(Salutation);
-    return this.http.get<any>(Salutation);
-  }
-
-  getMaritalStatus(){
-    const  getMaritalStatus = this.configService.config.baseUrl + this.configService.config.getMaritalStatus;
-    return this.http.get<any>(getMaritalStatus);
-  }
-
-  getEducationType(){
-    const  getEducationType = this.configService.config.baseUrl + this.configService.config.getEducationType;
-    return this.http.get<any>(getEducationType);
-  }
-
-  getNomineeRelationship(){
-    const  getNomineeRelationShip = this.configService.config.baseUrl + this.configService.config.getNomineeRelationShip;
-    return this.http.get<any>(getNomineeRelationShip);
-  }
-
-  getRelationship(){
-    const  getRelationship = this.configService.config.baseUrl + this.configService.config.getRelationship;
-    return this.http.get<any>(getRelationship);
-  }
-
-  getHalfQuote(reqData: any){
-    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
-    return this.http.post<any>(GetHalfQuote,reqData);
-  }
-  getFullQuote(reqData: any){
-    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
-    return this.http.post<any>(GetHalfQuote,reqData);
-  }
-  getInsurerData(){
-    const getInsurerData = this.configService.config.baseUrl + this.configService.config.getInsurerData;
-    return this.http.get<any>(getInsurerData);
-  }
+  
+  
    //yatra
-   Getform(reqData:any){
-    const getform = this.configService.config.baseUrl + this.configService.config.getForm
-    return this.http.post<any>(getform,reqData)
-  }
-  Getproductdetailsandfeatures(reqData:any){
-    const  getproductdetailsandfeatures = this.configService.config.baseUrl + this.configService.config.getProductDetailsAndFeatures;
-    return this.http.post<any>(getproductdetailsandfeatures,reqData)
-  }
-  Insertorupdatejourneydetails(reqData:any){
-    const  insertorupdatejourneydetails = this.configService.config.baseUrl + this.configService.config.insertOrUpdateJourneyDetails;
-    return this.http.post<any>(insertorupdatejourneydetails,reqData)
-  }
+  
+ 
   Insertorupdateformconfig(reqData:any){
     return this.http.post<any>(`${this.yatraUrl}api/forms/insertorupdateformconfig`,reqData)
   }
   InsertOrUpdateForm(reqdata:any){
     return this.http.post<any>(`${this.yatraUrl}api/`,reqdata)
   }
-  Insertorupdateformdata(reqdata:any){
-    const  insertorupdateformdata = this.configService.config.baseUrl + this.configService.config.insertOrUpdateFormData;
-    return this.http.post<any>(insertorupdateformdata,reqdata)
-  }
-  GetProposerRelationships(reqData:any){
-    const  GetProposerRelationships = this.configService.config.baseUrl + this.configService.config.getProposerRelationships;
-    return this.http.post<any>(GetProposerRelationships,reqData)
-  }
+  
+  
 
   getProposalNumber() {
     const proposalnumber = this.configService.config.baseUrl + this.configService.config.proposalNumber;
     return this.http.get<any>(proposalnumber);
   }
+  
   Getproductlist(reqData:any){
     const productList = this.configService.config.baseUrl + this.configService.config.productList;
     return this.http.post<any>(productList,reqData)
   }
-  Getproductlist2(reqData:any){
-    return this.http.post<any>(`https://localhost:7188/api/getquotefortopsellingproducts`,reqData)
-  }
+  
   Getproductlist3(reqData:any){
     return of(this.getproduct)
   }
@@ -470,17 +386,24 @@ export class CommonService {
   }
 
   GetSingleProductQuote(reqData:any){
-    const singleProductQuote=this.configService.config.getSingleProductQuote;
+    const singleProductQuote=this.configService.config.baseUrl+this.configService.config.getSingleProductQuote;
     return this.http.post<any>(singleProductQuote,reqData);
   }
 
-  GetKycDetails(reqData:any){
-    // const kycDetails=this.configService.config.baseUrl+this.configService.config.GetKycDetails;
-    return this.http.post<any>(`https://localhost:7188/api/getkycdetails`,reqData);
+  
+  // storeToken(token: string) {
+  //   localStorage.setItem('token', token);
+  // }
+  // isLoggedIn(): boolean {
+  //   if (!!localStorage.getItem('token')) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+  signOut() {
+    localStorage.clear();
+    sessionStorage.clear();
+    this.router.navigate(['']);
   }
-
-  GetCustomerDetailsViaPolicyNumber(reqData:any){
-    const policyNumber=this.configService.config.baseUrl+this.configService.config.getPolicyNumberDetails;
-    return this.http.post<any>(policyNumber,reqData);
-  }
+  
 }

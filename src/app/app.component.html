@@ -1,2 +1,8 @@
 <ng-toast></ng-toast>
-<router-outlet></router-outlet>
+<div>
+    <app-header></app-header>
+    <app-side-navbar *ngIf="showNavbar"></app-side-navbar>
+</div>
+<div>
+    <router-outlet></router-outlet>
+</div>

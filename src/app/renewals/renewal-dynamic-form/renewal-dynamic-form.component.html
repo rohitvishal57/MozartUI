@@ -1,0 +1,1281 @@
+<div class="siteBody siteBody_renewJourney">
+    <div class="contentBody bodyColumns-3">
+
+        <div class="class=bodyColumns bodyColumnsLeft">
+          <div class="bcl_main">
+              <div>Select from any customisation below</div>
+              <div class="processBtnGroup">
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'primary', 'active-green': activeSection === 'additional' || activeSection === 'payment' }" (click)="setSection('primary')">
+                      <div><i class="fa-solid fa-users"></i></div><div>Primary</div>
+                  </div>
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'additional', 'active-green': activeSection === 'payment' }" (click)="setSection('additional')">
+                      <div><i class="fa-solid fa-square-plus"></i></div><div>Additional</div>
+                  </div>
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'payment' }" (click)="setSection('payment')">
+                      <div><i>₹</i></div><div>Payment</div>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'primary'">
+          <div class="bcc_main">
+              <div class="accordionMain accordionpro">
+                  <div class="accordionItem" *ngIf="formId == 5001">
+                      <header>Proposer
+                        <!-- <button type="button" value="sectionedit" class="btn_editRed"></button> -->
+                    </header>
+                      <div class="accordionBody">
+                          <div class="accordionBodyRow">
+                            <div class="data-row" *ngIf="renewalInfo?.response?.policyData?.length > 0">
+                                <div class="data-item">
+                                  <label>Name</label>
+                                  <h6>{{ renewalInfo.response.policyData[0].PolicyOwnerName }}</h6>
+                                </div>
+                                <div class="data-item">
+                                  <label>ID No.</label>
+                                  <h6>{{ renewalInfo.response.policyData[0].panNo }}</h6>
+                                </div>
+                                <div class="data-item">
+                                  <label>D.O.B</label>
+                                  <h6>{{ renewalInfo.response.policyData[0].DateOfBirth }}</h6>
+                                </div>
+                              </div>
+                              <div class="detailsRow">
+                                  <div class="detailsHeading">Address</div>
+                                  <div class="data-rowEdit">
+                                    <div class="data-item">
+                                        <div class="data-row">
+                                          <div class="data-item">
+                                            <label>Address Line 1</label>
+                                            <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_Address_1 }}</h6>
+                                          </div>
+                                          <div class="data-item">
+                                            <label>Address Line 2</label>
+                                            <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_Address_2 }}</h6>
+                                          </div>
+                                          <div class="data-item">
+                                            <label>State</label>
+                                            <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_State }}</h6>
+                                          </div>
+                                          <div class="data-item">
+                                            <label>City</label>
+                                            <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_City }}</h6>
+                                          </div>
+                                          <div class="data-item">
+                                            <label>Pincode</label>
+                                            <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_Pincode }}</h6>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="data-item data-itemEdit" (click)="selectButton('primary',5005)">
+                                          <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="accordionItem" *ngIf="formId == 5001">
+                      <header>Member Details<button type="button" value="another" class="btn_iconText" (click)="selectButton('primary',5002)"><img src="assets/Img/icon_plus_red.svg"> Add another member</button></header>
+                      <div class="accordionBody">
+                          <div class="accordionBodyRow">
+                            <ng-container *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members">
+                                <div class="detailsRow">
+                                  <div class="detailsHeading">{{ member.Relation | titlecase }}</div>
+                                  <div class="data-row">
+                                    <div class="data-item data-item-28">
+                                      <label>Name</label>
+                                      <h6>{{ member.Name }}</h6>
+                                    </div>
+                                    <div class="data-item data-item-20">
+                                      <label>ID No.</label>
+                                      <h6>{{ member.PanNo || 'N/A' }}</h6>
+                                    </div>
+                                    <div class="data-item data-item-20">
+                                      <label>D.O.B</label>
+                                      <h6>{{ member.DoB | date: 'dd/MM/yyyy' }}</h6>
+                                    </div>
+                                    <div class="data-item data-item-20">
+                                      <label>Cover</label>
+                                      <h6>₹ {{ member.SumInsuredPerUnit }}</h6>
+                                    </div>
+                                    <div class="data-item data-item-10 data-itemEdit" (click)="selectButton('primary', 5003)">
+                                      <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="detailsBorder detailsBorder-w104"></div>
+                              </ng-container>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="accordionItem" *ngIf="formId == 5001">
+                      <header>Nominee Details<button type="button" value="another" class="btn_iconText" (click)="selectButton('primary',5004,'addNominee')"><img src="assets/Img/icon_plus_red.svg"> Add another member</button></header>
+                      <div class="accordionBody">
+                          <div class="accordionBodyRow">
+                           <!-- <ng-container *ngFor="let nominee of response?.response?.policyData[0]?.Nominee_Details"> -->
+                      <div class="detailsRow">
+                        <div class="detailsHeading">{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code | titlecase }}</div>
+                        <div class="data-row">
+                          <div class="data-item data-item-28">
+                            <label>Name</label>
+                            <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_first_name }}</h6>
+                          </div>
+                          <div class="data-item data-item-20">
+                            <label>ID No.</label>
+                            <h6>{{ 'N/A' }}</h6>
+                          </div>
+                          <div class="data-item data-item-20">
+                            <label>D.O.B</label>
+                            <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_dob || 'N/A' }}</h6>
+                          </div>
+                          <div class="data-item data-item-20">
+                            <label>Relation to Nominee</label>
+                            <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code || 'N/A' }}</h6>
+                          </div>
+                          <div class="data-item data-item-10 data-itemEdit" (click)="selectButton('primary',5004,'editNominee')">
+                            <button type="button" value="dataedit" class="btn_editGrey"></button>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="detailsBorder detailsBorder-w104"></div>
+                    <!-- </ng-container> -->
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="accordionMain">
+                      <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5002">
+                          <header>Add New Member<button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_plus_red.svg"> Add another member</button></header>
+                          <div class="accordionBody">
+                              <div class="accordionBodyRow">
+                                  <div class="breadcrumbNav">
+                                      <a href="#" class="active">Member Details</a><img src="assets/Img/icon_right_arrow_red.svg"><a href="#" class="">Additional Information</a>
+                                  </div>
+                                  <div class="detailsRow">
+                                      <div class="detailsHeading-12">Personal Details</div>
+                                      <div class="row">
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block form-floating input-block-renew">
+                                                <input type="text" id="name" formControlName="name" class="form-control input-textBox">
+                                                <label for="name">Name</label>
+                                                <span class="ui-error" *ngIf="form?.get('name')?.invalid && form.get('name')?.touched">Please enter name</span>                                
+                                              </div>
+                                          </div>
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block form-floating input-block-renew">
+                                                <input type="text" id="weight" formControlName="weight" class="form-control input-textBox">
+                                                <label for="weight">Weight</label>
+                                                <span class="ui-error" *ngIf="form.get('weight')?.invalid && form.get('weight')?.touched">Please enter weight</span>
+                                                <span class="ui-prefix">kg</span>
+                                              </div>
+                                          </div>
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block input-block-renew focus">
+                                                  <div class="fields-blockHeight">
+                                                    <input type="text" formControlName="heightft" placeholder="Enter height" class="input-textBox">
+                                                    <input type="text" formControlName="heightin" placeholder="Enter height" class="input-textBox">
+                                                    <span class="ui-prefix ft-prefix">ft</span>
+                                                    <span class="ui-prefix in-prefix">in</span>
+                                                  </div>
+                                                  <span class="ui-error" *ngIf="form.get('heightft')?.invalid || form.get('heightin')?.invalid">Please enter height</span>
+                                               </div>
+                                          </div>
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block form-floating input-block-renew">
+                                                <select id="gender" formControlName="gender" class="form-control input-selectBox">
+                                                    <option>Select gender</option>
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                  </select>
+                                                  <label for="gender">Gender</label>
+                                                  <span class="ui-error" *ngIf="form.get('gender')?.invalid && form.get('gender')?.touched">Please select gender</span>
+                                               </div>
+                                          </div>
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block form-floating input-block-renew">
+                                                <input type="date" id="dob" formControlName="dob" class="form-control input-textBox">
+                                                <label for="dob">Date of birth</label>
+                                                <span class="ui-error" *ngIf="form.get('dob')?.invalid && form.get('dob')?.touched">Please enter date of birth</span>
+                                             </div>
+                                          </div>
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block form-floating input-block-renew">
+                                                <select id="idtype" formControlName="idtype" class="form-select input-selectBox">
+                                                    <option>Select ID type</option>
+                                                    <option value="aadhaar">Aadhaar</option>
+                                                    <option value="pan">PAN</option>
+                                                  </select>
+                                                  <label for="idtype">ID type</label>
+                                                  <span class="ui-error" *ngIf="form.get('idtype')?.invalid && form.get('idtype')?.touched">Please select ID</span>
+                                                </div>
+                                          </div>
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <select id="idtype" formControlName="idtype" class="form-select input-selectBox">
+                                                    <option>Select ID type</option>
+                                                    <option value="aadhaar">Aadhaar</option>
+                                                    <option value="pan">PAN</option>
+                                                </select>
+                                                <label for="idtype">ID type</label>
+                                                <span class="ui-error" *ngIf="form.get('idtype')?.invalid && form.get('idtype')?.touched">Please select ID</span>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="detailsHeading-12">Sum Insured</div>
+                                      <div class="row">
+                                          <div class="slider">
+                                            <div class="slider-container">
+                                                <input type="range"  [min]="control.min" [max]="control.max" [step]="control.step" 
+                                                       [value]="rangeValue[control.name]" (input)="updateRangeValue($event, control.name)"
+                                                       [style.background]="getBackground(rangeValue[control.name], control.min, control.max)">      
+                                                <!-- <div class="slider-values">
+                                                    <span>5L</span><span>7L</span><span>10L</span><span>15L</span><span>20L</span>
+                                                    <span>25L</span><span>50L</span><span>1Cr</span><span>2Cr</span>
+                                                </div> -->
+                                            </div>
+                                            <span class="selected-value">{{ formatValue(rangeValue[control.name]) }}</span>
+                                          </div>
+                                         <div class="col-12">
+                                              <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">Proposer can have increased cover of 15L with only ₹200 addition to the previous premium</div>
+                                          </div>
+                                      </div>
+                                      <div class="detailsHeading-12">Professional Details</div>
+                                      <div class="row">
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block form-floating input-block-renew">
+                                                <select id="air" formControlName="air" class="form-select input-selectBox">
+                                                    <option>Select Annual income range</option>
+                                                    <option value="5L">5L</option>
+                                                    <option value="5L-10L">5L-10L</option>
+                                                  </select>
+                                                  <label for="air">Annual income range</label>
+                                                  <span class="ui-error" *ngIf="form.get('air')?.invalid && form.get('air')?.touched">Please select annual income range</span>
+                                               </div>
+                                          </div>
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block form-floating input-block-renew">
+                                                <select id="occupation" formControlName="occupation" class="form-select input-selectBox">
+                                                    <option>Select occupation</option>
+                                                    <option value="salaried">Salaried</option>
+                                                    <option value="selfemployed">Self-employed</option>
+                                                  </select>
+                                                  <label for="occupation">Occupation</label>
+                                                  <span class="ui-error" *ngIf="form.get('occupation')?.invalid && form.get('occupation')?.touched">Please select occupation</span>
+                                               </div>
+                                          </div>
+                                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                              <div class="input-block form-floating input-block-renew">
+                                                <select id="education" formControlName="education" class="form-select input-selectBox">
+                                                    <option>Select education</option>
+                                                    <option value="graduate">Graduate</option>
+                                                    <option value="postgraduate">Postgraduate</option>
+                                                  </select>
+                                                  <label for="education">Education</label>
+                                                  <span class="ui-error" *ngIf="form.get('education')?.invalid && form.get('education')?.touched">Please select education</span>
+                                               </div>
+                                          </div>
+                                      </div>
+                                      <div class="detailsHeading-12">Please select any conditions that apply</div>
+                                      <div class="row">
+                                        <div class="col-12">
+                                          <div class="input-checkbox-condition">
+                                            <div class="input-checkbox-block input-checkbox-withIcon">
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-alcohol" class="input-check" />
+                                                <label for="condition-alcohol"><img src="assets/Img/icon_alcohol.svg">Alcohol</label>
+                                              </div>
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-tobacco" class="input-check" />
+                                                <label for="condition-tobacco"><img src="assets/Img/icon_tabacco.svg">Tobacco</label>
+                                              </div>
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-panmasala" class="input-check" />
+                                                <label for="condition-panmasala"><img src="assets/Img/icon_alcohol.svg">Pan Masala/Guthka</label>
+                                              </div>
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-smoking" class="input-check" />
+                                                <label for="condition-smoking"><img src="assets/Img/icon_smoking.svg">Smoking</label>
+                                              </div>
+                                              <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="condition-other" class="input-check" />
+                                                <label for="condition-other"><img src="assets/Img/icon_other.svg">Other</label>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      
+                                      
+                                      <div class="searchConditionWraper">
+                                          <h6>Do you have any health conditions?</h6>
+                                          <p>We require to know this data to provide you with the best solution possible.</p>
+                                          <div class="searchConditionMain">
+                                              <input type="search" placeholder="Search conditions">
+                                              <button type="button" name="search" class="btn_text">Search now</button>
+                                          </div>
+                                      </div>
+                                      <div class="tabsMain">
+                                          <div class="tabsNavMain">
+                                              <ul class="nav_mainTabs">
+                                                  <li><a class="active" aria-label="chronicCondition">Chronic conditions <span class="count-badge">1</span></a></li>
+                                                  <li><a aria-label="organCondition">Organ Related Condition </a></li>
+                                                  <li><a aria-label="majorCondition">Major Procedure/Conditions </a></li>
+                                                  <li><a aria-label="otherCondition">Other Conditions </a></li>
+                                              </ul>
+                                          </div>
+                                          <div class="tabsMainContent">
+                                            <div id="chronicCondition" class="main_tabContent active">
+                                              <div class="input-checkbox-condition">
+                                                <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft" formGroupName=>
+                                                  <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="condition-highblood"  class="input-check" />
+                                                    <label for="condition-highblood"><img src="assets/Img/icon_alcohol.svg">High Blood Pressure (Hypertension)</label>
+                                                  </div>
+                                                  <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="condition-asthma"  class="input-check" />
+                                                    <label for="condition-asthma"><img src="assets/Img/icon_tabacco.svg">Asthma/Chronic Pulmonary Obstructive Disease</label>
+                                                  </div>
+                                                  <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="condition-diabetes"  class="input-check" />
+                                                    <label for="condition-diabetes"><img src="assets/Img/icon_alcohol.svg">Diabetes</label>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            
+                                            <div id="organCondition" class="main_tabContent in-active">
+                                              Organ Related Condition
+                                            </div>
+                                            
+                                            <div id="majorCondition" class="main_tabContent in-active">
+                                              Major Procedure/Conditions
+                                            </div>
+                                            
+                                            <div id="otherCondition" class="main_tabContent in-active">
+                                              Other Conditions
+                                            </div>
+                                          </div>
+                                          
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <footer>
+                              <button type="button" value="next" class="btn_pink btn_pinkNext" (click)="handleAction('addMember')">Add Member</button>
+                          </footer>
+                      </div>
+              </div>
+              <div class="accordionMain">
+                        
+                <!--Accordion Item start-->
+                <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5003">
+                    <header>
+                        Edit Details of your Son
+                        <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
+                    </header>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="breadcrumbNav">
+                                <a href="#" class="complete">Member Details</a><img src="assets/Img/icon_right_arrow_red.svg"><a href="#" class="active">Additional Information</a>
+                            </div>
+                            <div class="detailsRow">
+                                <div class="detailsHeading-12">Prior Policies</div>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <span class="para-grey-12">Do any of the Insured members or the proposer have previously owned Insurance policies?</span>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="priorpolicies" value="yes" checked>
+                                                <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="priorpolicies" value="no" >
+                                                <span>No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="pp-son" name="pp-son" class="form-control input-selectBox" disabled>
+                                                <option>Select Relation</option>
+                                                <option value="1" selected>Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <!--<label for="pp-son">Gender</label>-->
+                                            <span class="ui-error">Please select Relation</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="pp-benefit" name="pp-benefit" class="form-control input-selectBox" >
+                                                <option>Select Benefit type</option>
+                                                <option value="1">Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <label for="pp-benefit">Benefit type</label>
+                                            <span class="ui-error">Please select Benefit type</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="pp-policynumber" name="pp-policynumber" value="" placeholder="" class="form-control input-textBox" >
+                                            <label for="pp-policynumber">Policy Number</label>
+                                            <span class="ui-error">Please enter Policy Number</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="pp-sumassured" name="pp-sumassured" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="pp-sumassured">Sum assured</label>
+                                            <span class="ui-error">Please enter Sum assured</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Citizenship</div>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <span class="para-grey-12">Are any of the Insured Members or the Proposer not an Indian citizen? </span>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="citizenship" value="yes" >
+                                                <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="citizenship" value="no" checked>
+                                                <span>No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="citizenship-son" name="citizenship-son" class="form-control input-selectBox" disabled>
+                                                <option>Select Relation</option>
+                                                <option value="1" selected>Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <!--<label for="citizenship-son">Gender</label>-->
+                                            <span class="ui-error">Please select Relation</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="citizenship-benefit" name="citizenship-benefit" class="form-control input-selectBox" >
+                                                <option>Select Benefit type</option>
+                                                <option value="1">Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <label for="citizenship-benefit">Benefit type</label>
+                                            <span class="ui-error">Please select Benefit type</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="citizenship-policynumber" name="citizenship-policynumber" value="" placeholder="" class="form-control input-textBox" >
+                                            <label for="citizenship-policynumber">Policy Number</label>
+                                            <span class="ui-error">Please enter Policy Number</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="citizenship-sumassured" name="citizenship-sumassured" value="" placeholder="" class="form-control input-textBox">
+                                            <label for="citizenship-sumassured">Sum assured</label>
+                                            <span class="ui-error">Please enter Sum assured</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Extraneous conditions</div>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <span class="para-grey-12">Are any of the Insured Members or the Proposer not an Indian citizen?  </span>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="extraneousconditions" value="yes" >
+                                                <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="extraneousconditions" value="no" checked>
+                                                <span>No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="extraneous-son" name="extraneous-son" class="form-control input-selectBox" disabled>
+                                                <option>Select Relation</option>
+                                                <option value="1" selected>Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <!--<label for="extraneous-son">Gender</label>-->
+                                            <span class="ui-error">Please select Relation</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="extraneous-occupation" name="extraneous-occupation" class="form-control input-selectBox" >
+                                                <option>Select Occupation</option>
+                                                <option value="1">Son</option>
+                                                <option value="2">Daughter</option>
+                                            </select>
+                                            <label for="extraneous-occupation">Occupation</label>
+                                            <span class="ui-error">Please select Occupation</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Pre-existing conditions</div>
+                                <div class="row align-items-center mb-1">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
+                                        <span class="para-grey-12">Are any of the Insured Members or the Proposerever been diagnosed with or consulted a doctor or advised surgery for any of the following: Paralysis, Epilepsy/Fits, Physical disability / defects, Psychiatric disorder, defect in sight/hearing/speech?  </span>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="preexistingconditions" value="yes" >
+                                                <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel ">
+                                                <input type="radio" name="preexistingconditions" value="no" checked>
+                                                <span>No</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="para-grey-12">Diabetes  </span>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-radio-block radio_additionalInfo">
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="diabetes" value="yes" >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="diabetes" value="no" checked>
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="para-grey-12">Asthma/ Chronic Pulmonary Obstructive Disease  </span>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-radio-block radio_additionalInfo">
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="asthmadiabetes" value="yes" >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="asthmadiabetes" value="no" checked>
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="para-grey-12">High blood pressure (Hypertension) </span>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-radio-block radio_additionalInfo">
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="hypertension" value="yes" >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="hypertension" value="no" checked>
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <span class="para-grey-12">High cholestrol / High tryglycerides (Hyperlimidemia) </span>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-radio-block radio_additionalInfo">
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="hyperlimidemia" value="yes" >
+                                                        <span>Yes</span>
+                                                    </label>
+                                                    <label class="input-radiolabel ">
+                                                        <input type="radio" name="hyperlimidemia" value="no" checked>
+                                                        <span>No</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <footer>
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editMember')">Update Details</button>
+                    </footer>
+                </div>
+                <!--Accordion Item end-->
+                
+              </div>
+              <div class="accordionMain">                        
+                <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5005">
+                    <header>
+                      Edit Address
+                    </header>
+                    <div class="accordionBody">
+                      <div class="accordionBodyRow">
+                        <div class="detailsRow">
+                          <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="address1" name="address1" placeholder="" class="form-control input-textBox" formControlName="Home_Address_1">
+                                <label for="address1">Address Line 1</label>
+                                <span class="ui-error" *ngIf="form?.get('address1')?.invalid && form?.get('address1')?.touched">Please enter Address Line 1</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="address2" name="address2" placeholder="" class="form-control input-textBox" formControlName="Home_Address_2">
+                                <label for="address2">Address Line 2</label>
+                                <span class="ui-error" *ngIf="form?.get('address2')?.invalid && form?.get('address2')?.touched">Please enter Address Line 2</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="city" name="city" placeholder="" class="form-control input-textBox" formControlName="Home_City">
+                                <label for="city">City</label>
+                                <span class="ui-error" *ngIf="form?.get('city')?.invalid && form?.get('city')?.touched">Please enter City</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="state" name="state" placeholder="" class="form-control input-textBox" formControlName="Home_State">
+                                <label for="state">State</label>
+                                <span class="ui-error" *ngIf="form?.get('state')?.invalid && form?.get('state')?.touched">Please enter State</span>
+                              </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="input-block form-floating input-block-renew">
+                                <input type="text" id="pincode" name="pincode" placeholder="" class="form-control input-textBox" formControlName="Home_Pincode">
+                                <label for="pincode">Pin Code</label>
+                                <span class="ui-error" *ngIf="form?.get('pincode')?.invalid && form?.get('pincode')?.touched">Please enter Pin Code</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <footer>
+                      <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
+                    </footer>
+                  </div>
+                  
+                  
+                <!--Accordion Item end-->
+                
+              </div>
+              <div class="accordionMain">
+                        
+                <!--Accordion Item start-->
+                <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5004">
+                    <header>
+                        Edit Nominee Details
+                        <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
+                    </header>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="detailsRow">
+                                <div class="row mb-2">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <div class="input-checkbox-block">
+                                            <div class="input-checkbox-feild no-radius-checkbox">
+                                                <input type="checkbox" id="nominee-spouse" value="" class="input-check">
+                                                <label for="nominee-spouse">Make your spouse a nominee</label>
+                                              </div>
+                                          </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Nominee Personal Details</div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-fname" name="nomine-fname" formControlName="nominee_first_name" placeholder="" class="form-control input-textBox" >
+                                            <label for="nomine-fname">First Name</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">
+                                                Please enter First Name
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-mname" formControlName="nominee_middle_name" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-mname">Middle Name</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_middle_name')?.invalid && form?.get('nominee_middle_name')?.touched">
+                                                Please enter Middle Name
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-lname">Last Name</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_last_name')?.invalid && form?.get('nominee_last_name')?.touched">
+                                                Please enter Last Name
+                                            </span>
+                                         </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="date" id="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-dob">DOB</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_dob')?.invalid && form?.get('nominee_dob')?.touched">
+                                            Please enter DOB
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="nomine-relation" formControlName="nominee_relationship_code" class="form-control input-selectBox">
+                                                <option value="">Select Relation</option>
+                                                <option value="Son">Son</option>
+                                                <option value="Spouse">Spouse</option>
+                                                <option value="Father">Father</option>
+                                                <option value="Mother">Mother</option>
+                                                <option value="Daughter">Daughter</option>
+                                            </select>
+                                            <label for="nomine-relation">Relation with Nominee</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_relationship_code')?.invalid && form?.get('nominee_relationship_code')?.touched">
+                                                Please select Relation with Nominee
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-contactno">Nominee Contact No.</label>
+                                            <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">
+                                                Please enter Nominee contact no.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="detailsHeading-12">Nominee Contact Details</div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-mobileno" formControlName="nominee_mobile_number" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-mobileno">Mobile Number</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_mobile_number')?.invalid && form?.get('nominee_mobile_number')?.touched">
+                                                Please enter Mobile Number
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-emergencymobileno" formControlName="nominee_emergency_phone_number" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-emergencymobileno">Emergency phone number</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_emergency_phone_number')?.invalid && form?.get('nominee_emergency_phone_number')?.touched">
+                                                Please enter Mobile Number
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-emailid" formControlName="nominee_email_address" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-emailid">Email Address</label>
+                                            <span class="ui-error" *ngIf="form?.get('nominee_email_address')?.invalid && form?.get('nominee_email_address')?.touched">
+                                                Please enter Email Address
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bi_right">
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('addNominee')">Save Updates</button>
+                    </div>
+                </div>
+                <!--Accordion Item end-->
+                
+            </div> 
+          </div>
+        </div>
+        <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'additional'">
+          <div class="bcc_main accordionpro">
+          <div class="tenure-details-cnt">
+              <div class="tenure-details-title">Tenure Details</div>
+              <div class="tenure-details">
+                  <div class="premium-values">
+                      <div class="year-premium-details" *ngFor="let tenure of tenureDetails"  [ngClass]="{'active-border': selectedTenure === tenure.id}" (click)="selectedTenure=tenure.id">
+                          <div class="year-value">{{ tenure?.tenure }}</div>
+                          <div class="premium-value">{{ tenure?.premium }}<span>/yr</span></div>
+                          <div class="offer-percentage-value">{{ tenure?.offerPercentage }}</div>
+                      </div>
+                  </div>
+                  <div class="premium-offer-details">
+                      <div class="lightbulb-icon"><img src="assets/Img/icon_lightbulb.svg" alt="No Data Found" /></div>
+                      <div class="discount-value">You can potentially earn 10,000 more with just 2 more years</div>
+                  </div>
+              </div>
+          </div>
+          <div class="optional-coverages-cnt">
+              <div class="optional-coverages-title">Optional Coverages</div>
+              <div class="optional-coverages-list">
+                  <!-- <div *ngFor="let coverage of coverages" class="coverage" [ngClass]="{'active-border': isCoverageSelected(coverage)}" (click)="selectCoverage(coverage)">
+                      <div class="coverage-logo">
+                          <img [src]="coverage?.image" alt="coverage image" width="30px" height="30px" />
+                      </div>
+                      <div class="coverage-name">{{ coverage?.name }}</div>
+                      <div class="coverage-description">{{ coverage?.description }}</div>
+                  </div> -->
+              </div>
+          </div>
+          <div class="health-add-ons-cnt">
+              <div class="health-add-ons-title">Health add-ons</div>
+              <div class="health-add-ons-list">
+                  <!-- <div *ngFor="let addOn of healthAddOns" class="health-add-on" [ngClass]="{'active-border': isHealthAddOnSelected(addOn)}" (click)="selectAddOn(addOn)">
+                      <div class="health-add-on-logo"><img [src]="addOn?.image" alt="No Data Found" /></div>
+                      <div class="health-add-on-name">{{addOn?.name}}</div>
+                      <div class="health-add-on-description">{{addOn?.description}}</div>
+                  </div> -->
+              </div>
+          </div>
+        </div>
+        </div>
+        <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'payment'">
+        <div class="formSections">
+          <div class="payment-header">
+              <span>Share payment link</span>
+              <i class="fa fa-chevron-down"></i>
+          </div>
+          <div class="message-cnt">
+              <div class="payment-details">
+                  <div class="detail-item">
+                      <i class="fa fa-phone"></i>
+                      <span class="detail-label">Customer Mobile Number :</span>
+                      <span class="detail-value">91 8659378459</span>
+                      <div class="edit-icon"><i class="fa-regular fa-pen-to-square"></i></div>
+                  </div>
+                  <div class="detail-item">
+                      <i class="fa fa-envelope" *ngIf="!isEditingEmail"></i>
+                      <span class="detail-label" *ngIf="!isEditingEmail">Email Address :</span>
+                      <ng-container *ngIf="!isEditingEmail; else editEmailField">
+                        <span class="detail-value">{{ email }}</span>
+                        <div class="edit-icon" (click)="toggleEditEmail()"><i class="fa-regular fa-pen-to-square"></i></div>
+                      </ng-container>
+                      <ng-template #editEmailField>
+                        <div  class="email-input">
+                          <div class="input-container">
+                            <input type="email"  [(ngModel)]="email" class="inputField_Text" [ngClass]="{'has-value': email && email !== ''}">
+                            <label>Email Address</label>
+                          </div>
+                        </div>
+                        <button class="save-btn" (click)="saveEmail()">Save and send</button>
+                      </ng-template>
+                  </div>
+              </div>
+              <div class="message-send-cnt" *ngIf="!emailSaved">
+                  <div class="send-link-btn">
+                    <button [ngClass]="{'disabled-btn': isEditingEmail}" [disabled]="isEditingEmail">Send Link</button>
+                  </div>
+                  <div class="separator" *ngIf="!isEditingEmail">
+                    <span>OR</span>
+                  </div>
+                  <div class="payment-select" *ngIf="!isEditingEmail">
+                    <div>Make payment online</div>
+                    <div class="custom-dropdown" (click)="toggleDropdown()">
+                      <div class="selected-option">
+                        {{ selectedPaymentTypeLabel || 'Select payment type' }}
+                      </div>
+                      <div class="dropdown-options" *ngIf="isDropdownOpen">
+                        <div class="payment-option" *ngFor="let option of paymentTypes" [ngClass]="{'selected': selectedPaymentType === option.value}" 
+                          (click)="selectPaymentType(option)">
+                          <div>{{ option.label }}</div>
+                          <div *ngIf="option.isFasterProcess" class="faster-process">Faster process</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>    
+              </div>
+              <div class="message-sent-container" *ngIf="emailSaved">
+                <div class="payment-responce">
+                    <div class="message-icon">
+                        <i class="fa fa-check-circle"></i>
+                    </div>
+                    <div class="message-text">
+                        Payment link is sent to customer’s mobile number and email ID
+                    </div>
+                </div>
+                <div class="resend-link-btn">
+                    <button (click)="resendLink()">Resend Link</button>
+                </div>
+              </div>
+          </div>
+        </div>
+        </div>      
+        <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'policySummery'">
+          <div class="bcc_main accordionpro">
+          <div class="formSections">
+            <div class="section-header">
+              <h3>Policy Summary</h3>
+              <div class="header-actions">
+                <div class="copy-link">
+                  <span>Copy link to share</span>
+                  <i class="fa-solid fa-link"></i>
+                </div>
+                <div class="edit-icons">
+                  <i class="fa-solid fa-pen"></i>
+                </div>
+              </div>
+            </div>
+            <div class="details-header">
+                  <div class="policy-section">
+                    <div class="policy-header">
+                      <span class="badge original">Original</span>
+                    </div>
+                    <div class="policy-details">
+                      <div class="policy-item">
+                        <div class="policy-label">Members</div><div class="policy-value">Self, Spouse, Kid 1</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Policy</div><div class="policy-value">Activ Health Platinum</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Premium</div><div class="policy-value">₹7,562/yr</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Cover</div><div class="policy-value">₹10 lacs</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Tenure</div><div class="policy-value">2 years</div>
+                      </div>
+                    </div>
+                    <div class="addons">
+                      <div class="policy-label">Add ons</div>
+                      <div class="policy-addon">
+                          <div class="addon">Cancer secure cover</div>
+                          <div class="addon">Personal accident cover</div>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="policy-section modifieds" >
+                    <div class="policy-header">
+                      <span class="badge modified">Modified</span>
+                    </div>
+                    <div class="policy-details">
+                      <div class="policy-item">
+                        <div class="policy-label">Members</div><div class="policy-value">Self, Spouse, Kid 1, Mother</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Policy</div><div class="policy-value">Activ Health Platinum</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Premium</div><div class="policy-value">₹8,291/yr</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Cover</div><div class="policy-value">₹15 lacs</div>
+                      </div>
+                      <div class="policy-item">
+                        <div class="policy-label">Tenure</div><div class="policy-value">3 years</div>
+                      </div>
+                    </div>
+                    <div class="addons">
+                      <div class="policy-label">Add ons</div>
+                      <div class="policy-addon">
+                          <div class="addon">Cancer secure cover</div>
+                          <div class="addon">Personal accident cover</div>
+                          <div class="addon">Vaccine Cover</div>
+                    </div>
+                    </div>
+                  </div>
+                  <div class="free-benefits">
+                    <div>Free benefits included with your plan</div>
+                    <div class="lisr-free-benefits">
+                        <div class="benefit">
+                          <div class="benefit-icon"><i class="fa-solid fa-heart"></i></div>
+                          <span>Upto 100% Health Returns™</span>
+                        </div>
+                        <div class="benefit">
+                          <div class="benefit-icon"><i class="fa-solid fa-heart"></i></div>
+                          <span>Access To Expert Health Coaches</span>
+                        </div>
+                        <div class="benefit">
+                          <div class="benefit-icon"><i class="fa-solid fa-heart"></i></div>
+                          <span>Cover for dental consultations</span>
+                        </div>
+                        <div class="benefit">
+                          <div class="benefit-icon"><i class="fa-solid fa-heart"></i></div>
+                          <span>Free Wellness Services</span>
+                        </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+          <div class="formSections">
+            <div class="section-header">
+              <h3>Member Details</h3>
+              <div class="edit-icons">
+                  <i class="fa-solid fa-pen"></i>
+              </div>
+            </div>
+            <div class="member-cards">
+              <div class="member-card">
+                  <div class="member-header">
+                      <div class="member-name">Mihir Sodawalla</div>
+                      <div class="badges">Proposer</div>
+                  </div>
+                  <div class="member-details">
+                      <div class="member-item"><div>Height:</div><div>5.3 ft</div></div>
+                      <div class="member-item"><div>Weight:</div><div>63 kgs</div></div>
+                      <div class="member-item"><div>DOB:</div><div>06/06/1990</div></div>
+                  </div>
+                  <div class="member-details">
+                      <div class="member-item"><div>PAN Card:</div><div>9768850231</div></div>
+                      <div class="member-item"><div>Health Conditions:</div><div>Yes</div></div>
+                  </div>
+              </div>
+              <div class="member-card">
+                <div class="member-header">
+                    <div class="member-name">Mihir Sodawalla</div>
+                </div>
+                <div class="member-details">
+                    <div class="member-item"><div>Height:</div><div>5.3 ft</div></div>
+                    <div class="member-item"><div>Weight:</div><div>63 kgs</div></div>
+                    <div class="member-item"><div>DOB:</div><div>06/06/1990</div></div>
+                </div>
+                <div class="member-details">
+                    <div class="member-item"><div>PAN Card:</div><div>9768850231</div></div>
+                    <div class="member-item"><div>Health Conditions:</div><div>Yes</div></div>
+                </div>
+            </div>
+            <div class="member-card">
+              <div class="member-header">
+                  <div class="member-name">Mihir Sodawalla</div>
+              </div>
+              <div class="member-details">
+                  <div class="member-item"><div>Height:</div><div>5.3 ft</div></div>
+                  <div class="member-item"><div>Weight:</div><div>63 kgs</div></div>
+                  <div class="member-item"><div>DOB:</div><div>06/06/1990</div></div>
+              </div>
+              <div class="member-details">
+                  <div class="member-item"><div>PAN Card:</div><div>9768850231</div></div>
+                  <div class="member-item"><div>Health Conditions:</div><div>Yes</div></div>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="formSections">
+            <div class="section-header">
+              <h3>Contact Details</h3>
+              <div class="edit-icons">
+                  <i class="fa-solid fa-pen"></i>
+              </div>
+            </div>
+            <div class="contact-details">
+              <div class="member-item">
+                <div>Address:</div> 
+                <div>Flat 1, Floor 5, Building Name, Street Name, Locality, Mumbai - 400067</div>
+              </div>
+              <div class="contact-detail">
+                  <div class="member-item">
+                    <div>Contact:</div> 
+                    <div>+91 8345346464</div>
+                  </div>
+                  <div class="member-item">
+                    <div>Emergency Contact:</div>
+                    <div>+91 8345346464</div>
+                  </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>   
+           
+        <div class="bodyColumns bodyColumnsRight" >
+        <div class="bcr_main planDetails">
+            <header>
+                <h6>Plan details</h6>
+                <div class="planProductInfo">
+                    <div class="ppi_img">
+                        <img src="assets/Img/icon_activeone.svg">
+                    </div>
+                    <div class="ppi_info">
+                        <h4>Activ One NXT</h4>
+                        <h5>Aditya Birla Health Insurance</h5>
+                        <h6>23-22-0175217-00</h6>
+                    </div>
+                </div>
+                <div class="planProductQuote">
+                    <div class="label">Base Quote/ incl tax</div>
+                    <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
+                </div>
+                <div class="planProductQuote">
+                    <div class="label">Term</div>
+                    <div class="value">{{ renewalInfo?.response?.policyData[0]?.Tenure }} Year</div>
+                </div>
+            </header>
+            <hr>
+            <div class="planProductBody">
+                <div class="benefitCoverMain">
+                    <div class="bc_img">
+                        <img src="assets/Img/icon_plus_red2.svg">
+                    </div>
+                    <div class="bc_info">
+                        <h5>Hospital cash benefit cover</h5>
+                        <h6>Premium - ₹799</h6>
+                    </div>
+                </div>
+                <div class="benefitCoverMain">
+                    <div class="bc_img">
+                        <img src="assets/Img/icon_plus_red2.svg">
+                    </div>
+                    <div class="bc_info">
+                        <h5>Hospital cash benefit cover</h5>
+                        <h6>Premium - ₹699</h6>
+                    </div>
+                </div>
+                <div class="additionalPremium">
+                    <span class="label">Additional Premium</span>
+                    <label class="value">₹1,498</label>
+                </div>
+                <div class="additionalPremium">
+                    <span class="label">
+                        <div class="input-checkbox-block">
+                            <div class="input-checkbox-feild">
+                                <input type="checkbox" id="health-return" value="healthreturn" class="input-check" checked>
+                                <label for="health-return"></label>
+                            </div>
+                        </div>
+                        <span>Use my Health Returns</span>
+                    </span>
+                    <label class="value">₹{{renewalInfo?.response?.policyData[0]?.healthReturn}}</label>
+                </div>
+            </div>
+            <footer>
+                <div class="workingQuote">
+                    <span>Working Quote/ incl tax</span>
+                    <label>₹8,361</label>
+                </div>
+                <button type="button" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
+                <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['subquotes']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
+            </footer>
+        </div>
+        </div>
+    </div>
+    <div class="bottomInfoMain">
+        <div class="room-update" style="text-align: center;" data-bs-toggle="modal" data-bs-target="#exampleModal" *ngIf="activeSection == 'additional' ">RoomUpdate</div>
+        <div class="bottomInfoSubMain">
+     <div class="bi_left">
+        <div class="planProductInfo">
+           <div class="ppi_img">
+              <img src="assets/Img/icon_activeone.svg">
+           </div>
+           <div class="ppi_info">
+              <h4>Activ One NXT</h4>
+              <h5>Aditya Birla Health Insurance</h5>
+              <h6>23-22-0175217-00</h6>
+           </div>
+        </div>
+        <div class="planProductQuote">
+           <div class="label">Total Premium/ incl tax</div>
+           <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
+        </div>
+     </div>
+     <div class="bi_right">
+        <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()">Proceed</button>
+        <button type="button" value="renewnow" class="btn_red btn_redRenew" *ngIf="activeSection != 'payment' " (click)="renewNow()">Renew Now</button>
+        <button type="button" value="renewnow" class="btn_red " *ngIf="activeSection === 'payment'" (click)="setSection('policySummery')">Next</button>
+     </div>
+  </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <div class="room-update-details-cnt">
+                      <div class="room-update-title">Would you like to upgrade your room?</div>
+                      <div class="product-details-cnt">
+                          <div class="product-premium-details">
+                              <div class="product-details">
+                                  <div class="ppi_img">
+                                      <img src="assets/Img/icon_activeone.svg" alt="no image" width="40px" height="45px" />
+                                  </div>
+                                  <div class="product-name-details">
+                                      <div class="product-name">Active One Next</div>
+                                      <div class="company-name">Aditya Birla Health Insurance</div>
+                                      <div class="policy-no">23-22-0175217-0</div>
+                                  </div>
+                              </div>
+                              <div class="premium-details">
+                                  <div class="premium-title">Total Premium/Incl tax</div>
+                                  <div class="premium">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
+                              </div>
+                          </div>
+                          <div class="rooms">
+                              <div class="room">
+                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
+                                  <div class="room-name">Semi-Delux Room</div>
+                              </div>
+                              <div class="room">
+                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
+                                  <div class="room-name">Semi-Delux Room</div>
+                              </div>
+                              <div class="room">
+                                  <div class="tick-icon"><i class="fa-solid fa-check" style="color: #d9b83f;"></i></div>
+                                  <div class="room-name">Semi-Delux Room</div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="room-upgrade-benefits-cnt">
+                          <div class="room-upgrade-benefits-title">Upgrade benefits</div>
+                          <div class="upgrade-rooms-list">
+                                <div *ngFor="let plan of roomUpgradeBenefits" class="upgrade-rooms">
+                                  <input type="radio" id="plan1" name="plan" class="plan-radio" (change)="onRadioChanges()" />
+                                  <label [for]="plan?.id" class="plan-label">
+                                      <div class="plan-details" *ngIf="plan?.type !== 'No Upgrade'">
+                                          <div class="plan-type">{{ plan?.type }}</div>
+                                          <div class="plan-price">{{ plan?.price }}</div>
+                                      </div>
+                                      <div class="plan-premium" *ngIf="plan?.type !== 'No Upgrade'">
+                                          <div class="premium-title">Premium</div>
+                                          <div>{{ plan?.premium }}</div>
+                                      </div>
+                                      <span *ngIf="plan?.type === 'No Upgrade'" class="no-need-upgrade">{{ plan?.label }}</span>
+                                  </label>
+                              </div> 
+                          </div>
+                      </div>
+                  </div>
+                  <div class="apply-button-cnt"><button class="apply-button" [class.active]="isRadioSelected" data-bs-dismiss="modal">Apply</button></div>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>

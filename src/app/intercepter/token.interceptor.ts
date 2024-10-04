@@ -7,12 +7,12 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
+import { CommonService } from '../services/common.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private loginService: CommonService, private router: Router) {}
 
   private excludedUrls: string[] = ['/getHealthQuote','/getStates','/getRelationShip','/getPinCode'];
 

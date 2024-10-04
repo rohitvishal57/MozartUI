@@ -1,86 +1,44 @@
-import { NgModule,APP_INITIALIZER } from '@angular/core';
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ConfigService } from './config.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MyMaterialModule } from './material.module';
 import { PrimeNgModule } from './prime-ng.module';
-import {HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgToastModule } from 'ng-angular-popup';
-import { LoginComponent } from './component/login/login.component';
-import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
-import { PortalModule } from './portal/portal.module';
 import {NgxSpinnerModule } from 'ngx-spinner';
 import { DatePipe } from '@angular/common';
-import { BankLoginComponent } from './component/bank-login/bank-login.component';
-import { BancassureComponent } from './component/bancassure/bancassure.component';
-import { AgentLoginComponent } from './component/bancassure/agent-login/agent-login.component';
-import { DndModule } from 'ngx-drag-drop';
 import { TokenInterceptor } from './intercepter/token.interceptor';
-import {BrowserUtils, IPublicClientApplication, InteractionType, LogLevel, PublicClientApplication } from '@azure/msal-browser';
-import { ADConfig } from 'src/configuration';
-import { MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalBroadcastService, MsalGuard, MsalGuardConfiguration, MsalInterceptorConfiguration, MsalModule, MsalRedirectComponent, MsalService } from '@azure/msal-angular';
-import { withDisabledInitialNavigation, withEnabledBlockingInitialNavigation } from '@angular/router';
-import { ConfigService } from './config.service';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { HeaderComponent } from './layout/header/header.component';
+import { SideNavbarComponent } from './layout/side-navbar/side-navbar.component';
+import { LoginModule } from './login/login/login.module';
+import { DashboardModule } from './dashboard/dashboard/dashboard.module';
+import { ClaimsViewModule } from './claims/claims-view/claims-view.module';
+import { ProductsModule } from './product/products/products.module';
+
+
 
 export function loadConfig(configService: ConfigService) {
   return () => configService.loadConfig().toPromise();
 }
-// Form MSAL Login
-export function loggerCallback(logLevel: LogLevel, message: string) {
-  console.log(message);
-}
-export function MSALInstanceFactory(): IPublicClientApplication {
-  return new PublicClientApplication({
-    auth: {
-      clientId: ADConfig.msalConfig.auth.clientId,
-      authority: ADConfig.msalConfig.auth.authority,
-      redirectUri: '/',
-      postLogoutRedirectUri: '/'
-    },
-    system: {
-      allowNativeBroker: false, 
-      loggerOptions: {
-        loggerCallback,
-        logLevel: LogLevel.Info,
-        piiLoggingEnabled: false
-      }
-    }
-  });
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
 
-export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
-  const protectedResourceMap = new Map<string, Array<string>>();
-  protectedResourceMap.set(ADConfig.apiConfig.uri, ADConfig.apiConfig.scopes);
-  return {
-    interactionType: InteractionType.Popup,
-    protectedResourceMap
-  };
-}
-
-export function MSALGuardConfigFactory(): MsalGuardConfiguration {
-  return {
-    interactionType: InteractionType.Redirect,
-    authRequest: {
-      scopes: [...ADConfig.apiConfig.scopes]
-    },
-    loginFailedRoute: '/login'
-  };
-}
-
-const initialNavigation = !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup()
-  ? withEnabledBlockingInitialNavigation() 
-  : withDisabledInitialNavigation();
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    AdminLoginComponent,
-    BancassureComponent,
-    BankLoginComponent,
-    AgentLoginComponent
+    HeaderComponent,
+    SideNavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -93,10 +51,20 @@ const initialNavigation = !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup(
     FormsModule,
     NgToastModule,
     NgxSpinnerModule,
-    DndModule,
-    PortalModule,
-    MsalModule
+    LoginModule,
+    DashboardModule,
+    ClaimsViewModule,
+    ProductsModule,
+    NgxPaginationModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     ConfigService,
     {
@@ -111,23 +79,8 @@ const initialNavigation = !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup(
       useClass:TokenInterceptor,
       multi:true
     },
-    {
-      provide: MSAL_INSTANCE,
-      useFactory: MSALInstanceFactory
-    },
-    {
-      provide: MSAL_GUARD_CONFIG,
-      useFactory: MSALGuardConfigFactory
-    },
-    {
-      provide: MSAL_INTERCEPTOR_CONFIG,
-      useFactory: MSALInterceptorConfigFactory
-    },
-    MsalService,
-    MsalGuard,
-    MsalBroadcastService
+    BsModalService,
   ],
-  schemas: [],
-  bootstrap: [AppComponent,MsalRedirectComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

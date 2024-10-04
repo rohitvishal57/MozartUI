@@ -1,0 +1,16 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ProductDetailsComponent } from './product-details/product-details.component';
+import { QuoteProductsComponent } from './quote-products/quote-products.component';
+import { AuthGuard } from 'src/app/authorize/auth.guard';
+
+const routes: Routes = [
+  { path: "productDetails", component: ProductDetailsComponent, canActivate: [AuthGuard] },
+  { path: "quoteProducts", component: QuoteProductsComponent},
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class QuoteRoutingModule { }

@@ -84,8 +84,6 @@ import { AnimateModule } from 'primeng/animate';
 import { CardModule } from 'primeng/card';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { EditorModule } from 'primeng/editor';
-import { ChartModule } from 'primeng/chart';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
@@ -103,7 +101,6 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
         CarouselModule,
         CascadeSelectModule,
         CheckboxModule,
-        ChartModule,
         ChipsModule,
         ChipModule,
         ColorPickerModule,
@@ -119,7 +116,6 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
         DynamicDialogModule,
         DialogModule,
         MessagesModule,
-        EditorModule,
         FieldsetModule,
         FileUploadModule,
         GalleriaModule,

@@ -1,0 +1,38 @@
+<div class="main">
+    <div class="sub-mainNav"></div>
+    <div class="sub-main">
+        <div class="logo">
+            <img src="assets/logo/ABHI_Logo.svg" alt="abhi-logo">
+        </div>
+        <div class="header">
+            <div class="header2">
+                <div class="header-left-cnt">
+                    <div class="toolbar">
+                        <button *ngIf="!isDesktopView" class="menu-button" (click)="toggleSidenav()">☰</button>
+                        <div *ngIf="isDesktopView" class="menu">
+                            <div (click)="redirect('dashboard')" routerLinkActive="active-link">Dashboard</div>
+                            <div (click)="redirect('dashboard')" routerLinkActive="active-link">Proposals</div>
+                            <div (click)="redirect('products')" routerLinkActive="active-link">Products</div>
+                            <div (click)="redirect('renewals/renewalList')" routerLinkActive="active-link">
+                                <div class="nav-text">Renewals</div>
+                            </div>
+                            <div (click)="redirect('claims/claimsList')" routerLinkActive="active-link">Claims</div>
+                            <div (click)="redirect('Endorsements')" routerLinkActive="active-link">Endorsements</div>
+                        </div>    
+                    </div>
+                </div>
+                <div class="header-right-cnt">
+                    <div class="language-selector">
+                        <select (change)="setLanguage($event)" [value]="currentLanguage">
+                          <option value="en">English</option>
+                          <option value="hi">Hindi</option>
+                          <option value="te">Telugu</option>
+                        </select>
+                    </div>  
+                    <!-- <button class="logout-button" (click)="logOut()">Log Out</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="abhifont">Aditya Birla Health Insurance</div>
+</div>
