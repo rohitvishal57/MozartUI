@@ -41,7 +41,7 @@ export class GetQuoteComponent {
       { value: 20000000 } // 2Cr
     ],
     translate: (value: number): string => {
-      return ''; // Empty string prevents showing the value above the slider
+      return '';
     }
   };
 
@@ -58,7 +58,7 @@ export class GetQuoteComponent {
   proposerState:any;
   selectedSumInsured: any;
   selectedDiseases: string[] = [];
-  diseaseNames: string = "";
+  diseaseNames: string | null = null;
 
   multiIndiReqData: any = {
     proposerPincode: "",
@@ -182,9 +182,9 @@ export class GetQuoteComponent {
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     this.quoteFormGroup = this.fb.group({
-      proposerPincode: [null, [Validators.required]],
-      proposerName: [null, [Validators.required]],
-      mobileNumber: [null, [Validators.required]],
+      proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$')]],
+      proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]],
+      mobileNumber: [null, [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       typeOfBusiness: ["NB"],
       isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
@@ -303,14 +303,6 @@ export class GetQuoteComponent {
     this.activeDropdown = null;
   }
 
-  // formatTickLabel(value: number): string {
-  //   if (value >= 100) {
-  //     return (value / 100).toFixed(0) + 'Cr';
-  //   } else {
-  //     return value + 'L';
-  //   }
-  // }
-
   formatTickLabel(value: number, forSlider: boolean): string {
     if (value >= 10000000) {
       return forSlider == true ? (value / 10000000) + 'Cr' : '₹' + (value / 10000000) + ' Crores';
@@ -350,6 +342,7 @@ export class GetQuoteComponent {
   }
 
   continue() {
+    console.log(this.quoteFormGroup);
     this.quoteFormGroup.get('numberOfInsuredMembers')?.setValue(this.selectedRelationships.length);
     this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length+"A");
     console.log(this.quoteFormGroup.value);
@@ -539,13 +532,13 @@ export class GetQuoteComponent {
   // Add new member details
   addInsuredMemberDetails(): void {
     // Mark required fields as touched
-    this.quoteFormGroup.get('proposerName')?.markAsTouched();
-    this.quoteFormGroup.get('proposerPincode')?.markAsTouched();
-    this.quoteFormGroup.get('mobileNumber')?.markAsTouched();
+    // this.quoteFormGroup.get('proposerName')?.markAsTouched();
+    // this.quoteFormGroup.get('proposerPincode')?.markAsTouched();
+    // this.quoteFormGroup.get('mobileNumber')?.markAsTouched();
   
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid) {
-      // Reset the insuredMembers group
+      this.quoteFormGroup.markAllAsTouched();
       const insuredMembersGroup = this.fb.group({});
       this.quoteFormGroup.setControl('insuredMembers', insuredMembersGroup);
   
@@ -609,14 +602,14 @@ export class GetQuoteComponent {
       "pincode": event.target.value
     }
     this.service.getPinCodeByCity(reqdata).subscribe({
-      next: (res:any) => {
+      next: (res) => {
         console.log(res)
         this.proposerZone = res.data.zone;
         this.proposerCity = res.data.city;
         this.proposerState = res.data.state;
         this.proposerZoneValue = res.data.zoneCode;
       },
-      error: (err:any) => {
+      error: (err) => {
         console.error(err)
         this.toast.warning({ detail: "WARNING", summary: "Could not fetch pincode details.", duration: 1000 });
       }

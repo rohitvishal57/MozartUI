@@ -127,7 +127,7 @@ export class ProductsComponent implements OnInit {
   async getProposalNum() {
     try {
       const res = await firstValueFrom(this.common.getProposalNumber());
-      this.proposalNum = res;
+      this.proposalNum = res.data.proposalNumber;
     } catch (error) {
       console.error(error);
     }
@@ -146,11 +146,13 @@ export class ProductsComponent implements OnInit {
   async buyNow(item: any) {
     this.formData = { ...this.formData, productName: item.productName }
     try {
+      await this.getProposalNum();
       await this.getFormSequence(item);
       console.log(item)
       const productData = {
         partnerId : item.partnerId,
-        productId : item.productId
+        productId : item.productId,
+        proposalNum: this.proposalNum
 
       }
       console.log(productData)

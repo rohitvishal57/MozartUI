@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { firstValueFrom } from 'rxjs';
-import { CommonService } from 'src/app/services/common.service';
-import { EncryptionService } from 'src/app/services/encryption.service';
-import { QuoteService } from '../quote.service';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { NgToastService } from "ng-angular-popup";
+import { NgxSpinnerService } from "ngx-spinner";
+import { CommonService } from "src/app/services/common.service";
+import { EncryptionService } from "src/app/services/encryption.service";
+import { QuoteService } from "../quote.service";
+import { firstValueFrom } from "rxjs";
+
 
 @Component({
   selector: 'app-quote-products',
@@ -13,7 +14,6 @@ import { QuoteService } from '../quote.service';
   styleUrls: ['./quote-products.component.scss']
 })
 export class QuoteProductsComponent implements OnInit {
-
   stylesList: any[] = [];
   formData: any = {}
   private allJsonFormData: any[] = []
@@ -45,25 +45,24 @@ export class QuoteProductsComponent implements OnInit {
   displayNoProductsMessage: boolean = false;
 
   showSpecialForm: boolean = false;
-  addonView:any[]=[]
+  addonView: any[] = []
   isOverlayVisible = false;
-  popIndex:any
+  popIndex: any
   selectedAddons: string[] = [];
 
-  constructor(private QuoteService: QuoteService, private router: Router, private toast: NgToastService,
-    private service: CommonService, private encryptionService: EncryptionService,private spinner: NgxSpinnerService) { }
-
+  constructor(private quoteService: QuoteService, private router: Router, private toast: NgToastService,
+    private service: CommonService, private encryptionService: EncryptionService, private spinner: NgxSpinnerService) { }
   ngOnInit(): void {
     // sessionStorage.clear()
-    this.formData=history.state.formData;
-    if(sessionStorage.getItem("cardListProducts")){
+    this.formData = history.state.formData;
+    if (sessionStorage.getItem("cardListProducts")) {
       this.cartProductList = this.encryptionService.decrypt(sessionStorage.getItem("cardListProducts") as string);
     }
-    else{
+    else {
       this.cartProductList = [];
     }
     localStorage.setItem("formIndex", "0")
-    console.log(this.formData,this.agentCode,this.cartProductList);
+    console.log(this.formData, this.agentCode, this.cartProductList);
     this.getPoductList();
     this.Getagentcartdetails();
   }
@@ -75,10 +74,28 @@ export class QuoteProductsComponent implements OnInit {
       sumInsured: String(this.formData.sumInsured),
       quoteData: JSON.stringify(this.formData)
     }
+    // this.loginService.Getproductlist(reqData).subscribe({
+    //   next: (res) => {
+    //     this.ProductList = res.data;
+    //     console.log(this.ProductList)
+    //     this.ProductList.forEach((item:any)=>{
+    //       item.keyFeatures = JSON.parse(item.keyFeatures)
+    //       console.log(typeof(item.keyFeatures));
+    //       this.plans[1].discount = item.t2DiscPercentage;
+    //       this.plans[2].discount = item.t3DiscPercentage;
+    //     })
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //     if (err.status === 404) {
+    //       this.displayNoProductsMessage = true;
+    //     }
+    //   }
+    // })
     console.log(reqData);
     this.spinner.show();
     // this.service.Getproductlist3({}).subscribe({
-    this.QuoteService.Getproductlist2(reqData).subscribe({
+    this.quoteService.Getproductlist2(reqData).subscribe({
       next: (res:any) => {
         this.spinner.hide();
         console.log(res)
@@ -86,10 +103,19 @@ export class QuoteProductsComponent implements OnInit {
         this.ProductList = res.data.products
         console.log(this.ProductList);
         this.ProductList.forEach((prod: any) => {
-          console.log(prod);
+          // Parse keyFeatures and initialize selectedAddon
           prod.keyFeatures = JSON.parse(prod.keyFeatures);
-          prod.selectedAddon=[]
-        })
+          prod.selectedAddon = [];
+
+          // Round tenure premiums
+          prod.tenure1Premium = Math.round(prod.tenure1Premium);
+          prod.tenure2Premium = Math.round(prod.tenure2Premium);
+          prod.tenure3Premium = Math.round(prod.tenure3Premium);
+
+          // Optionally, log the updated product
+          console.log(prod);
+        });
+
         this.selectedPlans = Array(this.ProductList.length).fill(null);
         this.addonView = Array(this.ProductList.length).fill(false);
       },
@@ -102,15 +128,29 @@ export class QuoteProductsComponent implements OnInit {
       }
     })
   }
+  // getProducts() {
+  //   this.loginService.getAllProducts().subscribe({
+  //     next: (res) => {
+  //       this.products = res;
+  //       console.log(this.products)
+  //       if (this.products.length > 0) {
+  //         this.getPoductList(this.products[0])
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error(err);
+  //     }
+  //   })
+  // }
 
   async getProposalNum() {
     try {
       await this.service.getProposalNumber().subscribe({
-        next:(res)=>{
+        next: (res) => {
           console.log(res);
           this.proposalNum = res.data;
         },
-        error:(err)=>{
+        error: (err) => {
           console.error(err);
         }
       })
@@ -120,7 +160,7 @@ export class QuoteProductsComponent implements OnInit {
   }
 
   buyNow(item: any) {
-    this.router.navigate(['productDetails'], {
+    this.router.navigate(['portal/abhi/productDetails'], {
       state: { item: item }
     });
   }
@@ -148,16 +188,17 @@ export class QuoteProductsComponent implements OnInit {
 
   selectPlan(i: number, planNumber: number) {
     this.selectedPlans[i] = planNumber;
-    console.log(planNumber,this.ProductList[i],i,this.ProductList);
+    console.log(planNumber, this.ProductList[i], i, this.ProductList);
     const premiumKey = `tenure${planNumber}Premium`;
     this.ProductList[i].selectedPremiumAmount = this.ProductList[i][premiumKey];
-    console.log(this.selectedPlans,i,planNumber,this.ProductList,premiumKey);
+    console.log(this.selectedPlans, i, planNumber, this.ProductList, premiumKey);
   }
 
   async insurenow(item: any) {
     console.log(item);
-    this.formData = { ...this.formData, productName: item.productName ,totalPremium: item.selectedPremiumAmount,
-      firstName:this.formData.proposerName
+    this.formData = {
+      ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount,
+      firstName: this.formData.proposerName
     }
     console.log(this.formData);
     try {
@@ -165,11 +206,12 @@ export class QuoteProductsComponent implements OnInit {
       this.removeFromCart(item);
       console.log(item)
       const productData = {
-        partnerId : this.partnerId,
-        productId : item.productId,
-        isQuote : true
-
+        partnerId: this.partnerId,
+        productId: item.productId,
+        tenureAmounts: item.tenureAmounts,
+        selectedAddons: item.selectedAddon
       }
+      sessionStorage.setItem("isQuote", true.toString());
       console.log(productData)
       if (this.formSequence != null && this.formSequence.length > 0) {
         this.router.navigate(['yatra'], {
@@ -181,18 +223,18 @@ export class QuoteProductsComponent implements OnInit {
     }
   }
 
-  addToCart(item: any){
-    item.tenureAmounts=[]
-    for(let i =1 ;i<=3;i++){
+  addToCart(item: any) {
+    item.tenureAmounts = []
+    for (let i = 1; i <= 3; i++) {
       const premiumKey = `tenure${i}Premium`;
       console.log(item[premiumKey]);
-      item.tenureAmounts[i-1]=item[premiumKey]
+      item.tenureAmounts[i - 1] = item[premiumKey]
     }
     console.log(item);
     this.cartProductList.push(item);
     console.log(item);
-    
-    sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
+
+    sessionStorage.setItem("cardListProducts", this.encryptionService.encrypt(this.cartProductList));
     this.getProposalNum();
     // setTimeout(() => {
     //   this.insertorupdateagentcartdetails(item);
@@ -200,9 +242,9 @@ export class QuoteProductsComponent implements OnInit {
     console.log(this.cartProductList);
   }
 
-  removeFromCart(i: any){
-    this.cartProductList.splice(i,1);
-    sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
+  removeFromCart(i: any) {
+    this.cartProductList.splice(i, 1);
+    sessionStorage.setItem("cardListProducts", this.encryptionService.encrypt(this.cartProductList));
   }
 
   async getFormSequence(item: any) {
@@ -230,20 +272,20 @@ export class QuoteProductsComponent implements OnInit {
       this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
-  insertorupdateagentcartdetails(item:any){
+  insertorupdateagentcartdetails(item: any) {
     console.log(item);
     let reqdata = {
       "id": "",
-      "proposalNum":this.proposalNum,
+      "proposalNum": this.proposalNum,
       "agentCode": this.agentCode,
       "productId": item.productId,
       "productName": item.productName,
       "productCode": item.productCode,
       "planCode": item.planCode,
       "subPlanCode": item.subPlanCode,
-      "productFeatures":JSON.stringify(item.keyFeatures),
-      "proposerName":"Manjunath Saukar",
-      "selectedPremiumAmount":item.selectedPremiumAmount,
+      "productFeatures": JSON.stringify(item.keyFeatures),
+      "proposerName": "Manjunath Saukar",
+      "selectedPremiumAmount": item.selectedPremiumAmount,
       "t1PremiumAmount": item.tenure1Premium,
       "t2PremiumAmount": item.tenure2Premium,
       "t3PremiumAmount": item.tenure3Premium,
@@ -251,49 +293,49 @@ export class QuoteProductsComponent implements OnInit {
       "t3DiscountAmount": item.t3DiscountAmount,
       "quoteData": "{\n  \"proposerPincode\": \"500013\",\n  \"typeOfBusiness\": \"NB\",\n  \"isEmpoyee\": false,\n  \"sumInsured\": \"5000000\",\n  \"noOfMembers\": \"1\",\n  \"familySize\": \"1A\",\n  \"insuredMemeberDetails\": [\n    {\n      \"roomCategory\": \"\",\n      \"memberAge\": \"43\",\n      \"sumInsured\": \"5000000\",\n      \"isChronic\": \"No\",\n      \"zone\": \"Zone II\",\n      \"gender\": \"M\",\n      \"memberDob\": \"31-12-1980\",\n      \"memberRelation\": \"self\",\n      \"memberRelationCode\": \"24\"\n    }\n  ]\n}\n",
       "selectedAddons": "string",
-      "isFullQouteComplete":false,
+      "isFullQouteComplete": false,
       "createdBy": this.agentCode,
       "modifiedBy": this.agentCode,
-  }
-  console.log(reqdata);
-    this.QuoteService.Insertorupdateagentcartdetails(reqdata).subscribe({
-      next:(res)=>{
+    }
+    console.log(reqdata);
+    this.quoteService.Insertorupdateagentcartdetails(reqdata).subscribe({
+      next: (res) => {
         console.log(res);
       },
-      error:(err)=>{
+      error: (err) => {
         console.error(err);
-        
+
       }
     })
   }
-  Getagentcartdetails(){
+  Getagentcartdetails() {
     let reqdata = {
       "agentCode": this.agentCode
     }
-    this.QuoteService.Getagentcartdetails(reqdata).subscribe({
-      next:(res)=>{
+    this.quoteService.Getagentcartdetails(reqdata).subscribe({
+      next: (res) => {
         console.log(res);
       },
-      error:(err)=>{
+      error: (err) => {
         console.error(TypeError);
-        
+
       }
     })
   }
-  addToView(index:any){
-    if(this.addonView[index] == false){
+  addToView(index: any) {
+    if (this.addonView[index] == false) {
       this.addonView[index] = true;
     }
-    else{
-      this.addonView[index]= false
+    else {
+      this.addonView[index] = false
     }
   }
-  closeOverlay(){
+  closeOverlay() {
     this.isOverlayVisible = false;
   }
-  showOverlay(i:any) {
+  showOverlay(i: any) {
     this.isOverlayVisible = true;
-    this.popIndex=i
+    this.popIndex = i
 
     const selectedAddons = this.ProductList[this.popIndex].selectedAddon || [];
     this.ProductList[this.popIndex].productFeatures.forEach((addon: any) => {
@@ -315,17 +357,17 @@ export class QuoteProductsComponent implements OnInit {
   isSelected(featureName: string): boolean {
     return this.selectedAddons.includes(featureName);
   }
-  onCheckboxChange(event: any, addon: any,i:any) {
+  onCheckboxChange(event: any, addon: any, i: any) {
     addon.isSelected = event.target.checked;
-    if(event.target.checked){
+    if (event.target.checked) {
       this.ProductList[this.popIndex].selectedAddon.push(addon.featureName)
     }
-    else{
+    else {
       this.ProductList[this.popIndex].selectedAddon = this.ProductList[this.popIndex].selectedAddon.filter(
         (name: string) => name !== addon.featureName
       );
     }
-    console.log(addon,this.ProductList,i,this.popIndex);
-}
+    console.log(addon, this.ProductList, i, this.popIndex);
+  }
 
 }

@@ -53,8 +53,8 @@
     "calculateAddOnValue":"yatra/Agent/CalculateAddonValue",
     "getHalfQuote":"yatra/api/gethalfquote",
     "getProductDetailsAndFeatures":"yatra/api/getproductdetailsandfeatures",
-    "getSingleProductQuote":"https://localhost:7188/api/getquoteforsingleproduct",
-    "getKycDetails":"https://localhost:7188/api/getkycdetails",
+    "getSingleProductQuote":"https://upuat.adityabirlahealth.com/quote/api/getquoteforsingleproduct",
+    "getKycDetails":"https://upuat.adityabirlahealth.com/quote/api/getkycdetails",
     "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails"
 
 }

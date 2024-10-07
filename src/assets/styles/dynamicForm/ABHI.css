@@ -3,6 +3,7 @@ body {
 }
 
 .main-container {
+    padding-top: 11rem;
     display: flex;
     flex-direction: row;
     /*background-color: #F1F3F6;*/
@@ -263,7 +264,7 @@ body {
     color: #666;
     background-color: #fff;
     background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(242, 243, 246, 1) 100%);
-    z-index: 1;
+    /* z-index: 1; */
     padding: 0 3px;
     border-radius: 2px;
 }
@@ -277,7 +278,7 @@ body {
     font-size: 12px;
     color: #666;
     background-color: #fff;
-    z-index: 1;
+    /* z-index: 1; */
     padding: 0 3px;
     border-radius: 2px;
 }
@@ -929,10 +930,6 @@ body {
     margin-left: 211px;
 }
 
-.main-container .right-panel .img1Popup {
-    /* margin-left: 42%;
-    margin-top: -38%; */
-}
 
 .main-container .right-panel .boldtext-label {
     font-size: 12px;
@@ -970,6 +967,16 @@ body {
     margin: 0px 24px;
     color: #ffe2dc;
     float: right;
+}
+.main-container .right-panel .add-btn {
+    background-color: #c72229;
+    padding: 1%;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+    margin: 0 2%;
+    color: #ffe2dc;
+    /* float: right; */
 }
 .main-container .right-panel .field-btn {
     background-color: #c72229;
@@ -1434,6 +1441,7 @@ body {
 }
 
 .main-container .right-panel .next-btn,
+.main-container .right-panel .add-btn,
 .main-container .right-panel .back-btn,
 .main-container .right-panel .field-btn {
     padding: 10px 21px;
@@ -2021,6 +2029,7 @@ a:not([href]) {
 }
 .main-container .right-panel .send-btn.send-link-btn:hover, 
 .main-container .right-panel .next-btn:hover,
+.main-container .right-panel .add-btn:hover,
 .main-container .right-panel .field-btn:hover {
     background-color: #FFE7E5;
     color: #C7222A;
@@ -2450,6 +2459,7 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {
         margin: 6px 8px;
@@ -2459,6 +2469,7 @@ margin: 0;
 @media (max-width:768px) {
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {
         margin: 6px 3px;
@@ -2536,6 +2547,7 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .add-btn,
     .main-container .right-panel .back-btn,
     .main-container .right-panel .field-btn {
         float: none;
@@ -2543,6 +2555,7 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
+    .main-container .right-panel .add-btn,
     .main-container .right-panel .field-btn {
         left: 115px;
     }
