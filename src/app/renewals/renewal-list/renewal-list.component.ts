@@ -36,6 +36,7 @@ export class RenewalListComponent {
   private onDestroy$: Subject<boolean> = new Subject<boolean>();
   agentCode=localStorage.getItem('agentCode');
   filterType: string = "totalRecords";
+  placeholder:string='';
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
     { name: 'RUG', selected: false },
@@ -206,21 +207,25 @@ export class RenewalListComponent {
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
     if (this.selected === "mobileNumber") {
+      this.placeholder = 'Mobile Number';
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[6-9][0-9]{9}$")
       ]);
     } else if (this.selected === "proposerName") {
+      this.placeholder = 'Proposer Name';
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
       ]);
     } else if (this.selected === "policyNumber") {
+      this.placeholder = 'Policy Number';
       this.searchInputControl.setValidators([Validators.required]);
+    } else if (this.selected= ''){
+      this.placeholder= '';
     }
     this.searchInputControl.updateValueAndValidity();
   }
-  
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";

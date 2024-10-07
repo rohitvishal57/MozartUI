@@ -44,7 +44,7 @@ export class RenewalsService {
     return this.httpService.post(generatepaymentlink, reqBody);
   }
   getRenewalInfoApi(policyNumber: string, requestBody: any) {
-    const getRenewalInfoApi = `${this.configService.config.baseUrl + this.configService.config.getRenewalInfoApi}?policyNumber=${policyNumber}`;
+    const getRenewalInfoApi = `${this.configService.config.baseUrl + this.configService.config.getRenewalInfo}?policyNumber=${policyNumber}`;
     return this.httpService.post(getRenewalInfoApi, requestBody);
   }
 
