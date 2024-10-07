@@ -38,6 +38,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
+    this.getRequestList();
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -47,24 +48,21 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   requestsListRequestBody:any = {
+      "agentCode": localStorage.getItem('agentCode'),
       "start": 0,
-      "length": "10",
-      "sortColumn": "RequestedOn",
-      "searchColumn": "",
+      "length": 10,
+      "sortColumn": "RaisedOn",
+      "searchColumn": "MemberName",
       "sortDirection": "DESC",
       "searchString": "",
-      "uiStatus": [],
-      "viewBy": [
-        "5100003"
-      ]
+      "uiStatus": []
   }
    
   getRequestList() {
-    this.requestsListRequestBody.agentId = localStorage.getItem('agentCode');
+    this.requestsListRequestBody.start = (this.page - 1) * this.rows;
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
-        if (response.isSuccess) {
-          console.log(response.endorsementDetails);
+        if (response && response.statusCode == "200" && response.isSuccess) {
           this.endorsementDetails = [...response.endorsementDetails];
           this.countsList = response.endorsementDetails;
           this.totalRecords = response.totalRecords;
@@ -80,7 +78,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   statusFilter(filter: string) {
     if (filter === "All") {
-      this.requestsListRequestBody.uiStatus = ["Active", "Resolved", "Cancelled"];
+      this.requestsListRequestBody.uiStatus = [];
     } else {
     this.requestsListRequestBody.uiStatus = [filter];
     }
@@ -97,7 +95,6 @@ export class EndorsementsRequestsComponent implements OnInit {
   onSelectChanges(event: any): void {
     event.stopPropagation(); 
     this.selected !== "none";
-    // console.log("selected value", this.selected);
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
 
@@ -123,7 +120,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.searchInputControl.markAsUntouched();
   }
   getPlaceholder(): string {
-    if (this.selected === "requestId") {
+    if (this.selected === "EndorsementID") {
       return "Enter Request ID";
     } else if (this.selected === "memberName") {
       return "Enter Member Name";
@@ -181,7 +178,6 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.selectedView = view;
   }
   redirect(value:any){
-    console.log(value);
     this.router.navigate([value]);
   }
 }
