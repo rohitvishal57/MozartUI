@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { endorsementDetails } from 'src/app/interface/endorsementDetails.interface';
@@ -25,7 +25,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   searchInputControl = new FormControl("");
   isDesktopView: boolean = false
   constructor(private router:Router,
-    private endorsementService: EndorsementsRequestsService, private cdr:ChangeDetectorRef
+    private endorsementService: EndorsementsRequestsService,
   ) { }
 
   ngOnInit(): void {
@@ -38,7 +38,6 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
-    this.getRequestList();
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -62,15 +61,13 @@ export class EndorsementsRequestsComponent implements OnInit {
    
   getRequestList() {
     this.requestsListRequestBody.agentId = localStorage.getItem('agentCode');
-    this.requestsListRequestBody.start = (this.page - 1) * this.rows;
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
-        if (response && response.statusCode == "200" && response.isSuccess) {
-          this.endorsementDetails = [];
+        if (response.isSuccess) {
+          console.log(response.endorsementDetails);
           this.endorsementDetails = [...response.endorsementDetails];
           this.countsList = response.endorsementDetails;
           this.totalRecords = response.totalRecords;
-          this.cdr.detectChanges();
         } else {
           console.error("API request was not successful.");
         }
@@ -100,6 +97,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   onSelectChanges(event: any): void {
     event.stopPropagation(); 
     this.selected !== "none";
+    // console.log("selected value", this.selected);
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
 
@@ -125,7 +123,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.searchInputControl.markAsUntouched();
   }
   getPlaceholder(): string {
-    if (this.selected === "EndorsementID") {
+    if (this.selected === "requestId") {
       return "Enter Request ID";
     } else if (this.selected === "memberName") {
       return "Enter Member Name";
@@ -183,6 +181,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.selectedView = view;
   }
   redirect(value:any){
+    console.log(value);
     this.router.navigate([value]);
   }
 }

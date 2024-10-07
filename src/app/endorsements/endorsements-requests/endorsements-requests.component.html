@@ -4,7 +4,7 @@
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
                 <h2>All Requests</h2>
-                <button type="button" class="btn_white btn_newRequest" (click)="redirect('endorsements/new-request')">
+                <button type="button" class="btn_white btn_newRequest" (click)="redirect('Endorsements/Endorsements-new-request')">
                     <img src="assets/Img/icon_plus_red.svg">New Requests
                 </button>
             </div>
@@ -55,7 +55,7 @@
                             </tr>
                           </thead>
                           <tbody class="table-group-divider" >
-                            <tr *ngFor="let row of endorsementDetails; let i = index"
+                            <tr *ngFor="let row of endorsementDetails | paginate: { itemsPerPage: rows, currentPage: page }; let i = index"
                     class="table-values">
                                 <td class="td-text-bold">{{ row?.caseId }}</td>
                                 <td >{{ row?.policyNumber }}</td>
@@ -67,7 +67,7 @@
                                 <td >{{ row?.raisedOn }}</td>
                                 <!--<td>
                                     <button type="button" class="btn_icon" (click)="downloadRequest(row)">
-                                        <img src="assets/Img/icon_download_grey.svg" width="9" height="9">
+                                        <img src="../../../../../assets/Img/icon_download_grey.svg" width="9" height="9">
                                     </button> 
                                 </td>-->
                             </tr>
