@@ -47,7 +47,9 @@ export class RenewalDynamicFormComponent implements OnInit {
   ngOnInit() {
     this.renewalService.policy$.subscribe(policy => {
      if(policy.policyNo){
-     this.policyNumber=policy.policyNo;}
+     this.policyNumber=policy.policyNo;
+    this.activeSection=policy.activeSection
+  }
    });
    this.getRenewalInfo();
    this.initializeForm();

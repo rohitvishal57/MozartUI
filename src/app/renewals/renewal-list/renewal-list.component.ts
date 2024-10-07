@@ -37,6 +37,7 @@ export class RenewalListComponent {
   agentCode=localStorage.getItem('agentCode');
   filterType: string = "totalRecords";
   placeholder:string='';
+  activeSection:string= "primary"
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
     { name: 'RUG', selected: false },
@@ -273,11 +274,13 @@ export class RenewalListComponent {
   renewalListView(view: string) {
     this.selectedView = view;
   }
-  handleAction(item: RenewalList, event: string) {
+  handleAction(item: RenewalList, event?: string) {
     switch (event) {
       case 'download':
         break;
-      case 'delete':
+      case 'payment':
+        this.activeSection=event;
+      this.renewalJourney(item);
         break;
       case 'email':
         const emailRequestBody={
@@ -396,7 +399,7 @@ export class RenewalListComponent {
   }
   renewalJourney(proposerDetail : RenewalList) {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
-    this.renewalService.setPolicyNo(proposerDetail.policyNumber);
+    this.renewalService.setPolicyState(proposerDetail.policyNumber, this.activeSection);
     this.router.navigate(["renewals/renewalDynamicForm"]);
   }
   getFixedStarArray(): number[] {

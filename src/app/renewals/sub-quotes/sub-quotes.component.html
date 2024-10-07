@@ -1,9 +1,6 @@
-      <!--Body start-->
       <main class="siteBody">
-        <!--Main Columns start-->
         <div class="contentBody bodyColumns-1">
             <div class="bodyColumn userQuotes" *ngIf="subQuotes === false" >
-                <!--User Quotes view options start-->
                 <section class="UQ_viewWraper">
                     <div class="UQ_heading">
                         <h2><span class="userimg"><img src="assets/Img/user_img.svg"></span>Ishwar Vidyarthi’s Quotes</h2>
@@ -14,8 +11,6 @@
                         <button type="button" value="gridlist" class="btn_grid btn_grid_text active jsBtnClickQuote mobile-hide" aria-label="userquotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)=" quotesView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List">List View</button>
                     </div>
                 </section>
-                <!--User Quotes view options end-->
-                <!--Table Main start-->
                 <section id="userquotes-list" class="tableMain user-quoteView mobile-hide" *ngIf="selectedView == 'list'">
                     <div class="tableSubMain">
                         <div class="table-responsive">

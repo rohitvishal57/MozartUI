@@ -1,7 +1,7 @@
 <main class="siteBody">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
-            <h2>All Quotes</h2>
+            <h2>Renewals List</h2>
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
@@ -24,7 +24,6 @@
                     </ul>
                 </div>
                 <div class="quickFilterRight">
-                    <button type="button" value="download" class="btn_iconGrey mobile-hide "><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
                     <div class="searchWraper " [matMenuTriggerFor]="searchMenu" #menuTrigger="matMenuTrigger">
                         <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" aria-label="field_searchWraper" data-bs-toggle="dropdown" aria-expanded="false" (click)="toggleSearchDropdown()" [ngClass]="{'active': selected != ''}">
                             <img src="assets/Img/icon_magnify_grey.svg" alt="Search">
@@ -138,37 +137,24 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Proposer</th>
-                                    <th scope="col">Ratings</th>
-                                    <th scope="col">Product</th>
-                                    <th scope="col" nowrap>Policy Type & No.</th>
-                                    <th scope="col">Status</th>
+                                    <th scope="col" nowrap>Product</th>
+                                    <th scope="col" nowrap>Policy Type</th>
+                                    <th scope="col" nowrap>Policy Number</th>
                                     <th scope="col" nowrap>Renewal Premium
                                         <button type="button" value="sort" class="btn_sort"></button>
                                     </th>
                                     <th scope="col" nowrap>Mobile No.</th>
                                     <th scope="col" nowrap>Date of Renewal</th>
-                                    <th scope="col">Modification</th>
+                                    <th scope="col">Status</th>
                                     <th scope="col">Notice</th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of renewalsList; let i = index">
                                     <td>{{ row.proposerFirstName }}</td>
-                                    <td>
-                                        <div class="starRating">
-                                            <div class="starList" *ngFor="let index of getFixedStarArray()" [ngClass]="getStarClasses(index, row.rating)"></div>
-                                        </div>
-                                    </td>
                                     <td><span class="productName">{{ row.productName }}</span></td>
-                                    <td>
-                                        <div class="table-policyType">
-                                            <div class="row-policyType">
-                                                <span class="lable">{{ row.policyType }}</span>
-                                                <span class="value">{{ row.policyNumber }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ row.status }}</td>
+                                    <td>{{ row.policyType }}</td>
+                                    <td>{{ row.policyNumber }}</td>
                                     <td>
                                         <div class="table-renewalPremium">
                                             <div class="row-renewalPremium">
@@ -187,23 +173,17 @@
                                     </td>
                                     <td>{{row.proposerMobileNumber}}</td>
                                     <td>{{ row.policyEndDate }}</td>
-                                    <td><span class="table-modification">{{ row.modification }}</span></td>
+                                    <td>{{ row.status }}</td>
                                     <td>
                                         <div class="btn_groupAction">
                                             <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="renewalJourney(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <!-- <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(row, 'renew')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button> -->
+                                            <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(row, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                             <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
                                                         <li class="actionItem" (click)="handleAction(row, 'download')">
                                                             <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                        </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'delete')">
-                                                            <a> <img src="assets/Img/icon_delete_grey.svg" alt="Delete"><span>Delete</span></a>
-                                                        </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                            <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via </span></a>
                                                         </li>
                                                         <li class="actionItem" (click)="handleAction(row, 'copyPayLink')">
                                                             <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>copyPayLink </span></a>
@@ -215,7 +195,7 @@
                                                             <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                                         </li>
                                                         <li class="actionItem" (click)="handleAction(row, 'notice')">
-                                                            <a> <img src="assets/Img/icon_send_renewal_notice_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
+                                                            <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
                                                         </li>
                                                         <!-- <li class="actionItem" (click)="handleAction(row, 'autodebit')">
                                                             <a> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></a>
@@ -258,7 +238,7 @@
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
                                     <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="renewalJourney(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                    <!-- <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button> -->
+                                    <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(row, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                     <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
 
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
@@ -266,12 +246,6 @@
                                             <ul class="actionItemsMain">
                                                 <li class="actionItem" (click)="handleAction(row, 'download')">
                                                     <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'delete')">
-                                                    <a> <img src="assets/Img/icon_delete_grey.svg" alt="Delete"><span>Delete</span></a>
-                                                </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via </span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="handleAction(row, 'copyPayLink')">
                                                     <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>copyPayLink </span></a>
@@ -283,7 +257,7 @@
                                                     <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="handleAction(row, 'notice')">
-                                                    <a> <img src="assets/Img/icon_send_renewal_notice_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
+                                                    <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
                                                 </li>
                                                 <!-- <li class="actionItem" (click)="handleAction(row, 'autodebit')">
                                                     <a> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></a>
@@ -292,9 +266,6 @@
                                         </div>
                                     </mat-menu>
 
-                                </div>
-                                <div class="starRating">
-                                    <div class="starList" *ngFor="let index of getFixedStarArray()" [ngClass]="getStarClasses(index, row.rating)"></div>
                                 </div>
                             </div>
                         </header>
@@ -337,10 +308,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_100 info_rpm">
-                                <div class="item_lable">Modification</div>
-                                <div class="item_value">{{ row.modification }}</div>
                             </div>
                         </div>
                     </div>

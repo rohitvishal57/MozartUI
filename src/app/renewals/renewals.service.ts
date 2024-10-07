@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ConfigService } from 'src/app/services/config.service';
 import { HttpService } from 'src/app/services/http.service';
+interface PolicyState {
+  policyNo: string;
+  activeSection: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +17,15 @@ export class RenewalsService {
 
   private stateSource = new BehaviorSubject<{ button: string, value?: any }>({ button: 'primary' });
   state$ = this.stateSource.asObservable();
-  private policyNo = new BehaviorSubject<{ policyNo: string }>({ policyNo: "" });
-  policy$ = this.policyNo.asObservable();
+  private policyState = new BehaviorSubject<PolicyState>({ policyNo: "", activeSection: "" });
+  policy$ = this.policyState.asObservable();
 
 
   updateState(button: string, value?: any) {
     this.stateSource.next({ button, value });
   }
-  setPolicyNo(policyNo: string) {
-    this.policyNo.next({ policyNo });
+  setPolicyState(policyNo: string, activeSection: string) {
+    this.policyState.next({ policyNo, activeSection });
   }
   getRenewalListApi(reqBody: any) {
     const getRenewalListApi = this.configService.config.baseUrl + this.configService.config.getRenewalList;
