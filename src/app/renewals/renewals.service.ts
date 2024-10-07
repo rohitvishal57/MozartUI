@@ -24,19 +24,23 @@ export class RenewalsService {
     this.policyNo.next({ policyNo });
   }
   getRenewalListApi(reqBody: any) {
-    const getRenewalListApi = this.configService.config.baseUrl + this.configService.config.getRenewalListApi;
+    const getRenewalListApi = this.configService.config.baseUrl + this.configService.config.getRenewalList;
     return this.httpService.post(getRenewalListApi, reqBody);
   }
-  sendrenewalwhatappsms(reqBody: any) {
-    const sendrenewalwhatappsms = this.configService.config.baseUrl + this.configService.config.sendrenewalwhatappsms;
+  sendRenewalWhatsappApi(reqBody: any) {
+    const sendrenewalwhatappsms = this.configService.config.baseUrl + this.configService.config.sendRenewalWhatappsms;
     return this.httpService.post(sendrenewalwhatappsms, reqBody);
   }
-  sendrenewalsms(reqBody: any) {
-    const sendrenewalsms = this.configService.config.baseUrl + this.configService.config.sendrenewalsms;
+  sendRenewalsmsApi(reqBody: any) {
+    const sendrenewalsms = this.configService.config.baseUrl + this.configService.config.sendRenewalsms;
     return this.httpService.post(sendrenewalsms, reqBody);
   }
-  generatepaymentlink(reqBody: any) {
-    const generatepaymentlink = this.configService.config.baseUrl + this.configService.config.generatepaymentlink;
+  sendRenewalEmailApi(reqBody:any){
+    const sendrenewalemail = this.configService.config.baseUrl + this.configService.config.sendRenewalEmail;
+    return this.httpService.post(sendrenewalemail,reqBody);
+  }
+  generatePaymentlinkApi(reqBody: any) {
+    const generatepaymentlink = this.configService.config.baseUrl + this.configService.config.generatePaymentlink;
     return this.httpService.post(generatepaymentlink, reqBody);
   }
   getRenewalInfoApi(policyNumber: string, requestBody: any) {

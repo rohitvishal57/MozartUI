@@ -10,6 +10,7 @@ export interface RenewalList {
     healthReturn: number;
     proposerMobileNumber: string;
     policyEndDate: string;
+    policyStartDate?:string,
     modification: string;
   }
   

@@ -275,15 +275,50 @@ export class RenewalListComponent {
       case 'delete':
         break;
       case 'email':
+        const emailRequestBody={
+          agentCode: this.agentCode,
+          emailId: "hfgeh@gmail.com",
+          mobile: item.proposerMobileNumber,
+          eventName: "string",
+          policyHolderFullName: item.proposerFirstName,
+          renewedPolicyNumber: item.policyNumber,
+          dateOfRenewed: item.policyEndDate,
+          dateOfRenewal: item.policyEndDate,
+          grossRenewalPayable: item.renewalPremiumAmount.toString(),
+          renewalPaymentLink: "string",
+          attachment: {
+            "flag": "string",
+            "details": {
+              "document": [
+                {
+                  "key": "string",
+                  "value": "string"
+                }
+              ]
+            }
+          }
+        };
+        this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
+          (response:any)=>{
+            if(response.success){
+              console.log("Mail sent successfully");
+            }
+            else{
+              console.log("mail is not sent successfullky");
+            }
+          },
+          (error:any)=>{
+            console.log("error coming from sendRenewalEmailApi");
+          }
+        )
         break;
       case 'copyPayLink':
         const copyPayLinkRequestBody = {
           policy: item.policyNumber,  
           mobile: item.proposerMobileNumber,  
-          source: ""  
+          source: "DE"  
         };
-  
-        this.renewalService.generatepaymentlink (copyPayLinkRequestBody).subscribe(
+        this.renewalService.generatePaymentlinkApi(copyPayLinkRequestBody).subscribe(
           (response:any) => {
             if (response.success) {
               console.log('Payment link copied successfully.');
@@ -295,29 +330,27 @@ export class RenewalListComponent {
             console.error('Error while copying payment link:', error);
           }
         );
-        console.log("copyPayLink");
         break;  
       case 'sms':
         const smsRequestBody = {
-          agentCode: "5100003",
-          type: item.policyType,
-          customerName: "",  
+          agentCode: this.agentCode,
+          type: "DUE",
+          customerName: item.proposerFirstName,  
           customerMobileNo: item.proposerMobileNumber,  
-          agentMobileNo: "",  
-          masterPolicyNo: "",  
-          eventName: "",  
-          renewalLink: "",  
-          dueDate: "",  
+          agentMobileNo: "db",  
+          masterPolicyNo: "bjkh",  
+          eventName: "bsdj",  
+          renewalLink: "khavbjk",  
+          dueDate: "acsvh",  
           dateOfRenewal: item.policyEndDate,  
           renewedPolicyNo: item.policyNumber,  
-          proposalNumber: "",  
+          proposalNumber: "vasxb",  
           policyNumber: item.policyNumber,  
           grossRenewalAmount: item.renewalPremiumAmount.toString(),  
           isAutoSMS: true,
-          sessionId: ""  
+          sessionId: "jbsaj"  
         };
-  
-        this.renewalService.sendrenewalsms(smsRequestBody).subscribe(
+        this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response:any) => {
             if (response.success) {
               console.log('WhatsApp message sent successfully.');
@@ -328,16 +361,14 @@ export class RenewalListComponent {
           (error:any) => {
             console.error('Error while sending WhatsApp message:', error);
           }
-        );
-        console.log("sms");
-        
+        );        
         break;
       case 'whatsapp':
         const whatsApprequestBody = {
           templateCode: "DUE-CSTMR",
           policyNumbers: [item.policyNumber]
         };
-        this.renewalService.sendrenewalwhatappsms(whatsApprequestBody).subscribe(
+        this.renewalService.sendRenewalWhatsappApi(whatsApprequestBody).subscribe(
           (response:any) => {
             if (response.success) {
               console.log('WhatsApp message sent successfully.');
@@ -348,9 +379,7 @@ export class RenewalListComponent {
           (error:any) => {
             console.error('Error while sending WhatsApp message:', error);
           }
-        );
-        console.log("whatsApp");
-        
+        );        
         break;
       case 'notice':
         break;

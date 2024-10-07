@@ -1524,7 +1524,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn_red btn_fullWidth" [class.active]="isRadioSelected">Apply</button>
+            <button type="button" class="btn_fullWidth"  [ngClass]="{'btn_white': !isRadioSelected, 'btn_red': isRadioSelected}">Apply</button>
         </div>
       </div>
     </div>
