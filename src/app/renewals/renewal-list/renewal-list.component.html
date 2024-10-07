@@ -49,8 +49,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="name" name="name" class="form-control input-textBox" *ngIf="selected !== 'none' && selected !== ''" [formControl]="searchInputControl">
+                                        <div class="input-block form-floating input-block-renew" *ngIf="selected!== ''">
+                                            <input type="text" id="name" name="name" class="form-control input-textBox" placeholder="" [formControl]="searchInputControl">
+                                            <label for="name">please enter {{placeholder}}</label>
                                             <mat-error *ngIf="searchInputControl.invalid && searchInputControl.touched">
                                                 {{ getErrorMessage() }}
                                             </mat-error>
@@ -58,7 +59,12 @@
                                     </div>
                                 </div>
                                 <footer style="display: flex;">
-                                    <button type="button" value="apply" [ngClass]="{'btn_search_white btn_fullWidth': !searchInputControl.valid,'btn_red btn_fullWidth': searchInputControl.valid}" (click)="applySearch(menuTrigger)">Apply</button>
+                                    <button type="button" value="apply" 
+                                    [ngClass]="{
+                                        'btn_search_white btn_fullWidth': !searchInputControl.valid || selected === '', 
+                                        'btn_red btn_fullWidth': searchInputControl.valid && selected !== ''
+                                      }" 
+                                    (click)="applySearch(menuTrigger)">Apply</button>
                                 </footer>
                             </div>
                         </mat-menu>

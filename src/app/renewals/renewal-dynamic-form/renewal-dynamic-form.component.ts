@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
 
 @Component({
@@ -42,7 +40,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private renewalService: RenewalsService
-  ) {}
+    ) {}
 
   ngOnInit() {
     this.renewalService.policy$.subscribe(policy => {
@@ -244,10 +242,9 @@ export class RenewalDynamicFormComponent implements OnInit {
  }
  onRadioChanges() {
    this.isRadioSelected = true;
+   console.log("radio vlue whenever selecting",this.isRadioSelected);
+
    }
- applyRoomUpgrade() {
-   this.isRadioSelected = false;
- }
  setSection(section: string) {
    this.activeSection = section;
  }
