@@ -831,21 +831,21 @@
                                             <label class="input-radiolabel ">
                                                 <input type="radio" name="policyTenure" value="1year" >
                                                 <span><em class="tenure-year">1 Year</em>
-                                                <em class="tenure-amount">₹ 9,162<em>/ yr</em></em>
+                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.tenure1}}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
                                                 <input type="radio" name="policyTenure" value="2years" >
                                                 <span><em class="tenure-year">2 Years</em>
-                                                <em class="tenure-amount">₹ 8,204<em>/ yr</em></em>
-                                                <em class="tenure-off">7.5% off</em>
+                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.tenure2}}<em>/ yr</em></em>
+                                                <em class="tenure-off">{{renewalInfo?.response?.policyData[0]?.tenure2percentage}} off</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
                                                 <input type="radio" name="policyTenure" value="3years" checked>
                                                 <span><em class="tenure-year">3 Years</em>
-                                                <em class="tenure-amount">₹ 6,567<em>/ yr</em></em>
-                                                <em class="tenure-off">13% off</em>
+                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.tenure3}}<em>/ yr</em></em>
+                                                <em class="tenure-off">{{renewalInfo?.response?.policyData[0]?.tenure3percentage}} off</em>
                                                 </span>
                                                 <em class="badge-recommended">Recommended</em>
                                             </label>
@@ -872,37 +872,9 @@
                                            <div class="input-checkbox-feild">
                                                 <input type="checkbox" id="personal-accident" value="personal-accident" class="input-check" checked>
                                                 <label for="personal-accident">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_critical_illness.svg" class="inactive"></span>
-                                                    <em class="head">Personal accident cover</em>
-                                                    <em class="headInfo">Get financial protection against uncertainities such as accidental death and permanent or total diablement resulting from an accident</em>
-                                                </label>
-                                            </div>
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="critical-illness" value="critical-illness" class="input-check" >
-                                                <label for="critical-illness">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_critical_illness.svg" class="inactive"></span>
-                                                    <em class="head">Critical illness cover</em>
-                                                    <em class="headInfo">Get cover for upto 20 listed critical illnesses and helps you overcome financial shortcomes</em>
-                                                    <em class="tipInfo_org">
-                                                        <img src="assets/Img/icon_lightbulb.svg">
-                                                        Vorem ipsum dolor sit amet, consecter adipiscing elit.
-                                                    </em>
-                                                </label>
-                                            </div>
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="international-coverage" value="international-coverage" class="input-check" >
-                                                <label for="international-coverage">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_international_coverage.svg" class="inactive"></span>
-                                                    <em class="head">International coverage for major illness cover</em>
-                                                    <em class="headInfo">Get cover for internationsl in-patient hospitalisation expenses for 16 listed illnesses</em>
-                                                </label>
-                                            </div>
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="hospital-cash" value="hospital-cash" class="input-check" >
-                                                <label for="hospital-cash">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_hospital_cash.svg" class="inactive"></span>
-                                                    <em class="head">Hospital cash benefit cover</em>
-                                                    <em class="headInfo">Get a fixed cash amount daily in addition to your insurance benefits when you get hospitalised</em>
+                                                    <!-- <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_critical_illness.svg" class="inactive"></span> -->
+                                                    <em class="head">{{renewalInfo?.response?.policyData[0]?.coverName}}</em>
+                                                    <em class="headInfo">{{renewalInfo?.response?.policyData[0]?.coverDescription}}</em>
                                                 </label>
                                             </div>        
                                         </div>
@@ -922,40 +894,12 @@
                                 <div class="row mb-2">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages checkbox_healthAddOns">
-                                           <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="future-secure" value="future-secure" class="input-check" checked>
-                                                <label for="future-secure">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_critical_illness.svg" class="inactive"></span>
-                                                    <em class="head">Future secure</em>
-                                                    <em class="headInfo">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Congue justo tristique proin congue diam.</em>
-                                                    <div class="familyMembers">
-                                                        <ul>
-                                                            <li class="familyMembers_item">
-                                                                <span class="member-info"><img src="assets/Img/icon_member_self.png">Self</span>
-                                                                <input type="text" name="self-desiredcover" placeholder="Enter desired cover">
-                                                            </li>
-                                                            <li class="familyMembers_item">
-                                                                <span class="member-info"><img src="assets/Img/icon_member_spouse.png">Spouse</span>
-                                                                <input type="text" name="spouse-desiredcover" placeholder="Enter desired cover"> 
-                                                            </li>
-                                                            <li class="familyMembers_item">
-                                                                <span class="member-info"><img src="assets/Img/icon_member_daughter.png">Daughter</span>
-                                                                <input type="text" name="daughter-desiredcover" placeholder="Enter desired cover">
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </label>
-                                            </div>
                                             <div class="input-checkbox-feild">
                                                 <input type="checkbox" id="cancer-booster" value="cancer-booster" class="input-check" >
                                                 <label for="cancer-booster">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_cancer_booster.svg" class="inactive"></span>
-                                                    <em class="head">Cancer hosptalisation booster</em>
-                                                    <em class="headInfo">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Congue justo tristique proin congue diam.</em>
-                                                    <em class="tipInfo_org">
-                                                        <img src="assets/Img/icon_lightbulb.svg">
-                                                        Vorem ipsum dolor sit amet, consecter adipiscing elit.
-                                                    </em>
+                                                    <!-- <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_cancer_booster.svg" class="inactive"></span> -->
+                                                    <em class="head">{{renewalInfo?.response?.policyData[0]?.addonName}}</em>
+                                                    <em class="headInfo">{{renewalInfo?.response?.policyData[0]?.addonDescription}}</em>
                                                     <div class="familyMembers">
                                                         <ul>
                                                             <li class="familyMembers_item">
@@ -969,27 +913,7 @@
                                                         </ul>
                                                     </div>
                                                 </label>
-                                            </div>
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="vaccine-coverage" value="vaccine-coverage" class="input-check" >
-                                                <label for="vaccine-coverage">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_vaccine_cover.svg" class="inactive"></span>
-                                                    <em class="head">Vaccine Cover</em>
-                                                    <em class="headInfo">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Congue justo tristique proin congue diam.</em>
-                                                    <em class="tipInfo_org">
-                                                        <img src="assets/Img/icon_lightbulb.svg">
-                                                        Vorem ipsum dolor sit amet, consecter adipiscing elit.
-                                                    </em>
-                                                </label>
-                                            </div>
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="tele-opd" value="tele-opd" class="input-check" >
-                                                <label for="tele-opd">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_tele_opd.svg" class="inactive"></span>
-                                                    <em class="head">Tele OPD</em>
-                                                    <em class="headInfo">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Congue justo tristique proin congue diam.</em>
-                                                </label>
-                                            </div>                                           
+                                            </div>                                          
                                         </div>
                                     </div>
                                 </div>                               
@@ -1372,12 +1296,6 @@
       </div>
   </div>
   <div class="bottomInfoMain">
-        <div class="bottomInfoArrow" *ngIf="activeSection == 'additional' ">
-            <button type="button" class="btn_iconText btn_updateRoom" data-bs-toggle="modal" data-bs-target="#roomModal">
-                <img src="assets/Img/icon_plan_details_arrow.svg">
-                Update Room
-            </button>
-        </div>
       <div class="bottomInfoSubMain">
           <div class="bi_left">
               <div class="planProductInfo">
