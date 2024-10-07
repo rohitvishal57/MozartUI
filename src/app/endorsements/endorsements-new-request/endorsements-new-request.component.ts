@@ -672,7 +672,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
   backToEndorsment() {
-    this._router.navigate(["endorsements/Endorsements-new-request"]);
+    this._router.navigate(["endorsements/new-request"]);
   }
   initiateKyc() {
     console.log(this.caseCreationForm.value);
@@ -713,9 +713,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
     return `${kb.toFixed(2)} KB`;
   }
 
-  campnoSelected() {
-    //  console.log('campid :>> ', campid);   
-  }
   openOtpPopup() {
     this.otpPopupRef = this.modalService.show(this.otpPopup);
   }
