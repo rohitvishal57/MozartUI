@@ -5,10 +5,12 @@
   background-color: #f5f5f5;
   padding: 39px;
 }
+
 .dashboard_contentContainer {
   max-width: 1082px;
   margin: auto;
 }
+
 .dashboard_insureContainer {
   width: 100%;
   height: 100%;
@@ -110,18 +112,22 @@ p {
   justify-content: space-around;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
   gap: 15px;
+
   @media (max-width:767px) {
     flex-direction: column;
   }
+
   .field_div {
     width: 23.6%;
     display: flex;
     flex-direction: column;
     gap: 4px;
     position: relative;
+
     @media (max-width:767px) {
       width: 100%;
     }
+
     .field_label {
       font-weight: 300;
       font-size: 12px;
@@ -138,12 +144,14 @@ p {
   display: flex;
   justify-content: space-between;
   gap: 4px;
-  > span {
+
+  >span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 180px;
   }
+
   i {
     font-size: 9px;
     padding: 5px;
@@ -315,7 +323,7 @@ input[type="checkbox"]:focus+label:before {
   line-height: 20px;
   // -webkit-appearance: none;
   position: relative;
-  background: url(/assets/images/down_arrow.svg) no-repeat 96% 50%;
+  background: url(../../../assets/images/down_arrow.svg) no-repeat 96% 50%;
   border: 1px solid #E2E2E2;
   padding: 8px !important;
   height: 44px;
@@ -331,20 +339,18 @@ input[type="checkbox"]:focus+label:before {
 .ui-error {
   font-family: "Anek Latin", sans-serif;
   font-weight: 400;
-  font-size: 11px;
+  font-size: 10px;
   color: #EB0000;
   line-height: 12px;
-  text-align: left;
-  /*position: absolute;
-    left: 0;
-    top: 44px;*/
-  display: none;
+  text-align: justify;
+  display: block;
+  padding-left: 10px;
 }
 
 .ui-dob-icon {
   width: 20px;
   height: 20px;
-  background: url(/assets/images/date_icon.svg) no-repeat;
+  background: url(../../../assets/images/date_icon.svg) no-repeat;
   position: absolute;
   top: 12px;
   right: 16px;
@@ -391,7 +397,7 @@ input[type="checkbox"]:focus+label:before {
   line-height: 20px;
   // -webkit-appearance: none;
   position: relative;
-  background: var(--site-body-bg) url(/assets/images/down_arrow.svg) no-repeat 96% 50%;
+  background: var(--site-body-bg) url(../../../assets/images/down_arrow.svg) no-repeat 96% 50%;
   border: 1px solid var(--site-body-bg);
   padding: 12px 16px !important;
   height: 44px;
@@ -680,7 +686,7 @@ input[type="search"]::-webkit-search-results-decoration {
   border-width: 0;
   width: 24px;
   height: 24px;
-  background: url(/assets/images/icon_tick_round_red.svg) no-repeat;
+  background: url(../../../assets/images/icon_tick_round_red.svg) no-repeat;
   transform: rotate(0deg);
   background-size: 100%;
 }
@@ -880,6 +886,7 @@ h4 {
 
 .overlay_dropdown_w360 {
   width: 360px;
+
   @media (max-width:767px) {
     width: 100%;
   }
@@ -1021,12 +1028,14 @@ h4 {
   font-family: "Anek Latin", sans-serif;
   font-weight: 600;
   font-size: 20px;
-  color:#2e2e2e;
+  color: #2e2e2e;
   margin: 0;
 }
+
 .sumInsured_dragBar {
   margin-top: 10px;
 }
+
 .insurer_detailsMain {
   display: flex;
   flex-direction: column;
@@ -1340,50 +1349,59 @@ h4 {
     font-size: 12px;
     color: #000;
   }
-  
+
 }
+
 ::ng-deep .ngx-slider .ngx-slider-bar {
   background: #f7a500 !important;
   height: 6px !important;
   border-radius: 12px !important;
 }
+
 ::ng-deep .ngx-slider .ngx-slider-pointer {
   background-color: #c7222a !important;
 }
+
 ::ng-deep .ngx-slider .ngx-slider-pointer:after {
   width: 22px !important;
   height: 22px !important;
-  top:5px !important;
+  top: 5px !important;
   left: 5px !important;
   -webkit-border-radius: 12px !important;
-    -moz-border-radius: 12px !important;
+  -moz-border-radius: 12px !important;
   border-radius: 12px !important;
   background: #fff !important;
 }
+
 ::ng-deep .ngx-slider .ngx-slider-tick {
   width: 6px !important;
   height: 6px !important;
   background: #797979 !important;
-  top:2px !important;
+  top: 2px !important;
 }
 
-::ng-deep .ngx-slider .ngx-slider-tooltip-wrapper{
+::ng-deep .ngx-slider .ngx-slider-tooltip-wrapper {
 
   margin-top: 1px !important;
 }
+
 .tick-labels {
   display: flex;
   justify-content: space-between;
   padding-top: 2px;
 }
+
 .dropdownContent {
   position: absolute;
   top: 40px;
+
   @media(max-width:767px) {
     width: 100%;
   }
+
   .overlay_popupMain {
     top: 0;
   }
 }
+
 /*Custom overlay dropdown end*/

@@ -107,6 +107,8 @@ export interface ISubControl {
   bigFont?: boolean;
   dependentControls?: string[];
   getAllOption?: string;
+  isButton?:boolean;
+  innerArrayControl?:IDynamicControl[][];
 }
 
 export interface ITab {
