@@ -12,6 +12,13 @@
 .btn_red {
   padding: 10px 32px;
 }
+.uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem h6 {
+  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 90%;
+    margin-bottom: 0;
+}
 /*---Common css end---*/
   
   

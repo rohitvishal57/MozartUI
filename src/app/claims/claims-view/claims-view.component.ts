@@ -284,72 +284,68 @@ formatUploadDateTime() {
   }
 }
 
+submitRequest(): void {
+  if (this.saveForm.valid || this.form.valid) {
+    const saveClaimData = this.form.value;
+    const fileUploadFormData = new FormData();
+    this.uploadedFiles.forEach((file, index) => {
+      const metadata = {
+        policyNumber: this.form.get('policyNumber')?.value || '',
+        labelName: file.label || '',
+        documentName: this.namesVariable || '',
+        documentType: this.documentType || '',
+        createdBy: file.createdBy || '',
+        file: file.file
+      };
+      fileUploadFormData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
+      fileUploadFormData.append(`fileDetails[${index}].labelName`, metadata.labelName);
+      fileUploadFormData.append(`fileDetails[${index}].documentName`, metadata.documentName);
+      fileUploadFormData.append(`fileDetails[${index}].documentType`, metadata.documentType);
+      fileUploadFormData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
+      fileUploadFormData.append(`fileDetails[${index}].file`, file.file, file.file.name);
+    });
 
-submitRequest(): void{
-if (this.saveForm.valid || this.form.valid) {
-  const saveClaimData = this.form.value;
-  
-  // Prepare a single FormData object for all files
-   const fileUploadFormData = new FormData();
-  
-  // Collect metadata and files into FormData
-  this.uploadedFiles.forEach((file, index) => {
-    const metadata = {
-      policyNumber: this.form.get('policyNumber')?.value || '',
-      labelName: file.label || '',
-      documentName: this.namesVariable || '',
-      documentType: this.documentType || '',
-      createdBy: file.createdBy || '',
-      file: file.file
-    };
+    const fileUploadObservable = this.claimsService.uploadFiles(fileUploadFormData).pipe(
+      map(response => ({ response })),
+      catchError(error => of({ error }))
+    );
 
-    // Append metadata
-    fileUploadFormData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
-    fileUploadFormData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-    fileUploadFormData.append(`fileDetails[${index}].documentName`, metadata.documentName);
-    fileUploadFormData.append(`fileDetails[${index}].documentType`, metadata.documentType);
-    fileUploadFormData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-    fileUploadFormData.append(`fileDetails[${index}].file`, file.file, file.file.name);
-  });
+    const saveClaimObservable = this.claimsService.saveClaims(saveClaimData).pipe(
+      map(response => ({ response })),
+      catchError(error => of({ error }))
+    );
+    forkJoin([fileUploadObservable, saveClaimObservable]).subscribe(results => {
+      const fileUploadResult = results[0];
+      const claimsResult = results[1];
 
-  // Prepare observables for API calls
-  const fileUploadObservable = this.claimsService.uploadFiles(fileUploadFormData).pipe(
-    map(response => ({ response })),
-    catchError(error => of({ error }))
-  );
+      if ('response' in fileUploadResult && 'response' in claimsResult) {
+        const fileUploadResponse = fileUploadResult.response;
+        const claimsResponse = claimsResult.response;
 
-  const saveClaimObservable = this.claimsService.saveClaims(saveClaimData).pipe(
-    map(response => ({ response })),
-    catchError(error => of({ error }))
-  );
-
-  // forkJoin to run both observables in parallel
-  forkJoin([fileUploadObservable, saveClaimObservable]).subscribe(results => {
-    const claimsResult = results[1];
-    // Handle claims submission response
-    if ('response' in claimsResult) {
-        this.response = claimsResult.response;
-      if (this.response.success === true) {
-        this.uploadSuccess = true;
-        this.toast.success({ detail: 'Claims submitted successfully' });
-        this.router.navigate(['claims/claimsList'])
-
+        if (fileUploadResponse && claimsResponse) {
+          this.uploadSuccess = true;
+          this.toast.success({ detail: 'Claims submitted successfully' });
+          this.router.navigate(['claims/claimsList']);
+        } else {
+          this.toast.error({ detail: 'Failed to submit claims' });
+        }
       } else {
-        this.toast.error({ detail: 'Failed to submit claims' });
+        if ('error' in fileUploadResult) {
+          this.toast.error({ detail: 'File upload failed', duration: 3000 });
+        }
+        if ('error' in claimsResult) {
+          this.toast.error({ detail: 'Claims submission failed', duration: 3000 });
+        }
       }
-    } else if ('error' in claimsResult) {
-      this.toast.error({ detail: 'Error occurred during claims submission', duration: 3000 });
-    }
+      this.updateStatusLabel();
+    }, _error => {
+      this.toast.error({ detail: 'Error occurred', duration: 3000 });
+    });
+  } else {
+    this.toast.error({ detail: 'Please fill in the required form fields.' });
+  }
+}
 
-    this.updateStatusLabel();
-  },
-  error => {
-    this.toast.error({ detail: 'Error occurred', duration: 3000 });
-  });
-} else {
-  this.toast.error({ detail: 'Please fill in the required form fields.' });
-}
-}
 }
 
 
