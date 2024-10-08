@@ -323,7 +323,7 @@ input[type="checkbox"]:focus+label:before {
   line-height: 20px;
   // -webkit-appearance: none;
   position: relative;
-  background: url(../../../assets/images/down_arrow.svg) no-repeat 96% 50%;
+  background: url(../../../assets/Img/down_arrow.svg) no-repeat 96% 50%;
   border: 1px solid #E2E2E2;
   padding: 8px !important;
   height: 44px;
@@ -350,7 +350,7 @@ input[type="checkbox"]:focus+label:before {
 .ui-dob-icon {
   width: 20px;
   height: 20px;
-  background: url(../../../assets/images/date_icon.svg) no-repeat;
+  background: url(../../../assets/Img/date_icon.svg) no-repeat;
   position: absolute;
   top: 12px;
   right: 16px;
@@ -397,7 +397,7 @@ input[type="checkbox"]:focus+label:before {
   line-height: 20px;
   // -webkit-appearance: none;
   position: relative;
-  background: var(--site-body-bg) url(../../../assets/images/down_arrow.svg) no-repeat 96% 50%;
+  background: var(--site-body-bg) url(../../../assets/Img/down_arrow.svg) no-repeat 96% 50%;
   border: 1px solid var(--site-body-bg);
   padding: 12px 16px !important;
   height: 44px;
@@ -686,7 +686,7 @@ input[type="search"]::-webkit-search-results-decoration {
   border-width: 0;
   width: 24px;
   height: 24px;
-  background: url(../../../assets/images/icon_tick_round_red.svg) no-repeat;
+  background: url(../../../assets/Img/icon_tick_round_red.svg) no-repeat;
   transform: rotate(0deg);
   background-size: 100%;
 }

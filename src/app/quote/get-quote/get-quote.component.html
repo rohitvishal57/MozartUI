@@ -1,22 +1,22 @@
 <div class="contentBody dashboard_contentContainer">
   <div style="width: 100%;">
-    <form>
-      <div class="card-outer">
-        <div class="card">
-          <div class="header">
-            <div class="headerSearch">
-              <div class="field_searchMain">
-                <input type="text" class="search-bar filterSearch"
-                  placeholder="Search Your Customer, Leads, Claims No and more" />
-                <img src="assets/images/icon_magnify_grey.svg">
-              </div>
-            </div>
-            <div class="headerButtons">
-              <button class="get-quote-btn" type="button" (click)="getQuote()">
-                <i class="fas fa-plus"></i> Get Quote
-              </button>
+  <form>
+    <div class="card-outer">
+      <div class="card">
+        <div class="header">
+          <div class="headerSearch">
+            <div class="field_searchMain">
+              <input type="text" class="search-bar filterSearch"
+                placeholder="Search Your Customer, Leads, Claims No and more" />
+              <img src="assets/Img/icon_magnify_grey.svg">
             </div>
           </div>
+          <div class="headerButtons">
+            <button class="get-quote-btn" type="button" (click)="getQuote()">
+              <i class="fas fa-plus"></i> Get Quote
+            </button>
+          </div>
+        </div>
 
           <div class="insurance_optionHUB" *ngIf="showCard" [formGroup]="quoteFormGroup">
             <div class="dropdown-container " *ngIf="showDropdownsFlag">
@@ -49,47 +49,46 @@
                   </div>
                 </button>
 
-                <!-- Dropdown content for each item, displayed only when the activeDropdown matches the index -->
-                <div class="dropdownContent" *ngIf="activeDropdown === i">
-
-
-                  <!-- Custom dropdown content for "Policy Type" -->
-                  <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Policy Type'">
-                    <div class="option_policyType">
-                      <div class="input-radio-block raido_policyType">
-                        <label class="input-radiolabel">
-                          <input type="radio" name="policytype" value="Family Floater"
-                            (click)="onPlanTypeChange('Family Floater')"
-                            [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater'">
-                          <span>
-                            <em class="pt-head"><img src="assets/images/icon_familyfloater.svg">Family Floater
-                              Policy</em>
-                            <em class="para-12">A family floater health insurance is a type of policy where you and your
-                              family share the same cover amount.</em>
-                          </span>
-                          <img src="assets/images/img_selected_policytype.svg" class="selected_policy">
-                        </label>
-
-                        <label class="input-radiolabel">
-                          <input type="radio" name="policytype" value="Multi Individual"
-                            (click)="onPlanTypeChange('Multi Individual')"
-                            [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual'">
-                          <span>
-                            <em class="pt-head"><img src="assets/images/icon_multiindividual.svg">Multi-individual
-                              Policy</em>
-                            <em class="para-12">A multi-individual health insurance is a type of policy wherein each
-                              member
-                              has their own cover amount.</em>
-                          </span>
-                          <img src="assets/images/img_selected_policytype.svg" class="selected_policy2">
-                        </label>
-                      </div>
-
-                      <div class="tipInfo_org"><img src="assets/images/Lightbulb Icon.png">You can edit members
-                        to change back to family floater policy.</div>
-                      <button type="button" class="btn_red btn_fullWidth" (click)="updatePlanType()">Continue</button>
-                    </div>
-                  </div>
+              <!-- Dropdown content for each item, displayed only when the activeDropdown matches the index -->
+              <div class="dropdownContent" *ngIf="activeDropdown === i">
+               
+               
+                <!-- Custom dropdown content for "Policy Type" -->
+                 <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Policy Type'">
+                   <div class="option_policyType" >
+                     <div class="input-radio-block raido_policyType">
+                       <label class="input-radiolabel">
+                         <input type="radio" name="policytype" value="Family Floater"
+                           (click)="onPlanTypeChange('Family FLoater')"
+                           [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater'">
+                         <span>
+                           <em class="pt-head"><img src="assets/Img/icon_familyfloater.svg">Family Floater
+                             Policy</em>
+                           <em class="para-12">A family floater health insurance is a type of policy where you and your
+                             family share the same cover amount.</em>
+                         </span>
+                         <img src="assets/Img/img_selected_policytype.svg" class="selected_policy">
+                       </label>
+   
+                       <label class="input-radiolabel">
+                         <input type="radio" name="policytype" value="Multi Individual"
+                           (click)="onPlanTypeChange('Multi Individual')"
+                           [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual'">
+                         <span>
+                           <em class="pt-head"><img
+                               src="assets/Img/icon_multiindividual.svg">Multi-individual Policy</em>
+                           <em class="para-12">A multi-individual health insurance is a type of policy wherein each member
+                             has their own cover amount.</em>
+                         </span>
+                         <img src="assets/Img/img_selected_policytype.svg" class="selected_policy2">
+                       </label>
+                     </div>
+   
+                     <div class="tipInfo_org"><img src="assets/Img/Lightbulb Icon.png">You can edit members
+                       to change back to family floater policy.</div>
+                     <button type="button" class="btn_red btn_fullWidth" (click)="updatePlanType()">Continue</button>
+                   </div>
+                 </div>
 
                   <!-- Sum Insured Dropdown -->
 
@@ -178,7 +177,7 @@
                             <!-- <div class="input-checkbox-feild">
                                 <input type="checkbox" id="self" value="self" class="input-check">
                                 <label for="self"><img
-                                    src="assets/images/icon_member_self.png">Self</label>
+                                    src="assets/Img/icon_member_self.png">Self</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="text" placeholder="Enter Age" class="member_textbox">
@@ -197,24 +196,22 @@
                                   <div class="member_extraInfoSub">
                                     <input type="date" placeholder="Enter DOB" class="member_textbox"
                                       [value]="relation.dob" (input)="onAgeChange($event, relation)">
-                                    <span *ngIf="relation.deletable" class="delete_member"
-                                      (click)="removeMember(relation)"><img
-                                        src="assets/images/icon_delete_red2.svg"></span>
+                                      <span *ngIf="relation.deletable" class="delete_member" (click)="removeMember(relation)"><img
+                                        src="assets/Img/icon_delete_red2.svg"></span>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
-                                <button type="button" class="btn_white btn_addChildren"
-                                  (click)="incrementMember(relation)">
+                                <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
+                                <button type="button" class="btn_white btn_addChildren" (click)="incrementMember(relation)">
                                   <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
-                                  <img src="assets/images/icon_round_plus_red.svg">
+                                  <img src="assets/Img/icon_round_plus_red.svg">
                                 </button>
                               </div>
                             </ng-container>
                             <!-- <div class="input-checkbox-feild">
                                 <input type="checkbox" id="member-spouse" value="spouse" class="input-check">
                                 <label for="member-spouse"><img
-                                    src="assets/images/icon_member_spouse.png">Spouse</label>
+                                    src="assets/Img/icon_member_spouse.png">Spouse</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="text" placeholder="Enter Age" class="member_textbox">
@@ -224,31 +221,31 @@
                               <div class="input-checkbox-feild">
                                 <input type="checkbox" id="member-daughter1" value="daughter1" class="input-check">
                                 <label for="member-daughter1"><img
-                                    src="assets/images/icon_member_daughter.png">Daughter 1</label>
+                                    src="assets/Img/icon_member_daughter.png">Daughter 1</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="text" placeholder="Enter Age" class="member_textbox">
                                     <span class="delete_member"><img
-                                        src="assets/images/icon_delete_red2.svg"></span>
+                                        src="assets/Img/icon_delete_red2.svg"></span>
                                   </div>
                                 </div>
                               </div>
                               <div class="input-checkbox-feild">
                                 <input type="checkbox" id="member-daughter2" value="daughter2" class="input-check">
                                 <label for="member-daughter2"><img
-                                    src="assets/images/icon_member_daughter.png">Daughter 2</label>
+                                    src="assets/Img/icon_member_daughter.png">Daughter 2</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="text" placeholder="Enter Age" class="member_textbox">
                                     <span class="delete_member"><img
-                                        src="assets/images/icon_delete_red2.svg"></span>
+                                        src="assets/Img/icon_delete_red2.svg"></span>
                                   </div>
                                 </div>
                               </div>
                               <div class="input-checkbox-feild">
                                 <input type="checkbox" id="member-father" value="father" class="input-check">
                                 <label for="member-father"><img
-                                    src="assets/images/icon_member_father.png">Father</label>
+                                    src="assets/Img/icon_member_father.png">Father</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="text" placeholder="Enter Age" class="member_textbox">
@@ -258,7 +255,7 @@
                               <div class="input-checkbox-feild">
                                 <input type="checkbox" id="member-mother" value="mother" class="input-check">
                                 <label for="member-mother"><img
-                                    src="assets/images/icon_member_spouse.png">Mother</label>
+                                    src="assets/Img/icon_member_spouse.png">Mother</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="text" placeholder="Enter Age" class="member_textbox">
@@ -267,30 +264,29 @@
                               </div>
                               <div class="input-checkbox-feild">
                                 <button type="button" class="btn_white btn_addChildren">
-                                  <span><img src="assets/images/icon_member_daughter.png">Daughter</span>
-                                  <img src="assets/images/icon_round_plus_red.svg">
+                                  <span><img src="assets/Img/icon_member_daughter.png">Daughter</span>
+                                  <img src="assets/Img/icon_round_plus_red.svg">
                                 </button>
                               </div> -->
                             <!-- <div class="input-checkbox-feild">
                                 <button type="button" class="btn_white btn_addChildren">
-                                  <span><img src="assets/images/icon_member_son.png">Son</span>
-                                  <img src="assets/images/icon_round_plus_red.svg">
+                                  <span><img src="assets/Img/icon_member_son.png">Son</span>
+                                  <img src="assets/Img/icon_round_plus_red.svg">
                                 </button>
                               </div> -->
+                            </div>
                           </div>
+                          <button type="button" value="additional-family" class="btn_coverAdditional_FM">
+                            <span class="cover_label">
+                              <img src="assets/Img/icon_familymembers_org.svg" width="20">
+                              <span>Would you like to cover additional family members?</span>
+                            </span>
+                            <img src="assets/Img/icon_right_arrow_black.svg" width="7">
+                          </button>
                         </div>
-                        <button type="button" value="additional-family" class="btn_coverAdditional_FM">
-                          <span class="cover_label">
-                            <img src="assets/images/icon_familymembers_org.svg" width="20">
-                            <span>Would you like to cover additional family members?</span>
-                          </span>
-                          <img src="assets/images/icon_right_arrow_black.svg" width="7">
-                        </button>
+                        <button type="button" class="btn_red btn_fullWidth" (click)="addInsuredMemberDetails()">Next</button>
                       </div>
-                      <button type="button" class="btn_red btn_fullWidth"
-                        (click)="addInsuredMemberDetails()">Next</button>
-                    </div>
-                  </div>
+                </div>
 
                   <!-- Disease Dropdown -->
 

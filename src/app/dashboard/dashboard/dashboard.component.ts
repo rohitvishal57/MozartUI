@@ -84,7 +84,7 @@ export class DashboardComponent {
       visible: true,
       products: [
         {
-          productLogo: 'assets/images/customize-icon.png',
+          productLogo: 'assets/Img/customize-icon.png',
           productName: 'Active One Next',
           premium: '₹ 876,545',
           tenure: '5 years',
@@ -93,7 +93,7 @@ export class DashboardComponent {
           feature3: 'Feature 3',
         },
         {
-          productLogo: 'assets/images/customize-icon.png',
+          productLogo: 'assets/Img/customize-icon.png',
           productName: 'Active Assure',
           premium: '₹ 876,545',
           tenure: '5 years',
@@ -110,19 +110,19 @@ export class DashboardComponent {
       visible: true,
       tasks: [
         {
-          profileImage: 'assets/images/customize-icon.png',
+          profileImage: 'assets/Img/customize-icon.png',
           profileName: 'Kanth',
           description: 'Your customer\'s payment had failed! Get them to retry payment.',
           resendLink: 'Resend payment link to Kanth',
         },
         {
-          profileImage: 'assets/images/customize-icon.png',
+          profileImage: 'assets/Img/customize-icon.png',
           profileName: 'Rohini Sharma',
           description: 'Your customer\'s payment had failed! Get them to retry payment.',
           resendLink: 'Resend payment link to Rohini',
         },
         {
-          profileImage: 'assets/images/customize-icon.png',
+          profileImage: 'assets/Img/customize-icon.png',
           profileName: 'Fathima',
           description: 'Your customer\'s payment had failed! Get them to retry payment.',
           resendLink: 'Resend payment link to Fathima',

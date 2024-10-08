@@ -1686,7 +1686,7 @@ body {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: #F1F3F6 url(../../../assets/images/icon_select_downarrow.svg) no-repeat right;
+    background: #F1F3F6 url(../../../assets/Img/icon_select_downarrow.svg) no-repeat right;
     background-position-x: 95%;
 }
 
@@ -1722,7 +1722,7 @@ body {
     display: inline-block;
     width: 24px;
     height: 24px;
-    background: url(../../../assets/images/icon_select_downarrow.svg) no-repeat center;
+    background: url(../../../assets/Img/icon_select_downarrow.svg) no-repeat center;
     background-size: 12px;
     cursor: pointer;
 }
@@ -2021,7 +2021,7 @@ a:not([href]) {
 }
 .main-container .right-panel .paymentBtn.btn-ENach,
 .main-container .right-panel .paymentBtn.btn-EMandate {
-    background: #fff url(../../../assets/images/img_faster_process.svg) no-repeat 90%;
+    background: #fff url(../../../assets/Img/img_faster_process.svg) no-repeat 90%;
 }
 .main-container .right-panel .paymentBtn.active-button {
     color: #000;
@@ -2179,7 +2179,7 @@ input[type=checkbox]:checked {
 .bottom-section .label-value-container .value-text {
     width: 32px;
     height: 5px;
-    background: url(../../../assets/images/icon_plan_details_arrow.svg) no-repeat;
+    background: url(../../../assets/Img/icon_plan_details_arrow.svg) no-repeat;
     position: absolute;
     top: -20px;
     left: 48%;

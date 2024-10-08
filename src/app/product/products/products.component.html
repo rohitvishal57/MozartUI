@@ -20,12 +20,12 @@
                         <p>{{item.productDescription}}</p>
                         <div class="product-button">
                             <button class="get" (click)="buyNow(item)">
-                               <img src="assets/images/trolley1.svg" alt="">
+                               <img src="assets/Img/trolley1.svg" alt="">
                                Buy Now
                             </button>
                             <button class="get1" >View Recommended Add-Ons</button>
                             <button class="get2" >
-                                <img src="assets/images/left-and-right-arrows1.svg" alt="">
+                                <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                 Add to Compare
                             </button>
                         </div>
@@ -48,7 +48,7 @@
         <div class="cardItem box " [ngClass]="{'center-elements': cartProductList.length === 0}">
             <div *ngIf="cartProductList.length == 0" class="no-product">
                 
-                    <img src="./../../../../assets/images/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
+                    <img src="./../../../../assets/Img/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
                     <p class="no-prod-para">No product added in the cart</p>
                 
             </div>
@@ -61,12 +61,12 @@
                             <input type="button" class="product-remove-btn" value="Remove" (click)="removeFromCart(item)">
                         </div>
                         <div class="product-features">
-                            <div class="feature"><img src="./../../../../assets/images/Frame2.svg" alt=""> 5x cover of base premium</div>
-                            <div class="feature"><img src="./../../../../assets/images/Frame2.svg" alt=""> Health Assessment</div>
-                            <div class="feature"><img src="./../../../../assets/images/Frame2.svg" alt=""> Cover Home-based Treatments</div>
+                            <div class="feature"><img src="./../../../../assets/Img/Frame2.svg" alt=""> 5x cover of base premium</div>
+                            <div class="feature"><img src="./../../../../assets/Img/Frame2.svg" alt=""> Health Assessment</div>
+                            <div class="feature"><img src="./../../../../assets/Img/Frame2.svg" alt=""> Cover Home-based Treatments</div>
                         </div>
                         <div class="quick-tip">
-                            <img src="./../../../../assets/images/lightbulb.svg" alt="">
+                            <img src="./../../../../assets/Img/lightbulb.svg" alt="">
                             Premium might increase based on the addOns.
                         </div>
                         

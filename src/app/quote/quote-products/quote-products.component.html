@@ -139,12 +139,12 @@
                                 <div class="product-button">
                                     <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
                                     <button class="get" (click)="addToCart(item)">
-                                        <img src="assets/images/trolley1.svg" alt="">
+                                        <img src="assets/Img/trolley1.svg" alt="">
                                         Add to Cart
                                     </button>
                                     <button class="get1" (click)="showOverlay(i)">View Recommended Add-Ons</button>
                                     <button class="get2">
-                                        <img src="assets/images/left-and-right-arrows1.svg" alt="">
+                                        <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                         Add to Compare
                                     </button>
                                 </div>
@@ -167,7 +167,7 @@
         <div class="cardItem box " [ngClass]="{'center-elements': cartProductList.length === 0}">
             <div *ngIf="cartProductList.length == 0" class="no-product">
                 <!-- <div> -->
-                <img src="assets/images/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
+                <img src="assets/Img/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
                 <p class="no-prod-para">No product added in the cart</p>
                 <!-- </div> -->
             </div>
@@ -195,7 +195,7 @@
                         <div class="product-features">
                             <div *ngFor="let key of item.keyFeatures">
                                 <div class="feature-element">
-                                    <img src="assets/images/Frame2.svg" alt="">
+                                    <img src="assets/Img/Frame2.svg" alt="">
                                     <div class="feature"> {{ key }}</div>
                                 </div>
                             </div>
@@ -228,7 +228,7 @@
                             </div>
                         </div>
                         <div class="quick-tip">
-                            <img src="assets/images/lightbulb.svg" alt="">
+                            <img src="assets/Img/lightbulb.svg" alt="">
                             Premium might increase based on the addOns.
                         </div>
                         <!-- <div class=""> -->
