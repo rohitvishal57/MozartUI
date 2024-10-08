@@ -11,6 +11,7 @@ import { CommonService } from 'src/app/services/common.service';
 export class SideNavbarComponent {
   isExpanded = false;
   isActive = false;
+  selectedIcon!:string;
   
   constructor(private router:Router,
     private loginService: CommonService,private toast: NgToastService){
@@ -58,5 +59,8 @@ export class SideNavbarComponent {
 
   redirect(value:any){
     this.router.navigate([value]);
+  }
+  isRouteActive(route: string): boolean {
+    return this.router.url === route;
   }
 }
