@@ -570,6 +570,7 @@ button {
   padding: 9px;
 }
 .siteSidenav .sidenavMenu a .img_link {
+  display: flex;
   align-items: center;
   padding: 4px;
   border-radius: 5px;
@@ -1734,7 +1735,7 @@ input[type="search"]::-webkit-search-results-decoration {
   width: 100%;
   padding: 23px;
   padding-bottom: 9rem;
-  //padding-top: 7.5rem;
+  padding-top: 11rem;
   background: var(--bg-verylight-grey);
     min-height: 100vh;
 }
