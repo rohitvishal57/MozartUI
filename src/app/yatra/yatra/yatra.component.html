@@ -530,9 +530,9 @@
                                     <div
                                       [ngClass]="{'expandable-border': true, 'active': expandedItem === subControl.name, 'selected': selectedItem === subControl.name}">
                                       <div (click)="toggleContent(i)" style="display: flex ; flex-direction: row;">
-                                        <img *ngIf="subControl.image?.src" src="{{ subControl.image?.src }}"
-                                          alt="{{subControl.image?.alt}}" class="expandable-image">
-                                        <label class="expandable-label">{{subControl.label}}</label>
+                                        <img *ngIf="subControl.image?.src" src="{{ subControl?.image?.src }}"
+                                          alt="{{subControl?.image?.alt}}" class="expandable-image">
+                                        <label class="expandable-label">{{subControl?.label}}</label>
                                       </div>
                                     </div>
                                   </div>
