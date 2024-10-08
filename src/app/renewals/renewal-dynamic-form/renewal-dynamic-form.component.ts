@@ -258,11 +258,14 @@ export class RenewalDynamicFormComponent implements OnInit {
      this.setSection('additional');
    } 
    else if (this.activeSection === 'additional') {
-     this.setSection('payment');
+     this.setSection('policySummary');
    } 
-   else if (this.activeSection === 'payment') {
-     if(value == 'back') this.setSection('additional')
+   else if (this.activeSection === 'policySummary') {
+      this.setSection('payment')
    }
+   else if (this.activeSection === 'payment') {
+    if(value == 'back') this.setSection('policySummary');
+  }
  }
  renewNow() {
    this.setSection('payment')

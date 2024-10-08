@@ -28,6 +28,7 @@ export class LeadsListComponent {
   searchInputControl = new FormControl("",Validators.required);
   isDesktopView:boolean=false;
   agentCode=localStorage.getItem('agentCode');
+  placeholder:string='';
 
 
   constructor(
@@ -150,27 +151,33 @@ export class LeadsListComponent {
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
     if (this.selected === "mobileNumber") {
+      this.placeholder = 'Mobile Number';
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[6-9][0-9]{9}$")
       ]);
     } 
     else if (this.selected === "name") {
+      this.placeholder = 'Proposer Name';
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
       ]);
     }
     else if (this.selected === "email") {
+      this.placeholder = 'Email';
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$")
       ]);
     } 
     else if (this.selected === "leadId") {
+      this.placeholder = 'Lead Id';
       this.searchInputControl.setValidators([
         Validators.required
       ]);
+    } else if (this.selected= ''){
+      this.placeholder= '';
     } 
     this.searchInputControl.updateValueAndValidity();
   }

@@ -24,24 +24,11 @@
                                 [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All
                                 Leads({{countsList.totalRecords}})</button>
                         </li>
-                        <!-- <li>
-                            <button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('createdInLessThan30DaysCount')">< 30 Days ({{countsList.createdInLessThan30DaysCount}})</button>
-                        </li>
-                        <li>
-                            <button type="button" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('createdIn30To60DaysCount')">30-60 Days ({{countsList.createdIn30To60DaysCount}})</button>
-                        </li>
-                        <li>
-                            <button type="button" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('createdIn60To90DaysCount')">60-90 Days ({{countsList.createdIn60To90DaysCount}})</button>
-                        </li> -->
                     </ul>
                 </div>
                 <div class="quickFilterRight">
-                    <button type="button" value="download" class="btn_iconGrey mobile-hide"><img
-                            src="assets/Img/icon_download_grey.svg" alt="Download"></button>
                     <div class="searchWraper " [matMenuTriggerFor]="searchMenu" #menuTrigger="matMenuTrigger">
-                        <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick"
-                            aria-label="field_searchWraper" data-bs-toggle="dropdown" aria-expanded="false"
-                            (click)="toggleSearchDropdown()">
+                        <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" aria-label="field_searchWraper" data-bs-toggle="dropdown" aria-expanded="false" (click)="toggleSearchDropdown()" [ngClass]="{'active': selected != ''}">
                             <img src="assets/Img/icon_magnify_grey.svg" alt="Search">
                         </button>
                         <mat-menu #searchMenu="matMenu">
@@ -67,10 +54,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="name" name="name" class="form-control input-textBox"
-                                                *ngIf="selected !== 'none' && selected !== ''"
-                                                [formControl]="searchInputControl">
+                                        <div class="input-block form-floating input-block-renew" *ngIf="selected !== ''">
+                                            <input type="text" id="name" name="name" placeholder="" class="form-control input-textBox" [formControl]="searchInputControl">
+                                            <label for="name">Enter {{placeholder}}</label>
                                             <mat-error *ngIf="searchInputControl.invalid && searchInputControl.touched">
                                                 {{ getErrorMessage() }}
                                             </mat-error>
@@ -86,12 +72,8 @@
                         </mat-menu>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()"
-                            class="btn_filter jsFilterBtnClick" aria-label="filterForm"><img
-                                src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter
-                            ({{appliedFiltersCount}})<span id="filter-count"></span></button>
-                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop"
-                            [ngClass]="{'active': toggeledropdown}">
+                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader">
                                     <header>Filter</header>
@@ -162,47 +144,36 @@
                                     <td>{{row.leadID}}</td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" value="Assign to" title="Assign to"
-                                                class="btn_action btn_editAction"><img
-                                                    src="assets/Img/icon_profile.svg"></button>
-                                            <button type="button" value="Update Status" title="Update Status"
-                                                class="btn_action btn_renewalAction"><img
-                                                    src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" value="Add Notes" title="Add Notes"
-                                                class="btn_action btn_renewalAction"><img
-                                                    src="assets/Img/icon_add_notes.svg"></button>
-                                            <button type="button" value="more" title="More"
-                                                class="btn_action btn_moreAction" aria-label="item-moreaction"
-                                                [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}"
-                                                data-bs-toggle="dropdown" aria-expanded="false"><img
-                                                    src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                            <mat-menu #moreMenu="matMenu"
-                                                class="overlay_popupMenu_Main_CDK moreActionItems active">
+                                            <button type="button" value="Assign to" title="Assign to" class="btn_action btn_editAction"><img src="assets/Img/icon_profile.svg"></button>
+                                            <button type="button" value="Update Status" title="Update Status" class="btn_action btn_renewalAction"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" value="Add Notes" title="Add Notes" class="btn_action btn_renewalAction"><img src="assets/Img/icon_add_notes.svg"></button>
+                                            <!-- <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                            <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
                                                         <li class="actionItem">
-                                                            <a>
-                                                                <!-- <img src="assets/Img/icon_download2_grey.svg" alt="Download"> -->
+                                                            <a> 
+                                                                <img src="assets/Img/icon_download2_grey.svg" alt="Download">
                                                                 <span>Edit Lead</span></a>
                                                         </li>
                                                         <li class="actionItem">
-                                                            <a>
-                                                                <!-- <img src="assets/Img/icon_delete_grey.svg" alt="Delete"> -->
+                                                            <a> 
+                                                                <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
                                                                 <span>Mark Duplicate</span></a>
                                                         </li>
                                                         <li class="actionItem">
                                                             <a>
-                                                                <!-- <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"> -->
+                                                                <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
                                                                 <span>View audit trail</span></a>
                                                         </li>
                                                         <li class="actionItem">
                                                             <a>
-                                                                <!-- <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"> -->
+                                                                <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
                                                                 <span>Quick Quote</span></a>
                                                         </li>
                                                     </ul>
                                                 </div>
-                                            </mat-menu>
+                                            </mat-menu> -->
                                         </div>
                                     </td>
                                 </tr>
@@ -241,47 +212,36 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" value="Assign to" title="Assign to"
-                                        class="btn_action btn_editAction"><img
-                                            src="assets/Img/icon_profile.svg"></button>
-                                    <button type="button" value="Update Status" title="Update Status"
-                                        class="btn_action btn_renewalAction"><img
-                                            src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" value="Add Notes" title="Add Notes"
-                                        class="btn_action btn_renewalAction"><img
-                                            src="assets/Img/icon_add_notes.svg"></button>
-                                    <button type="button" value="more" title="More"
-                                        class="btn_action btn_moreActionCard" aria-label="item-moreactionCard"
-                                        [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}"
-                                        data-bs-toggle="dropdown" aria-expanded="false"><img
-                                            src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                    <button type="button" value="Assign to" title="Assign to" class="btn_action btn_editAction"><img src="assets/Img/icon_profile.svg"></button>
+                                    <button type="button" value="Update Status" title="Update Status" class="btn_action btn_renewalAction"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" value="Add Notes" title="Add Notes" class="btn_action btn_renewalAction"><img src="assets/Img/icon_add_notes.svg"></button>
+                                    <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
                                                 <li class="actionItem">
-                                                    <a>
-                                                        <!-- <img src="assets/Img/icon_download2_grey.svg" alt="Download"> -->
+                                                    <a> 
+                                                        <img src="assets/Img/icon_download2_grey.svg" alt="Download">
                                                         <span>Edit Lead</span></a>
                                                 </li>
                                                 <li class="actionItem">
-                                                    <a>
-                                                        <!-- <img src="assets/Img/icon_delete_grey.svg" alt="Delete"> -->
+                                                    <a> 
+                                                        <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
                                                         <span>Mark Duplicate</span></a>
                                                 </li>
                                                 <li class="actionItem">
                                                     <a>
-                                                        <!-- <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"> -->
+                                                        <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
                                                         <span>View audit trail</span></a>
                                                 </li>
                                                 <li class="actionItem">
                                                     <a>
-                                                        <!-- <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"> -->
+                                                        <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
                                                         <span>Quick Quote</span></a>
                                                 </li>
                                             </ul>
                                         </div>
-                                    </mat-menu>
-
+                                    </mat-menu> -->
                                 </div>
                             </div>
                         </header>

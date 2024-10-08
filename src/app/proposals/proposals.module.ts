@@ -1,14 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { ProposalsListComponent } from './proposals-list/proposals-list.component';
 import { ProposalsRoutingModule } from './proposals-routing.module';
+import { PrimeNgModule } from 'src/app/prime-ng.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MyMaterialModule } from 'src/app/material.module';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [ProposalsListComponent],
   imports: [
     CommonModule,
-    ProposalsRoutingModule
+    ProposalsRoutingModule,
+    PrimeNgModule,
+    NgxSpinnerModule,
+    ReactiveFormsModule,
+    MyMaterialModule
   ]
 })
 export class ProposalsModule { }

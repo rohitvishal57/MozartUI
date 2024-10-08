@@ -232,18 +232,10 @@ h6 {
 .lead-sub-menu{
 	display: inline-flex !important;
 }
-
-.btn_search_white {
-	padding: 10px 16px;
-	border-radius: 12px;
-	background: #F1F3F6;
-	font-weight: 500;
-	font-size: 18px;
-	line-height: 24px;
-	color: var(--text-black-4c);
-	border: 1px solid var(--white-color);
-	width: 100%;
-}
-.lead-sub-menu{
-	display: inline-flex !important;
-}
+.jsFilterBtnClick.active ,.jsFilterBtnClick.active {
+	background: var(--primary-red-color) !important;
+	color: white;
+	img{
+		filter: brightness(0) invert(1);
+	}
+  }

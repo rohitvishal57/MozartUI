@@ -388,10 +388,6 @@ export class RenewalListComponent {
             console.error('Error while sending WhatsApp message:', error);
           }
         );        
-        break;
-      case 'notice':
-        break;
-      case 'autodebit':
         break;  
       default:
         console.warn('Unknown action:', event);

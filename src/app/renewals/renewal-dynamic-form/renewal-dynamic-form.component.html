@@ -12,7 +12,7 @@
                       <div><i class="fa-solid fa-square-plus"></i></div>
                       <div>Additional</div>
                   </div>
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'payment' ||  activeSection === 'policySummary' }" (click)="setSection('payment')">
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'payment' ||  activeSection === 'policySummary' }" (click)="setSection('policySummary')">
                       <div><i>₹</i></div>
                       <div>Payment</div>
                   </div>
@@ -869,14 +869,14 @@
                                 <div class="row mb-2">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages">
-                                           <div class="input-checkbox-feild">
+                                           <!-- <div class="input-checkbox-feild">
                                                 <input type="checkbox" id="personal-accident" value="personal-accident" class="input-check" checked>
                                                 <label for="personal-accident">
-                                                    <!-- <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_critical_illness.svg" class="inactive"></span> -->
+                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_critical_illness.svg" class="inactive"></span>
                                                     <em class="head">{{renewalInfo?.response?.policyData[0]?.coverName}}</em>
                                                     <em class="headInfo">{{renewalInfo?.response?.policyData[0]?.coverDescription}}</em>
                                                 </label>
-                                            </div>        
+                                            </div>         -->
                                         </div>
                                     </div>
                                 </div>                                
@@ -1033,29 +1033,29 @@
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Members</label>
-                                            <h6>Self, Spouse, Kid 1</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Policy</label>
-                                            <h6>Activ Health Platinum</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Premium</label>
-                                            <h6>₹7,562/yr</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Cover</label>
-                                            <h6>₹10 lacs</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Tenure</label>
-                                            <h6>2 years</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
                                             <label>Add ons</label>
                                             <div class="list_addons">
-                                                <span class="item_addon">Cancer secure cover</span>
-                                                <span class="item_addon">Personal accident cover</span>
+                                                <!-- <span class="item_addon">Cancer secure cover</span>
+                                                <span class="item_addon">Personal accident cover</span> -->
                                             </div>
                                         </div>
                                     </div>
@@ -1065,30 +1065,30 @@
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Members</label>
-                                            <h6>Self, Spouse, Kid 1, Mother</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Policy</label>
-                                            <h6>Activ Health Platinum</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Premium</label>
-                                            <h6>₹8,291/yr</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Cover</label>
-                                            <h6>₹15 lacs</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Tenure</label>
-                                            <h6>3 years</h6>
+                                            <h6></h6>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
                                             <label>Add ons</label>
                                             <div class="list_addons">
-                                                <span class="item_addon">Cancer secure cover</span>
+                                                <!-- <span class="item_addon">Cancer secure cover</span>
                                                 <span class="item_addon">Personal accident cover</span>
-                                                <span class="item_addon">Vaccine cover</span>
+                                                <span class="item_addon">Vaccine cover</span> -->
                                             </div>
                                         </div>
                                     </div>
@@ -1099,25 +1099,25 @@
                                         <span class="img_freeBenefits">
                                             <img src="assets/Img/icon_stethoscope.svg">
                                         </span>
-                                        <span class="text_freeBenefits">Upto 100% Health Returns™</span>
+                                        <!-- <span class="text_freeBenefits">Upto 100% Health Returns™</span> -->
                                     </div>
                                     <div class="item_freeBenefits">
                                         <span class="img_freeBenefits">
                                             <img src="assets/Img/icon_handheart.svg">
                                         </span>
-                                        <span class="text_freeBenefits">Access To Expert Health Coaches</span>
+                                        <!-- <span class="text_freeBenefits">Access To Expert Health Coaches</span> -->
                                     </div>
                                     <div class="item_freeBenefits">
                                         <span class="img_freeBenefits">
                                             <img src="assets/Img/icon_handheart.svg">
                                         </span>
-                                        <span class="text_freeBenefits">Cover for dental consultations</span>
+                                        <!-- <span class="text_freeBenefits">Cover for dental consultations</span> -->
                                     </div>
                                     <div class="item_freeBenefits">
                                         <span class="img_freeBenefits">
                                             <img src="assets/Img/icon_handheart.svg">
                                         </span>
-                                        <span class="text_freeBenefits">Free Wellness Services</span>
+                                        <!-- <span class="text_freeBenefits">Free Wellness Services</span> -->
                                     </div>
                                 </section>
                             </div>
@@ -1134,77 +1134,77 @@
                             <div class="detailsRow">
                                 <div class="owl-carousel owl-theme memberDetails-carousel member-cards">
                                     <div class="item member-card">
-                                        <header>Mihir Sodawalla <span class="common-badge common-badge-rounded  bg-dark-org">Proposer</span></header>
+                                        <header>XXXXX <span class="common-badge common-badge-rounded  bg-dark-org">Proposer</span></header>
                                         <div class="row">
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
                                                 <label>Height</label>
-                                                <h6>5.3 ft</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
                                                 <label>Weight</label>
-                                                <h6>63 kgs</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>DOB</label>
-                                                <h6>06/06/1990</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>Pan card</label>
-                                                <h6>9768850231</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>Health Conditions</label>
-                                                <h6>Yes</h6>
+                                                <h6></h6>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="item member-card">
-                                        <header>Mihir Sodawalla </header>
+                                        <header>XXXXX </header>
                                         <div class="row">
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
                                                 <label>Height</label>
-                                                <h6>5.3 ft</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
                                                 <label>Weight</label>
-                                                <h6>63 kgs</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>DOB</label>
-                                                <h6>06/06/1990</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>Pan card</label>
-                                                <h6>9768850231</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>Health Conditions</label>
-                                                <h6>Yes</h6>
+                                                <h6></h6>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="item member-card">
-                                        <header>Mihir Sodawalla </header>
+                                        <header>XXXXX </header>
                                         <div class="row">
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
                                                 <label>Height</label>
-                                                <h6>5.3 ft</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
                                                 <label>Weight</label>
-                                                <h6>63 kgs</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>DOB</label>
-                                                <h6>06/06/1990</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>Pan card</label>
-                                                <h6>9768850231</h6>
+                                                <h6></h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>Health Conditions</label>
-                                                <h6>Yes</h6>
+                                                <h6></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -1223,17 +1223,17 @@
                             <div class="data-row">
                                 <div class="data-item data-item-100">
                                     <label>Address</label>
-                                    <h6>Flat 1, Floor 5, Building Name, Street Name, Locality, Mumbai - 400067</h6>
+                                    <h6></h6>
                                 </div>
                             </div>
                             <div class="data-row mb-3">
                                 <div class="data-item">
                                     <label>Contact</label>
-                                    <h6>+91 8345346464</h6>
+                                    <h6></h6>
                                 </div>
                                 <div class="data-item">
                                     <label>Emergency Contact</label>
-                                    <h6>+91 8345346464</h6>
+                                    <h6></h6>
                                 </div>
                             </div>
                         </div>
@@ -1317,7 +1317,7 @@
               <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection != 'payment' ">Proceed</button>
               <button type="button" value="renewnow" class="btn_red btn_redRenew" *ngIf="activeSection != 'payment' " (click)="renewNow()">Renew Now</button>
               <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" *ngIf="activeSection === 'payment'"  (click)="proceed('back')">Back</button>
-              <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" *ngIf="activeSection === 'payment'" (click)="setSection('policySummary')">Next</button>
+              <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" *ngIf="activeSection === 'payment'">Next</button>
           </div>
       </div>
   </div>
