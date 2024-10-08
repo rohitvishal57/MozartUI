@@ -24,6 +24,21 @@
                                 [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All
                                 Leads({{countsList.totalRecords}})</button>
                         </li>
+                        <li>
+                            <button type="button" class="btn_quickFilter" >Assigned Leads</button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn_quickFilter" >Unassigned Leads</button>
+                        </li>
+                        <!-- <li>
+                            <button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('createdInLessThan30DaysCount')">< 30 Days ({{countsList.createdInLessThan30DaysCount}})</button>
+                        </li>
+                        <li>
+                            <button type="button" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('createdIn30To60DaysCount')">30-60 Days ({{countsList.createdIn30To60DaysCount}})</button>
+                        </li>
+                        <li>
+                            <button type="button" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('createdIn60To90DaysCount')">60-90 Days ({{countsList.createdIn60To90DaysCount}})</button>
+                        </li> -->
                     </ul>
                 </div>
                 <div class="quickFilterRight">
@@ -117,12 +132,15 @@
                             alt="Grid Card"></button>
                 </div>
             </section>
+
+
             <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
                 <div class="tableSubMain">
                     <div class="table-responsive">
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
+                                    <th></th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Product name</th>
                                     <th scope="col">Mobile Number</th>
@@ -135,6 +153,7 @@
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of leadsList; let i = index">
+                                    <td>  <input type="checkbox"></td>
                                     <td>{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</td>
                                     <td><span class="productName">{{ row.interestedInPlan }}</span></td>
                                     <td>{{ row.phoneNumber }}</td>
@@ -144,7 +163,7 @@
                                     <td>{{row.leadID}}</td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" value="Assign to" title="Assign to" class="btn_action btn_editAction"><img src="assets/Img/icon_profile.svg"></button>
+                                            <button class="btn_action btn_editAction" (click)="showDialog()"> <img src="assets/Img/icon_profile.svg"  /></button>
                                             <button type="button" value="Update Status" title="Update Status" class="btn_action btn_renewalAction"><img src="assets/Img/icon_edit_grey.svg"></button>
                                             <button type="button" value="Add Notes" title="Add Notes" class="btn_action btn_renewalAction"><img src="assets/Img/icon_add_notes.svg"></button>
                                             <!-- <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
@@ -298,3 +317,34 @@
         </div>
     </div>
 </main>
+
+<div class="card flex justify-content-center ">
+    <p-dialog header="Allocate to" [modal]="true" [(visible)]="displayAssigneePopup" [style]="{ width: '75rem', height: '25rem' }">
+        <span class="p-text-secondary block mb-5">select user</span>
+    
+        <section class="white_container">
+            <div class="row mb-3">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                <div class="input-block form-floating input-block-renew">
+                  <select class="form-select input-selectBox" formControlName="policyNumber" >
+                    <option *ngFor="let item of agentCodes " [value]="item">
+                        {{ item }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              </div>
+         </section>
+        <!-- <div class="flex justify-content-end gap-2">
+            <p-button label="Cancel" severity="secondary" (onClick)="displayAssigneePopup = false" />
+            <p-button label="Save" (onClick)="displayAssigneePopup = false" />
+        </div> -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <button type="submit" class="btn_red"  (onClick)="displayAssigneePopup = false">Cancel</button>
+              <button type="submit" class="btn_red" (onClick)="displayAssigneePopup = false">Save</button>
+            </div>
+          </div>
+    </p-dialog>
+
+</div>

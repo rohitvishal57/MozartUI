@@ -29,7 +29,8 @@ export class LeadsListComponent {
   isDesktopView:boolean=false;
   agentCode=localStorage.getItem('agentCode');
   placeholder:string='';
-
+  displayAssigneePopup = false;
+  agentCodes: any = [];
 
   constructor(
     private leadsService: LeadsService,
@@ -59,6 +60,11 @@ export class LeadsListComponent {
       console.log("agent code is not present in local storege");
     }
     this.getProducts();
+
+    if (this.agentCode) {
+      this.agentCodes.push(this.agentCode);
+    }
+
   }
   onPageChange(event: any) {
     this.first = event.first;
@@ -242,4 +248,23 @@ export class LeadsListComponent {
   renewalListView(view: string) {
     this.selectedView = view;
   }
+
+  
+  showDialog(){
+    this.displayAssigneePopup = true;
+  }
+
+
+  getMyReportingUsers(){
+    let reportingUsersRequestModel = {
+      Agentcode: this.agentCode,
+      // sessionId: usr.sessionId,
+      // Branch: usr.branch,
+      // IntCategory: usr.intCategory?usr.intCategory:"",
+      // Category:usr.category?usr.category:"",
+      // IsSM: (usr.isSM == true)
+    }
+    
+  }  
+
 }
