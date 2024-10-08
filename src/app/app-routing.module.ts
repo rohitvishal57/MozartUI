@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LeadsModule } from './leads/leads.module';
 
 const routes: Routes = [
   { path: '', 
@@ -25,6 +26,15 @@ const routes: Routes = [
    },
    { path: 'renewals', 
     loadChildren:() => import('./renewals/renewals.module').then((m)=>m.RenewalsModule)
+   },
+   {path:'leads',
+    loadChildren:() => import("./leads/leads.module").then((m)=>m.LeadsModule)
+   },
+   {path:'customers',
+    loadChildren:() => import("./customers/customers.module").then((m)=>m.CustomersModule)
+   },
+   {path:'proposals',
+    loadChildren:() => import("./proposals/proposals.module").then((m)=>m.ProposalsModule)
    },
   {path:'**',redirectTo:'',pathMatch:'full'}
 
