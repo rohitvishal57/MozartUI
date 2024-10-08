@@ -30,7 +30,8 @@ export class StatusValidationComponent implements OnInit {
         console.log( url,'fragment')
         if(url.includes('adfs')){
             data.Idtoken = idToken;
-            this.loginService.checkADFSLogin(data,data.Idtoken).subscribe({
+            data.username = localStorage.getItem('userCode');
+            this.loginService.checkADFSLogin(data,data.Idtoken, data.username).subscribe({
               next: (res:any) => {
                 this.loginService.storeToken(res.data.token);
                 localStorage.setItem('agentCode', res.data.agentcode);
@@ -40,6 +41,7 @@ export class StatusValidationComponent implements OnInit {
                   summary: 'Login Successfull',
                   duration: 2000,
                 });
+                localStorage.removeItem('userCode');
                 this.router.navigate(['dashboard']);
               },
               error: (err) => {
@@ -53,7 +55,8 @@ export class StatusValidationComponent implements OnInit {
             });
         }else{
           data.Idtoken = idToken;
-          this.loginService.checkCyberArkLogin(data,data.Idtoken).subscribe({
+          data.username = localStorage.getItem('userCode');
+          this.loginService.checkCyberArkLogin(data,data.Idtoken,data.username).subscribe({
             next: (res:any) => {
               this.loginService.storeToken(res.data.token);
               localStorage.setItem('agentCode', res.data.agentcode);
@@ -63,6 +66,7 @@ export class StatusValidationComponent implements OnInit {
                 summary: 'Login Successfull',
                 duration: 2000,
               });
+              localStorage.removeItem('userCode');
               this.router.navigate(['dashboard']);
             },
             error: (err) => {
