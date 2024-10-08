@@ -38,11 +38,11 @@ export class LoginService {
     return this.httpService.post(getContactDetailsByAgentCodeApi, contactDetailsReqBody);
   }
 
-  checkADFSLogin(loginData: any, token:any) {
-    return this.httpService.post<any>(this.configService.config.baseUrl+this.configService.config.validateadfstoken+token, loginData);
+  checkADFSLogin(loginData: any, token:any, code:any) {
+    return this.httpService.post<any>(this.configService.config.baseUrl+this.configService.config.validateadfstoken+token+'&username='+code, loginData);
   }
 
-  checkCyberArkLogin(loginData: any, token:any) {
-    return this.httpService.post<any>(this.configService.config.baseUrl+this.configService.config.validatecyberarktoken+token, loginData);
+  checkCyberArkLogin(loginData: any, token:any,code:any) {
+    return this.httpService.post<any>(this.configService.config.baseUrl+this.configService.config.validatecyberarktoken+token+'&username='+code, loginData);
   }
 }

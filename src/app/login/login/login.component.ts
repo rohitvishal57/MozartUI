@@ -192,6 +192,7 @@ export class LoginComponent implements OnInit{
       this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
         .subscribe({  
           next: (res:any)=>{
+            localStorage.setItem('userCode', this.loginForm.value.userName);
             window.open(res.data.redirectUrl, "_blank");
           },
           error: ((err:any) => {
