@@ -1,43 +1,3 @@
-.filterWraperForm .fw_form .fw_checkboxWraper {
-	gap: 5px;
-}
-
-.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
-	width: 48%;
-}
-
-.searchWraperForm {
-	padding: 10px 20px;
-}
-
-.searchWraperForm header {
-	padding-top: 5px;
-	font-weight: 600;
-	font-size: 22px;
-}
-
-.searchWraperForm .searchHeader,
-.fw_form .searchHeader {
-	display: flex;
-	justify-content: space-between;
-	height: 40px;
-	padding-bottom: 5px;
-}
-
-.fw_form .filterHeader {
-	display: flex;
-	justify-content: space-between;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	margin: 0 !important;
-}
-
 .table>:not(caption)>*>* {
 	background-color: inherit;
 }
@@ -55,19 +15,6 @@ h6 {
 .tableSubMain .table td {
 	line-height: 10px;
 }
-
-.btn_quickFilter {
-	padding: 9px 9px 7px;
-}
-
-.starRating {
-	margin-top: 5px;
-}
-
-.cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 {
-	line-height: 16px;
-}
-
 //pagination css start
 .tableNav .pagination {
 	flex-direction: column;
@@ -170,80 +117,3 @@ h6 {
 }
 
 //pagination css end
-
-.form-floating>.form-control,
-.form-floating>.form-control-plaintext,
-.form-floating>.form-select {
-	min-height: auto;
-}
-
-.btn_iconGrey {
-	padding: 6px;
-}
-
-.btn_iconGrey img {
-	float: left;
-}
-
-.filterWraperForm {
-	padding: 15px 24px;
-}
-
-.filterWraperForm .fw_form header {
-	font-size: 21px;
-}
-
-.filterWraperForm .fw_form .fw_formRow h6 {
-	font-size: 16px;
-}
-
-.filterWraperForm .fw_form {
-	gap: 10px;
-}
-
-.filterWraperForm .fw_form .fw_formBody {
-	gap: 18px;
-}
-
-.input-block {
-	margin-bottom: 5px;
-}
-
-::ng-deep .mat-mdc-menu-content {
-	padding: 0 !important;
-}
-
-.moreActionItems ul a {
-	font-size: 13px;
-	letter-spacing: normal;
-}
-
-.btn_search_white {
-	padding: 10px 16px;
-	border-radius: 12px;
-	background: #F1F3F6;
-	font-weight: 500;
-	font-size: 18px;
-	line-height: 24px;
-	color: var(--text-black-4c);
-	border: 1px solid var(--white-color);
-	width: 100%;
-}
-.lead-sub-menu{
-	display: inline-flex !important;
-}
-
-.btn_search_white {
-	padding: 10px 16px;
-	border-radius: 12px;
-	background: #F1F3F6;
-	font-weight: 500;
-	font-size: 18px;
-	line-height: 24px;
-	color: var(--text-black-4c);
-	border: 1px solid var(--white-color);
-	width: 100%;
-}
-.lead-sub-menu{
-	display: inline-flex !important;
-}

@@ -1,24 +1,40 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LeadsListComponent } from './leads-list/leads-list.component';
-import { PrimeNgModule } from 'src/app/prime-ng.module';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MyMaterialModule } from 'src/app/material.module';
+
 import { LeadsRoutingModule } from './leads-routing.module';
+import { LeadsListComponent } from './leads-list/leads-list.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { PrimeNgModule } from '../prime-ng.module';
+import { MyMaterialModule } from '../material.module';
+import { CreateLeadComponent } from './create-lead/create-lead.component';
+import { CreateLead } from './CreateLead';
+import { LeadFormListValue } from './leadFormListValue';
+import { UploadLeadComponent } from './upload-lead/upload-lead.component';
+import { CampaignsComponent } from './campaigns/campaigns.component';
+import { NewCampaignComponent } from './new-campaign/new-campaign.component';
+import { NewCampaignRuleComponent } from './new-campaign-rule/new-campaign-rule.component';
 
 
 @NgModule({
   declarations: [
-    LeadsListComponent
+    LeadsListComponent,
+    CreateLeadComponent,
+    UploadLeadComponent,
+    CampaignsComponent,
+    NewCampaignComponent,
+    NewCampaignRuleComponent
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
+    NgxSpinnerModule,
+    NgxPaginationModule,
     LeadsRoutingModule,
     PrimeNgModule,
-    NgxSpinnerModule,
-    ReactiveFormsModule,
     MyMaterialModule
-  ]
+  ],
+  providers: [CreateLead, LeadFormListValue],
 })
 export class LeadsModule { }

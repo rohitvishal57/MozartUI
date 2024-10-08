@@ -9,6 +9,9 @@ const routes: Routes = [
    { path: 'dashboard', 
     loadChildren:() => import('./dashboard/dashboard/dashboard.module').then((m)=>m.DashboardModule)
    },
+   { path: 'leads', 
+   loadChildren:() => import('./leads/leads.module').then((m)=>m.LeadsModule)
+   },
    { path: 'claims', 
     loadChildren:() => import('./claims/claims-view/claims-view.module').then((m)=>m.ClaimsViewModule)
    },

@@ -1,10 +1,9 @@
-import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { LeadsList } from '../leads-list.interface';
 import { FormControl, Validators } from '@angular/forms';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { LeadsList } from 'src/app/interface/leads-list.interface';
-import { CommonService } from 'src/app/services/common.service';
 import { LeadsService } from '../leads.service';
+import { CommonService } from 'src/app/services/common.service';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-leads-list',
@@ -50,7 +49,14 @@ export class LeadsListComponent {
   }
 
   ngOnInit(): void {
-    this.getLeadsList()
+    const storedAgentCode = localStorage.getItem('agentCode');
+    if (storedAgentCode) {
+      this.leadsLisRequestBody.agentCode = storedAgentCode;
+      this.getLeadsList();
+    }
+    else{
+      console.log("agent code is not present in local storege");
+    }
     this.getProducts();
   }
   onPageChange(event: any) {
@@ -229,5 +235,4 @@ export class LeadsListComponent {
   renewalListView(view: string) {
     this.selectedView = view;
   }
-
 }

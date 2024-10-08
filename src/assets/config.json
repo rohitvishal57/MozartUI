@@ -7,7 +7,10 @@
     "sendRenewalEmail":"renewal/api/sendrenewalnotice",
     "generatePaymentlink":"renewal/api/generatepaymentlink",
 
-    "getLeadsList":"yatra/api/getLeadDetailsList",
+    "getLeadsListApi":"yatra/api/getleaddetailslist",
+    "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",
+    "saveLeadData":"yatra/api/createlead",
+
 
     "getClaimsList":"claims/api/getclaimlist",
     "getProposalDetails":"claims/api/getproposaldetails?AgentCode",

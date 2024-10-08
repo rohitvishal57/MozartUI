@@ -24,6 +24,7 @@ import { DashboardModule } from './dashboard/dashboard/dashboard.module';
 import { ClaimsViewModule } from './claims/claims-view/claims-view.module';
 import { ProductsModule } from './product/products/products.module';
 import { SpinnerInterceptor } from './intercepter/spinner.interceptor';
+import { LeadsModule } from './leads/leads.module';
 
 
 
@@ -55,6 +56,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginModule,
     DashboardModule,
     ClaimsViewModule,
+    LeadsModule,
     ProductsModule,
     NgxPaginationModule,
     TranslateModule.forRoot({
