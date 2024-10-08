@@ -232,6 +232,9 @@ button {
 .text-green {
   color: var(--green-color) !important;
 }
+.text-red {
+  color: var(--primary-red-color) !important;
+}
 .icon_withHeading {
     display: flex;
     gap:10px;
@@ -413,6 +416,20 @@ button {
   background: #F7A500;
   color: #fff;
 }
+.triangle-up {
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent; 
+  border-bottom: 5px solid var(--green-color);
+}
+.triangle-down {
+  width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--primary-red-color);
+}
 /*Common end*/
 
 /*Header start*/
@@ -421,7 +438,7 @@ button {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1;
+  z-index: 9;
 }
 
 .siteHeader .abcLinksMain {
@@ -929,6 +946,10 @@ button:focus {
   margin-bottom: 0px;
 }
 
+.input-block .input-textBox:hover, .input-block .input-selectBox:hover {
+  /*border-bottom: solid 1px #EB0000;
+    border-bottom: 1px solid #EB0000 ;*/
+}
 
 input:focus, select:focus, .form-control:focus {
   border: 1px solid var(--site-body-bg) !important;
@@ -1713,7 +1734,7 @@ input[type="search"]::-webkit-search-results-decoration {
   width: 100%;
   padding: 23px;
   padding-bottom: 9rem;
-  padding-top: 11rem;
+  //padding-top: 7.5rem;
   background: var(--bg-verylight-grey);
     min-height: 100vh;
 }
@@ -2293,7 +2314,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info h4, .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info h5, .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info h6 {
   margin: 0;
 }
-
+.bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info h5 {
+	font-weight:300;
+	font-size:12px;
+}
 .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info h4 {
   font-weight: 500;
   font-size: 16px;
@@ -2321,8 +2345,25 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 22px;
   line-height: 24px;
   color: var(--primary-red-color);
+  display: flex;
+  gap:8px;
 }
-
+.sub_revicsedPremium {
+  display: inline-flex;
+  gap:4px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 12px;
+  align-items: center;
+}
+.bottomExtraInfo {
+  display: flex;
+  flex-direction: column;
+  gap:12px;
+}
+.bottomExtraInfo h6 {
+  font-weight: 500;
+}
 /*Bottom Section end*/
 
 /*Quick Filter start*/
@@ -3794,6 +3835,8 @@ input[type="search"]::-webkit-search-results-decoration {
 .radio_roomInfo .main_RI .main_RI_item .head {
   font-weight: 600;
 }
+.radio_roomInfo .main_RI .main_RI_item .value {}
+/*Room type Radio styles End*/
 
 /*Popup Modal start*/
 .modal-backdrop.show {
@@ -3963,6 +4006,7 @@ input[type="search"]::-webkit-search-results-decoration {
   border: 2px solid #F1F3F6;
   box-shadow: 0px -16px 16px 0px #0000000A;
   box-shadow: 0px -4px 12px 0px #AEAEB70A;
+  z-index: 9;
 }
 .raido_paymentType {
   flex-direction: column;
@@ -4108,3 +4152,326 @@ input[type="search"]::-webkit-search-results-decoration {
 .icon_menuMobile .btn_menuMobile span:nth-child(2) {
   width: 15px;
 }
+/*Mobile menu icon end*/
+.captchaMain {
+  width: 100%;
+  background: #abd5d6;
+  padding: 20px;
+  font-weight: 400;
+  font-size: 20px;
+  color: #000;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/*OVD Upload start*/
+.ovd_uploadMain {
+  display: flex;
+  flex-direction: column;
+  gap:6px;
+}
+.ovd_uploadMain h6 {
+  font-weight: 500;
+  font-size: 18px;
+  color: var(--black-color);
+}
+.upload-required-info {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--black-color);
+}
+.ovdUpload {
+  background: #ECECEC;
+  border: 1px solid #CDCECE;
+  max-width: 315px;
+  border-radius: 4px;
+  padding: 10px;
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--black-color);
+  position: relative;
+
+}
+.ovdUpload input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: 315px;
+  height: 100%;
+}
+/*OVD Upload end*/
+
+/*Claim Progress Steps start*/
+.main_claimProgressSteps {}
+.submain_claimProgressSteps {
+  display: flex;
+  flex-wrap: nowrap;
+  gap:8px;
+  max-width: 884px;
+  overflow-x: auto;
+}
+.item_count .img_tick, .item_count .img_error {
+  display: none;
+}
+.submain_claimProgressSteps .item_claimProgressSteps {
+  position: relative;
+  padding-top: 24px;
+  flex: auto;
+  max-width: 150px;
+}
+.submain_claimProgressSteps .item_claimProgressSteps:before {
+  content: "";
+  width: 100%;
+  position: absolute;
+  top: 7px;
+  left: 0;
+  border: 2px dashed rgba(166, 178, 197, 0.26);
+}
+.submain_claimProgressSteps .item_claimProgressSteps .item_count em {
+  font-style: normal;
+}
+.submain_claimProgressSteps .item_claimProgressSteps .item_count {
+  width: 18px;
+  height: 18px;
+  font-weight: 400;
+  font-size: 10px;
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 10px;
+  text-align: center;
+}
+.submain_claimProgressSteps .item_claimProgressSteps .item_count .count {
+  padding: 5px;
+  background: #BEC7D4;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 10px;
+}
+.submain_claimProgressSteps .item_claimProgressSteps .item_info {
+  display: flex;
+  flex-direction: column;
+  gap:4px;
+  font-weight: 400;
+}
+.submain_claimProgressSteps .item_claimProgressSteps .item_info h6 {
+  font-weight: 400;
+  font-size: 16px;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.submain_claimProgressSteps .item_claimProgressSteps .item_info small {
+  font-size: 10px;
+  color: #4c4c4c;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.completed:before {
+  border-width: 0px ;
+  height: 4px;
+  background-image: linear-gradient(90deg, #4CAF50 -4.74%, #E5E5E5 106.12%);
+
+}
+.submain_claimProgressSteps .item_claimProgressSteps.completed h6 {
+  color: #1F874C;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.completed .count {
+  display: none;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.completed .img_tick {
+  display: block;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.completed .img_tick img {
+  width: 100%;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.active .count {
+  background: #FFCE42;
+  font-weight: 600;
+  color: #000;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.active:before {
+  border-width: 0px ;
+  height: 4px;
+  background: #F7A500;
+
+}
+.submain_claimProgressSteps .item_claimProgressSteps.active h6 {
+  color: #F7A500;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.error .count {
+  display: none;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.error .img_error {
+  display: block;
+  padding: 3px;
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 10px;
+  background: #D34528;
+}
+.submain_claimProgressSteps .item_claimProgressSteps.error:before {
+  border-width: 0px ;
+  height: 4px;
+  background: #D34528;
+
+}
+.submain_claimProgressSteps .item_claimProgressSteps.error h6 {
+  color: #D34528;
+}
+/*Claim Progress Steps end*/
+
+/*Post Buy Policy Number Generate start*/
+.PB_policyNumber {
+  width: 100%;
+  max-width: 680px;
+}
+.PB_policyNumber .white_container {
+  border-radius: 20px;
+  padding: 30px 27px;
+}
+.PB_policyNumber .data-item label {
+  font-weight: 400;
+  font-size: 12px;
+  color: #000000;
+}
+.PB_policyNumber .data-item h6 {
+  font-weight: 600;
+  font-size: 15px;
+  color: #000000;
+}
+.download_policyKit {
+  background: #F2F6FE;
+  border-radius: 4px;
+  padding: 4px 4px 4px 12px;
+  display: flex;
+  justify-content: space-between;
+}
+.download_policyKit h6 {
+  font-weight: 400;
+  font-size: 14px;
+  color: #000000;
+}
+.download_policyKit .btn_downloadKit{
+  border-width: 0;
+  background: #ffffff;
+  box-shadow: 0px 2px 12px 0px #0000001A;
+  border-radius: 4px;
+  padding: 4px 15px 4px 17px;
+  display: flex;
+  gap:10px;
+  font-weight: 600;
+  font-size: 12px;
+  color: #144DB8;
+}
+.download_policyKit .btn_downloadKit:hover {
+  opacity: 0.5;
+}
+.img_daha {
+  position: relative;
+  min-height: 269px;
+  max-width: 210px;
+  margin: auto;
+}
+.img_daha .img_daha_mobile {
+  position: absolute;
+  bottom: 0;
+  z-index: 1;
+}
+.img_daha .img_daha_ellipse {
+  position: absolute;
+  bottom: 0;
+}
+.img_daha_Info h6 {
+  font-weight: 400;
+  font-size: 26px;
+  color: #000000;
+  line-height: 28px;
+  margin-bottom: 15px !important;
+}
+.img_daha_Info p {
+  font-weight: 400;
+  font-size: 16px;
+  color: #000000;
+  line-height: 17px;
+}
+.img_daha_Info a {
+  margin-bottom: 5px;
+  display: flex;
+}
+.setup_autoDebit h5 {
+  font-weight: 600;
+  font-size: 26px;
+  color: #000000;
+  line-height: 28px;
+  margin-bottom: 5px !important;
+}
+.setup_autoDebit h6 {
+  font-weight: 300;
+  font-size: 16px;
+  color: #000000;
+  line-height: 17px;
+  margin-bottom: 15px !important;
+}
+.setup_autoDebit p {
+  font-weight: 400;
+  font-size: 14px;
+  color: #000000;
+  line-height: 20px;
+  margin-bottom: 20px !important;
+}
+.options_autoDebit {
+  margin-bottom: 20px;
+}
+.btn_autoDebit {
+  border-radius: 4px;
+  padding: 8px 15px;
+  font-weight: 400;
+  font-size: 16px;
+}
+.options_autoDebit {
+  display: flex;
+  align-items: center;
+  gap:25px;
+}
+.options_autoDebit .item_autoDebit {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap:12px;
+  font-weight: 400;
+  font-size: 16px;
+  color: #000000;
+  line-height: 22px;
+}
+.customer_abhaID h4 {
+  font-weight: 400;
+  font-size: 16px;
+  color: #c7222a;
+  line-height: 24px;
+  margin-bottom: 5px !important;
+}
+.customer_abhaID h5 {
+  font-weight: 600;
+  font-size: 22px;
+  color: #000000;
+  line-height: 24px;
+  margin-bottom: 5px !important;
+}
+.customer_abhaID h6 {
+  font-weight: 400;
+  font-size: 16px;
+  color: #2e2e2e;
+  line-height: 36px;
+  margin-bottom: 5px !important;
+}
+.customer_abhaID p {
+  line-height: 18px;
+}
+.customer_abhaID img {
+  margin-top: -30px;
+}
+/*Post Buy Policy Number Generate end*/
