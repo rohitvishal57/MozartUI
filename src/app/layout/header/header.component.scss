@@ -196,7 +196,7 @@
       background: hsla(0, 0%, 67%, 0.227);
       color: #fff;
       padding: 6px 16px;
-      font-size: 16px;
+      font-size: 14px;
       border: none;
       border-radius: 20px;
       cursor: pointer;
@@ -205,7 +205,9 @@
       appearance: none; /* Remove default styling in some browsers */
       display: flex;
       align-items: center;
-
+      &:focus {
+        border: 0px solid var(--site-body-bg) !important;
+      }
     }
   }
   

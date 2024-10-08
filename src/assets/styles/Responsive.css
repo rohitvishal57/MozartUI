@@ -190,6 +190,7 @@
     }
     .siteHeader .abcLinksMain .abcTopLinks .abcHome a, .siteHeader .abcLinksMain .abcTopLinks .abcSolution a {
         font-weight: 600;
+        gap:5px;
     }
     .siteHeader .abcLinksMain .abcTopLinks .abcSolution a{
         padding: 5px 11px;
@@ -296,6 +297,16 @@
     }
     .customer_abhaID img {
         margin-top: 30px;
+    }
+    .uploadDocument_area {
+        gap: 20px;
+    }
+    .uploadedFiles_main li {
+        width: 100%;
+    }
+    .uploadedFiles_main li .uploadedFiles_headInfo {
+        flex-direction: column;
+        align-items: flex-end;
     }
 }
 @media (max-width:390px){
