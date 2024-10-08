@@ -4,6 +4,122 @@
             <div class="body_flex_row justify-content-between">
                 <!-- <h2>My Endorsement</h2> -->
             </div>
+            <div *ngIf="isAUuser && !this.dataToDisplay">
+                <!-- <h2 class="sub-title mb-30 font-weight-bold"> AU User Details</h2> -->
+                <section class="white_container">
+                    <h6 class="heading-16-red">AU User Details</h6>
+                </section>
+                <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" [(value)]='AUSearchCategory'
+                                    >
+                                    <!-- <option value="" disabled selected>Search Policy Number</option> -->
+                                    <option *ngFor="let opt of AUSearchby" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="AUSearchCategory">Search By</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="AUSearchValue" placeholder=""
+                                [(ngModel)]="AUSearchValue" type="text">
+                                <label for="AUSearchValue">Identification Number</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-lg-3 col-md-3 mb-30">
+                            <button class="au-search btn_red" type="button" (click)="SETAUDATA()">Search</button>
+                        </div>
+
+                    </div>
+                </section>
+            </div>  
+             <div *ngIf="isIDFCUser &&  !this.dataToDisplay">
+                <!-- <h2 class="sub-title mb-30 font-weight-bold" > IDFC User Details</h2> -->
+                <section class="white_container">
+                    <h6 class="heading-16-red">IDFC User Details</h6>
+                </section>
+             
+                <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" [(ngModel)]="AUSearchCategory"
+                                    >
+                                    <!-- <option value="" disabled selected>Search Policy Number</option> -->
+                                    <option *ngFor="let opt of AUSearchby" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="AUSearchCategory">Search By</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="IDFCSearchValue" placeholder=""
+                                [(ngModel)]="IDFCSearchValue" type="text">
+                                <label for="IDFCSearchValue">Identification Number</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-lg-3 col-md-3 mb-30">
+                            <button class="au-search btn_red" type="button" (click)="SETIDFCDATA()">Search</button>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+            <div *ngIf="isYESuser && !this.dataToDisplay">
+                <section class="white_container">
+                    <h6 class="heading-16-red">Yes Bank User Details</h6>
+                </section>
+                <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" [(ngModel)]="YESSearchCategory"
+                                    >
+                                    <!-- <option value="" disabled selected>Search Policy Number</option> -->
+                                    <option *ngFor="let opt of YESSearchby" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="YESSearchCategory">Search By</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="YESSearchValue" placeholder=""
+                                [(ngModel)]="YESSearchValue" type="text" (input)="checkEnableSendOTP()">
+                                <label for="YESSearchValue">Identification Number</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-lg-2 col-md-2 mb-30">
+                            <label class="label label-height label-form-builder">&nbsp;</label>
+                            <button class="au-search yes-search btn_red" type="button" [disabled]="!sendOTPEnabled"
+                                (click)="sendOTP()">Send OTP
+                            </button>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="otpEntered">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="enteredOTP" placeholder=""
+                                [(ngModel)]="enteredOTP" type="text" (input)="checkEnableSendOTP()">
+                                <label for="enteredOTP">Enter OTP</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-lg-1 col-md-1 mb-30" *ngIf="otpEntered">
+                            <label class="label label-height label-form-builder">&nbsp;</label>
+                            <button class="au-search yes-search btn_red" type="button" (click)="validate()">Validate
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
             <section class="white_container">
                 <h6 class="heading-16-red">Lead Details</h6>
             </section>

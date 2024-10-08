@@ -13,6 +13,20 @@ import { LeadsService } from '../leads.service';
 export class CreateLeadComponent implements OnInit{
   userValidations!: FormGroup;
   submitted: boolean = false;
+  otpEntered: boolean = false;
+  enteredOTP: string = '';
+  sendOTPEnabled: boolean = false;
+  YESSearchValue: string = "";
+  YESSearchby: any[] = ['Customer ID'];
+  YESSearchCategory: any;
+  IDFCSearchValue=''
+  dataToDisplay: any;
+  isYESuser = false;
+  isAUuser = false;
+  AUSearchby: any[] = ['Customer ID', 'Aadhar Card', 'PAN Card'];
+  AUSearchCategory: any;
+  isIDFCUser=false;
+  AUSearchValue: string = "";
   constructor(private formBuilder: FormBuilder, private leadsService: LeadsService,  private datePipe: DatePipe, public CreateLead: CreateLead, public CreateLeadList: LeadFormListValue,){
 
   }
@@ -106,6 +120,19 @@ export class CreateLeadComponent implements OnInit{
   }
   campnoSelected(){
 
+  }
+  SETAUDATA() {
+  }
+  SETIDFCDATA() {
+  }
+  checkEnableSendOTP() {
+    // Check if the Identification Number field is not empty to enable Send OTP button
+    this.sendOTPEnabled = this.YESSearchValue.trim() !== '';
+  }
+  validate(){
+
+  }
+  sendOTP() {
   }
   onSubmit(){
     this.submitted = true;
