@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConfigService } from 'src/app/services/config.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -8,7 +9,7 @@ import { HttpService } from 'src/app/services/http.service';
 export class LoginService {
 
   constructor(private configService: ConfigService,
-    private httpService: HttpService
+    private httpService: HttpService  
   ) { }
 
   //Agent APi's
@@ -20,7 +21,6 @@ export class LoginService {
   storeToken(token: string) {
     localStorage.setItem('token', token);
   }
-
 
   // For Send OTP Login
   validateOtpRequestApi(validateOtpReqBody: any) {
@@ -36,5 +36,13 @@ export class LoginService {
   getContactDetailsByAgentCodeApi(contactDetailsReqBody: any) {
     const getContactDetailsByAgentCodeApi = this.configService.config.baseUrl + this.configService.config.getContactDetailsByAgentCode;
     return this.httpService.post(getContactDetailsByAgentCodeApi, contactDetailsReqBody);
+  }
+
+  checkADFSLogin(loginData: any, token:any) {
+    return this.httpService.post<any>(this.configService.config.baseUrl+this.configService.config.validateadfstoken+token, loginData);
+  }
+
+  checkCyberArkLogin(loginData: any, token:any) {
+    return this.httpService.post<any>(this.configService.config.baseUrl+this.configService.config.validatecyberarktoken+token, loginData);
   }
 }

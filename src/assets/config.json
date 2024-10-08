@@ -22,6 +22,8 @@
     "uploadFiles":"claims/api/saveuploadfiledetails",
 
     "partnerlogin":"auth/api/login",
+    "validateadfstoken":"auth/api/validateadfstoken?Idtoken=",
+    "validatecyberarktoken":"auth/api/validatecyberarktoken?Idtoken=",
     "getContactDetailsByAgentCode":"auth/api/getcontactdetailsbyagentcode",
     "sendotp":"auth/api/sendotp",
     "validateotp":"auth/api/validateotp",
