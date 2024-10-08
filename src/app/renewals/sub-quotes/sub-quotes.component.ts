@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RenewalList } from 'src/app/interface/renewal-list.interface';
 
 @Component({
   selector: 'app-sub-quotes',
@@ -10,6 +11,7 @@ export class SubQuotesComponent {
 
   subQuotes:boolean=false;
   selectedView: string = "list";
+  subQuotesList:RenewalList[]=[]
 
   constructor(){}
 

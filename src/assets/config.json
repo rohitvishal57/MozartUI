@@ -1,7 +1,7 @@
 {
     "baseUrl":"https://usp.monocept.ai/",    
     "getRenewalList": "renewal/api/getrenewallist",
-    "getRenewalInfo":"renewal/api/renewalinfo",
+    "getRenewalInfo":"renewal/api/renewalinfotest",
     "sendRenewalWhatappsms":"renewal/api/sendrenewalwhatappsms",
     "sendRenewalsms":"renewal/api/sendrenewalsms",
     "sendRenewalEmail":"renewal/api/sendrenewalnotice",
