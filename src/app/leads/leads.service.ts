@@ -22,4 +22,11 @@ export class LeadsService {
     const saveLeadDataApi = this.configService.config.baseUrl + this.configService.config.saveLeadData;
     return this.http.post<any>(saveLeadDataApi, requestBody);
   }
+
+  getCampaignListApi(requestBody:any):Observable<any>{
+    const getCampaignListApi = this.configService.config.baseUrl + this.configService.config.getcampaignsdetails;
+    return this.http.post<any>(getCampaignListApi, requestBody);
+  }
+
+  
 }

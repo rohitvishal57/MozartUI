@@ -11,6 +11,7 @@
     "getLeadsListApi":"yatra/api/getleaddetailslist",
     "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",
     "saveLeadData":"yatra/api/createlead",
+    "getcampaignsdetails":"yatra/api/getcampaignsdetails",
 
 
     "getProposalListApi":"yatra/api/getproposallist",

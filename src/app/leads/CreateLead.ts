@@ -1,5 +1,5 @@
 export class CreateLead {
-    agentcode!: string;
+    AgentCode!: string;
     firstname!: string;
     lastname!: string;
     middlename!: string;
