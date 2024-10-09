@@ -895,9 +895,7 @@ button {
     background:#ffffff url(../Img/icon_arrow_back_mobile.svg) no-repeat center center;
     border: 1px solid var(--white-color);
     border-radius: 7px;
-    box-shadow: -2px -12px 24px 15px #CECECE29;
-    box-shadow: -2px -12px 24px 15px #CECECE29, 7px 15px 19px -9px #0000001C;
-    display: none;
+    box-shadow: 2px 2px 12px 0px #CECECE29;
 }
 .btn_newRequest {
   padding: 8px;
