@@ -62,71 +62,54 @@ export class EndorsementsNewRequestComponent implements OnInit {
       value: "aadharNumber"
     },
     {
-      name: "Change my Alternate number",
-      value: "alternateContactNumber"
-    },
-    {
-      name: "Change in International Contact Number",
-      value: "internationalContactNumber"
-    },
-    {
-      name: "Change in my Email ID- member",
-      value: "memberEmail"
-    },
-    {
-      name: "Change in my Email ID",
-      value: "email"
-    },
-    {
-      name: "Change my Alternate Email ID - member",
-      value: "memberAlternateEmail"
-    },
-    {
-      name: "Change my Alternate Email ID",
-      value: "alternateEmail"
-    },
-    {
-      name: "Change my Alternate number- member",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Change my Primary Registered Number- Member",
-      value: "memberPrimaryContactNumber"
+      name: "Pancard Update",
+      value: "panNumber"
     },
     {
       name: "Change my Primary Registered Number",
       value: "primaryContactNumber"
     },
     {
+      name: "Change my Alternate number",
+      value: "alternateContactNumber"
+    },
+    {
+      name: "Change in my Email ID",
+      value: "email"
+    },
+    {
+      name: "Change my Alternate Email ID",
+      value: "alternateEmail"
+    },
+    {
+      name: "Change my Primary Registered Number- Member",
+      value: "memberPrimaryContactNumber"
+    },
+    {
+      name: "Change my Alternate number- member",
+      value: "memberAlternateContactNumber"
+    },
+    {
+      name: "Change in my Email ID- member",
+      value: "memberEmail"
+    },
+    {
+      name: "Change my Alternate Email ID - member",
+      value: "memberAlternateEmail"
+    },
+    {
       name: "Change of Nominee",
       value: "nomineeContact"
     },
     {
-      name: "Correction in the email ID",
-      value: "CorrectionintheemailID"
-    },
+      name: "Change in International Contact Number",
+      value: "internationalContactNumber"
+    },  
     {
-      name: "Pancard Update",
-      value: "panNumber"
+      name: "Change in International Address",
+      value: "ChangeinInternationalAddress"
     },
-    //
-    {
-      name: "Addition of member/child- Premium calculation",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Addition of member/child- Premium recieved",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Addition of new born",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Addition of spouse",
-      value: "memberAlternateContactNumber"
-    },
-    {
+    /* {
       name: "Change in Bank details",
       value: "memberAlternateContactNumber"
     },
@@ -158,7 +141,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
       name: "Change my name",
       value: "memberAlternateContactNumber"
     },
-
+    {
+      name: "Addition of member/child- Premium calculation",
+      value: "memberAlternateContactNumber"
+    },
+    {
+      name: "Addition of member/child- Premium recieved",
+      value: "memberAlternateContactNumber"
+    },
+    {
+      name: "Addition of new born",
+      value: "memberAlternateContactNumber"
+    },
+    {
+      name: "Addition of spouse",
+      value: "memberAlternateContactNumber"
+    }, 
     {
       name: "Correction in DOB",
       value: "memberAlternateContactNumber"
@@ -172,10 +170,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
       value: "memberAlternateContactNumber"
     },
     {
-      name: "Correction in the emailID -  Member",
-      value: "memberAlternateContactNumber"
-    },
-    {
       name: "Deletion of Member from Policy",
       value: "memberAlternateContactNumber"
     },
@@ -183,7 +177,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
       name: "Details correction in E-health card",
       value: "memberAlternateContactNumber"
     },
-
     {
       name: "Disclosure of portability details",
       value: "memberAlternateContactNumber"
@@ -198,11 +191,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
     },
     {
       name: "Salutation change",
-      value: "memberAlternateContactNumber"
-    },
-
-    {
-      name: "Spelling Error in my name",
       value: "memberAlternateContactNumber"
     },
     {
@@ -224,11 +212,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     {
       name: "Updation of Loan account number",
       value: "memberAlternateContactNumber"
-    },  
-    {
-      name: "Change in International Address",
-      value: "ChangeinInternationalAddress"
-    }, 
+    } */
   ];
   filteredActivity: Observable<any[]> | any;
   MemberfilteredActivity: Observable<any[]> | undefined;
@@ -259,6 +243,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   isDesktop: boolean = false;
   otpPopupRef: BsModalRef<unknown> | any;
   documentSize: any;
+  uploadDoc: boolean = true;
   constructor(private formBuilder: FormBuilder,
     private modalService: BsModalService,
     private endorsement_service: EndorsementsRequestsService,
@@ -478,9 +463,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
    
     if (value === 'panNumber' || value === 'nomineeContact' || value === 'aadharNumber'||value=='ChangeinInternationalAddress') {
+      this.uploadDoc = true;
       this.showOtpSection = false;
       this.isDisabled = false;
     } else {
+      this.uploadDoc = false;
       this.showOtpSection = true;
       this.isDisabled = true;
     }

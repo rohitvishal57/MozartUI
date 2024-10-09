@@ -1,0 +1,93 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>My Endorsement</h2>
+            </div>
+
+            <div class="white_container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Endorsement Details</h4>
+                    </div>
+                    <hr />
+                    <div class="col-sm-2">
+                        <p><small>Request ID</small>{{policyData.caseId ? policyData.caseId : '-'}}</p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p><small>Member Name</small>{{policyData.memberName ? policyData.memberName : '-'}}
+                        </p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p><small>Member Relation</small>{{policyData.memberRelation ? policyData.memberRelation: '-'}}
+                        </p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p><small>Mobile Number</small>{{policyData.mobileNumber ? policyData.mobileNumber: '-'}}</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p><small>Endorsement Type</small>{{policyData.caseSubSubType ? policyData.caseSubSubType: '-'}}</p>
+                    </div>
+                </div>
+                <div class="row" *ngIf="policyData.caseSubSubType == 'Change of Nominee'">
+                    <div class="col-sm-2">
+                        <p><small>Nominee Name</small>{{ policyData.nomineeName ? policyData.nomineeName:'-' }}</p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p><small>Nominee Relationship</small>{{policyData.nomineeRelationship ? policyData.nomineeRelationship:'-'}}
+                        </p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p><small>Nominee Contact</small>{{policyData.nomineeContact? policyData.nomineeContact:'-'}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <p><small>Member ID</small>{{ policyData.customer ? policyData.customer:'-' }}</p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p><small>Category</small>{{policyData.category ? policyData.category:'-'}}
+                        </p>
+                    </div>
+                    <div class="col-sm-2">
+                        <p><small>Status</small>{{policyData.status? policyData.status:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change my Primary Registered Number'">
+                        <p><small>Primary Contact Number</small>{{policyData.primaryContactNumber? policyData.primaryContactNumber:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change my Primary Registered Number- Member'">
+                        <p><small>Member Primary Contact Number</small>{{policyData.memberPrimaryContactNumber? policyData.memberPrimaryContactNumber:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change my Alternate number'">
+                        <p><small>Alternate Contact Number</small>{{policyData.alternateContactNumber? policyData.alternateContactNumber:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change my Alternate number- member'">
+                        <p><small>Member Alternate Contact Number</small>{{policyData.memberAlternateContactNumber? policyData.memberAlternateContactNumber:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change in International Contact Number'">
+                        <p><small>International Contact Number</small>{{policyData.internationalContactNumber? policyData.internationalContactNumber:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change in my Email ID- member'">
+                        <p><small>Member Email</small>{{policyData.memberEmail? policyData.memberEmail:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change in my Email ID'">
+                        <p><small>Email</small>{{policyData.c? policyData.email:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change my Alternate Email ID'">
+                        <p><small>Alternate Email</small>{{policyData.alternateEmail? policyData.alternateEmail:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Change my Alternate Email ID - member'">
+                        <p><small>Member Alternate Email</small>{{policyData.memberAlternateEmail? policyData.memberAlternateEmail:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Aadhar Card Update'">
+                        <p><small>Aadhar No</small>{{policyData.aadharCardNo? policyData.aadharCardNo:'-'}}</p>
+                    </div>
+                    <div class="col-sm-3" *ngIf="policyData.caseSubSubType == 'Pancard Update'">
+                        <p><small>PAN No</small>{{policyData.panCardNo? policyData.panCardNo:'-'}}</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>

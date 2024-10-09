@@ -24,12 +24,18 @@
                         <div class="field_searchMain">
                             <select [(ngModel)]="selected" class="filterSearch" (ngModelChange)="onSelectChanges($event)">
                                 <option value="" disabled selected>Select an option</option>
+                                <option value="date">Date</option>
                                 <option value="EndorsementID">Request ID</option>
                                 <option value="memberName">Member Name</option>
                                 <option value="policyNumber">Policy Number</option>
                             </select>
-                            <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <div *ngIf="selected == 'date'" class="d-flex field_searchMain">
+                                <input type="date" class="filterSearch" [formControl]="searchInputControl" id="filterSearch" (change)="getFromDate($event)">
+                                <input type="date" class="filterSearch" [formControl]="searchInputControl" id="filterSearch" (change)="getToDate($event)">
+                                <button *ngIf="selected == 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            </div>
+                            <input *ngIf="selected != 'date'" class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <button *ngIf="selected != 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <!--Search section end-->
@@ -56,7 +62,7 @@
                           </thead>
                           <tbody class="table-group-divider" >
                             <tr *ngFor="let row of endorsementDetails; let i = index"
-                    class="table-values">
+                    class="table-values" (click)="getEndorsementDetails(row)">
                                 <td class="td-text-bold">{{ row?.caseId }}</td>
                                 <td >{{ row?.policyNumber }}</td>
                                 <td ><span class="text-break-w100">{{ row?.productName }}</span></td>
@@ -88,7 +94,7 @@
             </section>
             <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
                 <div class="cardViewWraper">
-                    <div class="cardViewItem" *ngFor="let row of endorsementDetails | paginate: { itemsPerPage: rows, currentPage: page } ; let i = index">
+                    <div class="cardViewItem" *ngFor="let row of endorsementDetails; let i = index" (click)="getEndorsementDetails(row)">
                         <header>
                             <div class="card_insureInfo">
                                 <h6>
@@ -144,8 +150,8 @@
                         <ul class="pagination">
                             <li class="page-item">
                                 <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords"
-                                [rowsPerPageOptions]="[5,10,15,20]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                            </p-paginator>
+                                [rowsPerPageOptions]="[10,30,50]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                                </p-paginator>
                             </li>
                             <li class="pageCountMain">
                             <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}} of {{totalRecords}} entries</span>

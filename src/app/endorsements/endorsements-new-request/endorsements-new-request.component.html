@@ -11,7 +11,7 @@
         <form (ngSubmit)="onSubmit()" [formGroup]="caseCreationForm" novalidate autocomplete="false">
           <section class="white_container">
               <div class="row mb-3">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                   <div class="input-block form-floating input-block-renew">
                     <select class="form-select input-selectBox" formControlName="policyNumber" (change)="onChange($event)">
                       <option value="" disabled selected>Search Policy Number</option>
@@ -24,7 +24,7 @@
                     <span *ngIf="submitted && caseCreationForm.get('policyNumber').invalid" class="ui-error block-show">Please select policy number</span>
                   </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                   <div class="input-block form-floating input-block-renew">
                     <select class="form-select input-selectBox" formControlName="member" (change)="memberIdChange($event)">
                         <option value="" disabled selected>Select Member</option>
@@ -36,7 +36,7 @@
                     <span *ngIf="submitted && caseCreationForm.get('member').invalid" class="ui-error block-show">Please select member</span>
                   </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                   <div class="input-block form-floating input-block-renew">
                     <select class="form-select input-selectBox" formControlName="endorsementType" (change)="endorsementChange($event)">
                         <option value="" disabled selected>Select Endorsement Type</option>
@@ -48,17 +48,16 @@
                     <span *ngIf="submitted && caseCreationForm.get('endorsementType').invalid" class="ui-error block-show">Please select Endorsement Type</span>
                   </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                   <div class="input-block form-floating input-block-renew">
                     <select tabindex="2" formControlName="asignedTeam" class="form-select input-selectBox">
                       <option value="" disabled selected>Choose Option</option>
                       <option value="Endorsement - Non financial">Endorsement - Non financial</option>
-                      <!-- Add more options as needed -->
                     </select>
                     <label for="asignedTeam">Assigned Team</label>
                     <span *ngIf="submitted && caseCreationForm.get('asignedTeam').invalid" class="ui-error block-show">Please select Assigned Team</span>
                   </div>
-                </div>
+                </div> -->
 
                 <div formGroupName="endorsementDetails" class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                   <!--Aadhar card Number start-->  
@@ -314,7 +313,7 @@
                     <label for="currentdetails">Current Details in Policy</label>
                   </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4" *ngIf="uploadDoc">
                   <div class="uploadDocument_main">
                     <div *ngIf="!showDocInfo">
                       <div class="uploadDocument_area" (click)="fileInput.click()">
