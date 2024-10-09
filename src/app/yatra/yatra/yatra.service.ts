@@ -95,12 +95,20 @@ export class YatraService {
     return this.httpService.post(GetHalfQuote,reqData);
   }
   GetKycDetails(reqData:any){
-    // const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.GetKycDetails;
-    const getKycDetails='https://localhost:7188/api/getkycdetails';
+    const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.getKycDetails;
+    // const getKycDetails='https://localhost:7188/api/getkycdetails';
     return this.httpService.post<any>(getKycDetails,reqData);
   }
   GetCustomerDetailsViaPolicyNumber(reqData:any){
     const policyNumber=this.configService.config.baseUrl+this.configService.config.getPolicyNumberDetails;
     return this.httpService.post(policyNumber,reqData);
+  }
+  getBankCity(reqData:any){
+    const getBankCity=this.configService.config.baseUrl+this.configService.config.getBankCity;
+    return this.httpService.post(getBankCity,reqData);
+  }
+  getBranchDetails(reqData:any){
+    const getBranchDetails=this.configService.config.baseUrl+this.configService.config.getBranchDetails;
+    return this.httpService.post(getBranchDetails,reqData);
   }
 }

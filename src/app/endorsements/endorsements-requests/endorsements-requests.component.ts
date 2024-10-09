@@ -21,11 +21,14 @@ export class EndorsementsRequestsComponent implements OnInit {
   selectedView: string = "list";
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
-  selected: string = "";
+  selected: string = "date";
   searchInputControl = new FormControl("");
   isDesktopView: boolean = false
+  fromDate: any;
+  toDate: any;
   constructor(private router:Router,
     private endorsementService: EndorsementsRequestsService,
+    private _router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -47,12 +50,18 @@ export class EndorsementsRequestsComponent implements OnInit {
     }
   }
 
+  getEndorsementCaseDetails (data:any) {
+    this._router.navigate(['endorsements/endorsemet-details/'+data?.caseId]);
+  }
+
   requestsListRequestBody:any = {
       "agentCode": localStorage.getItem('agentCode'),
+      "fromDate": "",
+      "toDate": "",
       "start": 0,
       "length": 10,
-      "sortColumn": "RaisedOn",
-      "searchColumn": "MemberName",
+      "sortColumn": "RequestedOn",
+      "searchColumn": "",
       "sortDirection": "DESC",
       "searchString": "",
       "uiStatus": []
@@ -60,6 +69,7 @@ export class EndorsementsRequestsComponent implements OnInit {
    
   getRequestList() {
     this.requestsListRequestBody.start = (this.page - 1) * this.rows;
+    this.requestsListRequestBody.length = this.rows;
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
         if (response && response.statusCode == "200" && response.isSuccess) {
@@ -85,11 +95,20 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.getRequestList();
     this.activeFilter = filter;
   }
+
   toggleSearchDropdown() {
     if (this.toggeledropdown == true) {
       this.toggeledropdown = false;
     }
     this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
+  }
+
+  getFromDate(event:any){
+    this.fromDate = event.target.value;
+  }
+
+  getToDate(event:any){
+    this.toDate = event.target.value;
   }
 
   onSelectChanges(event: any): void {
@@ -113,6 +132,13 @@ export class EndorsementsRequestsComponent implements OnInit {
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
+      ]);
+    } else if (this.selected === "date") {
+      this.searchInputControl.setValidators([
+        Validators.required,
+        Validators.pattern(
+          "^(\\d{4})-(\\d{2})-(\\d{2})$"
+        ),
       ]);
     }
 
@@ -160,13 +186,17 @@ export class EndorsementsRequestsComponent implements OnInit {
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
       }
       else if (this.selected === "memberName") {
-        this.requestsListRequestBody.searchColumn = "memberName";
+        this.requestsListRequestBody.searchColumn = "MemberName";
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
       }
       else if (this.selected === "policyNumber") {
         this.requestsListRequestBody.searchColumn = "policyNumber";
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
+      } else if (this.selected === "date") {
+        this.requestsListRequestBody.fromDate = this.fromDate;
+        this.requestsListRequestBody.toDate = this.toDate;
       }
+      
       this.getRequestList();
       this.toggeleSearchdropdown = false;
     }

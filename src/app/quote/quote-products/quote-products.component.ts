@@ -64,69 +64,68 @@ export class QuoteProductsComponent implements OnInit {
     localStorage.setItem("formIndex", "0")
     console.log(this.formData, this.agentCode, this.cartProductList);
     this.getPoductList();
-    this.Getagentcartdetails();
   }
 
-  getPoductList() {
+  getPoductList(){
     // this.selectedToggle = item.insuranceType
-    const reqData = {
-      agentCode: this.agentCode,
-      sumInsured: String(this.formData.sumInsured),
-      quoteData: JSON.stringify(this.formData)
-    }
-    // this.loginService.Getproductlist(reqData).subscribe({
-    //   next: (res) => {
-    //     this.ProductList = res.data;
-    //     console.log(this.ProductList)
-    //     this.ProductList.forEach((item:any)=>{
-    //       item.keyFeatures = JSON.parse(item.keyFeatures)
-    //       console.log(typeof(item.keyFeatures));
-    //       this.plans[1].discount = item.t2DiscPercentage;
-    //       this.plans[2].discount = item.t3DiscPercentage;
-    //     })
-    //   },
-    //   error: (err) => {
-    //     console.error(err);
-    //     if (err.status === 404) {
-    //       this.displayNoProductsMessage = true;
-    //     }
-    //   }
-    // })
-    console.log(reqData);
-    this.spinner.show();
-    // this.service.Getproductlist3({}).subscribe({
-    this.quoteService.Getproductlist2(reqData).subscribe({
-      next: (res:any) => {
-        this.spinner.hide();
-        console.log(res)
-        this.partnerId = res.data.partnerId
-        this.ProductList = res.data.products
-        console.log(this.ProductList);
-        this.ProductList.forEach((prod: any) => {
-          // Parse keyFeatures and initialize selectedAddon
-          prod.keyFeatures = JSON.parse(prod.keyFeatures);
-          prod.selectedAddon = [];
-
-          // Round tenure premiums
-          prod.tenure1Premium = Math.round(prod.tenure1Premium);
-          prod.tenure2Premium = Math.round(prod.tenure2Premium);
-          prod.tenure3Premium = Math.round(prod.tenure3Premium);
-
-          // Optionally, log the updated product
-          console.log(prod);
-        });
-
-        this.selectedPlans = Array(this.ProductList.length).fill(null);
-        this.addonView = Array(this.ProductList.length).fill(false);
-      },
-      error: (err) => {
-        this.spinner.hide();
-        console.error(err);
-        if (err.status === 404) {
-          this.displayNoProductsMessage = true;
-        }
+      const reqData = {
+        agentCode: this.agentCode,
+        sumInsured: String(this.formData.sumInsured),
+        quoteData: JSON.stringify(this.formData)
       }
-    })
+      // this.loginService.Getproductlist(reqData).subscribe({
+      //   next: (res) => {
+      //     this.ProductList = res.data;
+      //     console.log(this.ProductList)
+      //     this.ProductList.forEach((item:any)=>{
+      //       item.keyFeatures = JSON.parse(item.keyFeatures)
+      //       console.log(typeof(item.keyFeatures));
+      //       this.plans[1].discount = item.t2DiscPercentage;
+      //       this.plans[2].discount = item.t3DiscPercentage;
+      //     })
+      //   },
+      //   error: (err) => {
+      //     console.error(err);
+      //     if (err.status === 404) {
+      //       this.displayNoProductsMessage = true;
+      //     }
+      //   }
+      // })
+      console.log(reqData);
+      // this.spinner.show();
+      // this.service.Getproductlist3({}).subscribe({
+      this.quoteService.Getproductlist2(reqData).subscribe({
+        next: (res: any) => {
+          console.log(res)
+          this.Getagentcartdetails();
+          this.partnerId = res.data.partnerId
+          this.ProductList = res.data.products
+          console.log(this.ProductList);
+          this.ProductList.forEach((prod: any) => {
+            // Parse keyFeatures and initialize selectedAddon
+            prod.keyFeatures = JSON.parse(prod.keyFeatures);
+            prod.selectedAddon = [];
+
+            // Round tenure premiums
+            prod.tenure1Premium = Math.round(prod.tenure1Premium);
+            prod.tenure2Premium = Math.round(prod.tenure2Premium);
+            prod.tenure3Premium = Math.round(prod.tenure3Premium);
+
+            // Optionally, log the updated product
+            console.log(prod);
+          });
+
+          this.selectedPlans = Array(this.ProductList.length).fill(3);
+          this.addonView = Array(this.ProductList.length).fill(false);
+        },
+        error: (err) => {
+          // this.spinner.hide();
+          console.error(err);
+          if (err.status === 404) {
+            this.displayNoProductsMessage = true;
+          }
+        }
+      });
   }
   // getProducts() {
   //   this.loginService.getAllProducts().subscribe({
@@ -220,12 +219,16 @@ export class QuoteProductsComponent implements OnInit {
   }
 
   addToCart(item: any) {
-    item.tenureAmounts = []
+    item.tenureAmounts = [];
+    const selectedPlanIndex = this.selectedPlans[this.ProductList.indexOf(item)];
+    const selectedPremiumKey = `tenure${selectedPlanIndex}Premium`;
+
     for (let i = 1; i <= 3; i++) {
       const premiumKey = `tenure${i}Premium`;
       console.log(item[premiumKey]);
       item.tenureAmounts[i - 1] = item[premiumKey]
     }
+    item.selectedPremiumAmount = item[selectedPremiumKey];
     console.log(item);
     this.cartProductList.push(item);
     console.log(item);

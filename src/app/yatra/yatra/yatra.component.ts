@@ -39,7 +39,7 @@ export class YatraComponent {
   activeTab: string = 'chronic';
   expandedItem: string = '';
   selectedItem: string = '';
-  bankName: any;
+  bankCode: any;
   bankCity: any;
   formControls: IFormControl[] = [];
 
@@ -1007,7 +1007,7 @@ export class YatraComponent {
 
       this.yatraService.getAllBankDetails().subscribe({
         next: (res:any) => {
-          control.options = res.allBanksData;
+          control.options = res.data;
         },
         error: (err) => {
           console.error(err);
@@ -1021,14 +1021,15 @@ export class YatraComponent {
     otherControl.value = "";
     otherControl.options = [];
     const data = JSON.parse(event.target.value);
-    this.bankName = data.id as string;
+    this.bankCode = data.id;
     const reqData = {
-      "bankName": this.bankName
+      "cityCode":"",
+      "bankCode": this.bankCode
     };
-
-    this.commonService.getBankCity(reqData).subscribe({
+    this.yatraService.getBankCity(reqData).subscribe({
       next: (res:any) => {
-        otherControl.options = [...res.AllBankCity]; // Create a new array to trigger change detection
+        console.log(res);
+        otherControl.options = [...res.data]; // Create a new array to trigger change detection
       },
       error: (err) => {
         console.error(err);
@@ -1041,15 +1042,20 @@ export class YatraComponent {
     otherControl.options = []; // Reset options to an empty array
 
     const data = JSON.parse(event.target.value);
+    console.log(event.target.value,data,data.id);
     this.bankCity = data.id as string;
+    console.log(this.bankCity);
+    
     const reqData = {
-      "bankName": this.bankName,
-      "city": this.bankCity
+      "bankCode": this.bankCode,
+      "cityCode": this.bankCity
     };
 
-    this.commonService.getBranchDetails(reqData).subscribe({
+    console.log(reqData);
+    this.yatraService.getBranchDetails(reqData).subscribe({
       next: (res:any) => {
-        otherControl.options = [...res.BranchDetails]; // Create a new array to trigger change detection
+        console.log(res);
+        otherControl.options = [...res.data]; // Create a new array to trigger change detection
       },
       error: (err) => {
         console.error(err);
@@ -1727,9 +1733,6 @@ export class YatraComponent {
     // Wrapping the asynchronous operation in a promise
     return new Promise((resolve, reject) => {
       const reqData = {
-        agencyCode: this.partnerId,
-        insuranceTypeCode: 101,
-        productId: this.productId,
         policyType: this.dynamicFormGroup.get('memberPolicyType')?.value,
       };
 
@@ -1744,7 +1747,7 @@ export class YatraComponent {
           const controlGroup = this.fb.group({});
 
           // For each relationship option, add a control
-          res.relationShip.forEach((option: any) => {
+          res.data.relationShip.forEach((option: any) => {
             controlGroup.addControl(option.value, new FormControl(false));
           });
 
@@ -1769,7 +1772,7 @@ export class YatraComponent {
           this.dynamicFormGroup.addControl(control.name, controlGroup);
 
           // Update control with the fetched options
-          control.selectCheckboxOptions = res.relationShip;
+          control.selectCheckboxOptions = res.data.relationShip;
           console.log(this.isQuote, this.isPolicyDetailsFetch);
 
           if (this.isQuote || this.isPolicyDetailsFetch) {
