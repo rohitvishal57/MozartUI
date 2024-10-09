@@ -2005,8 +2005,8 @@ a:not([href]) {
     background-color: #fff;
     border: 1px solid #d5d7de;
     border-radius: 16px;
-    min-width: 230px;
-    margin: 0px 24px 0 0;
+    min-width: 21%;
+    margin: 0px 4% 3% 0;
     padding: 16px 20px;
     color: #902a38;
     font-size: 16px;
@@ -2613,4 +2613,23 @@ margin: 0;
     text-align: center;
     color: #fff;
 }
+  
+.custom-copy-button {
+    background-color: #c72229; /* Set button background color */
+    color: white;              /* Set text/icon color */
+    border: none;              /* Remove border */
+    border-radius: 12px;
+    i {
+      color: white;            /* Set icon color */
+    }
+  
+    &:hover {
+      background-color: #ffe2dc; /* Change background color on hover */
+      color: #c72229;            /* Change text/icon color on hover */
+      
+      i {
+        color: #c72229;          /* Change icon color on hover */
+      }
+    }
+  }
   

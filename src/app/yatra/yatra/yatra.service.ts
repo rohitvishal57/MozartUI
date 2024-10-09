@@ -95,8 +95,8 @@ export class YatraService {
     return this.httpService.post(GetHalfQuote,reqData);
   }
   GetKycDetails(reqData:any){
-    // const kycDetails=this.configService.config.baseUrl+this.configService.config.GetKycDetails;
-    const getKycDetails=this.configService.config.getKycDetails;
+    // const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.GetKycDetails;
+    const getKycDetails='https://localhost:7188/api/getkycdetails';
     return this.httpService.post<any>(getKycDetails,reqData);
   }
   GetCustomerDetailsViaPolicyNumber(reqData:any){

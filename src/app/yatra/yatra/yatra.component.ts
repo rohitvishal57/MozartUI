@@ -2,14 +2,14 @@ import { ChangeDetectorRef, Component, ElementRef, Inject, Renderer2, inject } f
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
-import { DOCUMENT, DatePipe } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
-import { HttpClient } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { Router } from '@angular/router';
-import { concatMap, of, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { YatraService } from './yatra.service';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-yatra',
@@ -91,9 +91,9 @@ export class YatraComponent {
   question: any;
 
   constructor(private renderer: Renderer2, private el: ElementRef,
-    public commonService: CommonService,private yatraService:YatraService, private router: Router, private http: HttpClient, private spinner: NgxSpinnerService,
+    public commonService: CommonService,private yatraService:YatraService, private router: Router,private spinner: NgxSpinnerService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
-    private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document) { }
+    private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document,private clipboard: Clipboard) { }
 
   ngOnInit() {
     this.spinner.show();
@@ -2103,6 +2103,32 @@ export class YatraComponent {
   }
   onButtonClick(control: any) {
     this.selectedButton = control.name;
+    if(control.dependentControls){
+      this.form.formSections.forEach((section:any)=>{
+        section.formControls.forEach((controls:any)=>{
+            control.dependentControls.forEach((item:any) => {
+            if(controls.name == item){
+              controls.visible = true;
+            }
+          })
+        })
+      })
+    }
+    else{
+      let list:any=[];
+      this.form.formSections.forEach((section:any)=>{
+        section.formControls.forEach((controls:any)=>{
+          if(controls.dependentControls){
+            list = controls.dependentControls;
+          }
+          list.forEach((item:any) => {
+            if(controls.name == item){
+              controls.visible = false;
+            }
+          })
+        })
+      })
+    }
   }
   // In your template, you can bind the class dynamically
   getButtonClass(control: any): string {
@@ -3791,7 +3817,11 @@ export class YatraComponent {
     if(subControl.innerArrayControl.length > 1){
       subControl.innerArrayControl.pop();    }
   }
-    
+  copyText(control:any) {
+    console.log(control);
+    this.clipboard.copy(control);
+    // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
+  } 
   
 }
 

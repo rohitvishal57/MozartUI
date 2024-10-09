@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
@@ -20,6 +21,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PrimeNgModule,
     NgxSpinnerModule,
     ReactiveFormsModule,
+    ClipboardModule,
     YatraRoutingModule,
     TranslateModule.forRoot({
       loader: {
