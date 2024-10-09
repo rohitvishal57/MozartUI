@@ -235,6 +235,7 @@
             padding: 0;
             .mdc-tab__text-label{
               font-family: "Anek Latin", sans-serif !important;
+              letter-spacing: normal;
             }
             &.mdc-tab--active {
               .mdc-tab__content {
@@ -295,5 +296,25 @@
     height: 100%;
     border-radius: 12px;
     background: radial-gradient(69.17% 98.17% at 25.83% 93.56%, rgba(244, 251, 255, 0) 90%, #DBB3F3 160%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+  }
+  .claims_matTabs {
+    .uploadDocument_head {
+      h3 {
+        font-weight: 500;
+        font-size: 26px;
+        color: #1c1c1c;
+      }
+    }
+    .uploadDocument_area{
+      padding: 8px 16px;
+    }
+    .button_red{
+      font-size: 16px;
+      border-radius: 12px;
+      padding: 10px 46px;
+    }
+    .uploadedFiles_main li .uploadedFiles_headInfo {
+      display: none;
+    }
   }
   /*-----Claims Details start-----*/
