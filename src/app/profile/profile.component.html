@@ -1,11 +1,11 @@
 <div class="main-container">
-    <h2>Edit Member Details</h2>
+    <h2>Edit Agent Details</h2>
     <div class="profile-heading">
         <div class="profile-tabs">
             <ul class="tab-actions">
-                <li id="tab1" class="selected">Member Details</li>
-                <li id="tab2">Contact Details</li>
-                <li id="tab3">Nominee Details</li>
+                <li class="tab" [ngClass]="{'active': activeTab === 'tab1'}" (click)="tabSelection('tab1')">Member Details</li>
+                <li class="tab" [ngClass]="{'active': activeTab === 'tab2'}" (click)="tabSelection('tab2')">Contact Details</li>
+                <li class="tab" [ngClass]="{'active': activeTab === 'tab3'}" (click)="tabSelection('tab3')">Nominee Details</li>
             </ul>
         </div>
         <div class="profile-tabs-action">
@@ -114,6 +114,37 @@
                     <div>
                         <p>Relation</p>
                         <p class="bind_profile">Spouse</p>
+                    </div>
+                </div>
+                <div class="name-action">
+                    <img src="../../assets/images/edit.png" />
+                </div>
+            </div>
+        </div>
+        <h2>Verification details</h2>
+        <div class="profile-fields">
+            <div class="field">
+                <div class="name-field">
+                    <div>
+                        <img src="../../assets/images/name.png" />
+                    </div>
+                    <div>
+                        <p>Adhar Card</p>
+                        <p class="bind_profile">Ajay</p>
+                    </div>
+                </div>
+                <div class="name-action">
+                    <img src="../../assets/images/edit.png" />
+                </div>
+            </div>
+            <div class="field">
+                <div class="name-field">
+                    <div>
+                        <img src="../../assets/images/phone.png" />
+                    </div>
+                    <div>
+                        <p>Pan Card</p>
+                        <p class="bind_profile">8639166360</p>
                     </div>
                 </div>
                 <div class="name-action">

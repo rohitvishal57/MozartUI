@@ -19,7 +19,9 @@ export class QuoteService {
     return this.httpService.post(insertorupdateagentcartdetails, reqData);
   }
   Getproductlist2(reqData:any){
-    return this.httpService.post(`https://localhost:7188/api/getquotefortopsellingproducts`,reqData)
+    const  getquotefortopsellingproducts = `https://localhost:7188/api/getquotefortopsellingproducts`;
+    // const  getquotefortopsellingproducts = this.configService.config.baseUrl + this.configService.config.getquotefortopsellingproducts;
+    return this.httpService.post(getquotefortopsellingproducts,reqData)
   }
   Getproductdetailsandfeatures(reqData:any){
     const  getproductdetailsandfeatures = this.configService.config.baseUrl + this.configService.config.getProductDetailsAndFeatures;

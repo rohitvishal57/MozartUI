@@ -4,6 +4,8 @@ import { CreateLead } from '../CreateLead';
 import { LeadFormListValue } from '../leadFormListValue';
 import { DatePipe } from '@angular/common';
 import { LeadsService } from '../leads.service';
+import { NgToastService } from 'ng-angular-popup';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-lead',
@@ -27,7 +29,14 @@ export class CreateLeadComponent implements OnInit{
   AUSearchCategory: any;
   isIDFCUser=false;
   AUSearchValue: string = "";
-  constructor(private formBuilder: FormBuilder, private leadsService: LeadsService,  private datePipe: DatePipe, public CreateLead: CreateLead, public CreateLeadList: LeadFormListValue,){
+  agentCode: any;
+  constructor(private formBuilder: FormBuilder,
+       private toast: NgToastService,
+       private router:Router,
+        private leadsService: LeadsService,  
+        private datePipe: DatePipe, 
+        public CreateLead: CreateLead, 
+        public CreateLeadList: LeadFormListValue,){
 
   }
 
@@ -37,7 +46,7 @@ export class CreateLeadComponent implements OnInit{
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
     if (storedAgentCode) {
-      this.CreateLead.agentcode = storedAgentCode;
+      this.CreateLead.AgentCode = storedAgentCode.toString();
     }
     else{
       console.log("agent code is not present in local storege");
@@ -47,26 +56,27 @@ export class CreateLeadComponent implements OnInit{
       "id": 0,
       "agent": storedAgentCode
     }
+    this.agentCode = obj.agent;
     console.log(obj);
     console.log(storedAgentCode);
-    this.leadsService.getActiveCampaignDetails(obj).subscribe(
-      (response) => { 
-        console.log(response.data);
-        if (response.success) {
-          console.log(response);
-        } 
-        else {console.error("API request was not successful.");}
-      },
-      (error) => {
-        console.error("Error from getRenewalsList API:", error);
-      }
-    );
+    // this.leadsService.getActiveCampaignDetails(obj).subscribe(
+    //   (response) => { 
+    //     console.log(response.data);
+    //     if (response.success) {
+    //       console.log(response);
+    //     } 
+    //     else {console.error("API request was not successful.");}
+    //   },
+    //   (error) => {
+    //     console.error("Error from getRenewalsList API:", error);
+    //   }
+    // );
     this.inItForm();
 
   }
   inItForm(){
     this.userValidations = this.formBuilder.group({
-      campaignname: ['', Validators.required],
+      // campaignname: ['', Validators.required],
       leadType: [''],
       leadVintage: [''],
       source: [''],
@@ -147,7 +157,10 @@ export class CreateLeadComponent implements OnInit{
       // Continue with form submission if it's valid
       this.CreateLead = this.userValidations.value;
     }
+    console.log(this.agentCode);
+    this.CreateLead.AgentCode = this.agentCode;
     console.log(this.CreateLead);
+
     this.CreateLead.campaignname = 'Self'
     this.CreateLead.dob=this.userValidations?.get('dob')?.value;
     let dobFormatted = this.datePipe.transform(this.CreateLead.dob, 'yyyy-MM-dd');
@@ -159,11 +172,15 @@ export class CreateLeadComponent implements OnInit{
       (response) => { 
         console.log(response.data);
         if (response.success) {
+          this.toast.success({ detail: 'Lead is created successfully' });
           console.log(response);
+          this.router.navigate(['leads/leadsList'])
         } 
         else {console.error("API request was not successful.");}
       },
       (error) => {
+        // this.toast.error({ detail: 'Failed to submit claims' });
+
         console.error("Error from getRenewalsList API:", error);
       }
     );

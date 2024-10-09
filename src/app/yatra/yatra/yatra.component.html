@@ -640,17 +640,22 @@
                     </ng-container>
                   </ng-container>
                 </div>
-                <div *ngIf="control.type === 'editableInfo'" >
-                  <div [class]="control.class" class="typecss" [hidden]="!control.visible">
-                    <div class="input-container">
+                <div *ngIf="control.type === 'editableInfo'" [class]="control.class" class="typecss" >
+                  <div [hidden]="!control.visible">
+                    <!-- <div style="display: flex; flex-direction: row;">
                       <input *ngIf="control.disabled" class="inputField_Text_disabled"
-                        formControlName="{{ control.name }}" [type]="control.type"
-                        [ngClass]="{'disabled-has-value': hasAnyValue(control)}"
-                        (change)="onInputChange($event, control)" readonly>
-                      <label *ngIf="control.visibleLabel">{{ control.label?(control.label|translate):''}}</label>
-                    </div>
-                    <div class="edit-icon">
-                      <i (click)="selectEditField(control)" class="fa-regular fa-pen-to-square"></i>
+                        formControlName="{{ control.name }}" 
+                        [ngClass]="{'disabled-has-value': hasAnyValue(control)}" readonly>
+                        <i class="fa-regular fa-copy"></i>
+                    </div> -->
+                    <div style="display: flex; flex-direction: row;">
+                      <p>{{ control.value }}</p>
+                      <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                        formControlName="{{ control.name }}" 
+                        [ngClass]="{'disabled-has-value': hasAnyValue(control)}" readonly>
+                        <button pButton type="button" class="custom-copy-button" (click)="copyText(control)">
+                          <i class="fa-regular fa-copy"></i>
+                        </button>                        
                     </div>
                   </div>
                 </div>
@@ -717,6 +722,7 @@
                 <input *ngIf="control.type==='button' && control.visible == true" type="button"
                   (click)="callMethod(control.methodName,control)" [ngClass]="[control.class, getButtonClass(control)]"
                   value="{{ control.label ? (control.label | translate) : '' }}">
+                  
                 <div *ngIf="control.type === 'custom-radio'">
                   <div class="radio-card-container">
                     <ng-container *ngFor="let option of control.radioOptions">

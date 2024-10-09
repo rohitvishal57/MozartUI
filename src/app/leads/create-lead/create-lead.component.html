@@ -124,13 +124,12 @@
                 <h6 class="heading-16-red">Lead Details</h6>
             </section>
             <form (ngSubmit)="onSubmit()" [formGroup]="userValidations" novalidate autocomplete="false">
-                <section class="white_container">
+                <!-- <section class="white_container">
                     <div class="row mb-3">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" formControlName="campaignname"
                                     (selectionChange)="campnoSelected()">
-                                    <!-- <option value="" disabled selected>Search Policy Number</option> -->
                                     <option *ngFor="let opt of CreateLeadList.CampaignName" [value]="opt">
                                         {{ opt }}
                                     </option>
@@ -198,27 +197,9 @@
                 </section>
                 <section class="white_container">
                     <h6 class="heading-16-red">Personal Details</h6>
-                </section>
+                </section> -->
                 <section class="white_container">
                     <div class="row mb-3">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="nomineeName" placeholder=""
-                                    formControlName="mobilenumber" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }">
-                                <label for="nomineeName">Mobile Number *</label>
-                                <span class="invalid-feedback"
-                                    *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Field cannot
-                                        be blank</span>
-                                    <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.errors?.['pattern']">Enter a valid 10-digit Mobile
-                                        Number
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder=""
@@ -262,6 +243,24 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="nomineeName" placeholder=""
+                                    formControlName="mobilenumber" type="text" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }">
+                                <label for="nomineeName">Mobile Number *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Field cannot
+                                        be blank</span>
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.errors?.['pattern']">Enter a valid 10-digit Mobile
+                                        Number
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="email" placeholder=""
                                     formControlName="email" type="text" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }">
@@ -278,14 +277,14 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="isWhatsapp"
+                                <select class="form-select input-selectBox" formControlName="gender"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
-                                    <option *ngFor="let opt of CreateLeadList.IsWhatsApp" [value]="opt">
+                                    <option *ngFor="let opt of CreateLeadList.Gender" [value]="opt">
                                         {{ opt }}
                                     </option>
                                 </select>
-                                <label for="isWhatsapp">Is Watsapp</label>
+                                <label for="gender">Gender</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -302,18 +301,6 @@
                                 <label for="age">Age</label>
                                 <span class="ui-error block-show"
                                 *ngIf="submitted && userValidations.get('age')?.errors?.['pattern']">Please enter proper age in Digits</span>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="gender"
-                                    (selectionChange)="campnoSelected()">
-                                    <option value="" disabled selected>Choose Option</option>
-                                    <option *ngFor="let opt of CreateLeadList.Gender" [value]="opt">
-                                        {{ opt }}
-                                    </option>
-                                </select>
-                                <label for="gender">Gender</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -337,6 +324,18 @@
                                     *ngIf="submitted && userValidations.get('numberOfKids')?.errors?.['pattern']">Please
                                     enter proper value in
                                     Digits</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="isWhatsapp"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of CreateLeadList.IsWhatsApp" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="isWhatsapp">Is Watsapp</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">

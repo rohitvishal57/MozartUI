@@ -8,14 +8,19 @@ import { ProfileService } from './profile.service';
 })
 export class ProfileComponent implements OnInit {
 
-  profileDetails : any;
+  profileDetails: any;
+  activeTab = 'tab1';
 
-  constructor(private profileService : ProfileService){}
+  constructor(private profileService: ProfileService) { }
 
   ngOnInit(): void {
-    this.profileService.getProfileDetails((data :any) =>{
+    this.profileService.getProfileDetails((data: any) => {
       this.profileDetails = data;
     })
+  }
+
+  tabSelection(filter: string) {
+    this.activeTab = filter;
   }
 
 }

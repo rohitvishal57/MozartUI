@@ -1,5 +1,6 @@
 {
     "baseUrl":"https://usp.monocept.ai/",    
+    "baseUrl1":"https://upuat.adityabirlahealth.com/",    
     "getRenewalList": "renewal/api/getrenewallist",
     "getRenewalInfo":"renewal/api/renewalinfotest",
     "sendRenewalWhatappsms":"renewal/api/sendrenewalwhatappsms",
@@ -10,7 +11,8 @@
     "getLeadsListApi":"yatra/api/getleaddetailslist",
     "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",
     "saveLeadData":"yatra/api/createlead",
-
+    "getcampaignsdetails":"yatra/api/getcampaignsdetails",
+    "createbulklead":"yatra/api/createbulklead",
 
     "getProposalListApi":"yatra/api/getproposallist",
 
@@ -64,8 +66,9 @@
     "calculateAddOnValue":"yatra/Agent/CalculateAddonValue",
     "getHalfQuote":"yatra/api/gethalfquote",
     "getProductDetailsAndFeatures":"yatra/api/getproductdetailsandfeatures",
-    "getSingleProductQuote":"https://upuat.adityabirlahealth.com/quote/api/getquoteforsingleproduct",
-    "getKycDetails":"https://upuat.adityabirlahealth.com/quote/api/getkycdetails",
+    "getSingleProductQuote":"quote/api/getquoteforsingleproduct",
+    "getKycDetails":"quote/api/getkycdetails",
+    "getquotefortopsellingproducts":"quote/api/getquotefortopsellingproducts",
     "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails",
     "profileDetails":"yatra/api/getcustomerpolicydetails"
 
