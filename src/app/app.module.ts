@@ -25,6 +25,7 @@ import { ClaimsViewModule } from './claims/claims-view/claims-view.module';
 import { ProductsModule } from './product/products/products.module';
 import { SpinnerInterceptor } from './intercepter/spinner.interceptor';
 import { LeadsModule } from './leads/leads.module';
+import { ProfileModule } from './profile/profile.module';
 
 
 
@@ -58,6 +59,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ClaimsViewModule,
     LeadsModule,
     ProductsModule,
+    ProfileModule,
     NgxPaginationModule,
     TranslateModule.forRoot({
       loader: {

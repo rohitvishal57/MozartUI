@@ -1,0 +1,81 @@
+.main-container {
+    padding: 13rem 5rem 13rem 5rem;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    width: 95%;
+    float: right;
+
+    .profile-heading {
+
+        .profile-tabs {
+            .tab-actions {
+                display: flex;
+            }
+
+            .tab-actions>li:first-child {
+                margin-left: 0px;
+            }
+
+            .tab-actions>li {
+                justify-content: start;
+                background-color: #f1f1f1;
+                border-radius: 16px;
+                // background-color: #FFE7E5;
+                padding: 9px 12px 7px 12px;
+                margin-left: 16px;
+            }
+
+            ul li#tab1.selected {
+                background: #FFE7E5;
+            }
+
+        }
+
+        .profile-tabs-action {
+            display: flex;
+            padding-top: 16px;
+            justify-content: space-between;
+        }
+    }
+
+    .profile-details {
+        padding-top: 16px;
+
+        .profile-fields {
+            display: flex;
+            flex-wrap: wrap;
+
+            .field {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 245.5px;
+
+                .name-field {
+                    display: flex;
+                    flex-direction: row;
+
+                    div {
+                        margin: 8px;
+                    }
+
+                    .bind_profile {
+                        font-family: Anek Latin;
+                        font-size: 16px;
+                        font-weight: 500;
+                        line-height: 12px;
+                        letter-spacing: 0.3199999928474426px;
+                        text-align: left;
+
+                    }
+                }
+
+                .name-action {}
+            }
+
+        }
+
+
+    }
+}

@@ -66,6 +66,8 @@
     "getProductDetailsAndFeatures":"yatra/api/getproductdetailsandfeatures",
     "getSingleProductQuote":"https://upuat.adityabirlahealth.com/quote/api/getquoteforsingleproduct",
     "getKycDetails":"https://upuat.adityabirlahealth.com/quote/api/getkycdetails",
-    "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails"
+    "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails",
+    "profileDetails":"yatra/api/getcustomerpolicydetails"
+
 
 }

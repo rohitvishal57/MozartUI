@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LeadsModule } from './leads/leads.module';
 
 const routes: Routes = [
   { path: '', 
@@ -38,6 +37,9 @@ const routes: Routes = [
    },
    {path:'proposals',
     loadChildren:() => import("./proposals/proposals.module").then((m)=>m.ProposalsModule)
+   },
+   {path:'profile',
+    loadChildren:() => import("./profile/profile.module").then((m)=>m.ProfileModule)
    },
   {path:'**',redirectTo:'',pathMatch:'full'}
 
