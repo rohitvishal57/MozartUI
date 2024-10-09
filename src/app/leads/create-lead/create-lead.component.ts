@@ -59,18 +59,18 @@ export class CreateLeadComponent implements OnInit{
     this.agentCode = obj.agent;
     console.log(obj);
     console.log(storedAgentCode);
-    this.leadsService.getActiveCampaignDetails(obj).subscribe(
-      (response) => { 
-        console.log(response.data);
-        if (response.success) {
-          console.log(response);
-        } 
-        else {console.error("API request was not successful.");}
-      },
-      (error) => {
-        console.error("Error from getRenewalsList API:", error);
-      }
-    );
+    // this.leadsService.getActiveCampaignDetails(obj).subscribe(
+    //   (response) => { 
+    //     console.log(response.data);
+    //     if (response.success) {
+    //       console.log(response);
+    //     } 
+    //     else {console.error("API request was not successful.");}
+    //   },
+    //   (error) => {
+    //     console.error("Error from getRenewalsList API:", error);
+    //   }
+    // );
     this.inItForm();
 
   }

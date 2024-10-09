@@ -9,22 +9,20 @@
             </section> -->
             <form (ngSubmit)="onSubmit()" [formGroup]="bulkUploadForm" novalidate autocomplete="false">
                 <section class="white_container">
-                    <div class="row mb-3">
+                    <!-- <div class="row mb-3">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" formControlName="selectedcampId"
                                     (selectionChange)="campSelected($event)">
-                                    <!-- <option value="" disabled selected>Search Policy Number</option> -->
                                     <option *ngFor="let camp of campListData" [value]="camp.id">
                                         {{camp.campaignNo}}{{'-'}}{{camp.name}}
                                     </option>
                                 </select>
-                                <!-- <label for="campaignname">Campaign Name *</label> -->
                                 <span *ngIf="submitted && bulkUploadForm.get('selectedcampId')?.invalid"
                                     class="ui-error block-show">Please select campaign name</span>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4">
                         <div class="uploadDocument_main">
                             <div>

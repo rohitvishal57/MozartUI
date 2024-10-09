@@ -26,7 +26,7 @@ export class UploadLeadComponent implements OnInit{
     this.bulkUploadForm = this.formBuilder.group({
       selectedcampId:['']
     })
-    this.getActiveCampaignList();
+    // this.getActiveCampaignList();
   }
   getActiveCampaignList(){
     let obj ={
