@@ -7,7 +7,7 @@ import { EndorsementDetailsComponent } from '../endorsement-details/endorsement-
 const routes: Routes = [
   { path: '', component: EndorsementsRequestsComponent },
   { path: "new-request", component: EndorsementsNewRequestComponent },
-  { path: "endorsemet-details/:id", component: EndorsementDetailsComponent}
+  { path: "endorsemet-details/:caseId", component: EndorsementDetailsComponent}
 ];
 
 @NgModule({

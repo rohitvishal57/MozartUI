@@ -62,7 +62,7 @@
                           </thead>
                           <tbody class="table-group-divider" >
                             <tr *ngFor="let row of endorsementDetails; let i = index"
-                    class="table-values" (click)="getEndorsementDetails(row)">
+                    class="table-values" (click)="getEndorsementCaseDetails(row)">
                                 <td class="td-text-bold">{{ row?.caseId }}</td>
                                 <td >{{ row?.policyNumber }}</td>
                                 <td ><span class="text-break-w100">{{ row?.productName }}</span></td>
@@ -94,7 +94,7 @@
             </section>
             <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
                 <div class="cardViewWraper">
-                    <div class="cardViewItem" *ngFor="let row of endorsementDetails; let i = index" (click)="getEndorsementDetails(row)">
+                    <div class="cardViewItem" *ngFor="let row of endorsementDetails; let i = index" (click)="getEndorsementCaseDetails(row)">
                         <header>
                             <div class="card_insureInfo">
                                 <h6>

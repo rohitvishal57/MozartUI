@@ -50,7 +50,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     }
   }
 
-  getEndorsementDetails (data:any) {
+  getEndorsementCaseDetails (data:any) {
     this._router.navigate(['endorsements/endorsemet-details/'+data?.caseId]);
   }
 

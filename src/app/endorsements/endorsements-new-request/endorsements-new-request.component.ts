@@ -14,12 +14,10 @@ import {
 import { Router } from '@angular/router';
 import { interval, map, Observable, startWith, take } from 'rxjs';
 import { Helper } from 'src/app/utilities/helper/helper';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { EndorsementsRequestsService } from '../endorsements-requests/endorsements-requests.service';
 import { NgToastService } from 'ng-angular-popup';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { LoginService } from 'src/app/login/login/login.service';
 
 @Component({
@@ -249,13 +247,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     private endorsement_service: EndorsementsRequestsService,
     private loginservice : LoginService,
     private toast: NgToastService,
-    private spinner: NgxSpinnerService,
-    // private confirmationDialogService: ConfirmationDialogService,
-   // private _ngxService: NgxUiLoaderService,
     private _router: Router,
-    // private _utilities: UtilitiesService,
-    // private _proposals: ProposalService,
-    // private _modalService: NgbModal, 
     private dialog: MatDialog) {
   }
   ngOnInit() {
@@ -598,14 +590,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
       }
     }
-    this.spinner.show();
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
       (resp) => {
         if (resp && resp.statusCode == "200" && resp.isSuccess) {
           if (resp.response.caseId != null) {
             if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
               if (!this.selectedFile) {
-                this.spinner.hide();
                 this.isFilenotSelected = true;
                 return;
               }
@@ -626,7 +616,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   .subscribe((Respevent:any) => {
                     let event: any = Respevent;
                     if (Respevent && Respevent.statusCode == "200" && Respevent.isSuccess) {
-                      this.spinner.hide();
                       this.toast.success({ detail: `Your request ${resp.response.caseId} has been registered`});
                       this.backToEndorsment();
                     } 
@@ -640,20 +629,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
               }
             }
             else {
-              this.spinner.hide();
               this.toast.success({ detail: `Your request ${resp.response.caseId} has been registered`});
               this.backToEndorsment();
             }
           }
           else {
-            this.spinner.hide();
             this.toast.error({ detail: `${resp.response.statusMessage}`});
             this.backToEndorsment();
           }
         }
       },
       (err) => {
-        this.spinner.hide();
         console.log(err);
         this.selctedFileName = "";
       });
@@ -711,7 +697,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
 
   sendOTP() {
-    this.spinner.show();
     let selectedType = this.caseCreationForm.get('endorsementType').value;
     this.otpObj = {
       agentCode: this.agentCode,
@@ -730,19 +715,16 @@ export class EndorsementsNewRequestComponent implements OnInit {
             requestId: resp.requestId,
             otp: "",
           };
-          this.spinner.hide();
           this.openOtpPopup();
           this.startTimer();
           this.sendOtptDisabled = true;
         }
         else {
-          this.spinner.hide();
           this.sendOtptDisabled = false;
           this.toast.error({ detail: resp.errorMessage});
         }
       },
       (err) => {
-        this.spinner.hide();
         console.log(err);
         this.sendOtptDisabled = false;
         this.toast.error({ detail: "Something went wrong! Please try again later."});
@@ -756,11 +738,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       emailId: this.otpObj.EmailId,
       Mobile: this.otpObj.MobileNumber,
     };
-    this.spinner.show();
     this.loginservice.validateOtpRequestApi(modal).subscribe(
       (resp:any) => {
         if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 0) {
-          this.spinner.hide();
           this.closeOtpPopup();
           if (resp && resp.statusMessage) {
             this.toast.success({ detail: resp.statusMessage});
@@ -770,7 +750,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.isDisabled = false;
           this.sendOtptDisabled = true;
         } else if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 1) {
-          this.spinner.hide();
           this.closeOtpPopup();
           if (resp && resp.statusMessage) {
             this.toast.success({ detail: resp.statusMessage});
@@ -780,7 +759,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.sendOtptDisabled = false;
         }
         else {
-          this.spinner.hide();
           this.closeOtpPopup();
           if (resp && resp.errorMessage) {
             this.toast.error({ detail: resp.errorMessage});
@@ -793,7 +771,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
       (err:any) => {
           this.otpInfoObject = null;
           this.sendOtptDisabled = false;
-          this.spinner.hide();
           this.closeOtpPopup();
           this.toast.error({detail: "Something went wrong, please try again"});
       }
@@ -812,22 +789,18 @@ export class EndorsementsNewRequestComponent implements OnInit {
       }
       this.endorsement_service.getEndorsementPolicyInfoApi(policyObj).subscribe(
         (resp:any) => {
-          ;
           if (resp && resp.statusCode == "200" && resp.isSuccess) {
             this.policyInfoDetails = resp;
             this.externalPolicyData = this.policyInfoDetails.externalPolicyData.response;
-            console.log(this.externalPolicyData);
           }
           else {
-            // this.confirmationDialogService.confirm(
-            //   "Confirm Text",
-            //   resp && resp.errorMessage ? resp.errorMessage : "something went wrong, please try again."
-  
-            // );
+            this.toast.error({ detail: `${resp.response.statusMessage}`});
           }
         },
         (err) => {
           console.log(err);
+          this.toast.error({ detail: "Something went wrong! Please try again later."});
+
         });
 
     }
