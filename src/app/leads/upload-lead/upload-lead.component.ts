@@ -19,6 +19,10 @@ export class UploadLeadComponent implements OnInit{
 
   }
   ngOnInit(){
+    const storedAgentCode = localStorage.getItem('agentCode');
+    if (storedAgentCode) {
+      this.AgentCode = storedAgentCode;
+    }
     this.bulkUploadForm = this.formBuilder.group({
       selectedcampId:['']
     })
@@ -26,7 +30,7 @@ export class UploadLeadComponent implements OnInit{
   }
   getActiveCampaignList(){
     let obj ={
-      "Agent":"usr.agentCode"
+      "Agent":this.AgentCode
     }
     this.leadsService.getActiveCampaignDetails(obj).subscribe(
       (response) => { 
