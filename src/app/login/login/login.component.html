@@ -1,15 +1,4 @@
 <div class="login-mainContainer">
-  <!-- <div class="main">
-    <div class="sub-mainNav"></div>
-    <div class="sub-main">
-      <div class="logo">
-        <img src="assets/logo/ABHI_Logo.svg" alt="abhi-logo">
-      </div>
-      <div class="header">
-      </div>
-    </div>
-    <div class="abhifont">Aditya Birla Health Insurance</div>
-  </div> -->
   <div class="body">
     <router-outlet></router-outlet>
   </div>
@@ -26,7 +15,6 @@
           </div>
         </div>
       </div>
-    
       <form [formGroup]="loginForm" *ngIf="loginWithUsername">
         <div class="login-form-section">
           <div class="input-item">
@@ -36,85 +24,18 @@
             <small
               *ngIf="loginForm.controls['userName'].touched && !loginForm.controls['userName'].hasError('maxlength') && loginForm.controls['userName'].hasError('required')"
               class="text-danger">AgentCode/Email/IRDA License Number is required</small>
-            <!-- <small
-              *ngIf="loginForm.controls['agentUserName'].touched && !loginForm.controls['agentUserName'].hasError('maxlength') && loginForm.controls['agentUserName'].hasError('pattern')"
-              class="text-danger">Username contains letters, numbers and special characters allowed are
-              (&#64;,.)</small>
-            <small
-              *ngIf="loginForm.controls['agentUserName'].touched && loginForm.controls['agentUserName'].hasError('maxlength')"
-              class="text-danger">Username cannot be more than 30 characters</small> -->
           </div>
-          <!-- <div class="input-item">
-            <div class="input-with-icon">
-              <input [type]="passwordFieldType" placeholder="Password" formControlName="agentPassword">
-              <i class="fa eye-icon"
-                [ngClass]="{'fa-eye': passwordFieldType === 'password', 'fa-eye-slash': passwordFieldType === 'text'}"
-                (click)="togglePasswordVisibility()" aria-hidden="true">
-              </i>
-            </div>
-            <small
-              *ngIf="loginForm.controls['agentPassword'].touched && loginForm.controls['agentPassword'].hasError('maxlength')"
-              class="text-danger">Password cannot be more than 20 characters long</small>
-
-            <small
-              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && loginForm.controls['agentPassword'].hasError('minlength')"
-              class="text-danger">Password cannot be less than 5 characters</small>
-
-            <small
-              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && !loginForm.controls['agentPassword'].hasError('minlength') && loginForm.controls['agentPassword'].hasError('required')"
-              class="text-danger">Password is required</small>
-
-            <small
-              *ngIf="loginForm.controls['agentPassword'].touched && !loginForm.controls['agentPassword'].hasError('maxlength') && !loginForm.controls['agentPassword'].hasError('minlength') && !loginForm.controls['agentPassword'].hasError('required') && loginForm.controls['agentPassword'].hasError('pattern')"
-              class="text-danger">Password contains letters, numbers, and allowed special characters (&#64;, &amp;,
-              $)</small>
-          </div> -->
           <div class="submit-button">
             <button type="submit" class="login-button" (click)="onSubmit()">
               <span>Continue</span>
-            </button>
-            
+            </button> 
           </div>
-          <!-- <div class="social-login">
-          <a (click)="triggerAzureAdLogin()" class="social-login-button social-login-button-microsoft">
-            <svg height="30" style="overflow: visible; enable-background: new 0 0 30 30" viewBox="0 0 30 30"
-              width="30" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink">
-              <g>
-                <g id="Microsoft_1_">
-                  <g id="Microsoft">
-                    <g id="Blue_x5F_Square">
-                      <rect height="15" style="fill: #51aed9" width="15" y="17" />
-                    </g>
-                    <g id="Yellow_x5F_Square">
-                      <rect height="15" style="fill: #fec327" width="15" x="17" y="17" />
-                    </g>
-                    <g id="Green_x5F_Square">
-                      <rect height="15" style="fill: #34b67a" width="15" x="17" />
-                    </g>
-                    <g id="Orange_x5F_Square">
-                      <rect height="15" style="fill: #f15723" width="15" />
-                    </g>
-                  </g>
-                </g>
-              </g>
-            </svg>
-            <span>Microsoft Login</span>
-          </a>
-          <div id="google-button"></div>
-        </div> -->
-          <!-- <div class="paragraph">
-                    <p>Activ Health App presents Mental Health Coach for our customers with Activ Health Plans.So,they can focus on their mental well-being in these testing times.
-                        <br><br>Activ Health App Present Homeopathy consulations.Our customers with Activ Health Platinum Enhanced and Premier Plans can now avail unlimited tele-consulations at their finger-tips.</p>
-                </div> -->
-
         </div>
       </form>
       <form [formGroup]="codeForm" *ngIf="loginWithUserOTP && !loginWithUsername && !verifyOtpEnable">
         <div class="login-form-section">
           <div class="input-item">
             <div class="input-with-icon">
-              <!-- <label>User Code</label> -->
               <input type="text" placeholder="Enter your User Code" formControlName="verify">
             </div>
             <div class="row">
@@ -123,10 +44,6 @@
                     *ngIf="codeForm.controls['verify'].touched && !codeForm.controls['verify'].hasError('maxlength') && codeForm.controls['verify'].hasError('required')"
                     class="text-danger">User Code is required</small>
                   </div>
-                  <!-- <div class="col-6 d-flex justify-content-end pt-5">
-                    <small
-                    class="text-danger cursor" (click)="searchMobileNumber()">Search Mobile Number </small>
-                  </div> -->
             </div>
           </div>
           <div class="submit-button">
@@ -134,43 +51,6 @@
               <span>Send OTP </span>
             </button>
           </div>
-          <!-- <div class="d-flex justify-content-center">
-            <small
-            class="text-danger cursor">Login as Customer</small>
-          </div> -->
-         
-          <!-- <div class="social-login">
-          <a (click)="triggerAzureAdLogin()" class="social-login-button social-login-button-microsoft">
-            <svg height="30" style="overflow: visible; enable-background: new 0 0 30 30" viewBox="0 0 30 30"
-              width="30" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink">
-              <g>
-                <g id="Microsoft_1_">
-                  <g id="Microsoft">
-                    <g id="Blue_x5F_Square">
-                      <rect height="15" style="fill: #51aed9" width="15" y="17" />
-                    </g>
-                    <g id="Yellow_x5F_Square">
-                      <rect height="15" style="fill: #fec327" width="15" x="17" y="17" />
-                    </g>
-                    <g id="Green_x5F_Square">
-                      <rect height="15" style="fill: #34b67a" width="15" x="17" />
-                    </g>
-                    <g id="Orange_x5F_Square">
-                      <rect height="15" style="fill: #f15723" width="15" />
-                    </g>
-                  </g>
-                </g>
-              </g>
-            </svg>
-            <span>Microsoft Login</span>
-          </a>
-          <div id="google-button"></div>
-        </div> -->
-          <!-- <div class="paragraph">
-                    <p>Activ Health App presents Mental Health Coach for our customers with Activ Health Plans.So,they can focus on their mental well-being in these testing times.
-                        <br><br>Activ Health App Present Homeopathy consulations.Our customers with Activ Health Platinum Enhanced and Premier Plans can now avail unlimited tele-consulations at their finger-tips.</p>
-                </div> -->
         </div>
       </form>
       <div class="verify-e-p-otp-wrap" *ngIf="verifyOtpEnable">
@@ -193,10 +73,6 @@
           <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds</label>
           <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">Resend OTP</label>
         </div>
-        <!-- <div class="d-flex justify-content-center">
-          <small
-          class="text-danger cursor">Login as Customer</small>
-        </div> -->
       </div>
       <div>
     </div>
@@ -205,7 +81,6 @@
     <div class="verify-e-p-otp-wrap" >
       <h1 class="search-contact-text-wrap"><span class="back-icon"><i (click)="back()" class="fa-solid fa-arrow-left"></i></span> Search Contact</h1>
       <div class="otp-container">
-        <!-- <i class="fa-solid fa-magnifying-glass"></i> -->
         <input
         [formControl]="myControl"
         [matAutocomplete]="auto"

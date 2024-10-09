@@ -831,22 +831,22 @@
                                             <label class="input-radiolabel ">
                                                 <input type="radio" name="policyTenure" value="1year" >
                                                 <span><em class="tenure-year">1 Year</em>
-                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.tenure1}}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium}}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
                                                 <input type="radio" name="policyTenure" value="2years" >
                                                 <span><em class="tenure-year">2 Years</em>
-                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.tenure2}}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium}}<em>/ yr</em></em>
                                                 <em class="tenure-off">{{renewalInfo?.response?.policyData[0]?.tenure2percentage}} off</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
                                                 <input type="radio" name="policyTenure" value="3years" checked>
                                                 <span><em class="tenure-year">3 Years</em>
-                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.tenure3}}<em>/ yr</em></em>
-                                                <em class="tenure-off">{{renewalInfo?.response?.policyData[0]?.tenure3percentage}} off</em>
-                                                </span>
+                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium}}<em>/ yr</em></em>
+                                                <em class="tenure-off">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.tenure3percentage}} off</em>
+                                            </span>
                                                 <em class="badge-recommended">Recommended</em>
                                             </label>
                                         </div>
@@ -1248,12 +1248,12 @@
                   <h6>Plan details</h6>
                   <div class="planProductInfo">
                       <div class="ppi_img">
-                          <!-- <img src="assets/Img/icon_activeone.svg"> -->
+                          <img src="assets/Img/icon_activeone.svg">
                       </div>
                       <div class="ppi_info">
-                          <h4>{{renewalInfo?.response?.policyData[0]?.productName}}</h4>
+                          <h4>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h4>
                           <h5>Aditya Birla Health Insurance</h5>
-                          <h6>{{renewalInfo?.response?.policyData[0]?.policyNumber}}</h6>
+                          <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6>
                       </div>
                   </div>
                   <div class="planProductQuote">
@@ -1267,10 +1267,10 @@
               </header>
               <hr>
               <div class="planProductBody">
-                  <div class="additionalPremium">
+                  <!-- <div class="additionalPremium">
                       <span class="label">Additional Premium</span>
                       <label class="value">₹</label>
-                  </div>
+                  </div> -->
                   <div class="additionalPremium">
                       <span class="label">
                       <div class="input-checkbox-block">
@@ -1287,7 +1287,7 @@
               <footer>
                   <div class="workingQuote">
                       <span>Working Quote/ incl tax</span>
-                      <label>₹{{(renewalInfo?.response?.policyData[0]?.healthReturn)+(renewalInfo?.response?.policyData[0]?.BasicPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn)}}</label>
+                      <label>₹{{(renewalInfo?.response?.policyData[0]?.BasicPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn)}}</label>
                   </div>
                   <button type="button" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
                   <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewals/subquotes']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
@@ -1300,12 +1300,12 @@
           <div class="bi_left">
               <div class="planProductInfo">
                   <div class="ppi_img">
-                      <!-- <img src="assets/Img/icon_activeone.svg"> -->
+                      <img src="assets/Img/icon_activeone.svg">
                   </div>
                   <div class="ppi_info">
-                      <h4>{{renewalInfo?.response?.policyData[0]?.productName}}</h4>
+                      <h4>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h4>
                       <h5>Aditya Birla Health Insurance</h5>
-                      <h6>{{renewalInfo?.response?.policyData[0]?.policyNumber}}</h6>
+                      <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6>
                   </div>
               </div>
               <div class="planProductQuote">

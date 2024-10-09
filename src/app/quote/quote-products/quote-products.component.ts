@@ -145,15 +145,9 @@ export class QuoteProductsComponent implements OnInit {
 
   async getProposalNum() {
     try {
-      await this.service.getProposalNumber().subscribe({
-        next: (res) => {
-          console.log(res);
-          this.proposalNum = res.data;
-        },
-        error: (err) => {
-          console.error(err);
-        }
-      })
+      const res = await firstValueFrom(this.service.getProposalNumber());
+      this.proposalNum = res.data.proposalNumber;
+      console.log(this.proposalNum)
     } catch (error) {
       console.error(error);
     }
@@ -202,6 +196,7 @@ export class QuoteProductsComponent implements OnInit {
     }
     console.log(this.formData);
     try {
+      await this.getProposalNum();
       await this.getFormSequence(item);
       this.removeFromCart(item);
       console.log(item)
@@ -209,7 +204,8 @@ export class QuoteProductsComponent implements OnInit {
         partnerId: this.partnerId,
         productId: item.productId,
         tenureAmounts: item.tenureAmounts,
-        selectedAddons: item.selectedAddon
+        selectedAddons: item.selectedAddon,
+        proposalNum:this.proposalNum
       }
       sessionStorage.setItem("isQuote", true.toString());
       console.log(productData)

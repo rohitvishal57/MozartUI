@@ -8,9 +8,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MyMaterialModule } from 'src/app/material.module';
 import { SendOtpViaComponent } from '../send-otp-via/send-otp-via.component';
+import { StatusValidationComponent } from '../status-validation/status-validation.component';
 
 @NgModule({
-  declarations: [LoginComponent,SendOtpViaComponent],
+  declarations: [LoginComponent,SendOtpViaComponent, StatusValidationComponent],
   imports: [
     CommonModule,
     PrimeNgModule,

@@ -60,25 +60,11 @@ export class LoginComponent implements OnInit{
     sessionStorage.clear()
     this.loginForm = this.fb.group({
       userName: ['', [Validators.required]],
-      // agentPassword: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(20),Validators.minLength(5)]]
     })
     this.codeForm = this.fb.group({
       verify: ['', [Validators.required]],
     })
     this.isIframe = window !== window.parent && !window.opener;
-  }
-
-  handleRedirectResponse(fragment: any) {
-    const hashParams = new URLSearchParams(fragment);
-    const clientRequestId = hashParams.get('client-request-id');
-    const idToken = hashParams.get('id_token');
-
-    console.log('Client Request ID:', clientRequestId);
-    console.log('ID Token:', idToken);
-
-    // Store in session storage or handle as needed
-    sessionStorage.setItem('client-request-id', clientRequestId || '');
-    sessionStorage.setItem('id_token', idToken || '');
   }
 
   selectFormType(data:any){
@@ -98,18 +84,9 @@ export class LoginComponent implements OnInit{
       this.loginWithUsername = false;
       this.loginForm = this.fb.group({
         userName: ['', [Validators.required]],
-        // agentPassword: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9@.]*$/),Validators.maxLength(20),Validators.minLength(5)]]
       })
     }
   }
-
-  togglePasswordVisibility(): void {
-    console.log("hello hide here");
-    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
-  }
-
-  // For Microsoft MSAL
-  
 
   contactDetailsReqBody: any = {
     "userId": ""
@@ -212,16 +189,11 @@ export class LoginComponent implements OnInit{
 
   onSubmit(){
     if(this.loginForm.valid){
-      console.log(this.loginForm.value);
       this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
         .subscribe({  
           next: (res:any)=>{
-            const authWindow = window.open(res.data.redirectUrl, "_blank");
-            this.getResponseUrl(authWindow);
-            this.loginService.storeToken(res.token);
-            localStorage.setItem('agentCode', res.agentcode);
-            // this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 5000 })
-            this.router.navigate(['dashboard']);
+            localStorage.setItem('userCode', this.loginForm.value.userName);
+            window.open(res.data.redirectUrl, "_blank");
           },
           error: ((err:any) => {
             console.log(err);
@@ -229,9 +201,6 @@ export class LoginComponent implements OnInit{
           })
         })
     }
-    // else {
-    //   ValidateForm.validateAllFormFields(this.loginForm);
-    // }
     else {
       console.log('Form is invalid', this.loginForm);
       Object.keys(this.loginForm.controls).forEach(field => {
@@ -248,36 +217,6 @@ export class LoginComponent implements OnInit{
       else if (this.loginForm.get('nationality') && this.loginForm.get('nationality')?.value !== 'Indian')
         this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
     }
-  }
-
-  getResponseUrl(authWindow: any){
-  debugger;
-    const interval = setInterval(() => {
-          try {
-            if (authWindow?.location.href && authWindow.location.href.includes('id_token')) {
-              const returnUrl = authWindow.location.href;
-              console.log(returnUrl);
-
-              this.handleAuthResponse(returnUrl);
-
-              clearInterval(interval);
-            }
-          } catch (error) {
-            console.log('Error:', error);
-          }
-        }, 1000);
-  }
-
-   handleAuthResponse(returnUrl: string) {
-   debugger;
-    const urlParams = new URL(returnUrl);
-    const hashParams = new URLSearchParams(urlParams.hash.substring(1));
-    
-    const idToken = hashParams.get('id_token');
-    const clientRequestId = urlParams.searchParams.get('client-request-id');
-    
-    console.log('ID Token:', idToken);
-    console.log('Client Request ID:', clientRequestId);
   }
 
    // Handle key events for OTP input
@@ -312,7 +251,6 @@ export class LoginComponent implements OnInit{
     "mobileNumber": "",
     "eMailId": ""
   }
-  
  
   onVerifyOTP(){
     const otpCode = this.otp.join('');
@@ -345,7 +283,6 @@ export class LoginComponent implements OnInit{
             this.errorMessage = err;
           })
         })
-
     } else {
       this.errorMessage = "Please enter valid OTP";
       // this.toast.warning({ detail: "WARNING", summary: "Please enter valid OTP", duration: 3000 })
@@ -378,12 +315,6 @@ export class LoginComponent implements OnInit{
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  /* searchMobileNumber(){
-    this.searchMobileOrEmail = true;
-    this.verifyOtpEnable = false;
-    this.loginWithUsername = false;
-  } */
-
   back(){
     this.searchMobileOrEmail = false;
   }
@@ -392,7 +323,4 @@ export class LoginComponent implements OnInit{
     let data:any = {verify:this.myControl.value}
     this.codeForm.patchValue(data);
   }
-}
-function handleRedirectResponse(fragment: any, string: any) {
-  throw new Error('Function not implemented.');
 }

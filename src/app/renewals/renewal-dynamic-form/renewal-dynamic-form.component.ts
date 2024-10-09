@@ -271,7 +271,7 @@ export class RenewalDynamicFormComponent implements OnInit {
    this.setSection('payment')
  }
   getRenewalInfo() {
-    this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
+    this.renewalService.getRenewalInfoApi("21-24-0002334-00", {}).subscribe(
       (res:any) => {
         console.log("Renewal Info",res);
         this.renewalInfo = JSON.parse(res.data);

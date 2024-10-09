@@ -1,7 +1,8 @@
 {
     "baseUrl":"https://usp.monocept.ai/",    
+    "baseUrl1":"https://upuat.adityabirlahealth.com/",    
     "getRenewalList": "renewal/api/getrenewallist",
-    "getRenewalInfo":"renewal/api/renewalinfo",
+    "getRenewalInfo":"renewal/api/renewalinfotest",
     "sendRenewalWhatappsms":"renewal/api/sendrenewalwhatappsms",
     "sendRenewalsms":"renewal/api/sendrenewalsms",
     "sendRenewalEmail":"renewal/api/sendrenewalnotice",
@@ -22,6 +23,8 @@
     "uploadFiles":"claims/api/saveuploadfiledetails",
 
     "partnerlogin":"auth/api/login",
+    "validateadfstoken":"auth/api/validateadfstoken?Idtoken=",
+    "validatecyberarktoken":"auth/api/validatecyberarktoken?Idtoken=",
     "getContactDetailsByAgentCode":"auth/api/getcontactdetailsbyagentcode",
     "sendotp":"auth/api/sendotp",
     "validateotp":"auth/api/validateotp",
@@ -30,7 +33,7 @@
     "getactivepolicynumbers":"claims/api/getactivepolicynumbers",
     "endorsementfileuploadtoomnidocs":"claims/api/endorsementfileuploadtoomnidocs",
     "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
-    "endorsementGetOTP":"api/endorsementsendotp",
+    "endorsementGetOTP":"claims/api/endorsementsendotp",
     "getpolicyinfodetails":"claims/api/getpolicyinfodetails",
 
 
@@ -62,8 +65,9 @@
     "calculateAddOnValue":"yatra/Agent/CalculateAddonValue",
     "getHalfQuote":"yatra/api/gethalfquote",
     "getProductDetailsAndFeatures":"yatra/api/getproductdetailsandfeatures",
-    "getSingleProductQuote":"https://upuat.adityabirlahealth.com/quote/api/getquoteforsingleproduct",
-    "getKycDetails":"https://upuat.adityabirlahealth.com/quote/api/getkycdetails",
+    "getSingleProductQuote":"quote/api/getquoteforsingleproduct",
+    "getKycDetails":"quote/api/getkycdetails",
+    "getquotefortopsellingproducts":"quote/api/getquotefortopsellingproducts",
     "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails"
 
 }
