@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LeadsService } from '../leads.service';
+import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-upload-lead',
   templateUrl: './upload-lead.component.html',
@@ -15,7 +16,7 @@ export class UploadLeadComponent implements OnInit{
   selctedFileName: string = '';
   selectedFile: any;
   AgentCode: string = '';
-  constructor( private formBuilder: FormBuilder, private leadsService: LeadsService){
+  constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService){
 
   }
   ngOnInit(){
@@ -85,10 +86,10 @@ export class UploadLeadComponent implements OnInit{
     }
     continueFileUpload() {
       this.submitted = true;
-      if (this.bulkUploadForm.get('selectedcampId')?.value == '') {
-        this.submitted = false;
-        return;
-      }
+      // if (this.bulkUploadForm.get('selectedcampId')?.value == '') {
+      //   this.submitted = false;
+      //   return;
+      // }
       if (!this.selectedFile) {
         this.isFilenotSelected = true;
         return;
@@ -97,9 +98,9 @@ export class UploadLeadComponent implements OnInit{
       let fileExt = file.name.replace(/^.*\./, '');
       const data = new FormData();
       
-      const campnumb= this.campListData.find(obj=>{
-        return obj.id === this.bulkUploadForm.get('selectedcampId')?.value
-      });
+      // const campnumb= this.campListData.find(obj=>{
+      //   return obj.id === this.bulkUploadForm.get('selectedcampId')?.value
+      // });
       console.log(this.campListData,this.bulkUploadForm.get('selectedcampId')?.value,'this.selectedcampId')
       // let endDate = campnumb?.enddate;
       // if(endDate!=null && new Date(endDate)<new Date()){      
@@ -110,16 +111,33 @@ export class UploadLeadComponent implements OnInit{
       if (fileExt == 'xlsx' || fileExt == 'csv'||fileExt==='xls') {
        if (fileExt == 'xlsx' || fileExt == 'csv'|| fileExt==='xls') {
           data.append('FormFile', file)
-          data.append('CampaignNumber', campnumb?.campaignNo)
-          data.append('CampaignName', campnumb?.name)
+          // data.append('CampaignNumber', campnumb?.campaignNo)
+          // data.append('CampaignName', campnumb?.name)
+          data.append('CampaignNumber', "6536575")
+          data.append('CampaignName', "casdasda")
           data.append('AgentCode', this.AgentCode)
-  
+        data.append('requestid',"8757458")
           // if (this.selectedExistingGroup) {
           //   data.append('GroupId', this.existingGroupId)
           // }
         }
         // this.existingdata.emit(this.selectedExistingGroup);
         // this.percentDone = 0;
+
+        this.leadsService.uploadfile(data).subscribe(
+          (response: any) => { 
+            console.log(response);
+            if (response) {
+              console.log(response);
+              window.open(response.url, '_blank');
+              this.toast.success({ detail: response.status });
+            } 
+            else {console.error("API request was not successful.");}
+          },
+          (error: any) => {
+            console.error("Error from getRenewalsList API:", error);
+          }
+        );
         // this.subscription = this.dataService.uploadfile(data)
         //   .pipe().subscribe({
         //     next: (Respevent: any) => {

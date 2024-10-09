@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ConfigService } from '../services/config.service';
 
 @Injectable({
@@ -26,6 +26,13 @@ export class LeadsService {
   getCampaignListApi(requestBody:any):Observable<any>{
     const getCampaignListApi = this.configService.config.baseUrl + this.configService.config.getcampaignsdetails;
     return this.http.post<any>(getCampaignListApi, requestBody);
+  }
+
+  uploadfile(file: any) {
+    return this.http.post<any>(`${this.configService.config.baseUrl}${this.configService.config.createbulklead}`, file)
+      .pipe(map(data => {
+        return data;
+      }));
   }
 
   
