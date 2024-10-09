@@ -160,11 +160,11 @@
                                     <td>{{row.email}}</td>
                                     <td>{{ row.campaignName }}</td>
                                     <td><span class="table-modification">{{ row.campaignNumber }}</span></td>
-                                    <td>{{row.leadID}}</td>
+                                    <td>{{row.leadNumber}}</td>
                                     <td>
                                         <div class="btn_groupAction">
                                             <button class="btn_action btn_editAction" (click)="showDialog()"> <img src="assets/Img/icon_profile.svg"  /></button>
-                                            <button type="button" value="Update Status" title="Update Status" class="btn_action btn_renewalAction"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" value="Update Status" (click)="editLead(row)" title="Update Status" class="btn_action btn_renewalAction"><img src="assets/Img/icon_edit_grey.svg"></button>
                                             <button type="button" value="Add Notes" title="Add Notes" class="btn_action btn_renewalAction"><img src="assets/Img/icon_add_notes.svg"></button>
                                             <!-- <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
@@ -283,7 +283,7 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Lead ID</div>
-                                <div class="item_value">{{ row.leadID }}</div>
+                                <div class="item_value">{{ row.leadNumber }}</div>
                             </div>
                         </div>
                     </div>
@@ -320,17 +320,18 @@
 
 <div class="card flex justify-content-center ">
     <p-dialog header="Allocate to" [modal]="true" [(visible)]="displayAssigneePopup" [style]="{ width: '75rem', height: '25rem' }">
-        <span class="p-text-secondary block mb-5">select user</span>
+        <!-- <span class="p-text-secondary block mb-5">select user</span> -->
     
         <section class="white_container">
             <div class="row mb-3">
-              <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                 <div class="input-block form-floating input-block-renew">
                   <select class="form-select input-selectBox" formControlName="policyNumber" >
                     <option *ngFor="let item of agentCodes " [value]="item">
                         {{ item }}
                     </option>
                   </select>
+                  <label for="policyNumber">select user</label>
                 </div>
               </div>
               </div>
@@ -340,7 +341,7 @@
             <p-button label="Save" (onClick)="displayAssigneePopup = false" />
         </div> -->
         <div class="row mt-4">
-            <div class="col-12">
+            <div class="col-12 btn_container_leads">
                 <button type="submit" class="btn_red"  (onClick)="displayAssigneePopup = false">Cancel</button>
               <button type="submit" class="btn_red" (onClick)="displayAssigneePopup = false">Save</button>
             </div>

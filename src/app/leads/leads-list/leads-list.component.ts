@@ -4,6 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { LeadsService } from '../leads.service';
 import { CommonService } from 'src/app/services/common.service';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-leads-list',
@@ -34,7 +35,8 @@ export class LeadsListComponent {
 
   constructor(
     private leadsService: LeadsService,
-    private commonService:CommonService
+    private commonService:CommonService,
+    private router:Router,
   ) {}
 
   leadsLisRequestBody={
@@ -90,6 +92,15 @@ export class LeadsListComponent {
         console.error("Error from getRenewalsList API:", error);
       }
     );
+  }
+  editLead(leadData: any){
+    console.log(leadData);
+    localStorage.removeItem('updateLead')
+    localStorage.setItem('updateLead', JSON.stringify(leadData))
+
+    this.router.navigate(['/leads/updateLead/' + leadData.leadNumber]); 
+    
+
   }
   filterQuotes(filter: string) {
     this.leadsLisRequestBody.filterType = filter;

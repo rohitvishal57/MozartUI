@@ -1,7 +1,7 @@
 export interface LeadsList {
     id?: number | null;
     agentCode?: string | null;
-    leadID?: string | null;
+    leadNumber?: string | null;
     firstName?: string | null;
     middleName?: string | null;
     lastName?: string | null;
