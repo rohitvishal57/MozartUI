@@ -69,11 +69,13 @@ claimsReqBody =  {
     "sellerId": localStorage.getItem('agentCode'),
     "sortColumn": "ReportedDateTime",
     "sortdirection": "DESC",
-    "status": "All",
+    "status": "",
     "searchType": "string",
     "searchString": "string",
     "pageNumber": 1,
-    "pageSize": 270 
+    "pageSize": 270,
+    "fromDate":"2023-04-01",
+    "toDate":"2024-04-01"
   }
 fetchData(): void {
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => {    
