@@ -10,11 +10,13 @@ import { formatDate } from '@angular/common';
   styleUrls: ['./claims-details.component.scss']
 })
 export class ClaimsDetailsComponent {
-  claim: any; 
   claimId: string | null = null;  
+  claimsHistory:any
+  policyNumber: string | any ;  
+  claimInfoId: string | null = null;  
   filesUploaded: any[] = [];
   saveForm!: FormGroup;
-  claims: any[] = [];
+  claims: any;
   @Input() label: string = 'Label this document'; 
   files: {name:string, label:string}[] = [];
   editableControl: FormControl = new FormControl(''); 
@@ -33,6 +35,7 @@ export class ClaimsDetailsComponent {
   uploadedFile:any
   agentCode: any;
   selectMemberData: any = {};
+  selectedTabIndex: number = 0;
   @Input() uploadedFiles: { 
     name: string,
     type: string,
@@ -50,58 +53,58 @@ export class ClaimsDetailsComponent {
     documentType?: string,
     createdBy?: string
   }[] = [];
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private claimsService: ClaimsViewService, private router: Router,  private cdr: ChangeDetectorRef) {}
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private claimsService: ClaimsViewService, private router: Router,  private cdr: ChangeDetectorRef) 
+  {
+    this.route.queryParams.subscribe(params => {
+
+      this.claimId = this.route.snapshot.paramMap.get('id');
+      this.policyNumber = this.route.snapshot.paramMap.get('policyNumber');
+      this.claimInfoId = this.route.snapshot.paramMap.get('claimInfoId');
+   
+  })
+}
 
   ngOnInit() {
+    if (this.claimId && this.policyNumber && this.claimInfoId) {
+      this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimInfoId);  
+      this.updateStatusLabel();
   
-    this.claimId = this.route.snapshot.paramMap.get('id');
-    if (this.claimId) {
-    this.fetchClaimDetails(this.claimId);  
-    this.updateStatusLabel();
+      }
+    
+    this.fetchClaimHistory(this.policyNumber)
+  
+    // this.claimId = this.route.snapshot.paramMap.get('id');
+    // if (this.claimId) {
+    // this.fetchClaimDetails(this.claimId);  
+    // this.updateStatusLabel();
     }
       // console.log( 'updatestayus', this.updateStatusLabel());
       // const storedFiles = localStorage.getItem('uploadedFiles');
       // if (storedFiles) {
       //   this.uploadedFiles = JSON.parse(storedFiles);
       // }
-  }
+ // }
 
-  navigateToCreateClaim(){
-    this.router.navigate(['/claims/createClaims']);
-  }
-
-  fetchClaimDetails(claimId: string): void {    
-    const claimsReqBody = {
-        "sellerId": localStorage.getItem('agentCode'),
-        "sortColumn": "ReportedDateTime",
-        "sortdirection": "DESC",
-        "status": "All",
-        "searchType": "claimId",
-        "searchString": claimId, 
-        "pageNumber": 1,
-        "pageSize": 1 
-    };   
-    this.claimsService.getClaimsList(claimsReqBody).subscribe( // Call the service to get claim details
-      (response: any) => {
-      // this.claims = response.map(claim => {
-      //   // Assuming 'files' contains the array of file details for each claim
-      //   return {
-      //     ...claim,
-      //     files: claim.files || []  // Ensure files array exists
-      //   };
-      // });
-    if (response && response.data && response.data.length > 0) {
-        const filterClaim = response.data.filter((obj:any)=> obj.id == claimId); // Assuming only one claim is returned
-        this.claim = filterClaim[0];
-        } 
-        else {
-        console.error('No claim details found');
-      }
+  fetchClaimDetails(claimId: string,policyNumber:string, claimInfoId:string): void {    
+    let claimDetailsReqBody = {
+      id: claimId,
+      claimNumber: claimInfoId,
+      policyNumber:policyNumber
+    };
+    this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
+      (response:any):void => {
+      
+        this.claims =response.data       
+   
     },
-    (error) => {
+    (error:any) => {
       console.error('Error fetching claim details', error);
     }
   );
+  }
+
+  onTabChanged(event: any): void {
+    this.selectedTabIndex = event.index;
   }
 
    //  -------------- Method to handle file upload------------------//
@@ -224,6 +227,23 @@ uploadFiles(files: File[]): void {
     file.isEdited = true;
   }
 
+  fetchClaimHistory(policyNumber:string){
+    debugger
+    const policyNo = policyNumber;
+    let claimHistoryReqBody = {
+      "policyNumber" : policyNo
+    }
+ 
+    this.claimsService.getClaimsHistory(claimHistoryReqBody,policyNo).subscribe(
+      (response:any)=>{
+   
+      this.claimsHistory = response
+      
+    })
+    
+    
+
+  }
   submitClaim(){
     const claimDetailsReqBody = {
       AgentCode: localStorage.getItem('agentCode'),

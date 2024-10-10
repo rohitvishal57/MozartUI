@@ -13,10 +13,44 @@
                         <li class="quickFilterHeading">Claim Status</li>
                         <li><button type="button" value="all" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('all')"  [ngClass]="{'active': selectedStatus === 'all'}">All </button></li>
                         <li><button type="button" value="active" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('active')" [ngClass]="{'active': selectedStatus === 'active'}">Active </button></li>
-                        <li><button type="button" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">Resolved </button></li>
+                        <!-- <li><button type="button" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">Resolved </button></li> -->
                         <li><button type="button" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('cancelled')" [ngClass]="{'active': selectedStatus === 'cancelled'}">Cancelled </button></li>
+                        <div class="filterWraper">
+                            <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Date Filter<span id="filter-count"></span></button>
+                            <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop filterCnt" [ngClass]="{'active': toggeledropdown}">
+                                <div class="fw_form mobile_popupMain">
+                                    <div class="filterHeader" >
+                                        <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
+                                            <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
+                                        </button>
+                                    </div>                                
+                                                <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                    <div class="input-block input-block-dob">
+                                                        <label>From Date</label>
+                                                        <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')">
+                                                        <span class="ui-error">Please enter start date</span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                    <div class="input-block input-block-dob">
+                                                        <label>To Date</label>
+                                                        <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')">
+                                                        <span class="ui-error">Please enter end date</span>
+                                                    </div>
+                                                </div>
+                                                                                        <!-- <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button> -->
+                                        <button type="button" value="apply" class="btn_red" (click)="applyFilter()">Apply</button>
+
+                                            </div>
+                                </div>
+                            </div>
+                        </div>
                     </ul>
+                    
                 </div>
+                
+              
                 <div class="quickFilterRight" >
                     <!--Search section start-->
                     <div class="body_flex_row claims_searchWraper">
@@ -46,26 +80,33 @@
                                 <th scope="col">Policy No.</th>
                                 <th scope="col">Product Name</th>
                                 <th scope="col">Member Name</th>
-                                <th scope="col">Member Relation</th>
+                                <th scope="col">Member Id</th>
+                                <th scope="col">Mobile Number</th>
                                 <th scope="col">Request Type</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Raised Date</th>
+                                <th></th>
                             </tr>
                           </thead>
                           <tbody class="table-group-divider">
                             <ng-container *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index">
-                              <tr class="table-values" (click)="toggleDropdown(row)">
+                              <tr class="table-values">
                                 <td class="card_insureInfo">{{ row?.claimInfoId }}</td>
                                 <td>{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
                                 <td>{{ row?.memberName }}</td>
-                                <td>{{ row?.memberRelation }}</td>
+                                <td>{{ row?.memberId }}</td>
+                                <td>{{ row?.mobileNumber }}</td>
                                 <td>{{ row?.requestType }}</td>
                                 <td><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
                                 <td>{{ row?.reportedDateTime | datepipe }}</td>
+
+                                <div class="btn_groupAction">
+                                    <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="navigateToViewClaim(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                </div>
                               </tr>
                               
-                              <tr *ngIf="selectedClaim?.id === row.id" class="details-row visible-row">
+                              <!-- <tr *ngIf="selectedClaim?.id === row.id" class="details-row visible-row">
                                 <td [attr.colspan]="8">
                                   <div class="additional-info">
                                     <p><strong>Mobile No:987****456</strong> <span>{{ maskPhoneNumber(row?.policyNumber) }}</span></p>
@@ -73,7 +114,7 @@
                                     <button class="claimDetails_btn" (click)="navigateToViewClaim(row)">View Claim Details</button>
                                   </div>
                                 </td>
-                              </tr>
+                              </tr> -->
                             </ng-container>           
                  
                           </tbody>
@@ -110,8 +151,12 @@
                                 <div class="item_value">{{ gridClaims.memberName }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Member Relation</div>
-                                <div class="item_value">{{ gridClaims.memberRelation }}</div>
+                                <div class="item_lable">Member Id</div>
+                                <div class="item_value">{{ gridClaims.memberId }}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">Mobile Number</div>
+                                <div class="item_value">{{ gridClaims.mobileNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Request Type</div>
