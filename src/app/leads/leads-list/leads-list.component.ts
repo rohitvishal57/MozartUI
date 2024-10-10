@@ -44,7 +44,7 @@ export class LeadsListComponent {
   mobileNumber: string = '';
   selectedCheckBox = false
   checkBoxSelectedLeads : any =[];
-
+  auditTrails: any;
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -276,8 +276,12 @@ export class LeadsListComponent {
     this.selectedView = view;
   }
 
-  showDialog(leadInformation: any) {
-    this.checkBoxSelectedLeads.push(leadInformation);
+  showAssigneLeadDialog(leadInformation: any) {
+
+    if (!this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInformation.leadNumber)) {
+      this.checkBoxSelectedLeads.push(leadInformation);
+    }
+
     this.displayAssigneePopup = true;
   }
 
@@ -286,8 +290,17 @@ export class LeadsListComponent {
     this.displayNotesPopup = true;
   }
   
-  showAuditTrailDialog() {
+  showAuditTrailDialog(leadNumber: any) {
+    this.leadsService.viewAuditTrail(leadNumber).subscribe(
+      (response) => {
     this.displayAuditTrailPopup = true;
+
+        this.auditTrails = response;
+      },
+      (error) => {
+        console.error("Error from getMyReportingUsers API:", error);
+      }
+    );
   }
 
   fetchReportingUsers() {
@@ -304,8 +317,10 @@ export class LeadsListComponent {
     console.log("fetchReportingUsers agentCodes", this.agentCodes)
   }
 
-  assineLead() { 
+  assineLead() {
+    debugger
     const selectedLeadIDs = this.checkBoxSelectedLeads.map((lead: LeadsList) => lead.leadNumber);
+    console.log("selectedLeadIDs", selectedLeadIDs)
     let assigneLeadRequestBody: any = {};
     assigneLeadRequestBody.leadnumber = selectedLeadIDs,
       assigneLeadRequestBody.leadassigne = this.assignLeadForm.value.selectedAgentCode,
@@ -348,17 +363,28 @@ export class LeadsListComponent {
     this.displayNotesPopup = false;
   }
 
-  toggleAll(event :Event ) {
+  toggleAll(event: Event) {
     const input = event.target as HTMLInputElement;
-    console.log("onchange event",event);
     this.leadsList.forEach(lead => lead.isSelected = input.checked)
     this.checkBoxSelectedLeads = this.leadsList.filter(lead => lead.isSelected);
   }
 
 
 
+  updateSelectedLeads(leadInfo: any) {
+    debugger
+    if (this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInfo.leadNumber)) {
+      this.checkBoxSelectedLeads = this.checkBoxSelectedLeads.filter((lead: any) => lead.leadNumber !== leadInfo.leadNumber);
+    } else {
+      this.checkBoxSelectedLeads.push(leadInfo);
+    }
+    console.log("checkBoxSelectedLeads",this.checkBoxSelectedLeads)
+  }
 
 
-
+  selectAllAssigneLeadDialog(){
+   this.showAssigneLeadDialog(this.selectedleadInformation);
+  }
+  
 
 }
