@@ -398,9 +398,9 @@ export class RenewalListComponent {
     this.renewalService.setPolicyState(proposerDetail.policyNumber, this.activeSection);
     this.router.navigate(["renewals/renewalDynamicForm"]);
   }
-  getFixedStarArray(): number[] {
-    return Array.from({ length: 5 }, (_, i) => i); 
-  }
+  // getFixedStarArray(): number[] {
+  //   return Array.from({ length: 5 }, (_, i) => i); 
+  // }
   getStarClasses(index: number, rating: number): string[] {
     const starClasses = ['star'];
     const fullStars = Math.floor(rating);

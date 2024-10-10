@@ -7,6 +7,9 @@
     "sendRenewalsms":"renewal/api/sendrenewalsms",
     "sendRenewalEmail":"renewal/api/sendrenewalnotice",
     "generatePaymentlink":"renewal/api/generatepaymentlink",
+    "updatenominee":"renewal/api/updatenominee",
+    "updateaddress":"renewal/api/updateaddress",
+    "getproductdetailsandfeatures":"renewal/api/getproductdetailsandfeatures",
 
     "getLeadsListApi":"yatra/api/getleaddetailslist",
     "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",

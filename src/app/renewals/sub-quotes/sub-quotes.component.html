@@ -3,7 +3,7 @@
             <div class="bodyColumn userQuotes" *ngIf="subQuotes === false" >
                 <section class="UQ_viewWraper">
                     <div class="UQ_heading">
-                        <h2>proposername(policy number)</h2>
+                        <h2>{{ renewalInfo?.response?.policyData[0]?.PolicyOwnerName }} ({{renewalInfo?.response?.policyData[0]?.Policy_number}})</h2>
                     </div>
                     <div class="UQ_optionsWraper">
                         <button type="button" value="gridcard" class="btn_grid btn_grid_text jsBtnClickQuote mobile-hide" aria-label="userquotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)=" quotesView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card">Grid View</button>
@@ -35,15 +35,15 @@
                                         </div>
                                       </div>
                                   </td>
-                                  <td><span class="productName">Activ Fit</span></td>
-                                  <td>₹25,000
+                                  <td><span class="productName">{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</span></td>
+                                  <td>₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}
                                     <div class="text-green">
-                                        HR benefits of ₹796 added
+                                        HR benefits of ₹ added
                                     </div>  
                                   </td>
-                                  <td>9321075751</td>
-                                  <td>2023-03-15</td>
-                                  <td><span class="table-modification">Member Deleted, Tenure 2 Year</span></td>
+                                  <td>{{ renewalInfo?.response?.policyData[0]?.Mobile }}</td>
+                                  <td>{{renewalInfo?.response?.policyData[0]?.Policy_renewal_date}}</td>
+                                  <td><span class="table-modification"></span></td>
                                   <td>
                                     <div class="btn_groupAction">
                                         <button type="button" value="edit" title="Edit" class="btn_action btn_editAction"><img src="assets/Img/icon_edit_grey.svg"></button>
@@ -52,7 +52,7 @@
                                     </div>
                                   </td>
                                 </tr>
-                                <tr>
+                                <!-- <tr>
                                   <td class="sub_quote">
                                     <div class="input-checkbox-block">
                                         <div class="input-checkbox-feild">
@@ -77,7 +77,7 @@
                                         <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>                                          
                                     </div>
                                   </td>
-                                </tr>
+                                </tr> -->
                               </tbody>
                               <tfoot>
                                   <tr>
