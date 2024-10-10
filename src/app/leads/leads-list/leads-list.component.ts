@@ -367,6 +367,8 @@ export class LeadsListComponent {
     const input = event.target as HTMLInputElement;
     this.leadsList.forEach(lead => lead.isSelected = input.checked)
     this.checkBoxSelectedLeads = this.leadsList.filter(lead => lead.isSelected);
+    console.log("checkBoxSelectedLeads",this.checkBoxSelectedLeads.length)
+
   }
 
 
@@ -379,6 +381,7 @@ export class LeadsListComponent {
       this.checkBoxSelectedLeads.push(leadInfo);
     }
     console.log("checkBoxSelectedLeads",this.checkBoxSelectedLeads)
+    console.log("checkBoxSelectedLeads",this.checkBoxSelectedLeads.length)
   }
 
 

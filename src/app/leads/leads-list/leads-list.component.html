@@ -151,7 +151,7 @@
                                     <th class="text-center">
                                         <div class="icon_leads_check">
                                         <input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">
-                                        <button type="button" value="Assign To" title="Assign To" class="btn_action btn_renewalAction" (click)="selectAllAssigneLeadDialog()"><img
+                                        <button type="button" *ngIf="this.checkBoxSelectedLeads.length != 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction" (click)="selectAllAssigneLeadDialog()"><img
                                             src="assets/Img/icon_profile.svg"></button>
                                         </div></th>
                                     <th>Lead ID</th>
@@ -259,21 +259,21 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" value="Assign to" title="Assign to"
+                                    <button type="button" value="Assign to" title="Assign to" (click)="showAssigneLeadDialog(row)"
                                         class="btn_action btn_editAction"><img
                                             src="assets/Img/icon_profile.svg"></button>
-                                    <button type="button" value="Update Status" title="Update Status"
+                                    <button type="button" value="Update Status" title="Update Status" (click)="editLead(row.leadNumber)"
                                         class="btn_action btn_renewalAction"><img
                                             src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" value="Add Notes" title="Add Notes"
+                                    <button type="button" value="Add Notes" title="Add Notes" (click)="showNotesDialog(row)"
                                         class="btn_action btn_renewalAction"><img
                                             src="assets/Img/icon_add_notes.svg"></button>
-                                    <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                    <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
                                                 <li class="actionItem">
-                                                    <a> 
+                                                    <a (click)="editLead(row.leadNumber)"> 
                                                         <img src="assets/Img/icon_download2_grey.svg" alt="Download">
                                                         <span>Edit Lead</span></a>
                                                 </li>
@@ -283,7 +283,7 @@
                                                         <span>Mark Duplicate</span></a>
                                                 </li>
                                                 <li class="actionItem">
-                                                    <a>
+                                                    <a (click)="showAuditTrailDialog(row.leadNumber)">
                                                         <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
                                                         <span>View audit trail</span></a>
                                                 </li>
@@ -294,7 +294,7 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                    </mat-menu> -->
+                                    </mat-menu>
                                 </div>
                             </div>
                         </header>
