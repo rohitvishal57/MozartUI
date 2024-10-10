@@ -44,6 +44,7 @@
 
     "agentCartDetails":"quote/api/getagentcartdetails",
     "insertOrUpdateAgentCartDetails":"quote/api/insertorupdateagentcartdetails",
+    "deleteagentcartitems":"quote/api/deleteagentcartitems",
     "productList":"yatra/api/getproductlist",
     "pinCodeDetails":"yatra/api/getpincodedetails",
     "proposalNumber":"yatra/api/getproposalnumber",

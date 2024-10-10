@@ -117,8 +117,7 @@
                                                 class="add-wrapper" [ngClass]="{'selected': addon.isSelected}">
                                                 <label for="{{addon.featureName}}" class="add-checkbox">
                                                     <input type="checkbox" [value]="addon.featureName"
-                                                        id="{{addon.featureName}}"
-                                                        [checked]="addon.isSelected"
+                                                        id="{{addon.featureName}}" [checked]="addon.isSelected"
                                                         (change)="onCheckboxChange($event, addon,i)" />
                                                     <span>{{addon.featureName}}</span>
                                                 </label>
@@ -172,28 +171,30 @@
                 <!-- </div> -->
             </div>
             <div *ngIf="cartProductList.length >0">
-                <!-- <div>
-                    <p>Proposer Name</p>
-                </div> -->
+                <div class="allitem">
+                    <input type="button" class="product-remove-btn" value="Remove All"
+                                (click)="deleteallcartitems()">
+                </div>
                 <div *ngFor="let item of cartProductList; let i = index">
                     <div class="cart-cardItem">
                         <div class="cart-info-container">
                             <div class="proposer-info">
-                              <h5>Proposer Name:</h5>
-                              <p>{{formData.proposerName}}</p>
+                                <h5>Proposer Name:</h5>
+                                <p>{{item.proposerName}}</p>
                             </div>
                             <div class="mobile-info">
-                              <h5>Mobile Number:</h5>
-                              <p>{{formData.mobileNumber}}</p>
+                                <h5>Mobile Number:</h5>
+                                <p>{{item.mobileNumber}}</p>
                             </div>
-                          </div>
+                        </div>
                         <div class="product-header">
                             <div class="cart-productText"><img src="assets/logo/activeOne.svg"
                                     class="cart-productImage"> {{item.productName}}</div>
-                            <input type="button" class="product-remove-btn" value="Remove" (click)="removeFromCart(i)">
+                            <input type="button" class="product-remove-btn" value="Remove"
+                                (click)="deleteagentcartitems([item.id])">
                         </div>
                         <div class="product-features">
-                            <div *ngFor="let key of item.keyFeatures">
+                            <div *ngFor="let key of item.productFeatures">
                                 <div class="feature-element">
                                     <img src="assets/Img/Frame2.svg" alt="">
                                     <div class="feature"> {{ key }}</div>
@@ -213,18 +214,21 @@
                             </div>
 
                         </div>
-                        <div *ngIf="item.selectedAddon.length > 0">
-                            <hr>
-                            <!-- <div class="add-tag">Selected Addons</div> -->
-                            <div class="add-container">
-                                <ng-container *ngFor="let addon of item.selectedAddon">
-                                    <div class="add-box">
-                                        <img src="assets/logo/greenpoint.svg" alt="">
-                                        <div class="add-text">
-                                            {{addon}}
+                        <div *ngIf="item.selectedAddons">
+
+                            <div *ngIf="item.selectedAddons.length > 0">
+                                <hr>
+                                <!-- <div class="add-tag">Selected Addons</div> -->
+                                <div class="add-container">
+                                    <ng-container *ngFor="let addon of item.selectedAddons">
+                                        <div class="add-box">
+                                            <img src="assets/logo/greenpoint.svg" alt="">
+                                            <div class="add-text">
+                                                {{addon}}
+                                            </div>
                                         </div>
-                                    </div>
-                                </ng-container>
+                                    </ng-container>
+                                </div>
                             </div>
                         </div>
                         <div class="quick-tip">
