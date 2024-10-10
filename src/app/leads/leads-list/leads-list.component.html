@@ -148,29 +148,28 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    <th><input type="checkbox" id="Select All" onclick="toggleAll(this)">Select All</th>
                                     <th>Lead ID</th>
                                     <th>Name</th>
                                     <th>Mobile Number</th>
                                     <th>Email ID</th>
                                     <th>Product name</th>
-                                    <th>Compaign Name</th>
-                                    <th>Compain No</th>
+                                    <!-- <th>Compaign Name</th>
+                                    <th>Compain No</th> -->
                                     <th>Notice</th>
                                     <th></th>
-
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of leadsList; let i = index">
-                                    <td> <input type="checkbox"></td>
+                                    <td> <input type="checkbox" [(ngModel)]="row.isSelected" ></td>
                                     <td>{{row.leadNumber}}</td>
                                     <td>{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</td>
                                     <td>{{ row.phoneNumber }}</td>
                                     <td>{{row.email}}</td>
                                     <td><span class="productName">{{ row.interestedInPlan }}</span></td>
-                                    <td>{{ row.campaignName }}</td>
-                                    <td><span class="table-modification">{{ row.campaignNumber }}</span></td>
+                                    <!-- <td>{{ row.campaignName }}</td>
+                                    <td><span class="table-modification">{{ row.campaignNumber }}</span></td> -->
                                    <td>
                                         <div class="btn_groupAction">
                                             <button class="btn_action btn_editAction" (click)="showDialog(row)"> <img

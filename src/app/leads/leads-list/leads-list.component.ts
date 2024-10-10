@@ -40,7 +40,8 @@ export class LeadsListComponent {
   displayNotesPopup = false;
   activityTypes = ['sbhn', 'PORTABILITY', 'fresh policy'];
   addNoteForm!: FormGroup;
-  mobileNumber : string = '';
+  mobileNumber: string = '';
+  selectedCheckBox = false
 
   constructor(
     private leadsService: LeadsService,
@@ -94,7 +95,7 @@ export class LeadsListComponent {
     this.getLeadsList();
   }
   getLeadsList() {
-    
+
     this.leadsLisRequestBody.pageNumber = this.page;
     this.leadsLisRequestBody.pageSize = this.rows;
     this.leadsService.getLeadsListApi(this.leadsLisRequestBody).subscribe(
@@ -113,15 +114,13 @@ export class LeadsListComponent {
       }
     );
   }
-  editLead(leadData: any){
+  editLead(leadData: any) {
     console.log(leadData);
     localStorage.removeItem('updateLead')
     localStorage.setItem('updateLead', JSON.stringify(leadData))
-
-    this.router.navigate(['/leads/updateLead/' + leadData.leadNumber]); 
-    
-
+    this.router.navigate(['/leads/updateLead/' + leadData.leadNumber]);
   }
+
   filterQuotes(filter: string) {
     this.leadsLisRequestBody.filterType = filter;
     this.getLeadsList();
@@ -278,9 +277,8 @@ export class LeadsListComponent {
     this.selectedView = view;
   }
 
-
   showDialog(leadInformation: any) {
-    this.selectedleadInformation = leadInformation; 
+    this.selectedleadInformation = leadInformation;
     this.displayAssigneePopup = true;
   }
 
@@ -289,13 +287,9 @@ export class LeadsListComponent {
     this.displayNotesPopup = true;
   }
 
-  updateLeadInfoRoute(leadInformation: any) {
-    this.router.navigate(['/leads/createLead/'], { state: { leadInformation } }); // Pass state here
-  }
-
   fetchReportingUsers() {
-    let requestBody :any = {}
-    requestBody.agentCode =  this.agentCode
+    let requestBody: any = {}
+    requestBody.agentCode = this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
       (response) => {
         this.agentCodes = response;
@@ -304,45 +298,39 @@ export class LeadsListComponent {
         console.error("Error from getMyReportingUsers API:", error);
       }
     );
-    console.log("fetchReportingUsers agentCodes" ,this.agentCodes)
+    console.log("fetchReportingUsers agentCodes", this.agentCodes)
   }
 
   assineLead() {
-    const leadId = [this.selectedleadInformation.leadNumber];
-
-    let assigneLeadRequestBody : any = {};
-    assigneLeadRequestBody.leadnumber = leadId,
-    assigneLeadRequestBody.leadassigne =  this.assignLeadForm.value.selectedAgentCode,
-    assigneLeadRequestBody.agentCode = this.agentCode
-
-    console.log("request body for assigne:" + JSON.stringify(assigneLeadRequestBody))
+    let assigneLeadRequestBody: any = {};
+    assigneLeadRequestBody.leadnumber = [this.selectedleadInformation.leadNumber],
+      assigneLeadRequestBody.leadassigne = this.assignLeadForm.value.selectedAgentCode,
+      assigneLeadRequestBody.agentCode = this.agentCode
     this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
       (response) => {
         if (response.errorMessage == "success") {
-          console.error("Lead Success Assined");
+          console.log("Success! The lead has been successfully assigned!");
         }
       }, (error) => {
-        console.error("Error from assineLead API:", error);
+        console.error("Error: Unable to assign lead. Please try again later.", error);
       }
     );
     this.displayAssigneePopup = false;
   }
 
-
   addNotes() {
-    let addNotesRequestBody :any = {};
-
-    addNotesRequestBody.activitystartdate= this.addNoteForm.value.activityStartDate,
-    addNotesRequestBody.activityenddate= this.addNoteForm.value.activityEndDate,
-    addNotesRequestBody.activityName= this.addNoteForm.value.title,
-    addNotesRequestBody.note= this.addNoteForm.value.notes,
-    addNotesRequestBody.name= this.addNoteForm.value.notes,
-    addNotesRequestBody.activitytype= this.addNoteForm.value.activityType,
-    addNotesRequestBody.agentcode= this.agentCode,
-    addNotesRequestBody.createdat= new Date() ,
-    addNotesRequestBody.mobilenumber= this.selectedleadInformation.phoneNumber,
-    addNotesRequestBody.leadnumber= this.selectedleadInformation.leadNumber,
-    addNotesRequestBody.isupdate= 0
+    let addNotesRequestBody: any = {};
+    addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
+      addNotesRequestBody.activityenddate = this.addNoteForm.value.activityEndDate,
+      addNotesRequestBody.activityName = this.addNoteForm.value.title,
+      addNotesRequestBody.note = this.addNoteForm.value.notes,
+      addNotesRequestBody.name = this.addNoteForm.value.notes,
+      addNotesRequestBody.activitytype = this.addNoteForm.value.activityType,
+      addNotesRequestBody.agentcode = this.agentCode,
+      addNotesRequestBody.createdat = new Date(),
+      addNotesRequestBody.mobilenumber = this.selectedleadInformation.phoneNumber,
+      addNotesRequestBody.leadnumber = this.selectedleadInformation.leadNumber,
+      addNotesRequestBody.isupdate = 0
 
     this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
       (response) => {
@@ -354,9 +342,12 @@ export class LeadsListComponent {
       }
     );
     this.displayNotesPopup = false;
+  }
 
-  
+  selectedStates: boolean[] = new Array(this.leadsList.length).fill(true);
 
+  toggleAll() {
+    this.leadsList.forEach(lead => lead.isSelected = true)
   }
 
 }
