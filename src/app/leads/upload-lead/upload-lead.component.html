@@ -24,43 +24,39 @@
                         </div>
                     </div> -->
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4">
-                        <div class="uploadDocument_main">
-                            <div>
-                                <div class="uploadDocument_area" (click)="file.click()">
-                                    <div class="ud_area_left">
-                                        <h6>Upload Documents</h6>
-                                        <p>xlsx/xls/csv Files</p>
-                                        {{selctedFileName}}
-                                    </div>
-                                    <div class="ud_area_right">
-                                        <button type="button" class="btn_uploadDocument">
-                                            <span class="upload_icon"><img
-                                                    src="assets/Img/icon_upload_white.svg"></span>
-                                            Upload
-                                        </button>
-                                    </div>
-                                    <!-- <input type="file" id="file" #fileInput (change)="newfile($event)" style="display:none;" /> -->
-                                    <input type="file" accept=".xlsx, .xls, .csv" id="file" #file style="display: none"
-                                        (change)="newfile($event)">
-                                </div>
-                            </div>
-                            <span *ngIf="isFilenotSelected" class="ui-error block-show">
-                                Please select a file to continue.
-                            </span>
-                            <span class="ui-error block-show" *ngIf="showNote">
-                                File format not supported ! Please upload .xls, .xlsx or .csv files.
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-12 text-center mb-4">
-                            <button type="submit" (click)="continueFileUpload()" class="btn_red">Continue</button>
-                        </div>
-                        <div class="downlod-sampl-temp-txt text-center pt-15">
-                            <a class="text-faded-black text-capitalize" 
-                                href="assets/lms-assets/UploadSample.xlsx">Download sample
+                        <div class="sample_uploadDocument">
+                            <a href="assets/lms-assets/UploadSample.xlsx">Download sample
                                 template file</a>
                         </div>
+                        <div class="uploadDocument_main">
+                            <div class="uploadDocument_area" (click)="file.click()">
+                                <div class="ud_area_left">
+                                    <h6>Upload Documents</h6>
+                                    <p>xlsx/xls/csv Files</p>
+                                    {{selctedFileName}}
+                                </div>
+                                <div class="ud_area_right">
+                                    <button type="button" class="btn_uploadDocument">
+                                        <span class="upload_icon"><img
+                                                src="assets/Img/icon_upload_white.svg"></span>
+                                        Upload
+                                    </button>
+                                </div>
+                                <!-- <input type="file" id="file" #fileInput (change)="newfile($event)" style="display:none;" /> -->
+                                <input type="file" accept=".xlsx, .xls, .csv" id="file" #file style="display: none"
+                                    (change)="newfile($event)">
+                            </div>
+                        </div>
+                        <span *ngIf="isFilenotSelected" class="ui-error block-show">
+                            Please select a file to continue.
+                        </span>
+                        <span class="ui-error block-show" *ngIf="showNote">
+                            File format not supported ! Please upload .xls, .xlsx or .csv files.
+                        </span>
+                    </div>
+                    
+                    <div class="col-12 mt-5">
+                        <button type="submit" (click)="continueFileUpload()" class="btn_red">Continue</button>
                     </div>
                 </section>
 
