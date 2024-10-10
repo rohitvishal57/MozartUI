@@ -34,6 +34,7 @@ export class LeadsListComponent {
   displayAssigneePopup = false;
   agentCodes: any = [];
   assignLeadForm!: FormGroup;
+  updateStatusForm!: FormGroup;
   selectedLeadAssignee: string = '';
   selectedLeadNumbers: string[] = [];
   selectedleadInformation: any = {};
@@ -80,7 +81,10 @@ export class LeadsListComponent {
     this.assignLeadForm = this.fb.group({
       selectedAgentCode: ['']
     });
-
+    this.updateStatusForm = this.fb.group({
+      leadStatus: [''],
+      leadSubStatus: ['']
+    })
     this.addNoteForm = this.fb.group({
       title: [''],
       activityStartDate: [''],
@@ -122,6 +126,9 @@ export class LeadsListComponent {
   }
   updateStatus(leadNumber: any){
     this.displayUpdateStatusPopup = true
+  }
+  updateStatusSubmit(){
+    console.log(this.updateStatusForm.value);
   }
   filterQuotes(filter: string) {
     this.leadsLisRequestBody.filterType = filter;
