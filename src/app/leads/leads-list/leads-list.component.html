@@ -3,7 +3,7 @@
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
                 <h2>All Leads</h2>
-                <div class="lead-sub-menu">
+                <div class="btn_groupAction">
                     <button type="button" class="btn_white btn_newRequest" routerLink="/leads/createLead">
                         <img src="assets/Img/icon_plus_red.svg">Create lead
                     </button>
@@ -148,7 +148,15 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" (change)="toggleAll($event)"> Select All</th>
+                                    <th class="text-center"><input type="checkbox" id="Select All" onclick="toggleAll(this)"> Select All</th>
+                                    <!--<th>
+                                        <div class="input-checkbox-block">
+                                            <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="SelectAll" value="base-quote" class="input-check" onclick="toggleAll(this)">
+                                                <label for="SelectAll">Select All</label>
+                                            </div>
+                                        </div>
+                                    </th>-->
                                     <th>Lead ID</th>
                                     <th>Name</th>
                                     <th>Mobile Number</th>
@@ -157,12 +165,11 @@
                                     <!-- <th>Compaign Name</th>
                                     <th>Compain No</th> -->
                                     <th>Notice</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of leadsList; let i = index">
-                                    <td> <input type="checkbox" [checked]="row.isSelected"> </td>
+                                    <td align="center"> <input type="checkbox" [(ngModel)]="row.isSelected" ></td>
                                     <td>{{row.leadNumber}}</td>
                                     <td>{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</td>
                                     <td>{{ row.phoneNumber }}</td>

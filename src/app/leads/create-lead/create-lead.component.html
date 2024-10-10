@@ -2,15 +2,15 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <!-- <h2>My Endorsement</h2> -->
+                <h2>Create/Update Lead</h2>
             </div>
             <div *ngIf="isAUuser && !this.dataToDisplay">
                 <!-- <h2 class="sub-title mb-30 font-weight-bold"> AU User Details</h2> -->
-                <section class="white_container">
-                    <h6 class="heading-16-red">AU User Details</h6>
-                </section>
-                <section class="white_container">
+                <section class="white_container mb-5">
                     <div class="row mb-3">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">AU User Details</h6>
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" [(value)]='AUSearchCategory'
@@ -40,12 +40,12 @@
             </div>  
              <div *ngIf="isIDFCUser &&  !this.dataToDisplay">
                 <!-- <h2 class="sub-title mb-30 font-weight-bold" > IDFC User Details</h2> -->
-                <section class="white_container">
-                    <h6 class="heading-16-red">IDFC User Details</h6>
-                </section>
              
-                <section class="white_container">
+                <section class="white_container mb-5">
                     <div class="row mb-3">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">IDFC User Details</h6>
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" [(ngModel)]="AUSearchCategory"
@@ -75,11 +75,11 @@
             </div>
 
             <div *ngIf="isYESuser && !this.dataToDisplay">
-                <section class="white_container">
-                    <h6 class="heading-16-red">Yes Bank User Details</h6>
-                </section>
-                <section class="white_container">
+                <section class="white_container mb-5">
                     <div class="row mb-3">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">Yes Bank User Details</h6>
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" [(ngModel)]="YESSearchCategory"
@@ -120,9 +120,6 @@
                     </div>
                 </section>
             </div>
-            <section class="white_container">
-                <h6 class="heading-16-red">Lead Details</h6>
-            </section>
             <form (ngSubmit)="onSubmit()" [formGroup]="userValidations">
                 <!-- <section class="white_container">
                     <div class="row mb-3">
@@ -198,8 +195,11 @@
                 <section class="white_container">
                     <h6 class="heading-16-red">Personal Details</h6>
                 </section> -->
-                <section class="white_container">
+                <section class="white_container mb-5">
                     <div class="row mb-3">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">Lead Details</h6>
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder=""
@@ -360,11 +360,11 @@
                         </div>
                     </div>
                 </section>
-                <section class="white_container">
-                    <h6 class="heading-16-red">Address</h6>
-                </section>
-                <section class="white_container">
+                <section class="white_container mb-5">
                     <div class="row mb-3">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">Address</h6>
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="address1" placeholder=""
@@ -426,27 +426,29 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mb-0">
+                        <h4 class="mrg-btm-0 impText font-weight-bold"><span class="heading-16-red">Important :</span>
+                            Kindly
+                            ensure that
+                            Proposer's full name, address, gender and date of birth is strictly as per his/her
+                            CKYC1
+                            registry, Aadhaar records or OVD2</h4>
+                    </div>
+                    <div class="row impTextList sub-title mb-0 font-weight-bold">
+                        <p>1. Central KYC Registry</p>
+                    </div>
+                    <div class="row impTextList sub-title mb-3 font-weight-bold">
+                        <p>2. Officially Valid Documents, namely one of Aadhaar/Passport/Driving License/Voter
+                            ID</p>
+                    </div>
                 </section>
-                <div class="row mb-0">
-                    <h4 class="mrg-btm-0 impText font-weight-bold"><span class="heading-16-red">Important :</span>
-                        Kindly
-                        ensure that
-                        Proposer's full name, address, gender and date of birth is strictly as per his/her
-                        CKYC1
-                        registry, Aadhaar records or OVD2</h4>
-                </div>
-                <div class="row impTextList sub-title mb-0 font-weight-bold">
-                    <p>1. Central KYC Registry</p>
-                </div>
-                <div class="row impTextList sub-title mb-3 font-weight-bold">
-                    <p>2. Officially Valid Documents, namely one of Aadhaar/Passport/Driving License/Voter
-                        ID</p>
-                </div>
-                <section class="white_container">
-                    <h6 class="heading-16-red">Product Details</h6>
-                </section>
-                <section class="white_container">
+                
+                
+                <section class="white_container mb-5">
                     <div class="row mb-3">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">Product Details</h6>
+                        </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" formControlName="interestedProductName"
