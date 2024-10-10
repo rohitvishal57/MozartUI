@@ -243,8 +243,11 @@ h6 {
 	display: flex;
     justify-content: end;
   }
-
   .icon_leads_check{
     display: flex;
 	justify-content: space-around;
+  }
+.checkbox_selectAll{
+	top: 2px;
+    position: relative;
 }
