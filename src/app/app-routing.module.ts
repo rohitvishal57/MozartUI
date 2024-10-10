@@ -39,6 +39,9 @@ const routes: Routes = [
    {path:'proposals',
     loadChildren:() => import("./proposals/proposals.module").then((m)=>m.ProposalsModule)
    },
+   {path:'declaration',
+    loadChildren:() => import("./declaration/declaration.module").then((m)=>m.DeclarationModule)
+   },
   {path:'**',redirectTo:'',pathMatch:'full'}
 
 ];

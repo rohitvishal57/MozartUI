@@ -1,0 +1,117 @@
+.declaration-container {
+    padding-top: 11rem;
+    border-radius: 8px;
+    max-width: 87%;
+    margin: auto;
+    padding-left: 2%;
+    padding-bottom: 5%;
+
+    .section-title {
+        background-color: #6c7174;
+
+        .declaration {
+            color: #fff;
+            padding: 7px 14px;
+            margin-bottom: 10px;
+            border-radius: 2px;
+        }
+    }
+
+    .declaration-text {
+        font-size: 14px;
+        color: #333;
+        margin: 18px 5px;
+        line-height: 2.2;
+    }
+
+    .vernacular-declarationtext {
+        font-size: 14px;
+        color: #333;
+        margin: 20px 0;
+        line-height: 1.6;
+    }
+
+    .checkbox-bordered {
+        border: 1px solid #e0e0e0;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        background-color: #f0f0f0;
+        /* Gray background similar to the provided image */
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: 8px;
+            margin-left: 8px;
+        }
+
+        label {
+            font-size: 14px;
+            display: contents;
+            color: #333;
+        }
+
+    }
+
+    .physical-copy-required {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+
+        p {
+            margin-right: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        label {
+            margin-right: 15px;
+            font-size: 14px;
+        }
+    }
+
+    .disclaimer {
+        font-size: 12px;
+        color: #666;
+        margin: 15px 0;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+    }
+
+    .termsAndConditions {
+        border: 1px solid #e0e0e0;
+        padding: 10px;
+        border-radius: 5px;
+        line-height: 0;
+        position: absolute;
+        display: flex;
+        background-color: #f0f0f0;
+        width: 50%;
+
+        .termsAndConditions>input[type=checkbox] {
+            position: absolute;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: 8px;
+            margin-left: 8px;
+        }
+
+        .auth-button {
+            display: block;
+            justify-content: flex-end;
+            margin-top: 0px;
+            background-color: #ffca28;
+            border: none;
+            padding: 8px 25px 9px;
+            margin-left: 330%;
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+            border-radius: 5px;
+            cursor: pointer;
+            height: 30px;
+        }
+    }
+}
