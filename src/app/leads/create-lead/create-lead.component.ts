@@ -29,7 +29,7 @@ export class CreateLeadComponent implements OnInit {
   AUSearchCategory: any;
   isIDFCUser = false;
   AUSearchValue: string = "";
-  agentCode: any;
+  agentCode: any='';
   submittedUser: any = {};
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
@@ -53,6 +53,7 @@ export class CreateLeadComponent implements OnInit {
     }
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
+    this.agentCode = storedAgentCode;
     if (storedAgentCode) {
       this.CreateLead.AgentCode = storedAgentCode.toString();
     }
@@ -83,44 +84,7 @@ export class CreateLeadComponent implements OnInit {
     //   }
     // );
   }
-  updateleadInformation() {
-    this.inItForm();
-    this.userValidations.patchValue({
-      firstname: this.submittedUser.firstName,
-      lastname: this.submittedUser.lastName,
-      MiddleName: this.submittedUser.middleName,
-      email: this.submittedUser.email,
-      mobilenumber: this.submittedUser.phoneNumber,
-      dob: this.submittedUser.dob,
-      age: this.submittedUser.age,
-      gender: this.submittedUser.gender == "M" ? "Male" : this.submittedUser.gender == "F" ? "Female" : "Other",
-      maritalStatus: this.submittedUser.maritalStatus,
-      numberOfKids: this.submittedUser.numberOfKids,
-      occupation: this.submittedUser.occupation,
-      education: this.submittedUser.education,
-      address1: this.submittedUser.address1,
-      address2: this.submittedUser.address2,
-      address3: this.submittedUser.address3,
-      city: this.submittedUser.city,
-      state: this.submittedUser.state,
-      pincode: this.submittedUser.pincode,
-      interestedProductName: this.submittedUser.interestedProductName,
-      planType: this.submittedUser.planType,
-      policyEndDate: this.submittedUser.policyEndDate,
-      sumInsured: this.submittedUser.sumInsured,
-      premium: this.submittedUser.premium,
-      duePremiun: this.submittedUser.duePremiun,
-      familyConstruct: this.submittedUser.familyConstruct,
-      policyType: this.submittedUser.policyType,
-      policyNumber: this.submittedUser.policyNumber,
-      campaignname: this.submittedUser.campaignname,
-      campaignnumber: this.submittedUser.campaignnumber,
-      leadnumber: this.submittedUser.leadNumber,
-      leadAssignee: this.submittedUser.leadAssignee,
-      isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
-    });
-  }
-
+  
   inItForm() {
     this.userValidations = this.formBuilder.group({
       // campaignname: ['', Validators.required],
@@ -236,13 +200,21 @@ export class CreateLeadComponent implements OnInit {
   }
 
   getLeadInformationByLeadNumber(leadNumber: any) {
-    debugger;
-    console.log("getLeadInformationByLeadNumber ",leadNumber)
-    let requestBody: any = {
-      leadNumber : leadNumber
-    };
+    console.log("getLeadInformationByLeadNumber ", leadNumber)
+    let requestBody: any = {};
+    requestBody.agentCode = localStorage.getItem('agentCode');
+    requestBody.leadNumber = leadNumber;
+    requestBody.productName = "";
+    requestBody.startDate = "";
+    requestBody.pageNumber = 1;
+    requestBody.pageSize = 10;
+    requestBody.name = "";
+    requestBody.email = "";
+    requestBody.phoneNumber = "";
+    requestBody.filterType = "";
+    
     this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
-      this.submitted = response.data.leadList[0];
+      this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
     },
       (error) => {
@@ -252,5 +224,46 @@ export class CreateLeadComponent implements OnInit {
 
   }
 
+  updateleadInformation() {
+    this.inItForm();
+    console.log("userValidations form path ", this.submittedUser)
+    debugger
+    this.userValidations.patchValue({
+      firstname: this.submittedUser.firstName,
+      MiddleName: this.submittedUser.middleName,
+      lastname: this.submittedUser.lastName,
+      email: this.submittedUser.email,
+      mobilenumber: this.submittedUser.phoneNumber,
+      dob: this.submittedUser.dob,
+      age: this.submittedUser.age,
+      gender: this.submittedUser.gender == "M" ? "Male" : this.submittedUser.gender == "F" ? "Female" : "Other",
+      maritalStatus: this.submittedUser.maritalStatus,
+      numberOfKids: this.submittedUser.numberOfKids,
+      occupation: this.submittedUser.occupation,
+      education: this.submittedUser.education,
+      address1: this.submittedUser.address1,
+      address2: this.submittedUser.address2,
+      address3: this.submittedUser.address3,
+      city: this.submittedUser.city,
+      state: this.submittedUser.state,
+      pincode: this.submittedUser.pincode,
+      interestedProductName: this.submittedUser.interestedProductName,
+      planType: this.submittedUser.planType,
+      policyEndDate: this.submittedUser.policyEndDate,
+      sumInsured: this.submittedUser.sumInsured,
+      premium: this.submittedUser.premium,
+      duePremiun: this.submittedUser.duePremiun,
+      familyConstruct: this.submittedUser.familyConstruct,
+      policyType: this.submittedUser.policyType,
+      policyNumber: this.submittedUser.policyNumber,
+      campaignname: this.submittedUser.campaignname,
+      campaignnumber: this.submittedUser.campaignnumber,
+      leadnumber: this.submittedUser.leadNumber,
+      leadAssignee: this.submittedUser.leadAssignee,
+      isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
+    });
+    console.log("userValidations form path ", this.userValidations.errors)
+
+  }
 
 }
