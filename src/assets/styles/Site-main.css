@@ -560,7 +560,7 @@ button {
 .siteSidenav .sidenavMenu {
   /*gap: 22px;*/
   width: 100%;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
   height: 100%;
 }
@@ -572,7 +572,8 @@ button {
   font-weight: 300;
   font-size: 16px;
   color: var(--text-grey-79);
-  padding: 9px;
+  padding: 9px 9px 9px 25px;
+  transition: 0.3s;
 }
 .siteSidenav .sidenavMenu a .img_link {
   display: flex;
@@ -582,6 +583,18 @@ button {
   background: var(--white-color);
   width: 26px;
   height: 26px;
+}
+.siteSidenav .sidenavMenu a .img_link img {
+    width: 18px;
+    height: 18px;
+}
+.siteSidenav .sidenavMenu a .img_link.menu-proposals img {
+    filter: brightness(0) invert(0);
+    opacity: 0.8;
+}
+.siteSidenav .sidenavMenu a:hover .img_link.menu-proposals img {
+    filter: brightness(0) invert(1);
+    opacity: 1;
 }
 .siteSidenav .sidenavMenu a:hover .img_link, .siteSidenav .sidenavMenu a.active .img_link {
   background: var(--primary-red-color);
@@ -882,9 +895,7 @@ button {
     background:#ffffff url(../Img/icon_arrow_back_mobile.svg) no-repeat center center;
     border: 1px solid var(--white-color);
     border-radius: 7px;
-    box-shadow: -2px -12px 24px 15px #CECECE29;
-    box-shadow: -2px -12px 24px 15px #CECECE29, 7px 15px 19px -9px #0000001C;
-    display: none;
+    box-shadow: 2px 2px 12px 0px #CECECE29;
 }
 .btn_newRequest {
   padding: 8px;

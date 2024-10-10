@@ -4,6 +4,7 @@ export class CreateLead {
     lastname!: string;
     middlename!: string;
     mobilenumber!: string;
+    PhoneNumber!: string;
     emailid!: string;
     dob!: Date | string;
     age!: string;

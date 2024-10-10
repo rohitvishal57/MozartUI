@@ -51,11 +51,11 @@ export class GetQuoteComponent {
     { id: 'cholesterol', value: 'cholesterol', label: 'Cholesterol' },
     { id: 'diabetes', value: 'diabetes', label: 'Diabetes' }
   ];
-  
+
   proposerZone: any;
   proposerZoneValue: any;
   proposerCity: any;
-  proposerState:any;
+  proposerState: any;
   selectedSumInsured: any;
   selectedDiseases: string[] = [];
   diseaseNames: string | null = null;
@@ -90,7 +90,7 @@ export class GetQuoteComponent {
 
 
   value: number = 5;
-  
+
 
   relations: any[] = [
     {
@@ -155,8 +155,8 @@ export class GetQuoteComponent {
     },
     {
       "id": "R003",
-      "value": "Son",
-      "name": "Son",
+      "value": "Son1",
+      "name": "Son1",
       "isIncrement": true,
       "imagePath": "assets/Img/icon_member_son.png",
       "age": null,
@@ -165,8 +165,8 @@ export class GetQuoteComponent {
     },
     {
       "id": "R004",
-      "value": "Daughter",
-      "name": "Daughter",
+      "value": "Daughter1",
+      "name": "Daughter1",
       "isIncrement": true,
       "imagePath": "assets/Img/icon_member_daughter.png",
       "age": null,
@@ -220,7 +220,7 @@ export class GetQuoteComponent {
       this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
     }
-      
+
     // this.saveDataToStorage();
   }
 
@@ -344,7 +344,7 @@ export class GetQuoteComponent {
   continue() {
     console.log(this.quoteFormGroup);
     this.quoteFormGroup.get('numberOfInsuredMembers')?.setValue(this.selectedRelationships.length);
-    this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length+"A");
+    this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length + "A");
     console.log(this.quoteFormGroup.value);
     if (this.quoteFormGroup.valid) {
       console.log(this.quoteFormGroup.value);
@@ -354,7 +354,7 @@ export class GetQuoteComponent {
       });
     } else {
       this.quoteFormGroup.markAllAsTouched();
-      console.log('Form is invalid. Please correct the errors.',this.quoteFormGroup);
+      console.log('Form is invalid. Please correct the errors.', this.quoteFormGroup);
       this.showErrorMessage('Please complete all required fields correctly before proceeding.');
     }
   }
@@ -386,17 +386,38 @@ export class GetQuoteComponent {
   // }
 
   incrementMember(relation: any) {
-    console.log(relation);
-    let index = this.relations.findIndex((rel) => rel.isIncrement === true);
-    let baseRelation = JSON.parse(JSON.stringify(relation));
-    baseRelation.isIncrement = false;
-    baseRelation['deletable'] = true;
-    let currentCount = this.relationCountMap.get(relation.id) as number;
-    currentCount += 1;
-    baseRelation.name = `${relation.name} ${currentCount}`;
-    baseRelation.value = `${relation.name} ${currentCount}`;
-    this.relations.splice(index, 0, baseRelation);
+    // console.log(relation);
+    // let index = this.relations.findIndex((rel) => rel.isIncrement === true);
+    // let baseRelation = JSON.parse(JSON.stringify(relation));
+    // baseRelation.isIncrement = false;
+    // baseRelation['deletable'] = true;
+    // let currentCount = this.relationCountMap.get(relation.id) as number;
+    // currentCount += 1;
+    // baseRelation.name = `${relation.name} ${currentCount}`;
+    // baseRelation.value = `${relation.name} ${currentCount}`;
+    // this.relations.splice(index, 0, baseRelation);
+    // this.relationCountMap.set(relation.id, currentCount);
+
+    let baseName = relation.name.replace(/\d+/g, ''); // No trim needed, as we don't want a space
+
+    // Get the current count for the relation type (Son, Daughter, etc.)
+    let currentCount = this.relationCountMap.get(relation.id) || 1; // Start count at 1 if not set
+
+    let baseRelation = { ...relation }; // Deep copy the relation
+    baseRelation.isIncrement = false; // Mark the cloned relation as a regular relation
+    baseRelation['deletable'] = true; // Mark it as deletable
+
+    currentCount += 1; // Increment the count
+    baseRelation.name = `${baseName}${currentCount}`; // Set new name (e.g., Son2, Daughter2)
+    baseRelation.value = `${baseName}${currentCount}`; // Update value accordingly
+
+    // Insert the new relation at the correct index (right after the current one)
+    let index = this.relations.indexOf(relation) + 1;
+    this.relations.splice(index, 0, baseRelation); // Insert after the current relation
+
+    // Update the count in the map
     this.relationCountMap.set(relation.id, currentCount);
+
   }
 
   removeMember(relation: any) {
@@ -426,7 +447,7 @@ export class GetQuoteComponent {
   onDiseaseChange(event: any) {
     const selectedValue = event.target.value;
     console.log(selectedValue);
-    
+
     if (event.target.checked) {
       // Add the value to the array if the checkbox is checked and not already present
       if (!this.selectedDiseases.includes(selectedValue)) {
@@ -445,11 +466,11 @@ export class GetQuoteComponent {
     const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
 
     console.log(insuredMembersArray);
-    
+
     insuredMembersArray.controls.forEach((control: AbstractControl) => {
       const memberGroup = control as FormGroup;
-      memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames != "" ? this.diseaseNames :  null);
-      memberGroup.get('isChronic')?.setValue(this.diseaseNames != "" ? "Yes" :  "No");
+      memberGroup.get('chronicDiseases')?.setValue(this.diseaseNames != "" ? this.diseaseNames : null);
+      memberGroup.get('isChronic')?.setValue(this.diseaseNames != "" ? "Yes" : "No");
     });
     this.activeDropdown = null;
     // this.saveDataToStorage();
@@ -470,21 +491,21 @@ export class GetQuoteComponent {
   //     selectedSumInsured: this.selectedSumInsured,    // Store selected sum insured value
   //     selectedDiseases: this.selectedDiseases         // Store selected diseases (array of strings)
   //   };
-  
+
   //   console.log(data);  // Log data object to check the contents before saving
-  
+
   //   // Save the data object to localStorage
   //   localStorage.setItem('quoteFormData', JSON.stringify(data));
   //   console.log('Data saved to LocalStorage:', data);
   // }
-  
+
 
   // Load stored data from LocalStorage
   // loadStoredData() {
   //   const storedData = localStorage.getItem('quoteFormData');
   //   if (storedData) {
   //     const parsedData = JSON.parse(storedData);
-  
+
   //     this.selectedOptions = parsedData.selectedOptions || [];
   //     this.selectedPolicy = parsedData.selectedPolicy || "Family Floater";
   //     this.selectedRelationships = parsedData.selectedRelationships || [];
@@ -493,7 +514,7 @@ export class GetQuoteComponent {
   //     this.proposerZone = parsedData.proposerZone || null;
   //     this.selectedSumInsured = parsedData.selectedSumInsured || this.sliderOptions?.stepsArray?.[0]?.value;
   //     this.selectedDiseases = parsedData.selectedDiseases || [];
-  
+
   //     console.log('Data loaded from LocalStorage:', parsedData);
   //   }
   // }
@@ -518,13 +539,13 @@ export class GetQuoteComponent {
     this.quoteFormGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
 
     const insuredMembersArray = this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
-    if(insuredMembersArray){
+    if (insuredMembersArray) {
       insuredMembersArray.controls.forEach((control: AbstractControl) => {
         const memberGroup = control as FormGroup;
         memberGroup.get('sumInsured')?.setValue(this.selectedSumInsured);
       });
       // this.saveDataToStorage();
-  
+
       this.activeDropdown = null;
     }
   }
@@ -535,21 +556,21 @@ export class GetQuoteComponent {
     // this.quoteFormGroup.get('proposerName')?.markAsTouched();
     // this.quoteFormGroup.get('proposerPincode')?.markAsTouched();
     // this.quoteFormGroup.get('mobileNumber')?.markAsTouched();
-  
+
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid) {
       this.quoteFormGroup.markAllAsTouched();
       const insuredMembersGroup = this.fb.group({});
       this.quoteFormGroup.setControl('insuredMembers', insuredMembersGroup);
-  
+
       // Reset the insuredMemberDetails array
       const insuredMemberDetailsArray = this.fb.array([]) as FormArray;
       this.quoteFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
-  
+
       // Add controls for the currently selected relationships
       this.selectedRelationships.forEach((relation: any) => {
         insuredMembersGroup.addControl(relation.value, this.fb.control(true));
-  
+
         const memberGroup = this.fb.group({
           relation: [relation.value],
           roomCategory: [""],
@@ -562,19 +583,19 @@ export class GetQuoteComponent {
           memberdob: [relation.dob, [Validators.required]],
           memberRelationCode: [24, [Validators.required]],
           pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
-          city:[this.proposerCity],
+          city: [this.proposerCity],
           zoneValue: [this.proposerZone],
           state: [this.proposerState]
         });
-  
+
         insuredMemberDetailsArray.push(memberGroup);
       });
-  
+
       // Update selectedRelation string for display
       this.selectedRelation = this.selectedRelationships.length > 0
         ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
         : 'Please select members';
-  
+
       console.log(this.selectedRelation);
       // Optionally save data to storage
       // this.saveDataToStorage();
@@ -588,7 +609,7 @@ export class GetQuoteComponent {
       });
     }
   }
-  
+
 
   get insuredMemberDetails(): FormArray {
     return this.quoteFormGroup.get('insuredMemberDetails') as FormArray;

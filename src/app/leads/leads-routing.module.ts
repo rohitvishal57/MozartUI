@@ -14,6 +14,7 @@ import { NewCampaignRuleComponent } from './new-campaign-rule/new-campaign-rule.
 const routes: Routes = [
   { path: "leadsList", component: LeadsListComponent },
   { path: "createLead", component: CreateLeadComponent},
+  { path: "updateLead/:id", component: CreateLeadComponent},
   { path: "uploadLead", component: UploadLeadComponent},
   { path: "campaignmanagment", component: CampaignsComponent},
   { path: "createCampaign", component: NewCampaignComponent},

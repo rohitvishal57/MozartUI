@@ -8,9 +8,10 @@ import { PrimeNgModule } from 'src/app/prime-ng.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { EndorsementDetailsComponent } from '../endorsement-details/endorsement-details.component';
 
 @NgModule({
-  declarations: [EndorsementsNewRequestComponent,EndorsementsRequestsComponent],
+  declarations: [EndorsementsNewRequestComponent,EndorsementsRequestsComponent,EndorsementDetailsComponent],
   imports: [
     CommonModule,
     PrimeNgModule,

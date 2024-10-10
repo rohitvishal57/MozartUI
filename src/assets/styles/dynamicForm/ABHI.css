@@ -840,6 +840,30 @@ body {
     font-family: "Anek Latin", sans-serif;
 }
 
+.main-container .right-panel .sendEmail{
+    background-color: #c72229;
+    color: #ffe2dc;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+}
+
+.main-container .right-panel .sendOTPLabel{
+    background-color: #c72229;
+    color: #ffe2dc;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+}
+
+.main-container .right-panel .sendOTPBtn{
+    background-color: #c72229;
+    color: #ffe2dc;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+}
+
 .main-container .right-panel .section-paragraph1 {
     font-weight: 600;
     font-size: 20px;

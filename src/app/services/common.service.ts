@@ -40,13 +40,6 @@ export class CommonService {
   // }
 
   //For ABHI
-  
-  getBankCity(reqBody:any){
-    return this.http.post<any>(`${this.yatraUrl}getBankCity`,reqBody);
-  }
-  getBranchDetails(reqBody:any){
-    return this.http.post<any>(`${this.yatraUrl}getBranchDetails`,reqBody);
-  }
 
  
 
