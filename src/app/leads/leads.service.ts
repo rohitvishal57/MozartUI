@@ -60,5 +60,13 @@ export class LeadsService {
     const url = `${this.configService.config.baseUrl}${this.configService.config.viewaudittrail}${leadnumber}`;
     return this.http.post<any>(url, leadnumber);
   }
+  getReferenceStatus() {
+    const url = `${this.configService.config.baseUrl}${this.configService.config.referencestatus}`;
+    return this.httpService.get<any>(url);
+  }
+  updateStatus(requestBody:any):Observable<any>{
+    const updateStatusRequest = this.configService.config.baseUrl + this.configService.config.updatestatus;
+    return this.http.post<any>(updateStatusRequest, requestBody);
+  }
     
 }

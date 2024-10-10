@@ -18,6 +18,8 @@
     "getcampaignsdetails":"yatra/api/getcampaignsdetails",
     "createbulklead":"yatra/api/createbulklead",
     "viewaudittrail":"yatra/api/viewaudittrail?leadnumber=",
+    "referencestatus":"yatra/api/referencestatus",
+    "updatestatus":"yatra/api/updatestatus",
 
     "assineLead":"yatra/api/LeadAssigne",
     "getMyReportingUsers": "yatra/api/getmyreportingusers",

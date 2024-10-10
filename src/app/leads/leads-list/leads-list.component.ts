@@ -47,6 +47,9 @@ export class LeadsListComponent {
   selectedCheckBox = false
   checkBoxSelectedLeads : any =[];
   auditTrails: any;
+  referenceStatus: any;
+  referenceSubStatus: any;
+  statusUpdateLead: any;
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -125,10 +128,47 @@ export class LeadsListComponent {
     this.router.navigate(['/leads/updateLead/' + leadNumber]);
   }
   updateStatus(leadNumber: any){
-    this.displayUpdateStatusPopup = true
+    this.statusUpdateLead = leadNumber;
+    this.leadsService.getReferenceStatus().subscribe(
+      (response) => {
+        console.log(response);
+        this.displayUpdateStatusPopup = true
+        this.referenceStatus = response;
+        // this.referenceSubStatus = response;
+      },
+      (error) => {
+        console.error("Error from getMyReportingUsers API:", error);
+      }
+    );
+  }
+  changeReferStatus(event: any){
+    console.log(event.target.value);
+    let selectedStatus = event.target.value
+    this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
+    console.log(this.referenceSubStatus);
   }
   updateStatusSubmit(){
     console.log(this.updateStatusForm.value);
+    let reqObj = {
+      agentcode: this.agentCode,
+      statusMessage: "Approval",
+      statusCode: "334",
+      sessionId: "8",
+      response: "ok",
+      leadnumber: this.statusUpdateLead,
+      status: this.updateStatusForm.get('leadStatus')?.value,
+      substatus: this.updateStatusForm.get('leadSubStatus')?.value
+    }
+    this.leadsService.updateStatus(reqObj).subscribe(
+      (response) => {
+        console.log(response);
+        this.displayUpdateStatusPopup = false;
+      },
+      (error) => {
+        console.error("Error from getMyReportingUsers API:", error);
+        this.displayUpdateStatusPopup = false;
+      }
+    );
   }
   filterQuotes(filter: string) {
     this.leadsLisRequestBody.filterType = filter;
