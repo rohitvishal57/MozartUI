@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { ConfigService } from '../services/config.service';
+import { HttpService } from '../services/http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LeadsService {
 
-  constructor(private http:HttpClient, private configService: ConfigService) { }
+  constructor(private http:HttpClient, private configService: ConfigService, private httpService: HttpService) { }
 
   getLeadsListApi(requestBody:any):Observable<any>{
     const getProposalListApi = this.configService.config.baseUrl + this.configService.config.getLeadsListApi;
@@ -53,6 +54,11 @@ export class LeadsService {
   getLeadInfoByLeadID(requestBody:any):Observable<any>{
     const addLeadNotesRequest = this.configService.config.baseUrl + this.configService.config.getLeadDetailsList;
     return this.http.post<any>(addLeadNotesRequest, requestBody);
+  }
+  
+  viewAuditTrail(leadnumber: string) {
+    const url = `${this.configService.config.baseUrl}${this.configService.config.viewaudittrail}${leadnumber}`;
+    return this.http.post<any>(url, leadnumber);
   }
     
 }
