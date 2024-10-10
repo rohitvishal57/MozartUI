@@ -45,12 +45,11 @@ export class CreateLeadComponent implements OnInit {
 
   ngOnInit() {
 
+    this.inItForm();
     let data: any = this.route.snapshot.paramMap.get('id');
-    if (!data) {
-      this.inItForm();
-    } else {
+    if (data) {
       this.getLeadInformationByLeadNumber(data);
-    }
+    } 
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
     this.agentCode = storedAgentCode;
@@ -225,9 +224,6 @@ export class CreateLeadComponent implements OnInit {
   }
 
   updateleadInformation() {
-    this.inItForm();
-    console.log("userValidations form path ", this.submittedUser)
-    debugger
     this.userValidations.patchValue({
       firstname: this.submittedUser.firstName,
       MiddleName: this.submittedUser.middleName,
