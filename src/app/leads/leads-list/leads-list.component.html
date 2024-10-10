@@ -176,14 +176,14 @@
                                     <td><span class="table-modification">{{ row.campaignNumber }}</span></td> -->
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)"> <img
+                                            <button class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
                                                     src="assets/Img/icon_profile.svg" /></button>
                                             <button type="button" value="Update Status"
                                                 (click)="editLead(row.leadNumber)" title="Update Status"
                                                 class="btn_action btn_renewalAction"><img
                                                     src="assets/Img/icon_edit_grey.svg"></button>
 
-                                            <button class="btn_action btn_renewalAction" (click)="showNotesDialog(row)">
+                                            <button class="btn_action btn_renewalAction" (click)="showNotesDialog(row)" title="Add Notes">
                                                 <img src="assets/Img/icon_add_notes.svg"></button>
 
                                             <button type="button" value="more" title="More"
