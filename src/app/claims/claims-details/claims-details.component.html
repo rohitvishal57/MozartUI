@@ -40,7 +40,7 @@
                           <button type="button" class="btn_red">Upload Documents</button>
                           <div class="btn_groupAction">
                               <button type="button" class="btn_iconText">View Details</button>
-                              <button type="button" class="btn_iconText"><img src="../../../assets/Img/icon_phone_red.svg"> Care Manager</button>
+                              <button type="button" class="btn_iconText"><img src="assets/Img/icon_phone_red.svg"> Care Manager</button>
                           </div>
                       </div>
                   </div>
@@ -127,22 +127,22 @@
                                   <div class="uploadDocument_optionsInfo row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <ul class="unorderList ul_withIcon">
-                                              <li><img src="../../../../../assets/Img/icon_ud_kycid.svg">Any govt/KYC ID</li>
-                                              <li><img src="../../../../../assets/Img/icon_ud_doctor_prescription.svg">Doctor’s Prescription</li>
-                                              <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Consultation form</li>
+                                              <li><img src="assets/Img/icon_ud_kycid.svg">Any govt/KYC ID</li>
+                                              <li><img src="assets/Img/icon_ud_doctor_prescription.svg">Doctor’s Prescription</li>
+                                              <li><img src="assets/Img/icon_ud_consultation_form.svg">Consultation form</li>
                                           </ul>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <ul class="unorderList ul_withIcon">
-                                              <li><img src="../../../../../assets/Img/icon_ud_hospital_bill.svg">Hospital bill invoice</li>
-                                              <li><img src="../../../../../assets/Img/icon_ud_neft.svg">NEFT/ Cancelled cheque/ Passbook</li>
-                                              <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Claim form</li>
+                                              <li><img src="assets/Img/icon_ud_hospital_bill.svg">Hospital bill invoice</li>
+                                              <li><img src="assets/Img/icon_ud_neft.svg">NEFT/ Cancelled cheque/ Passbook</li>
+                                              <li><img src="assets/Img/icon_ud_consultation_form.svg">Claim form</li>
                                           </ul>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <ul class="unorderList ul_withIcon">
-                                              <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Investigation report</li>
-                                              <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Hospital discharge form</li>
+                                              <li><img src="assets/Img/icon_ud_consultation_form.svg">Investigation report</li>
+                                              <li><img src="assets/Img/icon_ud_consultation_form.svg">Hospital discharge form</li>
                                           </ul>
                                       </div>
                                   </div>
@@ -154,13 +154,11 @@
                                           </div>
                                           <div class="ud_area_right">
                                               <button type="button" class="btn_uploadDocument">
-                                                  <span class="upload_icon"><img src="../../../../../assets/Img/icon_upload_white.svg"></span> Upload
+                                                  <span class="upload_icon"><img src="assets/Img/icon_upload_white.svg"></span> Upload
                                               </button>
                                           </div>
                                           <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                                       </div>
-
-
 
                                       <div class="uploadDocument_listMain" *ngIf="uploadedFiles.length > 0">
                                           <div class="uploadDocument_filesList">
@@ -186,8 +184,8 @@
                                                                   </div>
                                                               </div>
                                                               <div class="headInfo_item">
-                                                                  <div class="upload-success" *ngIf="uploadSuccess"><img src="../../../../../assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
-                                                                  <div class="upload-fail" *ngIf="!uploadSuccess"><img src="../../../../../assets/Img/icon_failure.svg"><span class="failed-text">Failed</span></div>
+                                                                  <div class="upload-success" *ngIf="uploadSuccess"><img src="assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
+                                                                  <div class="upload-fail" *ngIf="!uploadSuccess"><img src="assets/Img/icon_failure.svg"><span class="failed-text">Failed</span></div>
                                                                   <div *ngIf="file.uploadDateTime">
                                                                       <span class="date-time">{{ file.formattedUploadDateTime }}</span>
                                                                   </div>
@@ -201,7 +199,7 @@
                                                               </div>
                                                               <div class="uploadedFiles_infoItem">
                                                                   <button class="delete-button" (click)="deleteFile(file)">
-                                                                      <img src="../../../../../assets/Img/icon_delete_red2.svg">
+                                                                      <img src="assets/Img/icon_delete_red2.svg">
                                                                   </button>
                                                                   <div class="size-align">
                                                                       <p>{{ convertBytesToKB(file.size) }}</p>
@@ -224,7 +222,7 @@
                                   <!-- <div class="ud_area_right">
                                       <button type="button" class="btn_uploadDocument">
                                           <span class="upload_icon"><img
-                                src="../../../../../assets/Img/icon_upload_white.svg"></span> Upload
+                                src="assets/Img/icon_upload_white.svg"></span> Upload
                                       </button>
                                   </div> -->
                               </div>
@@ -234,7 +232,7 @@
                                     <div class="col-12">
                                         <div class="tracker_claimDetails">
                                             <div class="tracker_statusInfo">
-                                                <h6><img src="../../../../../assets/Img/icon_clock.svg">It will take <span>3 Days</span> to Complete the Claim</h6>
+                                                <h6><img src="assets/Img/icon_clock.svg">It will take <span>3 Days</span> to Complete the Claim</h6>
                                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et do.</p>
                                             </div>
                                             <div class="main_claimProgressSteps">
@@ -243,8 +241,8 @@
                                                     <div class="item_claimProgressSteps completed">
                                                         <span class="item_count">
                                                           <em class="count">1</em>
-                                                          <em class="img_tick"><img src="../../../../../assets/Img/icon_tick_greenbg.svg"></em>
-                                                          <em class="img_error"><img src="../../../../../assets/Img/icon_danger.svg"></em>
+                                                          <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
+                                                          <em class="img_error"><img src="assets/Img/icon_danger.svg"></em>
                                                       </span>
                                                         <div class="item_info">
                                                             <h6>Claim Initiated</h6>
@@ -254,8 +252,8 @@
                                                     <div class="item_claimProgressSteps active">
                                                         <span class="item_count">
                                                           <em class="count">2</em>
-                                                          <em class="img_tick"><img src="../../../../../assets/Img/icon_tick_greenbg.svg"></em>
-                                                          <em class="img_error"><img src="../../../../../assets/Img/icon_danger.svg"></em>
+                                                          <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
+                                                          <em class="img_error"><img src="assets/Img/icon_danger.svg"></em>
                                                       </span>
                                                         <div class="item_info">
                                                             <h6>Under Hospital Review</h6>
@@ -265,24 +263,24 @@
                                                     <div class="item_claimProgressSteps error">
                                                         <span class="item_count">
                                                           <em class="count">3</em>
-                                                          <em class="img_tick"><img src="../../../../../assets/Img/icon_tick_greenbg.svg"></em>
-                                                          <em class="img_error"><img src="../../../../../assets/Img/icon_danger.svg"></em>
+                                                          <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
+                                                          <em class="img_error"><img src="assets/Img/icon_danger.svg"></em>
                                                         </span>
                                                         <div class="item_info">
                                                             <h6>Under Deficiency</h6>
                                                             <small>Since 24th Jan’24 | ETA: 5 hours (4 Hr 15 min remaining)</small>
                                                             <div class="tip_iconWithText">
-                                                                <img src="../../../../../assets/Img/icon_folder.svg">
+                                                                <img src="assets/Img/icon_folder.svg">
                                                                 <small>Our Customer Team will contact you with further details about your claim</small>
                                                             </div>
-                                                            <button type="button" class="btn_iconText">Upload Document <img src="../../../../../assets/Img/icon_right_arrow_red.svg"></button>
+                                                            <button type="button" class="btn_iconText">Upload Document <img src="assets/Img/icon_right_arrow_red.svg"></button>
                                                         </div>
                                                     </div>
                                                     <div class="item_claimProgressSteps">
                                                         <span class="item_count">
                                                           <em class="count">4</em>
-                                                          <em class="img_tick"><img src="../../../../../assets/Img/icon_tick_greenbg.svg"></em>
-                                                          <em class="img_error"><img src="../../../../../assets/Img/icon_danger.svg"></em>
+                                                          <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
+                                                          <em class="img_error"><img src="assets/Img/icon_danger.svg"></em>
                                                       </span>
                                                         <div class="item_info">
                                                             <h6>Claim Initiated</h6>
@@ -292,8 +290,8 @@
                                                     <div class="item_claimProgressSteps">
                                                         <span class="item_count">
                                                         <em class="count">5</em>
-                                                        <em class="img_tick"><img src="../../../../../assets/Img/icon_tick_greenbg.svg"></em>
-                                                        <em class="img_error"><img src="../../../../../assets/Img/icon_danger.svg"></em>
+                                                        <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
+                                                        <em class="img_error"><img src="assets/Img/icon_danger.svg"></em>
                                                     </span>
                                                         <div class="item_info">
                                                             <h6>TBD</h6>
@@ -302,8 +300,8 @@
                                                     <div class="item_claimProgressSteps">
                                                         <span class="item_count">
                                                         <em class="count">6</em>
-                                                        <em class="img_tick"><img src="../../../../../assets/Img/icon_tick_greenbg.svg"></em>
-                                                        <em class="img_error"><img src="../../../../../assets/Img/icon_danger.svg"></em>
+                                                        <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
+                                                        <em class="img_error"><img src="assets/Img/icon_danger.svg"></em>
                                                     </span>
                                                         <div class="item_info">
                                                             <h6>TBD</h6>
@@ -315,8 +313,8 @@
                                                 </div>
                                             </div>
                                             <div class="item_claimProgressButtons">
-                                                <button type="button" class="btn_iconText"><img src="../../../../../assets/Img/icon_claimhistory.svg">Claims History</button>
-                                                <button type="button" class="btn_red">View Details <img src="../../../../../assets/Img/icon_right_arrow_black.svg"></button>
+                                                <button type="button" class="btn_iconText"><img src="assets/Img/icon_claimhistory.svg">Claims History</button>
+                                                <button type="button" class="btn_red">View Details <img src="assets/Img/icon_right_arrow_black.svg"></button>
                                             </div>
                                         </div>
                                     </div>

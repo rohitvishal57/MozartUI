@@ -47,7 +47,7 @@
     "endorsementcreaterequest":"claims/api/endorsementcreaterequest",
     "endorsementGetOTP":"claims/api/endorsementsendotp",
     "getpolicyinfodetails":"claims/api/getpolicyinfodetails",
-
+    "endorsementCaseDetails":"claims/api/getcasedetailsbycaseid",
 
     "agentCartDetails":"quote/api/getagentcartdetails",
     "insertOrUpdateAgentCartDetails":"quote/api/insertorupdateagentcartdetails",
