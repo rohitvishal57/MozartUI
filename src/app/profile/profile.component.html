@@ -102,7 +102,7 @@
                     </div>
                     <div>
                         <p>Date of Birth</p>
-                        <p class="bind_profile">{{profileDetails?.dateOfBirth | date: 'dd-mm-yy'}}</p>
+                        <p class="bind_profile">{{profileDetails?.dateOfBirth | date: 'dd-MM-yyyy'}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -146,6 +146,20 @@
                         <img src="../../assets/images/phone.png" />
                     </div>
                     <div>
+                        <p>Agent Code</p>
+                        <p class="bind_profile">{{profileDetails?.agentCode}}</p>
+                    </div>
+                </div>
+                <div class="name-action">
+                    <img src="../../assets/images/edit.png" />
+                </div>
+            </div>
+            <div class="field">
+                <div class="name-field">
+                    <div>
+                        <img src="../../assets/images/phone.png" />
+                    </div>
+                    <div>
                         <p>Branch Code</p>
                         <p class="bind_profile">{{profileDetails?.branchOfficeCode}}</p>
                     </div>
@@ -168,20 +182,7 @@
                     <img src="../../assets/images/edit.png" />
                 </div>
             </div>
-            <div class="field">
-                <div class="name-field">
-                    <div>
-                        <img src="../../assets/images/phone.png" />
-                    </div>
-                    <div>
-                        <p>Agent Code</p>
-                        <p class="bind_profile">{{profileDetails?.agentCode}}</p>
-                    </div>
-                </div>
-                <div class="name-action">
-                    <img src="../../assets/images/edit.png" />
-                </div>
-            </div>
+
 
         </div>
     </div>
