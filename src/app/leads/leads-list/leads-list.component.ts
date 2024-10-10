@@ -39,6 +39,7 @@ export class LeadsListComponent {
   selectedleadInformation: any = {};
   displayNotesPopup = false;
   displayAuditTrailPopup = false;
+  displayUpdateStatusPopup = false;
   activityTypes = ['sbhn', 'PORTABILITY', 'fresh policy'];
   addNoteForm!: FormGroup;
   mobileNumber: string = '';
@@ -119,7 +120,9 @@ export class LeadsListComponent {
   editLead(leadNumber: any) {
     this.router.navigate(['/leads/updateLead/' + leadNumber]);
   }
-
+  updateStatus(leadNumber: any){
+    this.displayUpdateStatusPopup = true
+  }
   filterQuotes(filter: string) {
     this.leadsLisRequestBody.filterType = filter;
     this.getLeadsList();
