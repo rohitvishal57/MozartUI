@@ -14,10 +14,11 @@
     "getcampaignsdetails":"yatra/api/getcampaignsdetails",
     "createbulklead":"yatra/api/createbulklead",
 
+    "assineLead":"yatra/api/LeadAssigne",
+    "getMyReportingUsers": "yatra/api/getmyreportingusers",
     "getProposalListApi":"yatra/api/getproposallist",
-
     "getCustomerDetailsList":"yatra/api/getCustomerDetailsList",
-
+    "addLeadNotes":"yatra/api/addnotes",
     "getClaimsList":"claims/api/getclaimlist",
     "getProposalDetails":"claims/api/getproposaldetails?AgentCode",
     "saveClaims":"claims/api/saveclaim",

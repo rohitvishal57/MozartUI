@@ -66,6 +66,18 @@ export class CreateLeadComponent implements OnInit{
     else{
       console.log("agent code is not present in local storege");
     }
+
+    this.router.events.subscribe(event => {     
+        if (event instanceof NavigationEnd) {
+          const navigation = this.router.getCurrentNavigation();   
+          console.log("navigation {}" ,navigation)
+          if(navigation?.extras.state) { 
+            this.submittedUser = navigation.extras.state?.['leadInformation'];
+            this.updateleadInformation();
+      }
+   } });
+
+
     let usr = storedAgentCode ? JSON.parse(storedAgentCode) : null;
     let obj = {
       "id": 0,
@@ -169,6 +181,7 @@ export class CreateLeadComponent implements OnInit{
       isUpdate: 0,
     });
   }
+  
   changeDob(event: any){
     let age:any=''
     age=this.calculateAge(event.target.value);

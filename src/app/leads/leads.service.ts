@@ -35,5 +35,19 @@ export class LeadsService {
       }));
   }
 
+  getMyReportingUsers(requestBody:any):Observable<any>{
+    const getMyReportingUsersAPI = this.configService.config.baseUrl + this.configService.config.getMyReportingUsers;
+    return this.http.post<any>(getMyReportingUsersAPI, requestBody);
+  }
+
+  assineLead(requestBody:any):Observable<any>{
+    const assineLead = this.configService.config.baseUrl + this.configService.config.assineLead;
+    return this.http.post<any>(assineLead, requestBody);
+  }
+  
+  addLeadNotes(requestBody:any):Observable<any>{
+    const addLeadNotesRequest = this.configService.config.baseUrl + this.configService.config.addLeadNotes;
+    return this.http.post<any>(addLeadNotesRequest, requestBody);
+  }
   
 }
