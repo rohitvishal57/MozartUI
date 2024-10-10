@@ -14,8 +14,13 @@ export class ProfileComponent implements OnInit {
   constructor(private profileService: ProfileService) { }
 
   ngOnInit(): void {
-    this.profileService.getProfileDetails((data: any) => {
-      this.profileDetails = data;
+    const reqData={
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    this.profileService.getProfileDetails(reqData).subscribe(res =>{
+      if(res.success){
+        this.profileDetails = res.data;
+      }
     })
   }
 

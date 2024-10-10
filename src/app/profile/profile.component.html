@@ -3,9 +3,12 @@
     <div class="profile-heading">
         <div class="profile-tabs">
             <ul class="tab-actions">
-                <li class="tab" [ngClass]="{'active': activeTab === 'tab1'}" (click)="tabSelection('tab1')">Member Details</li>
-                <li class="tab" [ngClass]="{'active': activeTab === 'tab2'}" (click)="tabSelection('tab2')">Contact Details</li>
-                <li class="tab" [ngClass]="{'active': activeTab === 'tab3'}" (click)="tabSelection('tab3')">Nominee Details</li>
+                <li class="tab" [ngClass]="{'active': activeTab === 'tab1'}" (click)="tabSelection('tab1')">Member
+                    Details</li>
+                <li class="tab" [ngClass]="{'active': activeTab === 'tab2'}" (click)="tabSelection('tab2')">Contact
+                    Details</li>
+                <li class="tab" [ngClass]="{'active': activeTab === 'tab3'}" (click)="tabSelection('tab3')">Nominee
+                    Details</li>
             </ul>
         </div>
         <div class="profile-tabs-action">
@@ -29,7 +32,7 @@
                     </div>
                     <div>
                         <p>Name</p>
-                        <p class="bind_profile">Ajay</p>
+                        <p class="bind_profile">{{profileDetails?.smName}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -43,7 +46,7 @@
                     </div>
                     <div>
                         <p>Mobile Number</p>
-                        <p class="bind_profile">8639166360</p>
+                        <p class="bind_profile">{{profileDetails?.smMobile}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -56,8 +59,8 @@
                         <img src="../../assets/images/phone.png" />
                     </div>
                     <div>
-                        <p>Mobile Number</p>
-                        <p class="bind_profile">8639166360</p>
+                        <p>Alternate Mobile Number</p>
+                        <p class="bind_profile">{{profileDetails?.alternateMobileNumber}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -71,7 +74,7 @@
                     </div>
                     <div>
                         <p>Email ID</p>
-                        <p class="bind_profile">dfhrthrthtrh</p>
+                        <p class="bind_profile">{{profileDetails?.smEmail}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -85,7 +88,7 @@
                     </div>
                     <div>
                         <p>Gender</p>
-                        <p class="bind_profile">Male</p>
+                        <p class="bind_profile">{{profileDetails?.gender}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -99,7 +102,7 @@
                     </div>
                     <div>
                         <p>Date of Birth</p>
-                        <p class="bind_profile">11/07/1994</p>
+                        <p class="bind_profile">{{profileDetails?.dateOfBirth | date: 'dd-mm-yy'}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -113,7 +116,7 @@
                     </div>
                     <div>
                         <p>Relation</p>
-                        <p class="bind_profile">Spouse</p>
+                        <p class="bind_profile">{{profileDetails?.firstName}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -129,8 +132,8 @@
                         <img src="../../assets/images/name.png" />
                     </div>
                     <div>
-                        <p>Adhar Card</p>
-                        <p class="bind_profile">Ajay</p>
+                        <p>Agent category</p>
+                        <p class="bind_profile">{{profileDetails?.agentCategory}}</p>
                     </div>
                 </div>
                 <div class="name-action">
@@ -143,14 +146,43 @@
                         <img src="../../assets/images/phone.png" />
                     </div>
                     <div>
-                        <p>Pan Card</p>
-                        <p class="bind_profile">8639166360</p>
+                        <p>Branch Code</p>
+                        <p class="bind_profile">{{profileDetails?.branchOfficeCode}}</p>
                     </div>
                 </div>
                 <div class="name-action">
                     <img src="../../assets/images/edit.png" />
                 </div>
             </div>
+            <div class="field">
+                <div class="name-field">
+                    <div>
+                        <img src="../../assets/images/phone.png" />
+                    </div>
+                    <div>
+                        <p>Sub Channel</p>
+                        <p class="bind_profile">{{profileDetails?.subChannel}}</p>
+                    </div>
+                </div>
+                <div class="name-action">
+                    <img src="../../assets/images/edit.png" />
+                </div>
+            </div>
+            <div class="field">
+                <div class="name-field">
+                    <div>
+                        <img src="../../assets/images/phone.png" />
+                    </div>
+                    <div>
+                        <p>Agent Code</p>
+                        <p class="bind_profile">{{profileDetails?.agentCode}}</p>
+                    </div>
+                </div>
+                <div class="name-action">
+                    <img src="../../assets/images/edit.png" />
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
