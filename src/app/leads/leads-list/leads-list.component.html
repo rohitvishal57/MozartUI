@@ -384,7 +384,7 @@
 
     <div class="contentBody bodyColumns-1">
         <p-dialog header="Allocate to" [modal]="true" [(visible)]="displayNotesPopup"
-            [style]="{ width: '90rem', height: '35rem' }">
+            [style]="{ width: '90rem', height: '45rem' }">
 
             <section class="white_container">
                 <h6 class="heading-16-red">Add Notes</h6>
@@ -392,21 +392,21 @@
             <form (ngSubmit)="addNotes()" [formGroup]="addNoteForm" novalidate autocomplete="false">
                 <section class="white_container">
                     <div class="row mb-3">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-3">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="nomineeName" placeholder="" type="text"
                                     formControlName="title">
                                 <label>Activity Title *</label>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder="" type="date"
                                     formControlName="activityStartDate">
                                 <label>Activity Start Date*:</label>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="MiddleName" placeholder="" type="time"
                                     formControlName="activityStartTime">
@@ -414,7 +414,7 @@
 
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="lastname" placeholder="" type="date"
                                     formControlName="activityEndDate">
@@ -422,7 +422,7 @@
 
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="email" placeholder="" type="time"
                                     formControlName="activityEndTime">
@@ -430,7 +430,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" formControlName="activityType">
                                     <option value="" disabled selected>Choose Option</option>
@@ -442,7 +442,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-3">
                             <div class="input-block form-floating input-block-renew">
                                 <textarea class="form-control input-textBox" id="message" name="message" rows="4"
                                     cols="50" placeholder="Type your note..." formControlName="notes"></textarea>
