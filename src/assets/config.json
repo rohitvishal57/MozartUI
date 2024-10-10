@@ -18,7 +18,6 @@
     "createbulklead":"yatra/api/createbulklead",
 
     "assineLead":"yatra/api/LeadAssigne",
-    "getLeadDetailsList":"/yatra/api/getLeadDetailsList",
     "getMyReportingUsers": "yatra/api/getmyreportingusers",
     "getProposalListApi":"yatra/api/getproposallist",
     "getCustomerDetailsList":"yatra/api/getCustomerDetailsList",
