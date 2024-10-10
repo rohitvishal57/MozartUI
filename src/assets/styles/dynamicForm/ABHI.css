@@ -904,6 +904,7 @@ body {
     height: 46px;
     font-size: 14px;
     text-transform: uppercase;
+    margin-right: 5px;
 }
 
 .main-container .right-panel .sendOTPLabel{
