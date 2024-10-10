@@ -30,9 +30,15 @@
                                 <option value="policyNumber">Policy Number</option>
                             </select>
                             <div *ngIf="selected == 'date'" class="d-flex field_searchMain">
-                                <input type="date" class="filterSearch" [formControl]="searchInputControl" id="filterSearch" (change)="getFromDate($event)">
-                                <input type="date" class="filterSearch" [formControl]="searchInputControl" id="filterSearch" (change)="getToDate($event)">
-                                <button *ngIf="selected == 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <div class="input-block form-floating input-block-renew m-0">
+                                    <input type="date" id="fromDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getFromDate($event)">
+                                    <label for="fromDate">From Date</label>
+                                </div>
+                                <div class="input-block form-floating input-block-renew m-0">
+                                    <input type="date" id="toDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getToDate($event)">
+                                    <label for="toDate">To Date</label>
+                                </div>
+                                <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" style="position: initial" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg" alt="Search"></button>
                             </div>
                             <input *ngIf="selected != 'date'" class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                             <button *ngIf="selected != 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>

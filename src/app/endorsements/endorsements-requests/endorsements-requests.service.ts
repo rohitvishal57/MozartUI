@@ -41,7 +41,7 @@ export class EndorsementsRequestsService {
   }
 
   endorsementCaseDetailsApi(formData:any){
-    // const endorsementCaseDetailsApi = this.configService.config.baseUrl + this.configService.config.endorsementGetOTP;
-    return this.httpService.post("https://localhost:7026/api/getcasedetailsbycaseid", formData);
+    const endorsementCaseDetailsApi = this.configService.config.baseUrl + this.configService.config.endorsementCaseDetails;
+    return this.httpService.post(endorsementCaseDetailsApi, formData);
   }
 }

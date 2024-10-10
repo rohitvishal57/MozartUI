@@ -32,9 +32,10 @@ export class EndorsementDetailsComponent {
     this.endorsement_service
       .endorsementCaseDetailsApi(endorsementCaseDetailsReqBody)
       .subscribe(
-        (resp) => {
-          console.log(resp);
-          this.policyData = resp;
+        (resp:any) => {
+          if (resp.data && resp.data.statusCode == "200" && resp.data.isSuccess) {
+            this.policyData = resp.data;
+          }
         },
         (err: any) => {
           console.log(err);        }

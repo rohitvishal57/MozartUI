@@ -1,15 +1,15 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { endorsementDetails } from 'src/app/interface/endorsementDetails.interface';
+import { endorsementDetails } from 'src/app/interface/endorsement.interface';
 import { EndorsementsRequestsService } from './endorsements-requests.service';
-
 
 @Component({
   selector: 'app-endorsements-requests',
   templateUrl: './endorsements-requests.component.html',
   styleUrls: ['./endorsements-requests.component.scss']
 })
+
 export class EndorsementsRequestsComponent implements OnInit {
   endorsementDetails: endorsementDetails[] = [];
   countsList: any = [];
@@ -34,15 +34,18 @@ export class EndorsementsRequestsComponent implements OnInit {
   ngOnInit(): void {
     this.getRequestList();
   }
+
   downloadRequest(data: any) {
     alert(data.status);
   }
+
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
     this.getRequestList();
   }
+
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isDesktopView = window.innerWidth <= 1116;
@@ -64,7 +67,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       "searchColumn": "",
       "sortDirection": "DESC",
       "searchString": "",
-      "uiStatus": []
+      "uiStatus": ""
   }
    
   getRequestList() {
@@ -88,9 +91,9 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   statusFilter(filter: string) {
     if (filter === "All") {
-      this.requestsListRequestBody.uiStatus = [];
+      this.requestsListRequestBody.uiStatus = "";
     } else {
-    this.requestsListRequestBody.uiStatus = [filter];
+    this.requestsListRequestBody.uiStatus = filter;
     }
     this.getRequestList();
     this.activeFilter = filter;
@@ -141,10 +144,10 @@ export class EndorsementsRequestsComponent implements OnInit {
         ),
       ]);
     }
-
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched();
   }
+
   getPlaceholder(): string {
     if (this.selected === "EndorsementID") {
       return "Enter Request ID";
@@ -157,6 +160,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       return "Search...";
     }
   }
+
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";
@@ -170,6 +174,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     }
     return "";
   }
+
   cancelSearch() {
     this.toggeleSearchdropdown = false;
     this.selected = "";
@@ -192,7 +197,8 @@ export class EndorsementsRequestsComponent implements OnInit {
       else if (this.selected === "policyNumber") {
         this.requestsListRequestBody.searchColumn = "policyNumber";
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
-      } else if (this.selected === "date") {
+      } 
+      else if (this.selected === "date") {
         this.requestsListRequestBody.fromDate = this.fromDate;
         this.requestsListRequestBody.toDate = this.toDate;
       }
@@ -204,9 +210,11 @@ export class EndorsementsRequestsComponent implements OnInit {
       this.toggeleSearchdropdown = true;
     }
   }
+
   quotesViews(view: string) {
     this.selectedView = view;
   }
+
   redirect(value:any){
     this.router.navigate([value]);
   }
