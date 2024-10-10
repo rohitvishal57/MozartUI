@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { RenewalList } from 'src/app/interface/renewal-list.interface';
 import { RenewalsService } from '../renewals.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sub-quotes',
@@ -13,36 +11,66 @@ export class SubQuotesComponent {
 
   subQuotes:boolean=false;
   selectedView: string = "list";
-  subQuotesList:RenewalList[]=[]
-  renewalInfo:any={}
+  policyNumber:string=''
+  subQuotesList:any=[];
+  selectedQuotes: any[] = [];
+  selected: any = [];
 
-  constructor(private renewalService:RenewalsService,private router: Router){
-  }
+  constructor(private renewalService:RenewalsService){}
 
-  ngOnInit() {
-    this.getRenewalInfo();
-    // this.renewalService.getQuote().subscribe((policy:any) => {
-    //   console.log('Received policy data:', policy);
-    //   });
+  ngOnInit()
+  {
+    this.renewalService.policy$.subscribe(policy => {
+      if(policy.policyNo){
+      this.policyNumber=policy.policyNo;
+   }});
+   this.getSubquotes();
   }
-  getRenewalInfo() {
-    this.renewalService.getRenewalInfoApi("21-24-0002334-00", {}).subscribe(
-      (res:any) => {
-        this.renewalInfo = JSON.parse(res.data);
-      },
-      (err) => {
-        console.log("Error coming from getRenewalInfo API", err);
+  compareQuotes() {
+    this.subQuotes = true; 
+    this.selectedQuotes = this.subQuotesList.filter((quote: any) => quote.selected);  
+    console.log("Selected Quotes:", this.selectedQuotes);
+    this.selectedQuotes.forEach(quote => {
+    if (typeof quote.nomineeDetails === 'string') {
+        try {
+          quote.nomineeDetails = JSON.parse(quote.nomineeDetails);
+        } catch (e) {
+          console.error("Error parsing nomineeDetails", e);
+        }
       }
-    );
+    if (typeof quote.members === 'string') {
+        try {
+          quote.members = JSON.parse(quote.members);  
+        } catch (e) {
+          console.error("Error parsing members", e);
+        }
+      }
+      quote.members.forEach((member: any) => {
+        member.roomCategory = null; 
+        member.MemberproductComponents?.forEach((component: any) => {
+          const roomCategoryComponent = component.productComponent?.find(
+            (pc: any) => pc.productComponentName === 'RoomCategory'
+          );
+          if (roomCategoryComponent) {
+            member.roomCategory = roomCategoryComponent.productComponentValue;
+          }
+        });
+      });
+    });
   }
-  handleAction(value:any, task:any){
-  }
-  
-  compareQuotes(){
-    this.subQuotes=true    
-  }
-  quotesView(view: string){
+  quotesView(view: string)
+  {
     this.selectedView = view;
   }
-
+  getSubquotes(){
+    this.renewalService.getSubquotesApi("21-24-0002334-00",{}).subscribe(
+      (res:any)=>{
+        this.subQuotesList=res.data;
+        console.log("subquotes data",this.subQuotesList)
+      },
+      (err)=>{
+        console.log("error coming from sub quotes api",err);
+      }
+    )
+  }
 }

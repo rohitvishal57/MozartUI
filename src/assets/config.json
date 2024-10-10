@@ -10,6 +10,7 @@
     "updatenominee":"renewal/api/updatenominee",
     "updateaddress":"renewal/api/updateaddress",
     "getproductdetailsandfeatures":"renewal/api/getproductdetailsandfeatures",
+    "getSubquotes":"renewal/api/getsubquotes",
 
     "getLeadsListApi":"yatra/api/getleaddetailslist",
     "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",

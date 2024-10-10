@@ -348,12 +348,10 @@ export class RenewalListComponent {
           agentMobileNo: "db",  
           masterPolicyNo: "bjkh",  
           eventName: "bsdj",  
-          renewalLink: "khavbjk",  
           dueDate: "acsvh",  
           dateOfRenewal: item.policyEndDate,  
           renewedPolicyNo: item.policyNumber,  
           proposalNumber: "vasxb",  
-          policyNumber: item.policyNumber,  
           grossRenewalAmount: item.renewalPremiumAmount.toString(),  
           isAutoSMS: true,
           sessionId: "jbsaj"  

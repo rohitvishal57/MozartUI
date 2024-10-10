@@ -1,198 +1,174 @@
-      <main class="siteBody">
-        <div class="contentBody bodyColumns-1">
-            <div class="bodyColumn userQuotes" *ngIf="subQuotes === false" >
-                <section class="UQ_viewWraper">
-                    <div class="UQ_heading">
-                        <h2>{{ renewalInfo?.response?.policyData[0]?.PolicyOwnerName }} ({{renewalInfo?.response?.policyData[0]?.Policy_number}})</h2>
-                    </div>
-                    <div class="UQ_optionsWraper">
-                        <button type="button" value="gridcard" class="btn_grid btn_grid_text jsBtnClickQuote mobile-hide" aria-label="userquotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)=" quotesView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card">Grid View</button>
-                        <button type="button" value="gridlist" class="btn_grid btn_grid_text active jsBtnClickQuote mobile-hide" aria-label="userquotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)=" quotesView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List">List View</button>
-                    </div>
-                </section>
-                <section id="userquotes-list" class="tableMain user-quoteView mobile-hide" *ngIf="selectedView == 'list'">
-                    <div class="tableSubMain">
-                        <div class="table-responsive">
-                            <table class="table table-borderless table-search">
-                              <thead>
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn userQuotes" *ngIf="subQuotes === false">
+            <section class="UQ_viewWraper">
+                <div class="UQ_heading">
+                    <h2>{{ subQuotesList[0].policyOwnerName }} ({{ subQuotesList[0].policyNumber }})</h2>
+                </div>
+                <div class="UQ_optionsWraper">
+                    <button type="button" value="gridcard" class="btn_grid btn_grid_text jsBtnClickQuote mobile-hide" aria-label="userquotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)=" quotesView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card">Grid View</button>
+                    <button type="button" value="gridlist" class="btn_grid btn_grid_text active jsBtnClickQuote mobile-hide" aria-label="userquotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)=" quotesView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List">List View</button>
+                </div>
+            </section>
+            <section id="userquotes-list" class="tableMain user-quoteView mobile-hide" *ngIf="selectedView == 'list'">
+                <div class="tableSubMain">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
                                 <tr>
-                                  <th scope="col" class="head_quoteType">Quote Type</th>
-                                  <th scope="col">Product</th>
-                                  <th scope="col">Renewal Premium </th>
-                                  <th scope="col">Mobile No.</th>
-                                  <th scope="col">Date of Renewal</th>
-                                  <th scope="col">Modification</th>
-                                  <th scope="col">Notice</th>
+                                    <th scope="col" class="head_quoteType">Quote Type</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Renewal Premium </th>
+                                    <th scope="col">Mobile No.</th>
+                                    <th scope="col">Date of Renewal</th>
+                                    <th scope="col">Modification</th>
+                                    <th scope="col">Notice</th>
                                 </tr>
-                              </thead>
-                              <tbody class="table-group-divider">
-                                <tr class="base_quoteRow">
-                                  <td class="base_quote">
-                                      <div class="input-checkbox-block">
-                                        <div class="input-checkbox-feild">
-                                            <input type="checkbox" id="base-quote1" value="base-quote" class="input-check" >
-                                            <label for="base-quote1">Base Quote1</label>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr *ngFor="let quote of subQuotesList; let i = index" class="base_quoteRow">
+                                    <td  [ngClass]="quote.isBaseQuote ? 'base_quote' : 'sub_quote'">
+                                        <div class="input-checkbox-block">
+                                            <div class="input-checkbox-feild">
+                                                <input 
+                                                type="checkbox" 
+                                                id="quote-{{ i }}" 
+                                                [(ngModel)]="quote.selected"
+                                                value="base-quote"
+                                                class="input-check">
+                                                <label for="quote-{{ i }}">{{ quote.isBaseQuote ? 'Base Quote' : 'Sub Quote' }}</label>
+                                            </div>
                                         </div>
-                                      </div>
-                                  </td>
-                                  <td><span class="productName">{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</span></td>
-                                  <td>₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}
-                                    <div class="text-green">
-                                        HR benefits of ₹ added
-                                    </div>  
-                                  </td>
-                                  <td>{{ renewalInfo?.response?.policyData[0]?.Mobile }}</td>
-                                  <td>{{renewalInfo?.response?.policyData[0]?.Policy_renewal_date}}</td>
-                                  <td><span class="table-modification"></span></td>
-                                  <td>
-                                    <div class="btn_groupAction">
-                                        <button type="button" value="edit" title="Edit" class="btn_action btn_editAction"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                        <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                                        <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>  
-                                    </div>
-                                  </td>
+                                    </td>
+                                    <td><span class="productName">{{ quote.productCode }}</span></td>
+                                    <td>₹{{quote.annualPremium}}
+                                        <div class="text-green">
+                                            HR benefits of ₹796 added
+                                        </div>
+                                    </td>
+                                    <td>{{quote.mobile}}</td>
+                                    <td>{{ quote.policyRenewalDate | date: 'yyyy-MM-dd' }}</td>
+                                    <td><span class="table-modification">{{quote.comment}}, Tenure {{quote.tenure}} Year</span></td>
+                                    <td>
+                                        <div class="btn_groupAction">
+                                            <button type="button" value="edit" title="Edit" class="btn_action btn_editAction"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                            <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
+                                        </div>
+                                    </td>
                                 </tr>
-                                <!-- <tr>
-                                  <td class="sub_quote">
-                                    <div class="input-checkbox-block">
-                                        <div class="input-checkbox-feild">
-                                            <input type="checkbox" id="sub-quote1" value="sub-quote" class="input-check" >
-                                            <label for="sub-quote1">Sub Quote1</label>
-                                        </div>
-                                      </div>
-                                  </td>
-                                  <td><span class="productName">Activ Fit</span></td>
-                                  <td>₹25,000
-                                    <div class="text-green">
-                                        HR benefits of ₹796 added
-                                    </div>  
-                                  </td>
-                                  <td>9321075751</td>
-                                  <td>2023-03-15</td>
-                                  <td><span class="table-modification">Member Deleted, Tenure 2 Year</span></td>
-                                  <td>
-                                    <div class="btn_groupAction">
-                                        <button type="button" value="edit" title="Edit" class="btn_action btn_editAction"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                        <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img//icon_renewable_energy_grey.svg"></button>
-                                        <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>                                          
-                                    </div>
-                                  </td>
-                                </tr> -->
-                              </tbody>
-                              <tfoot>
-                                  <tr>
-                                      <td colspan="9" align="right">
-                                        <button type="button" value="compareselected" class="btn_compareSelected"  (click)="compareQuotes()">Compare Selected</button>
-                                      </td>
-                                  </tr>
-                              </tfoot>
-                            </table>
-                        </div>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="9" align="right">
+                                        <button type="button" value="compareselected" class="btn_compareSelected" (click)="compareQuotes()">Compare Selected</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
-                </section>
-                <!--Table Main end-->
-                
-                <!--Card view Main start-->
-                <section id="userquotes-card" class="cardViewMain user-quoteView userGridView mobile-block" *ngIf="selectedView == 'grid' ">
-                    <div class="cardViewWraper">
-                        <!--Card item start-->
-                        <div class="cardViewItem">
-                            <header>
-                                <div class="card_insureInfo">
-                                    <h6>
-                                        <div class="insureName">Base Quote 1</div>
-                                    </h6>
-                                    <div class="item_productName">product name</div>
+                </div>
+            </section>
+            <section id="userquotes-card" class="cardViewMain user-quoteView userGridView mobile-block" *ngIf="selectedView == 'grid' ">
+                <div class="cardViewWraper">
+                    <div class="cardViewItem" *ngFor="let quote of subQuotesList; let i = index">
+                        <header>
+                            <div class="card_insureInfo">
+                                <h6>
+                                    <div class="insureName">{{ quote.isBaseQuote ? 'Base Quote' : 'Sub Quote' }}</div>
+                                </h6>
+                            </div>
+                            <div class="card_btnGroup">
+                                <div class="btn_groupAction">
+                                    <button type="button" value="edit" title="Edit" class="btn_action btn_editAction"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
                                 </div>
-                                <div class="card_btnGroup">
-                                    <div class="btn_groupAction">
-                                        <button type="button" value="edit" title="Edit" class="btn_action btn_editAction"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                        <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                                        <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>  
-                                    </div>
+                            </div>
+                        </header>
+                        <div class="cardViewBody">
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">Product</div>
+                                <div class="item_value">{{ quote.productCode }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">Renewal Premium</div>
+                                <div class="item_value">₹{{quote.annualPremium}}</div>
+                                <div class="item_value2 text-green">HR benefits of ₹786 added</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">Mobile No.</div>
+                                <div class="item_value">{{quote.mobile}}</div>
+                            </div>
+                            <div class="cv_bodyItems ">
+                                <div class="item_lable">Date of Renewal</div>
+                                <div class="item_value">{{ quote.policyRenewalDate | date: 'yyyy-MM-dd' }}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_100 userInfo">
+                                <span class="modifiedBadge">Modified</span>
+                                <div class="userInfoItem">
+                                    <div class="item_lable">Members</div>
+                                    <div class="item_value">{{quote.comment}}</div>
                                 </div>
-                            </header>
-                            <div class="cardViewBody">
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">Product</div>
-                                    <div class="item_value">Active User</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">Renewal Premium</div>
-                                    <div class="item_value">₹25,000</div>
-                                    <div class="item_value2 text-green">HR benefits of ₹786 added</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">Mobile No.</div>
-                                    <div class="item_value">9321075751</div>
-                                </div>
-                                <div class="cv_bodyItems ">
-                                    <div class="item_lable">Date of Renewal</div>
-                                    <div class="item_value">2023-03-15</div>
-                                </div>
-                                <div class="cv_bodyItems cv_bodyItems_100 userInfo">
-                                    <span class="modifiedBadge">Modified</span>
-                                    <div class="userInfoItem">
-                                        <div class="item_lable">Members</div>
-                                        <div class="item_value">1 Member Added</div>
-                                    </div>
-                                    <div class="userInfoItem">
-                                        <div class="item_lable">Tenure</div>
-                                        <div class="item_value">1 Year</div>
-                                    </div>
+                                <div class="userInfoItem">
+                                    <div class="item_lable">Tenure</div>
+                                    <div class="item_value">{{quote.tenure}} Year</div>
                                 </div>
                             </div>
                         </div>
-                        <!--Card item end-->
                     </div>
-                </section>
-                <!--Card view Main end-->
-                
-            </div> 
-            <div class="bodyColumn body_flex_column quoteComparison" *ngIf="subQuotes == true">
-                <h3 class="icon_withHeading"><a class="btn_backPage"></a>Quote Comparison</h3>
-                <!--Quote Comparison Start-->
-                <section class="quoteComparisonWraper">
-                    <div class="qc_item qc_item1">
-                        <header>Quote <br>Comparison</header>
-                        <div class="upgradeInfo">Upgrade Recommendations</div>
-                        <div class="qc_info">Members</div>
-                        <div class="qc_info qc_info_grey">Nominee</div>
-                        <div class="qc_info qc_infoCover">
-                            <ul>
-                                <li>Optional Covers</li>
-                            </ul>
-                        </div>
-                        <div class="qc_info qc_info_grey">Room</div>
-                        <div class="qc_empty"></div>
-                    </div>
-                    <div class="qc_item qc_item2">
-                        <div class="qc_itemSubMain">
-                            <div class="qc_item">
-                                <header>
-                                    <div class="heading">
-                                        <h5>quote type(base quote or subquote)</h5>
-                                        <h6>premium amount<span>/year</span></h6>
-                                    </div>
-                                    <button type="button" value="buyplan" class="btn_red btn_buyPlan">Buy Plan</button>
-                                </header>
-                                <div class="upgradeInfo">(offer-percentage) Off on (tenure value) years tenure</div>
-                                <div class="qc_info">(proposer members)You, Spouse, Father</div>
-                                <div class="qc_info qc_info_grey">(nominee name)Rakesh</div>
-                                <div class="qc_info qc_infoCover">
-                                    <ul>
-                                        <li>(covers name)Cancer secure cover</li>
-                                    </ul>
-                                </div>
-                                <div class="qc_info qc_info_grey">(room type)Private AC</div>
-                                <div class="qc_empty"></div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <!--Quote Comparison end-->
-            </div>   
+                </div>
+            </section>
         </div>
-        <!--Main Columns end-->
-      </main>
-      <!--Body end-->
+        <div class="bodyColumn body_flex_column quoteComparison" *ngIf="subQuotes == true">
+            <h3 class="icon_withHeading"><a class="btn_backPage"></a>Quote Comparison</h3>
+            <section class="quoteComparisonWraper">
+                <div class="qc_item qc_item1">
+                    <header>Quote
+                        <br>Comparison</header>
+                    <div class="upgradeInfo">Upgrade Recommendations</div>
+                    <div class="qc_info">Members</div>
+                    <div class="qc_info qc_info_grey">Nominee</div>
+                    <div class="qc_info qc_infoCover">
+                        <ul>
+                            <li>Optional Covers</li>
+                        </ul>
+                    </div>
+                    <div class="qc_info qc_info_grey">Room</div>
+                    <div class="qc_empty"></div>
+                </div>
+                <div class="qc_item qc_item2">
+                    <div class="qc_itemSubMain">
+                        <div *ngFor="let quote of selectedQuotes" class="qc_item">
+                            <header>
+                                <div class="heading">
+                                    <h5>{{ quote.isBaseQuote ? 'Base Quote' : 'Sub Quote' }}</h5>
+                                    <h6>₹{{ quote.annualPremium }}<span>{{quote.tenure}}/year</span></h6>
+                                </div>
+                                <button type="button" value="buyplan" class="btn_red btn_buyPlan">Buy Plan</button>
+                            </header>
+                            <div class="upgradeInfo">{{ quote.discountPercentage }} Off on {{ quote.tenure }} years tenure</div>
+                            <div class="qc_info">
+                                <span *ngFor="let member of quote.members; let i = index">
+                                    {{ member.Relation }}<span *ngIf="i < quote.members.length - 1">, </span>
+                                </span>
+                            </div>
+                            <div class="qc_info qc_info_grey">{{ quote.nomineeDetails?.nominee_first_name }} {{ quote.nomineeDetails?.nominee_last_name }}</div>
+                            <div class="qc_info qc_infoCover">
+                                <ul>
+                                    <li>Cancer secure cover</li>
+                                </ul>
+                            </div>
+                            <div class="qc_info qc_info_grey">
+                                <span *ngFor="let member of quote.members; let i = index">
+                                    {{ member.roomCategory || 'N/A' }}<span *ngIf="i < quote.members.length - 1">, </span>
+                                </span>
+                            </div>
+                            <div class="qc_empty"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
