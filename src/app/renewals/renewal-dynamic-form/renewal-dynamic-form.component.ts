@@ -3,6 +3,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -25,23 +26,41 @@ export class RenewalDynamicFormComponent implements OnInit {
   policySummary : boolean=false
   activeSection: string = 'primary';
   policyNumber:string=''; 
-  control = {
-    name: 'sumInsured',
-    label: 'Sum Insured',
-    type: 'range',
-    min: 500000,
-    max: 20000000,
-    step: 500000,
-    value: 500000,
-    class: 'col-md-12'
-  };
-  rangeValue: { [key: string]: number } = { sumInsured: 500000 };
   renewalInfo: any;
   formObject: any = {};
+  subObject:any = {};
+  requestObject: any = {
+    agentCode: '',
+    productId: 0,
+    quoteData: '',
+    policyNumber: '',
+    quoteNumber: '',
+    comment: '',
+    referenceNumber: '',
+    tenure: 0
+  };
+  request:any;
+  selectedSumInsured: any;
+  sliderOptions: Options = {
+    stepsArray: [
+      { value: 500000 }, 
+      { value: 700000 }, 
+      { value: 1000000 },  
+      { value: 1500000 }, 
+      { value: 2500000 }, 
+      { value: 5000000 },
+      { value: 10000000 }, 
+      { value: 20000000 } 
+    ],
+    translate: (value: number): string => {
+      return '';
+    }
+  };
+  optionalCovers:any;
 
   constructor(
     private fb: FormBuilder,
-    private renewalService: RenewalsService
+    private renewalService: RenewalsService,private router: Router
   ) {}
 
   ngOnInit() {
@@ -53,6 +72,8 @@ export class RenewalDynamicFormComponent implements OnInit {
    });
    this.getRenewalInfo();
    this.initializeForm();
+   this.getproductdetailsandfeatures();
+   this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
  }
  initializeForm() {
    const group: { [key: string]: any } = {}; 
@@ -71,6 +92,21 @@ export class RenewalDynamicFormComponent implements OnInit {
    });
      this.form = this.fb.group(group);
  }
+
+ onSumInsuredChange(eventValue: any) {
+  this.selectedSumInsured = eventValue;
+}
+formatTickLabel(value: number, forSlider: boolean): string {
+  if (value >= 10000000) {
+    return forSlider == true ? (value / 10000000) + 'Cr' : '₹' + (value / 10000000) + ' Crores';
+  } else if (value >= 100000 && value < 1000000) {
+    return forSlider == true ? (value / 100000) + 'L' : '₹' + (value / 100000) + ' Lakhs';
+  } else if (value >= 100000 ) {
+    return forSlider == true ? (value / 100000) + 'L' : '₹' + (value / 100000) + ' Lakhs';
+  }
+
+  return value.toString();
+}
  handleAction(event: string,item?: any) {
      switch (event) {
        case 'addMember':
@@ -82,51 +118,60 @@ export class RenewalDynamicFormComponent implements OnInit {
        case 'editAddress':
          this.formId=5001;
          if (event === 'editAddress') {
-           const updatedAddress = { ...this.form.value };
-           Object.keys(updatedAddress).forEach((key) => {
-             if (updatedAddress[key] !== null && updatedAddress[key] !== undefined && updatedAddress[key] !== '') {
-               this.renewalInfo.response.policyData[0].HomeAddress[key] = updatedAddress[key];
-             }
-         });
-         } 
-         else {
-           console.log('Form is invalid');
-         }          
+          this.request={...this.requestObject,
+          HomeAddress: { ...this.form.value },
+         }
+         this.request.policyNumber='21-24-0002334-00';
+         this.request.agentCode=localStorage.getItem('agentCode');
+         this.request.comment='updated nominee detail',
+         this.renewalService.updateaddressApi(this.request).subscribe(
+          (res:any) => {
+            this.renewalInfo = JSON.parse(res.data);
+            console.log(this.renewalInfo);
+            
+          },
+          (err) => {
+            console.log("Error coming from getRenewalInfo API", err);
+          }
+        );
+         console.log(this.request);
+       } 
+       else {
+         console.log('Form is invalid');
+       }         
          break;
-       case 'addNominee':
-         this.formId=5001;
-         if (event === 'addNominee') {
-           const nominee = { ...this.form.value };
-           const nomineeDetails = this.renewalInfo.response.policyData[0].Nominee_Details;
-           Object.keys(nominee).forEach((key) => {nomineeDetails[key] = nominee[key];});
-           const additionalKeys = {
-               nominee_middle_name: nomineeDetails.nominee_middle_name || '',
-               nominee_mobile_number: nomineeDetails.nominee_mobile_number || '',
-               nominee_emergency_phone_number: nomineeDetails.nominee_emergency_phone_number || '',
-               nominee_email_address: nomineeDetails.nominee_email_address || ''
-           };
-           Object.assign(nomineeDetails, additionalKeys);
-           this.renewalInfo.response.policyData[0].Nominee_Details = nomineeDetails;
-         } 
-         else {
-           console.log('Form is invalid');
-         } 
-         break;  
+         case 'editNominee':
+          this.formId=5001;
+          if (event === 'editNominee') {
+           this.request={...this.requestObject,
+             nomineeDetailRequest: { ...this.form.value },
+            }
+            this.request.nomineeDetailRequest.policyNumber='21-24-0002334-00';
+            this.request.policyNumber='21-24-0002334-00';
+            this.request.agentCode=localStorage.getItem('agentCode');
+            this.request.comment='updated nominee detail',
+            this.renewalService.updatenomineeApi(this.request).subscribe(
+             (res:any) => {
+               this.renewalInfo = JSON.parse(res.data);
+               console.log(this.renewalInfo);
+             },
+             (err) => {
+               console.log("Error coming from updatenomineeApi", err);
+             }
+           );
+            console.log(this.request);
+          } 
+          else {
+            console.log('Form is invalid');
+          } 
+          break; 
+        case 'summary':
+        this.activeSection='primary'
+        break;
        default:
          console.warn('Unknown action:', event);
      }
    }
- updateRangeValue(event: any, controlName: string) {
- const value = event.target.value;
-   this.rangeValue[controlName] = +value;
- }
- getBackground(value: number, min: number, max: number): string {
-    const percentage = ((value - min) / (max - min)) * 100;
-    return `linear-gradient(to right, #ffcc00 0%, #ffcc00 ${percentage}%, #f0f0f0 ${percentage}%, #f0f0f0 100%)`;
- }
- formatValue(value: number): string {
-   return new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(value);
- }
  toggleEditPaymentOption(value: any) {
    if(value == 'email'){
    this.isEditEmail = !this.isEditEmail;
@@ -144,81 +189,89 @@ export class RenewalDynamicFormComponent implements OnInit {
    }
  }
  selectButton(button: string, value?: any,content? : any) {
-   if (this.selectedButton === 'primary') {
-     if (value == 5005) {
-       if (this.renewalInfo?.response?.policyData?.length > 0) {
-         this.formObject = { ...this.renewalInfo.response.policyData[0].HomeAddress };
-       } this.initializeForm();
-       this.formId = value;
-     }
-     else if (value == 5004) {
-       if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
-         const nomineeDetails = this.renewalInfo.response.policyData[0].Nominee_Details;
-         this.formObject = {...nomineeDetails,
-           nominee_middle_name: nomineeDetails.nominee_middle_name || '',
-           nominee_mobile_number: nomineeDetails.nominee_mobile_number || '',
-           nominee_emergency_phone_number: nomineeDetails.nominee_emergency_phone_number || '',
-           nominee_email_address: nomineeDetails.nominee_email_address || ''
-         };
-       } 
-       else if (content === 'addNominee') {
-         this.formObject = Object.keys(this.renewalInfo.response.policyData[0].Nominee_Details)
-           .reduce((acc:any, key:any) => { acc[key] = ''; return acc; }, {});
-           this.formObject.nominee_middle_name = '';
-           this.formObject.nominee_mobile_number = '';
-           this.formObject.nominee_emergency_phone_number = '';
-           this.formObject.nominee_email_address = '';  
-       }
-       this.initializeForm();
-       this.formId = value;
-     }
-     else if (value == 5003) {
-       this.formId = value;
-     }
-     else if (value == 5002) {
-       this.formObject = {
-         name: [''],
-         weight: [''],
-         heightft: [''],
-         heightin: [''],
-         gender: [''],
-         dob: [''],
-         idtype: [''],
-         air: [''],
-         occupation: [''],
-         education: [''],
-         conditions: this.fb.group({
-           alcohol: [false],
-           tobacco: [false],
-           panmasala: [false],
-           smoking: [false],
-           other: [false],
-         }),
-         healthConditions: this.fb.group({
-           highblood: [false],
-           asthma: [false],
-           diabetes: [false],
-         })
+  if (this.selectedButton === 'primary') {
+    if (value == 5005) {
+      if (this.renewalInfo?.response?.policyData?.length > 0) {
+        this.subObject = { ...this.renewalInfo?.response?.policyData[0]?.HomeAddress };
+        this.formObject = {
+         home_Address_1: this.subObject.Home_Address_1 || '',
+         home_Address_2: this.subObject.Home_Address_2 || '',
+         home_Address_3: this.subObject.Home_Address_3 || '',
+         home_State: this.subObject.Home_State || '',
+         home_City: this.subObject.Home_City || '',
+         home_Pincode: this.subObject.Home_Pincode ||'',
        };
-       this.initializeForm();
-       this.formId = value;
-     }
-     else {
-       this.formId = 5001; 
-     }
-   }
-   else if (this.selectedButton === 'additional') {
-     this.policySummary=false;
-   } 
-   else if (this.selectedButton == 'payment') {
-     if(value == 'policySummary'){
-       this.policySummary=true
-     }
-     else{
-       this.policySummary=false;
-     }
-   }
- }
+      } this.initializeForm();
+      this.formId = value;
+    }
+    else if (value == 5004) {
+      if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
+        const nomineeDetails = this.renewalInfo?.response?.policyData[0]?.Nominee_Details;
+        this.formObject = {
+          firstName: nomineeDetails.nominee_first_name || '',
+          lastName: nomineeDetails.nominee_last_name || '',
+          middleName: '',
+          dob: nomineeDetails.nominee_dob|| '',
+          contactNo: nomineeDetails.Nominee_Contact_No || '',
+          relationship: nomineeDetails.Relationship || '',
+          mobileNumber: '',
+          emergencyPhoneNumber:'',
+          emailAddress:'',
+          policyNumber:''
+        };
+      } 
+      this.initializeForm();
+      this.formId = value;
+    }
+    else if (value == 5003) {
+      
+      this.formId = value;
+    }
+    else if (value == 5002) {
+      this.formObject = {
+        name: [''],
+        weight: [''],
+        heightft: [''],
+        heightin: [''],
+        gender: [''],
+        dob: [''],
+        idtype: [''],
+        air: [''],
+        occupation: [''],
+        education: [''],
+        conditions: this.fb.group({
+          alcohol: [false],
+          tobacco: [false],
+          panmasala: [false],
+          smoking: [false],
+          other: [false],
+        }),
+        healthConditions: this.fb.group({
+          highblood: [false],
+          asthma: [false],
+          diabetes: [false],
+        })
+      };
+      
+     this.initializeForm();
+      this.formId = value;
+    }
+    else {
+      this.formId = 5001; 
+    }
+  }
+  else if (this.selectedButton === 'additional') {
+    this.policySummary=false;
+  } 
+  else if (this.selectedButton == 'payment') {
+    if(value == 'policySummary'){
+      this.policySummary=true
+    }
+    else{
+      this.policySummary=false;
+    }
+  }
+}
  selectPaymentType(option: any) {
    this.selectedPaymentType = option.value;
    this.selectedPaymentTypeLabel = option.label;
@@ -275,6 +328,24 @@ export class RenewalDynamicFormComponent implements OnInit {
       (res:any) => {
         console.log("Renewal Info",res);
         this.renewalInfo = JSON.parse(res.data);
+      },
+      (err) => {
+        console.log("Error coming from getRenewalInfo API", err);
+      }
+    );
+  }
+  changeroute(){
+    this.renewalService.setQuote(this.renewalInfo);
+    this.router.navigate(["renewals/subquotes"]);
+  }
+  getproductdetailsandfeatures(){
+    const request={
+      "productId": 2,
+      "agentCode":localStorage.getItem('agentCode')
+    }
+    this.renewalService.getproductdetailsandfeatures(request).subscribe(
+      (res:any) => { this.optionalCovers=res.data
+        console.log(res.data);
       },
       (err) => {
         console.log("Error coming from getRenewalInfo API", err);

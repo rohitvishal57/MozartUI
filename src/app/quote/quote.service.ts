@@ -18,6 +18,10 @@ export class QuoteService {
     const insertorupdateagentcartdetails = this.configService.config.baseUrl + this.configService.config.insertOrUpdateAgentCartDetails
     return this.httpService.post(insertorupdateagentcartdetails, reqData);
   }
+  deleteagentcartitems(reqData: any) {
+    const deleteagentcartitems = this.configService.config.baseUrl + this.configService.config.deleteagentcartitems;
+    return this.httpService.post(deleteagentcartitems, reqData);
+  }
   Getproductlist2(reqData:any){
     // const  getquotefortopsellingproducts = `https://localhost:7188/api/getquotefortopsellingproducts`;
     const  getquotefortopsellingproducts = this.configService.config.baseUrl1 + this.configService.config.getquotefortopsellingproducts;

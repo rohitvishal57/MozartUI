@@ -7,6 +7,9 @@
     "sendRenewalsms":"renewal/api/sendrenewalsms",
     "sendRenewalEmail":"renewal/api/sendrenewalnotice",
     "generatePaymentlink":"renewal/api/generatepaymentlink",
+    "updatenominee":"renewal/api/updatenominee",
+    "updateaddress":"renewal/api/updateaddress",
+    "getproductdetailsandfeatures":"renewal/api/getproductdetailsandfeatures",
 
     "getLeadsListApi":"yatra/api/getleaddetailslist",
     "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",
@@ -42,6 +45,7 @@
 
     "agentCartDetails":"quote/api/getagentcartdetails",
     "insertOrUpdateAgentCartDetails":"quote/api/insertorupdateagentcartdetails",
+    "deleteagentcartitems":"quote/api/deleteagentcartitems",
     "productList":"yatra/api/getproductlist",
     "pinCodeDetails":"yatra/api/getpincodedetails",
     "proposalNumber":"yatra/api/getproposalnumber",

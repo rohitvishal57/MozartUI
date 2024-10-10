@@ -1234,20 +1234,20 @@ export class YatraComponent {
         "pincode": event.target.value
       }
       console.log(event.target.value.length, reqData);
-      this.commonService.getPinCodeByCity(reqData).subscribe({
-        next: (res: any) => {
-          console.log(res)
-          this.dynamicFormGroup.get('city')?.setValue(res.data.city);
-          this.dynamicFormGroup.get('state')?.setValue(res.data.state);
-          this.dynamicFormGroup.get('zone')?.setValue(res.data.zone);
-        },
-        error: (err: any) => {
-          console.error(err)
-          this.dynamicFormGroup.get('city')?.setValue('');
-          this.dynamicFormGroup.get('state')?.setValue('');
-          this.dynamicFormGroup.get('zone')?.setValue('');
-        }
-      });
+      // this.commonService.getPinCodeByCity(reqData).subscribe({
+      //   next: (res: any) => {
+      //     console.log(res)
+      //     this.dynamicFormGroup.get('city')?.setValue(res.data.city);
+      //     this.dynamicFormGroup.get('state')?.setValue(res.data.state);
+      //     this.dynamicFormGroup.get('zone')?.setValue(res.data.zone);
+      //   },
+      //   error: (err: any) => {
+      //     console.error(err)
+      //     this.dynamicFormGroup.get('city')?.setValue('');
+      //     this.dynamicFormGroup.get('state')?.setValue('');
+      //     this.dynamicFormGroup.get('zone')?.setValue('');
+      //   }
+      // });
     }
     else if (parentControl != null && parentControl.dynamicControls) {
 
@@ -1257,50 +1257,50 @@ export class YatraComponent {
             const reqdata = {
               "pincode": event.target.value
             }
-            this.spinner.show();
-            this.commonService.getPinCodeByCity(reqdata).subscribe({
-              next: (res: any) => {
-                console.log(res)
+            // this.spinner.show();
+            // this.commonService.getPinCodeByCity(reqdata).subscribe({
+            //   next: (res: any) => {
+            //     console.log(res)
 
-                const patchObject: { [key: string]: any } = {};
+            //     const patchObject: { [key: string]: any } = {};
 
-                patchObject['city' as string] = res.data.city;
-                patchObject['zone' as string] = res.data.zone;
-                patchObject['zoneValue' as string] = res.data.zoneCode;
-                patchObject['state' as string] = res.data.state;
+            //     patchObject['city' as string] = res.data.city;
+            //     patchObject['zone' as string] = res.data.zone;
+            //     patchObject['zoneValue' as string] = res.data.zoneCode;
+            //     patchObject['state' as string] = res.data.state;
 
-                let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
+            //     let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
 
-                for (let i = 0; i < formArray.length; i++) {
-                  if (i == index)
-                    formArray[i] = { ...formArray[i], ...patchObject }
-                }
-
-
-                this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
-                this.spinner.hide();
-              },
-              error: (err: any) => {
-                console.error(err);
-                const patchObject: { [key: string]: any } = {};
-
-                patchObject['city' as string] = '';
-                patchObject['zone' as string] = '';
-                patchObject['zoneValue' as string] = '';
-                patchObject['state' as string] = '';
-
-                let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
-
-                for (let i = 0; i < formArray.length; i++) {
-                  if (i == index)
-                    formArray[i] = { ...formArray[i], ...patchObject }
-                }
+            //     for (let i = 0; i < formArray.length; i++) {
+            //       if (i == index)
+            //         formArray[i] = { ...formArray[i], ...patchObject }
+            //     }
 
 
-                this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
-                this.spinner.hide();
-              }
-            });
+            //     this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
+            //     this.spinner.hide();
+            //   },
+            //   error: (err: any) => {
+            //     console.error(err);
+            //     const patchObject: { [key: string]: any } = {};
+
+            //     patchObject['city' as string] = '';
+            //     patchObject['zone' as string] = '';
+            //     patchObject['zoneValue' as string] = '';
+            //     patchObject['state' as string] = '';
+
+            //     let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
+
+            //     for (let i = 0; i < formArray.length; i++) {
+            //       if (i == index)
+            //         formArray[i] = { ...formArray[i], ...patchObject }
+            //     }
+
+
+            //     this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
+            //     this.spinner.hide();
+            //   }
+            // });
           }
         });
       });
@@ -2465,7 +2465,7 @@ export class YatraComponent {
 
   async getPremiumAmount() {
     this.spinner.show();
-    console.log(this.tenureAmount, this.formData.insuredMemberDetails);
+    console.log(this.tenureAmount, this.formData.insuredMemberDetails,this.isQuote,Object.keys(this.formData).length);
 
     if (this.isQuote == false) {
       if (Object.keys(this.formData).length > 0) {
@@ -3430,16 +3430,16 @@ export class YatraComponent {
         const reqdata = {
           "pincode": this.dynamicFormGroup.get('proposerPincode')?.value
         }
-        this.commonService.getPinCodeByCity(reqdata).subscribe({
-          next: (res) => {
-            console.log(res)
-            this.dynamicFormGroup.get('proposerCity')?.setValue(res.strcity);
-            this.dynamicFormGroup.get('proposerState')?.setValue(res.strstate);
-          },
-          error: (err) => {
-            console.error(err)
-          }
-        });
+        // this.commonService.getPinCodeByCity(reqdata).subscribe({
+        //   next: (res) => {
+        //     console.log(res)
+        //     this.dynamicFormGroup.get('proposerCity')?.setValue(res.strcity);
+        //     this.dynamicFormGroup.get('proposerState')?.setValue(res.strstate);
+        //   },
+        //   error: (err) => {
+        //     console.error(err)
+        //   }
+        // });
 
       }
     }

@@ -59,7 +59,7 @@
                      <div class="input-radio-block raido_policyType">
                        <label class="input-radiolabel">
                          <input type="radio" name="policytype" value="Family Floater"
-                           (click)="onPlanTypeChange('Family FLoater')"
+                           (click)="onPlanTypeChange('Family Floater')"
                            [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater'">
                          <span>
                            <em class="pt-head"><img src="assets/Img/icon_familyfloater.svg">Family Floater
@@ -86,7 +86,7 @@
    
                      <div class="tipInfo_org"><img src="assets/Img/Lightbulb Icon.png">You can edit members
                        to change back to family floater policy.</div>
-                     <button type="button" class="btn_red btn_fullWidth" (click)="updatePlanType()">Continue</button>
+                     <!-- <button type="button" class="btn_red btn_fullWidth" (click)="updatePlanType()">Continue</button> -->
                    </div>
                  </div>
 
@@ -153,7 +153,7 @@
                             <div class="input-block input-block-renew input-filed-white">
                               <input type="text" id="pincodeproposer" [required]="true"
                                 formControlName="proposerPincode" value="" placeholder="Enter your 6 digit pincode"
-                                (change)="getProposerPincode($event)" class="input-textBox">
+                                class="input-textBox">
                               <span class="ui-error"
                                 *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && (quoteFormGroup.get('proposerPincode')?.touched || quoteFormGroup.get('proposerPincode')?.dirty)">
                                 Please enter a valid 6-digit pincode
@@ -276,13 +276,13 @@
                               </div> -->
                             </div>
                           </div>
-                          <button type="button" value="additional-family" class="btn_coverAdditional_FM">
+                          <!-- <button type="button" value="additional-family" class="btn_coverAdditional_FM">
                             <span class="cover_label">
                               <img src="assets/Img/icon_familymembers_org.svg" width="20">
                               <span>Would you like to cover additional family members?</span>
                             </span>
                             <img src="assets/Img/icon_right_arrow_black.svg" width="7">
-                          </button>
+                          </button> -->
                         </div>
                         <button type="button" class="btn_red btn_fullWidth" (click)="addInsuredMemberDetails()">Next</button>
                       </div>
