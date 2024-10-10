@@ -148,7 +148,9 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th class="text-center"><input type="checkbox" id="Select All" onclick="toggleAll(this)"> Select All</th>
+                                    <th class="text-center">
+                                        <input type="checkbox" id="Select All" onclick="toggleAll(this)" class="checkbox_selectAll"> Select All
+                                    </th>
                                     <!--<th>
                                         <div class="input-checkbox-block">
                                             <div class="input-checkbox-feild">
@@ -164,7 +166,7 @@
                                     <!-- <th>Product name</th> -->
                                     <!-- <th>Compaign Name</th>
                                     <th>Compain No</th> -->
-                                    <th>Notice</th>
+                                    <th class="text-center">Notice</th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
@@ -178,7 +180,7 @@
                                     <!-- <td>{{ row.campaignName }}</td>
                                     <td><span class="table-modification">{{ row.campaignNumber }}</span></td> -->
                                     <td>
-                                        <div class="btn_groupAction">
+                                        <div class="btn_groupAction justify-content-center">
                                             <button class="btn_action btn_editAction" (click)="showDialog(row)"> <img
                                                     src="assets/Img/icon_profile.svg" /></button>
                                             <button type="button" value="Update Status"
@@ -303,7 +305,7 @@
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">phoneNumber</div>
+                                <div class="item_lable">Phone Number</div>
                                 <div class="item_value">{{ row.phoneNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
@@ -311,11 +313,11 @@
                                 <div class="item_value">{{ row.email }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">campaignName</div>
+                                <div class="item_lable">Campaign Name</div>
                                 <div class="item_value">{{ row.campaignName}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">campaignNumber</div>
+                                <div class="item_lable">Campaign Number</div>
                                 <div class="item_value">{{ row.campaignNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
