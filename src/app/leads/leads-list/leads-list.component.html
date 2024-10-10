@@ -176,14 +176,14 @@
                                     <td><span class="table-modification">{{ row.campaignNumber }}</span></td> -->
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)"> <img
+                                            <button class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
                                                     src="assets/Img/icon_profile.svg" /></button>
                                             <button type="button" value="Update Status"
                                                 (click)="editLead(row.leadNumber)" title="Update Status"
                                                 class="btn_action btn_renewalAction"><img
                                                     src="assets/Img/icon_edit_grey.svg"></button>
 
-                                            <button class="btn_action btn_renewalAction" (click)="showNotesDialog(row)">
+                                            <button class="btn_action btn_renewalAction" (click)="showNotesDialog(row)" title="Add Notes">
                                                 <img src="assets/Img/icon_add_notes.svg"></button>
 
                                             <button type="button" value="more" title="More"
@@ -207,7 +207,7 @@
                                                                 <span>Mark Duplicate</span></a>
                                                         </li>
                                                         <li class="actionItem">
-                                                            <a (click)="showAuditTrailDialog()">
+                                                            <a (click)="showAuditTrailDialog(row.leadNumber)">
                                                                 <img src="assets/Img/icon_share_via_email_grey.svg"
                                                                     alt="Share via email">
                                                                 <span>View audit trail</span></a>
@@ -463,7 +463,7 @@
 
     <div class="card flex justify-content-center ">
         <p-dialog header="Audit Trail Details" [modal]="true" [(visible)]="displayAuditTrailPopup"
-            [style]="{ width: '75rem', height: '25rem' }">
+            [style]="{ width: '75rem', height: '45rem' }">
 
             <table class="table table-border table-search">
                 <thead>
@@ -477,11 +477,13 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                    <tr *ngFor="let row of auditTrails; let i = index" >
+                        <td>{{row.actionDate}}</td>
+                        <td>{{row.actionTime}}</td>
+                        <td>{{row.action}}</td>
+                        <td>{{row.actionOwnerCode}}</td>
+                        <td>{{row.actionRecipientCode}}</td>
+                        <td>{{row.actionType}}</td>
                     </tr>
                 </tbody>
             </table>

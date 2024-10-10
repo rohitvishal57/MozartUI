@@ -43,8 +43,8 @@ export class LeadsListComponent {
   addNoteForm!: FormGroup;
   mobileNumber: string = '';
   selectedCheckBox = false
-  checkBoxSelectedLeads: any = [];
-
+  checkBoxSelectedLeads : any =[];
+  auditTrails: any;
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -289,9 +289,18 @@ export class LeadsListComponent {
     this.selectedleadInformation = leadInformation;
     this.displayNotesPopup = true;
   }
-
-  showAuditTrailDialog() {
+  
+  showAuditTrailDialog(leadNumber: any) {
+    this.leadsService.viewAuditTrail(leadNumber).subscribe(
+      (response) => {
     this.displayAuditTrailPopup = true;
+
+        this.auditTrails = response;
+      },
+      (error) => {
+        console.error("Error from getMyReportingUsers API:", error);
+      }
+    );
   }
 
   fetchReportingUsers() {

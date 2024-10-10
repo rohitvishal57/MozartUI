@@ -16,6 +16,7 @@
     "saveLeadData":"yatra/api/createlead",
     "getcampaignsdetails":"yatra/api/getcampaignsdetails",
     "createbulklead":"yatra/api/createbulklead",
+    "viewaudittrail":"yatra/api/viewaudittrail?leadnumber=",
 
     "assineLead":"yatra/api/LeadAssigne",
     "getMyReportingUsers": "yatra/api/getmyreportingusers",
