@@ -68,5 +68,9 @@ export class LeadsService {
     const updateStatusRequest = this.configService.config.baseUrl + this.configService.config.updatestatus;
     return this.http.post<any>(updateStatusRequest, requestBody);
   }
+  getDuplicateLead(requestBody:any):Observable<any>{
+    const getDuplicateLeadRequest = this.configService.config.baseUrl + this.configService.config.getduplicateLead;
+    return this.http.post<any>(getDuplicateLeadRequest, requestBody);
+  }
     
 }

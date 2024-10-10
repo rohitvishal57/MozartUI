@@ -202,7 +202,7 @@
                                                                 <span>Edit Lead</span></a>
                                                         </li>
                                                         <li class="actionItem">
-                                                            <a>
+                                                            <a (click)="markDuplicate(row.leadNumber)">
                                                                 <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
                                                                 <span>Mark Duplicate</span></a>
                                                         </li>
@@ -278,7 +278,7 @@
                                                         <span>Edit Lead</span></a>
                                                 </li>
                                                 <li class="actionItem">
-                                                    <a> 
+                                                    <a (click)="markDuplicate(row.leadNumber)">  
                                                         <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
                                                         <span>Mark Duplicate</span></a>
                                                 </li>
@@ -420,7 +420,7 @@
             </form>
         </p-dialog>
 
-
+    </div>
     <div class="contentBody bodyColumns-1">
         <p-dialog header="Allocate to" [modal]="true" [(visible)]="displayNotesPopup"
             [style]="{ width: '90rem', height: '45rem' }">
@@ -499,7 +499,35 @@
             </form>
         </p-dialog>
     </div>
+    <div class="card flex justify-content-center ">
+        <p-dialog header="Mark duplicate" [modal]="true" [(visible)]="markDuplicatePopup"
+            [style]="{ width: '75rem', height: '30rem' }">
+            <span class="p-text-secondary block mb-5">Provide Lead Number for which the current Lead Number is duplicate</span>
+            <form (ngSubmit)="markDuplicateFormSubmit()" [formGroup]="markDuplicateForm" novalidate autocomplete="false">
+                <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                                <div class="input-block form-floating input-block-renew">
+                                    <input class="form-control input-textBox" id="leadId" placeholder="" type="text"
+                                        formControlName="leadId">
+                                    <label>Enter Lead ID</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+    
+                <div class="row mt-4">
+                    <div class="col-12 btn_container_leads">
+                        <button type="button" class="btn_red" (onClick)="markDuplicatePopup = false">Cancel</button>
+                        <button type="submit" class="btn_red">Mark Duplicate</button>
+                    </div>
+                </div>
+            </form>
+        </p-dialog>
 
+    </div>
     <div class="card flex justify-content-center ">
         <p-dialog header="Audit Trail Details" [modal]="true" [(visible)]="displayAuditTrailPopup"
             [style]="{ width: '75rem', height: '45rem' }">

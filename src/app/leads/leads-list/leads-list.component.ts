@@ -41,8 +41,11 @@ export class LeadsListComponent {
   displayNotesPopup = false;
   displayAuditTrailPopup = false;
   displayUpdateStatusPopup = false;
+  markDuplicatePopup = false;
+  duplicateLeadId: any;
   activityTypes = ['sbhn', 'PORTABILITY', 'fresh policy'];
   addNoteForm!: FormGroup;
+  markDuplicateForm!: FormGroup;
   mobileNumber: string = '';
   selectedCheckBox = false
   checkBoxSelectedLeads : any =[];
@@ -96,6 +99,9 @@ export class LeadsListComponent {
       activityEndTime: [''],
       activityType: [''],
       notes: [''],
+    });
+    this.markDuplicateForm = this.fb.group({
+      leadId: ['']
     });
   }
   onPageChange(event: any) {
@@ -167,6 +173,28 @@ export class LeadsListComponent {
       (error) => {
         console.error("Error from getMyReportingUsers API:", error);
         this.displayUpdateStatusPopup = false;
+      }
+    );
+  }
+  markDuplicate(leadNumber: any){
+    console.log(leadNumber);
+    this.duplicateLeadId = leadNumber;
+    this.markDuplicatePopup = true;
+  }
+  markDuplicateFormSubmit(){
+    console.log(this.markDuplicateForm.value);
+    let reqObject = {
+      leadnumber: this.duplicateLeadId,
+      duplicateof: this.markDuplicateForm.get('leadId')?.value
+    }
+    this.leadsService.getDuplicateLead(reqObject).subscribe(
+      (response) => {
+        console.log(response);
+        this.markDuplicatePopup = false;
+      },
+      (error) => {
+        console.error("Error from getMyReportingUsers API:", error);
+        this.markDuplicatePopup = false;
       }
     );
   }

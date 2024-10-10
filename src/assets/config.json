@@ -20,6 +20,7 @@
     "viewaudittrail":"yatra/api/viewaudittrail?leadnumber=",
     "referencestatus":"yatra/api/referencestatus",
     "updatestatus":"yatra/api/updatestatus",
+    "getduplicateLead":"yatra/api/getduplicateLead",
 
     "assineLead":"yatra/api/LeadAssigne",
     "getMyReportingUsers": "yatra/api/getmyreportingusers",
