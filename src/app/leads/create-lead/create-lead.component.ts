@@ -12,7 +12,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
   templateUrl: './create-lead.component.html',
   styleUrls: ['./create-lead.component.scss']
 })
-export class CreateLeadComponent implements OnInit{
+export class CreateLeadComponent implements OnInit {
   userValidations!: FormGroup;
   submitted: boolean = false;
   otpEntered: boolean = false;
@@ -21,61 +21,45 @@ export class CreateLeadComponent implements OnInit{
   YESSearchValue: string = "";
   YESSearchby: any[] = ['Customer ID'];
   YESSearchCategory: any;
-  IDFCSearchValue=''
+  IDFCSearchValue = ''
   dataToDisplay: any;
   isYESuser = false;
   isAUuser = false;
   AUSearchby: any[] = ['Customer ID', 'Aadhar Card', 'PAN Card'];
   AUSearchCategory: any;
-  isIDFCUser=false;
+  isIDFCUser = false;
   AUSearchValue: string = "";
   agentCode: any;
-  submittedUser: any;
+  submittedUser: any = {};
   constructor(private formBuilder: FormBuilder,
-       private toast: NgToastService,
-       private router:Router,
-       private route: ActivatedRoute,
-        private leadsService: LeadsService,  
-        private datePipe: DatePipe, 
-        public CreateLead: CreateLead, 
-        public CreateLeadList: LeadFormListValue,
-        private cdr: ChangeDetectorRef){
+    private toast: NgToastService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private leadsService: LeadsService,
+    private datePipe: DatePipe,
+    public CreateLead: CreateLead,
+    public CreateLeadList: LeadFormListValue,
+    private cdr: ChangeDetectorRef) {
 
   }
 
   ngOnInit() {
 
-    
-
     let data: any = this.route.snapshot.paramMap.get('id');
-    if(!data){
+    if (!data) {
       this.inItForm();
-    }else{
-      let lead:any = {} ; 
-      lead = localStorage.getItem('updateLead');
-
-    this.submittedUser = JSON.parse(lead)
-
-      this.updateleadInformation()
+    } else {
+      this.getLeadInformationByLeadNumber(data);
     }
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
     if (storedAgentCode) {
       this.CreateLead.AgentCode = storedAgentCode.toString();
     }
-    else{
+    else {
       console.log("agent code is not present in local storege");
     }
 
-    this.router.events.subscribe(event => {     
-        if (event instanceof NavigationEnd) {
-          const navigation = this.router.getCurrentNavigation();   
-          console.log("navigation {}" ,navigation)
-          if(navigation?.extras.state) { 
-            this.submittedUser = navigation.extras.state?.['leadInformation'];
-            this.updateleadInformation();
-      }
-   } });
 
 
     let usr = storedAgentCode ? JSON.parse(storedAgentCode) : null;
@@ -101,7 +85,6 @@ export class CreateLeadComponent implements OnInit{
   }
   updateleadInformation() {
     this.inItForm();
-    console.log("updating Lead Information details", this.submittedUser)
     this.userValidations.patchValue({
       firstname: this.submittedUser.firstName,
       lastname: this.submittedUser.lastName,
@@ -136,10 +119,9 @@ export class CreateLeadComponent implements OnInit{
       leadAssignee: this.submittedUser.leadAssignee,
       isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
     });
- 
-    console.log("form controler",this.userValidations.value)
   }
-  inItForm(){
+
+  inItForm() {
     this.userValidations = this.formBuilder.group({
       // campaignname: ['', Validators.required],
       leadType: [''],
@@ -181,20 +163,20 @@ export class CreateLeadComponent implements OnInit{
       isUpdate: 0,
     });
   }
-  
-  changeDob(event: any){
-    let age:any=''
-    age=this.calculateAge(event.target.value);
+
+  changeDob(event: any) {
+    let age: any = ''
+    age = this.calculateAge(event.target.value);
     this.userValidations.get('age')?.setValue(age);
     this.userValidations.updateValueAndValidity();
     this.userValidations.get('age')?.disable()
   }
-  calculateAge(dob: any){
+  calculateAge(dob: any) {
     let timeDiff = Math.abs(Date.now() - new Date(dob).getTime());
     let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     return age.toString();
   }
-  campnoSelected(){
+  campnoSelected() {
 
   }
   SETAUDATA() {
@@ -205,12 +187,12 @@ export class CreateLeadComponent implements OnInit{
     // Check if the Identification Number field is not empty to enable Send OTP button
     this.sendOTPEnabled = this.YESSearchValue.trim() !== '';
   }
-  validate(){
+  validate() {
 
   }
   sendOTP() {
   }
-  onSubmit(){
+  onSubmit() {
     this.submitted = true;
     console.log(this.userValidations.value);
     if (this.userValidations.invalid) {
@@ -229,21 +211,21 @@ export class CreateLeadComponent implements OnInit{
     console.log(this.CreateLead);
 
     this.CreateLead.campaignname = 'Self'
-    this.CreateLead.dob=this.userValidations?.get('dob')?.value;
+    this.CreateLead.dob = this.userValidations?.get('dob')?.value;
     let dobFormatted = this.datePipe.transform(this.CreateLead.dob, 'yyyy-MM-dd');
     let timeDiff = Math.abs(Date.now() - new Date(dobFormatted as string).getTime());
     let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     this.CreateLead.age = age.toString();
     console.log(this.CreateLead);
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
-      (response) => { 
+      (response) => {
         console.log(response.data);
         if (response.success) {
           this.toast.success({ detail: 'Lead is created successfully' });
           console.log(response);
           this.router.navigate(['leads/leadsList'])
-        } 
-        else {console.error("API request was not successful.");}
+        }
+        else { console.error("API request was not successful."); }
       },
       (error) => {
         // this.toast.error({ detail: 'Failed to submit claims' });
@@ -252,4 +234,23 @@ export class CreateLeadComponent implements OnInit{
       }
     );
   }
+
+  getLeadInformationByLeadNumber(leadNumber: any) {
+    debugger;
+    console.log("getLeadInformationByLeadNumber ",leadNumber)
+    let requestBody: any = {
+      leadNumber : leadNumber
+    };
+    this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
+      this.submitted = response.data.leadList[0];
+      this.updateleadInformation();
+    },
+      (error) => {
+        console.log("Failed to fetch lead Information!")
+      }
+    );
+
+  }
+
+
 }

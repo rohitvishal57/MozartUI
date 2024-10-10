@@ -50,4 +50,9 @@ export class LeadsService {
     return this.http.post<any>(addLeadNotesRequest, requestBody);
   }
   
+  getLeadInfoByLeadID(requestBody:any):Observable<any>{
+    const addLeadNotesRequest = this.configService.config.baseUrl + this.configService.config.getLeadDetailsList;
+    return this.http.post<any>(addLeadNotesRequest, requestBody);
+  }
+    
 }

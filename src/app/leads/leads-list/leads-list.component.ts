@@ -38,10 +38,12 @@ export class LeadsListComponent {
   selectedLeadNumbers: string[] = [];
   selectedleadInformation: any = {};
   displayNotesPopup = false;
+  displayAuditTrailPopup = false;
   activityTypes = ['sbhn', 'PORTABILITY', 'fresh policy'];
   addNoteForm!: FormGroup;
   mobileNumber: string = '';
   selectedCheckBox = false
+  checkBoxSelectedLeads : any =[];
 
   constructor(
     private leadsService: LeadsService,
@@ -52,7 +54,7 @@ export class LeadsListComponent {
 
   leadsLisRequestBody = {
     "agentCode": this.agentCode,
-    "leadId": "",
+    "leadNumber": "",
     "productName": "",
     "startDate": null,
     "pageNumber": 1,
@@ -114,11 +116,8 @@ export class LeadsListComponent {
       }
     );
   }
-  editLead(leadData: any) {
-    console.log(leadData);
-    localStorage.removeItem('updateLead')
-    localStorage.setItem('updateLead', JSON.stringify(leadData))
-    this.router.navigate(['/leads/updateLead/' + leadData.leadNumber]);
+  editLead(leadNumber: any) {
+    this.router.navigate(['/leads/updateLead/' + leadNumber]);
   }
 
   filterQuotes(filter: string) {
@@ -238,7 +237,7 @@ export class LeadsListComponent {
     this.leadsLisRequestBody.mobileNumber = "";
     this.leadsLisRequestBody.name = "";
     this.leadsLisRequestBody.email = "";
-    this.leadsLisRequestBody.leadId = "";
+    this.leadsLisRequestBody.leadNumber = "";
     this.searchInputControl.reset();
     this.getLeadsList();
     menuTrigger.closeMenu();
@@ -249,22 +248,22 @@ export class LeadsListComponent {
         this.leadsLisRequestBody.mobileNumber = this.searchInputControl.value!;
         this.leadsLisRequestBody.name = "";
         this.leadsLisRequestBody.email = "";
-        this.leadsLisRequestBody.leadId = "";
+        this.leadsLisRequestBody.leadNumber = "";
       }
       else if (this.selected === "name") {
         this.leadsLisRequestBody.name = this.searchInputControl.value!;
         this.leadsLisRequestBody.mobileNumber = "";
         this.leadsLisRequestBody.email = "";
-        this.leadsLisRequestBody.leadId = "";
+        this.leadsLisRequestBody.leadNumber = "";
       }
       else if (this.selected === "email") {
         this.leadsLisRequestBody.email = this.searchInputControl.value!;
         this.leadsLisRequestBody.mobileNumber = "";
         this.leadsLisRequestBody.name = "";
-        this.leadsLisRequestBody.leadId = "";
+        this.leadsLisRequestBody.leadNumber = "";
       }
       else if (this.selected === "leadId") {
-        this.leadsLisRequestBody.leadId = this.searchInputControl.value!;
+        this.leadsLisRequestBody.leadNumber = this.searchInputControl.value!;
         this.leadsLisRequestBody.mobileNumber = "";
         this.leadsLisRequestBody.name = "";
         this.leadsLisRequestBody.email = "";
@@ -278,13 +277,17 @@ export class LeadsListComponent {
   }
 
   showDialog(leadInformation: any) {
-    this.selectedleadInformation = leadInformation;
+    this.checkBoxSelectedLeads.push(leadInformation);
     this.displayAssigneePopup = true;
   }
 
   showNotesDialog(leadInformation: any) {
     this.selectedleadInformation = leadInformation;
     this.displayNotesPopup = true;
+  }
+  
+  showAuditTrailDialog() {
+    this.displayAuditTrailPopup = true;
   }
 
   fetchReportingUsers() {
@@ -301,9 +304,10 @@ export class LeadsListComponent {
     console.log("fetchReportingUsers agentCodes", this.agentCodes)
   }
 
-  assineLead() {
+  assineLead() { 
+    const selectedLeadIDs = this.checkBoxSelectedLeads.map((lead: LeadsList) => lead.leadNumber);
     let assigneLeadRequestBody: any = {};
-    assigneLeadRequestBody.leadnumber = [this.selectedleadInformation.leadNumber],
+    assigneLeadRequestBody.leadnumber = selectedLeadIDs,
       assigneLeadRequestBody.leadassigne = this.assignLeadForm.value.selectedAgentCode,
       assigneLeadRequestBody.agentCode = this.agentCode
     this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
@@ -344,10 +348,17 @@ export class LeadsListComponent {
     this.displayNotesPopup = false;
   }
 
-  selectedStates: boolean[] = new Array(this.leadsList.length).fill(true);
-
-  toggleAll() {
-    this.leadsList.forEach(lead => lead.isSelected = true)
+  toggleAll(event :Event ) {
+    const input = event.target as HTMLInputElement;
+    console.log("onchange event",event);
+    this.leadsList.forEach(lead => lead.isSelected = input.checked)
+    this.checkBoxSelectedLeads = this.leadsList.filter(lead => lead.isSelected);
   }
+
+
+
+
+
+
 
 }

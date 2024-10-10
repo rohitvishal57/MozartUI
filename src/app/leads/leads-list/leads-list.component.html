@@ -148,12 +148,12 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="Select All" onclick="toggleAll(this)">Select All</th>
+                                    <th><input type="checkbox" (change)="toggleAll($event)"> Select All</th>
                                     <th>Lead ID</th>
                                     <th>Name</th>
                                     <th>Mobile Number</th>
                                     <th>Email ID</th>
-                                    <th>Product name</th>
+                                    <!-- <th>Product name</th> -->
                                     <!-- <th>Compaign Name</th>
                                     <th>Compain No</th> -->
                                     <th>Notice</th>
@@ -162,50 +162,61 @@
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of leadsList; let i = index">
-                                    <td> <input type="checkbox" [(ngModel)]="row.isSelected" ></td>
+                                    <td> <input type="checkbox" [checked]="row.isSelected"> </td>
                                     <td>{{row.leadNumber}}</td>
                                     <td>{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</td>
                                     <td>{{ row.phoneNumber }}</td>
                                     <td>{{row.email}}</td>
-                                    <td><span class="productName">{{ row.interestedInPlan }}</span></td>
+                                    <!-- <td><span class="productName">{{ row.interestedInPlan }}</span></td> -->
                                     <!-- <td>{{ row.campaignName }}</td>
                                     <td><span class="table-modification">{{ row.campaignNumber }}</span></td> -->
-                                   <td>
+                                    <td>
                                         <div class="btn_groupAction">
                                             <button class="btn_action btn_editAction" (click)="showDialog(row)"> <img
                                                     src="assets/Img/icon_profile.svg" /></button>
-                                                    <button type="button" value="Update Status" (click)="editLead(row)" title="Update Status" class="btn_action btn_renewalAction"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" value="Update Status"
+                                                (click)="editLead(row.leadNumber)" title="Update Status"
+                                                class="btn_action btn_renewalAction"><img
+                                                    src="assets/Img/icon_edit_grey.svg"></button>
 
                                             <button class="btn_action btn_renewalAction" (click)="showNotesDialog(row)">
                                                 <img src="assets/Img/icon_add_notes.svg"></button>
 
-                                            <!-- <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                            <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
+                                            <button type="button" value="more" title="More"
+                                                class="btn_action btn_moreAction" aria-label="item-moreaction"
+                                                [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}"
+                                                data-bs-toggle="dropdown" aria-expanded="false"><img
+                                                    src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                            <mat-menu #moreMenu="matMenu"
+                                                class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
                                                         <li class="actionItem">
-                                                            <a> 
-                                                                <img src="assets/Img/icon_download2_grey.svg" alt="Download">
+                                                            <a (click)="editLead(row.leadNumber)">
+                                                                <img src="assets/Img/icon_download2_grey.svg"
+                                                                    alt="Download">
                                                                 <span>Edit Lead</span></a>
                                                         </li>
                                                         <li class="actionItem">
-                                                            <a> 
+                                                            <a>
                                                                 <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
                                                                 <span>Mark Duplicate</span></a>
                                                         </li>
                                                         <li class="actionItem">
-                                                            <a>
-                                                                <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
+                                                            <a (click)="showAuditTrailDialog()">
+                                                                <img src="assets/Img/icon_share_via_email_grey.svg"
+                                                                    alt="Share via email">
                                                                 <span>View audit trail</span></a>
                                                         </li>
                                                         <li class="actionItem">
                                                             <a>
-                                                                <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email">
+                                                                <img src="assets/Img/icon_share_via_email_grey.svg"
+                                                                    alt="Share via email">
                                                                 <span>Quick Quote</span></a>
                                                         </li>
                                                     </ul>
                                                 </div>
-                                            </mat-menu> -->
+                                            </mat-menu>
                                         </div>
                                     </td>
                                 </tr>
@@ -369,74 +380,110 @@
 
     <div class="contentBody bodyColumns-1">
         <p-dialog header="Allocate to" [modal]="true" [(visible)]="displayNotesPopup"
-        [style]="{ width: '90rem', height: '35rem' }">
-        
-        <section class="white_container">
-            <h6 class="heading-16-red">Add Notes</h6>
-        </section>
-        <form (ngSubmit)="addNotes()" [formGroup]="addNoteForm" novalidate autocomplete="false">
+            [style]="{ width: '90rem', height: '35rem' }">
+
             <section class="white_container">
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <div class="input-block form-floating input-block-renew">
-                            <input class="form-control input-textBox" id="nomineeName" placeholder="" type="text" formControlName="title" >
-                            <label >Activity Title *</label>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block form-floating input-block-renew">
-                            <input class="form-control input-textBox" id="firstname" placeholder="" type="date" formControlName="activityStartDate">
-                            <label>Activity Start Date*:</label>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block form-floating input-block-renew">
-                            <input class="form-control input-textBox" id="MiddleName" placeholder="" type="time" formControlName="activityStartTime" >
-                            <label> Activity Start Time*:</label>
-
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block form-floating input-block-renew">
-                            <input class="form-control input-textBox" id="lastname" placeholder="" type="date" formControlName="activityEndDate">
-                            <label>Activity End Date*:</label>
-
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block form-floating input-block-renew">
-                            <input class="form-control input-textBox" id="email" placeholder="" type="time" formControlName="activityEndTime">
-                            <label>Activity End Time*:</label>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" formControlName="activityType" >
-                                <option value="" disabled selected>Choose Option</option>
-                                <option *ngFor="let opt of activityTypes" [value]="opt">
-                                    {{ opt }}
-                                </option>
-                            </select>
-                            <label>Select Activity Type*:</label>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <div class="input-block form-floating input-block-renew">
-                            <textarea  class="form-control input-textBox" id="message" name="message" rows="4" cols="50" placeholder="Type your note..." formControlName="notes" ></textarea>
-                            <label>Note*:</label>
-                        </div>
-                    </div>
-                </div>
+                <h6 class="heading-16-red">Add Notes</h6>
             </section>
+            <form (ngSubmit)="addNotes()" [formGroup]="addNoteForm" novalidate autocomplete="false">
+                <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="nomineeName" placeholder="" type="text"
+                                    formControlName="title">
+                                <label>Activity Title *</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="firstname" placeholder="" type="date"
+                                    formControlName="activityStartDate">
+                                <label>Activity Start Date*:</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="MiddleName" placeholder="" type="time"
+                                    formControlName="activityStartTime">
+                                <label> Activity Start Time*:</label>
 
-            <div class="row mt-4">
-                <div class="col-12">
-                    <button type="submit" class="btn_red">Save</button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="lastname" placeholder="" type="date"
+                                    formControlName="activityEndDate">
+                                <label>Activity End Date*:</label>
+
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="email" placeholder="" type="time"
+                                    formControlName="activityEndTime">
+                                <label>Activity End Time*:</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="activityType">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of activityTypes" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label>Select Activity Type*:</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="input-block form-floating input-block-renew">
+                                <textarea class="form-control input-textBox" id="message" name="message" rows="4"
+                                    cols="50" placeholder="Type your note..." formControlName="notes"></textarea>
+                                <label>Note*:</label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <button type="submit" class="btn_red">Save</button>
+                    </div>
                 </div>
-            </div>
-        </form>
-</p-dialog>
+            </form>
+        </p-dialog>
     </div>
-</div>
+
+    <div class="card flex justify-content-center ">
+        <p-dialog header="Allocate to" [modal]="true" [(visible)]="displayAuditTrailPopup"
+            [style]="{ width: '75rem', height: '25rem' }">
+            <span class="p-text-secondary block mb-5">Audit Trail Details</span>
+
+            <table class="table table-borderless table-search">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                        <th>Action Owner</th>
+                        <th>Action Recipient</th>
+                        <th>Action Type</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </p-dialog>
+
+    </div>
