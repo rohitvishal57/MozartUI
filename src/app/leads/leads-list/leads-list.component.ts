@@ -36,7 +36,7 @@ export class LeadsListComponent {
   assignLeadForm!: FormGroup;
   selectedLeadAssignee: string = '';
   selectedLeadNumbers: string[] = [];
-  selectedleadInformation: any;
+  selectedleadInformation: any = {};
   displayNotesPopup = false;
   activityTypes = ['sbhn', 'PORTABILITY', 'fresh policy'];
   addNoteForm!: FormGroup;
@@ -284,7 +284,6 @@ export class LeadsListComponent {
     this.displayAssigneePopup = true;
   }
 
-
   showNotesDialog(leadInformation: any) {
     this.selectedleadInformation = leadInformation;
     this.displayNotesPopup = true;
@@ -295,9 +294,8 @@ export class LeadsListComponent {
   }
 
   fetchReportingUsers() {
-    const requestBody = {
-      parentCode: "2102267"
-    };
+    let requestBody :any = {}
+    requestBody.agentCode =  this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
       (response) => {
         this.agentCodes = response;
@@ -306,19 +304,19 @@ export class LeadsListComponent {
         console.error("Error from getMyReportingUsers API:", error);
       }
     );
+    console.log("fetchReportingUsers agentCodes" ,this.agentCodes)
   }
 
   assineLead() {
-    const leadId = [this.selectedleadInformation.leadId];
+    const leadId = [this.selectedleadInformation.leadNumber];
 
-    const requestBody = {
-      leadnumber : leadId,
-      leadassigne: this.assignLeadForm.get('selectedAgentCode')?.value,
-      agentcode: this.agentCode
-    };
+    let assigneLeadRequestBody : any = {};
+    assigneLeadRequestBody.leadnumber = leadId,
+    assigneLeadRequestBody.leadassigne =  this.assignLeadForm.value.selectedAgentCode,
+    assigneLeadRequestBody.agentCode = this.agentCode
 
-    console.log("request body for assigne:" + JSON.stringify(requestBody))
-    this.leadsService.assineLead(requestBody).subscribe(
+    console.log("request body for assigne:" + JSON.stringify(assigneLeadRequestBody))
+    this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
       (response) => {
         if (response.errorMessage == "success") {
           console.error("Lead Success Assined");
@@ -332,20 +330,19 @@ export class LeadsListComponent {
 
 
   addNotes() {
-    console.log("Values xnjf", this.addNoteForm.value)
-    const addNotesRequestBody = {
-      activitystartdate: this.addNoteForm.value.activityStartDate,
-      activityenddate: this.addNoteForm.value.activityEndDate,
-      activityName: this.addNoteForm.value.title,
-      note: this.addNoteForm.value.note,
-      mobilenumber: this.selectedleadInformation.phoneNumber,
-      agentcode: this.agentCode,
-      createdat: new Date() ,
-      name: this.addNoteForm.value.note,
-      leadnumber: this.selectedleadInformation.leadId,
-      activitytype: this.addNoteForm.value.activityType,
-      isupdate: 0
-    };
+    let addNotesRequestBody :any = {};
+
+    addNotesRequestBody.activitystartdate= this.addNoteForm.value.activityStartDate,
+    addNotesRequestBody.activityenddate= this.addNoteForm.value.activityEndDate,
+    addNotesRequestBody.activityName= this.addNoteForm.value.title,
+    addNotesRequestBody.note= this.addNoteForm.value.notes,
+    addNotesRequestBody.name= this.addNoteForm.value.notes,
+    addNotesRequestBody.activitytype= this.addNoteForm.value.activityType,
+    addNotesRequestBody.agentcode= this.agentCode,
+    addNotesRequestBody.createdat= new Date() ,
+    addNotesRequestBody.mobilenumber= this.selectedleadInformation.phoneNumber,
+    addNotesRequestBody.leadnumber= this.selectedleadInformation.leadNumber,
+    addNotesRequestBody.isupdate= 0
 
     this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
       (response) => {
@@ -357,6 +354,8 @@ export class LeadsListComponent {
       }
     );
     this.displayNotesPopup = false;
+
+  
 
   }
 

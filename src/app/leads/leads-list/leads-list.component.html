@@ -149,14 +149,16 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th scope="col" nowrap>Lead ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Mobile Number</th>
-                                    <th scope="col">Email ID</th>
-                                    <th scope="col">Product name</th>
-                                    <th scope="col" nowrap>Compaign Name</th>
-                                    <th scope="col">Compain No</th>
-                                    <th scope="col">Notice</th>
+                                    <th>Lead ID</th>
+                                    <th>Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Email ID</th>
+                                    <th>Product name</th>
+                                    <th>Compaign Name</th>
+                                    <th>Compain No</th>
+                                    <th>Notice</th>
+                                    <th></th>
+
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
@@ -169,7 +171,6 @@
                                     <td><span class="productName">{{ row.interestedInPlan }}</span></td>
                                     <td>{{ row.campaignName }}</td>
                                     <td><span class="table-modification">{{ row.campaignNumber }}</span></td>
-                                    <td>{{row.leadNumber}}</td>
                                    <td>
                                         <div class="btn_groupAction">
                                             <button class="btn_action btn_editAction" (click)="showDialog(row)"> <img
@@ -391,7 +392,7 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <div class="input-block form-floating input-block-renew">
-                            <input class="form-control input-textBox" id="MiddleName" placeholder="" type="text" formControlName="activityStartTime" >
+                            <input class="form-control input-textBox" id="MiddleName" placeholder="" type="time" formControlName="activityStartTime" >
                             <label> Activity Start Time*:</label>
 
                         </div>
@@ -405,7 +406,7 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <div class="input-block form-floating input-block-renew">
-                            <input class="form-control input-textBox" id="email" placeholder="" type="text" formControlName="activityEndTime">
+                            <input class="form-control input-textBox" id="email" placeholder="" type="time" formControlName="activityEndTime">
                             <label>Activity End Time*:</label>
                         </div>
                     </div>
