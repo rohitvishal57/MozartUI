@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
 
 @Component({
   selector: 'app-yatra',
@@ -2886,177 +2887,184 @@ export class YatraComponent {
 
   }
 
-  async halfQuotation() {
-    this.spinner.show();
+  // async halfQuotation() {
+  //   this.spinner.show();
 
-    let reqData = JSON.parse(JSON.stringify(this.formData));
+  //   let reqData = JSON.parse(JSON.stringify(this.formData));
 
-    Object.keys(reqData).forEach(key => {
-      const value = reqData[key];
+  //   Object.keys(reqData).forEach(key => {
+  //     const value = reqData[key];
 
-      if (Array.isArray(value)) {
-        value.forEach((element: any) => {
+  //     if (Array.isArray(value)) {
+  //       value.forEach((element: any) => {
 
-          Object.keys(element).forEach((key: any) => {
-            const value = element[key];
-            if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
-              try {
-                const parsedValue = JSON.parse(value);
-                element[key] = parsedValue.value;
-                element[key + 'Code'] = parsedValue.id;
-              } catch (error) {
-                console.error(`Error parsing JSON for key '${key}':`, error);
-              }
-            }
-          });
+  //         Object.keys(element).forEach((key: any) => {
+  //           const value = element[key];
+  //           if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
+  //             try {
+  //               const parsedValue = JSON.parse(value);
+  //               element[key] = parsedValue.value;
+  //               element[key + 'Code'] = parsedValue.id;
+  //             } catch (error) {
+  //               console.error(`Error parsing JSON for key '${key}':`, error);
+  //             }
+  //           }
+  //         });
 
-        });
-      }
-      // Check if the value is a string and starts with "{" and ends with "}"
-      else if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
-        try {
-          // Attempt to parse the stringified JSON value
-          const parsedValue = JSON.parse(value);
+  //       });
+  //     }
+  //     // Check if the value is a string and starts with "{" and ends with "}"
+  //     else if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
+  //       try {
+  //         // Attempt to parse the stringified JSON value
+  //         const parsedValue = JSON.parse(value);
 
-          reqData = { ...reqData, [key]: parsedValue.value };
-          reqData = { ...reqData, [key + 'Code']: parsedValue.id };
-        } catch (error) {
-          console.error(`Error parsing JSON for key '${key}':`, error);
-        }
-      }
-    });
+  //         reqData = { ...reqData, [key]: parsedValue.value };
+  //         reqData = { ...reqData, [key + 'Code']: parsedValue.id };
+  //       } catch (error) {
+  //         console.error(`Error parsing JSON for key '${key}':`, error);
+  //       }
+  //     }
+  //   });
 
-    reqData.insuredMemberDetails.forEach((element: any) => {
+  //   reqData.insuredMemberDetails.forEach((element: any) => {
 
-      element['memberNo'] = element['memberIndex'] + 1;
-      element['productComponents'] = [
-        {
-          "productComponentName": "SumInsured",
-          "productComponentValue": element['sumInsured']
-        },
-        {
-          "productComponentName": "Zone",
-          "productComponentValue": element['zoneValue']
-        }
-      ];
-      element['optionalCovers'] = this.addOnDetails[element['memberIndex']];
-    });
-    this.spinner.show();
-    reqData['selectedIndex'] = 1;
-    reqData['quoteDate'] = new Date().toISOString().split('T')[0];
-    reqData['preIssuanceDate'] = new Date().toISOString().split('T')[0];
-    reqData['customerSignatureDate'] = new Date().toISOString().split('T')[0];
-    reqData['agentSignatureDate'] = new Date().toISOString().split('T')[0];
-    reqData['leadId'] = this.leadId;
-    reqData['pinCode'] = reqData.insuredMemberDetails[0].pincode;
-    reqData['preIssuranceTime'] = new Date().toISOString().split('T')[1].split('.')[0];
-    this.mainData = reqData
-    var reqData1 = {
-      code: this.Code,
-      insuranceTypeCode: this.insurancetypecode,
-      productId: this.productid,
-      configuration_Json: JSON.stringify(reqData),
-      halfQuote: true,
-      productType: reqData.productType
-    };
+  //     element['memberNo'] = element['memberIndex'] + 1;
+  //     element['productComponents'] = [
+  //       {
+  //         "productComponentName": "SumInsured",
+  //         "productComponentValue": element['sumInsured']
+  //       },
+  //       {
+  //         "productComponentName": "Zone",
+  //         "productComponentValue": element['zoneValue']
+  //       }
+  //     ];
+  //     element['optionalCovers'] = this.addOnDetails[element['memberIndex']];
+  //   });
+  //   this.spinner.show();
+  //   reqData['selectedIndex'] = 1;
+  //   reqData['quoteDate'] = new Date().toISOString().split('T')[0];
+  //   reqData['preIssuanceDate'] = new Date().toISOString().split('T')[0];
+  //   reqData['customerSignatureDate'] = new Date().toISOString().split('T')[0];
+  //   reqData['agentSignatureDate'] = new Date().toISOString().split('T')[0];
+  //   reqData['leadId'] = this.leadId;
+  //   reqData['pinCode'] = reqData.insuredMemberDetails[0].pincode;
+  //   reqData['preIssuranceTime'] = new Date().toISOString().split('T')[1].split('.')[0];
+  //   this.mainData = reqData
+  //   var reqData1 = {
+  //     code: this.Code,
+  //     insuranceTypeCode: this.insurancetypecode,
+  //     productId: this.productid,
+  //     configuration_Json: JSON.stringify(reqData),
+  //     halfQuote: true,
+  //     productType: reqData.productType
+  //   };
 
-    this.spinner.show();
+  //   this.spinner.show();
 
-    console.log(reqData1);
+  //   console.log(reqData1);
 
-    try {
-      const res = await new Promise((resolve, reject) => {
-        this.yatraService.getHalfQuote(reqData1).subscribe({
-          next: (res) => {
-            resolve(res);
-          },
-          error: (err) => {
-            reject(err);
-          }
-        });
-      });
+  //   try {
+  //     const res = await new Promise((resolve, reject) => {
+  //       this.yatraService.getHalfQuote(reqData1).subscribe({
+  //         next: (res) => {
+  //           resolve(res);
+  //         },
+  //         error: (err) => {
+  //           reject(err);
+  //         }
+  //       });
+  //     });
 
-      const response = res as any;
-      console.log(response);
+  //     const response = res as any;
+  //     console.log(response);
 
-      Object.keys(response).forEach(key => {
+  //     Object.keys(response).forEach(key => {
 
-        if (key === 'ns0:SuperHealthTopUpRes') {
-          this.quoteNo = response[key].quoteNumber
-        }
-        else {
-          this.quoteNo = response[key].PolCreationRespons.quoteNumber
-        }
+  //       if (key === 'ns0:SuperHealthTopUpRes') {
+  //         this.quoteNo = response[key].quoteNumber
+  //       }
+  //       else {
+  //         this.quoteNo = response[key].PolCreationRespons.quoteNumber
+  //       }
 
-      });
+  //     });
 
-      this.toast.success({ detail: "SUCCESS", summary: `Half Quotation Generated Successfully.${this.quoteNo}`, duration: 3000 });
-      sessionStorage.setItem("mainData", this.encryptionService.encrypt(JSON.stringify(this.mainData)));
-      this.spinner.hide();
-    } catch (err) {
-      console.error(err);
-      this.spinner.hide();
-    }
-  }
+  //     this.toast.success({ detail: "SUCCESS", summary: `Half Quotation Generated Successfully.${this.quoteNo}`, duration: 3000 });
+  //     sessionStorage.setItem("mainData", this.encryptionService.encrypt(JSON.stringify(this.mainData)));
+  //     this.spinner.hide();
+  //   } catch (err) {
+  //     console.error(err);
+  //     this.spinner.hide();
+  //   }
+  // }
 
   async fullQuotation() {
-    this.spinner.show();
-    this.mainData = { ...this.mainData, ...this.dynamicFormGroup.value };
-    this.mainData['quotationNumber'] = 'QSP' + this.quoteNo;
-    this.mainData['KYC_Transition_Id'] = 'SP' + new Date().getTime();
-    this.mainData['collectionRcvdDate'] = new Date().toISOString().split('T')[0];
-    var reqData: any = {
-      code: this.Code,
-      insuranceTypeCode: this.insurancetypecode,
-      productId: this.productid,
-      configuration_Json: JSON.stringify(this.mainData),
-      fullQuote: true,
-      productType: this.mainData.productType
-    };
+    // this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+    console.log(this.formData);
+    this.mappedFormData();
+    console.log(this.mappedFormData());
+    
 
-    try {
-      const res: any = await new Promise((resolve, reject) => {
-        this.yatraService.getFullQuote(reqData).subscribe({
-          next: (res) => {
-            resolve(res);
-          },
-          error: (err) => {
-            reject(err);
-          }
-        });
-      });
+    // this.spinner.show();
+    // this.mainData = { ...this.mainData, ...this.dynamicFormGroup.value };
+    // this.mainData['quotationNumber'] = 'QSP' + this.quoteNo;
+    // this.mainData['KYC_Transition_Id'] = 'SP' + new Date().getTime();
+    // this.mainData['collectionRcvdDate'] = new Date().toISOString().split('T')[0];
+    // var reqData: any = {
+    //   code: this.Code,
+    //   insuranceTypeCode: this.insurancetypecode,
+    //   productId: this.productid,
+    //   configuration_Json: JSON.stringify(this.mainData),
+    //   fullQuote: true,
+    //   productType: this.mainData.productType
+    // };
 
-      const response = res as any;
+    // try {
+    //   const res: any = await new Promise((resolve, reject) => {
+    //     this.yatraService.getFullQuote(reqData).subscribe({
+    //       next: (res) => {
+    //         resolve(res);
+    //       },
+    //       error: (err) => {
+    //         reject(err);
+    //       }
+    //     });
+    //   });
 
-      Object.keys(response).forEach(key => {
-        if (key === 'ns0:SuperHealthTopUpRes') {
-          this.quoteNo = response[key].quoteNumber;
-          this.customerId = response[key].customerId;
-          this.dynamicFormGroup.addControl('customerId', this.fb.control(response[key].customerId));
-          this.dynamicFormGroup.addControl('receiptNumber', this.fb.control(response[key].ReceiptCreationResponse.ReceiptNumber));
-          this.dynamicFormGroup.addControl('quotationNumber', this.fb.control(response[key].quoteNumber));
-        }
-        else {
-          this.quoteNo = response[key].PolCreationRespons.quoteNumber
-          this.customerId = res[key].PolCreationRespons.customerId;
-          this.dynamicFormGroup.addControl('customerId', this.fb.control(res[key].PolCreationRespons.customerId));
-          this.dynamicFormGroup.addControl('receiptNumber', this.fb.control(res[key].ReceiptCreationResponse.ReceiptNumber));
-          this.dynamicFormGroup.addControl('quotationNumber', this.fb.control(res[key].PolCreationRespons.quoteNumber));
-        }
-      });
-      this.dynamicFormGroup.get('totalPremium')?.setValue(this.formData.totalPremium);
+    //   const response = res as any;
 
-      this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
-      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-      this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
-      this.spinner.hide();
+    //   Object.keys(response).forEach(key => {
+    //     if (key === 'ns0:SuperHealthTopUpRes') {
+    //       this.quoteNo = response[key].quoteNumber;
+    //       this.customerId = response[key].customerId;
+    //       this.dynamicFormGroup.addControl('customerId', this.fb.control(response[key].customerId));
+    //       this.dynamicFormGroup.addControl('receiptNumber', this.fb.control(response[key].ReceiptCreationResponse.ReceiptNumber));
+    //       this.dynamicFormGroup.addControl('quotationNumber', this.fb.control(response[key].quoteNumber));
+    //     }
+    //     else {
+    //       this.quoteNo = response[key].PolCreationRespons.quoteNumber
+    //       this.customerId = res[key].PolCreationRespons.customerId;
+    //       this.dynamicFormGroup.addControl('customerId', this.fb.control(res[key].PolCreationRespons.customerId));
+    //       this.dynamicFormGroup.addControl('receiptNumber', this.fb.control(res[key].ReceiptCreationResponse.ReceiptNumber));
+    //       this.dynamicFormGroup.addControl('quotationNumber', this.fb.control(res[key].PolCreationRespons.quoteNumber));
+    //     }
+    //   });
+    //   this.dynamicFormGroup.get('totalPremium')?.setValue(this.formData.totalPremium);
 
-    } catch (err) {
-      console.error(err);
-      this.spinner.hide();
-    }
+    //   this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+    //   sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+    //   this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
+    //   this.spinner.hide();
+
+    // } catch (err) {
+    //   console.error(err);
+    //   this.spinner.hide();
+    // }
 
   }
+
 
   /* AddOn Related Method */
 
@@ -3792,7 +3800,38 @@ export class YatraComponent {
               });
             }
             console.log(this.dynamicFormGroup.value);
-          })
+            // this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+            if (key === 'preFix') {
+              const prefixFromKYC = response.data[key].toLowerCase();
+
+              // Find the matching option from the JSON (ignoring case)
+              const matchingPrefix = this.form.formSections
+                .flatMap((section: any) => section.formControls)
+                .find((control: any) => control.name === 'preFix')
+                .options.find((option: any) => option.value.toLowerCase() === prefixFromKYC);
+
+              if (matchingPrefix) {
+                this.dynamicFormGroup.get('preFix')?.setValue(matchingPrefix.value);
+                this.dynamicFormGroup.get(key)?.disable(); // Set the matching value in the form control
+              }
+            } else {
+              // For other fields, just set the value as before
+              const formControl = this.dynamicFormGroup.get(key);
+              if (formControl) {
+                formControl.setValue(response.data[key]);
+                formControl.disable(); // Disable the form control
+              }
+
+              this.form.formSections.forEach((section: any) => {
+                section.formControls.forEach((control: any) => {
+                  if (control.name === key) {
+                    control.disabled = true; // Disable the field in the JSON structure
+                    control.value = response.data[key]; // Update the value in the JSON as well
+                  }
+                });
+              });
+            }
+          });
         } else {
           console.error('Expected response.data to be an object, but received:', response.data);
         }
@@ -3911,6 +3950,101 @@ export class YatraComponent {
     console.log(control);
     this.clipboard.copy(control);
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
+  }
+
+  mappedFormData() {
+    const mappedData: Partial<Root> = {
+      agentCode: '',
+      productName: this.formData?.productName || '',
+      productCode: this.formData?.productId || '',
+      planCode: this.formData?.planCode || '',
+      policyType: this.formData?.memberPolicyType || '',
+      businessType: this.formData?.typeOfBusiness || '',
+      insuredMemberDetails: this.formData?.insuredMemberDetails?.map((member: any) => {
+        return {
+          relation: member?.relation || '',
+          memberrelationCode: '', // Use default or calculated value
+          memberSalutation: member?.preFix || '',
+          firstName: member?.firstName || '',
+          middleName: member?.middleName || '',
+          lastName: member?.lastName || '',
+          height: member?.height || '',
+          heightInInches: member?.heightInches || '',
+          weight: member?.weight || '',
+          memberdob: member?.memberdob || '',
+          emailId: member?.emailId || '',
+          mobileNumber: member?.mobileNumber || '',
+          memberNationality: member?.nationality || '',
+          relationshipType: member?.relationshipType || '',
+          memberAge: member?.memberAge || '',
+          memberGender: member?.memberGender || '',
+          memberPincode: member?.pincode || '',
+          preExistingDisease: member?.preExistingDisease || '',
+          memberIndex: member?.memberIndex || '',
+          zone: member?.zone || '',
+          state: member?.state || '',
+          city: member?.city || '',
+          memberType: member?.memberType || '',
+          memberSumInsured: member?.sumInsured || '',
+          memberZone: member?.zoneValue || '',
+          memberNatureOfDuty: member?.natureOfDuty || '',
+          memberDesignation: member?.productMemberDesignation || '',
+          memberOccupation: member?.productMemberOccupation || '',
+          covers: member?.covers || []
+        };
+      }) || [],
+      proposerSalutation: this.formData?.preFix || '',
+      proposerFirstName: this.formData?.firstName || '',
+      proposerMiddleName: this.formData?.middleName || '',
+      proposerLastName: this.formData?.lastName || '',
+      proposerDob: this.formData?.memberDobProposer || '',
+      proposerAge: this.formData?.memberAgeProposer || '',
+      proposerGender: this.formData?.proposerGender || '',
+      proposerMobileNumber: this.formData?.mobileNumber || '',
+      proposerWhatsAppNo: this.formData?.whatsappNo || '',
+      proposerAddress1: this.formData?.proposerAddress1 || '',
+      proposerAddress2: this.formData?.proposerAddress2 || '',
+      proposerCity: this.formData?.city || '',
+      proposerState: this.formData?.state || '',
+      proposerEmailId: this.formData?.emailId || '',
+      proposerPincode: this.formData?.proposerPincode || '',
+      idProof: this.formData?.idProof || '',
+      idNo: this.formData?.idNo || '',
+      proposerAnnualIncome: this.formData?.annualIncome || '',
+      proposerOccupation: this.formData?.occupation || '',
+      proposerEducation: this.formData?.educationDetails || '',
+      proposerPANNo: this.formData?.panNo || '',
+      proposerMaritalStatus: this.formData?.maritalStatus || '',
+      nomineeFirstName: this.formData?.nomineeFirstName || '',
+      nomineeMidleName: this.formData?.nomineeMiddleName || '',
+      nomineeLastName: this.formData?.nomineeLastName || '',
+      nomineeRelation: this.formData?.nomineeRelationWithProposer || '',
+      nomineeRelationCode: this.formData?.nomineeRelationWithProposerCode || '',
+      nomineeContactNumber: this.formData?.emergencyContact || '',
+      nomineeAddress: this.formData?.nomineeAddress || '',
+      nomineeDob: this.formData?.nomineeDob || '',
+      nomineeAge: this.formData?.nomineeAge || '',
+      NameofAccountHolder: this.formData?.accountHolderName || '',
+      accountNumber: this.formData?.accountNumber || '',
+      accountType: this.formData?.accountType || '',
+      bankCity: this.formData?.bankCity || '',
+      bankBranch: this.formData?.bankBranch || '',
+      paymentMode: this.formData?.paymentMode || '',
+      chequeNumber: this.formData?.chequeNumber || '',
+      chequeDate: this.formData?.chequeDate || '',
+      bankName: this.formData?.bankName || '',
+      ifscCode: this.formData?.ifscCode || '',
+      micrNo: this.formData?.micrCode || '',
+      premiumAmount: this.formData?.totalPremium || '',
+      paymentDate: this.formData?.paymentDate || '',
+      paymentCollectionMode: this.formData?.paymentCollectionMode || '',
+      paymentByRelationship: this.formData?.paymentByRelationship || '',
+      payerName: this.formData?.payerName || '',
+      paymentBy: this.formData?.paymentBy || '',
+      PaymentGatewayName: this.formData?.PaymentGatewayName || ''
+    };
+
+    console.log(mappedData);
   }
 
 }
