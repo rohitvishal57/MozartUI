@@ -24,6 +24,7 @@
 
     "assineLead":"yatra/api/LeadAssigne",
     "getMyReportingUsers": "yatra/api/getmyreportingusers",
+    "fetchActivityType":"yatra/api/fetchactivitytype",
     "getProposalListApi":"yatra/api/getproposallist",
     "getCustomerDetailsList":"yatra/api/getCustomerDetailsList",
     "addLeadNotes":"yatra/api/addnotes",

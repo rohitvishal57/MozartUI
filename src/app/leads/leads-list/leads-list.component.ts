@@ -43,12 +43,12 @@ export class LeadsListComponent {
   displayUpdateStatusPopup = false;
   markDuplicatePopup = false;
   duplicateLeadId: any;
-  activityTypes = ['sbhn', 'PORTABILITY', 'fresh policy'];
+  activityTypes : any =[];
   addNoteForm!: FormGroup;
   markDuplicateForm!: FormGroup;
   mobileNumber: string = '';
   selectedCheckBox = false
-  checkBoxSelectedLeads : any =[];
+  checkBoxSelectedLeads: any = [];
   auditTrails: any;
   referenceStatus: any;
   referenceSubStatus: any;
@@ -103,6 +103,18 @@ export class LeadsListComponent {
     this.markDuplicateForm = this.fb.group({
       leadId: ['']
     });
+
+    let fetchActivityTypeRequest: any = {};
+    debugger
+    this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
+    (response) => {
+    console.log("ActivityType information : "+ response.activityName);
+    this.activityTypes =  response.activityName	;
+    },
+      (error) => {
+
+      });
+
   }
   onPageChange(event: any) {
     this.first = event.first;
@@ -133,7 +145,7 @@ export class LeadsListComponent {
   editLead(leadNumber: any) {
     this.router.navigate(['/leads/updateLead/' + leadNumber]);
   }
-  updateStatus(leadNumber: any){
+  updateStatus(leadNumber: any) {
     this.statusUpdateLead = leadNumber;
     this.leadsService.getReferenceStatus().subscribe(
       (response) => {
@@ -147,13 +159,13 @@ export class LeadsListComponent {
       }
     );
   }
-  changeReferStatus(event: any){
+  changeReferStatus(event: any) {
     console.log(event.target.value);
     let selectedStatus = event.target.value
     this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
     console.log(this.referenceSubStatus);
   }
-  updateStatusSubmit(){
+  updateStatusSubmit() {
     console.log(this.updateStatusForm.value);
     let reqObj = {
       agentcode: this.agentCode,
@@ -176,12 +188,12 @@ export class LeadsListComponent {
       }
     );
   }
-  markDuplicate(leadNumber: any){
+  markDuplicate(leadNumber: any) {
     console.log(leadNumber);
     this.duplicateLeadId = leadNumber;
     this.markDuplicatePopup = true;
   }
-  markDuplicateFormSubmit(){
+  markDuplicateFormSubmit() {
     console.log(this.markDuplicateForm.value);
     let reqObject = {
       leadnumber: this.duplicateLeadId,
@@ -367,11 +379,11 @@ export class LeadsListComponent {
     this.selectedleadInformation = leadInformation;
     this.displayNotesPopup = true;
   }
-  
+
   showAuditTrailDialog(leadNumber: any) {
     this.leadsService.viewAuditTrail(leadNumber).subscribe(
       (response) => {
-    this.displayAuditTrailPopup = true;
+        this.displayAuditTrailPopup = true;
 
         this.auditTrails = response;
       },
@@ -445,7 +457,7 @@ export class LeadsListComponent {
     const input = event.target as HTMLInputElement;
     this.leadsList.forEach(lead => lead.isSelected = input.checked)
     this.checkBoxSelectedLeads = this.leadsList.filter(lead => lead.isSelected);
-    console.log("checkBoxSelectedLeads",this.checkBoxSelectedLeads.length)
+    console.log("checkBoxSelectedLeads", this.checkBoxSelectedLeads.length)
 
   }
 
@@ -458,14 +470,14 @@ export class LeadsListComponent {
     } else {
       this.checkBoxSelectedLeads.push(leadInfo);
     }
-    console.log("checkBoxSelectedLeads",this.checkBoxSelectedLeads)
-    console.log("checkBoxSelectedLeads",this.checkBoxSelectedLeads.length)
+    console.log("checkBoxSelectedLeads", this.checkBoxSelectedLeads)
+    console.log("checkBoxSelectedLeads", this.checkBoxSelectedLeads.length)
   }
 
 
-  selectAllAssigneLeadDialog(){
-   this.showAssigneLeadDialog(this.selectedleadInformation);
+  selectAllAssigneLeadDialog() {
+    this.showAssigneLeadDialog(this.selectedleadInformation);
   }
-  
+
 
 }
