@@ -22,8 +22,10 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4">
                         <div class="sample_uploadDocument">
-                            <a href="assets/lms-assets/UploadSample.xlsx">Download sample
+                            <a *ngIf="performanceUploadForm.get('selectedView')?.value == 'performance'" href="assets/performance-assets/FinalSheetPerformanceView.xlsx">Download sample
                                 template file</a>
+                            <a *ngIf="performanceUploadForm.get('selectedView')?.value != 'performance'" href="assets/performance-assets/DetailedView.xlsx">Download sample
+                                    template file</a>
                         </div>
                         <div class="uploadDocument_main">
                             <div class="uploadDocument_area" (click)="file.click()">
