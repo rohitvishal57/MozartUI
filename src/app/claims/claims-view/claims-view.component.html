@@ -3,7 +3,7 @@
   <div class="contentBody bodyColumns-1">
       <div class="bodyColumn body_flex_column">
           <div class="body_flex_row justify-content-between">
-              <h2>My Claims</h2>
+              <h2> <i class="fa fa-arrow-left" aria-hidden="true" (click)="navigateToListClaim()"></i>  My Claims</h2>
           </div>
           <section class="white_container">
               <h6 class="heading-16-red">Raise Request</h6>
@@ -158,7 +158,7 @@
                               </div>
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
-                                      <input type="text" class="form-control input-textBox" placeholder="Amount" formControlName="billAmount" />
+                                      <input type="number" class="form-control input-textBox" placeholder="Amount" formControlName="billAmount" />
                                       <label for="addnotes">Amount</label>
                                   </div>
                               </div>

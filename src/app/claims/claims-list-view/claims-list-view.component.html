@@ -89,8 +89,10 @@
                             </tr>
                           </thead>
                           <tbody class="table-group-divider">
-                            <ng-container *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index">
-                              <tr class="table-values">
+                            <ng-container *ngIf="claims.length > 0">
+
+                            
+                              <tr class="table-values"  *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index">
                                 <td class="card_insureInfo">{{ row?.claimInfoId }}</td>
                                 <td>{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
@@ -106,7 +108,12 @@
                                     </div>
                                 </td>
                               </tr>
-                              
+                            </ng-container>
+                            <ng-container *ngIf="claims.length <= 0">
+                                <tr>
+                                    No Records Found...
+                                </tr>
+                            </ng-container>
                               <!-- <tr *ngIf="selectedClaim?.id === row.id" class="details-row visible-row">
                                 <td [attr.colspan]="8">
                                   <div class="additional-info">
@@ -116,7 +123,7 @@
                                   </div>
                                 </td>
                               </tr> -->
-                            </ng-container>           
+                                    
                  
                           </tbody>
                         </table>

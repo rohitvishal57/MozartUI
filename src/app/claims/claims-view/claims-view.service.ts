@@ -46,7 +46,7 @@ export class ClaimsViewService {
   getHospitalsByCities(hospitalsReqBody:any){
     const getHospitalsByCities = this.configService.config.baseUrl + this.configService.config.getHospitals;
     return this.httpService.post(getHospitalsByCities, hospitalsReqBody);
-   // return this.httpService.post('https://localhost:7026/api/gethospitaldetails', hospitalsReqBody);
+  // return this.httpService.post('https://localhost:7026/api/gethospitaldetails', hospitalsReqBody);
   }
 
   getClaimDetailsView(claimDetailsReqBody:any){
@@ -57,8 +57,8 @@ export class ClaimsViewService {
 
   getClaimsHistory(claimHistoryReqBody:any, policyNo:any){
     const getClaimsHistory = this.configService.config.baseUrl + this.configService.config.getClaimHistory+`=${policyNo}`;
-    return this.httpService.post(getClaimsHistory, claimHistoryReqBody);
-    //return this.httpService.post('https://localhost:7026/api/getclaimHistory?policynumber='+policyNo, claimHistoryReqBody);
+   return this.httpService.post(getClaimsHistory, claimHistoryReqBody);
+   // return this.httpService.post('https://localhost:7026/api/getclaimHistory?policynumber='+policyNo, claimHistoryReqBody);
 
   }
 

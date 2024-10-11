@@ -123,6 +123,11 @@ export class ClaimsViewComponent {
     this.getProposalDetails();
     this.fetchStates();
   }
+  
+  navigateToListClaim(){
+    this.router.navigate(['claims/claimsList'])
+
+  }
 
   saveUpload(): void {
     this.saveForm = this.fb.group({

@@ -227,23 +227,25 @@ uploadFiles(files: File[]): void {
     file.isEdited = true;
   }
 
-  fetchClaimHistory(policyNumber:string){
-    debugger
+  fetchClaimHistory(policyNumber:string){    
     const policyNo = policyNumber;
     let claimHistoryReqBody = {
       "policyNumber" : policyNo
     }
  
     this.claimsService.getClaimsHistory(claimHistoryReqBody,policyNo).subscribe(
-      (response:any)=>{
-   
-      this.claimsHistory = response
+      (response:any)=>{   
+      this.claimsHistory = response.data;
+      console.log('resp', this.claimsHistory);
       
     })
-    
-    
+  }
+
+  navigateToListClaim(){
+    this.router.navigate(['claims/claimsList'])
 
   }
+
   submitClaim(){
     const claimDetailsReqBody = {
       AgentCode: localStorage.getItem('agentCode'),

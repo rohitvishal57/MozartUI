@@ -38,6 +38,7 @@ export class ClaimsListViewComponent implements OnInit {
   fromDate: any;
   toDate: any;
   
+  
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
 
   ngOnInit(){
@@ -83,7 +84,7 @@ claimsReqBody =  {
 
   }
 fetchData(): void {
-  this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => {    
+  this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
     this.claims = res.data;       
     this.gridClaimsData = res.data; 
     this.totalRecords = this.claims.length;    
@@ -137,8 +138,15 @@ cancel() {
     if (searchValue) {
       this.claimsReqBody.searchType = this.selected;
       this.claimsReqBody.searchString = searchValue;
+
       this.fetchData();
      // this.toggleSearchdropdown = false;
+     this.claimsReqBody.searchType = '';
+      this.claimsReqBody.searchString = '';
+      console.log('searchvalue', this.claimsReqBody.searchString);
+      console.log('searchtype', this.claimsReqBody.searchType);
+
+      
     }
     else if(searchValue === ''){  
       this.selected = '';
@@ -150,6 +158,8 @@ cancel() {
     else{
       this.fetchData();
     }
+    this.selected = '';
+    this.searchInputControl.reset();
   }
 
 onSelectChanges(event: any): void {
@@ -201,9 +211,9 @@ getPlaceholder(): string {
   //}
   navigateToViewClaim(row:any){
     let claimDetailsReqBody = {
-      id: row.id,
-      claimNumber: row.claimInfoId,
-      policyNumber: row.policyNumber
+      "id": row.id,
+      "claimNumber": row.claimInfoId,
+      "policyNumber": row.policyNumber
     };
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
       (response) => {
