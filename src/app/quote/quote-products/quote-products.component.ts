@@ -186,7 +186,7 @@ export class QuoteProductsComponent implements OnInit {
     item.tenureAmounts = [];
     this.formData = {
       ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount,
-      firstName: this.formData.proposerName
+      firstName: this.formData.proposerName, quoteId:item.quoteNumber
     }
     console.log(this.formData);
     try {
@@ -295,7 +295,8 @@ export class QuoteProductsComponent implements OnInit {
       "isFullQouteComplete": false,
       "createdBy": this.agentCode,
       "modifiedBy": this.agentCode,
-      "quoteNumber":item.QuoteNumber
+      "quoteNumber":item.QuoteNumber,
+      "mobileNumber": this.formData.mobileNumber
     }
     console.log(reqdata);
     this.quoteService.Insertorupdateagentcartdetails(reqdata).subscribe({

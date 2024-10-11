@@ -72,5 +72,10 @@ export class LeadsService {
     const getDuplicateLeadRequest = this.configService.config.baseUrl + this.configService.config.getduplicateLead;
     return this.http.post<any>(getDuplicateLeadRequest, requestBody);
   }
-    
+
+  fetchActivityType(requestBody:any):Observable<any>{
+    const getDuplicateLeadRequest = this.configService.config.baseUrl + this.configService.config.fetchActivityType;
+    return this.http.post<any>(getDuplicateLeadRequest, requestBody);
+  }
+
 }

@@ -192,6 +192,7 @@ export class GetQuoteComponent {
       familySize: [null],
       memberPolicyType: [this.selectedPlan],
       memberDobProposer:[''],
+      memberAgeProposer:[''],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
@@ -347,6 +348,7 @@ export class GetQuoteComponent {
     this.quoteFormGroup.get('insuredMemberDetails')?.value.forEach((item:any)=>{
       if(item.relation == 'Self'){
         this.quoteFormGroup.get('memberDobProposer')?.setValue(item.memberdob);
+        this.quoteFormGroup.get('memberAgeProposer')?.setValue(item.memberAge);
         console.log(item);
       }
     })
