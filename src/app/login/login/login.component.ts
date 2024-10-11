@@ -269,7 +269,7 @@ export class LoginComponent implements OnInit{
             console.log(res);
             if(res.isSuccess && res.token !== null && res.statusMessage === "OTP Successfully Validated") {
               this.loginService.storeToken(res.token);
-              localStorage.setItem('agentcode', res.agentCode);
+              localStorage.setItem('agentCode', res.agentCode);
               // this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 5000 })
               this.router.navigate(['dashboard']);
             } else {

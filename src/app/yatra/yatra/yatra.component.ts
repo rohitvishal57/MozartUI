@@ -89,6 +89,7 @@ export class YatraComponent {
   isPolicyDetailsFetch: boolean = false;
   selectedAddons: any[] = [];
   question: any;
+  leadnumber: string = "";
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
@@ -528,6 +529,7 @@ export class YatraComponent {
           }
         });
       });
+      this.dynamicFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
       //dynamic css
       // this.showHtmlContent = true;
       console.log(this.form);
@@ -2268,14 +2270,16 @@ export class YatraComponent {
           "productId": this.productId,
           "formId": this.formSequence[this.getFormIndexValue()].formId,
           "jsonForm": JSON.stringify(this.form),
-          "formSequence": this.getFormIndexValue()
+          "formSequence": this.getFormIndexValue(),
+          "leadNumber":this.leadnumber,
+          "quoteNumber":this.formData.quoteId
         };
 
         this.yatraService.Insertorupdateformdata(reqData).subscribe({
-          next: (res) => {
+          next: (res: any) => {
             // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
             console.log(res);
-
+            this.leadnumber = res.data;
           },
           error: (err) => {
             console.error(err);
@@ -2465,7 +2469,7 @@ export class YatraComponent {
 
   async getPremiumAmount() {
     this.spinner.show();
-    console.log(this.tenureAmount, this.formData.insuredMemberDetails,this.isQuote,Object.keys(this.formData).length);
+    console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
 
     if (this.isQuote == false) {
       if (Object.keys(this.formData).length > 0) {
@@ -2531,15 +2535,19 @@ export class YatraComponent {
 
         this.commonService.GetSingleProductQuote(reqData).pipe(
           tap((res: any) => {
+            const QuoteNumber=[];
             // Update tenureAmount and discountList after receiving the response
             for (let i = 1; i <= 3; i++) {
               const premiumKey = `tenure${i}Premium`;
               const discountKey = `t${i}DiscountPercentage`;
+              const Quote = `tenure${i}QuoteNumber`
+              QuoteNumber.push(res.data[Quote]);
               console.log(res.data[premiumKey], res.data[discountKey]);
 
               this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
               this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
             }
+            this.formData.quoteId = QuoteNumber[this.selectedIndex];
           })
         ).subscribe({
           next: () => {
@@ -3484,7 +3492,7 @@ export class YatraComponent {
   }
 
   setPremiumAmount() {
-    console.log(this.displayTaxList, this.selectedIndex);
+    console.log(this.displayTaxList, this.selectedIndex,this.formData);
     this.tenureAmount.forEach(member => {
       console.log(member);
 
@@ -3753,9 +3761,9 @@ export class YatraComponent {
     const panNumber = this.dynamicFormGroup.get('panNo')?.value;
 
     const dobDate = new Date(proposerDOB);
-    const formattedDOB = dobDate.getFullYear() + '-' + 
-                     String(dobDate.getMonth() + 1).padStart(2, '0') + '-' + 
-                     String(dobDate.getDate()).padStart(2, '0');
+    const formattedDOB = dobDate.getFullYear() + '-' +
+      String(dobDate.getMonth() + 1).padStart(2, '0') + '-' +
+      String(dobDate.getDate()).padStart(2, '0');
 
     const reqData = {
       dateOfBirth: formattedDOB,
@@ -3773,10 +3781,22 @@ export class YatraComponent {
         if (typeof response.data === 'object' && response.data !== null) {
           Object.keys(response.data).forEach((key: any) => {
             this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+            const insuredMemberDetailsControl = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+            if (insuredMemberDetailsControl) {
+              insuredMemberDetailsControl.controls.forEach((control: any) => {
+                if (control.get('relation')?.value === 'Self') {
+                  // Set the value for the matching 'self' relation
+                  control.get(key)?.setValue(response.data[key]);
+                }
+              });
+            }
+            console.log(this.dynamicFormGroup.value);
           })
         } else {
           console.error('Expected response.data to be an object, but received:', response.data);
         }
+        this.dynamicFormGroup.get('ckycNo')?.setValue(response.data.ckycNo);
       },
       error: (error) => {
         this.spinner.hide();
