@@ -104,7 +104,162 @@
                             </mat-tab>
                             <mat-tab label="Detailed View">
                                 <div class="body_flex_column gap-32">
-
+                                    <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
+                                        <div class="tableSubMain">
+                                            <div class="table-responsive">
+                                                <table class="table table-borderless table-search">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Agent Code</th>
+                                                            <th>Proposal ID</th>
+                                                            <th>Proposal Substatus</th>
+                                                            <th>Client ID</th>
+                                                            <th>Insured Name</th>
+                                                            <th>Business Type</th>
+                                                            <th>Policy Start Date</th>
+                                                            <th>Policy End Date</th>
+                                                            <th>Policy Number</th>
+                                                            <th>Product Name</th>
+                                                            <th>Policy Variant</th>
+                                                            <th>Plan Type</th>
+                                                            <th>Plan Variant</th>
+                                                            <th>Portability</th>
+                                                            <th>Net Premium</th>
+                                                            <th>Sum Insured</th>
+                                                            <th>Inwarded Date</th>
+                                                            <th>Issue Date</th>
+                                                            <th>PR Date</th>
+                                                            <th>Port%</th>
+                                                            <th>Super%</th>
+                                                            <th>CI/CS/PA/ASP/Credit%</th>
+                                                            <th>SI Credit%</th>
+                                                            <th>Weighted Net Premium of Annual Club Apr 16 2024 6:17PM</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="table-group-divider">
+                                                        <tr>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                            <td>N/A</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                                            <nav>
+                                                <ul class="pagination">
+                                                    <li class="page-item">
+                                                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords"
+                                                            [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                                            class="custom-paginator my-paginator">
+                                                        </p-paginator>
+                                                    </li>
+                                                    <li class="pageCountMain">
+                                                        <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords
+                                                            ? countsList.totalRecords : first + rows}}</span> of <span
+                                                            class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div> -->
+                                    </section>
+                                    <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
+                                        <div class="cardViewWraper">
+                                            <div class="cardViewItem" *ngFor="let row of detailedList; let i = index">
+                                                <header>
+                                                    <div class="card_insureInfo">
+                                                        <h6>
+                                                            <div class="insureName">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}
+                                                            </div>
+                                                        </h6>
+                                                        <div class="item_productName">{{ row.interestedInPlan }}</div>
+                                                    </div>
+                                                    <!-- <div class="card_btnGroup">
+                                                        <div class="btn_groupAction">
+                                                            <button type="button" value="Assign to" title="Assign to" 
+                                                                class="btn_action btn_editAction"><img
+                                                                    src="assets/Img/icon_profile.svg"></button>
+                                                            <button type="button" value="Update Status" title="Update Status" 
+                                                                class="btn_action btn_renewalAction"><img
+                                                                    src="assets/Img/icon_edit_grey.svg"></button>
+                                                            <button type="button" value="Add Notes" title="Add Notes" 
+                                                                class="btn_action btn_renewalAction"><img
+                                                                    src="assets/Img/icon_add_notes.svg"></button>
+                                                        </div>
+                                                    </div> -->
+                                                </header>
+                                                <div class="cardViewBody">
+                                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                                        <div class="item_lable">Phone Number</div>
+                                                        <div class="item_value">{{ row.phoneNumber }}</div>
+                                                    </div>
+                                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                                        <div class="item_lable">Email</div>
+                                                        <div class="item_value">{{ row.email }}</div>
+                                                    </div>
+                                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                                        <div class="item_lable">Campaign Name</div>
+                                                        <div class="item_value">{{ row.campaignName}}</div>
+                                                    </div>
+                                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                                        <div class="item_lable">Campaign Number</div>
+                                                        <div class="item_value">{{ row.campaignNumber }}</div>
+                                                    </div>
+                                                    <div class="cv_bodyItems cv_bodyItems_45">
+                                                        <div class="item_lable">Lead ID</div>
+                                                        <div class="item_value">{{ row.leadNumber }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                                            <nav>
+                                                <ul class="pagination">
+                                                    <li class="page-item">
+                                                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords"
+                                                            [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
+                                                            class="custom-paginator my-paginator">
+                                                        </p-paginator>
+                                                    </li>
+                                                    <li class="pageCountMain">
+                                                        <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords
+                                                            ? countsList.totalRecords : first + rows}}</span> of <span
+                                                            class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                                    </li>
+                                                </ul>
+                                            </nav>
+                                        </div> -->
+                                    </section>
+                                    <!-- <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalRecords === 0">
+                                        <div class="cardViewWraper">
+                                            <div class="no_dataFound">
+                                                <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                                                <p>No data found</p>
+                                            </div>
+                                        </div>
+                                    </section> -->
                                 </div>
                             </mat-tab>
                         </mat-tab-group>

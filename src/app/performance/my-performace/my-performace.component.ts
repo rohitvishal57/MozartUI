@@ -8,7 +8,8 @@ import { Component } from '@angular/core';
 export class MyPerformaceComponent {
   selectedTabIndex: number = 0;
   docType = 'Monthly';
-
+  detailedList: any;
+  selectedView: string = "list";
   onTabChanged(event: any): void {
     this.selectedTabIndex = event.index;
   }
