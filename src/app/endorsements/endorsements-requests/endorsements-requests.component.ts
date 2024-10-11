@@ -19,8 +19,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   rows: number = 10;
   totalRecords: number = 0;
   selectedView: string = "list";
-  toggeledropdown: boolean = false;
-  toggeleSearchdropdown: boolean = false;
+  isSearch: boolean = false;
   selected: string = "date";
   searchInputControl = new FormControl("");
   isDesktopView: boolean = false
@@ -43,6 +42,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
+    this.isSearch = false;
     this.getRequestList();
   }
 
@@ -62,8 +62,8 @@ export class EndorsementsRequestsComponent implements OnInit {
       "fromDate": "",
       "toDate": "",
       "start": 0,
-      "length": 10,
-      "sortColumn": "RequestedOn",
+      "length": this.rows,
+      "sortColumn": "RaisedOn",
       "searchColumn": "",
       "sortDirection": "DESC",
       "searchString": "",
@@ -71,8 +71,12 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
    
   getRequestList() {
-    this.requestsListRequestBody.start = (this.page - 1) * this.rows;
-    this.requestsListRequestBody.length = this.rows;
+    if (!this.isSearch) {
+      this.requestsListRequestBody.start = (this.page - 1) * this.rows;
+      this.requestsListRequestBody.length = this.rows;
+    } else {
+      this.requestsListRequestBody.start = 0;
+    }
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
         if (response && response.statusCode == "200" && response.isSuccess) {
@@ -99,13 +103,6 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.activeFilter = filter;
   }
 
-  toggleSearchDropdown() {
-    if (this.toggeledropdown == true) {
-      this.toggeledropdown = false;
-    }
-    this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
-  }
-
   getFromDate(event:any){
     this.fromDate = event.target.value;
   }
@@ -126,7 +123,7 @@ export class EndorsementsRequestsComponent implements OnInit {
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
       ]);
     }
-    else if (this.selected === "EndorsementID") {
+    else if (this.selected === "caseId") {
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
@@ -149,7 +146,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   getPlaceholder(): string {
-    if (this.selected === "EndorsementID") {
+    if (this.selected === "caseId") {
       return "Enter Request ID";
     } else if (this.selected === "memberName") {
       return "Enter Member Name";
@@ -175,19 +172,10 @@ export class EndorsementsRequestsComponent implements OnInit {
     return "";
   }
 
-  cancelSearch() {
-    this.toggeleSearchdropdown = false;
-    this.selected = "";
-    this.requestsListRequestBody.searchColumn = "";
-    this.requestsListRequestBody.sortColumn = "";
-    this.requestsListRequestBody.searchString = "";
-    this.getRequestList()
-  }
-
   applySearch() {
     if (this.searchInputControl.valid) {
-      if (this.selected === "EndorsementID") {
-        this.requestsListRequestBody.searchColumn = "EndorsementID";
+      if (this.selected === "caseId") {
+        this.requestsListRequestBody.searchColumn = "CaseId";
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
       }
       else if (this.selected === "memberName") {
@@ -195,19 +183,16 @@ export class EndorsementsRequestsComponent implements OnInit {
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
       }
       else if (this.selected === "policyNumber") {
-        this.requestsListRequestBody.searchColumn = "policyNumber";
+        this.requestsListRequestBody.searchColumn = "PolicyNumber";
         this.requestsListRequestBody.searchString = this.searchInputControl.value!;
       } 
       else if (this.selected === "date") {
         this.requestsListRequestBody.fromDate = this.fromDate;
         this.requestsListRequestBody.toDate = this.toDate;
       }
-      
+      this.isSearch = true;
+      this.first = 0;
       this.getRequestList();
-      this.toggeleSearchdropdown = false;
-    }
-    else {
-      this.toggeleSearchdropdown = true;
     }
   }
 
