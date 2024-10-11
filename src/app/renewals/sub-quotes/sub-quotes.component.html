@@ -51,9 +51,9 @@
                                     <td><span class="table-modification">{{quote.comment}}, Tenure {{quote.tenure}} Year</span></td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" value="edit" title="Edit" class="btn_action btn_editAction"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" [routerLink]="['/renewals/renewalDynamicForm']"><img src="assets/Img/icon_edit_grey.svg"></button>
                                             <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                                            <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
+                                            <!-- <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button> -->
                                         </div>
                                     </td>
                                 </tr>
@@ -80,9 +80,9 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" value="edit" title="Edit" class="btn_action btn_editAction"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" [routerLink]="['/renewals/renewalDynamicForm']"><img src="assets/Img/icon_edit_grey.svg"></button>
                                     <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                                    <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button>
+                                    <!-- <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button> -->
                                 </div>
                             </div>
                         </header>
@@ -121,7 +121,7 @@
             </section>
         </div>
         <div class="bodyColumn body_flex_column quoteComparison" *ngIf="subQuotes == true">
-            <h3 class="icon_withHeading"><a class="btn_backPage"></a>Quote Comparison</h3>
+            <h3 class="icon_withHeading"><a class="btn_backPage" (click)="backSubquotes()"></a>Quote Comparison</h3>
             <section class="quoteComparisonWraper">
                 <div class="qc_item qc_item1">
                     <header>Quote

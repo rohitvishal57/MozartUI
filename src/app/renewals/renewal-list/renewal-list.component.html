@@ -182,11 +182,11 @@
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
-                                                        <li class="actionItem" (click)="handleAction(row, 'download')">
+                                                        <!-- <li class="actionItem" (click)="handleAction(row, 'download')">
                                                             <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                        </li>
+                                                        </li> -->
                                                         <li class="actionItem" (click)="handleAction(row, 'copyPayLink')">
-                                                            <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>copyPayLink </span></a>
+                                                            <a><img src="assets/Img/icon_copylink.svg" alt="generate payment link"><span>copyPayLink </span></a>
                                                         </li>
                                                         <li class="actionItem" (click)="handleAction(row, 'sms')">
                                                             <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
@@ -195,11 +195,8 @@
                                                             <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                                         </li>
                                                         <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                            <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
+                                                            <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Send Renewal Notice</span></a>
                                                         </li>
-                                                        <!-- <li class="actionItem" (click)="handleAction(row, 'autodebit')">
-                                                            <a> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></a>
-                                                        </li> -->
                                                     </ul>
                                                 </div>
                                             </mat-menu>
@@ -240,15 +237,14 @@
                                     <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="renewalJourney(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
                                     <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(row, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                     <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
-                                                <li class="actionItem" (click)="handleAction(row, 'download')">
+                                                <!-- <li class="actionItem" (click)="handleAction(row, 'download')">
                                                     <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                </li>
+                                                </li> -->
                                                 <li class="actionItem" (click)="handleAction(row, 'copyPayLink')">
-                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>copyPayLink </span></a>
+                                                    <a><img src="assets/Img/icon_copylink.svg" alt="generate payment link"><span>copyPayLink </span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="handleAction(row, 'sms')">
                                                     <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
@@ -257,11 +253,8 @@
                                                     <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                    <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Send Renewal Notice"><span>Send Renewal Notice</span></a>
+                                                    <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="generate payment link"><span>Send Renewal Notice</span></a>
                                                 </li>
-                                                <!-- <li class="actionItem" (click)="handleAction(row, 'autodebit')">
-                                                    <a> <img src="assets/Img/icon_create_auto_debit_grey.svg" alt="Create Auto-Debit Registration Link"><span>Create Auto-Debit Registration Link</span></a>
-                                                </li> -->
                                             </ul>
                                         </div>
                                     </mat-menu>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RenewalsService } from '../renewals.service';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-sub-quotes',
@@ -16,7 +17,7 @@ export class SubQuotesComponent {
   selectedQuotes: any[] = [];
   selected: any = [];
 
-  constructor(private renewalService:RenewalsService){}
+  constructor(private renewalService:RenewalsService,private toast: NgToastService){}
 
   ngOnInit()
   {
@@ -65,12 +66,20 @@ export class SubQuotesComponent {
   getSubquotes(){
     this.renewalService.getSubquotesApi("21-24-0002334-00",{}).subscribe(
       (res:any)=>{
-        this.subQuotesList=res.data;
-        console.log("subquotes data",this.subQuotesList)
+        if(res.success){
+          this.subQuotesList=res.data;
+          this.toast.success({ detail: "Success", summary: "Subquotes List generated successfully.", duration: 1000 });
+        }
+        else{
+          this.toast.error({ detail: "Error", summary: "Failed to generate Subquotes List.", duration: 1000 });
+        }
       },
       (err)=>{
-        console.log("error coming from sub quotes api",err);
+        this.toast.error({ detail: "Error", summary: "Error while generating Subquotes List.", duration: 1000 });
       }
     )
+  }
+  backSubquotes(){
+    this.subQuotes=false;
   }
 }
