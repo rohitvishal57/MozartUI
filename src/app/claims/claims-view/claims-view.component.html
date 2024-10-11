@@ -45,8 +45,8 @@
 
                       <!-- Cashless Fields -->
 
-                      <div class="row mb-3" *ngIf="showCashlessFields">
-
+                      <div class="col-12 mb-3" *ngIf="showCashlessFields">
+                        <div class="row">
                           <div *ngIf="showCashlessFields" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="text" class="form-control input-textBox" formControlName="coverName" [value]="'Hospitalisation'" readonly />
@@ -87,7 +87,7 @@
                                   <label for="dischargeTime">Time of Discharge (Tentative)</label>
                               </div>
                           </div>
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                               <div class="input-block form-floating input-block-renew">
                                   <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
                                   <label for="ailmentDescription">Description of the Ailment</label>
@@ -115,9 +115,10 @@
                               </div>
                           </div>
                       </div>
+                    </div>
 
                       <!-- Reimbursement Fields -->
-                      <div class="row mb-3" *ngIf="showReimbursementFields">
+                      <div class="col-12" *ngIf="showReimbursementFields">
                           <!-- <div *ngIf="showCashlessFields" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                     <div class="input-block form-floating input-block-renew">
                       <input type="text" class="form-control input-textBox" formControlName="coverName" [value]=""  />
@@ -136,20 +137,20 @@
                               </div>
                           </div>
                       </div>
-                      <div>
-
-                      </div>
 
 
-                      <div *ngIf="showFirstScenario" class="row mb-3" formArrayName="billsArray">
-                          <div *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i" class="row mb-3">
+                      <div *ngIf="showFirstScenario" class="col-12" formArrayName="billsArray">
+                            <section class="main_addBills mb-5" >
+                                <button type="button" class="btn btn-add" (click)="addBillRow()">Add More Bills</button>
+                            
+                          <div class="row" *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i">
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
                                       <input type="text" class="form-control input-textBox" placeholder="Bill No" formControlName="billNo" />
                                       <label for="addnotes">Bill No.</label>
                                   </div>
                               </div>
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                   <div class="input-block form-floating input-block-renew">
                                       <input type="date" class="form-control input-textBox" formControlName="billDate" />
                                       <label for="addnotes">Date</label>
@@ -160,21 +161,15 @@
                                       <input type="text" class="form-control input-textBox" placeholder="Amount" formControlName="billAmount" />
                                       <label for="addnotes">Amount</label>
                                   </div>
-                                  <button type="button" class="btn" (click)="removeBillRow(i)"> <img src="assets/Img/icon_delete_red2.svg"></button>
-
                               </div>
-                              <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-1">
-                                  <div class="input-block form-floating input-block-renew">
-
-                                  </div>
-                              </div> -->
+                              <div class="col-12 col-sm-12 col-md-6 col-lg-1 col-xl-1 text-center">
+                                <button type="button" class="btn btn_bill_delete" (click)="removeBillRow(i)"> <img src="assets/Img/icon_delete_red2.svg"></button>
+                              </div>
                           </div>
-                          <div class="col-12">
-                              <button type="button" class="btn btn-add" (click)="addBillRow()">Add More Bills</button>
-                          </div>
+                        </section>
                       </div>
-
-                      <div *ngIf="showSecondScenario" class="row mb-3">
+                      <div class="col-12" *ngIf="showSecondScenario">
+                      <div  class="row mb-3">
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" placeholder="Hospital Address" />
@@ -196,26 +191,20 @@
                               </div>
                           </div>
 
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" />
                                   <label for="dischargeDate">Date of Discharge</label>
                               </div>
                           </div>
 
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="time" class="form-control input-textBox" formControlName="dischargeTime" placeholder="Time of Discharge (Tentative)" />
                                   <label for="dischargeTime">Time of Discharge (Tentative)</label>
                               </div>
                           </div>
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                              <div class="input-block form-floating input-block-renew">
-                                  <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
-                                  <label for="ailmentDescription">Description of the Ailment</label>
-                              </div>
-                          </div>
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                               <div class="input-block form-floating input-block-renew">
                                   <select class="form-select input-selectBox" formControlName="state" (change)="onStateChange($event)">
                                       <option class="dropdown-options" value="" disabled selected>Select State</option>
@@ -226,7 +215,7 @@
                               </div>
                           </div>
 
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                               <div class="input-block form-floating input-block-renew">
                                   <select class="form-select input-selectBox" formControlName="city" (change)="onCityChange($event)" [disabled]="!selectedState">
                                       <option class="dropdown-options" value="" disabled selected>Select City</option>
@@ -236,7 +225,14 @@
                                   <span class="ui-error">Please select city</span>
                               </div>
                           </div>
+                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                              <div class="input-block form-floating input-block-renew">
+                                  <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
+                                  <label for="ailmentDescription">Description of the Ailment</label>
+                              </div>
+                          </div>
                       </div>
+                    </div>
                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="input-block form-floating input-block-renew">
                               <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
