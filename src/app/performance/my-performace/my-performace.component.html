@@ -54,11 +54,19 @@
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                         <div class="claims_member_info">
-                                            <h4>Campaign Performance</h4>
-                                            <!-- <div><button [ngClass]="{'btn-campaign-performance-info-active': docType == 'Monthly'}"
-                                                class="btn-campaign-performance-info">Monthly</button><button
-                                                [ngClass]="{'btn-campaign-performance-info-active':  docType == 'Quaterly'}"
-                                                class="btn-campaign-performance-info">Quaterly</button></div> -->
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <h4>Campaign Performance</h4>
+                                                <div style="display: inline-flex;">
+                                                    <button type="button" value="gridlist"
+                                                        class="btn_grid mobile-hide jsBtnClickQuote"
+                                                        [ngClass]="{'active': selectedView === 'Monthly'}"
+                                                        aria-label="quotes-list" (click)="toggleView('Monthly')">Monthly</button>
+                                                    <button type="button" value="gridcard"
+                                                        class="btn_grid mobile-hide jsBtnClickQuote"
+                                                        [ngClass]="{'active': selectedView === 'Quaterly'}"
+                                                        aria-label="quotes-card" (click)="toggleView('Quaterly')">Quarterly</button>
+                                                </div>
+                                            </div>
                                             <ul class="list-detailsInfo">
                                                 <li>
                                                     <span class="label">GWP(Weighted) as on:</span>
@@ -104,7 +112,8 @@
                             </mat-tab>
                             <mat-tab label="Detailed View">
                                 <div class="body_flex_column gap-32">
-                                    <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
+                                    <section id="quotes-list" class="tableMain quoteView block-show "
+                                        *ngIf="selectedView == 'list'">
                                         <div class="tableSubMain">
                                             <div class="table-responsive">
                                                 <table class="table table-borderless table-search">
@@ -133,7 +142,8 @@
                                                             <th>Super%</th>
                                                             <th>CI/CS/PA/ASP/Credit%</th>
                                                             <th>SI Credit%</th>
-                                                            <th>Weighted Net Premium of Annual Club Apr 16 2024 6:17PM</th>
+                                                            <th>Weighted Net Premium of Annual Club Apr 16 2024 6:17PM
+                                                            </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="table-group-divider">
@@ -185,13 +195,15 @@
                                             </nav>
                                         </div> -->
                                     </section>
-                                    <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
+                                    <section id="quotes-card" class="cardViewMain quoteView mobile-block"
+                                        *ngIf="selectedView == 'grid'">
                                         <div class="cardViewWraper">
                                             <div class="cardViewItem" *ngFor="let row of detailedList; let i = index">
                                                 <header>
                                                     <div class="card_insureInfo">
                                                         <h6>
-                                                            <div class="insureName">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}
+                                                            <div class="insureName">{{ row.firstName }} {{
+                                                                row.middleName }} {{ row.lastName }}
                                                             </div>
                                                         </h6>
                                                         <div class="item_productName">{{ row.interestedInPlan }}</div>

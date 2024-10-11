@@ -398,3 +398,18 @@
   .tableSubMain .table td {
     line-height: 10px;
   }
+
+  h4 {
+    margin: 0; /* Remove default margin */
+}
+
+.btn_grid {
+
+  // margin-left: 10px;
+  position: relative; /* Ensure z-index works */
+  z-index: 10; /* Bring the button above other elements */
+}
+
+.btn_grid:hover {
+  background-color: #C7222A;; /* Darken color on hover */
+}
