@@ -294,7 +294,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   getPolicyNumbers() {
     let data={
-      UserId:[this.agentCode]
+      UserId: this.agentCode
     }
     this.endorsement_service.getactivepolicynumbersApi(data).subscribe(
       (resp:any) => {
