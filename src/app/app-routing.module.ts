@@ -42,6 +42,10 @@ const routes: Routes = [
    {path:'declaration',
     loadChildren:() => import("./declaration/declaration.module").then((m)=>m.DeclarationModule)
    },
+   {
+    path:'performance',
+    loadChildren:() => import("./performance/performance.module").then((m)=>m.PerformanceModule)
+   },
   {path:'**',redirectTo:'',pathMatch:'full'}
 
 ];
