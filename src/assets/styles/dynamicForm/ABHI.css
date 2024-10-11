@@ -2111,7 +2111,8 @@ a:not([href]) {
     position: relative;
 }
 .main-container .right-panel .paymentBtn.btn-ENach,
-.main-container .right-panel .paymentBtn.btn-EMandate {
+.main-container .right-panel .paymentBtn.btn-EMandate,
+.main-container .right-panel .paymentBtn.btn-AutoDebit {
     background: #fff url(../../../assets/Img/img_faster_process.svg) no-repeat 90%;
     background-size: 50%;
 }
