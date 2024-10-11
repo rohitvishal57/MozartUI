@@ -9,12 +9,13 @@ export class MyPerformaceComponent {
   selectedTabIndex: number = 0;
   docType = 'Monthly';
   detailedList: any;
-  selectedView: string = "Monthly";
+  selectedView: string = "list";
+  selectedButton: string = "Monthly";
   onTabChanged(event: any): void {
     this.selectedTabIndex = event.index;
   }
   toggleView(key: any){
     console.log(key);
-    this.selectedView = key;
+    this.selectedButton = key;
   }
 }

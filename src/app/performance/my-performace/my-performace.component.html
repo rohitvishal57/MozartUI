@@ -59,11 +59,11 @@
                                                 <div style="display: inline-flex;">
                                                     <button type="button" value="gridlist"
                                                         class="btn_grid mobile-hide jsBtnClickQuote"
-                                                        [ngClass]="{'active': selectedView === 'Monthly'}"
+                                                        [ngClass]="{'active': selectedButton === 'Monthly'}"
                                                         aria-label="quotes-list" (click)="toggleView('Monthly')">Monthly</button>
                                                     <button type="button" value="gridcard"
                                                         class="btn_grid mobile-hide jsBtnClickQuote"
-                                                        [ngClass]="{'active': selectedView === 'Quaterly'}"
+                                                        [ngClass]="{'active': selectedButton === 'Quaterly'}"
                                                         aria-label="quotes-card" (click)="toggleView('Quaterly')">Quarterly</button>
                                                 </div>
                                             </div>
