@@ -5,7 +5,7 @@ import { UploadPerformaceComponent } from './upload-performace/upload-performace
 
 const routes: Routes = [
   { path: "my-performance", component: MyPerformaceComponent },
-  { path: "upload-perfomance", component: UploadPerformaceComponent },
+  { path: "upload-performance", component: UploadPerformaceComponent },
 ];
 
 @NgModule({
