@@ -51,8 +51,8 @@
                                     <td><span class="table-modification">{{quote.comment}}, Tenure {{quote.tenure}} Year</span></td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" [routerLink]="['/renewals/renewalDynamicForm']"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                            <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="handleAction(quote, 'primary')"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(quote, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                             <!-- <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button> -->
                                         </div>
                                     </td>
@@ -80,8 +80,8 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" [routerLink]="['/renewals/renewalDynamicForm']"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="handleAction(quote, 'primary')"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(quote, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                     <!-- <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button> -->
                                 </div>
                             </div>

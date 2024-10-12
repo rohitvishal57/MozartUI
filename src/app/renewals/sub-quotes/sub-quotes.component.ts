@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sub-quotes',
@@ -17,7 +18,9 @@ export class SubQuotesComponent {
   selectedQuotes: any[] = [];
   selected: any = [];
 
-  constructor(private renewalService:RenewalsService,private toast: NgToastService){}
+  constructor(private renewalService:RenewalsService,
+    private router:Router,private toast: NgToastService
+  ){}
 
   ngOnInit()
   {
@@ -81,5 +84,10 @@ export class SubQuotesComponent {
   }
   backSubquotes(){
     this.subQuotes=false;
+  }
+  handleAction(renewObject:any,event:any){
+      console.log("proposer PolicyNumber",renewObject.policyNumber);
+      this.renewalService.setPolicyState(renewObject.policyNumber, event);
+      this.router.navigate(["renewals/renewalDynamicForm"]);
   }
 }

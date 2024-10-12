@@ -89,17 +89,17 @@ export class RenewalListComponent {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
           })); 
-          this.toast.success({ detail: "Success", summary: "Renewals List generated successfully.", duration: 1000 });
+          this.toast.success({ detail: "Success", summary: "Renewals List generated successfully.", duration: 1500 });
           console.log("Renewal List",this.renewalsList);
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType];         } 
         else {
-          this.toast.error({ detail: "Error", summary: "Failed to generate Renewals List.", duration: 1000 });
+          this.toast.error({ detail: "Error", summary: "Failed to generate Renewals List.", duration: 1500 });
           console.error("API request was not successful.");
         }
       },
       (error) => {
-        this.toast.error({ detail: "Error", summary: "Error while generating Subquotes List.", duration: 1000 });
+        this.toast.error({ detail: "Error", summary: "Error while generating Subquotes List.", duration: 1500 });
         console.error("Error from getRenewalsList API:", error);
       }
     );
@@ -317,13 +317,13 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "Success", summary: "Renewal notice shared successfully.", duration: 500 });
+              this.toast.success({ detail: "Success", summary: "Renewal notice shared successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "Error", summary: "Failed to send renewal notice.", duration: 500 });
+              this.toast.error({ detail: "Error", summary: "Failed to send renewal notice.", duration: 1500 });
             }
           },
           (error: any) => {
-            this.toast.error({ detail: "Error", summary: "Error while sending renewal notice.", duration: 500 });
+            this.toast.error({ detail: "Error", summary: "Error while sending renewal notice.", duration: 1500 });
           }
         );
         break;
@@ -336,13 +336,13 @@ export class RenewalListComponent {
         this.renewalService.generatePaymentlinkApi(copyPayLinkRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "Success", summary: "Payment link copied successfully.", duration: 500 });
+              this.toast.success({ detail: "Success", summary: "Payment link copied successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "Error", summary: "Failed to copy payment link.", duration: 500});
+              this.toast.error({ detail: "Error", summary: "Failed to copy payment link.", duration: 1500});
             }
           },
           (error: any) => {
-            this.toast.error({ detail: "Error", summary: "Error while copying payment link.", duration: 500 });
+            this.toast.error({ detail: "Error", summary: "Error while copying payment link.", duration: 1500 });
           }
         );
         break;
@@ -366,13 +366,13 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "Success", summary: "SMS sent successfully.", duration: 500 });
+              this.toast.success({ detail: "Success", summary: "SMS sent successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "Error", summary: "Failed to send SMS.", duration: 500 });
+              this.toast.error({ detail: "Error", summary: "Failed to send SMS.", duration: 1500 });
             }
           },
           (error: any) => {
-            this.toast.error({ detail: "Error", summary: "Error while sending SMS.", duration: 500 });
+            this.toast.error({ detail: "Error", summary: "Error while sending SMS.", duration: 1500 });
           }
         );
         break;
@@ -384,13 +384,13 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "Success", summary: "WhatsApp message sent successfully.", duration: 500});
+              this.toast.success({ detail: "Success", summary: "WhatsApp message sent successfully.", duration: 1500});
             } else {
-              this.toast.error({ detail: "Error", summary: "Failed to send WhatsApp message.", duration: 500 });
+              this.toast.error({ detail: "Error", summary: "Failed to send WhatsApp message.", duration: 1500 });
             }
           },
           (error: any) => {
-            this.toast.error({ detail: "Error", summary: "Error while sending WhatsApp message.", duration: 500 });
+            this.toast.error({ detail: "Error", summary: "Error while sending WhatsApp message.", duration: 1500 });
           }
         );
         break;
