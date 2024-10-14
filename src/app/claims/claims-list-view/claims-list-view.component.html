@@ -13,59 +13,38 @@
                         <li class="quickFilterHeading">Claim Status</li>
                         <li><button type="button" value="all" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('all')"  [ngClass]="{'active': selectedStatus === 'all'}">All </button></li>
                         <li><button type="button" value="active" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('active')" [ngClass]="{'active': selectedStatus === 'active'}">Active </button></li>
-                        <!-- <li><button type="button" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">Resolved </button></li> -->
+                        <li><button type="button" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">Resolved </button></li>
                         <li><button type="button" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('cancelled')" [ngClass]="{'active': selectedStatus === 'cancelled'}">Cancelled </button></li>
-                        <div class="filterWraper">
-                            <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm">Date <span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"></button>
-                            <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop filterCnt" [ngClass]="{'active': toggeledropdown}">
-                                <div class="fw_form mobile_popupMain">
-                                    <div class="filterHeader" >
-                                        <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
-                                            <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                        </button>
-                                    </div>                                
-                                                <div class="row">
-                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                    <div class="input-block input-block-dob">
-                                                        <label>From Date</label>
-                                                        <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')">
-                                                        <span class="ui-error">Please enter start date</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                    <div class="input-block input-block-dob">
-                                                        <label>To Date</label>
-                                                        <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')">
-                                                        <span class="ui-error">Please enter end date</span>
-                                                    </div>
-                                                </div>
-                                                                                        <!-- <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button> -->
-                                        <button type="button" value="apply" class="btn_red" (click)="applyFilter()">Apply</button>
-
-                                            </div>
-                                </div>
-                            </div>
-                        </div>
-                    </ul>
-                    
+                    </ul>  
                 </div>
                 
-              
                 <div class="quickFilterRight" >
                     <!--Search section start-->
                     <div class="body_flex_row claims_searchWraper">
                         <div class="field_searchMain">
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)">
                                 <option value="" disabled selected>Select an option</option>
+                                <option value="date">Date</option>
                                 <option value="requestType">Request Type</option>
                                 <option value="productName">Product Name</option>
                                 <option value="policyNumber">Policy Number</option>
                             </select>
-                            <input type="search" id="filterSearch" value="" class="filterSearch" [placeholder]="getPlaceholder()"  [formControl]="searchInputControl">
-                            <button type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+
+                            <div *ngIf="selected == 'date'" class="d-flex field_searchMain">
+                                <div class="input-block form-floating input-block-renew m-0">
+                                    <input type="date" id="fromDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getFromDate($event)">
+                                    <label for="fromDate">From Date</label>
+                                </div>
+                                <div class="input-block form-floating input-block-renew m-0">
+                                    <input type="date" id="toDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getToDate($event)">
+                                    <label for="toDate">To Date</label>
+                                </div>
+                                <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" style="position: initial" (click)="applyFilter()"><img src="assets/Img/icon_magnify_grey.svg" alt="Search"></button>
+                            </div>
+                            <input *ngIf="selected != 'date'" class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <button *ngIf="selected != 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
-                    <!--Search section end-->
                     <button type="button" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
                     <button type="button" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
@@ -123,8 +102,6 @@
                                   </div>
                                 </td>
                               </tr> -->
-                                    
-                 
                           </tbody>
                         </table>
                     </div>

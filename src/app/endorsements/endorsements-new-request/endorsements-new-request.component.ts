@@ -19,6 +19,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { EndorsementsRequestsService } from '../endorsements-requests/endorsements-requests.service';
 import { NgToastService } from 'ng-angular-popup';
 import { LoginService } from 'src/app/login/login/login.service';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -26,13 +27,10 @@ import { LoginService } from 'src/app/login/login/login.service';
   styleUrls: ['./endorsements-new-request.component.scss'],
 })
 export class EndorsementsNewRequestComponent implements OnInit {
-  @ViewChild("otpPopup") otpPopup:TemplateRef<any> | any;
+  otpModal: any;
   caseCreationForm: FormGroup | any;
   userData: any;
   modalRef?: BsModalRef; // Reference to modal instance
-  policyNumberValue: FormControl | any;
-  policiesListDataValue: Observable<any[]> | any;
-  policyNumberList:any = [123, 3345, 456456];
   otp: string[] = ['', '', '', '', '', ''];  // Initialize OTP array
   timeLeft: number = 60;
   isTimerRunning: boolean = false;
@@ -239,7 +237,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
   selectedFormControlVal: any;
   screenSize: number | any;
   isDesktop: boolean = false;
-  otpPopupRef: BsModalRef<unknown> | any;
   documentSize: any;
   uploadDoc: boolean = true;
   constructor(private formBuilder: FormBuilder,
@@ -253,6 +250,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   ngOnInit() {
     this.isDesktop = this.screenSize > 768;
     this.agentCode = localStorage.getItem('agentCode');
+    this.otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
     this.getPolicyNumbers();
     this.initForm();
   }
@@ -538,6 +536,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       console.log("Case Sub sub type:",this.CaseSubSubTypeValue)
     }
     let payloadObj:any = {
+      AgentCode: this.agentCode,
       MemberName: this.selectedMember.membername,
       MobileNumber: this.policyInfoDetails.policyDetails.primaryMobile,
       MemberRelation: this.selectedMember.relationwithproposer,
@@ -645,7 +644,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
   backToEndorsment() {
-    this._router.navigate(["endorsements/new-request"]);
+    this._router.navigate(["endorsements"]);
   }
   initiateKyc() {
     console.log(this.caseCreationForm.value);
@@ -687,13 +686,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   
   openOtpPopup() {
-    this.otpPopupRef = this.modalService.show(this.otpPopup);
+    this.otpModal.show();
   }
 
   closeOtpPopup() {
-    if (this.otpPopupRef) {
-      this.otpPopupRef.hide();
-    }
+    this.otpModal.hide();
   }
 
   sendOTP() {
@@ -733,6 +730,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   validateOTP() {
     const otpCode = this.otp.join('');
     let modal = {
+      agentCode: this.agentCode,
       RequestId: this.otpInfoObject.requestId,
       OTPNumber: otpCode,
       emailId: this.otpObj.EmailId,
@@ -741,7 +739,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.loginservice.validateOtpRequestApi(modal).subscribe(
       (resp:any) => {
         if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 0) {
-          this.closeOtpPopup();
           if (resp && resp.statusMessage) {
             this.toast.success({ detail: resp.statusMessage});
           } else {
@@ -750,7 +747,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.isDisabled = false;
           this.sendOtptDisabled = true;
         } else if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 1) {
-          this.closeOtpPopup();
           if (resp && resp.statusMessage) {
             this.toast.success({ detail: resp.statusMessage});
           } else {
@@ -759,7 +755,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.sendOtptDisabled = false;
         }
         else {
-          this.closeOtpPopup();
           if (resp && resp.errorMessage) {
             this.toast.error({ detail: resp.errorMessage});
           } else {
@@ -767,6 +762,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
           }
           this.sendOtptDisabled = false;
         }
+        this.closeOtpPopup();
       },
       (err:any) => {
           this.otpInfoObject = null;
@@ -781,7 +777,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.selectedMember = this.policies.find((obj:any) => {
       return obj.memberid === member;
     });
-    console.log(this.selectedMember);
     if(this.selectedMember != ""){
       let policyObj = {
         policyNumber:this.selectedMember.policynumber,
@@ -800,9 +795,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         (err) => {
           console.log(err);
           this.toast.error({ detail: "Something went wrong! Please try again later."});
-
         });
-
     }
   }
 

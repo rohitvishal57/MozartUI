@@ -2,8 +2,8 @@
 <main class="siteBody">
   <div class="contentBody bodyColumns-1">
       <div class="bodyColumn body_flex_column">
-        <div class="body_flex_row justify-content-between">
-            <h2>My Endorsement</h2>
+        <div class="body_flex_row endorsement-title" (click)="backToEndorsment()">
+          <h2 class="icon_withHeading"><a class="btn_backPage"></a>My Endorsement</h2>
         </div>
         <section class="white_container">
           <h6 class="heading-16-red">Raise Request</h6>
@@ -360,7 +360,6 @@
                   </div>
                 </div>
               </div>
-            
           </section>
           <div class="row mt-4">
             <div class="col-12">
@@ -373,31 +372,36 @@
     </div>
 </main>
 
-<ng-template #otpPopup>
-  <div class="modal-content otp_popup_mobilever_endorsement">
+<!-- OTP Modal -->
+<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content otp_popup_mobilever_endorsement">
       <div class="modal-body">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4>Verify your account</h4>
-          <p>We’ve sent an OTP on your registered mobile no. or email Id.
-              <br />Please enter it here to continue.</p>
-          <div class="otp-class">
-              <small>Enter OTP</small>
-              <div class="otp-container">
-                  <input type="password" #otp0 class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
-                  <input type="password" #otp1 class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
-                  <input type="password" #otp2 class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
-                  <input type="password" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
-                  <input type="password" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
-                  <input type="password" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
-              </div>        
+        <button type="button" class="close" (click)="closeOtpPopup()">&times;</button>
+        <h4>Verify your account</h4>
+        <p>We’ve sent an OTP on your registered mobile no. or email Id.<br />Please enter it here to continue.</p>
+        
+        <div class="otp-class">
+          <small>Enter OTP</small>
+          <div class="otp-container">
+            <input type="password" #otp0 class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
+            <input type="password" #otp1 class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
+            <input type="password" #otp2 class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
+            <input type="password" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
+            <input type="password" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
+            <input type="password" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
           </div>
-          <div class="text-center">
-              <button type="button" (click)="validateOTP()" class="verify-btn">Verify</button>
-          </div>
-          <div class="d-flex justify-content-center">
-            <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds</label>
-            <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">Resend OTP</label>
-          </div>
+        </div>
+        
+        <div class="text-center">
+          <button type="button" (click)="validateOTP()" class="verify-btn">Verify</button>
+        </div>
+        
+        <div class="d-flex justify-content-center">
+          <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds</label>
+          <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">Resend OTP</label>
+        </div>
       </div>
+    </div>
   </div>
-</ng-template>
+</div>
