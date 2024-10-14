@@ -19,15 +19,15 @@ export class YatraService {
     console.log(Salutation);
     return this.httpService.get(Salutation);
   }
-  getNatureOfOccupation(){
-    const Occupation = this.configService.config.baseUrl + this.configService.config.getNatureOfWork;
-    return this.httpService.get(Occupation);
+  getNatureOfDuty(){
+    const natureOfDuties = this.configService.config.baseUrl + this.configService.config.getNatureOfDuty;
+    return this.httpService.get(natureOfDuties);
   }
   getInsurerData(){
     const getInsurerData = this.configService.config.baseUrl + this.configService.config.getInsurerData;
     return this.httpService.get(getInsurerData);
   }
-  getAllOccupation(){
+  getInsuredOccupation(){
     const getOccupation = this.configService.config.baseUrl + this.configService.config.getOccupation;
     return this.httpService.get(getOccupation);
   }
@@ -91,8 +91,9 @@ export class YatraService {
     return this.httpService.post(GetHalfQuote,reqData);
   }
   getFullQuote(reqData: any){
-    const  GetHalfQuote = this.configService.config.baseUrl + this.configService.config.getHalfQuote;
-    return this.httpService.post(GetHalfQuote,reqData);
+    const  GetFullQuote = this.configService.config.baseUrl1 + this.configService.config.getFullQuote;
+    // const getFullQuoteUrl='https://localhost:7070/api/getfullquote';
+    return this.httpService.post(GetFullQuote,reqData);
   }
   GetKycDetails(reqData:any){
     const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.getKycDetails;

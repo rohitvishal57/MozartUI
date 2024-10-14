@@ -6,6 +6,9 @@ export interface Root {
     policyType: string
     businessType: string
     insuredMemberDetails: InsuredMemberDetail[]
+	CKYCNo:string
+	QuoteId:string
+	LeadId:string
     proposerSalutation: string
     proposerFirstName: string
     proposerMiddleName: string
@@ -52,7 +55,8 @@ export interface Root {
     ifscCode: string
     micrNo: string
     premiumAmount: string
-    paymentDate: string
+	selectedTenure: string
+    paymentDate: number
     paymentCollectionMode: string
     paymentByRelationship: string
     payerName: string
