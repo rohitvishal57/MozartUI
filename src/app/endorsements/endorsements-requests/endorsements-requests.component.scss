@@ -1940,10 +1940,13 @@
       position: absolute;
       right: 10px;
       top: 10px;
-      padding: 0;
+      padding: 0 13px;
       img {
         position: initial;
       }
+    }
+    @media (max-width:767px) {
+      flex-direction: column;
     }
   }
 }
@@ -1967,6 +1970,9 @@
 }
 .tableNav .pagination {
   flex-direction: column;
+}
+.field_searchMain .field_searchMain .input-block-renew .input-textBox{
+  padding: 9px 16px !important;
 }
 /*---Common css end---*/
 /* Required Css End */

@@ -3,7 +3,7 @@
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
 
-                <h2> <i class="fa fa-arrow-left" aria-hidden="true" (click)="navigateToListClaim()"></i>  Claims</h2>
+                <h2 class="icon_withHeading"><a class="btn_backPage" (click)="navigateToListClaim()"></a> Claims</h2>
                 <!-- <button type="button" class="btn_white btn_newRequest" (click)="navigateToCreateClaim()">
                 <img src="assets/Img/icon_plus_red.svg">New Requests
             </button> -->
@@ -48,7 +48,7 @@
 
                     </div>
                 </div>
-                <div class="uploadDocument_listMain" *ngIf="uploadedFiles.length > 0">
+                <div class="uploadDocument_listMain mt-3" *ngIf="uploadedFiles.length > 0">
                     <div class="uploadDocument_filesList">
                         <div class="filesList_head">
                             <div class="filesList_headLeft">Uploads:</div>
@@ -377,8 +377,8 @@
                                                 <button type="button" class="btn_iconText"><img src="assets/Img/icon_claimhistory.svg">Claims History</button>
                                                 <button type="button" class="btn_red">View Details <img src="assets/Img/icon_right_arrow_black.svg"></button>
                                             </div>
-                                            <div *ngIf="claimsHistory && claimsHistory.length > 0">
-                                                <div class="detailsRow" *ngFor="let claimsHist of claimsHistory">
+                                            <div class="detailsRow" *ngIf="claimsHistory && claimsHistory.length > 0">
+                                                <div class="row claim_historyData" *ngFor="let claimsHist of claimsHistory">
                                                     <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                                         <label>Policy Number</label>
                                                         <h6>{{ claimsHist?.policyNumber }}</h6>

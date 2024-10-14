@@ -592,7 +592,8 @@ button {
     filter: brightness(0) invert(0);
     opacity: 0.8;
 }
-.siteSidenav .sidenavMenu a:hover .img_link.menu-proposals img {
+.siteSidenav .sidenavMenu a:hover .img_link.menu-proposals img,
+.siteSidenav .sidenavMenu a.active .img_link.menu-proposals img {
     filter: brightness(0) invert(1);
     opacity: 1;
 }
@@ -4533,4 +4534,21 @@ input[type="search"]::-webkit-search-results-decoration {
 .tip_iconWithText img {
     width: 24px;
     height: 24px;
+}
+.vernacular_declaration .input-checkbox-feild .input-check + label {
+  display: flex;
+}
+.vernacular_declaration label span {
+  font-weight: 400;
+  font-size: 14px;
+  color: #4c4c4c;
+}
+.vernacular_declaration .input-checkbox-feild .input-check + label:before {
+  min-width: 16px;
+  min-height: 16px;
+}
+.vernacular_declaration .input-checkbox-feild .input-check:checked + label:after{
+  bottom: auto;
+  left: 5px;
+  top: 1px;
 }
