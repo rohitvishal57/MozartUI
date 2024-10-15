@@ -408,7 +408,7 @@
         <button type="button" (click)="validateOTP()" class="verify-btn btn_red btn_fullWidth">Verify</button>
         <div class="d-flex justify-content-center">
           <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds</label>
-          <label *ngIf="timeLeft == 0" class="btn_linkText btn_fullWidth" (click)="resendOTP()">Resend OTP</label>
+          <button type="button" *ngIf="timeLeft == 0" class="btn_linkText btn_fullWidth" (click)="resendOTP()">Resend OTP</button>
         </div>
       </div>
     </div>
