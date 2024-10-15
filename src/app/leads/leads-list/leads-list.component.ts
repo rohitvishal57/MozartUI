@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: 'app-leads-list',
@@ -53,11 +54,20 @@ export class LeadsListComponent {
   referenceStatus: any;
   referenceSubStatus: any;
   statusUpdateLead: any;
+  startDate: any;
+  endDate: any;
+  StaticPolicyTypes = [
+    { name: 'Individual', selected: false },
+    { name: 'RUG', selected: false },
+    { name: 'Family Floater', selected: false },
+    { name: 'Groups', selected: false }
+  ];
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private datePipe: DatePipe
   ) { }
 
   leadsLisRequestBody = {
@@ -159,6 +169,19 @@ export class LeadsListComponent {
   editLead(leadNumber: any) {
     this.router.navigate(['/leads/updateLead/' + leadNumber]);
   }
+
+  updateLeadStatus(leadNumber: any) {
+    this.router.navigate(['/leads/updateLead'], {
+      queryParams: {leadNumber : leadNumber,action: 'updateStatus'},
+    });
+  }
+
+  addNotesLead(leadNumber : any ){
+    this.router.navigate(['/leads/updateLead'], {
+      queryParams: {leadNumber : leadNumber,action: 'addNotes'},
+    });
+  }
+  
   updateStatus(leadNumber: any) {
     this.statusUpdateLead = leadNumber;
     this.leadsService.getReferenceStatus().subscribe(
@@ -397,6 +420,9 @@ export class LeadsListComponent {
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
       (response) => {
         this.agentCodes = response;
+        if (this.agentCodes.length > 0) {
+          this.assignLeadForm.patchValue({ selectedAgentCode: this.agentCodes[0] });
+        }
       },
       (error) => {
         console.error("Error from getMyReportingUsers API:", error);
@@ -454,11 +480,7 @@ export class LeadsListComponent {
     const input = event.target as HTMLInputElement;
     this.leadsList.forEach(lead => lead.isSelected = input.checked)
     this.checkBoxSelectedLeads = this.leadsList.filter(lead => lead.isSelected);
-    console.log("checkBoxSelectedLeads", this.checkBoxSelectedLeads.length)
-
   }
-
-
 
   updateSelectedLeads(leadInfo: any) {
     if (this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInfo.leadNumber)) {
@@ -466,10 +488,7 @@ export class LeadsListComponent {
     } else {
       this.checkBoxSelectedLeads.push(leadInfo);
     }
-    console.log("checkBoxSelectedLeads", this.checkBoxSelectedLeads)
-    console.log("checkBoxSelectedLeads", this.checkBoxSelectedLeads.length)
   }
-
 
   selectAllAssigneLeadDialog() {
     this.showAssigneLeadDialog(this.selectedleadInformation);
@@ -497,7 +516,6 @@ export class LeadsListComponent {
   }
 
   getPlaceholder(): string {
-    debugger
     if (this.selected === 'leadId') {
         return 'Enter Lead Number';
       } else if (this.selected === 'mobileNumber') {
@@ -511,4 +529,13 @@ export class LeadsListComponent {
         return 'Search...';
       }
     } 
+    formatDate(dateType: "startDate" | "endDate") {
+      if (dateType === "startDate" && this.startDate) {
+        this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
+      } else if (dateType === "endDate" && this.endDate) {
+        this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
+      }
+    }
+
+
 }
