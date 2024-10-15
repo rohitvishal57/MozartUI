@@ -55,12 +55,6 @@ export class QuoteProductsComponent implements OnInit {
   ngOnInit(): void {
     // sessionStorage.clear()
     this.formData = history.state.formData;
-    if (sessionStorage.getItem("cardListProducts")) {
-      this.cartProductList = this.encryptionService.decrypt(sessionStorage.getItem("cardListProducts") as string);
-    }
-    else {
-      this.cartProductList = [];
-    }
     localStorage.setItem("formIndex", "0")
     console.log(this.formData, this.agentCode, this.cartProductList);
     this.getPoductList();
@@ -189,21 +183,27 @@ export class QuoteProductsComponent implements OnInit {
 
   async insurenow(item: any) {
     console.log(item);
+    item.tenureAmounts = [];
     this.formData = {
       ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount,
-      firstName: this.formData.proposerName
+      firstName: this.formData.proposerName, quoteId:item.quoteNumber
     }
     console.log(this.formData);
     try {
       await this.getProposalNum();
       await this.getFormSequence(item);
-      this.removeFromCart(item);
+      // this.removeFromCart(item);
+      for (let i = 1; i <= 3; i++) {
+        const premiumKey = `t${i}PremiumAmount`;
+        console.log(item[premiumKey]);
+        item.tenureAmounts[i - 1] = item[premiumKey]
+      }
       console.log(item)
       const productData = {
         partnerId: this.partnerId,
         productId: item.productId,
         tenureAmounts: item.tenureAmounts,
-        selectedAddons: item.selectedAddon,
+        selectedAddons: item.selectedAddons,
         proposalNum:this.proposalNum
       }
       sessionStorage.setItem("isQuote", true.toString());
@@ -220,24 +220,24 @@ export class QuoteProductsComponent implements OnInit {
 
   addToCart(item: any) {
     item.tenureAmounts = [];
+    console.log(item);
     const selectedPlanIndex = this.selectedPlans[this.ProductList.indexOf(item)];
     const selectedPremiumKey = `tenure${selectedPlanIndex}Premium`;
-
+    const QuoteNumber = `tenure${selectedPlanIndex}QuoteNumber`
     for (let i = 1; i <= 3; i++) {
       const premiumKey = `tenure${i}Premium`;
       console.log(item[premiumKey]);
       item.tenureAmounts[i - 1] = item[premiumKey]
     }
     item.selectedPremiumAmount = item[selectedPremiumKey];
+    item.QuoteNumber = item[QuoteNumber];
     console.log(item);
-    this.cartProductList.push(item);
     console.log(item);
 
-    sessionStorage.setItem("cardListProducts", this.encryptionService.encrypt(this.cartProductList));
     this.getProposalNum();
-    // setTimeout(() => {
-    //   this.insertorupdateagentcartdetails(item);
-    // }, 2000);
+    setTimeout(() => {
+      this.insertorupdateagentcartdetails(item);
+    }, 2000);
     console.log(this.cartProductList);
   }
 
@@ -283,22 +283,26 @@ export class QuoteProductsComponent implements OnInit {
       "planCode": item.planCode,
       "subPlanCode": item.subPlanCode,
       "productFeatures": JSON.stringify(item.keyFeatures),
-      "proposerName": "Manjunath Saukar",
+      "proposerName": this.formData.proposerName,
       "selectedPremiumAmount": item.selectedPremiumAmount,
       "t1PremiumAmount": item.tenure1Premium,
       "t2PremiumAmount": item.tenure2Premium,
       "t3PremiumAmount": item.tenure3Premium,
       "t2DiscountAmount": item.t2DiscountAmount,
       "t3DiscountAmount": item.t3DiscountAmount,
-      "quoteData": "{\n  \"proposerPincode\": \"500013\",\n  \"typeOfBusiness\": \"NB\",\n  \"isEmpoyee\": false,\n  \"sumInsured\": \"5000000\",\n  \"noOfMembers\": \"1\",\n  \"familySize\": \"1A\",\n  \"insuredMemeberDetails\": [\n    {\n      \"roomCategory\": \"\",\n      \"memberAge\": \"43\",\n      \"sumInsured\": \"5000000\",\n      \"isChronic\": \"No\",\n      \"zone\": \"Zone II\",\n      \"gender\": \"M\",\n      \"memberDob\": \"31-12-1980\",\n      \"memberRelation\": \"self\",\n      \"memberRelationCode\": \"24\"\n    }\n  ]\n}\n",
-      "selectedAddons": "string",
+      "quoteData": JSON.stringify(this.formData),
+      "selectedAddons": JSON.stringify(item.selectedAddon),
       "isFullQouteComplete": false,
       "createdBy": this.agentCode,
       "modifiedBy": this.agentCode,
+      "quoteNumber":item.QuoteNumber,
+      "mobileNumber": this.formData.mobileNumber
     }
     console.log(reqdata);
     this.quoteService.Insertorupdateagentcartdetails(reqdata).subscribe({
       next: (res) => {
+        this.spinner.show();
+        this.Getagentcartdetails()
         console.log(res);
       },
       error: (err) => {
@@ -312,8 +316,14 @@ export class QuoteProductsComponent implements OnInit {
       "agentCode": this.agentCode
     }
     this.quoteService.Getagentcartdetails(reqdata).subscribe({
-      next: (res) => {
+      next: (res:any) => {
         console.log(res);
+        this.cartProductList = res.data;
+        this.cartProductList.forEach((item:any)=>{
+          item.productFeatures = JSON.parse(item.productFeatures);
+          item.selectedAddons = JSON.parse(item.selectedAddons);
+        })
+        console.log(this.cartProductList);
       },
       error: (err) => {
         console.error(TypeError);
@@ -368,5 +378,28 @@ export class QuoteProductsComponent implements OnInit {
     }
     console.log(addon, this.ProductList, i, this.popIndex);
   }
+  deleteagentcartitems(cartId:any[]) {
+    let reqdata = {
+      "agentCode": this.agentCode,
+      "id":cartId
+    }
+    console.log(reqdata);
+    this.quoteService.deleteagentcartitems(reqdata).subscribe({
+      next: (res) => {
+        console.log(res);
+        this.Getagentcartdetails();
+      },
+      error: (err) => {
+        console.error(TypeError);
 
+      }
+    })
+  }
+  deleteallcartitems(){
+    const list:any=[];
+    this.cartProductList.forEach((item:any)=>{
+      list.push(item.id)
+    })
+    this.deleteagentcartitems(list);
+  }
 }

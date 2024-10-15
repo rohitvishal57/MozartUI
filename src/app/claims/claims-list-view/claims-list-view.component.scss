@@ -122,6 +122,11 @@ padding:0 0 0 10px !important;
 }
 
 /*---Common css start---*/
+.filterCnt{
+  padding: 15px 24px;
+  width: 50%;
+  min-width: 300px;
+}
 .btn_quickFilter {
   &.btn_quickFilterClaim {
     height: auto !important;
@@ -156,7 +161,7 @@ padding:0 0 0 10px !important;
 .tableSubMain .table tbody td {
   background: transparent;
 }
-.tableSubMain .table td {
+.tableSubMain .table td.card_insureInfo{
   font-size: 10px;
   vertical-align: top;
   color: #2e2e2e;

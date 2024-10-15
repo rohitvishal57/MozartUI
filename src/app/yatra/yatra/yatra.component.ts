@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
 
 @Component({
   selector: 'app-yatra',
@@ -75,7 +76,7 @@ export class YatraComponent {
   AHPARiskValue: any;
   showPopup: boolean = false;
   showDoneButton = true;
-  changesMade : boolean = false;
+  changesMade: boolean = false;
 
   partnerId: any
   productId: any
@@ -89,11 +90,13 @@ export class YatraComponent {
   isPolicyDetailsFetch: boolean = false;
   selectedAddons: any[] = [];
   question: any;
+  leadnumber: string = "";
+  QuoteNumber:any = [];
 
   constructor(private renderer: Renderer2, private el: ElementRef,
-    public commonService: CommonService,private yatraService:YatraService, private router: Router,private spinner: NgxSpinnerService,
+    public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
-    private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document,private clipboard: Clipboard) { }
+    private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard) { }
 
   ngOnInit() {
     this.spinner.show();
@@ -240,7 +243,7 @@ export class YatraComponent {
       }
       console.log(reqData);
       this.yatraService.Getform(reqData).subscribe({
-        next: (res:any) => {
+        next: (res: any) => {
           console.log(res);
           this.form = JSON.parse(res.data.jsonFormData);
           // this.form = totalpremium;
@@ -264,7 +267,7 @@ export class YatraComponent {
         // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
         // console.log(policyindex);
         if (control.dynamicControls) {
-          console.log(control.name, control,this.formData);
+          console.log(control.name, control, this.formData);
 
           if (this.formData[control.name] && control.visible == true) {
             console.log(control.dynamicControls[0], this.formData.planType);
@@ -375,7 +378,7 @@ export class YatraComponent {
               console.log(control);
               this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
             }
-            else{
+            else {
               control.subControls.forEach((subControl: ISubControl) => {
                 if (subControl.name == 'addOnDetails') {
                   let demoTypeIndex: any;
@@ -389,16 +392,16 @@ export class YatraComponent {
                       // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
                     ]; // Keep the first control (or reset)
                   }
-  
-  
+
+
                   console.log(subControl.innerSubControls);
-  
-  
+
+
                   this.formData['insuredMemberDetails'].forEach((member: any) => {
                     if (subControl.innerSubControls) {
                       let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
                       console.log(tempInnerControl, member);
-  
+
                       const tempRelationshipType = JSON.parse(member.relationshipType);
                       tempInnerControl.label = tempRelationshipType.value;
                       tempInnerControl.name = tempRelationshipType.value;
@@ -505,7 +508,9 @@ export class YatraComponent {
                   section.formControls.forEach((formControl: any) => {
                     if (formControl.name == 'totalPremium' && formControl.type == 'custom-radio') {
                       this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
-                      console.log(this.selectedIndex);
+                      this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                      this.formData.tenure = this.selectedIndex;
+                      console.log(this.selectedIndex,this.formData);
                     }
                   });
                 });
@@ -528,10 +533,11 @@ export class YatraComponent {
           }
         });
       });
+      this.dynamicFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
       //dynamic css
       // this.showHtmlContent = true;
       console.log(this.form);
-      console.log(this.dynamicFormGroup);
+      console.log(this.dynamicFormGroup,this.formData);
 
 
 
@@ -865,7 +871,7 @@ export class YatraComponent {
 
   getSalutation(control: any) {
     this.yatraService.getSalutation().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         control.options = res.Salutation;
       },
@@ -875,10 +881,35 @@ export class YatraComponent {
     });
   }
 
-  getAllOccupationRisk(control: any) {
-    this.yatraService.getNatureOfOccupation().subscribe({
+  getInsuredOccupation(control: any) {
+    this.yatraService.getInsuredOccupation().subscribe({
       next: (res: any) => {
-        control.options = res.NatureOfDuty;
+        console.log(res);
+        control.options = res.data;
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  getAllProposerOccupation(control: any) {
+    this.yatraService.getProposerOccupation().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        control.options = res.data;
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  getNatureOfDuty(control: any) {
+    this.yatraService.getNatureOfDuty().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        control.options = res.data;
       },
       error: (err: any) => {
         console.error(err);
@@ -889,7 +920,7 @@ export class YatraComponent {
   getAllInsureData(control: any) {
     this.spinner.show();
     this.yatraService.getInsurerData().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         control.options = res.InsurerName;
         this.spinner.hide();
@@ -900,23 +931,9 @@ export class YatraComponent {
     });
   }
 
-
-  getAllOccupation(control: any) {
-    this.yatraService.getAllOccupation().subscribe({
-      next: (res:any) => {
-        console.log(res);
-
-        control.options = res.Occupation;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
-  }
-
   getIdentityProof(control: any) {
     this.yatraService.getIdentification().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         control.options = res.IdType;
       },
@@ -926,21 +943,9 @@ export class YatraComponent {
     });
   }
 
-  getProposerOccupation(control: any) {
-    this.yatraService.getProposerOccupation().subscribe({
-      next: (res:any) => {
-        console.log(res);
-        control.options = res.ProposerOccupation;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
-  }
-
   getNationality(control: any) {
     this.yatraService.getNationality().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         control.options = res.Nationality;
       },
@@ -953,7 +958,7 @@ export class YatraComponent {
   getGstRegistrationStatus(control: any) {
 
     this.yatraService.getGstRegistrationStatus().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         control.options = res.Registration;
       },
@@ -965,7 +970,7 @@ export class YatraComponent {
 
   getMaritalStatus(control: any) {
     this.yatraService.getMaritalStatus().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         control.options = res.MaritalStatus;
       },
@@ -977,7 +982,7 @@ export class YatraComponent {
 
   getEducationType(control: any) {
     this.yatraService.getEducationType().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         control.options = res.EducationType;
       },
@@ -989,9 +994,9 @@ export class YatraComponent {
 
   getNomineeRelationShip(control: any) {
     this.yatraService.getNomineeRelationship().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
-        control.options = res.nomineeRelationShip;
+        control.options = res.data;
       },
       error: (err) => {
         console.error(err);
@@ -1006,7 +1011,7 @@ export class YatraComponent {
       // else{
 
       this.yatraService.getAllBankDetails().subscribe({
-        next: (res:any) => {
+        next: (res: any) => {
           control.options = res.data;
         },
         error: (err) => {
@@ -1023,11 +1028,11 @@ export class YatraComponent {
     const data = JSON.parse(event.target.value);
     this.bankCode = data.id;
     const reqData = {
-      "cityCode":"",
+      "cityCode": "",
       "bankCode": this.bankCode
     };
     this.yatraService.getBankCity(reqData).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         otherControl.options = [...res.data]; // Create a new array to trigger change detection
       },
@@ -1042,10 +1047,10 @@ export class YatraComponent {
     otherControl.options = []; // Reset options to an empty array
 
     const data = JSON.parse(event.target.value);
-    console.log(event.target.value,data,data.id);
+    console.log(event.target.value, data, data.id);
     this.bankCity = data.id as string;
     console.log(this.bankCity);
-    
+
     const reqData = {
       "bankCode": this.bankCode,
       "cityCode": this.bankCity
@@ -1053,7 +1058,7 @@ export class YatraComponent {
 
     console.log(reqData);
     this.yatraService.getBranchDetails(reqData).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         otherControl.options = [...res.data]; // Create a new array to trigger change detection
       },
@@ -1086,7 +1091,7 @@ export class YatraComponent {
   getAllRelationship(control: any) {
     this.spinner.show();
     this.yatraService.getRelationship().subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         control.selectCheckboxOptions.forEach((element: any) => {
           const index = res.RelationShip.findIndex((relation: any) => relation.value === element.label);
@@ -1234,20 +1239,20 @@ export class YatraComponent {
         "pincode": event.target.value
       }
       console.log(event.target.value.length, reqData);
-      this.commonService.getPinCodeByCity(reqData).subscribe({
-        next: (res:any) => {
-          console.log(res)
-          this.dynamicFormGroup.get('city')?.setValue(res.data.city);
-          this.dynamicFormGroup.get('state')?.setValue(res.data.state);
-          this.dynamicFormGroup.get('zone')?.setValue(res.data.zone);
-        },
-        error: (err:any) => {
-          console.error(err)
-          this.dynamicFormGroup.get('city')?.setValue('');
-          this.dynamicFormGroup.get('state')?.setValue('');
-          this.dynamicFormGroup.get('zone')?.setValue('');
-        }
-      });
+      // this.commonService.getPinCodeByCity(reqData).subscribe({
+      //   next: (res: any) => {
+      //     console.log(res)
+      //     this.dynamicFormGroup.get('city')?.setValue(res.data.city);
+      //     this.dynamicFormGroup.get('state')?.setValue(res.data.state);
+      //     this.dynamicFormGroup.get('zone')?.setValue(res.data.zone);
+      //   },
+      //   error: (err: any) => {
+      //     console.error(err)
+      //     this.dynamicFormGroup.get('city')?.setValue('');
+      //     this.dynamicFormGroup.get('state')?.setValue('');
+      //     this.dynamicFormGroup.get('zone')?.setValue('');
+      //   }
+      // });
     }
     else if (parentControl != null && parentControl.dynamicControls) {
 
@@ -1257,50 +1262,50 @@ export class YatraComponent {
             const reqdata = {
               "pincode": event.target.value
             }
-            this.spinner.show();
-            this.commonService.getPinCodeByCity(reqdata).subscribe({
-              next: (res:any) => {
-                console.log(res)
+            // this.spinner.show();
+            // this.commonService.getPinCodeByCity(reqdata).subscribe({
+            //   next: (res: any) => {
+            //     console.log(res)
 
-                const patchObject: { [key: string]: any } = {};
+            //     const patchObject: { [key: string]: any } = {};
 
-                patchObject['city' as string] = res.data.city;
-                patchObject['zone' as string] = res.data.zone;
-                patchObject['zoneValue' as string] = res.data.zoneCode;
-                patchObject['state' as string] = res.data.state;
+            //     patchObject['city' as string] = res.data.city;
+            //     patchObject['zone' as string] = res.data.zone;
+            //     patchObject['zoneValue' as string] = res.data.zoneCode;
+            //     patchObject['state' as string] = res.data.state;
 
-                let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
+            //     let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
 
-                for (let i = 0; i < formArray.length; i++) {
-                  if (i == index)
-                    formArray[i] = { ...formArray[i], ...patchObject }
-                }
-
-
-                this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
-                this.spinner.hide();
-              },
-              error: (err:any) => {
-                console.error(err);
-                const patchObject: { [key: string]: any } = {};
-
-                patchObject['city' as string] = '';
-                patchObject['zone' as string] = '';
-                patchObject['zoneValue' as string] = '';
-                patchObject['state' as string] = '';
-
-                let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
-
-                for (let i = 0; i < formArray.length; i++) {
-                  if (i == index)
-                    formArray[i] = { ...formArray[i], ...patchObject }
-                }
+            //     for (let i = 0; i < formArray.length; i++) {
+            //       if (i == index)
+            //         formArray[i] = { ...formArray[i], ...patchObject }
+            //     }
 
 
-                this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
-                this.spinner.hide();
-              }
-            });
+            //     this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
+            //     this.spinner.hide();
+            //   },
+            //   error: (err: any) => {
+            //     console.error(err);
+            //     const patchObject: { [key: string]: any } = {};
+
+            //     patchObject['city' as string] = '';
+            //     patchObject['zone' as string] = '';
+            //     patchObject['zoneValue' as string] = '';
+            //     patchObject['state' as string] = '';
+
+            //     let formArray: any = this.dynamicFormGroup.get(parentControl.name)?.value;
+
+            //     for (let i = 0; i < formArray.length; i++) {
+            //       if (i == index)
+            //         formArray[i] = { ...formArray[i], ...patchObject }
+            //     }
+
+
+            //     this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
+            //     this.spinner.hide();
+            //   }
+            // });
           }
         });
       });
@@ -1636,7 +1641,7 @@ export class YatraComponent {
     });
   }
 
-    // getProposerRelationship(control: IFormControl): Promise<any> {
+  // getProposerRelationship(control: IFormControl): Promise<any> {
   //   // Showing the spinner before making the API call
   //   this.spinner.show();
 
@@ -1740,7 +1745,7 @@ export class YatraComponent {
 
       // API call wrapped in pipe
       this.yatraService.GetProposerRelationships(reqData).pipe(
-        tap((res:any) => {
+        tap((res: any) => {
           console.log(res, "API Response Received");
 
           // Prepare form group
@@ -1950,7 +1955,7 @@ export class YatraComponent {
             tempControl[0].value = JSON.stringify(option);
             formControl.dynamicControls?.push(tempControl);
             console.log(this.formData);
-            
+
             let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
             // let formArr;
 
@@ -1999,6 +2004,7 @@ export class YatraComponent {
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
@@ -2106,26 +2112,30 @@ export class YatraComponent {
   }
   onButtonClick(control: any) {
     this.selectedButton = control.name;
-    if(control.dependentControls){
-      this.form.formSections.forEach((section:any)=>{
-        section.formControls.forEach((controls:any)=>{
-            control.dependentControls.forEach((item:any) => {
-            if(controls.name == item){
+    console.log(this.selectedButton);
+
+    if (control.dependentControls) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          control.dependentControls.forEach((item: any) => {
+            if (controls.name == item) {
               controls.visible = true;
             }
           })
         })
       })
     }
-    else{
-      let list:any=[];
-      this.form.formSections.forEach((section:any)=>{
-        section.formControls.forEach((controls:any)=>{
-          if(controls.dependentControls){
+    else {
+      let list: any = [];
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          console.log(controls);
+
+          if (controls.dependentControls) {
             list = controls.dependentControls;
           }
-          list.forEach((item:any) => {
-            if(controls.name == item){
+          list.forEach((item: any) => {
+            if (controls.name == item) {
               controls.visible = false;
             }
           })
@@ -2133,6 +2143,63 @@ export class YatraComponent {
       })
     }
   }
+
+  onEmailClick(control: any) {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((controls: any) => {
+        if (controls.dependentControls) {
+          controls.dependentControls.forEach((item: any) => {
+            const controlToHide = section.formControls.find((c: any) => c.name === item);
+            if (controlToHide) {
+              controlToHide.visible = false; // Hide all dependent controls initially
+            }
+          });
+        }
+      });
+    });
+
+    // Show the dependent controls for the currently clicked button
+    if (control.dependentControls) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          control.dependentControls.forEach((item: any) => {
+            if (controls.name === item) {
+              controls.visible = true; // Show the dependent controls for this button
+            }
+          });
+        });
+      });
+    }
+  }
+
+  onOtpClick(control: any) {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((controls: any) => {
+        if (controls.dependentControls) {
+          controls.dependentControls.forEach((item: any) => {
+            const controlToHide = section.formControls.find((c: any) => c.name === item);
+            if (controlToHide) {
+              controlToHide.visible = false; // Hide all dependent controls initially
+            }
+          });
+        }
+      });
+    });
+
+    // Show the dependent controls for the currently clicked button
+    if (control.dependentControls) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          control.dependentControls.forEach((item: any) => {
+            if (controls.name === item) {
+              controls.visible = true; // Show the dependent controls for this button
+            }
+          });
+        });
+      });
+    }
+  }
+
   // In your template, you can bind the class dynamically
   getButtonClass(control: any): string {
     return this.selectedButton === control.name ? 'active-button' : '';
@@ -2153,16 +2220,32 @@ export class YatraComponent {
         if (this.dynamicFormGroup.get('insuredMemberDetails')) {
           this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('insuredMemberDetails')?.value.length);
           this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((element: any, index: any) => {
-            element.memberIndex = index;
+            element.memberIndex = index+1;
           });
+          this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((member:any,index:any)=>{
+            if(member.relation == 'Self' && ( this.dynamicFormGroup.get('memberDobProposer') || this.dynamicFormGroup.get('memberAgeProposer') || this.dynamicFormGroup.get('proposerGender')
+            || this.dynamicFormGroup.get('emailId') || this.dynamicFormGroup.get('firstName') || this.dynamicFormGroup.get('middleName') || this.dynamicFormGroup.get('lastName') || this.dynamicFormGroup.get('preFix'))){
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+            }
+          })
         }
+        console.log(this.dynamicFormGroup.value);
+        
         this.flattenObjectInsert(this.dynamicFormGroup.value);
         this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
         console.log(this.formData);
 
 
         this.allJsonForm[this.getFormIndexValue()] = this.form;
-        
+
         if (this.form.saveBtnFunction) {
           await this.resolveMethod(this.form.saveBtnFunction);
         }
@@ -2207,14 +2290,16 @@ export class YatraComponent {
           "productId": this.productId,
           "formId": this.formSequence[this.getFormIndexValue()].formId,
           "jsonForm": JSON.stringify(this.form),
-          "formSequence": this.getFormIndexValue()
+          "formSequence": this.getFormIndexValue(),
+          "leadNumber": this.leadnumber,
+          "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
         };
 
         this.yatraService.Insertorupdateformdata(reqData).subscribe({
-          next: (res) => {
+          next: (res: any) => {
             // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
             console.log(res);
-
+            this.leadnumber = res.data;
           },
           error: (err) => {
             console.error(err);
@@ -2404,9 +2489,10 @@ export class YatraComponent {
 
   async getPremiumAmount() {
     this.spinner.show();
-    console.log(this.tenureAmount, this.formData.insuredMemberDetails);
+    console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
 
     if (this.isQuote == false) {
+      this.spinner.show();
       if (Object.keys(this.formData).length > 0) {
         // const modifiedInsuredMemberDetails = JSON.parse(JSON.stringify(this.formData));
         this.formData.insuredMemberDetails.forEach((member: any) => {
@@ -2470,15 +2556,21 @@ export class YatraComponent {
 
         this.commonService.GetSingleProductQuote(reqData).pipe(
           tap((res: any) => {
+            this.spinner.hide();
             // Update tenureAmount and discountList after receiving the response
             for (let i = 1; i <= 3; i++) {
               const premiumKey = `tenure${i}Premium`;
               const discountKey = `t${i}DiscountPercentage`;
+              const Quote = `tenure${i}QuoteNumber`
+              this.QuoteNumber.push(res.data[Quote]);
               console.log(res.data[premiumKey], res.data[discountKey]);
 
               this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
               this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
             }
+            this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+            // this.formData.tenure = this.selectedIndex;
+            sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
           })
         ).subscribe({
           next: () => {
@@ -2817,177 +2909,231 @@ export class YatraComponent {
 
   }
 
-  async halfQuotation() {
-    this.spinner.show();
+  // async halfQuotation() {
+  //   this.spinner.show();
 
-    let reqData = JSON.parse(JSON.stringify(this.formData));
+  //   let reqData = JSON.parse(JSON.stringify(this.formData));
 
-    Object.keys(reqData).forEach(key => {
-      const value = reqData[key];
+  //   Object.keys(reqData).forEach(key => {
+  //     const value = reqData[key];
 
-      if (Array.isArray(value)) {
-        value.forEach((element: any) => {
+  //     if (Array.isArray(value)) {
+  //       value.forEach((element: any) => {
 
-          Object.keys(element).forEach((key: any) => {
-            const value = element[key];
-            if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
-              try {
-                const parsedValue = JSON.parse(value);
-                element[key] = parsedValue.value;
-                element[key + 'Code'] = parsedValue.id;
-              } catch (error) {
-                console.error(`Error parsing JSON for key '${key}':`, error);
-              }
-            }
-          });
+  //         Object.keys(element).forEach((key: any) => {
+  //           const value = element[key];
+  //           if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
+  //             try {
+  //               const parsedValue = JSON.parse(value);
+  //               element[key] = parsedValue.value;
+  //               element[key + 'Code'] = parsedValue.id;
+  //             } catch (error) {
+  //               console.error(`Error parsing JSON for key '${key}':`, error);
+  //             }
+  //           }
+  //         });
 
-        });
-      }
-      // Check if the value is a string and starts with "{" and ends with "}"
-      else if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
-        try {
-          // Attempt to parse the stringified JSON value
-          const parsedValue = JSON.parse(value);
+  //       });
+  //     }
+  //     // Check if the value is a string and starts with "{" and ends with "}"
+  //     else if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
+  //       try {
+  //         // Attempt to parse the stringified JSON value
+  //         const parsedValue = JSON.parse(value);
 
-          reqData = { ...reqData, [key]: parsedValue.value };
-          reqData = { ...reqData, [key + 'Code']: parsedValue.id };
-        } catch (error) {
-          console.error(`Error parsing JSON for key '${key}':`, error);
-        }
-      }
-    });
+  //         reqData = { ...reqData, [key]: parsedValue.value };
+  //         reqData = { ...reqData, [key + 'Code']: parsedValue.id };
+  //       } catch (error) {
+  //         console.error(`Error parsing JSON for key '${key}':`, error);
+  //       }
+  //     }
+  //   });
 
-    reqData.insuredMemberDetails.forEach((element: any) => {
+  //   reqData.insuredMemberDetails.forEach((element: any) => {
 
-      element['memberNo'] = element['memberIndex'] + 1;
-      element['productComponents'] = [
-        {
-          "productComponentName": "SumInsured",
-          "productComponentValue": element['sumInsured']
-        },
-        {
-          "productComponentName": "Zone",
-          "productComponentValue": element['zoneValue']
-        }
-      ];
-      element['optionalCovers'] = this.addOnDetails[element['memberIndex']];
-    });
-    this.spinner.show();
-    reqData['selectedIndex'] = 1;
-    reqData['quoteDate'] = new Date().toISOString().split('T')[0];
-    reqData['preIssuanceDate'] = new Date().toISOString().split('T')[0];
-    reqData['customerSignatureDate'] = new Date().toISOString().split('T')[0];
-    reqData['agentSignatureDate'] = new Date().toISOString().split('T')[0];
-    reqData['leadId'] = this.leadId;
-    reqData['pinCode'] = reqData.insuredMemberDetails[0].pincode;
-    reqData['preIssuranceTime'] = new Date().toISOString().split('T')[1].split('.')[0];
-    this.mainData = reqData
-    var reqData1 = {
-      code: this.Code,
-      insuranceTypeCode: this.insurancetypecode,
-      productId: this.productid,
-      configuration_Json: JSON.stringify(reqData),
-      halfQuote: true,
-      productType: reqData.productType
-    };
+  //     element['memberNo'] = element['memberIndex'] + 1;
+  //     element['productComponents'] = [
+  //       {
+  //         "productComponentName": "SumInsured",
+  //         "productComponentValue": element['sumInsured']
+  //       },
+  //       {
+  //         "productComponentName": "Zone",
+  //         "productComponentValue": element['zoneValue']
+  //       }
+  //     ];
+  //     element['optionalCovers'] = this.addOnDetails[element['memberIndex']];
+  //   });
+  //   this.spinner.show();
+  //   reqData['selectedIndex'] = 1;
+  //   reqData['quoteDate'] = new Date().toISOString().split('T')[0];
+  //   reqData['preIssuanceDate'] = new Date().toISOString().split('T')[0];
+  //   reqData['customerSignatureDate'] = new Date().toISOString().split('T')[0];
+  //   reqData['agentSignatureDate'] = new Date().toISOString().split('T')[0];
+  //   reqData['leadId'] = this.leadId;
+  //   reqData['pinCode'] = reqData.insuredMemberDetails[0].pincode;
+  //   reqData['preIssuranceTime'] = new Date().toISOString().split('T')[1].split('.')[0];
+  //   this.mainData = reqData
+  //   var reqData1 = {
+  //     code: this.Code,
+  //     insuranceTypeCode: this.insurancetypecode,
+  //     productId: this.productid,
+  //     configuration_Json: JSON.stringify(reqData),
+  //     halfQuote: true,
+  //     productType: reqData.productType
+  //   };
 
-    this.spinner.show();
+  //   this.spinner.show();
 
-    console.log(reqData1);
+  //   console.log(reqData1);
 
-    try {
-      const res = await new Promise((resolve, reject) => {
-        this.yatraService.getHalfQuote(reqData1).subscribe({
-          next: (res) => {
-            resolve(res);
-          },
-          error: (err) => {
-            reject(err);
-          }
-        });
-      });
+  //   try {
+  //     const res = await new Promise((resolve, reject) => {
+  //       this.yatraService.getHalfQuote(reqData1).subscribe({
+  //         next: (res) => {
+  //           resolve(res);
+  //         },
+  //         error: (err) => {
+  //           reject(err);
+  //         }
+  //       });
+  //     });
 
-      const response = res as any;
-      console.log(response);
+  //     const response = res as any;
+  //     console.log(response);
 
-      Object.keys(response).forEach(key => {
+  //     Object.keys(response).forEach(key => {
 
-        if (key === 'ns0:SuperHealthTopUpRes') {
-          this.quoteNo = response[key].quoteNumber
-        }
-        else {
-          this.quoteNo = response[key].PolCreationRespons.quoteNumber
-        }
+  //       if (key === 'ns0:SuperHealthTopUpRes') {
+  //         this.quoteNo = response[key].quoteNumber
+  //       }
+  //       else {
+  //         this.quoteNo = response[key].PolCreationRespons.quoteNumber
+  //       }
 
-      });
+  //     });
 
-      this.toast.success({ detail: "SUCCESS", summary: `Half Quotation Generated Successfully.${this.quoteNo}`, duration: 3000 });
-      sessionStorage.setItem("mainData", this.encryptionService.encrypt(JSON.stringify(this.mainData)));
-      this.spinner.hide();
-    } catch (err) {
-      console.error(err);
-      this.spinner.hide();
-    }
-  }
+  //     this.toast.success({ detail: "SUCCESS", summary: `Half Quotation Generated Successfully.${this.quoteNo}`, duration: 3000 });
+  //     sessionStorage.setItem("mainData", this.encryptionService.encrypt(JSON.stringify(this.mainData)));
+  //     this.spinner.hide();
+  //   } catch (err) {
+  //     console.error(err);
+  //     this.spinner.hide();
+  //   }
+  // }
 
   async fullQuotation() {
     this.spinner.show();
-    this.mainData = { ...this.mainData, ...this.dynamicFormGroup.value };
-    this.mainData['quotationNumber'] = 'QSP' + this.quoteNo;
-    this.mainData['KYC_Transition_Id'] = 'SP' + new Date().getTime();
-    this.mainData['collectionRcvdDate'] = new Date().toISOString().split('T')[0];
+    console.log(this.formData);
+    const data = await this.mappedFormData(this.formData);
+    console.log(data);
+    
+
     var reqData: any = {
-      code: this.Code,
-      insuranceTypeCode: this.insurancetypecode,
-      productId: this.productid,
-      configuration_Json: JSON.stringify(this.mainData),
-      fullQuote: true,
-      productType: this.mainData.productType
-    };
-
-    try {
-      const res: any = await new Promise((resolve, reject) => {
-        this.yatraService.getFullQuote(reqData).subscribe({
-          next: (res) => {
-            resolve(res);
-          },
-          error: (err) => {
-            reject(err);
-          }
-        });
-      });
-
-      const response = res as any;
-
-      Object.keys(response).forEach(key => {
-        if (key === 'ns0:SuperHealthTopUpRes') {
-          this.quoteNo = response[key].quoteNumber;
-          this.customerId = response[key].customerId;
-          this.dynamicFormGroup.addControl('customerId', this.fb.control(response[key].customerId));
-          this.dynamicFormGroup.addControl('receiptNumber', this.fb.control(response[key].ReceiptCreationResponse.ReceiptNumber));
-          this.dynamicFormGroup.addControl('quotationNumber', this.fb.control(response[key].quoteNumber));
-        }
-        else {
-          this.quoteNo = response[key].PolCreationRespons.quoteNumber
-          this.customerId = res[key].PolCreationRespons.customerId;
-          this.dynamicFormGroup.addControl('customerId', this.fb.control(res[key].PolCreationRespons.customerId));
-          this.dynamicFormGroup.addControl('receiptNumber', this.fb.control(res[key].ReceiptCreationResponse.ReceiptNumber));
-          this.dynamicFormGroup.addControl('quotationNumber', this.fb.control(res[key].PolCreationRespons.quoteNumber));
-        }
-      });
-      this.dynamicFormGroup.get('totalPremium')?.setValue(this.formData.totalPremium);
-
-      this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
-      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-      this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
-      this.spinner.hide();
-
-    } catch (err) {
-      console.error(err);
-      this.spinner.hide();
+      agentCode: this.agentCode,
+      productId: this.productId,
+      productType: 'AO',
+      fullQuoteRequestJson: JSON.stringify(data)
     }
 
+    setTimeout(() => {
+      console.log('Spinner hidden after timeout.');
+      this.yatraService.getFullQuote(reqData).subscribe({
+        next: (response:any) => {
+          console.log(response);
+          if (response?.data && response.data['ns0:ActiveHealthRes']) {
+            const healthRes = response.data['ns0:ActiveHealthRes'];
+            const polCreationResponse = healthRes.PolCreationRespons;
+            const receiptResponse = healthRes.ReceiptCreationResponse;
+      
+            this.quoteNo = polCreationResponse.quoteNumber;
+            this.customerId = polCreationResponse.customerId;
+            console.log(healthRes,polCreationResponse,receiptResponse.ReceiptNumber,this.quoteNo,this.customerId);
+            console.log(this.dynamicFormGroup);
+            
+      
+            // Setting the form values using FormGroup's setValue() method
+            this.dynamicFormGroup.get('customerId')?.setValue(polCreationResponse.customerId);
+            this.dynamicFormGroup.get('quoteValidFromDate')?.setValue(polCreationResponse.quoteValidFromDate);
+            this.dynamicFormGroup.get('quoteValidToDate')?.setValue(polCreationResponse.quoteValidToDate);
+            this.dynamicFormGroup.get('policyStatus')?.setValue(polCreationResponse.policyStatus);
+            this.dynamicFormGroup.get('ReceiptNumber')?.setValue(receiptResponse.ReceiptNumber);
+            console.log(this.dynamicFormGroup.value);   
+          } else {
+            console.error("No valid data in response", response);
+          }
+  
+        this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+        sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+        this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
+        this.spinner.hide();
+        },
+        error: (err) => {
+          this.spinner.hide();
+          console.error(err);
+        }
+      });
+    }, 1100);
+    
+
+    // this.spinner.show();
+    // this.mainData = { ...this.mainData, ...this.dynamicFormGroup.value };
+    // this.mainData['quotationNumber'] = 'QSP' + this.quoteNo;
+    // this.mainData['KYC_Transition_Id'] = 'SP' + new Date().getTime();
+    // this.mainData['collectionRcvdDate'] = new Date().toISOString().split('T')[0];
+    // var reqData: any = {
+    //   code: this.Code,
+    //   insuranceTypeCode: this.insurancetypecode,
+    //   productId: this.productid,
+    //   configuration_Json: JSON.stringify(this.mainData),
+    //   fullQuote: true,
+    //   productType: this.mainData.productType
+    // };
+
+    // try {
+    //   const res: any = await new Promise((resolve, reject) => {
+    //     this.yatraService.getFullQuote(reqData).subscribe({
+    //       next: (res) => {
+    //         resolve(res);
+    //       },
+    //       error: (err) => {
+    //         reject(err);
+    //       }
+    //     });
+    //   });
+
+    //   const response = res as any;
+
+    //   Object.keys(response).forEach(key => {
+    //     if (key === 'ns0:SuperHealthTopUpRes') {
+    //       this.quoteNo = response[key].quoteNumber;
+    //       this.customerId = response[key].customerId;
+    //       this.dynamicFormGroup.addControl('customerId', this.fb.control(response[key].customerId));
+    //       this.dynamicFormGroup.addControl('receiptNumber', this.fb.control(response[key].ReceiptCreationResponse.ReceiptNumber));
+    //       this.dynamicFormGroup.addControl('quotationNumber', this.fb.control(response[key].quoteNumber));
+    //     }
+    //     else {
+    //       this.quoteNo = response[key].PolCreationRespons.quoteNumber
+    //       this.customerId = res[key].PolCreationRespons.customerId;
+    //       this.dynamicFormGroup.addControl('customerId', this.fb.control(res[key].PolCreationRespons.customerId));
+    //       this.dynamicFormGroup.addControl('receiptNumber', this.fb.control(res[key].ReceiptCreationResponse.ReceiptNumber));
+    //       this.dynamicFormGroup.addControl('quotationNumber', this.fb.control(res[key].PolCreationRespons.quoteNumber));
+    //     }
+    //   });
+    //   this.dynamicFormGroup.get('totalPremium')?.setValue(this.formData.totalPremium);
+
+    //   this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+    //   sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+    //   this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
+    //   this.spinner.hide();
+
+    // } catch (err) {
+    //   console.error(err);
+    //   this.spinner.hide();
+    // }
+
   }
+
 
   /* AddOn Related Method */
 
@@ -3085,7 +3231,7 @@ export class YatraComponent {
         modifiedInsuredMemberDetails.forEach((member: any) => {
           // Find the matching member by relation (e.g., Self, Spouse, etc.)
           if (member.relation == key) {
-            let addOnSumInsured :any = 0;
+            let addOnSumInsured: any = 0;
             const coverId = addOnData.addOnId;
             const coverName = addOnData.additionalCoverName;
             let coverFound = false;
@@ -3098,10 +3244,10 @@ export class YatraComponent {
               if (addOnDetail.addOnSumInsured) {
                 addOnSumInsured = addOnDetail.addOnSumInsured;
               }
-              if(addOnData.addOnId == 'PA' && addOnDetail.occupation){
+              if (addOnData.addOnId == 'PA' && addOnDetail.occupation) {
                 member['occupationCode'] = JSON.parse(addOnDetail.occupation).value;
               }
-              if(addOnData.addOnId == 'PA' && addOnDetail.occupationRisk){
+              if (addOnData.addOnId == 'PA' && addOnDetail.occupationRisk) {
                 member['natureOfDutyCode'] = JSON.parse(addOnDetail.occupationRisk).value;
               }
             });
@@ -3369,16 +3515,16 @@ export class YatraComponent {
         const reqdata = {
           "pincode": this.dynamicFormGroup.get('proposerPincode')?.value
         }
-        this.commonService.getPinCodeByCity(reqdata).subscribe({
-          next: (res) => {
-            console.log(res)
-            this.dynamicFormGroup.get('proposerCity')?.setValue(res.strcity);
-            this.dynamicFormGroup.get('proposerState')?.setValue(res.strstate);
-          },
-          error: (err) => {
-            console.error(err)
-          }
-        });
+        // this.commonService.getPinCodeByCity(reqdata).subscribe({
+        //   next: (res) => {
+        //     console.log(res)
+        //     this.dynamicFormGroup.get('proposerCity')?.setValue(res.strcity);
+        //     this.dynamicFormGroup.get('proposerState')?.setValue(res.strstate);
+        //   },
+        //   error: (err) => {
+        //     console.error(err)
+        //   }
+        // });
 
       }
     }
@@ -3422,8 +3568,8 @@ export class YatraComponent {
     this.router.navigate(['products']);
   }
 
-  setPremiumAmount() {
-    console.log(this.displayTaxList, this.selectedIndex);
+  setPremiumAmount(control?: any) {
+    console.log(this.displayTaxList, this.selectedIndex, this.formData);
     this.tenureAmount.forEach(member => {
       console.log(member);
 
@@ -3444,6 +3590,7 @@ export class YatraComponent {
                 if (this.selectedIndex == index) {
                   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   this.selectedIndex = index;
+                  this.formData.tenure = this.selectedIndex;
                 }
                 console.log(this.selectedIndex);
               } else if (index === 1) {
@@ -3455,6 +3602,7 @@ export class YatraComponent {
                 if (this.selectedIndex == index) {
                   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   this.selectedIndex = index;
+                  this.formData.tenure = this.selectedIndex;
                 }
               } else if (index === 2) {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
@@ -3465,6 +3613,7 @@ export class YatraComponent {
                 if (this.selectedIndex == index || this.selectedIndex == -1) {
                   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   this.selectedIndex = index;
+                  this.formData.tenure = this.selectedIndex;
                 }
               }
             });
@@ -3689,28 +3838,76 @@ export class YatraComponent {
 
   verifyKYC() {
     const proposerDOB = this.dynamicFormGroup.get('memberDobProposer')?.value;
-    const panNumber = this.dynamicFormGroup.get('panNo')?.value; 
-  
+    const panNumber = this.dynamicFormGroup.get('panNo')?.value;
+
+    const dobDate = new Date(proposerDOB);
+    const formattedDOB = dobDate.getFullYear() + '-' +
+      String(dobDate.getMonth() + 1).padStart(2, '0') + '-' +
+      String(dobDate.getDate()).padStart(2, '0');
+
     const reqData = {
-      dateOfBirth: proposerDOB,
+      dateOfBirth: formattedDOB,
       panNumber: panNumber
     };
     console.log(reqData);
 
     this.spinner.show();
-  
+
     this.yatraService.GetKycDetails(reqData).subscribe({
-      next: (response:any) => {
+      next: (response: any) => {
         console.log('KYC details:', response);
-        this.toast.success({detail:"SUCCESS", summary:"KYC Details Fetched Successfully", duration:3000});
+        this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
         this.spinner.hide();
         if (typeof response.data === 'object' && response.data !== null) {
-          Object.keys(response.data).forEach((key:any)=>{
-              this.dynamicFormGroup.get(key)?.setValue(response.data[key])
-          })
+          Object.keys(response.data).forEach((key: any) => {
+            this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+            const insuredMemberDetailsControl = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+
+            if (insuredMemberDetailsControl) {
+              insuredMemberDetailsControl.controls.forEach((control: any) => {
+                if (control.get('relation')?.value === 'Self') {
+                  // Set the value for the matching 'self' relation
+                  control.get(key)?.setValue(response.data[key]);
+                }
+              });
+            }
+            console.log(this.dynamicFormGroup.value);
+            // this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+            // if (key === 'preFix') {
+            //   const prefixFromKYC = response.data[key].toLowerCase();
+
+            //   // Find the matching option from the JSON (ignoring case)
+            //   const matchingPrefix = this.form.formSections
+            //     .flatMap((section: any) => section.formControls)
+            //     .find((control: any) => control.name === 'preFix')
+            //     .options.find((option: any) => option.value.toLowerCase() === prefixFromKYC);
+
+            //   if (matchingPrefix) {
+            //     this.dynamicFormGroup.get('preFix')?.setValue(matchingPrefix.value);
+            //     this.dynamicFormGroup.get(key)?.disable(); // Set the matching value in the form control
+            //   }
+            // } else {
+            //   // For other fields, just set the value as before
+            //   const formControl = this.dynamicFormGroup.get(key);
+            //   if (formControl) {
+            //     formControl.setValue(response.data[key]);
+            //     formControl.disable(); // Disable the form control
+            //   }
+
+            //   this.form.formSections.forEach((section: any) => {
+            //     section.formControls.forEach((control: any) => {
+            //       if (control.name === key) {
+            //         control.disabled = true; // Disable the field in the JSON structure
+            //         control.value = response.data[key]; // Update the value in the JSON as well
+            //       }
+            //     });
+            //   });
+            // }
+          });
         } else {
           console.error('Expected response.data to be an object, but received:', response.data);
         }
+        // this.dynamicFormGroup.get('ckycNo')?.setValue(response.data.ckycNo);
       },
       error: (error) => {
         this.spinner.hide();
@@ -3720,7 +3917,7 @@ export class YatraComponent {
     });
   }
 
-  getPolicyDetails(control: IFormControl) {
+  getPolicyDetails() {
     const policyNumberDetails = this.dynamicFormGroup.get('policyNumber')?.value;
     const reqData = {
       policyNumber: policyNumberDetails
@@ -3786,11 +3983,11 @@ export class YatraComponent {
     console.log(subControl, control, this.dynamicFormGroup);
   }
   addNewDisease(subControl: any, control: any) {
-    console.log(subControl,control);
-    if(subControl.innerArrayControl.length < 2){
+    console.log(subControl, control);
+    if (subControl.innerArrayControl.length < 2) {
       const innerarrayControl = subControl.innerArrayControl[0]
       const firstKey = innerarrayControl.shift();  // This is the checkbox object
-      console.log(innerarrayControl,firstKey);
+      console.log(innerarrayControl, firstKey);
       // Step 2: Group the checkbox with the rest of the controls in a new array
       const groupedControls = [
         [firstKey, ...innerarrayControl],  // First group with checkbox
@@ -3798,33 +3995,144 @@ export class YatraComponent {
       ];
       subControl.innerArrayControl = groupedControls;
     }
-    else{
+    else {
       subControl.innerArrayControl.push(subControl.innerArrayControl[1]);
     }
 
-    
+
     const controlNames = Object.keys((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls || {});
     const abc = controlNames.find(name => name === subControl.name);
-    
+
     if (abc) {  // Check if abc is not undefined
-      console.log(abc);    
+      console.log(abc);
       console.log(abc, (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[abc]);
       const formArr = (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[abc] as FormArray;
       formArr.push(this.initializeDynamicFormControls(subControl.innerArrayControl[0], subControl.innerArrayControl.length - 1));
-  }
+    }
     console.log(this.dynamicFormGroup, this.dynamicFormGroup.get(control.name) as FormGroup);
     console.log(this.form);
   }
-  removeDisease(subControl: any, control: any){
-    console.log(subControl,control);
-    if(subControl.innerArrayControl.length > 1){
-      subControl.innerArrayControl.pop();    }
+  removeDisease(subControl: any, control: any) {
+    console.log(subControl, control);
+    if (subControl.innerArrayControl.length > 1) {
+      subControl.innerArrayControl.pop();
+    }
   }
-  copyText(control:any) {
+  copyText(control: any) {
     console.log(control);
     this.clipboard.copy(control);
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
-  } 
-  
+  }
+
+
+  async mappedFormData(formData: any): Promise<Partial<Root>> {
+    const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
+    const mappedData: Partial<Root> = {
+      agentCode: this.agentCode || '',
+      productName: formData?.productName || '',
+      productCode: formData?.productId || '',
+      planCode: formData?.planCode || '',
+      policyType: formData?.memberPolicyType || '',
+      businessType: formData?.typeOfBusiness || '',
+      insuredMemberDetails: formData?.insuredMemberDetails?.map((member: any, index: any) => {
+        return {
+          relation: member?.relation || '',
+          memberrelationCode: this.jsonParse(member.relationshipType, 'id') || '',
+          memberSalutation: formData[`insuredMemberDetails.${index}.preFix`] || '',
+          firstName: member?.firstName || '',
+          middleName: member?.middleName || '',
+          lastName: member?.lastName || '',
+          height: member?.height || '',
+          heightInInches: formData[`insuredMemberDetails.${index}.heightInches`] || '',
+          weight: member?.weight || '',
+          memberdob: member?.memberdob || '',
+          emailId: member?.emailId || '',
+          mobileNumber: member?.mobileNumber || '',
+          memberNationality: this.jsonParse(formData.nationality, 'name') || '',
+          relationshipType: member.relation || '',
+          memberAge: member?.memberAge || '',
+          memberGender: member?.memberGender || '',
+          memberPincode: member?.pincode || '',
+          preExistingDisease: member?.preExistingDisease || '',
+          memberIndex: formData[`insuredMemberDetails.${index}.memberIndex`],
+          zone: member?.zone || '',
+          state: member?.state || '',
+          city: member?.city || '',
+          memberType: member?.memberType || '',
+          memberSumInsured: formData[`insuredMemberDetails.${index}.sumInsured`] || '',
+          memberZone: member?.zoneValue || '',
+          memberNatureOfDuty: formData[`insuredMemberDetails.${index}.productMemberNatureWork`] || '',
+          memberDesignation: formData[`insuredMemberDetails.${index}.productMemberDesignation`] || '',
+          memberOccupation: formData[`insuredMemberDetails.${index}.productMemberOccupation`] || '',
+          covers: member?.covers || [],
+          memberRoomCategory: ''
+        };
+      }) || [],
+      CKYCNo: formData?.ckycNo || '',
+      QuoteId: formData?.quoteId || '',
+      LeadId: formData?.leadNumber || '',
+      proposerSalutation: formData?.preFix || '',
+      proposerFirstName: formData?.firstName || '',
+      proposerMiddleName: formData?.middleName || '',
+      proposerLastName: formData?.lastName || '',
+      proposerDob: formData?.memberDobProposer || '',
+      proposerAge: formData?.memberAgeProposer || '',
+      proposerGender: formData?.proposerGender || '',
+      proposerMobileNumber: formData?.mobileNumber || '',
+      proposerWhatsAppNo: formData?.whatsappNo || formData?.mobileNumber,
+      proposerAddress1: formData?.proposerAddress1 || '',
+      proposerAddress2: formData?.proposerAddress2 || '',
+      proposerCity: formData?.city || '',
+      proposerState: formData?.state || '',
+      proposerEmailId: formData?.emailId || '',
+      proposerPincode: formData?.proposerPincode || '',
+      idProof: this.jsonParse(formData?.idProof, 'value') || '',
+      idNo: formData?.idNo || '',
+      proposerAnnualIncome: formData?.annualIncome || '',
+      proposerOccupation: this.jsonParse(formData?.occupation, 'value') || '',
+      proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
+      proposerPANNo: formData?.panNo || '',
+      gstDetails: formData?.gstDetails || '',
+      proposerMaritalStatus: this.jsonParse(formData?.maritalStatus, 'value') || '',
+      ifPEP: formData?.isPep || '',
+      proposerNationality: this.jsonParse(formData.nationality, 'name') || '',
+      nomineeFirstName: formData?.nomineeFirstName || '',
+      nomineeMidleName: formData?.nomineeMiddleName || '',
+      nomineeLastName: formData?.nomineeLastName || '',
+      nomineeRelation: this.jsonParse(formData?.nomineeRelationWithProposer, 'name') || '',
+      nomineeRelationCode: this.jsonParse(formData?.nomineeRelationWithProposer, 'value') || '',
+      nomineeContactNumber: formData?.nomineeContactNo || '',
+      nomineeAddress: formData?.nomineeAddress || '',
+      nomineeDob: formData?.nomineeDob || '',
+      nomineeAge: nomineeAge || '',
+      NameofAccountHolder: formData?.accountHolderName || '',
+      accountNumber: formData?.accountNumber || '',
+      accountType: formData?.accountType || '',
+      bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
+      bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
+      paymentMode: this.selectedButton || '',
+      chequeNumber: formData?.chequeNumber || '',
+      chequeDate: formData?.chequeDate || '',
+      bankName: this.jsonParse(formData?.bankName, 'name') || '',
+      ifscCode: formData?.ifscCode || '',
+      micrNo: formData?.micrCode || '',
+      premiumAmount: formData?.totalPremium || '',
+      selectedTenure: (parseInt(formData?.tenure) + 1).toString() || '',
+      paymentDate: new Date() as any || '',
+      paymentCollectionMode: formData.paymentOption || '',
+      paymentByRelationship: 'Self',
+      payerName: formData?.accountHolderName || '',
+      paymentBy: 'customer',
+      PaymentGatewayName: formData?.PaymentGatewayName || ''
+    };
+
+    return mappedData;
+  }
+
+  jsonParse(string: any, extract: any) {
+    const value = JSON.parse(string);
+    return value[extract];
+  }
+
 }
 

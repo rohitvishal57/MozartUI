@@ -7,6 +7,8 @@ import { Subject } from "rxjs";
 import { MatMenuTrigger } from '@angular/material/menu';
 import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
+import { NgToastService } from 'ng-angular-popup';
+
 
 @Component({
   selector: 'app-renewal-list',
@@ -50,6 +52,7 @@ export class RenewalListComponent {
     private router: Router,
     private datePipe: DatePipe,
     private commonService:CommonService,
+    private toast: NgToastService
   ) {}
 
   renewalLisRequestBody={
@@ -86,12 +89,17 @@ export class RenewalListComponent {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
           })); 
+          this.toast.success({ detail: "Success", summary: "Renewals List generated successfully.", duration: 1500 });
           console.log("Renewal List",this.renewalsList);
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType];         } 
-        else {console.error("API request was not successful.");}
+        else {
+          this.toast.error({ detail: "Error", summary: "Failed to generate Renewals List.", duration: 1500 });
+          console.error("API request was not successful.");
+        }
       },
       (error) => {
+        this.toast.error({ detail: "Error", summary: "Error while generating Subquotes List.", duration: 1500 });
         console.error("Error from getRenewalsList API:", error);
       }
     );
@@ -279,116 +287,113 @@ export class RenewalListComponent {
       case 'download':
         break;
       case 'payment':
-        this.activeSection=event;
-      this.renewalJourney(item);
+        this.activeSection = event;
+        this.renewalJourney(item);
         break;
       case 'email':
-        const emailRequestBody={
+        const emailRequestBody = {
           agentCode: this.agentCode,
-          emailId: "hfgeh@gmail.com",
+          emailId: "sona@gmail.com",
           mobile: item.proposerMobileNumber,
-          eventName: "string",
+          eventName: "sending payment link to email",
           policyHolderFullName: item.proposerFirstName,
           renewedPolicyNumber: item.policyNumber,
           dateOfRenewed: item.policyEndDate,
           dateOfRenewal: item.policyEndDate,
           grossRenewalPayable: item.renewalPremiumAmount.toString(),
-          renewalPaymentLink: "string",
+          renewalPaymentLink: "this is payment link",
           attachment: {
-            "flag": "string",
-            "details": {
-              "document": [
+            flag: "string",
+            details: {
+              document: [
                 {
-                  "key": "string",
-                  "value": "string"
+                  key: "string",
+                  value: "string"
                 }
               ]
             }
           }
         };
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
-          (response:any)=>{
-            if(response.success){
-              console.log("Mail sent successfully");
-            }
-            else{
-              console.log("mail is not sent successfullky");
+          (response: any) => {
+            if (response.isSuccess) {
+              this.toast.success({ detail: "Success", summary: "Renewal notice shared successfully.", duration: 1500 });
+            } else {
+              this.toast.error({ detail: "Error", summary: "Failed to send renewal notice.", duration: 1500 });
             }
           },
-          (error:any)=>{
-            console.log("error coming from sendRenewalEmailApi");
+          (error: any) => {
+            this.toast.error({ detail: "Error", summary: "Error while sending renewal notice.", duration: 1500 });
           }
-        )
+        );
         break;
       case 'copyPayLink':
         const copyPayLinkRequestBody = {
-          policy: item.policyNumber,  
-          mobile: item.proposerMobileNumber,  
-          source: "DE"  
+          policy: item.policyNumber,
+          mobile: item.proposerMobileNumber,
+          source: "UnifiedPortal"
         };
         this.renewalService.generatePaymentlinkApi(copyPayLinkRequestBody).subscribe(
-          (response:any) => {
-            if (response.success) {
-              console.log('Payment link copied successfully.');
+          (response: any) => {
+            if (response.isSuccess) {
+              this.toast.success({ detail: "Success", summary: "Payment link copied successfully.", duration: 1500 });
             } else {
-              console.error('Failed to copy payment link.');
+              this.toast.error({ detail: "Error", summary: "Failed to copy payment link.", duration: 1500});
             }
           },
-          (error:any) => {
-            console.error('Error while copying payment link:', error);
+          (error: any) => {
+            this.toast.error({ detail: "Error", summary: "Error while copying payment link.", duration: 1500 });
           }
         );
-        break;  
+        break;
       case 'sms':
         const smsRequestBody = {
           agentCode: this.agentCode,
           type: "DUE",
-          customerName: item.proposerFirstName,  
-          customerMobileNo: item.proposerMobileNumber,  
-          agentMobileNo: "db",  
-          masterPolicyNo: "bjkh",  
-          eventName: "bsdj",  
-          renewalLink: "khavbjk",  
-          dueDate: "acsvh",  
-          dateOfRenewal: item.policyEndDate,  
-          renewedPolicyNo: item.policyNumber,  
-          proposalNumber: "vasxb",  
-          policyNumber: item.policyNumber,  
-          grossRenewalAmount: item.renewalPremiumAmount.toString(),  
+          customerName: item.proposerFirstName,
+          customerMobileNo: item.proposerMobileNumber,
+          agentMobileNo: "9177035634",
+          eventName: "sending payment link to sms",
+          dueDate: "gvx",
+          dateOfRenewal: item.policyEndDate,
+          renewedPolicyNo: item.policyNumber,
+          proposalNumber: "vasxb",
+          policyNumber: item.policyNumber,
+          grossRenewalAmount: item.renewalPremiumAmount.toString(),
           isAutoSMS: true,
-          sessionId: "jbsaj"  
+          sessionId: "jbsaj"
         };
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
-          (response:any) => {
-            if (response.success) {
-              console.log('WhatsApp message sent successfully.');
+          (response: any) => {
+            if (response.isSuccess) {
+              this.toast.success({ detail: "Success", summary: "SMS sent successfully.", duration: 1500 });
             } else {
-              console.error('Failed to send WhatsApp message.');
+              this.toast.error({ detail: "Error", summary: "Failed to send SMS.", duration: 1500 });
             }
           },
-          (error:any) => {
-            console.error('Error while sending WhatsApp message:', error);
+          (error: any) => {
+            this.toast.error({ detail: "Error", summary: "Error while sending SMS.", duration: 1500 });
           }
-        );        
+        );
         break;
       case 'whatsapp':
-        const whatsApprequestBody = {
+        const whatsAppRequestBody = {
           templateCode: "DUE-CSTMR",
           policyNumbers: [item.policyNumber]
         };
-        this.renewalService.sendRenewalWhatsappApi(whatsApprequestBody).subscribe(
-          (response:any) => {
-            if (response.success) {
-              console.log('WhatsApp message sent successfully.');
+        this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
+          (response: any) => {
+            if (response.isSuccess) {
+              this.toast.success({ detail: "Success", summary: "WhatsApp message sent successfully.", duration: 1500});
             } else {
-              console.error('Failed to send WhatsApp message.');
+              this.toast.error({ detail: "Error", summary: "Failed to send WhatsApp message.", duration: 1500 });
             }
           },
-          (error:any) => {
-            console.error('Error while sending WhatsApp message:', error);
+          (error: any) => {
+            this.toast.error({ detail: "Error", summary: "Error while sending WhatsApp message.", duration: 1500 });
           }
-        );        
-        break;  
+        );
+        break;
       default:
         console.warn('Unknown action:', event);
     }
@@ -397,9 +402,6 @@ export class RenewalListComponent {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
     this.renewalService.setPolicyState(proposerDetail.policyNumber, this.activeSection);
     this.router.navigate(["renewals/renewalDynamicForm"]);
-  }
-  getFixedStarArray(): number[] {
-    return Array.from({ length: 5 }, (_, i) => i); 
   }
   getStarClasses(index: number, rating: number): string[] {
     const starClasses = ['star'];

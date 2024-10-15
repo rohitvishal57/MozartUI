@@ -31,15 +31,15 @@
                               <div class="data-row" *ngIf="renewalInfo?.response?.policyData?.length > 0">
                                   <div class="data-item">
                                       <label>Name</label>
-                                      <h6>{{ renewalInfo.response.policyData[0].PolicyOwnerName }}</h6>
+                                      <h6>{{ renewalInfo?.response?.policyData[0]?.PolicyOwnerName }}</h6>
                                   </div>
                                   <div class="data-item">
                                       <label>ID No.</label>
-                                      <h6>{{ renewalInfo.response.policyData[0].panNo }}</h6>
+                                      <h6>{{ renewalInfo?.response?.policyData[0]?.panNo }}</h6>
                                   </div>
                                   <div class="data-item">
                                       <label>D.O.B</label>
-                                      <h6>{{ renewalInfo.response.policyData[0].DateOfBirth }}</h6>
+                                      <h6>{{ renewalInfo?.response?.policyData[0]?.DateOfBirth }}</h6>
                                   </div>
                               </div>
                               <div class="detailsRow">
@@ -49,27 +49,27 @@
                                           <div class="data-row">
                                               <div class="data-item">
                                                   <label>Address Line 1</label>
-                                                  <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_Address_1 }}</h6>
+                                                  <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_1 }}</h6>
                                               </div>
                                               <div class="data-item">
                                                   <label>Address Line 2</label>
-                                                  <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_Address_2 }}</h6>
+                                                  <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_2 }}</h6>
                                               </div>
                                               <div class="data-item">
                                                   <label>State</label>
-                                                  <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_State }}</h6>
+                                                  <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_State }}</h6>
                                               </div>
                                               <div class="data-item">
                                                   <label>City</label>
-                                                  <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_City }}</h6>
+                                                  <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City }}</h6>
                                               </div>
                                               <div class="data-item">
                                                   <label>Pincode</label>
-                                                  <h6>{{ renewalInfo.response.policyData[0].HomeAddress?.Home_Pincode }}</h6>
+                                                  <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Pincode }}</h6>
                                               </div>
                                           </div>
                                       </div>
-                                      <div class="data-item data-itemEdit" (click)="selectButton('primary',5005)">
+                                      <div class="data-item data-itemEdit" (click)="selectButton(5005)">
                                           <button type="button" value="dataedit" class="btn_editGrey"></button>
                                       </div>
                                   </div>
@@ -79,11 +79,11 @@
                   </div>
                   <div class="accordionItem" *ngIf="formId == 5001">
                       <header>Member Details
-                          <button type="button" value="another" class="btn_iconText" (click)="selectButton('primary',5002)"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
+                          <button type="button" value="another" class="btn_iconText" (click)="selectButton(5002)"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
-                              <ng-container *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members">
+                              <ng-container *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index">
                                   <div class="detailsRow">
                                       <div class="detailsHeading">{{ member.Relation | titlecase }}</div>
                                       <div class="data-row">
@@ -103,7 +103,7 @@
                                               <label>Cover</label>
                                               <h6>₹ {{ member.SumInsuredPerUnit }}</h6>
                                           </div>
-                                          <div class="data-item data-item-10 data-itemEdit" (click)="selectButton('primary', 5003)">
+                                          <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5003,'',i)">
                                               <button type="button" value="dataedit" class="btn_editGrey"></button>
                                           </div>
                                       </div>
@@ -118,7 +118,6 @@
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
-                              <!-- <ng-container *ngFor="let nominee of response?.response?.policyData[0]?.Nominee_Details"> -->
                               <div class="detailsRow">
                                   <div class="detailsHeading">{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code | titlecase }}</div>
                                   <div class="data-row">
@@ -138,13 +137,12 @@
                                           <label>Relation to Nominee</label>
                                           <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code || 'N/A' }}</h6>
                                       </div>
-                                      <div class="data-item data-item-10 data-itemEdit" (click)="selectButton('primary',5004,'editNominee')">
+                                      <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5004,'editNominee')">
                                           <button type="button" value="dataedit" class="btn_editGrey"></button>
                                       </div>
                                   </div>
                               </div>
                               <div class="detailsBorder detailsBorder-w104"></div>
-                              <!-- </ng-container> -->
                           </div>
                       </div>
                   </div>
@@ -152,7 +150,6 @@
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5002">
                       <header>Add New Member
-                          <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -164,9 +161,9 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="name" name="name" formControlName="name" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="name" name="name" formControlName="Name" placeholder="" class="form-control input-textBox">
                                               <label for="name">Name</label>
-                                              <span class="ui-error" *ngIf="form?.get('name')?.invalid && form.get('name')?.touched">Please enter name</span>
+                                              <span class="ui-error" *ngIf="form?.get('Name')?.invalid && form.get('Name')?.touched">Please enter name</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -180,82 +177,78 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block input-block-renew focus">
                                               <div class="fields-blockHeight">
-                                                  <input type="text" formControlName="heightft" placeholder="Enter height" class="input-textBox">
+                                                  <input type="text" formControlName="height" placeholder="Enter height" class="input-textBox">
                                                   <input type="text" formControlName="heightin" placeholder="Enter height" class="input-textBox">
                                                   <span class="ui-prefix ft-prefix">ft</span>
                                                   <span class="ui-prefix in-prefix">in</span>
                                               </div>
-                                              <span class="ui-error" *ngIf="form.get('heightft')?.invalid || form.get('heightin')?.invalid">Please enter height</span>
+                                              <span class="ui-error" *ngIf="form.get('height')?.invalid || form.get('height')?.invalid">Please enter height</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="gender" name="gender" formControlName="gender" placeholder="" class="form-control input-selectBox">
+                                              <select id="gender" name="gender" formControlName="Gender" placeholder="" class="form-control input-selectBox">
                                                   <option value="">Select gender</option>
                                                   <option value="male">Male</option>
                                                   <option value="female">Female</option>
                                               </select>
                                               <label for="gender">Gender</label>
-                                              <span class="ui-error" *ngIf="form.get('gender')?.invalid && form.get('gender')?.touched">Please select gender</span>
+                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && form.get('Gender')?.touched">Please select gender</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="date" id="dob" formControlName="dob" placeholder="" class="form-control input-textBox">
+                                              <input type="date" id="dob" formControlName="DoB" placeholder="" class="form-control input-textBox">
                                               <label for="dob">Date of birth</label>
-                                              <span class="ui-error" *ngIf="form.get('dob')?.invalid && form.get('dob')?.touched">Please enter date of birth</span>
+                                              <span class="ui-error" *ngIf="form.get('DoB')?.invalid && form.get('DoB')?.touched">Please enter date of birth</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="idtype" name="idtype" formControlName="idtype" placeholder="" class="form-select input-selectBox">
-                                                  <option value="">Select ID type</option>
+                                              <select id="Idtype" name="Idtype" formControlName="IdProof" placeholder="" class="form-select input-selectBox">
+                                                  <option value="" disabled selected>Select ID type</option>
                                                   <option value="aadhaar">Aadhaar</option>
                                                   <option value="pan">PAN</option>
                                               </select>
-                                              <label for="idtype">ID type</label>
-                                              <span class="ui-error" *ngIf="form.get('idtype')?.invalid && form.get('idtype')?.touched">Please select ID</span>
+                                              <label for="Idtype">ID type</label>
+                                              <span class="ui-error" *ngIf="form.get('IdProof')?.invalid && form.get('IdProof')?.touched">Please select ID</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                          <div class="input-block form-floating input-block-renew">
-                                              <select id="idtype" name="idtype" formControlName="idtype" placeholder="" class="form-select input-selectBox">
-                                                  <option value="">Select ID type</option>
-                                                  <option value="aadhaar">Aadhaar</option>
-                                                  <option value="pan">PAN</option>
-                                              </select>
-                                              <label for="idtype">ID type</label>
-                                              <span class="ui-error" *ngIf="form.get('idtype')?.invalid && form.get('idtype')?.touched">Please select ID</span>
-                                          </div>
-                                      </div>
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="idtype" name="name" formControlName="IdProofNumber" placeholder="" class="form-control input-textBox">
+                                            <label for="name">IdProofNumber</label>
+                                            <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span>
+                                        </div>
+                                    </div>
                                   </div>
                                   <div class="detailsHeading-12">Sum Insured</div>
                                   <div class="row">
-                                      <div class="slider">
-                                          <div class="slider-container">
-                                              <input type="range" [min]="control.min" [max]="control.max" [step]="control.step" [value]="rangeValue[control.name]" (input)="updateRangeValue($event, control.name)" [style.background]="getBackground(rangeValue[control.name], control.min, control.max)">
-                                              <!-- <div class="slider-values">
-                                                  <span>5L</span><span>7L</span><span>10L</span><span>15L</span><span>20L</span>
-                                                  <span>25L</span><span>50L</span><span>1Cr</span><span>2Cr</span>
-                                              </div> -->
+                                    <div class="slider">
+                                        <div class="slider-container">
+                                            <ngx-slider [(value)]="selectedSumInsured" [options]="sliderOptions"(valueChange)="onSumInsuredChange($event)"></ngx-slider>
+                                            <div class="tick-labels">
+                                              <span *ngFor="let tick of sliderOptions.stepsArray">{{ formatTickLabel(tick.value, true) }}</span>
+                                            </div>
                                           </div>
-                                          <span class="selected-value">{{ formatValue(rangeValue[control.name]) }}</span>
+                                          <span class="selected-value">{{ formatTickLabel(selectedSumInsured,false) }}</span>
                                       </div>
-                                      <div class="col-12">
-                                          <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">Proposer can have increased cover of 15L with only ₹200 addition to the previous premium</div>
-                                      </div>
-                                  </div>
+                                    <div class="col-12">
+                                        <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">Proposer can have increased cover of 15L with only ₹200 addition to the previous premium</div>
+                                    </div>
+                                </div>
                                   <div class="detailsHeading-12">Professional Details</div>
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="air" name="air" formControlName="air" placeholder="" class="form-select input-selectBox">
+                                              <select id="air" name="air" formControlName="AnnualIncome" placeholder="" class="form-select input-selectBox">
                                                   <option value="">Select Annual income range</option>
                                                   <option value="5L">5L</option>
                                                   <option value="5L-10L">5L-10L</option>
+                                                  <option value=">10L"> >10L</option>
                                               </select>
                                               <label for="air">Annual income range</label>
-                                              <span class="ui-error" *ngIf="form.get('air')?.invalid && form.get('air')?.touched">Please select annual income range</span>
+                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && form.get('AnnualIncome')?.touched">Please select annual income range</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -330,7 +323,7 @@
                                       <div class="tabsMainContent">
                                           <div id="chronicCondition" class="main_tabContent active">
                                               <div class="input-checkbox-condition">
-                                                  <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft" formGroupName=>
+                                                  <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                       <div class="input-checkbox-feild">
                                                           <input type="checkbox" id="condition-highblood" class="input-check" />
                                                           <label for="condition-highblood"><img src="assets/Img/icon_alcohol.svg">High Blood Pressure (Hypertension)</label>
@@ -366,10 +359,9 @@
                   </div>
               </div>
               <div class="accordionMain">
-                  <!--Accordion Item start-->
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5003">
                       <header>
-                          Edit Details of your Son
+                          Edit Details of your {{formObject.Relation}}
                           <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
                       </header>
                       <div class="accordionBody">
@@ -399,10 +391,13 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="pp-son" name="pp-son" class="form-control input-selectBox" disabled>
+                                              <select id="pp-son" name="pp-son" formControlName="Relation" placeholder="" class="form-control input-selectBox" >
                                                   <option>Select Relation</option>
-                                                  <option value="1" selected>Son</option>
-                                                  <option value="2">Daughter</option>
+                                                  <option value="Self">Self</option>
+                                                  <option value="Spouse">Spouse</option>
+                                                  <option value="Son">Son</option>
+                                                  <option value="Dependent Son">Dependent Son</option>
+                                                  <option value="Daughter">Daughter</option>
                                               </select>
                                               <!--<label for="pp-son">Gender</label>-->
                                               <span class="ui-error">Please select Relation</span>
@@ -421,14 +416,14 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="pp-policynumber" name="pp-policynumber" value="" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="pp-policynumber" name="pp-policynumber" formControlName="" placeholder="" class="form-control input-textBox">
                                               <label for="pp-policynumber">Policy Number</label>
                                               <span class="ui-error">Please enter Policy Number</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="pp-sumassured" name="pp-sumassured" value="" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="pp-sumassured" name="pp-sumassured" formControlName="SumInsured" placeholder="" class="form-control input-textBox">
                                               <label for="pp-sumassured">Sum assured</label>
                                               <span class="ui-error">Please enter Sum assured</span>
                                           </div>
@@ -455,11 +450,14 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="citizenship-son" name="citizenship-son" class="form-control input-selectBox" disabled>
-                                                  <option>Select Relation</option>
-                                                  <option value="1" selected>Son</option>
-                                                  <option value="2">Daughter</option>
-                                              </select>
+                                            <select id="pp-son" name="pp-son" formControlName="Relation" placeholder="" class="form-control input-selectBox" >
+                                                <option>Select Relation</option>
+                                                <option value="Self">Self</option>
+                                                <option value="Spouse">Spouse</option>
+                                                <option value="Son">Son</option>
+                                                <option value="Dependent Son">Dependent Son</option>
+                                                <option value="Daughter">Daughter</option>
+                                            </select>
                                               <!--<label for="citizenship-son">Gender</label>-->
                                               <span class="ui-error">Please select Relation</span>
                                           </div>
@@ -484,7 +482,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="citizenship-sumassured" name="citizenship-sumassured" value="" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="citizenship-sumassured" name="citizenship-sumassured" formControlName="SumInsured" placeholder="" class="form-control input-textBox">
                                               <label for="citizenship-sumassured">Sum assured</label>
                                               <span class="ui-error">Please enter Sum assured</span>
                                           </div>
@@ -511,21 +509,24 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="extraneous-son" name="extraneous-son" class="form-control input-selectBox" disabled>
-                                                  <option>Select Relation</option>
-                                                  <option value="1" selected>Son</option>
-                                                  <option value="2">Daughter</option>
-                                              </select>
+                                            <select id="pp-son" name="pp-son" formControlName="Relation" placeholder="" class="form-control input-selectBox" >
+                                                <option>Select Relation</option>
+                                                <option value="Self">Self</option>
+                                                <option value="Spouse">Spouse</option>
+                                                <option value="Son">Son</option>
+                                                <option value="Dependent Son">Dependent Son</option>
+                                                <option value="Daughter">Daughter</option>
+                                            </select>
                                               <!--<label for="extraneous-son">Gender</label>-->
                                               <span class="ui-error">Please select Relation</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="extraneous-occupation" name="extraneous-occupation" class="form-control input-selectBox">
+                                              <select id="extraneous-occupation" name="extraneous-occupation" formControlName="occupation" class="form-control input-selectBox">
                                                   <option>Select Occupation</option>
-                                                  <option value="1">Son</option>
-                                                  <option value="2">Daughter</option>
+                                                  <option value="1"></option>
+                                                  <option value="2"></option>
                                               </select>
                                               <label for="extraneous-occupation">Occupation</label>
                                               <span class="ui-error">Please select Occupation</span>
@@ -540,87 +541,30 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="preexistingconditions" value="yes">
+                                                  <input type="radio" name="preexistingconditions" value="yes" (change)="preexistingCondition('yes')" >
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="preexistingconditions" value="no" checked>
+                                                  <input type="radio" name="preexistingconditions" value="no" (change)="preexistingCondition('no')" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
                                       </div>
                                   </div>
-                                  <div class="row">
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                  <div class="row" *ngIf="preexistingConditionSelected === 'yes'">
+                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngFor="let condition of healthConditions">
                                           <div class="row align-items-center mb-3">
                                               <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <span class="para-grey-12">Diabetes  </span>
+                                                  <span class="para-grey-12">{{ condition }}  </span>
                                               </div>
                                               <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                   <div class="input-radio-block radio_additionalInfo">
                                                       <label class="input-radiolabel ">
-                                                          <input type="radio" name="diabetes" value="yes">
+                                                          <input type="radio" [name]="condition" [value]="condition" [id]="condition">
                                                           <span>Yes</span>
                                                       </label>
                                                       <label class="input-radiolabel ">
-                                                          <input type="radio" name="diabetes" value="no" checked>
-                                                          <span>No</span>
-                                                      </label>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                          <div class="row align-items-center mb-3">
-                                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <span class="para-grey-12">Asthma/ Chronic Pulmonary Obstructive Disease  </span>
-                                              </div>
-                                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <div class="input-radio-block radio_additionalInfo">
-                                                      <label class="input-radiolabel ">
-                                                          <input type="radio" name="asthmadiabetes" value="yes">
-                                                          <span>Yes</span>
-                                                      </label>
-                                                      <label class="input-radiolabel ">
-                                                          <input type="radio" name="asthmadiabetes" value="no" checked>
-                                                          <span>No</span>
-                                                      </label>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                          <div class="row align-items-center mb-3">
-                                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <span class="para-grey-12">High blood pressure (Hypertension) </span>
-                                              </div>
-                                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <div class="input-radio-block radio_additionalInfo">
-                                                      <label class="input-radiolabel ">
-                                                          <input type="radio" name="hypertension" value="yes">
-                                                          <span>Yes</span>
-                                                      </label>
-                                                      <label class="input-radiolabel ">
-                                                          <input type="radio" name="hypertension" value="no" checked>
-                                                          <span>No</span>
-                                                      </label>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                          <div class="row align-items-center mb-3">
-                                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <span class="para-grey-12">High cholestrol / High tryglycerides (Hyperlimidemia) </span>
-                                              </div>
-                                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <div class="input-radio-block radio_additionalInfo">
-                                                      <label class="input-radiolabel ">
-                                                          <input type="radio" name="hyperlimidemia" value="yes">
-                                                          <span>Yes</span>
-                                                      </label>
-                                                      <label class="input-radiolabel ">
-                                                          <input type="radio" name="hyperlimidemia" value="no" checked>
+                                                          <input type="radio" [name]="condition" [value]="condition" [id]="condition" checked>
                                                           <span>No</span>
                                                       </label>
                                                   </div>
@@ -635,7 +579,6 @@
                           <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editMember')">Update Details</button>
                       </footer>
                   </div>
-                  <!--Accordion Item end-->
               </div>
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5005">
@@ -650,35 +593,35 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="address1" name="address1" formControlName="Home_Address_1" placeholder="" class="form-control input-textBox" >
                                               <label for="address1">Address Line 1</label>
-                                              <span class="ui-error" *ngIf="form?.get('address1')?.invalid && form?.get('address1')?.touched">Please enter Address Line 1</span>
+                                              <span class="ui-error" *ngIf="form?.get('home_Address_1')?.invalid && form?.get('home_Address_1')?.touched">Please enter Address Line 1</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="address2" name="address2" placeholder="" class="form-control input-textBox" formControlName="Home_Address_2">
                                               <label for="address2">Address Line 2</label>
-                                              <span class="ui-error" *ngIf="form?.get('address2')?.invalid && form?.get('address2')?.touched">Please enter Address Line 2</span>
+                                              <span class="ui-error" *ngIf="form?.get('home_Address_2')?.invalid && form?.get('home_Address_2')?.touched">Please enter Address Line 2</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="city" name="city" placeholder="" class="form-control input-textBox" formControlName="Home_City">
                                               <label for="city">City</label>
-                                              <span class="ui-error" *ngIf="form?.get('city')?.invalid && form?.get('city')?.touched">Please enter City</span>
+                                              <span class="ui-error" *ngIf="form?.get('home_City')?.invalid && form?.get('home_City')?.touched">Please enter City</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="state" name="state" placeholder="" class="form-control input-textBox" formControlName="Home_State">
                                               <label for="state">State</label>
-                                              <span class="ui-error" *ngIf="form?.get('state')?.invalid && form?.get('state')?.touched">Please enter State</span>
+                                              <span class="ui-error" *ngIf="form?.get('home_State')?.invalid && form?.get('home_State')?.touched">Please enter State</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="pincode" name="pincode" placeholder="" class="form-control input-textBox" formControlName="Home_Pincode">
                                               <label for="pincode">Pin Code</label>
-                                              <span class="ui-error" *ngIf="form?.get('pincode')?.invalid && form?.get('pincode')?.touched">Please enter Pin Code</span>
+                                              <span class="ui-error" *ngIf="form?.get('home_Pincode')?.invalid && form?.get('home_Pincode')?.touched">Please enter Pin Code</span>
                                           </div>
                                       </div>
                                   </div>
@@ -691,11 +634,9 @@
                   </div>
               </div>
               <div class="accordionMain">
-                  <!--Accordion Item start-->
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5004">
                       <header>
                           Edit Nominee Details
-                          <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -716,7 +657,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-fname" name="nomine-fname" formControlName="nominee_first_name" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-fname">First Name</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('firstName')?.invalid && form?.get('firstName')?.touched">
                                               Please enter First Name
                                           </span>
                                           </div>
@@ -725,7 +666,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-mname" formControlName="nominee_middle_name" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-mname">Middle Name</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_middle_name')?.invalid && form?.get('nominee_middle_name')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('middleName')?.invalid && form?.get('middleName')?.touched">
                                               Please enter Middle Name
                                           </span>
                                           </div>
@@ -734,7 +675,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-lname">Last Name</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_last_name')?.invalid && form?.get('nominee_last_name')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('lastName')?.invalid && form?.get('lastName')?.touched">
                                               Please enter Last Name
                                           </span>
                                           </div>
@@ -743,14 +684,14 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="date" id="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-dob">DOB</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_dob')?.invalid && form?.get('nominee_dob')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('dob')?.invalid && form?.get('dob')?.touched">
                                           Please enter DOB
                                           </span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="nomine-relation" name="nomine-relation" formControlName="nominee_relationship_code" placeholder="" class="form-control input-selectBox">
+                                              <select id="nomine-relation" name="nomine-relation" formControlName="Relationship" placeholder="" class="form-control input-selectBox">
                                                   <option value="">Select Relation</option>
                                                   <option value="Son">Son</option>
                                                   <option value="Spouse">Spouse</option>
@@ -759,7 +700,7 @@
                                                   <option value="Daughter">Daughter</option>
                                               </select>
                                               <label for="nomine-relation">Relation with Nominee</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_relationship_code')?.invalid && form?.get('nominee_relationship_code')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('relationship')?.invalid && form?.get('relationship')?.touched">
                                               Please select Relation with Nominee
                                           </span>
                                           </div>
@@ -768,7 +709,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-contactno">Nominee Contact No.</label>
-                                              <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('contactNo')?.invalid && form?.get('contactNo')?.touched">
                                               Please enter Nominee contact no.
                                           </span>
                                           </div>
@@ -780,16 +721,16 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-mobileno" formControlName="nominee_mobile_number" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-mobileno">Mobile Number</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_mobile_number')?.invalid && form?.get('nominee_mobile_number')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('mobileNumber')?.invalid && form?.get('mobileNumber')?.touched">
                                               Please enter Mobile Number
                                           </span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="nomine-emergencymobileno" formControlName="nominee_emergency_phone_number" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="nomine-emergencymobileno" formControlName="nominee_emergencyPhoneNumber" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-emergencymobileno">Emergency phone number</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_emergency_phone_number')?.invalid && form?.get('nominee_emergency_phone_number')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('emergencyPhoneNumber')?.invalid && form?.get('emergencyPhoneNumber')?.touched">
                                               Please enter Mobile Number
                                           </span>
                                           </div>
@@ -798,7 +739,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-emailid" formControlName="nominee_email_address" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-emailid">Email Address</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_email_address')?.invalid && form?.get('nominee_email_address')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('emailAddress')?.invalid && form?.get('emailAddress')?.touched">
                                               Please enter Email Address
                                           </span>
                                           </div>
@@ -808,10 +749,9 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('addNominee')">Save Updates</button>
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editNominee')">Save Updates</button>
                       </footer>
                   </div>
-                  <!--Accordion Item end-->
               </div>
           </div>
       </div>
@@ -829,23 +769,23 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-radio-block raido_policyTenure ">
                                             <label class="input-radiolabel ">
-                                                <input type="radio" name="policyTenure" value="1year" >
+                                                <input type="radio" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" >
                                                 <span><em class="tenure-year">1 Year</em>
                                                     <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium}}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
-                                                <input type="radio" name="policyTenure" value="2years" >
+                                                <input type="radio" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" >
                                                 <span><em class="tenure-year">2 Years</em>
                                                     <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium}}<em>/ yr</em></em>
-                                                <em class="tenure-off">{{renewalInfo?.response?.policyData[0]?.tenure2percentage}} off</em>
+                                                <em class="tenure-off">₹ 7.5 off</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
-                                                <input type="radio" name="policyTenure" value="3years" checked>
+                                                <input type="radio" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" >
                                                 <span><em class="tenure-year">3 Years</em>
                                                 <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium}}<em>/ yr</em></em>
-                                                <em class="tenure-off">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.tenure3percentage}} off</em>
+                                                <em class="tenure-off">₹ 10 off</em>
                                             </span>
                                                 <em class="badge-recommended">Recommended</em>
                                             </label>
@@ -869,14 +809,16 @@
                                 <div class="row mb-2">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages">
-                                           <!-- <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="personal-accident" value="personal-accident" class="input-check" checked>
-                                                <label for="personal-accident">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_critical_illness.svg" class="inactive"></span>
-                                                    <em class="head">{{renewalInfo?.response?.policyData[0]?.coverName}}</em>
-                                                    <em class="headInfo">{{renewalInfo?.response?.policyData[0]?.coverDescription}}</em>
+                                           <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers?.productFeatures">
+                                              <div *ngIf="cover.categoryName == 'Optional Covers'">
+                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check">
+                                                <label [for]="cover.featureName">
+                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
+                                                    <em class="head">{{cover.featureName}}</em>
+                                                    <em class="headInfo">{{cover.featureDescription}}</em>
                                                 </label>
-                                            </div>         -->
+                                             </div>  
+                                            </div>        
                                         </div>
                                     </div>
                                 </div>                                
@@ -894,25 +836,16 @@
                                 <div class="row mb-2">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages checkbox_healthAddOns">
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="cancer-booster" value="cancer-booster" class="input-check" >
-                                                <label for="cancer-booster">
-                                                    <!-- <span><img src="assets/Img/icon_tick_round_red.svg" class="active"><img src="assets/Img/icon_cancer_booster.svg" class="inactive"></span> -->
-                                                    <em class="head">{{renewalInfo?.response?.policyData[0]?.addonName}}</em>
-                                                    <em class="headInfo">{{renewalInfo?.response?.policyData[0]?.addonDescription}}</em>
-                                                    <div class="familyMembers">
-                                                        <ul>
-                                                            <li class="familyMembers_item">
-                                                                <span class="member-info"><img src="assets/Img/icon_member_self.png">Self</span>
-                                                                <input type="text" name="self-desiredcover" placeholder="Enter desired cover">
-                                                            </li>
-                                                            <li class="familyMembers_item">
-                                                                <span class="member-info"><img src="assets/Img/icon_member_spouse.png">Spouse</span>
-                                                                <input type="text" name="spouse-desiredcover" placeholder="Enter desired cover"> 
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                            <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers?.productFeatures">
+                                              <div *ngIf="cover.categoryName == 'Health Add On'"> 
+                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" >
+                                                <label [for]="cover.featureName">
+                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
+                                                    <!-- <img src="assets/Img/icon_cancer_booster.svg" class="inactive"> -->
+                                                    <em class="head">{{cover.featureName}}</em>
+                                                    <em class="headInfo">{{cover.featureDescription}}</em>
                                                 </label>
+                                              </div>
                                             </div>                                          
                                         </div>
                                     </div>
@@ -1022,7 +955,7 @@
                         <div class="btn_groupAction">
                             <!-- <button type="button" value="copylink" class="btn_pink btn_copylink btn_copiedlink">Link copied!</button> -->
                             <button type="button" value="copylink" class="btn_pink btn_copylink">Copy link to share <img src="assets/Img/icon_link.svg"></button>
-                            <button type="button" value="sectionedit" class="btn_editRed"></button>
+                            <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')"></button>
                         </div>
                     </header>
                     <div class="accordionBody">
@@ -1033,23 +966,24 @@
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Members</label>
-                                            <h6></h6>
+                                            <div *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members">
+                                            <span >{{ member.Relation | titlecase }}</span></div>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Policy</label>
-                                            <h6></h6>
+                                            <h6>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Premium</label>
-                                            <h6></h6>
+                                            <h6>₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Cover</label>
-                                            <h6></h6>
+                                            <h6>₹{{ renewalInfo?.response?.policyData[0]?.Members[0].SumInsuredPerUnit }}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Tenure</label>
-                                            <h6></h6>
+                                            <h6>{{ renewalInfo?.response?.policyData[0]?.Tenure }} Year</h6>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
                                             <label>Add ons</label>
@@ -1060,7 +994,7 @@
                                         </div>
                                     </div>
                                 </section>
-                                <section class="block_bg_lightgreen memberPoliySummary mt-2">
+                                <!-- <section class="block_bg_lightgreen memberPoliySummary mt-2">
                                     <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-blue">Modified</span>
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
@@ -1086,39 +1020,39 @@
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
                                             <label>Add ons</label>
                                             <div class="list_addons">
-                                                <!-- <span class="item_addon">Cancer secure cover</span>
+                                                <span class="item_addon">Cancer secure cover</span>
                                                 <span class="item_addon">Personal accident cover</span>
-                                                <span class="item_addon">Vaccine cover</span> -->
+                                                <span class="item_addon">Vaccine cover</span>
                                             </div>
                                         </div>
                                     </div>
-                                </section>
+                                </section> -->
                                 <div class="detailsHeading-12">Free benefits included with your plan</div>
                                 <section class="plan_freeBenefits">
                                     <div class="item_freeBenefits">
                                         <span class="img_freeBenefits">
                                             <img src="assets/Img/icon_stethoscope.svg">
                                         </span>
-                                        <!-- <span class="text_freeBenefits">Upto 100% Health Returns™</span> -->
+                                        <span class="text_freeBenefits">Upto 100% Health Returns™</span>
                                     </div>
                                     <div class="item_freeBenefits">
                                         <span class="img_freeBenefits">
                                             <img src="assets/Img/icon_handheart.svg">
                                         </span>
-                                        <!-- <span class="text_freeBenefits">Access To Expert Health Coaches</span> -->
+                                        <span class="text_freeBenefits">Access To Expert Health Coaches</span>
+                                    </div>
+                                    <!-- <div class="item_freeBenefits">
+                                        <span class="img_freeBenefits">
+                                            <img src="assets/Img/icon_handheart.svg">
+                                        </span>
+                                        <span class="text_freeBenefits">Cover for dental consultations</span>
                                     </div>
                                     <div class="item_freeBenefits">
                                         <span class="img_freeBenefits">
                                             <img src="assets/Img/icon_handheart.svg">
                                         </span>
-                                        <!-- <span class="text_freeBenefits">Cover for dental consultations</span> -->
-                                    </div>
-                                    <div class="item_freeBenefits">
-                                        <span class="img_freeBenefits">
-                                            <img src="assets/Img/icon_handheart.svg">
-                                        </span>
-                                        <!-- <span class="text_freeBenefits">Free Wellness Services</span> -->
-                                    </div>
+                                        <span class="text_freeBenefits">Free Wellness Services</span>
+                                    </div> -->
                                 </section>
                             </div>
                         </div>
@@ -1127,84 +1061,34 @@
                 <div class="accordionItem">
                     <header>
                         Member Details
-                        <button type="button" value="sectionedit" class="btn_editRed"></button>
+                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')"></button>
                     </header>
                     <div class="accordionBody">
-                        <div class="accordionBodyRow">
-                            <div class="detailsRow">
-                                <div class="owl-carousel owl-theme memberDetails-carousel member-cards">
-                                    <div class="item member-card">
-                                        <header>XXXXX <span class="common-badge common-badge-rounded  bg-dark-org">Proposer</span></header>
+                        <div class="accordionBodyRow" >
+                            <div class="detailsRow" >
+                                <div class="owl-carousel owl-theme memberDetails-carousel member-cards" >
+                                    <div class="item member-card" *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index">
+                                        <header>{{ member.Name }} <span *ngIf="i === 0" class="common-badge common-badge-rounded  bg-dark-org">Proposer</span></header>
                                         <div class="row">
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
                                                 <label>Height</label>
-                                                <h6></h6>
+                                                <h6>{{ member.height }}</h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
                                                 <label>Weight</label>
-                                                <h6></h6>
+                                                <h6>{{ member.weight }}</h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>DOB</label>
-                                                <h6></h6>
+                                                <h6>{{ member.DoB | date: 'dd/MM/yyyy' }}</h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>Pan card</label>
-                                                <h6></h6>
+                                                <h6>{{ member.PanNo }}</h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
                                                 <label>Health Conditions</label>
-                                                <h6></h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item member-card">
-                                        <header>XXXXX </header>
-                                        <div class="row">
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
-                                                <label>Height</label>
-                                                <h6></h6>
-                                            </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
-                                                <label>Weight</label>
-                                                <h6></h6>
-                                            </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
-                                                <label>DOB</label>
-                                                <h6></h6>
-                                            </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
-                                                <label>Pan card</label>
-                                                <h6></h6>
-                                            </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
-                                                <label>Health Conditions</label>
-                                                <h6></h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item member-card">
-                                        <header>XXXXX </header>
-                                        <div class="row">
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
-                                                <label>Height</label>
-                                                <h6></h6>
-                                            </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
-                                                <label>Weight</label>
-                                                <h6></h6>
-                                            </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
-                                                <label>DOB</label>
-                                                <h6></h6>
-                                            </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
-                                                <label>Pan card</label>
-                                                <h6></h6>
-                                            </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
-                                                <label>Health Conditions</label>
-                                                <h6></h6>
+                                                <h6>{{ member.HealthAssessment }}</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -1216,24 +1100,28 @@
                 <div class="accordionItem">
                     <header>
                         Contact Details
-                        <button type="button" value="sectionedit" class="btn_editRed"></button>
+                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')"></button>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="data-row">
                                 <div class="data-item data-item-100">
                                     <label>Address</label>
-                                    <h6></h6>
+                                    <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_1 }},
+                                        {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City }},
+                                        {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_State }}-
+                                        {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Pincode }}
+                                    </h6>
                                 </div>
                             </div>
                             <div class="data-row mb-3">
                                 <div class="data-item">
                                     <label>Contact</label>
-                                    <h6></h6>
+                                    <h6>{{ renewalInfo?.response?.policyData[0]?.Mobile }}</h6>
                                 </div>
                                 <div class="data-item">
                                     <label>Emergency Contact</label>
-                                    <h6></h6>
+                                    <h6>{{ renewalInfo?.response?.policyData[0]?.EmergencyContactNo }}</h6>
                                 </div>
                             </div>
                         </div>
@@ -1242,7 +1130,7 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsRight">
+      <div class="bodyColumns bodyColumnsRight" *ngIf="activeSection != 'payment' && formId != 5002 && formId != 5003">
           <div class="bcr_main planDetails">
               <header>
                   <h6>Plan details</h6>

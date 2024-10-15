@@ -608,7 +608,26 @@
                 width: 174px;
                 height: 124px;
             }
+            .allitem{
+                display: flex;
+                justify-content: end;
+                .product-remove-btn {
+                    height: 26px;
+                    width: 74px;
+                    border-radius: 8px;
+                    padding: 2px, 16px, 4px, 16px;
+                    background-color: #FFE7E5;
+                    border: none;
 
+                    font-family: "Anek Latin", sans-serif;
+                    font-size: 12px;
+                    font-weight: 400;
+                    line-height: 24px;
+                    text-align: center;
+                    color: #C7222A;
+
+                }
+            }
             .cart-cardItem {
                 width: 362px;
                 min-height: 230px;

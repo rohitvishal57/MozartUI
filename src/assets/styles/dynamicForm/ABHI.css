@@ -347,17 +347,21 @@ body {
     color: #ffe2dc;
 }
 
-.abhaLabel1{
+.abhaLabel1, .abhaLabel1 p{
     font-family: "Anek Latin", sans-serif;
     color: #c72229;
     padding-left: 15px;
 }
 
-.abhaLabel2{
+.abhaLabel2, .abhaLabel2 p{
     font-size: x-large;
     font-weight: 600;
     padding-left: 15px;
     font-family: "Anek Latin", sans-serif;
+}
+.abhaLabel1 p, .abhaLabel2 p {
+    padding: 0;
+    line-height: 24px;
 }
 .autoDebitLabel1{
     font-size: large;
@@ -582,12 +586,14 @@ body {
 .main-container .right-panel .acceptTermsCheck {
     border: 0px solid #ccc;
     cursor: pointer;
-    margin-top: 19px;
-    margin-bottom: 38px;
+    /*margin-top: 19px;*/
+    margin-bottom: 18px;
     background-color: #f2f3f6;
     border-radius: 20px;
     /* height: 102px; */
-    padding: 4px;
+    padding: 5px 15px;
+    display: flex;
+    gap: 10px;
 }
 
 .main-container .right-panel .acceptTermsCheck .checkboxes {
@@ -606,7 +612,56 @@ body {
     display: block;
     height: auto;
     width: 17px;
+    /*position: absolute;
+  opacity: 0;*/
 }
+/*.acceptTermsCheck input[type="checkbox"] + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--black-color);
+    line-height: 17px;
+    display: inline-block;
+  }
+  
+  .acceptTermsCheck input[type="checkbox"] + label:before {
+    content: "";
+    margin-right: 1rem;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--text-grey-79);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+  }
+  
+  .acceptTermsCheck input[type="checkbox"]:checked + label:before {
+    border: 1px solid var(--primary-red-color);
+    background: var(--primary-red-color);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+  }
+  .acceptTermsCheck input[type="checkbox"]:checked + label:after {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 10px;
+    border: solid var(--white-color);
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(38deg);
+    -ms-transform: rotate(38deg);
+    transform: rotate(38deg);
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+  }*/
 
 .main-container .right-panel .checkboxes {
     width: auto;
@@ -844,8 +899,12 @@ body {
     background-color: #c72229;
     color: #ffe2dc;
     border: none;
-    border-radius: 14px;
-    width: auto;
+    border-radius: 12px;
+    width: 18%;
+    height: 46px;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-right: 5px;
 }
 
 .main-container .right-panel .sendOTPLabel{
@@ -853,18 +912,23 @@ body {
     color: #ffe2dc;
     border: none;
     border-radius: 14px;
-    width: auto;
+    width: 18%;
+    height: 37px;
 }
 
 .main-container .right-panel .sendOTPBtn{
     background-color: #c72229;
     color: #ffe2dc;
     border: none;
-    border-radius: 14px;
-    width: auto;
+    border-radius: 12px;
+    width: 18%;
+    height: 46px;
+    font-size: 14px;
+    text-transform: uppercase;
 }
 
-.main-container .right-panel .section-paragraph1 {
+.main-container .right-panel .section-paragraph1,
+.main-container .right-panel .section-paragraph1 p {
     font-weight: 600;
     font-size: 20px;
     color: #292929;
@@ -887,7 +951,9 @@ body {
 .main-container .right-panel .section-paragraph2 p {
     margin: 0;
 }
-
+.section-paragraph p{
+    line-height: 18px;
+}
 .main-container .right-panel .name {
     font-size: 30px;
     margin-left: 7%;
@@ -2001,11 +2067,14 @@ a:not([href]) {
     border-radius: 12px;
     padding: 9px 46px;
     font-family: Anek Latin;
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 400;
     line-height: 19.8px;
     color: #fff;
-    margin: 0 24px 0 0;
+    margin: 0 14px 0 10px;
+    height: 46px;
+    position: relative;
+    top: -8px;
 }
 .main-container .right-panel .custom-line {
     position: relative;
@@ -2029,14 +2098,12 @@ a:not([href]) {
     background-color: #fff;
     border: 1px solid #d5d7de;
     border-radius: 16px;
-    min-width: 21%;
-    margin: 0px 4% 3% 0;
-    padding: 16px 20px;
-    color: #902a38;
-    font-size: 16px;
+    min-width: 24%;
+    margin: 0px 1% 3% 0;
+    padding: 16px 11px 16px 10px;
     box-shadow: 0px 6px 16px 0px #00000014;
     font-family: Anek Latin;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     line-height: 24px;
     text-align: left;
@@ -2044,12 +2111,17 @@ a:not([href]) {
     position: relative;
 }
 .main-container .right-panel .paymentBtn.btn-ENach,
-.main-container .right-panel .paymentBtn.btn-EMandate {
+.main-container .right-panel .paymentBtn.btn-EMandate,
+.main-container .right-panel .paymentBtn.btn-AutoDebit {
     background: #fff url(../../../assets/Img/img_faster_process.svg) no-repeat 90%;
+    background-size: 50%;
 }
 .main-container .right-panel .paymentBtn.active-button {
     color: #000;
     border-color: #C7222A;
+}
+.main-container .right-panel .paymentBtn:focus {
+    border-color: #C7222A !important;
 }
 .main-container .right-panel .send-btn.send-link-btn:hover, 
 .main-container .right-panel .next-btn:hover,
@@ -2337,11 +2409,11 @@ color: #fff;
 }
 .abhaquestion p {
     font-family: Anek Latin;
-font-size: 12px;
-font-weight: 500;
+font-size: 14px;
+font-weight: 400;
 line-height: 18px;
 text-align: left;
-color: #000;
+color: #4c4c4c;
 }
 .abhaLabel2 {
     width: 30%;
@@ -2643,6 +2715,8 @@ margin: 0;
     color: white;              /* Set text/icon color */
     border: none;              /* Remove border */
     border-radius: 12px;
+    margin-left: 10px;
+    padding: 10px 20px;
     i {
       color: white;            /* Set icon color */
     }

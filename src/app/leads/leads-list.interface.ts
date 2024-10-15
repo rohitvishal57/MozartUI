@@ -26,6 +26,7 @@ export interface LeadsList {
     notes?: string | null;
     createdOn?: string | null;
     isAssign?: boolean | null;
-    campaignNumber?:string
+    campaignNumber?:string;
+    isSelected?:boolean;
   }
   

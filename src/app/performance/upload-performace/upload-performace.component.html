@@ -1,0 +1,66 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>Upload Bulk File</h2>
+            </div>
+            <form (ngSubmit)="onSubmit()" [formGroup]="performanceUploadForm" novalidate autocomplete="false">
+                <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-radio-block radio_additionalInfo">
+                                <label>
+                                    <input type="radio" name="priorpolicies" (change)="viewSelected($event)" formControlName="selectedView" value="performance" checked>
+                                    <span>Performance</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="priorpolicies" (change)="viewSelected($event)" formControlName="selectedView" value="detailedView">
+                                    <span>Detailed View</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4">
+                        <div class="sample_uploadDocument">
+                            <a *ngIf="performanceUploadForm.get('selectedView')?.value == 'performance'" href="assets/performance-assets/FinalSheetPerformanceView.xlsx">Download sample
+                                template file</a>
+                            <a *ngIf="performanceUploadForm.get('selectedView')?.value != 'performance'" href="assets/performance-assets/DetailedView.xlsx">Download sample
+                                    template file</a>
+                        </div>
+                        <div class="uploadDocument_main">
+                            <div class="uploadDocument_area" (click)="file.click()">
+                                <div class="ud_area_left">
+                                    <h6>Upload Documents</h6>
+                                    <p>xlsx/xls/csv Files</p>
+                                    {{selctedFileName}}
+                                </div>
+                                <div class="ud_area_right">
+                                    <button type="button" class="btn_uploadDocument">
+                                        <span class="upload_icon"><img
+                                                src="assets/Img/icon_upload_white.svg"></span>
+                                        Upload
+                                    </button>
+                                </div>
+                                <!-- <input type="file" id="file" #fileInput (change)="newfile($event)" style="display:none;" /> -->
+                                <input type="file" accept=".xlsx, .xls, .csv" id="file" #file style="display: none"
+                                    (change)="newfile($event)">
+                            </div>
+                        </div>
+                        <span *ngIf="isFilenotSelected" class="ui-error block-show">
+                            Please select a file to continue.
+                        </span>
+                        <span class="ui-error block-show" *ngIf="showNote">
+                            File format not supported ! Please upload .xls, .xlsx or .csv files.
+                        </span>
+                    </div>
+                    
+                    <div class="col-12 mt-5">
+                        <button type="submit" (click)="continueFileUpload()" class="btn_red">Continue</button>
+                    </div>
+                </section>
+
+            </form>
+
+        </div>
+    </div>
+</main>

@@ -7,7 +7,7 @@ import { ClaimsDetailsComponent } from '../claims-details/claims-details.compone
 const routes: Routes = [
   { path: "claimsList", component: ClaimsListViewComponent },
   { path: "createClaims", component: ClaimsViewComponent },
-  { path: "detailsView/:id", component: ClaimsDetailsComponent }
+  { path: "detailsView/:id/:claimInfoId/:policyNumber", component: ClaimsDetailsComponent }
 ];
 
 @NgModule({

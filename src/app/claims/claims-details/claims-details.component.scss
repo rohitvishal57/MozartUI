@@ -168,6 +168,7 @@
       display: flex;
       flex-direction: column;
       gap:8px;
+      border-radius: 8px;
       padding: 8px 16px;
       background: #ffffff;
       box-shadow: 0px 2px 4px 0px #D5D7DE33;
@@ -315,6 +316,75 @@
     }
     .uploadedFiles_main li .uploadedFiles_headInfo {
       display: none;
+    }
+  }
+  .tracker_claimDetails {
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    .btn_iconText {
+      font-weight: 600;
+      font-size: 12px;
+      img {
+        width: 13px;
+        height: 13px;
+      }
+    }
+    .tracker_statusInfo {
+      background: radial-gradient(102.74% 97.48% at -2.74% 9.46%, #FFFAF0 0%, #FFF9EC 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      h6 {
+        font-weight: 400;
+        font-size: 18px;
+        color: #4c4c4c;
+        margin: 0;
+        display: flex;
+        gap:8px;
+        span {
+          color: #F7A500;
+          font-weight: 700;
+        }
+      }
+      p {
+        font-weight: 300;
+        font-size: 14px;
+        color: #4c4c4c;
+        margin: 0;
+      }
+    }
+    .claim_historyData {
+      border: 1px solid #EBEBEC;
+      padding: 7px;
+      border-radius: 5px;
+      margin: 0;
+    }
+  }
+  .item_claimProgressButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    .btn_red {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-weight: 500;
+      font-size: 14px;
+      img {
+        filter: brightness(1) invert(1);
+        width: 11px;
+        height: 7px;
+      }
+      &:hover {
+        img {
+          filter: brightness(0) invert(0);
+        }
+      }
     }
   }
   /*-----Claims Details start-----*/

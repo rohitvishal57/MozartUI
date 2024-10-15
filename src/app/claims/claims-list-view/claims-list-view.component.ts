@@ -28,12 +28,17 @@ export class ClaimsListViewComponent implements OnInit {
   rows: number = 10;
   page: number = 1;
   selectedStatus = 'all';
-  toggledropdown: boolean = false;
   toggleSearchdropdown: boolean = false;
   searchInputControl = new FormControl("");
   selected: string = "";
   userId!: number;
   selectedClaim: any = null;
+  toggeledropdown: boolean = false;
+  toggeleSearchdropdown: boolean = false;
+  fromDate: any;
+  toDate: any;
+  
+  
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
 
   ngOnInit(){
@@ -74,16 +79,50 @@ claimsReqBody =  {
     "searchString": "string",
     "pageNumber": 1,
     "pageSize": 270,
-    "fromDate":"2023-04-01",
-    "toDate":"2024-04-01"
+    "fromDate": "2022-04-01",
+    "toDate": "2024-04-01"
+
   }
 fetchData(): void {
-  this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => {    
+  this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
     this.claims = res.data;       
     this.gridClaimsData = res.data; 
     this.totalRecords = this.claims.length;    
   });
   }
+
+  formatDate(dateType: "fromDate" | "toDate") {
+    if (dateType === "fromDate" && this.fromDate) {
+      this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
+    } else if (dateType === "toDate" && this.toDate) {
+      this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
+    }
+  }
+  toggleFilterDropdown() {
+    if(this.toggeleSearchdropdown==true)
+    {
+       this.toggeleSearchdropdown=false;
+    }
+    this.toggeledropdown = !this.toggeledropdown;    
+  }
+
+  applyFilter() {
+  this.formatDate("fromDate");
+  this.formatDate("toDate");
+  this.claimsReqBody.fromDate=this.fromDate;
+  this.claimsReqBody.toDate=this.toDate;
+  this.fetchData();
+  this.toggeledropdown=false;
+}
+
+cancel() {
+  this.fromDate = null;
+  this.toDate = null;
+  this.claimsReqBody.fromDate = '';
+  this.claimsReqBody.toDate = '';
+  this.toggeledropdown = false;
+  this.fetchData();
+}
 
   //-----------search dropdown----------//
   // toggleSearchDropdown(event: any){
@@ -99,8 +138,15 @@ fetchData(): void {
     if (searchValue) {
       this.claimsReqBody.searchType = this.selected;
       this.claimsReqBody.searchString = searchValue;
+
       this.fetchData();
      // this.toggleSearchdropdown = false;
+     this.claimsReqBody.searchType = '';
+      this.claimsReqBody.searchString = '';
+      console.log('searchvalue', this.claimsReqBody.searchString);
+      console.log('searchtype', this.claimsReqBody.searchType);
+
+      
     }
     else if(searchValue === ''){  
       this.selected = '';
@@ -112,6 +158,8 @@ fetchData(): void {
     else{
       this.fetchData();
     }
+    this.selected = '';
+    this.searchInputControl.reset();
   }
 
 onSelectChanges(event: any): void {
@@ -143,14 +191,14 @@ getPlaceholder(): string {
     }
   } 
   
-  toggleDropdown(row: any) {
-    if (this.selectedClaim && this.selectedClaim.id === row.id) {
-      this.selectedClaim = null; 
-    } else {
-      this.selectedClaim = row;
-    }
-  }
-  maskPhoneNumber(policyNumber: string) {
+  // toggleDropdown(row: any) {
+  //   if (this.selectedClaim && this.selectedClaim.id === row.id) {
+  //     this.selectedClaim = null; 
+  //   } else {
+  //     this.selectedClaim = row;
+  //   }
+  // }
+ // maskPhoneNumber(policyNumber: string) {
     // if (!policyNumber || policyNumber.length < 4) {
     //   return policyNumber; 
     // }
@@ -160,9 +208,30 @@ getPlaceholder(): string {
     // const masked = '******';
     
     // return `${start}${masked}${end}`;
-  }
+  //}
   navigateToViewClaim(row:any){
-    this.router.navigate([`/claims/detailsView/${row.id}`]);
-   // this.router.navigateByUrl(`/portal/agent/claimsDetails`);
+    let claimDetailsReqBody = {
+      "id": row.id,
+      "claimNumber": row.claimInfoId,
+      "policyNumber": row.policyNumber
+    };
+    this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
+      (response) => {
+        this.router.navigate([`/claims/detailsView/${row.id}/${row.claimInfoId}/${row.policyNumber}`]);
+        // this.router.navigate([`/claims/detailsView`], {
+        //   queryParams: {
+        //     id: row.id,
+        //     claimNumber: '',
+        //     policyNumber: row.policyNumber
+        //   }
+        // });
+      },
+      (error) => {
+        console.error('Error fetching claim details', error);
+       
+      }
+    );
   }
+  
+  
 }

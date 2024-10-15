@@ -208,6 +208,9 @@
       &:focus {
         border: 0px solid var(--site-body-bg) !important;
       }
+      option {
+        color: #333;
+      }
     }
   }
   

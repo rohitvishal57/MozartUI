@@ -29,4 +29,41 @@ export class ClaimsViewService {
     const uploadFiles = this.configService.config.baseUrl + this.configService.config.uploadFiles;
     return this.httpService.post(uploadFiles, formData);
   }
+  getStates(statesReqBody: any){
+    const getStates = this.configService.config.baseUrl + this.configService.config.getStates;
+    return this.httpService.post(getStates, statesReqBody);
+    //return this.httpService.post('https://localhost:7026/api/getstatename', statesReqBody);
+
+  }
+
+  getCitiesByState(citiesReqBody:any){
+    const getCitiesByState = this.configService.config.baseUrl + this.configService.config.getCities;
+    return this.httpService.post(getCitiesByState, citiesReqBody);
+    //return this.httpService.post('https://localhost:7026/api/getcityname', citiesReqBody);
+
+  }
+
+  getHospitalsByCities(hospitalsReqBody:any){
+    const getHospitalsByCities = this.configService.config.baseUrl + this.configService.config.getHospitals;
+    return this.httpService.post(getHospitalsByCities, hospitalsReqBody);
+  // return this.httpService.post('https://localhost:7026/api/gethospitaldetails', hospitalsReqBody);
+  }
+
+  getClaimDetailsView(claimDetailsReqBody:any){
+    const getClaimDetailsView = this.configService.config.baseUrl + this.configService.config.getClaimsDetails;
+    return this.httpService.post(getClaimDetailsView, claimDetailsReqBody);
+    //return this.httpService.post('https://localhost:7026/api/getclaimdetails', claimDetailsReqBody);
+  }
+
+  getClaimsHistory(claimHistoryReqBody:any, policyNo:any){
+    const getClaimsHistory = this.configService.config.baseUrl + this.configService.config.getClaimHistory+`=${policyNo}`;
+   return this.httpService.post(getClaimsHistory, claimHistoryReqBody);
+   // return this.httpService.post('https://localhost:7026/api/getclaimHistory?policynumber='+policyNo, claimHistoryReqBody);
+
+  }
+
+  getBlackListedhospitals(claimsBlackListHspReqBody:any){
+    const getBlackListedhospitals = this.configService.config.baseUrl + this.configService.config.blackListedHospitals;
+    return this.httpService.post(getBlackListedhospitals, claimsBlackListHspReqBody)
+  }
 }

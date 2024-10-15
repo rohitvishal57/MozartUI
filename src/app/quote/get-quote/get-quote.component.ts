@@ -191,6 +191,8 @@ export class GetQuoteComponent {
       numberOfInsuredMembers: [null],
       familySize: [null],
       memberPolicyType: [this.selectedPlan],
+      memberDobProposer:[''],
+      memberAgeProposer:[''],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
@@ -343,6 +345,13 @@ export class GetQuoteComponent {
 
   continue() {
     console.log(this.quoteFormGroup);
+    this.quoteFormGroup.get('insuredMemberDetails')?.value.forEach((item:any)=>{
+      if(item.relation == 'Self'){
+        this.quoteFormGroup.get('memberDobProposer')?.setValue(item.memberdob);
+        this.quoteFormGroup.get('memberAgeProposer')?.setValue(item.memberAge);
+        console.log(item);
+      }
+    })
     this.quoteFormGroup.get('numberOfInsuredMembers')?.setValue(this.selectedRelationships.length);
     this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length + "A");
     console.log(this.quoteFormGroup.value);
@@ -523,11 +532,7 @@ export class GetQuoteComponent {
 
   onPlanTypeChange(planType: string) {
     this.selectedPlan = planType;
-  }
-
-  updatePlanType() {
-    this.quoteFormGroup.get('memberPolicyType')?.setValue(this.selectedPlan);
-    // this.saveDataToStorage();
+    this.quoteFormGroup.get('memberPolicyType')?.setValue(planType);
     this.activeDropdown = null;
   }
 
@@ -616,26 +621,26 @@ export class GetQuoteComponent {
   }
 
 
-  getProposerPincode(event: any) {
+  // getProposerPincode(event: any) {
 
-    console.log(event.target.value, typeof event)
-    const reqdata = {
-      "pincode": event.target.value
-    }
-    this.service.getPinCodeByCity(reqdata).subscribe({
-      next: (res) => {
-        console.log(res)
-        this.proposerZone = res.data.zone;
-        this.proposerCity = res.data.city;
-        this.proposerState = res.data.state;
-        this.proposerZoneValue = res.data.zoneCode;
-      },
-      error: (err) => {
-        console.error(err)
-        this.toast.warning({ detail: "WARNING", summary: "Could not fetch pincode details.", duration: 1000 });
-      }
-    });
+  //   console.log(event.target.value, typeof event)
+  //   const reqdata = {
+  //     "pincode": event.target.value
+  //   }
+  //   this.service.getPinCodeByCity(reqdata).subscribe({
+  //     next: (res) => {
+  //       console.log(res)
+  //       this.proposerZone = res.data.zone;
+  //       this.proposerCity = res.data.city;
+  //       this.proposerState = res.data.state;
+  //       this.proposerZoneValue = res.data.zoneCode;
+  //     },
+  //     error: (err) => {
+  //       console.error(err)
+  //       this.toast.warning({ detail: "WARNING", summary: "Could not fetch pincode details.", duration: 1000 });
+  //     }
+  //   });
 
-  }
+  // }
 
 }

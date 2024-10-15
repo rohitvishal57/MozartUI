@@ -594,7 +594,8 @@ button {
     filter: brightness(0) invert(0);
     opacity: 0.8;
 }
-.siteSidenav .sidenavMenu a:hover .img_link.menu-proposals img {
+.siteSidenav .sidenavMenu a:hover .img_link.menu-proposals img,
+.siteSidenav .sidenavMenu a.active .img_link.menu-proposals img {
     filter: brightness(0) invert(1);
     opacity: 1;
 }
@@ -4268,7 +4269,7 @@ input[type="search"]::-webkit-search-results-decoration {
   text-align: center;
 }
 .submain_claimProgressSteps .item_claimProgressSteps .item_count .count {
-  padding: 5px;
+  padding: 0px;
   background: #BEC7D4;
   width: 100%;
   height: 100%;
@@ -4288,10 +4289,12 @@ input[type="search"]::-webkit-search-results-decoration {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
 }
 .submain_claimProgressSteps .item_claimProgressSteps .item_info small {
   font-size: 10px;
   color: #4c4c4c;
+  line-height: 13px;
 }
 .submain_claimProgressSteps .item_claimProgressSteps.completed:before {
   border-width: 0px ;
@@ -4330,7 +4333,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .submain_claimProgressSteps .item_claimProgressSteps.error .img_error {
   display: block;
-  padding: 3px;
+  padding: 1px;
   width: 100%;
   height: 100%;
   display: block;
@@ -4345,6 +4348,28 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .submain_claimProgressSteps .item_claimProgressSteps.error h6 {
   color: #D34528;
+}
+.item_claimProgressInfo {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: #000;
+    padding: 10px 12px;
+    border-radius: 5px;
+    background: #FFF4CE;
+    margin-top: 10px;
+    position: relative;
+}
+.item_claimProgressInfo:before{
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #FFF4CE;
 }
 /*Claim Progress Steps end*/
 
@@ -4499,3 +4524,33 @@ input[type="search"]::-webkit-search-results-decoration {
   margin-top: -30px;
 }
 /*Post Buy Policy Number Generate end*/
+
+.tip_iconWithText {
+    display: flex;
+    gap: 8px;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 15px;
+    color: #595959;
+}
+.tip_iconWithText img {
+    width: 24px;
+    height: 24px;
+}
+.vernacular_declaration .input-checkbox-feild .input-check + label {
+  display: flex;
+}
+.vernacular_declaration label span {
+  font-weight: 400;
+  font-size: 14px;
+  color: #4c4c4c;
+}
+.vernacular_declaration .input-checkbox-feild .input-check + label:before {
+  min-width: 16px;
+  min-height: 16px;
+}
+.vernacular_declaration .input-checkbox-feild .input-check:checked + label:after{
+  bottom: auto;
+  left: 5px;
+  top: 1px;
+}
