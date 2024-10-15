@@ -252,3 +252,27 @@ h6 {
 	top: 2px;
     position: relative;
 }
+
+.leads_searchWraper {
+	.field_searchMain {
+	  display: flex;
+	  gap:8px;
+	  margin-right: 5px;
+	  .filterSearch {
+		height: auto;
+		padding: 12px 35px 12px 16px;
+		&:focus {
+		  border-width: 0 !important;
+		}
+	  }
+	  button {
+		position: absolute;
+		right: 10px;
+		top: 10px;
+		padding: 0;
+		img {
+		  position: initial;
+		}
+	  }
+	}
+  }

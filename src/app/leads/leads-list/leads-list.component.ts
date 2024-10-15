@@ -26,7 +26,7 @@ export class LeadsListComponent {
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
-  selected: string = "";
+  selected: string = "leadId";
   searchInputControl = new FormControl("", Validators.required);
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
@@ -122,7 +122,6 @@ export class LeadsListComponent {
     });
 
     let fetchActivityTypeRequest: any = {};
-    debugger
     this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
       (response) => {
         console.log("ActivityType information : " + response.activityName);
@@ -323,6 +322,7 @@ export class LeadsListComponent {
       this.placeholder = '';
     }
     this.searchInputControl.updateValueAndValidity();
+    this.getPlaceholder();
   }
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
@@ -352,36 +352,13 @@ export class LeadsListComponent {
     this.getLeadsList();
     menuTrigger.closeMenu();
   }
-  applySearch(menuTrigger: MatMenuTrigger) {
+  applySearch() {
     if (this.searchInputControl.valid) {
-      // if (this.selected === "mobileNumber") {
-      //   this.leadsLisRequestBody.mobileNumber = this.searchInputControl.value!;
-      //   this.leadsLisRequestBody.name = "";
-      //   this.leadsLisRequestBody.email = "";
-      //   this.leadsLisRequestBody.leadNumber = "";
-      // }
-      // else if (this.selected === "name") {
-      //   this.leadsLisRequestBody.name = this.searchInputControl.value!;
-      //   this.leadsLisRequestBody.mobileNumber = "";
-      //   this.leadsLisRequestBody.email = "";
-      //   this.leadsLisRequestBody.leadNumber = "";
-      // }
-      // else if (this.selected === "email") {
-      //   this.leadsLisRequestBody.email = this.searchInputControl.value!;
-      //   this.leadsLisRequestBody.mobileNumber = "";
-      //   this.leadsLisRequestBody.name = "";
-      //   this.leadsLisRequestBody.leadNumber = "";
-      // }
-      // else if (this.selected === "leadId") {
-        // this.leadsLisRequestBody.leadNumber = this.searchInputControl.value!;
-        // this.leadsLisRequestBody.mobileNumber = "";
-        // this.leadsLisRequestBody.name = "";
-        // this.leadsLisRequestBody.email = "";
-      // }
       this.leadsInfoListRequestBody.searchby=this.searchInputControl.value!;
-      this.getLeadsList();
-      menuTrigger.closeMenu();
+    }else{
+      this.leadsInfoListRequestBody.searchby = "";
     }
+    this.getLeadsList();
   }
   renewalListView(view: string) {
     this.selectedView = view;
@@ -429,7 +406,6 @@ export class LeadsListComponent {
   }
 
   assineLead() {
-    debugger
     const selectedLeadIDs = this.checkBoxSelectedLeads.map((lead: LeadsList) => lead.leadNumber);
     console.log("selectedLeadIDs", selectedLeadIDs)
     let assigneLeadRequestBody: any = {};
@@ -485,7 +461,6 @@ export class LeadsListComponent {
 
 
   updateSelectedLeads(leadInfo: any) {
-    debugger
     if (this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInfo.leadNumber)) {
       this.checkBoxSelectedLeads = this.checkBoxSelectedLeads.filter((lead: any) => lead.leadNumber !== leadInfo.leadNumber);
     } else {
@@ -520,4 +495,20 @@ export class LeadsListComponent {
     this.activeFilter = "unAssignedLead";
 
   }
+
+  getPlaceholder(): string {
+    debugger
+    if (this.selected === 'leadId') {
+        return 'Enter Lead Number';
+      } else if (this.selected === 'mobileNumber') {
+        return 'Enter mobileNumber';
+      } else if (this.selected === 'name') {
+        return 'Enter Name';
+      }else if (this.selected == 'email'){
+        return 'Enter EmailId';
+      }
+    else {
+        return 'Search...';
+      }
+    } 
 }

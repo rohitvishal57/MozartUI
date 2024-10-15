@@ -30,66 +30,31 @@
                         <li>
                             <button type="button" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'unAssignedLead'}"  (click)="getUnAssignedLeads()">Unassigned Leads</button>
                         </li>
-                        <!-- <li>
-                            <button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('createdInLessThan30DaysCount')">< 30 Days ({{countsList.createdInLessThan30DaysCount}})</button>
-                        </li>
-                        <li>
-                            <button type="button" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('createdIn30To60DaysCount')">30-60 Days ({{countsList.createdIn30To60DaysCount}})</button>
-                        </li>
-                        <li>
-                            <button type="button" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('createdIn60To90DaysCount')">60-90 Days ({{countsList.createdIn60To90DaysCount}})</button>
-                        </li> -->
                     </ul>
                 </div>
+
+                
+             
                 <div class="quickFilterRight">
-                    <div class="searchWraper " [matMenuTriggerFor]="searchMenu" #menuTrigger="matMenuTrigger">
-                        <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick"
-                            aria-label="field_searchWraper" data-bs-toggle="dropdown" aria-expanded="false"
-                            (click)="toggleSearchDropdown()" [ngClass]="{'active': selected != ''}">
-                            <img src="assets/Img/icon_magnify_grey.svg" alt="Search">
-                        </button>
-                        <mat-menu #searchMenu="matMenu">
-                            <div class="searchWraperForm" (click)="$event.stopPropagation()">
-                                <div class="searchHeader">
-                                    <header class="search-title mb-3">Search</header>
-                                    <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search"
-                                        (click)="cancelSearch(menuTrigger)">
-                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                    </button>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <select id="idtype" name="idtype" class="form-select input-selectBox"
-                                                [(ngModel)]="selected" (change)="onSelectChanges($event)">
-                                                <option value="">Select Search Option</option>
-                                                <!-- <option value="mobileNumber">Mobile Number</option>
-                                                <option value="name">Name</option>
-                                                <option value="email">Email ID</option> -->
-                                                <option value="leadId">Lead ID</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="input-block form-floating input-block-renew"
-                                            *ngIf="selected !== ''">
-                                            <input type="text" id="name" name="name" placeholder=""
-                                                class="form-control input-textBox" [formControl]="searchInputControl">
-                                            <label for="name">Enter {{placeholder}}</label>
-                                            <mat-error *ngIf="searchInputControl.invalid && searchInputControl.touched">
-                                                {{ getErrorMessage() }}
-                                            </mat-error>
-                                        </div>
-                                    </div>
-                                </div>
-                                <footer style="display: flex;">
-                                    <button type="button" value="apply"
-                                        [ngClass]="{'btn_search_white btn_fullWidth': !searchInputControl.valid,'btn_red btn_fullWidth': searchInputControl.valid}"
-                                        (click)="applySearch(menuTrigger)">Apply</button>
-                                </footer>
-                            </div>
-                        </mat-menu>
+                   
+
+
+                    <div class="body_flex_row leads_searchWraper">
+                        <div class="field_searchMain">
+                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)">
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="leadId">Lead Id</option>
+                                <option value="mobileNumber">Mobile Number</option>
+                                <option value="name">Name</option>
+                                <option value="email">Email ID</option>
+                            </select>
+                            <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <button  type="button" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                        </div>
                     </div>
+                 
+
+                
                     <div class="filterWraper">
                         <button type="button" value="filter" (click)="toggleFilterDropdown()"
                             class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}"
