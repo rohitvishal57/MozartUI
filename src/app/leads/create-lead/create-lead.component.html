@@ -443,7 +443,6 @@
                     </div>
                 </section>
                 
-                
                 <section class="white_container mb-5" *ngIf="action!='addNotes'">
                     <div class="row mb-3">
                         <div class="col-12 mb-4">
@@ -528,53 +527,57 @@
                             </div>
                         </div>
                     </div>
+
+                </section>
+                    <section class="white_container mb-5" *ngIf="action=='updateStatus'">
+                        <div class="row mb-3">
+                            <div class="col-12 mb-4">
+                                <h6 class="heading-16-red">Update Lead Status</h6>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="input-block form-floating input-block-renew">
+                                    <select class="form-select input-selectBox" formControlName="referenceStatus"
+                                    (change)="changeReferStatus($event)">
+                                        <option value="" disabled selected>Choose Option</option>
+                                        <option *ngFor="let item of referenceStatus" [value]="item.name">
+                                            {{ item.name }}
+                                        </option>
+                                    </select>
+                                    <label for="interestedProductName">Enter Lead Status</label>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="input-block form-floating input-block-renew">
+                                    <select class="form-select input-selectBox" formControlName="referenceSubStatus"
+                                        (selectionChange)="campnoSelected()">
+                                        <option value="" disabled selected>Choose Option</option>
+                                        <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
+                                            {{ item.name }}
+                                        </option>
+                                    </select>
+                                    <label for="familyConstruct">Enter Lead Sub-Status</label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="row mt-4">
+                            <div class="col-12">
+                                <button type="submit" class="btn_red">Update Status</button>
+                            </div>
+                        </div> -->
+               
+                    </section>
+        
+
+                    
                     <div class="row mt-4">
                         <div class="col-12">
                             <button type="submit" class="btn_red">Save</button>
                         </div>
                     </div>
-                </section>
+              
                  
             </form>
-            <section class="white_container mb-5" *ngIf="action=='updateStatus'">
-                <form (ngSubmit)="updateStatusSubmit()" [formGroup] = "updateLeadStatus" >
-                <div class="row mb-3">
-                    <div class="col-12 mb-4">
-                        <h6 class="heading-16-red">Update Lead Status</h6>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" formControlName="referenceStatus"
-                            (change)="changeReferStatus($event)">
-                                <option value="" disabled selected>Choose Option</option>
-                                <option *ngFor="let item of referenceStatus" [value]="item.name">
-                                    {{ item.name }}
-                                </option>
-                            </select>
-                            <label for="interestedProductName">Enter Lead Status</label>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" formControlName="referenceSubStatus"
-                                (selectionChange)="campnoSelected()">
-                                <option value="" disabled selected>Choose Option</option>
-                                <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
-                                    {{ item.name }}
-                                </option>
-                            </select>
-                            <label for="familyConstruct">Enter Lead Sub-Status</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <button type="submit" class="btn_red">Update Status</button>
-                    </div>
-                </div>
-             </form>
-            </section>
-
+           
             <section class="white_container mb-5" *ngIf="action=='addNotes'">
                 <form (ngSubmit)="addNotesSubmit()" [formGroup] = "addNoteForm" >
                 <div class="row mb-3">
