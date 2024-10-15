@@ -1,43 +1,9 @@
 .main-container {
-    padding: 13rem 5rem 13rem 5rem;
     display: flex;
     flex-direction: column;
     background-color: #fff;
     width: 95%;
     float: right;
-
-    .profile-heading {
-
-        .profile-tabs {
-            .tab-actions {
-                display: flex;
-            }
-
-            .tab-actions>li:first-child {
-                margin-left: 0px;
-            }
-
-            .tab-actions>li {
-                justify-content: start;
-                background-color: #f1f1f1;
-                border-radius: 16px;
-                // background-color: #FFE7E5;
-                padding: 9px 12px 7px 12px;
-                margin-left: 16px;
-            }
-
-            li.tab.active {
-                background: #FFE7E5;
-            }
-
-        }
-
-        .profile-tabs-action {
-            display: flex;
-            padding-top: 16px;
-            justify-content: space-between;
-        }
-    }
 
     .profile-details {
         padding-top: 16px;
@@ -78,7 +44,6 @@
             }
 
         }
-
 
     }
 }

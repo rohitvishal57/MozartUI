@@ -9,23 +9,19 @@ import { ProfileService } from './profile.service';
 export class ProfileComponent implements OnInit {
 
   profileDetails: any;
-  activeTab = 'tab1';
 
   constructor(private profileService: ProfileService) { }
 
   ngOnInit(): void {
-    const reqData={
+    const reqData = {
       "agentCode": localStorage.getItem('agentCode')
     }
-    this.profileService.getProfileDetails(reqData).subscribe(res =>{
-      if(res.success){
+    this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
+      if (res.success) {
         this.profileDetails = res.data;
       }
     })
   }
 
-  tabSelection(filter: string) {
-    this.activeTab = filter;
-  }
 
 }
