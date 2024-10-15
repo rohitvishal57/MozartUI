@@ -12,8 +12,7 @@ interface PolicyState {
 })
 export class RenewalsService {
 
-  constructor(private configService: ConfigService,
-    private httpService: HttpService) { }
+  constructor(private configService: ConfigService,private httpService: HttpService) { }
 
   private stateSource = new BehaviorSubject<{ button: string, value?: any }>({ button: 'primary' });
   state$ = this.stateSource.asObservable();
@@ -29,7 +28,6 @@ export class RenewalsService {
     return this.quote$;
   }
   
-
   updateState(button: string, value?: any) {
     this.stateSource.next({ button, value });
   }
@@ -75,5 +73,9 @@ export class RenewalsService {
   getproductdetailsandfeatures(reqBody: any){
     const getproductdetailsandfeatures = this.configService.config.baseUrl + this.configService.config.getproductdetailsandfeatures;
     return this.httpService.post(getproductdetailsandfeatures, reqBody);
+  }
+  updateMemberDetailsApi(reqBody: any){
+    const updateMemberDetails = this.configService.config.baseUrl + this.configService.config.updateMemberDetails;
+    return this.httpService.post(updateMemberDetails, reqBody);
   }
 }

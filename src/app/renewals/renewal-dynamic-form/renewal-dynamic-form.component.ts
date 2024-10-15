@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
 import { Options } from '@angular-slider/ngx-slider';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -29,11 +30,26 @@ export class RenewalDynamicFormComponent implements OnInit {
   renewalInfo: any;
   formObject: any = {};
   subObject:any = {};
-  requestObject: any = {
-    policyNumber: '',
-  };
   request:any;
   selectedSumInsured: any;
+  optionalCovers:any;
+  referenceNumber:any=null;
+  selectedTenure: string=''; 
+  baseQuote:string='';
+  productId:any;
+  member:any;
+  activeTab: string = 'chronicCondition';
+  memberRole: string='';
+  preexistingConditionSelected: string = 'no'; 
+  healthConditions: string[] = [
+    'Asthma',
+    'Diabetes',
+    'Hyperlipidaemia',
+    'Hypertension',
+    'PTCA',
+    'COPD',
+    'HighBMI'
+  ];
   sliderOptions: Options = {
     stepsArray: [
       { value: 500000 }, 
@@ -49,25 +65,9 @@ export class RenewalDynamicFormComponent implements OnInit {
       return '';
     }
   };
-  optionalCovers:any;
-  referenceNumber:any=null;
-  selectedTenure: string=''; 
-  baseQuote:string='';
-  productId:any;
-  healthConditions: string[] = [
-    'Asthma',
-    'Diabetes',
-    'Hyperlipidaemia',
-    'Hypertension',
-    'PTCA',
-    'COPD',
-    'HighBMI'
-  ];
-  preexistingConditionSelected: string = 'no'; 
-  member:any;
+  requestObject: any = {policyNumber: "string",referenceNumber: "string",};
 
-  constructor(private fb: FormBuilder,private renewalService: RenewalsService,private router: Router) {
-  }
+  constructor(private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,private toast: NgToastService) {}
 
   ngOnInit() {
     this.renewalService.policy$.subscribe(policy => {
@@ -90,7 +90,7 @@ initializeForm() {
     if (controlValue instanceof Object && !(controlValue instanceof Array)) {
       group[key] = this.fb.group(
         Object.keys(controlValue).reduce((subForms: { [nestedKey: string]: any }, nestedKey: string) => {
-          subForms[nestedKey] = [controlValue[nestedKey]];  // Assign control value to each nested key
+          subForms[nestedKey] = [controlValue[nestedKey]]; 
           return subForms;
         }, {})
       );
@@ -114,17 +114,62 @@ formatTickLabel(value: number, forSlider: boolean): string {
   }
   return value.toString();
 }
+setActiveTab(tabName: string): void {
+  this.activeTab = tabName;
+}
  handleAction(event: string,item?: any) {
      switch (event) {
-       case 'addMember':
+       case 'Member':
          this.formId=5001;
-         if (event === 'addMember') {
-          this.request={...this.requestObject,...this.form.value,
-            referenceNumber:this.referenceNumber,SumInsured:this.selectedSumInsured,
-            BaseQuote:this.baseQuote,ProductId:this.productId
-           }
-           this.request.policyNumber='21-24-0002334-00';
-           console.log(this.request);
+         if (this.memberRole === 'Add' && this.form.valid) {
+            this.form.value.SumInsured=this.selectedSumInsured;
+            this.requestObject.member=JSON.stringify(this.form.value);
+            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.referenceNumber=this.referenceNumber; 
+            this.requestObject.agentCode="4620973";
+            this.requestObject.productId=2;
+            this.requestObject.quoteData="";
+            console.log(this.requestObject);
+            this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
+              (res:any) => {
+                if(res.data.isUpdateSuccess == true){
+                  this.renewalInfo.response.policyData[0].Members.push(this.form.value);
+                  const newMemberIndex = this.renewalInfo.response.policyData[0].Members.length - 1;
+                  this.renewalInfo.response.policyData[0].Members[newMemberIndex].SumInsured = this.selectedSumInsured;
+                  this.referenceNumber=res.data.referenceNumber;
+                }
+                console.log('updated',res);
+              },
+              (err) => {
+                this.toast.error({ detail: "Error", summary: "Failed to Add New Member.", duration: 1500 });
+                console.log("Error coming from updateMemberDetails API", err);}
+            );
+         } 
+         else if (this.memberRole === 'Update' && this.form.valid) {
+            this.form.value.SumInsured=this.selectedSumInsured;
+            this.requestObject.member=JSON.stringify(this.form.value);
+            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.referenceNumber=this.referenceNumber; 
+            this.requestObject.agentCode="4620973";
+            this.requestObject.productId=2;
+            this.requestObject.quoteData="";
+            console.log(this.requestObject);
+            this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
+              (res:any) => {
+                if(res.data.isUpdateSuccess == true){
+                  const memberIndex = this.renewalInfo.response.policyData[0].Members.findIndex((member:any) => member.FirstName === this.form.value.FirstName);
+                  if (memberIndex !== -1) {
+                    this.renewalInfo.response.policyData[0].Members[memberIndex] = { ...this.renewalInfo.response.policyData[0].Members[memberIndex], ...this.form.value };
+                    this.renewalInfo.response.policyData[0].Members[memberIndex].SumInsured = this.selectedSumInsured;
+                  } else {console.log('Member not found for update');}
+                  this.referenceNumber=res.data.referenceNumber;
+                }
+                console.log('updated',res);
+              },
+              (err) => {
+                this.toast.error({ detail: "Error", summary: "Failed to Update Member.", duration: 1500 });
+                console.log("Error coming from updateMemberDetails API", err);}
+            );
          } 
          else {
            console.log('Form is invalid');
@@ -136,40 +181,52 @@ formatTickLabel(value: number, forSlider: boolean): string {
        case 'editAddress':
          this.formId=5001;
          if (event === 'editAddress') {
-          this.request={...this.requestObject,...this.form.value,referenceNumber:this.referenceNumber
-         }
-         this.request.policyNumber='21-24-0002334-00';
-         this.renewalService.updateaddressApi(this.request).subscribe(
-          (res:any) => {
-            this.renewalInfo = JSON.parse(res.data);
-            console.log('updated',this.renewalInfo);
-          },
-          (err) => {
-            console.log("Error coming from getRenewalInfo API", err);
-          }
-        );
-         console.log(this.request);
-       } 
-       else {
-         console.log('Form is invalid');
-       }         
+            this.requestObject.updatedAddress=JSON.stringify(this.form.value);
+            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.referenceNumber=this.referenceNumber; 
+            console.log(this.requestObject);
+            this.renewalService.updateaddressApi(this.requestObject).subscribe(
+              (res:any) => {
+                if(res.data.isUpdateSuccess == true){
+                  Object.keys(this.form.value).forEach((key) => {
+                    if (this.form.value[key] !== null && this.form.value[key] !== undefined && this.form.value[key] !== '') {
+                      this.renewalInfo.response.policyData[0].HomeAddress[key] = this.form.value[key];
+                    }
+                  })
+                  this.referenceNumber=res.data.referenceNumber;
+                }
+                console.log('updated',this.renewalInfo);
+              },
+              (err) => {
+                this.toast.error({ detail: "Error", summary: "Failed to Update Address.", duration: 1500 });
+                console.log("Error coming from updateaddressApi API", err);}
+            );
+          } 
+          else {
+            console.log('Form is invalid');
+          }         
          break;
          case 'editNominee':
           this.formId=5001;
           if (event === 'editNominee') {
-           this.request={...this.requestObject,...this.form.value,referenceNumber:this.referenceNumber
-            }
-            this.request.policyNumber='21-24-0002334-00';
-            this.renewalService.updatenomineeApi(this.request).subscribe(
+            this.requestObject.updatedNomineeDetails=JSON.stringify(this.form.value);
+            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.referenceNumber=this.referenceNumber;            
+            this.renewalService.updatenomineeApi(this.requestObject).subscribe(
              (res:any) => {
-               this.renewalInfo = JSON.parse(res.data);
-               console.log('nominee',this.renewalInfo);
+              if(res.data.isUpdateSuccess == true){
+                Object.keys(this.form.value).forEach((key) => {
+                  if (this.form.value[key] !== null && this.form.value[key] !== undefined && this.form.value[key] !== '') {
+                    this.renewalInfo.response.policyData[0].Nominee_Details[key] = this.form.value[key];
+                  }
+                 })
+                 this.referenceNumber=res.data.referenceNumber;
+              }
              },
              (err) => {
-               console.log("Error coming from updatenomineeApi", err);
-             }
-           );
-            console.log(this.request);
+              this.toast.error({ detail: "Error", summary: "Failed to Update Nominee Details.", duration: 1500 });
+              console.log("Error coming from updatenomineeApi", err);}
+            );
           } 
           else {
             console.log('Form is invalid');
@@ -185,7 +242,6 @@ formatTickLabel(value: number, forSlider: boolean): string {
    preexistingCondition(value:any){
     this.preexistingConditionSelected=value
     console.log(this.preexistingConditionSelected);
-    
    }
  toggleEditPaymentOption(value: any) {
    if(value == 'email'){
@@ -207,65 +263,32 @@ formatTickLabel(value: number, forSlider: boolean): string {
   if (this.selectedButton === 'primary') {
     if (value == 5005) {
       if (this.renewalInfo?.response?.policyData?.length > 0) {
-        this.subObject = { ...this.renewalInfo?.response?.policyData[0]?.HomeAddress };
-        this.formObject = {
-          Home_Address_1: this.subObject.Home_Address_1 || '',
-          Home_Address_2: this.subObject.Home_Address_2 || '',
-          Home_State: this.subObject.Home_State || '',
-          Home_City: this.subObject.Home_City || '',
-          Home_Pincode: this.subObject.Home_Pincode ||'',
-       };
-      } this.initializeForm();
+        this.formObject = {...this.renewalInfo?.response?.policyData[0]?.HomeAddress };
+      } 
+      this.initializeForm();
       this.formId = value;
     }
     else if (value == 5004) {
       if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
-        const nomineeDetails = this.renewalInfo?.response?.policyData[0]?.Nominee_Details;
-        this.formObject = {
-          nominee_first_name: nomineeDetails.nominee_first_name || '',
-          nominee_last_name: nomineeDetails.nominee_last_name || '',
-          nominee_dob: nomineeDetails.nominee_dob|| '',
-          Nominee_Contact_No: nomineeDetails.Nominee_Contact_No || '',
-          Relationship: nomineeDetails.Relationship || '',
-          nominee_middle_name: '',
-          nominee_mobile_number: '',
-          nominee_emergencyPhoneNumber:'',
-          nominee_email_address:'',
-          nonimee_relationship_code:''
-        };
+        this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Nominee_Details};
       } 
       this.initializeForm();
       this.formId = value;
     }
     else if (value == 5003) {
-      if (this.renewalInfo?.response?.policyData?.length > 0) {
-        this.subObject = { ...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] };
-        this.formObject = {...this.subObject,
-        Name: this.subObject.Name,
-        idtype: this.subObject.Name,
-        air: this.subObject.Name,
-      };
-    }
-    console.log(this.subObject);
-    
-    this.initializeForm();
       this.formId = value;
     }
     else if (value == 5002) {
-      this.formObject = {
-        Name: '',
-        weight: '',
-        height: '',
-        heightin: '',
-        Gender: '',
-        DoB: '',
-        IdProof: '',
-        IdProofNumber:'',
-        AnnualIncome: '',
-        occupation: '',
-        education: '',
-      };
-      
+      if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'addMember'){
+        this.memberRole='Add';
+      this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
+          .reduce((acc: any, key: any) => { acc[key] = '';return acc; }, {});
+      this.formObject = {...this.subObject};
+    }
+    else if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editMember'){
+      this.memberRole='Update';
+      this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0]};      
+    }
      this.initializeForm();
       this.formId = value;
     }
@@ -295,7 +318,6 @@ formatTickLabel(value: number, forSlider: boolean): string {
  onDocumentClick(event: Event) {
    const target = event.target as HTMLElement;
    const dropdown = document.querySelector('.custom-dropdown');
-
    if (dropdown && !dropdown.contains(target)) {
      this.isDropdownOpen = false;
    }
@@ -342,19 +364,12 @@ formatTickLabel(value: number, forSlider: boolean): string {
   getRenewalInfo() {
     this.renewalService.getRenewalInfoApi("21-24-0002334-00", {}).subscribe(
       (res:any) => {
-        console.log("Renewal Info",res);
-        console.log(JSON.parse("{\"productName\":\"Activ One Max\",\"exisitingPolicy\":\"no\",\"isAdityaBirlaPolicy\":null,\"policyNumber\":null,\"getPolicyDetails\":null,\"previousDocumentPara\":null,\"policyDocumentUpload\":null,\"memberDobProposer\":\"1999-07-10\",\"panNo\":\"CBGPJ2411M\",\"verifyKYC\":null,\"productVariant\":\"Max Plus\",\"isEmployee\":false,\"typeOfBusiness\":\"NB\",\"memberPlan\":\"Max Plus\",\"productType\":\"AO\",\"planCode\":\"MASSMARKET_PLUS\",\"productId\":\"7200\",\"preFix\":\"Mr\",\"firstName\":\"PRATIK\",\"middleName\":\"NITIN\",\"lastName\":\"JADHAV\",\"memberAgeProposer\":25,\"proposerGender\":\"M\",\"emailId\":\"pratik@gmail.com\",\"proposerAddress1\":\"S/O: NITIN JADHAV, 402, ARJUN SMRUTI, KALYAN\",\"proposerAddress2\":\"ROAD, GOPAL NAGAR, DOMBIVALI EAST, KALYAN\",\"proposerAddress3\":\"NEAR JANKI HOTEL\",\"city\":\"Thane\",\"country\":\"IN\",\"state\":\"MH\",\"mobileNumber\":\"7738030781\",\"idProof\":\"{\\\"id\\\":\\\"2\\\",\\\"value\\\":\\\"Aadhar Card\\\",\\\"name\\\":\\\"Aadhar Card\\\"}\",\"idNo\":\"7161\",\"annualIncome\":\"500000\",\"occupation\":\"{\\\"id\\\":\\\"O556\\\",\\\"value\\\":\\\"Self Employed\\\",\\\"name\\\":\\\"Self Employed\\\"}\",\"maritalStatus\":\"{\\\"id\\\":\\\"S\\\",\\\"value\\\":\\\"Single\\\",\\\"name\\\":\\\"Single\\\"}\",\"educationDetails\":\"{\\\"id\\\":\\\"6\\\",\\\"value\\\":\\\"Post Graduate\\\",\\\"name\\\":\\\"Post Graduate\\\"}\",\"nationality\":\"{\\\"id\\\":\\\"1\\\",\\\"value\\\":\\\"Indian\\\",\\\"name\\\":\\\"Indian\\\",\\\"selected\\\":true}\",\"sumInsured\":\"2000000\",\"pincode\":\"421201\",\"zone\":null,\"zoneValue\":\"\",\"horizontalLine\":null,\"addMembers\":null,\"insureMem\":null,\"numberOfInsuredMembers\":1,\"plandetails\":\"\",\"totalPremium\":\"\",\"next\":null,\"memberPolicyType\":\"Multi Individual\",\"insuredMembers.Self\":true,\"insuredMembers.Spouse\":false,\"insuredMembers.Son1\":false,\"insuredMembers.Daughter1\":false,\"insuredMembers.Mother\":false,\"insuredMembers.Father\":false,\"insuredMembers.Mother-In-Law\":false,\"insuredMembers.Father-In-Law\":false,\"insuredMemberDetails.0.relationshipType\":\"{\\\"id\\\":\\\"R001\\\",\\\"value\\\":\\\"Self\\\",\\\"name\\\":\\\"Self\\\",\\\"isIncrement\\\":false,\\\"imagePath\\\":\\\"assets/Self.png\\\"}\",\"insuredMemberDetails.0.relation\":\"Self\",\"insuredMemberDetails.0.memberdob\":\"1999-07-10\",\"insuredMemberDetails.0.memberAge\":25,\"insuredMemberDetails.0.firstName\":\"PRATIK\",\"insuredMemberDetails.0.lastName\":\"JADHAV\",\"insuredMemberDetails.0.middleName\":\"NITIN\",\"insuredMemberDetails.0.mobileNumber\":\"7738030781\",\"insuredMemberDetails.0.emailId\":\"pratik@gmail.com\",\"insuredMemberDetails.0.memberGender\":\"M\",\"insuredMemberDetails.0.sumInsured\":\"2000000\",\"insuredMemberDetails.0.pincode\":\"500013\",\"insuredMemberDetails.0.planType\":\"Multi Individual\",\"insuredMemberDetails.0.memberIndex\":0,\"insuredMemberDetails.0.city\":\"Hyderabad\",\"insuredMemberDetails.0.zone\":\"Zone II\",\"insuredMemberDetails.0.zoneValue\":\"Z002\",\"insuredMemberDetails.0.state\":\"TELANGANA\",\"insuredMemberDetails.0.covers\":[],\"insuredMembers\":{\"Self\":true,\"Spouse\":false,\"Son1\":false,\"Daughter1\":false,\"Mother\":false,\"Father\":false,\"Mother-In-Law\":false,\"Father-In-Law\":false},\"insuredMemberDetails\":[{\"relationshipType\":\"{\\\"id\\\":\\\"R001\\\",\\\"value\\\":\\\"Self\\\",\\\"name\\\":\\\"Self\\\",\\\"isIncrement\\\":false,\\\"imagePath\\\":\\\"assets/Self.png\\\"}\",\"relation\":\"Self\",\"memberdob\":\"1999-07-10\",\"memberAge\":25,\"firstName\":\"PRATIK\",\"lastName\":\"JADHAV\",\"middleName\":\"NITIN\",\"mobileNumber\":\"7738030781\",\"emailId\":\"pratik@gmail.com\",\"memberGender\":\"M\",\"sumInsured\":\"2000000\",\"pincode\":\"500013\",\"planType\":\"Multi Individual\",\"memberIndex\":0,\"city\":\"Hyderabad\",\"zone\":\"Zone II\",\"zoneValue\":\"Z002\",\"state\":\"TELANGANA\",\"covers\":[],\"isChronic\":\"No\",\"chronicDiseases\":null,\"roomCategory\":\"\",\"memberRelationCode\":24}],\"familySize\":\"1A\",\"proposerName\":\"PRATIKJADHAV\",\"proposerPincode\":\"500013\"}"
-      
-      ));
-        
         this.renewalInfo = JSON.parse(res.data);
         this.email=this.renewalInfo?.response?.policyData[0]?.Email
         this.mobileNo=this.renewalInfo?.response?.policyData[0]?.Mobile
         this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
       },
-      (err) => {
-        console.log("Error coming from getRenewalInfo API", err);
-      }
+      (err) => {console.log("Error coming from getRenewalInfo API", err);}
     );
   }
   changeroute(){
@@ -362,18 +377,10 @@ formatTickLabel(value: number, forSlider: boolean): string {
     this.router.navigate(["renewals/subquotes"]);
   }
   getproductdetailsandfeatures(){
-    const request={
-      "productId": 2,
-      "agentCode":localStorage.getItem('agentCode')
-    }
+    const request={"productId": 2,"agentCode":localStorage.getItem('agentCode')}
     this.renewalService.getproductdetailsandfeatures(request).subscribe(
-      (res:any) => { this.optionalCovers=res.data
-        console.log(res.data);
-      },
-      (err) => {
-        console.log("Error coming from getRenewalInfo API", err);
-      }
+      (res:any) => { this.optionalCovers=res.data},
+      (err) => {console.log("Error coming from getRenewalInfo API", err);}
     );
   }
-
 }
