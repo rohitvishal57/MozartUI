@@ -6,6 +6,7 @@ import { CommonService } from "src/app/services/common.service";
 import { EncryptionService } from "src/app/services/encryption.service";
 import { QuoteService } from "../quote.service";
 import { firstValueFrom } from "rxjs";
+import { ConfirmationService } from "primeng/api";
 
 
 @Component({
@@ -51,7 +52,9 @@ export class QuoteProductsComponent implements OnInit {
   selectedAddons: string[] = [];
 
   constructor(private quoteService: QuoteService, private router: Router, private toast: NgToastService,
-    private service: CommonService, private encryptionService: EncryptionService, private spinner: NgxSpinnerService) { }
+    private service: CommonService, private encryptionService: EncryptionService, private spinner: NgxSpinnerService,
+    private confirmationService: ConfirmationService
+  ) { }
   ngOnInit(): void {
     // sessionStorage.clear()
     this.formData = history.state.formData;
@@ -190,7 +193,6 @@ export class QuoteProductsComponent implements OnInit {
     }
     console.log(this.formData);
     try {
-      await this.getProposalNum();
       await this.getFormSequence(item);
       // this.removeFromCart(item);
       for (let i = 1; i <= 3; i++) {
@@ -218,7 +220,7 @@ export class QuoteProductsComponent implements OnInit {
     }
   }
 
-  addToCart(item: any) {
+  async addToCart(item: any) {
     item.tenureAmounts = [];
     console.log(item);
     const selectedPlanIndex = this.selectedPlans[this.ProductList.indexOf(item)];
@@ -234,10 +236,10 @@ export class QuoteProductsComponent implements OnInit {
     console.log(item);
     console.log(item);
 
-    this.getProposalNum();
-    setTimeout(() => {
-      this.insertorupdateagentcartdetails(item);
-    }, 2000);
+    await this.getProposalNum();
+    // setTimeout(() => {
+    await  this.insertorupdateagentcartdetails(item);
+    // }, 2000);
     console.log(this.cartProductList);
   }
 
@@ -271,7 +273,7 @@ export class QuoteProductsComponent implements OnInit {
       this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
-  insertorupdateagentcartdetails(item: any) {
+  async  insertorupdateagentcartdetails(item: any) {
     console.log(item);
     let reqdata = {
       "id": "",
@@ -299,7 +301,7 @@ export class QuoteProductsComponent implements OnInit {
       "mobileNumber": this.formData.mobileNumber
     }
     console.log(reqdata);
-    this.quoteService.Insertorupdateagentcartdetails(reqdata).subscribe({
+    await this.quoteService.Insertorupdateagentcartdetails(reqdata).subscribe({
       next: (res) => {
         this.spinner.show();
         this.Getagentcartdetails()
@@ -310,12 +312,13 @@ export class QuoteProductsComponent implements OnInit {
 
       }
     })
+
   }
-  Getagentcartdetails() {
+  async Getagentcartdetails() {
     let reqdata = {
       "agentCode": this.agentCode
     }
-    this.quoteService.Getagentcartdetails(reqdata).subscribe({
+    await this.quoteService.Getagentcartdetails(reqdata).subscribe({
       next: (res:any) => {
         console.log(res);
         this.cartProductList = res.data;
@@ -379,21 +382,32 @@ export class QuoteProductsComponent implements OnInit {
     console.log(addon, this.ProductList, i, this.popIndex);
   }
   deleteagentcartitems(cartId:any[]) {
+    
     let reqdata = {
       "agentCode": this.agentCode,
       "id":cartId
     }
     console.log(reqdata);
-    this.quoteService.deleteagentcartitems(reqdata).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.Getagentcartdetails();
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this/those item?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        // Proceed with deletion if confirmed
+        this.quoteService.deleteagentcartitems(reqdata).subscribe({
+          next: (res) => {
+            console.log('Deletion successful', res);
+            this.Getagentcartdetails();
+          },
+          error: (err) => {
+            console.error('Error while deleting:', err);
+          }
+        });
       },
-      error: (err) => {
-        console.error(TypeError);
-
+      reject: () => {
+        console.log('Deletion canceled');
       }
-    })
+    });
   }
   deleteallcartitems(){
     const list:any=[];

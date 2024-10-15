@@ -5,7 +5,7 @@ import { QuoteProductsComponent } from './quote-products/quote-products.componen
 import { AuthGuard } from 'src/app/authorize/auth.guard';
 
 const routes: Routes = [
-  { path: "productDetails", component: ProductDetailsComponent, canActivate: [AuthGuard] },
+  { path: "productDetails", component: ProductDetailsComponent },
   { path: "quoteProducts", component: QuoteProductsComponent},
 ];
 
