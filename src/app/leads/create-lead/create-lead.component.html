@@ -559,23 +559,14 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="row mt-4">
-                            <div class="col-12">
-                                <button type="submit" class="btn_red">Update Status</button>
-                            </div>
-                        </div> -->
-               
                     </section>
-        
-
-                    
-                    <div class="row mt-4">
+ 
+                    <div class="row mt-4" *ngIf="action!='addNotes'">
                         <div class="col-12">
                             <button type="submit" class="btn_red">Save</button>
                         </div>
                     </div>
-              
-                 
+
             </form>
            
             <section class="white_container mb-5" *ngIf="action=='addNotes'">
