@@ -1,10 +1,16 @@
 <div class="main-container">
+  <div class="detail">
+    Product Details
+  </div>
     <div class="cardItem box">
         <div class="product-item">
             <img src="assets/logo/activeOne.svg">
             {{state.productName}}
         </div>
-        <!-- <p>{{state.productDescription}}</p> -->
+        <div class="key">
+          <h2>Product Description</h2>
+          <div class="keypoint">{{state.productDescription}}</div>
+        </div>
         <div class="key" >
           <div *ngFor="let key of state.keyFeatures">
               <div class="keypoint">

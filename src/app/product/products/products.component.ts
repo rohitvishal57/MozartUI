@@ -191,5 +191,10 @@ export class ProductsComponent implements OnInit {
       this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
-
+  productsDetail(item: any) {
+    console.log(item);
+    this.router.navigate(['quote/productDetails'], {
+      state: { item: item }
+    });
+  }
 }

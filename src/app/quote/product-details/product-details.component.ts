@@ -49,10 +49,10 @@ export class ProductDetailsComponent {
     console.log(reqData);
     this.quoteservices.Getproductdetailsandfeatures(reqData).subscribe({
       next: (res:any) => {
-        console.log(res);
-        this.state = res;
+        console.log(res.data);
+        this.state = res.data;
         this.state.keyFeatures = JSON.parse(this.state.keyFeatures);
-        features = res.productFeatures
+        features = res.data.productFeatures
         this.groupedFeatures = features.reduce((result:any, { categoryName, featureName, featureDescription }:any) => {
           if (!result[categoryName]) {
             result[categoryName] = [];

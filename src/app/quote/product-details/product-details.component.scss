@@ -1,22 +1,24 @@
 .main-container {
-  display: flex;
-  flex-direction: row;
   background-color: #fff;
-
+  padding: 11rem;
+  .detail{
+    font-size: 24px;
+    font-weight: 500;
+  }
   .box {
-    padding: 1% 1%;
-    margin: 1% 4%;
+    // padding: 1% 1%;
+    // margin: 1% 4%;
     // border: 1px solid #000000;
-    border-radius: 20px;
-    background-color: rgb(255, 255, 255);
+    // border-radius: 20px;
+    // background-color: rgb(255, 255, 255);
     cursor: default;
-    box-shadow: 0 2px 3px 0 rgba(73, 73, 73, 0.2), 0 3px 10px 0 rgba(73, 73, 73, 0.19);
-    transition: border-color 0.3s ease;
+    // box-shadow: 0 2px 3px 0 rgba(73, 73, 73, 0.2), 0 3px 10px 0 rgba(73, 73, 73, 0.19);
+    // transition: border-color 0.3s ease;
 
     &.cardItem {
       padding: 1%;
-      margin: 5% 1% 2% 3%;
-      width: 70%;
+      // margin: 5% 1% 2% 3%;
+      // width: 70%;
 
       @media (max-width:820px) {
         width: 48%;
@@ -33,7 +35,7 @@
       font-size: 16px;
       font-weight: 700;
       color: rgb(21, 21, 99);
-      margin: 2%;
+      margin: 1%;
     }
     .key{
       padding: 1%;
