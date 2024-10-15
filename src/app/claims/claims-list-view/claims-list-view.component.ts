@@ -30,7 +30,7 @@ export class ClaimsListViewComponent implements OnInit {
   selectedStatus = 'all';
   toggleSearchdropdown: boolean = false;
   searchInputControl = new FormControl("");
-  selected: string = "";
+  selected: string = "date";
   userId!: number;
   selectedClaim: any = null;
   toggeledropdown: boolean = false;
@@ -67,6 +67,14 @@ onPageChange(event:any) {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first/this.rows)+1
+}
+
+getFromDate(event:any){
+  this.fromDate = event.target.value;
+}
+
+getToDate(event:any){
+  this.toDate = event.target.value;
 }
 
 //---------API Call-------//
