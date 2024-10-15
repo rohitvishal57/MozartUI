@@ -22,13 +22,13 @@
                         <li>
                             <button type="button" value="allpolicies" class="btn_quickFilter"
                                 [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All
-                                Leads({{countsList.totalRecords}})</button>
+                                Leads</button>
                         </li>
                         <li>
-                            <button type="button" class="btn_quickFilter">Assigned Leads</button>
+                            <button type="button" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">Assigned Leads</button>
                         </li>
                         <li>
-                            <button type="button" class="btn_quickFilter">Unassigned Leads</button>
+                            <button type="button" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'unAssignedLead'}"  (click)="getUnAssignedLeads()">Unassigned Leads</button>
                         </li>
                         <!-- <li>
                             <button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('createdInLessThan30DaysCount')">< 30 Days ({{countsList.createdInLessThan30DaysCount}})</button>
@@ -63,9 +63,9 @@
                                             <select id="idtype" name="idtype" class="form-select input-selectBox"
                                                 [(ngModel)]="selected" (change)="onSelectChanges($event)">
                                                 <option value="">Select Search Option</option>
-                                                <option value="mobileNumber">Mobile Number</option>
+                                                <!-- <option value="mobileNumber">Mobile Number</option>
                                                 <option value="name">Name</option>
-                                                <option value="email">Email ID</option>
+                                                <option value="email">Email ID</option> -->
                                                 <option value="leadId">Lead ID</option>
                                             </select>
                                         </div>
@@ -228,19 +228,19 @@
                         </table>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                <div class="tableNav" *ngIf="countsList.totalCount > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords"
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalCount"
                                     [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
                                     class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords
-                                    ? countsList.totalRecords : first + rows}}</span> of <span
-                                    class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalCount
+                                    ? countsList.totalCount : first + rows}}</span> of <span
+                                    class="pageCountTotal">{{countsList.totalCount}} entries</span>
                             </li>
                         </ul>
                     </nav>

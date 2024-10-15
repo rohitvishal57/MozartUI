@@ -43,7 +43,7 @@ export class LeadsListComponent {
   displayUpdateStatusPopup = false;
   markDuplicatePopup = false;
   duplicateLeadId: any;
-  activityTypes : any =[];
+  activityTypes: any = [];
   addNoteForm!: FormGroup;
   markDuplicateForm!: FormGroup;
   mobileNumber: string = '';
@@ -72,6 +72,23 @@ export class LeadsListComponent {
     "mobileNumber": "",
     "filterType": ""
   }
+
+  leadsInfoListRequestBody = {
+    "agentcode": this.agentCode,
+    "myleads": true,
+    "assignedleads": true,
+    "unassignedleads": true,
+    "start": 1,
+    "viewBy": [
+      ""
+    ],
+    "length": 10,
+    "searchby": "",
+    "isSellerPortal": true
+  }
+
+
+
 
   ngOnInit(): void {
     const storedAgentCode = localStorage.getItem('agentCode');
@@ -107,10 +124,10 @@ export class LeadsListComponent {
     let fetchActivityTypeRequest: any = {};
     debugger
     this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
-    (response) => {
-    console.log("ActivityType information : "+ response.activityName);
-    this.activityTypes =  response.activityName	;
-    },
+      (response) => {
+        console.log("ActivityType information : " + response.activityName);
+        this.activityTypes = response.activityName;
+      },
       (error) => {
 
       });
@@ -123,17 +140,15 @@ export class LeadsListComponent {
     this.getLeadsList();
   }
   getLeadsList() {
-
-    this.leadsLisRequestBody.pageNumber = this.page;
-    this.leadsLisRequestBody.pageSize = this.rows;
-    this.leadsService.getLeadsListApi(this.leadsLisRequestBody).subscribe(
+    this.leadsInfoListRequestBody.start = this.page;
+    this.leadsInfoListRequestBody.length = this.rows;
+    this.leadsService.getLeadsListApi(this.leadsInfoListRequestBody).subscribe(
       (response) => {
-        console.log(response.data);
-        if (response.success) {
-          this.leadsList = response.data.leadList,
+        if (response.statusCode == 200) {
+          this.leadsList = response.leadList,
             console.log("Renewal List", this.leadsList);
-          this.countsList = response.data;
-          this.totalRecords = this.countsList.totalRecords;
+          this.countsList = response;
+          this.totalRecords = this.countsList.totalCount;
         }
         else { console.error("API request was not successful."); }
       },
@@ -211,7 +226,12 @@ export class LeadsListComponent {
     );
   }
   filterQuotes(filter: string) {
+    this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.myleads = true;
+    this.leadsInfoListRequestBody.assignedleads = true;
+    this.leadsInfoListRequestBody.unassignedleads = true;
     this.leadsLisRequestBody.filterType = filter;
+
     this.getLeadsList();
     this.activeFilter = filter;
   }
@@ -334,30 +354,31 @@ export class LeadsListComponent {
   }
   applySearch(menuTrigger: MatMenuTrigger) {
     if (this.searchInputControl.valid) {
-      if (this.selected === "mobileNumber") {
-        this.leadsLisRequestBody.mobileNumber = this.searchInputControl.value!;
-        this.leadsLisRequestBody.name = "";
-        this.leadsLisRequestBody.email = "";
-        this.leadsLisRequestBody.leadNumber = "";
-      }
-      else if (this.selected === "name") {
-        this.leadsLisRequestBody.name = this.searchInputControl.value!;
-        this.leadsLisRequestBody.mobileNumber = "";
-        this.leadsLisRequestBody.email = "";
-        this.leadsLisRequestBody.leadNumber = "";
-      }
-      else if (this.selected === "email") {
-        this.leadsLisRequestBody.email = this.searchInputControl.value!;
-        this.leadsLisRequestBody.mobileNumber = "";
-        this.leadsLisRequestBody.name = "";
-        this.leadsLisRequestBody.leadNumber = "";
-      }
-      else if (this.selected === "leadId") {
-        this.leadsLisRequestBody.leadNumber = this.searchInputControl.value!;
-        this.leadsLisRequestBody.mobileNumber = "";
-        this.leadsLisRequestBody.name = "";
-        this.leadsLisRequestBody.email = "";
-      }
+      // if (this.selected === "mobileNumber") {
+      //   this.leadsLisRequestBody.mobileNumber = this.searchInputControl.value!;
+      //   this.leadsLisRequestBody.name = "";
+      //   this.leadsLisRequestBody.email = "";
+      //   this.leadsLisRequestBody.leadNumber = "";
+      // }
+      // else if (this.selected === "name") {
+      //   this.leadsLisRequestBody.name = this.searchInputControl.value!;
+      //   this.leadsLisRequestBody.mobileNumber = "";
+      //   this.leadsLisRequestBody.email = "";
+      //   this.leadsLisRequestBody.leadNumber = "";
+      // }
+      // else if (this.selected === "email") {
+      //   this.leadsLisRequestBody.email = this.searchInputControl.value!;
+      //   this.leadsLisRequestBody.mobileNumber = "";
+      //   this.leadsLisRequestBody.name = "";
+      //   this.leadsLisRequestBody.leadNumber = "";
+      // }
+      // else if (this.selected === "leadId") {
+        // this.leadsLisRequestBody.leadNumber = this.searchInputControl.value!;
+        // this.leadsLisRequestBody.mobileNumber = "";
+        // this.leadsLisRequestBody.name = "";
+        // this.leadsLisRequestBody.email = "";
+      // }
+      this.leadsInfoListRequestBody.searchby=this.searchInputControl.value!;
       this.getLeadsList();
       menuTrigger.closeMenu();
     }
@@ -480,4 +501,23 @@ export class LeadsListComponent {
   }
 
 
+  getAssignedLeads() {
+    this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.myleads = false;
+    this.leadsInfoListRequestBody.assignedleads = true;
+    this.leadsInfoListRequestBody.unassignedleads = false;
+    this.getLeadsList();
+    this.activeFilter = "assignedLead";
+
+  }
+
+  getUnAssignedLeads() {
+    this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.myleads = false;
+    this.leadsInfoListRequestBody.assignedleads = false;
+    this.leadsInfoListRequestBody.unassignedleads = true;
+    this.getLeadsList();
+    this.activeFilter = "unAssignedLead";
+
+  }
 }
