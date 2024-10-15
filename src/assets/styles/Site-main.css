@@ -3882,6 +3882,12 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 500;
   margin-bottom: 16px !important;
 }
+.popupModalMain .modal-body p {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  color: #4c4c4c;
+}
 .popupModalMain .modal-header, .popupModalMain .modal-footer {
   padding: 0;
   border-width: 0;
@@ -3896,6 +3902,11 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 600;
   font-size: 22px;
   color: var(--black-color);
+  margin: 0;
+}
+.modal_footerBtnGroup_column {
+  flex-direction: column;
+  gap: 10px;
 }
 /*Popup Modal start*/
 
@@ -4551,4 +4562,20 @@ input[type="search"]::-webkit-search-results-decoration {
   bottom: auto;
   left: 5px;
   top: 1px;
+}
+.btn_linkText {
+  background: transparent;
+  border-width: 0;
+  border-radius: 0;
+  padding: 0px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--primary-red-color);
+  align-items: center;
+  gap: 8px;
+}
+
+.btn_linkText:hover {
+  opacity: 0.8;
 }
