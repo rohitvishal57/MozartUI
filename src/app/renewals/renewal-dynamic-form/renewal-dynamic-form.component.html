@@ -931,8 +931,7 @@
         <div class="bcc_main">
             <div class="accordionMain">
                 <div class="accordionItem">
-                    <header>
-                        Share payment link
+                    <header>Share payment link
                         <!-- <button type="button" value="sectionedit" class="btn_iconText accordionArrow"><img src="assets/Img/icon_arrow_back_mobile.svg"></button> -->
                     </header>
                     <div class="accordionBody">
@@ -941,48 +940,32 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="sharePyment_link">
-                                            <div class="sharePyment_phoneInfo" *ngIf="!isEditMobile">
+                                            <div class="sharePyment_phoneInfo">
                                                 <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
                                                     <span class="info_img"><img src="assets/Img/icon_phone_call.svg"></span>
-                                                    <span class="info_text">Customer Mobile Number : <span>91 {{mobileNo}}</span></span>
-                                                    <span class="btn_iconGrey info_button edit_cmn" (click)="toggleEditPaymentOption('mobileNo')"><img src="assets/Img/icon_edit_grey.svg"></span>
-                                                </div>
-                                            </div>
-                                            <div class="sharePyment_phoneInfoEdit" *ngIf="isEditMobile">
-                                                <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
-                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
-                                                        <input type="tel" id="cmnumber" name="cmnumber" [(ngModel)]="mobileNo" placeholder="Customer Mobile Number" class="input-textBox btn_fullWidth" >
-                                                    </div>
-                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
-                                                        <button type="button" class="btn_red btn_darkGrey edit_cmn_save" (click)="handlePaymentEvent('mobileNo')">Save and send</button>
-                                                    </div>
+                                                    <span class="info_text">Customer Mobile Number : <span>91 {{renewalInfo?.response?.policyData[0]?.Mobile}}</span></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="sharePyment_link">
-                                            <div class="sharePyment_mobileNumber" *ngIf="!isEditEmail">
+                                            <div class="sharePyment_mobileNumber">
                                                 <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
                                                     <span class="info_img"><img src="assets/Img/icon_email.svg"></span>
-                                                    <span class="info_text">Email Address : <span>{{ email }}</span></span>
-                                                    <span class="btn_iconGrey info_button edit_cme"  (click)="toggleEditPaymentOption('email')"><img src="assets/Img/icon_edit_grey.svg"></span>
-                                                </div>
-                                            </div>
-                                            <div class="sharePyment_phoneInfoEdit" *ngIf="isEditEmail">
-                                                <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
-                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
-                                                        <input type="email" id="cmemail" name="cmemail" [(ngModel)]="email" placeholder="Email Address" class="input-textBox btn_fullWidth" >
-                                                    </div>
-                                                    <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
-                                                        <button type="button" class="btn_red btn_darkGrey edit_cme_save" (click)="handlePaymentEvent('email')">Save and send</button>
-                                                    </div>
+                                                    <span class="info_text">Email Address : <span>{{ renewalInfo?.response?.policyData[0]?.Email }}</span></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
-                                        <button type="button" class="btn_red btn_sendLink" [ngClass]="{'btn_disabled': isEditEmail || isEditMobile}">Send Link</button></div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3 d-flex align-items-center">
+                                        <button type="button" class="btn_red btn_sendLink" (click)="sendLink()">Send Link</button>
+                                        <div class="d-flex align-items-center" style="padding-left:40px;">
+                                            <input type="text" class="form-control" disabled [(ngModel)]="link" placeholder="" style="flex: 1; min-width: 250px;" />
+                                            <button type="button" class="btn btn-secondary btn_copyLink" [cdkCopyToClipboard]="link">Copy Link</button>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
                                         <div class="block_or_line"><span>OR</span></div>
                                     </div>
@@ -990,19 +973,78 @@
                                         <div class="detailsHeading mb-3">Make payment online</div>
                                         <div class="row">
                                             <div class="raido_policyTenure raido_paymentType radio_format">
-                                             <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                             <div class="input-radiolabel payment-radio-Cnt col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Nach')" [ngClass]="{'active': selectedPaymentType == 'E-Nach'}">
                                                  <input type="radio" name="paymentType" value="E - Nach">
                                                  <span><em class="label">E - Nach</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
-                                             <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                             <div class="input-radiolabel payment-radio-Cnt col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Mandate')" [ngClass]="{'active': selectedPaymentType == 'E-Mandate'}">
                                                  <input type="radio" name="paymentType" value="E - Mandate" >
                                                  <span><em class="label">E - Mandate</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
-                                             <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
-                                                 <input type="radio" name="paymentType" value="Auto Debit" ><span><em class="label">Auto Debit</em></span>
+                                             <div class="input-radiolabel payment-radio-Cnt col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('Auto_Debit')" [ngClass]="{'active': selectedPaymentType == 'Auto_Debit'}">
+                                                 <input type="radio" name="paymentType" value="Auto Debit" >
+                                                 <span><em class="label">Auto Debit</em></span>
                                              </div>
+                                             <div class="input-radiolabel payment-radio-Cnt col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('offline')" [ngClass]="{'active': selectedPaymentType == 'offline'}">
+                                                <input type="radio" name="paymentType" value="Auto Debit" >
+                                                <span><em class="label">offline</em></span>
+                                            </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3" *ngIf="selectedPaymentType == 'offline'">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <select id="Relation" name="Relation" placeholder="" class="form-control input-selectBox">
+                                                        <option value="">Select Payment Option</option>
+                                                        <option value="Cheque">Cheque</option>
+                                                        <option value="Demand Draft">Demand Draft</option>
+                                                        <option value="NEFT">NEFT</option>
+                                                    </select>
+                                                    <label for="Relation">Payment Option</label>
+                                                    <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input type="number" id="cheque_Amount" name="cheque_Amount" placeholder="" class="form-control input-textBox">
+                                                    <label for="cheque_Amount">Cheque Amount</label>
+                                                    <!-- <span class="ui-error">Please enter Mobile Number</span> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input type="number" id="cheque_Number" name="cheque_Number" placeholder="" class="form-control input-textBox">
+                                                    <label for="cheque_Number">Cheque Number</label>
+                                                    <!-- <span class="ui-error">Please enter Mobile Number</span> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input type="date" id="cheque_Date" name="cheque_Date" placeholder="" class="form-control input-textBox">
+                                                    <label for="cheque_Date">Cheque Date</label>
+                                                    <!-- <span class="ui-error" *ngIf="form.get('DoB')?.invalid && form.get('DoB')?.touched">Please enter date of birth</span> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input type="text" id="IFSC_COde" name="IFSC_COde" placeholder="" class="form-control input-textBox">
+                                                    <label for="IFSC_COde">IFSC Code</label>
+                                                    <!-- <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span> -->
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <select id="bank_Name" name="bank_Name" placeholder="" class="form-control input-selectBox">
+                                                        <option value="">Select Bank Name</option>
+                                                        <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
+                                                    </select>
+                                                    <label for="bank_Name">Bank Name</label>
+                                                    <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                                </div>
+                                            </div>
+                                          </div>
                                     </div>
                                 </div>
                             </div>
@@ -1016,8 +1058,7 @@
         <div class="bcc_main">
             <div class="accordionMain">
                 <div class="accordionItem">
-                    <header>
-                        Policy Summary
+                    <header>Policy Summary
                         <div class="btn_groupAction">
                             <!-- <button type="button" value="copylink" class="btn_pink btn_copylink btn_copiedlink">Link copied!</button> -->
                             <button type="button" value="copylink" class="btn_pink btn_copylink">Copy link to share <img src="assets/Img/icon_link.svg"></button>
@@ -1125,8 +1166,7 @@
                     </div>
                 </div>
                 <div class="accordionItem">
-                    <header>
-                        Member Details
+                    <header>Member Details
                         <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')"></button>
                     </header>
                     <div class="accordionBody">
@@ -1164,8 +1204,7 @@
                     </div>
                 </div>                       
                 <div class="accordionItem">
-                    <header>
-                        Contact Details
+                    <header>Contact Details
                         <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')"></button>
                     </header>
                     <div class="accordionBody">

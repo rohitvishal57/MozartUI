@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
 import { Options } from '@angular-slider/ngx-slider';
 import { NgToastService } from 'ng-angular-popup';
+import { ClipboardModule } from '@angular/cdk/clipboard'
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -13,15 +15,15 @@ import { NgToastService } from 'ng-angular-popup';
 export class RenewalDynamicFormComponent implements OnInit {
   form: FormGroup = this.fb.group({});
   formId: number = 5001;
-  isEditEmail = false;
-  isEditMobile =false;
-  email:any;
-  mobileNo :any;
+  // isEditEmail = false;
+  // isEditMobile =false;
+  // email:any;
+  // mobileNo :any;
   selectedButton: string = 'primary'; 
   selectedCoverages: any[] = []; 
   isRadioSelected = false;
   selectedPaymentType: string = '';
-  selectedPaymentTypeLabel: string = '';
+  // selectedPaymentTypeLabel: string = '';
   isDropdownOpen: boolean = false;
   policySummary : boolean=false
   activeSection: string = 'primary';
@@ -67,14 +69,17 @@ export class RenewalDynamicFormComponent implements OnInit {
   requestObject: any = {policyNumber: "string",referenceNumber: "string",};
   agentCode=localStorage.getItem('agentCode');
   productsList:any[]=[];
-  hideSection:boolean=true
+  hideSection:boolean=true;
+  link: string = ''; 
+  bankNameList:any
 
   constructor(
     private fb: FormBuilder,
     private renewalService: RenewalsService,
     private router: Router,
     private toast: NgToastService,
-    private ac:ActivatedRoute) {}
+    private ac:ActivatedRoute,
+    private yatraService:YatraService) {}
 
   ngOnInit() {
     this.ac.paramMap.subscribe((params) => {
@@ -258,22 +263,22 @@ setActiveTab(tabName: string): void {
     this.preexistingConditionSelected=value
     console.log(this.preexistingConditionSelected);
    }
- toggleEditPaymentOption(value: any) {
-   if(value == 'email'){
-   this.isEditEmail = !this.isEditEmail;
-   this.isEditMobile = false;
-   } else if(value == 'mobileNo'){
-     this.isEditMobile = !this.isEditMobile;
-     this.isEditEmail=false;
-     }
- }
- handlePaymentEvent(value: any) {
-   if (this.email && this.email !== '' && value == 'email') {
-     this.isEditEmail = false;
-   }else if (this.mobileNo && this.mobileNo !== null && value == 'mobileNo') {
-     this.isEditMobile = false;
-   }
- }
+//  toggleEditPaymentOption(value: any) {
+//    if(value == 'email'){
+//    this.isEditEmail = !this.isEditEmail;
+//    this.isEditMobile = false;
+//    } else if(value == 'mobileNo'){
+//      this.isEditMobile = !this.isEditMobile;
+//      this.isEditEmail=false;
+//      }
+//  }
+//  handlePaymentEvent(value: any) {
+//    if (this.email && this.email !== '' && value == 'email') {
+//      this.isEditEmail = false;
+//    }else if (this.mobileNo && this.mobileNo !== null && value == 'mobileNo') {
+//      this.isEditMobile = false;
+//    }
+//  }
  selectButton(value?: any,content? : any,member?:number) {
   if (this.selectedButton === 'primary') {
     if (value == 5005) {
@@ -325,9 +330,21 @@ setActiveTab(tabName: string): void {
   }
 }
  selectPaymentType(option: any) {
-   this.selectedPaymentType = option.value;
-   this.selectedPaymentTypeLabel = option.label;
-   this.isDropdownOpen = false; 
+  if(option == 'offline'){
+    this.yatraService.getAllBankDetails().subscribe({
+      next: (res: any) => {
+        this.bankNameList = res.data;
+        console.log(this.bankNameList);
+        
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+   this.selectedPaymentType = option;
+  //  this.selectedPaymentTypeLabel = option.label;
+  //  this.isDropdownOpen = false; 
  }
  @HostListener('document:click', ['$event'])
  onDocumentClick(event: Event) {
@@ -383,8 +400,6 @@ setActiveTab(tabName: string): void {
         this.renewalInfo = JSON.parse(res.data);
         this.getTenureDetails();
         this.getproductdetailsandfeatures();
-        this.email=this.renewalInfo?.response?.policyData[0]?.Email
-        this.mobileNo=this.renewalInfo?.response?.policyData[0]?.Mobile
         this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
       },
       (err) => {console.log("Error coming from getRenewalInfo API", err);}
@@ -446,5 +461,8 @@ setActiveTab(tabName: string): void {
       console.error("Product name is not available in renewalInfo.");
     }
   }  
+  sendLink(){
+    this.link="https://www.paypal.com/invoice/p/#ABCDEFG123456"
+    }
 
 }
