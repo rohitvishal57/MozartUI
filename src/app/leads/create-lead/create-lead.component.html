@@ -536,7 +536,7 @@
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <select class="form-select input-selectBox" formControlName="referenceStatus"
+                                    <select class="form-select input-selectBox" formControlName="status"
                                     (change)="changeReferStatus($event)">
                                         <option value="" disabled selected>Choose Option</option>
                                         <option *ngFor="let item of referenceStatus" [value]="item.name">
@@ -548,7 +548,7 @@
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <select class="form-select input-selectBox" formControlName="referenceSubStatus"
+                                    <select class="form-select input-selectBox" formControlName="substatus"
                                         (selectionChange)="campnoSelected()">
                                         <option value="" disabled selected>Choose Option</option>
                                         <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">

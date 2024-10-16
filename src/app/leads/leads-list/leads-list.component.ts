@@ -58,9 +58,9 @@ export class LeadsListComponent {
   endDate: any;
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
-    { name: 'RUG', selected: false },
+    // { name: 'RUG', selected: false },
     { name: 'Family Floater', selected: false },
-    { name: 'Groups', selected: false }
+    // { name: 'Groups', selected: false }
   ];
   constructor(
     private leadsService: LeadsService,
@@ -94,11 +94,13 @@ export class LeadsListComponent {
     ],
     "length": 10,
     "searchby": "",
+    "searchlist":"",
+    "fromdate":null,
+    "todate":null,
+    "policyList":"",
     "isSellerPortal": true
+
   }
-
-
-
 
   ngOnInit(): void {
     const storedAgentCode = localStorage.getItem('agentCode');
@@ -158,6 +160,9 @@ export class LeadsListComponent {
             console.log("Renewal List", this.leadsList);
           this.countsList = response;
           this.totalRecords = this.countsList.totalCount;
+          if(this.toggeledropdown){
+            this.appliedFiltersCount = this.leadsList.length;
+          }
         }
         else { console.error("API request was not successful."); }
       },
@@ -249,6 +254,9 @@ export class LeadsListComponent {
   }
   filterQuotes(filter: string) {
     this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.fromdate=null;
+    this.leadsInfoListRequestBody.todate=null;
+    this.leadsInfoListRequestBody.searchlist="";
     this.leadsInfoListRequestBody.myleads = true;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = true;
@@ -287,9 +295,9 @@ export class LeadsListComponent {
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
-    console.log("selectedProducts", selectedProducts);
-    this.leadsLisRequestBody.productName = selectedProducts.join(", ");
-    console.log("product names which are taking by request body", this.leadsLisRequestBody.productName);
+    this.leadsInfoListRequestBody.searchlist = selectedProducts.join(", ");
+    this.leadsInfoListRequestBody.fromdate =  this.startDate;
+    this.leadsInfoListRequestBody.todate =  this.endDate;
     this.getLeadsList();
     this.toggeledropdown = false;
   }
@@ -497,6 +505,9 @@ export class LeadsListComponent {
 
   getAssignedLeads() {
     this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.fromdate=null;
+    this.leadsInfoListRequestBody.todate=null;
+    this.leadsInfoListRequestBody.searchlist="";
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = false;
@@ -507,6 +518,9 @@ export class LeadsListComponent {
 
   getUnAssignedLeads() {
     this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.fromdate=null;
+    this.leadsInfoListRequestBody.todate=null;
+    this.leadsInfoListRequestBody.searchlist="";
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = false;
     this.leadsInfoListRequestBody.unassignedleads = true;

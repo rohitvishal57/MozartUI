@@ -145,13 +145,11 @@ export class CreateLeadComponent implements OnInit {
       leadnumber: [''],
       leadAssignee: [''],
       isUpdate: 0,
-      referenceStatus:[''],
-      referenceSubStatus:[''] 
+      status:[''],
+      substatus:[''] 
     });
 
-    // this.updateLeadStatus = this.formBuilder.group({
-    // referenceStatus:[''],
-    // referenceSubStatus:[''] });
+    
     
     this.addNoteForm = this.formBuilder.group({
       title: [''],
