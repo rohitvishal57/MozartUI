@@ -20,7 +20,7 @@ export class EndorsementsRequestsComponent implements OnInit {
   totalRecords: number = 0;
   selectedView: string = "list";
   isSearch: boolean = false;
-  selected: string = "date";
+  selected: string = "";
   searchInputControl = new FormControl("");
   isDesktopView: boolean = false
   fromDate: any;
@@ -112,7 +112,6 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   onSelectChanges(event: any): void {
-    event.stopPropagation(); 
     this.selected !== "none";
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();

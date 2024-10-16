@@ -66,4 +66,8 @@ export class ClaimsViewService {
     const getBlackListedhospitals = this.configService.config.baseUrl + this.configService.config.blackListedHospitals;
     return this.httpService.post(getBlackListedhospitals, claimsBlackListHspReqBody)
   }
+
+  getClaimStatus(claimsReqBody: any) {
+    return this.httpService.post("https://localhost:7026/api/getclaimstatus", claimsReqBody);
+  }
 }

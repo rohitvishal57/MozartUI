@@ -89,7 +89,6 @@ export class RenewalListComponent {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
           })); 
-          this.toast.success({ detail: "Success", summary: "Renewals List generated successfully.", duration: 1500 });
           console.log("Renewal List",this.renewalsList);
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType];         } 

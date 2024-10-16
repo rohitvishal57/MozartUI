@@ -62,7 +62,7 @@
                 <div formGroupName="endorsementDetails" class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                   <!--Aadhar card Number start-->  
                   <div *ngIf="this.caseCreationForm.get('endorsementType').value == 'aadharNumber'">
-                    <div class="detailsRow m-0">
+                    <div class="detailsRow">
                       <div class="detailsHeading-12">New Details to be update</div>
                       <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -82,7 +82,7 @@
                   <!--Aadhar card Number end-->
                   <!--Nominee Details start-->
                   <div *ngIf="this.caseCreationForm.get('endorsementType').value == 'nomineeContact'">
-                    <div class="detailsRow m-0">
+                    <div class="detailsRow">
                       <div class="detailsHeading-12">New Details to be update</div>
                       <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -122,7 +122,7 @@
                   <!--Nominee Details end-->
                   <!--Pancard Number start-->  
                   <div *ngIf="this.caseCreationForm.get('endorsementType').value == 'panNumber'">
-                    <div class="detailsRow m-0">
+                    <div class="detailsRow">
                       <div class="detailsHeading-12">New Details to be update</div>
                       <div class="row">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -169,7 +169,7 @@
                   <!--New Address end-->
                   <!--Otp Section start-->
                   <div *ngIf="showOtpSection">
-                    <div class="detailsRow m-0">
+                    <div class="detailsRow">
                       <div class="detailsHeading-12">New Details to be update</div>
                       <div class="row">
                         <!--Primary Number start-->
