@@ -257,6 +257,9 @@
 //--
 .accordionMain .accordionItem .accordionBody .accordionBodyRow{
 	gap: 0px;
+	.detailsBorder:last-child {
+		display: none;
+	}
 }
 .bcl_main .processBtnGroup {
      gap: 0px;

@@ -5,9 +5,9 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li class="quickFilterHeading">Quick filter</li>
+                        <li class="quickFilterHeading block-hide">Quick filter</li>
                         <li>
-                            <button type="button" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">All Policies({{countsList.totalRecords}})</button>
+                            <button type="button" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">All ({{countsList.totalRecords}})</button>
                         </li>
                         <li>
                             <button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')">< 30 Days ({{countsList.expiringInLessThan30DaysCount}})</button>
@@ -24,7 +24,21 @@
                     </ul>
                 </div>
                 <div class="quickFilterRight">
-                    <div class="searchWraper " [matMenuTriggerFor]="searchMenu" #menuTrigger="matMenuTrigger">
+                    <!--Search section start-->
+                    <div class="body_flex_row common_searchWraper">
+                        <div class="field_searchMain">
+                            <select class="filterSearch" >
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="caseId">Request ID</option>
+                                <option value="memberName">Member Name</option>
+                                <option value="policyNumber">Policy Number</option>
+                            </select>
+                            <input  class="filterSearch" id="filterSearch"  type="text" placeholder="Request ID">
+                            <button  type="button" class="btn_text" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                        </div>
+                    </div>
+                    <!--Search section end-->
+                    <div class="searchWraper  block-hide" [matMenuTriggerFor]="searchMenu" #menuTrigger="matMenuTrigger">
                         <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" aria-label="field_searchWraper" data-bs-toggle="dropdown" aria-expanded="false" (click)="toggleSearchDropdown()" [ngClass]="{'active': selected != ''}">
                             <img src="assets/Img/icon_magnify_grey.svg" alt="Search">
                         </button>
