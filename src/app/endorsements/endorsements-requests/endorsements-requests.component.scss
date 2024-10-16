@@ -1944,9 +1944,18 @@
       img {
         position: initial;
       }
+      @media (max-width:767px) {
+        top: auto;
+        bottom: 6px;
+      }
     }
     @media (max-width:767px) {
       flex-direction: column;
+    }
+    .field_searchMain{
+      @media (max-width:767px) {
+        flex-direction: row;
+      }
     }
   }
 }

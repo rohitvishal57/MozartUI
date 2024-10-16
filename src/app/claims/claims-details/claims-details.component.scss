@@ -150,6 +150,9 @@
       font-size: 17px;
       color: #4c4c4c;
       margin: 0 !important;
+      @media(max-width:767px) {
+        font-size: 14px;
+      }
       .info-dot {
         width: 5px;
         height: 5px;
@@ -197,6 +200,16 @@
     align-items: center;
     border-radius: 12px;
     border: 1px solid rgba(0, 0, 0, 0.2);
+    @media(max-width:767px) {
+      flex-direction: column;
+      gap:10px;
+      .button_underDeficiency {
+        width: 100%;
+        .btn_groupAction {
+          justify-content: center;
+        }
+      }
+    }
     h5, h6 {
       margin: 0 !important;
     }
@@ -230,6 +243,9 @@
         background: #F7F7F7;
         padding: 0 50px;
         margin-bottom: 20px;
+        @media(max-width:767px) {
+          padding: 0 20px;
+        }
         .mat-mdc-tab-labels {
           gap:20px;
           .mdc-tab {
