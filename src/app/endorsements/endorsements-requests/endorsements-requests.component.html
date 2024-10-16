@@ -22,26 +22,14 @@
                     <!--Search section start-->
                     <div class="body_flex_row claims_searchWraper">
                         <div class="field_searchMain">
-                            <select [(ngModel)]="selected" class="filterSearch" (ngModelChange)="onSelectChanges($event)">
+                            <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)">
                                 <option value="" disabled selected>Select an option</option>
-                                <option value="date">Date</option>
                                 <option value="caseId">Request ID</option>
                                 <option value="memberName">Member Name</option>
                                 <option value="policyNumber">Policy Number</option>
                             </select>
-                            <div *ngIf="selected == 'date'" class="d-flex field_searchMain">
-                                <div class="input-block form-floating input-block-renew m-0">
-                                    <input type="date" id="fromDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getFromDate($event)">
-                                    <label for="fromDate">From Date</label>
-                                </div>
-                                <div class="input-block form-floating input-block-renew m-0">
-                                    <input type="date" id="toDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getToDate($event)">
-                                    <label for="toDate">To Date</label>
-                                </div>
-                                <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" style="position: initial" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg" alt="Search"></button>
-                            </div>
-                            <input *ngIf="selected != 'date'" class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button *ngIf="selected != 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <button type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <!--Search section end-->
@@ -63,7 +51,7 @@
                                 <th scope="col">Request Type</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Raised Date</th>
-                                <th scope="col">Notice</th>
+                                <th scope="col">Action</th>
                                 <!--<th scope="col">Download</th>-->
                             </tr>
                           </thead>
@@ -79,7 +67,7 @@
                                 <td align="center">{{ row?.status }}</td>
                                 <td>{{ row?.raisedOn }}</td>
                                 <td>
-                                    <button type="button" value="Endorsements" title="Endorsements" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button type="button" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                 </td>
                                 <!--<td>
                                     <button type="button" class="btn_icon" (click)="downloadRequest(row)">
@@ -112,7 +100,7 @@
                                 </h6>
                                 <div class="item_productName">{{ row?.caseId }}</div>
                             </div>
-                            <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                            <button type="button" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                             <!-- <div class="card_btnGroup">
                                 <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadRequest(row)"><img src="assets/Img/icon_download_grey.svg"></button>
                             </div> -->

@@ -111,11 +111,11 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.toDate = event.target.value;
   }
 
-  onSelectChanges(event: any): void {
-    this.selected !== "none";
-    this.searchInputControl.setValue("");
+  onSelectChanges(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.selected = inputElement.value;
+    this.searchInputControl.reset();
     this.searchInputControl.clearValidators();
-
     if (this.selected === "memberName") {
       this.searchInputControl.setValidators([
         Validators.required,
@@ -125,19 +125,16 @@ export class EndorsementsRequestsComponent implements OnInit {
     else if (this.selected === "caseId") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
+        Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),
       ]);
     } else if (this.selected === "policyNumber") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
+        Validators.pattern("^\\s*[0-9-]+\\s*$"),
       ]);
     } else if (this.selected === "date") {
       this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(
-          "^(\\d{4})-(\\d{2})-(\\d{2})$"
-        ),
+        Validators.required
       ]);
     }
     this.searchInputControl.updateValueAndValidity();
@@ -172,26 +169,23 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   applySearch() {
+    const searchValue = this.searchInputControl?.value?.trim();
     if (this.searchInputControl.valid) {
       if (this.selected === "caseId") {
         this.requestsListRequestBody.searchColumn = "CaseId";
-        this.requestsListRequestBody.searchString = this.searchInputControl.value!;
+        this.requestsListRequestBody.searchString = searchValue;
       }
       else if (this.selected === "memberName") {
         this.requestsListRequestBody.searchColumn = "MemberName";
-        this.requestsListRequestBody.searchString = this.searchInputControl.value!;
+        this.requestsListRequestBody.searchString = searchValue;
       }
       else if (this.selected === "policyNumber") {
         this.requestsListRequestBody.searchColumn = "PolicyNumber";
-        this.requestsListRequestBody.searchString = this.searchInputControl.value!;
-      } 
-      else if (this.selected === "date") {
-        this.requestsListRequestBody.fromDate = this.fromDate;
-        this.requestsListRequestBody.toDate = this.toDate;
+        this.requestsListRequestBody.searchString = searchValue;
       }
-      this.isSearch = true;
-      this.first = 0;
-      this.getRequestList();
+    this.isSearch = true;
+    this.first = 0;
+    this.getRequestList();
     }
   }
 
