@@ -38,7 +38,6 @@ export class CreateLeadComponent implements OnInit {
   referenceStatus: any;
   referenceSubStatus: any;
   activityTypes: any = [];
-  isReadonly = false;
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -200,7 +199,7 @@ export class CreateLeadComponent implements OnInit {
     }
     else {
       // Continue with form submission if it's valid
-      this.CreateLead = this.userValidations.value;
+      this.CreateLead = this.userValidations.getRawValue();
     }
     this.CreateLead.AgentCode = this.agentCode;
     this.CreateLead.PhoneNumber = this.userValidations.get('mobilenumber')?.value;
@@ -294,13 +293,10 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
     });
 
-    if(this.action ==  'updateStatus'){
-      this.isReadonly = true;
-    }
-    // this.userValidations.get('firstname')?.disable();
-    // this.userValidations.get('mobilenumber')?.disable();
-    // this.userValidations.get('lastname')?.disable();
-    // this.userValidations.get('email')?.disable();
+    this.userValidations.get('firstname')?.disable();
+    this.userValidations.get('mobilenumber')?.disable();
+    this.userValidations.get('lastname')?.disable();
+    this.userValidations.get('email')?.disable();
 
 
   }

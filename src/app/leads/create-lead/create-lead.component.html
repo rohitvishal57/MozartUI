@@ -204,7 +204,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder=""
                                     formControlName="firstname" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }" [readonly] ='isReadonly'>
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }" >
                                 <label for="firstname">First Name *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('firstname')?.errors">
@@ -229,7 +229,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="lastname" placeholder=""
                                     formControlName="lastname" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }" [readonly] ='isReadonly'>
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }" >
                                 <label for="lastname">Last Name *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('lastname')?.errors">
@@ -245,7 +245,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="nomineeName" placeholder=""
                                     formControlName="mobilenumber" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }" [readonly] ='isReadonly'>
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }" >
                                 <label for="nomineeName">Mobile Number *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
@@ -263,7 +263,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="email" placeholder=""
                                     formControlName="email" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }" [readonly] ='isReadonly'>
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }">
                                 <label for="email">Email *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('email')?.errors">
