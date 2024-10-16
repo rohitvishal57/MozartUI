@@ -26,8 +26,7 @@ import { ProductsModule } from './product/products/products.module';
 import { SpinnerInterceptor } from './intercepter/spinner.interceptor';
 import { LeadsModule } from './leads/leads.module';
 import { ProfileModule } from './profile/profile.module';
-
-
+import { EncryptionInterceptor } from './intercepter/aesEncryptToken.interceptor';
 
 export function loadConfig(configService: ConfigService) {
   return () => configService.loadConfig().toPromise();
@@ -80,6 +79,11 @@ export function HttpLoaderFactory(http: HttpClient) {
       multi: true,
     },
     DatePipe,
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass:EncryptionInterceptor,
+      multi:true
+    },
     {
       provide:HTTP_INTERCEPTORS,
       useClass:TokenInterceptor,
