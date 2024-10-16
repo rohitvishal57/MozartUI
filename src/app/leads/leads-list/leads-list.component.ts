@@ -7,6 +7,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-leads-list',
@@ -66,21 +67,11 @@ export class LeadsListComponent {
     private commonService: CommonService,
     private fb: FormBuilder,
     private router: Router,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private toast: NgToastService
+
   ) { }
 
-  leadsLisRequestBody = {
-    "agentCode": this.agentCode,
-    "leadNumber": "",
-    "productName": "",
-    "startDate": null,
-    "pageNumber": 1,
-    "pageSize": 10,
-    "name": "",
-    "email": "",
-    "mobileNumber": "",
-    "filterType": ""
-  }
 
   leadsInfoListRequestBody = {
     "agentcode": this.agentCode,
@@ -102,46 +93,27 @@ export class LeadsListComponent {
   }
 
   ngOnInit(): void {
-    const storedAgentCode = localStorage.getItem('agentCode');
-    if (storedAgentCode) {
-      this.leadsLisRequestBody.agentCode = storedAgentCode;
-      this.getLeadsList();
-    }
-    else {
-      console.log("agent code is not present in local storege");
-    }
+    this.agentCode = localStorage.getItem('agentCode');
+    this.getLeadsList();
     this.getProducts();
     this.fetchReportingUsers();
     this.assignLeadForm = this.fb.group({
       selectedAgentCode: ['']
     });
-    this.updateStatusForm = this.fb.group({
-      leadStatus: [''],
-      leadSubStatus: ['']
-    })
-    this.addNoteForm = this.fb.group({
-      title: [''],
-      activityStartDate: [''],
-      activityStartTime: [''],
-      activityEndDate: [''],
-      activityEndTime: [''],
-      activityType: [''],
-      notes: [''],
-    });
     this.markDuplicateForm = this.fb.group({
       leadId: ['']
     });
 
+  }
+  fetchActivityType(event: any) {
     let fetchActivityTypeRequest: any = {};
     this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
       (response) => {
-        console.log("ActivityType information : " + response.activityName);
         this.activityTypes = response.activityName;
       },
       (error) => {
-
+        console.log("Failed to Fetch Activity Type information : ", error);
       });
-
   }
   onPageChange(event: any) {
     this.first = event.first;
@@ -159,7 +131,7 @@ export class LeadsListComponent {
           console.log("Renewal List", this.leadsList);
           this.countsList = response;
           this.totalRecords = this.countsList.totalCount;
-          if(this.filterLeads == true) {
+          if (this.filterLeads == true) {
             this.appliedFiltersCount = response.totalCount;
           }
         }
@@ -170,64 +142,15 @@ export class LeadsListComponent {
       }
     );
   }
-  editLead(leadNumber: any) {
-    this.router.navigate(['/leads/updateLead/' + leadNumber]);
-  }
-
   updateLeadStatus(leadNumber: any) {
     this.router.navigate(['/leads/updateLead'], {
       queryParams: { leadNumber: leadNumber, action: 'updateStatus' },
     });
   }
-
   addNotesLead(leadNumber: any) {
     this.router.navigate(['/leads/updateLead'], {
       queryParams: { leadNumber: leadNumber, action: 'addNotes' },
     });
-  }
-
-  updateStatus(leadNumber: any) {
-    this.statusUpdateLead = leadNumber;
-    this.leadsService.getReferenceStatus().subscribe(
-      (response) => {
-        console.log(response);
-        this.displayUpdateStatusPopup = true
-        this.referenceStatus = response;
-        // this.referenceSubStatus = response;
-      },
-      (error) => {
-        console.error("Error from getMyReportingUsers API:", error);
-      }
-    );
-  }
-  changeReferStatus(event: any) {
-    console.log(event.target.value);
-    let selectedStatus = event.target.value
-    this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
-    console.log(this.referenceSubStatus);
-  }
-  updateStatusSubmit() {
-    console.log(this.updateStatusForm.value);
-    let reqObj = {
-      agentcode: this.agentCode,
-      statusMessage: "Approval",
-      statusCode: "334",
-      sessionId: "8",
-      response: "ok",
-      leadnumber: this.statusUpdateLead,
-      status: this.updateStatusForm.get('leadStatus')?.value,
-      substatus: this.updateStatusForm.get('leadSubStatus')?.value
-    }
-    this.leadsService.updateStatus(reqObj).subscribe(
-      (response) => {
-        console.log(response);
-        this.displayUpdateStatusPopup = false;
-      },
-      (error) => {
-        console.error("Error from getMyReportingUsers API:", error);
-        this.displayUpdateStatusPopup = false;
-      }
-    );
   }
   markDuplicate(leadNumber: any) {
     console.log(leadNumber);
@@ -259,7 +182,6 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.myleads = true;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = true;
-    this.leadsLisRequestBody.filterType = filter;
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
@@ -277,7 +199,7 @@ export class LeadsListComponent {
       error: (err) => {
         console.log("error coming form getproduct list API");
       }
-    })
+    });
   }
   toggleFilterDropdown() {
     if (this.toggeleSearchdropdown == true) {
@@ -293,11 +215,9 @@ export class LeadsListComponent {
   applyFilter() {
     this.filterLeads = true;
     this.calculateAppliedFiltersCount();
-    const selectedProducts = this.productsList
-      .filter((product) => product.selected)
+    const selectedProducts = this.productsList.filter((product) => product.selected)
       .map((product) => product.productName);
-    const selectedPolicyTypes = this.StaticPolicyTypes
-      .filter((policyType) => policyType.selected)
+    const selectedPolicyTypes = this.StaticPolicyTypes.filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
     this.leadsInfoListRequestBody.searchlist = selectedProducts.join(", ");
     this.leadsInfoListRequestBody.policyList = selectedPolicyTypes.join(", ");
@@ -312,10 +232,9 @@ export class LeadsListComponent {
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.appliedFiltersCount = 0;
-    this.leadsLisRequestBody.productName = "";
     this.toggeledropdown = false;
-    this.startDate ="";
-    this.endDate="";
+    this.startDate = "";
+    this.endDate = "";
     this.getLeadsList();
   }
   clear() {
@@ -323,9 +242,8 @@ export class LeadsListComponent {
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.appliedFiltersCount = 0;
-    this.leadsLisRequestBody.productName = "";
-    this.startDate ="";
-    this.endDate="";
+    this.startDate = "";
+    this.endDate = "";
     this.getLeadsList();
   }
   toggleSearchDropdown() {
@@ -334,6 +252,7 @@ export class LeadsListComponent {
     }
     this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
   }
+
   onSelectChanges(event: any): void {
     this.searchInputControl.setValue("");
     this.searchInputControl.clearValidators();
@@ -369,6 +288,7 @@ export class LeadsListComponent {
     this.searchInputControl.updateValueAndValidity();
     this.getPlaceholder();
   }
+
   getErrorMessage(): string {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";
@@ -386,17 +306,6 @@ export class LeadsListComponent {
     }
     return "";
   }
-  cancelSearch(menuTrigger: MatMenuTrigger) {
-    this.toggeleSearchdropdown = false;
-    this.selected = "";
-    this.leadsLisRequestBody.mobileNumber = "";
-    this.leadsLisRequestBody.name = "";
-    this.leadsLisRequestBody.email = "";
-    this.leadsLisRequestBody.leadNumber = "";
-    this.searchInputControl.reset();
-    this.getLeadsList();
-    menuTrigger.closeMenu();
-  }
   applySearch() {
     if (this.searchInputControl.valid) {
       this.leadsInfoListRequestBody.searchby = this.searchInputControl.value!;
@@ -408,26 +317,16 @@ export class LeadsListComponent {
   renewalListView(view: string) {
     this.selectedView = view;
   }
-
   showAssigneLeadDialog(leadInformation: any) {
-
     if (!this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInformation.leadNumber)) {
       this.checkBoxSelectedLeads.push(leadInformation);
     }
-
     this.displayAssigneePopup = true;
   }
-
-  showNotesDialog(leadInformation: any) {
-    this.selectedleadInformation = leadInformation;
-    this.displayNotesPopup = true;
-  }
-
   showAuditTrailDialog(leadNumber: any) {
     this.leadsService.viewAuditTrail(leadNumber).subscribe(
       (response) => {
         this.displayAuditTrailPopup = true;
-
         this.auditTrails = response;
       },
       (error) => {
@@ -435,7 +334,6 @@ export class LeadsListComponent {
       }
     );
   }
-
   fetchReportingUsers() {
     let requestBody: any = {}
     requestBody.agentCode = this.agentCode
@@ -450,20 +348,17 @@ export class LeadsListComponent {
         console.error("Error from getMyReportingUsers API:", error);
       }
     );
-    console.log("fetchReportingUsers agentCodes", this.agentCodes)
   }
-
   assineLead() {
     const selectedLeadIDs = this.checkBoxSelectedLeads.map((lead: LeadsList) => lead.leadNumber);
-    console.log("selectedLeadIDs", selectedLeadIDs)
     let assigneLeadRequestBody: any = {};
     assigneLeadRequestBody.leadnumber = selectedLeadIDs,
       assigneLeadRequestBody.leadassigne = this.assignLeadForm.value.selectedAgentCode,
       assigneLeadRequestBody.agentCode = this.agentCode
     this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
       (response) => {
-        if (response.errorMessage == "success") {
-          console.log("Success! The lead has been successfully assigned!");
+        if (response.message  == "Success") {
+          this.toast.success({ detail: 'Lead has been successfully assigned' });
         }
       }, (error) => {
         console.error("Error: Unable to assign lead. Please try again later.", error);
@@ -471,39 +366,11 @@ export class LeadsListComponent {
     );
     this.displayAssigneePopup = false;
   }
-
-  addNotes() {
-    let addNotesRequestBody: any = {};
-    addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
-      addNotesRequestBody.activityenddate = this.addNoteForm.value.activityEndDate,
-      addNotesRequestBody.activityName = this.addNoteForm.value.title,
-      addNotesRequestBody.note = this.addNoteForm.value.notes,
-      addNotesRequestBody.name = this.addNoteForm.value.notes,
-      addNotesRequestBody.activitytype = this.addNoteForm.value.activityType,
-      addNotesRequestBody.agentcode = this.agentCode,
-      addNotesRequestBody.createdat = new Date(),
-      addNotesRequestBody.mobilenumber = this.selectedleadInformation.phoneNumber,
-      addNotesRequestBody.leadnumber = this.selectedleadInformation.leadNumber,
-      addNotesRequestBody.isupdate = 0
-
-    this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
-      (response) => {
-        if (response.errorMessage == "success") {
-          console.log("Add addLeadNotes success");
-        }
-      }, (error) => {
-        console.error("Error from addLeadNotes API:", error);
-      }
-    );
-    this.displayNotesPopup = false;
-  }
-
   toggleAll(event: Event) {
     const input = event.target as HTMLInputElement;
     this.leadsList.forEach(lead => lead.isSelected = input.checked)
     this.checkBoxSelectedLeads = this.leadsList.filter(lead => lead.isSelected);
   }
-
   updateSelectedLeads(leadInfo: any) {
     if (this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInfo.leadNumber)) {
       this.checkBoxSelectedLeads = this.checkBoxSelectedLeads.filter((lead: any) => lead.leadNumber !== leadInfo.leadNumber);
@@ -511,12 +378,9 @@ export class LeadsListComponent {
       this.checkBoxSelectedLeads.push(leadInfo);
     }
   }
-
   selectAllAssigneLeadDialog() {
     this.showAssigneLeadDialog(this.selectedleadInformation);
   }
-
-
   getAssignedLeads() {
     this.leadsInfoListRequestBody.searchby = "";
     this.leadsInfoListRequestBody.fromdate = null;
@@ -528,9 +392,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
-
   }
-
   getUnAssignedLeads() {
     this.leadsInfoListRequestBody.searchby = "";
     this.leadsInfoListRequestBody.fromdate = null;
@@ -542,9 +404,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
-
   }
-
   getPlaceholder(): string {
     if (this.selected === 'leadId') {
       return 'Enter Lead Number';

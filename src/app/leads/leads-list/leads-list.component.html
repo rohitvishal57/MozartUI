@@ -241,7 +241,8 @@
                                     <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
                                     <button class="btn_action btn_renewalAction"  title="Quick Quote" ><img
                                         src="assets/Img/icon_savenew_subquote.svg"></button>
-                                    <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
+                                   
+                                        <!-- <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
                                                 <li class="actionItem">
@@ -266,7 +267,7 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                    </mat-menu>
+                                    </mat-menu> -->
                                 </div>
                             </div>
                         </header>
@@ -351,126 +352,7 @@
             </div>
         </form>
     </p-dialog>
-    <div class="card flex justify-content-center ">
-        <p-dialog header="Add lead status" [modal]="true" [(visible)]="displayUpdateStatusPopup"
-            [style]="{ width: '75rem', height: '30rem' }">
-            <!-- <span class="p-text-secondary block mb-5">select user</span> -->
-            <form (ngSubmit)="updateStatusSubmit()" [formGroup]="updateStatusForm" novalidate autocomplete="false">
-                <section class="white_container">
-                    <div class="row mb-3">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                            <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="leadStatus" (change)="changeReferStatus($event)">
-                                    <option *ngFor="let item of referenceStatus " [value]="item.name">
-                                        {{ item.name }}
-                                    </option>
-                                </select>
-                                <label>Enter Lead Status</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                            <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="leadSubStatus">
-                                    <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
-                                        {{ item.name }}
-                                    </option>
-                                </select>
-                                <label>Enter Lead Sub-Status</label>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-    
-                <div class="row mt-4">
-                    <div class="col-12 btn_container_leads">
-                        <button type="button" class="btn_red" (onClick)="displayUpdateStatusPopup = false">Cancel</button>
-                        <button type="submit" class="btn_red">Add</button>
-                    </div>
-                </div>
-            </form>
-        </p-dialog>
-
-    </div>
-    <div class="contentBody bodyColumns-1">
-        <p-dialog header="Allocate to" [modal]="true" [(visible)]="displayNotesPopup"
-            [style]="{ width: '90rem', height: '45rem' }">
-
-            <section class="white_container">
-                <h6 class="heading-16-red">Add Notes</h6>
-            </section>
-            <form (ngSubmit)="addNotes()" [formGroup]="addNoteForm" novalidate autocomplete="false">
-                <section class="white_container">
-                    <div class="row mb-3">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-3">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="nomineeName" placeholder="" type="text"
-                                    formControlName="title">
-                                <label>Activity Title*:</label>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="firstname" placeholder="" type="date"
-                                    formControlName="activityStartDate">
-                                <label>Activity Start Date*:</label>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="MiddleName" placeholder="" type="time"
-                                    formControlName="activityStartTime">
-                                <label> Activity Start Time*:</label>
-
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="lastname" placeholder="" type="date"
-                                    formControlName="activityEndDate">
-                                <label>Activity End Date*:</label>
-
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="email" placeholder="" type="time"
-                                    formControlName="activityEndTime">
-                                <label>Activity End Time*:</label>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">
-                            <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="activityType">
-                                    <option value="" disabled selected>Choose Option</option>
-                                    <option *ngFor="let opt of activityTypes" [value]="opt">
-                                        {{ opt }}
-                                    </option>
-                                </select>
-                                <label>Select Activity Type*:</label>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-3">
-                            <div class="input-block form-floating input-block-renew">
-                                <textarea class="form-control input-textBox" id="message" name="message" rows="4"
-                                    cols="50" placeholder="Type your note..." formControlName="notes"></textarea>
-                                <label>Note*:</label>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <button type="submit" class="btn_red">Save</button>
-                    </div>
-                </div>
-            </form>
-        </p-dialog>
-    </div>
+   
     <div class="card flex justify-content-center ">
         <p-dialog header="Mark duplicate" [modal]="true" [(visible)]="markDuplicatePopup"
             [style]="{ width: '75rem', height: '30rem' }">
