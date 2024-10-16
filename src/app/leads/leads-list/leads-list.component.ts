@@ -56,11 +56,10 @@ export class LeadsListComponent {
   statusUpdateLead: any;
   startDate: any;
   endDate: any;
+  filterLeads = false;
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
-    { name: 'RUG', selected: false },
     { name: 'Family Floater', selected: false },
-    { name: 'Groups', selected: false }
   ];
   constructor(
     private leadsService: LeadsService,
@@ -94,11 +93,13 @@ export class LeadsListComponent {
     ],
     "length": 10,
     "searchby": "",
+    "searchlist": "",
+    "fromdate": null,
+    "todate": null,
+    "policyList": "",
     "isSellerPortal": true
+
   }
-
-
-
 
   ngOnInit(): void {
     const storedAgentCode = localStorage.getItem('agentCode');
@@ -154,10 +155,13 @@ export class LeadsListComponent {
     this.leadsService.getLeadsListApi(this.leadsInfoListRequestBody).subscribe(
       (response) => {
         if (response.statusCode == 200) {
-          this.leadsList = response.leadList,
-            console.log("Renewal List", this.leadsList);
+          this.leadsList = response.leadList;
+          console.log("Renewal List", this.leadsList);
           this.countsList = response;
           this.totalRecords = this.countsList.totalCount;
+          if(this.filterLeads == true) {
+            this.appliedFiltersCount = response.totalCount;
+          }
         }
         else { console.error("API request was not successful."); }
       },
@@ -172,16 +176,16 @@ export class LeadsListComponent {
 
   updateLeadStatus(leadNumber: any) {
     this.router.navigate(['/leads/updateLead'], {
-      queryParams: {leadNumber : leadNumber,action: 'updateStatus'},
+      queryParams: { leadNumber: leadNumber, action: 'updateStatus' },
     });
   }
 
-  addNotesLead(leadNumber : any ){
+  addNotesLead(leadNumber: any) {
     this.router.navigate(['/leads/updateLead'], {
-      queryParams: {leadNumber : leadNumber,action: 'addNotes'},
+      queryParams: { leadNumber: leadNumber, action: 'addNotes' },
     });
   }
-  
+
   updateStatus(leadNumber: any) {
     this.statusUpdateLead = leadNumber;
     this.leadsService.getReferenceStatus().subscribe(
@@ -248,18 +252,22 @@ export class LeadsListComponent {
     );
   }
   filterQuotes(filter: string) {
-    this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.searchby = "";
+    this.leadsInfoListRequestBody.fromdate = null;
+    this.leadsInfoListRequestBody.todate = null;
+    this.leadsInfoListRequestBody.searchlist = "";
     this.leadsInfoListRequestBody.myleads = true;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = true;
     this.leadsLisRequestBody.filterType = filter;
-
+    this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
   }
   getProducts() {
     const reqData = {
-      "agentCode": this.agentCode
+      //"agentCode": this.agentCode
+      "agentCode": '4620973'
     }
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res) => {
@@ -283,27 +291,41 @@ export class LeadsListComponent {
     this.appliedFiltersCount = selectedProductsCount;
   }
   applyFilter() {
+    this.filterLeads = true;
     this.calculateAppliedFiltersCount();
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
-    console.log("selectedProducts", selectedProducts);
-    this.leadsLisRequestBody.productName = selectedProducts.join(", ");
-    console.log("product names which are taking by request body", this.leadsLisRequestBody.productName);
+    const selectedPolicyTypes = this.StaticPolicyTypes
+      .filter((policyType) => policyType.selected)
+      .map((policyType) => policyType.name);
+    this.leadsInfoListRequestBody.searchlist = selectedProducts.join(", ");
+    this.leadsInfoListRequestBody.policyList = selectedPolicyTypes.join(", ");
+    this.leadsInfoListRequestBody.fromdate = this.startDate;
+    this.leadsInfoListRequestBody.todate = this.endDate;
     this.getLeadsList();
     this.toggeledropdown = false;
+
   }
   cancel() {
+    this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.appliedFiltersCount = 0;
     this.leadsLisRequestBody.productName = "";
     this.toggeledropdown = false;
+    this.startDate ="";
+    this.endDate="";
     this.getLeadsList();
   }
   clear() {
+    this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.appliedFiltersCount = 0;
     this.leadsLisRequestBody.productName = "";
+    this.startDate ="";
+    this.endDate="";
     this.getLeadsList();
   }
   toggleSearchDropdown() {
@@ -377,8 +399,8 @@ export class LeadsListComponent {
   }
   applySearch() {
     if (this.searchInputControl.valid) {
-      this.leadsInfoListRequestBody.searchby=this.searchInputControl.value!;
-    }else{
+      this.leadsInfoListRequestBody.searchby = this.searchInputControl.value!;
+    } else {
       this.leadsInfoListRequestBody.searchby = "";
     }
     this.getLeadsList();
@@ -496,20 +518,28 @@ export class LeadsListComponent {
 
 
   getAssignedLeads() {
-    this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.searchby = "";
+    this.leadsInfoListRequestBody.fromdate = null;
+    this.leadsInfoListRequestBody.todate = null;
+    this.leadsInfoListRequestBody.searchlist = "";
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = false;
+    this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
 
   }
 
   getUnAssignedLeads() {
-    this.leadsInfoListRequestBody.searchby="";
+    this.leadsInfoListRequestBody.searchby = "";
+    this.leadsInfoListRequestBody.fromdate = null;
+    this.leadsInfoListRequestBody.todate = null;
+    this.leadsInfoListRequestBody.searchlist = "";
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = false;
     this.leadsInfoListRequestBody.unassignedleads = true;
+    this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
 
@@ -517,25 +547,25 @@ export class LeadsListComponent {
 
   getPlaceholder(): string {
     if (this.selected === 'leadId') {
-        return 'Enter Lead Number';
-      } else if (this.selected === 'mobileNumber') {
-        return 'Enter mobileNumber';
-      } else if (this.selected === 'name') {
-        return 'Enter Name';
-      }else if (this.selected == 'email'){
-        return 'Enter EmailId';
-      }
-    else {
-        return 'Search...';
-      }
-    } 
-    formatDate(dateType: "startDate" | "endDate") {
-      if (dateType === "startDate" && this.startDate) {
-        this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
-      } else if (dateType === "endDate" && this.endDate) {
-        this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
-      }
+      return 'Enter Lead Number';
+    } else if (this.selected === 'mobileNumber') {
+      return 'Enter mobileNumber';
+    } else if (this.selected === 'name') {
+      return 'Enter Name';
+    } else if (this.selected == 'email') {
+      return 'Enter EmailId';
     }
+    else {
+      return 'Search...';
+    }
+  }
+  formatDate(dateType: "startDate" | "endDate") {
+    if (dateType === "startDate" && this.startDate) {
+      this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
+    } else if (dateType === "endDate" && this.endDate) {
+      this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
+    }
+  }
 
 
 }

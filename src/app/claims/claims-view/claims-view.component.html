@@ -144,25 +144,25 @@
                                 <button type="button" class="btn btn-add" (click)="addBillRow()">Add More Bills</button>
                             
                           <div class="row" *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i">
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
                                       <input type="text" class="form-control input-textBox" placeholder="Bill No" formControlName="billNo" />
                                       <label for="addnotes">Bill No.</label>
                                   </div>
                               </div>
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                              <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
                                   <div class="input-block form-floating input-block-renew">
                                       <input type="date" class="form-control input-textBox" formControlName="billDate" />
                                       <label for="addnotes">Date</label>
                                   </div>
                               </div>
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                              <div class="col-10 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
                                       <input type="number" class="form-control input-textBox" placeholder="Amount" formControlName="billAmount" />
                                       <label for="addnotes">Amount</label>
                                   </div>
                               </div>
-                              <div class="col-12 col-sm-12 col-md-6 col-lg-1 col-xl-1 text-center">
+                              <div class="col-2 col-sm-12 col-md-1 col-lg-1 col-xl-1 text-center">
                                 <button type="button" class="btn btn_bill_delete" (click)="removeBillRow(i)"> <img src="assets/Img/icon_delete_red2.svg"></button>
                               </div>
                           </div>

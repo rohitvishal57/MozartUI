@@ -127,7 +127,7 @@
         max-width: 700px;
     }
     .icon_withHeading .btn_backPage {
-        display: none;
+        /*display: none;*/
     }
     .filterWraperForm .fw_form .fw_formBody{
         max-height: 300px;
@@ -210,7 +210,7 @@
     }
     .quickFilterLeft .quickFilter {
         flex-wrap: nowrap;
-        min-width: 520px;
+        /*min-width: 520px;*/
     }
     .filterWraperForm {
         min-width: 100%;
@@ -307,6 +307,18 @@
     .uploadedFiles_main li .uploadedFiles_headInfo {
         flex-direction: column;
         align-items: flex-end;
+    }
+    .popupModalMain .modal-dialog {
+        max-width: 100%;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        top: auto;
+        position: absolute;
+        margin: 0;
+    }
+    .popupModalMain .modal-content {
+        border-radius: 16px 16px 0 0;
     }
 }
 @media (max-width:390px){

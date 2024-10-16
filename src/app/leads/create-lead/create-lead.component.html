@@ -204,7 +204,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder=""
                                     formControlName="firstname" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }" [readonly] ='isReadonly'>
                                 <label for="firstname">First Name *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('firstname')?.errors">
@@ -229,7 +229,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="lastname" placeholder=""
                                     formControlName="lastname" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }" [readonly] ='isReadonly'>
                                 <label for="lastname">Last Name *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('lastname')?.errors">
@@ -245,7 +245,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="nomineeName" placeholder=""
                                     formControlName="mobilenumber" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }" [readonly] ='isReadonly'>
                                 <label for="nomineeName">Mobile Number *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
@@ -263,7 +263,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="email" placeholder=""
                                     formControlName="email" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }">
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }" [readonly] ='isReadonly'>
                                 <label for="email">Email *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('email')?.errors">
@@ -426,21 +426,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-0">
-                        <h4 class="mrg-btm-0 impText font-weight-bold"><span class="heading-16-red">Important :</span>
-                            Kindly
-                            ensure that
-                            Proposer's full name, address, gender and date of birth is strictly as per his/her
-                            CKYC1
-                            registry, Aadhaar records or OVD2</h4>
-                    </div>
-                    <div class="row impTextList sub-title mb-0 font-weight-bold">
-                        <p>1. Central KYC Registry</p>
-                    </div>
-                    <div class="row impTextList sub-title mb-3 font-weight-bold">
-                        <p>2. Officially Valid Documents, namely one of Aadhaar/Passport/Driving License/Voter
-                            ID</p>
-                    </div>
                 </section>
                 
                 <section class="white_container mb-5" *ngIf="action!='addNotes'">
@@ -536,7 +521,7 @@
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <select class="form-select input-selectBox" formControlName="referenceStatus"
+                                    <select class="form-select input-selectBox" formControlName="status"
                                     (change)="changeReferStatus($event)">
                                         <option value="" disabled selected>Choose Option</option>
                                         <option *ngFor="let item of referenceStatus" [value]="item.name">
@@ -548,7 +533,7 @@
                             </div>
                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <select class="form-select input-selectBox" formControlName="referenceSubStatus"
+                                    <select class="form-select input-selectBox" formControlName="substatus"
                                         (selectionChange)="campnoSelected()">
                                         <option value="" disabled selected>Choose Option</option>
                                         <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
@@ -558,6 +543,21 @@
                                     <label for="familyConstruct">Enter Lead Sub-Status</label>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mb-0">
+                            <h4 class="mrg-btm-0 impText font-weight-bold"><span class="heading-16-red">Important :</span>
+                                Kindly
+                                ensure that
+                                Proposer's full name, address, gender and date of birth is strictly as per his/her
+                                CKYC1
+                                registry, Aadhaar records or OVD2</h4>
+                        </div>
+                        <div class="row impTextList sub-title mb-0 font-weight-bold">
+                            <p>1. Central KYC Registry</p>
+                        </div>
+                        <div class="row impTextList sub-title mb-3 font-weight-bold">
+                            <p>2. Officially Valid Documents, namely one of Aadhaar/Passport/Driving License/Voter
+                                ID</p>
                         </div>
                     </section>
  
@@ -581,7 +581,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityTitle" placeholder=""
                                     formControlName="activityTitle" type="text" >
-                                <label for="activityTitle">Activity Title*:</label>
+                                <label for="activityTitle">Activity Title*</label>
 
                             </div>
                         </div>
@@ -590,7 +590,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityStartDate" placeholder=""
                                     formControlName="activityStartDate" type="date" >
-                                <label for="activityStartDate">Activity Start Date*:</label>
+                                <label for="activityStartDate">Activity Start Date*</label>
 
                             </div>
                         </div>
@@ -599,7 +599,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityStartTime" placeholder=""
                                     formControlName="activityStartTime" type="time" >
-                                <label for="activityStartTime">Activity Start Time*:</label>
+                                <label for="activityStartTime">Activity Start Time*</label>
 
                             </div>
                         </div>
@@ -608,7 +608,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityEndDate" placeholder=""
                                     formControlName="activityEndDate" type="date" >
-                                <label for="activityEndDate">Activity End Date*:</label>
+                                <label for="activityEndDate">Activity End Date*</label>
 
                             </div>
                         </div>
@@ -617,7 +617,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityEndTime" placeholder=""
                                     formControlName="activityEndTime" type="time" >
-                                <label for="activityEndTime">Activity End Time*:</label>
+                                <label for="activityEndTime">Activity End Time*</label>
 
                             </div>
                         </div>
@@ -630,7 +630,7 @@
                                     {{ item }}
                                 </option>
                             </select>
-                            <label for="interestedProductName">Select Activity Type*:</label>
+                            <label for="interestedProductName">Select Activity Type*</label>
                         </div>
                     </div>
 					 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
