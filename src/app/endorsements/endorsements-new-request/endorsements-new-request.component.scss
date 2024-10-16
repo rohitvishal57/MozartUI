@@ -14,7 +14,28 @@
         }
     }
     }
-
+.popupModalOTP .modal-dialog {
+    max-width: 430px;
+}
+.popupModalOTP .modal-body {
+    gap: 12px;
+}
+.OTPContainer {
+    display: flex;
+    gap:15px;
+}
+.OTPContainer .OTP_Input {
+    width: 50px;
+    height: 40px;
+    border-radius: 8px;
+    padding: 8px 16px;
+    background: #fff;
+    border: 1px solid #F1F3F6;
+    font-weight: 400;
+    font-size: 14px;
+    color: #4c4c4c;
+    text-align: center;
+}
 /*---Common css end---*/
 
 

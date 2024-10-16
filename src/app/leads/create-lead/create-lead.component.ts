@@ -202,18 +202,17 @@ export class CreateLeadComponent implements OnInit {
     console.log("getLeadInformationByLeadNumber ", leadNumber)
     let requestBody: any = {};
     requestBody.agentCode = localStorage.getItem('agentCode');
-    requestBody.leadNumber = leadNumber;
-    requestBody.productName = "";
-    requestBody.startDate = "";
-    requestBody.pageNumber = 1;
-    requestBody.pageSize = 10;
-    requestBody.name = "";
-    requestBody.email = "";
-    requestBody.phoneNumber = "";
-    requestBody.filterType = "";
-    
+    requestBody.myleads = false;
+    requestBody.assignedleads = false;
+    requestBody.unassignedleads = false;
+    requestBody.start = 1;
+    requestBody.viewBy = [];
+    requestBody.length = 10;
+    requestBody.searchby = leadNumber;
+    requestBody.isSellerPortal = true;
+
     this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
-      this.submittedUser = response.data.leadList[0];
+      this.submittedUser = response.leadList[0];
       this.updateleadInformation();
     },
       (error) => {

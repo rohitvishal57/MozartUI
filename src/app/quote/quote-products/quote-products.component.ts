@@ -6,13 +6,14 @@ import { CommonService } from "src/app/services/common.service";
 import { EncryptionService } from "src/app/services/encryption.service";
 import { QuoteService } from "../quote.service";
 import { firstValueFrom } from "rxjs";
-import { ConfirmationService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 
 
 @Component({
   selector: 'app-quote-products',
   templateUrl: './quote-products.component.html',
-  styleUrls: ['./quote-products.component.scss']
+  styleUrls: ['./quote-products.component.scss'],
+  providers: [ConfirmationService, MessageService]
 })
 export class QuoteProductsComponent implements OnInit {
   stylesList: any[] = [];
