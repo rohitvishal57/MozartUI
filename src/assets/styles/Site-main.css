@@ -1600,7 +1600,7 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 12px;
   color: var(--primary-red-color);
 }
-.form-floating>.form-control.input-selectBox~label,
+/*.form-floating>.form-control.input-selectBox~label,
 .form-floating>.form-control.input-selectBox:not(:placeholder-shown)~label{
     font-weight: 500;
     font-size: 14px;
@@ -1614,7 +1614,7 @@ input[type="search"]::-webkit-search-results-decoration {
     padding: 0 !important;
     z-index: 1;
     transform: scale(.85) translateY(-0.1rem) translateX(.15rem) !important;
-}
+}*/
 .form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select.focus~label,.form-floating>.form-control.input-selectBox.focus~label {
     opacity: 1;
     transform: scale(.85) translateY(-1.5rem) translateX(.15rem) !important;
