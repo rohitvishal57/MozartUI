@@ -736,6 +736,7 @@ export class YatraComponent {
     parentControl: IFormControl | null = null,
     index: number | null = null
   ): boolean {
+    console.log(control, parentControl, index);
     let myControl: AbstractControl | null;
 
     if (parentControl != null && index != null) {
@@ -2870,7 +2871,7 @@ export class YatraComponent {
         else if (this.dynamicFormGroup.get(newKey) instanceof FormGroup) {
           const formGroup = this.dynamicFormGroup.get(newKey);
           Object.keys(value).forEach((key2) => {
-            console.log(value[key2]);
+            console.log(value[key2], key2);
             if (key2 == 'covers') {
               console.log(formGroup?.get(key2), typeof formGroup?.get(key2));
               console.log(formGroup?.get(key2) instanceof FormArray);
@@ -2889,11 +2890,18 @@ export class YatraComponent {
               console.log(arrayOfObject);
               // Loop through the array and create FormGroups for each object
               arrayOfObject.forEach((obj: any) => {
-                const group = this.fb.group({
-                  coverId: [obj.coverId],
-                  value: [obj.value]
-                });
-                formArray.push(group);
+                if (key2 == 'covers') {
+                  const group = this.fb.group({
+                    coverId: [obj.coverId],
+                    value: [obj.value]
+                  });
+                  formArray.push(group);
+                }
+                else {
+                  const group = formArray.controls[0]
+                  console.log(group);
+                  formArray.push(group)
+                }
               });
             }
             else
@@ -3987,13 +3995,14 @@ export class YatraComponent {
 
 
   addDiseaseList(subControl?: any, control?: any) {
+    console.log(this.dynamicFormGroup.value,this.form);
     if (this.isOverlayVisible) {
       this.isOverlayVisible = false;
     }
     else {
       this.isOverlayVisible = true;
     }
-    console.log(subControl, control, this.dynamicFormGroup);
+    console.log(subControl, control);
   }
   addNewDisease(subControl: any, control: any) {
     console.log(subControl, control);
@@ -4025,11 +4034,27 @@ export class YatraComponent {
     console.log(this.dynamicFormGroup, this.dynamicFormGroup.get(control.name) as FormGroup);
     console.log(this.form);
   }
-  removeDisease(subControl: any, control: any) {
-    console.log(subControl, control);
+  removeDisease(subControl: any, control: any, index: any) {
+    console.log(subControl, control, index,this.form,this.dynamicFormGroup.value);
     if (subControl.innerArrayControl.length > 1) {
-      subControl.innerArrayControl.pop();
+      this.form.formSections.forEach((sections:any)=>{
+        sections.formControls.forEach((controls:any)=>{
+          if(controls.name == control.name && controls.subControls){
+            controls.subControls.forEach((subControls:any)=>{
+              if(subControls.name == subControl.name){
+                subControls.innerArrayControl.splice(index,1);
+                console.log(subControls);
+              }
+            });
+          }
+        });
+      });
+      // subControl.innerArrayControl.splice(index, 1);
+      ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray)?.removeAt(index);
+      // console.log(((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray));
+      // subControl.innerArrayControl.pop();
     }
+    console.log(control, this.dynamicFormGroup,this.form);
   }
   copyText(control: any) {
     console.log(control);
@@ -4130,7 +4155,7 @@ export class YatraComponent {
       ifscCode: formData?.ifscCode || '',
       micrNo: formData?.micrCode || '',
       premiumAmount: formData?.totalPremium || '',
-      selectedTenure: (parseInt(formData?.tenure) + 1).toString() || '',
+      selectedTenure: (parseInt(formData?.tenure)).toString() || '',
       paymentDate: new Date() as any || '',
       paymentCollectionMode: formData.paymentOption || '',
       paymentByRelationship: 'Self',
