@@ -91,7 +91,7 @@ export class YatraComponent {
   selectedAddons: any[] = [];
   question: any;
   leadnumber: string = "";
-  QuoteNumber:any = [];
+  QuoteNumber: any = [];
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
@@ -510,7 +510,7 @@ export class YatraComponent {
                       this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
                       this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
                       this.formData.tenure = this.selectedIndex;
-                      console.log(this.selectedIndex,this.formData);
+                      console.log(this.selectedIndex, this.formData);
                     }
                   });
                 });
@@ -537,7 +537,7 @@ export class YatraComponent {
       //dynamic css
       // this.showHtmlContent = true;
       console.log(this.form);
-      console.log(this.dynamicFormGroup,this.formData);
+      console.log(this.dynamicFormGroup, this.formData);
 
 
 
@@ -1112,6 +1112,7 @@ export class YatraComponent {
 
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null) {
+    this.changesMade = true;
     // console.log(event.target.value,event);
     let eventValue = event.target.value;
     if (control.name === "chequeNumber") {
@@ -2206,6 +2207,7 @@ export class YatraComponent {
   }
   async onSubmit() {
 
+    this.changesMade = false;
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
 
     if (this.dynamicFormGroup.get('numberOfInsuredMembers')?.value < 2 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
@@ -2220,11 +2222,11 @@ export class YatraComponent {
         if (this.dynamicFormGroup.get('insuredMemberDetails')) {
           this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('insuredMemberDetails')?.value.length);
           this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((element: any, index: any) => {
-            element.memberIndex = index+1;
+            element.memberIndex = index + 1;
           });
-          this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((member:any,index:any)=>{
-            if(member.relation == 'Self' && ( this.dynamicFormGroup.get('memberDobProposer') || this.dynamicFormGroup.get('memberAgeProposer') || this.dynamicFormGroup.get('proposerGender')
-            || this.dynamicFormGroup.get('emailId') || this.dynamicFormGroup.get('firstName') || this.dynamicFormGroup.get('middleName') || this.dynamicFormGroup.get('lastName') || this.dynamicFormGroup.get('preFix'))){
+          this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((member: any, index: any) => {
+            if (member.relation == 'Self' && (this.dynamicFormGroup.get('memberDobProposer') || this.dynamicFormGroup.get('memberAgeProposer') || this.dynamicFormGroup.get('proposerGender')
+              || this.dynamicFormGroup.get('emailId') || this.dynamicFormGroup.get('firstName') || this.dynamicFormGroup.get('middleName') || this.dynamicFormGroup.get('lastName') || this.dynamicFormGroup.get('preFix'))) {
               (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
               (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
               (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
@@ -2238,7 +2240,7 @@ export class YatraComponent {
           })
         }
         console.log(this.dynamicFormGroup.value);
-        
+
         this.flattenObjectInsert(this.dynamicFormGroup.value);
         this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
         console.log(this.formData);
@@ -2490,6 +2492,10 @@ export class YatraComponent {
   async getPremiumAmount() {
     this.spinner.show();
     console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
+
+    if(this.changesMade){
+      this.changeRecalculate(false);
+    }
 
     if (this.isQuote == false) {
       this.spinner.show();
@@ -3027,7 +3033,7 @@ export class YatraComponent {
     console.log(this.formData);
     const data = await this.mappedFormData(this.formData);
     console.log(data);
-    
+
 
     var reqData: any = {
       agentCode: this.agentCode,
@@ -3039,34 +3045,34 @@ export class YatraComponent {
     setTimeout(() => {
       console.log('Spinner hidden after timeout.');
       this.yatraService.getFullQuote(reqData).subscribe({
-        next: (response:any) => {
+        next: (response: any) => {
           console.log(response);
           if (response?.data && response.data['ns0:ActiveHealthRes']) {
             const healthRes = response.data['ns0:ActiveHealthRes'];
             const polCreationResponse = healthRes.PolCreationRespons;
             const receiptResponse = healthRes.ReceiptCreationResponse;
-      
+
             this.quoteNo = polCreationResponse.quoteNumber;
             this.customerId = polCreationResponse.customerId;
-            console.log(healthRes,polCreationResponse,receiptResponse.ReceiptNumber,this.quoteNo,this.customerId);
+            console.log(healthRes, polCreationResponse, receiptResponse.ReceiptNumber, this.quoteNo, this.customerId);
             console.log(this.dynamicFormGroup);
-            
-      
+
+
             // Setting the form values using FormGroup's setValue() method
             this.dynamicFormGroup.get('customerId')?.setValue(polCreationResponse.customerId);
             this.dynamicFormGroup.get('quoteValidFromDate')?.setValue(polCreationResponse.quoteValidFromDate);
             this.dynamicFormGroup.get('quoteValidToDate')?.setValue(polCreationResponse.quoteValidToDate);
             this.dynamicFormGroup.get('policyStatus')?.setValue(polCreationResponse.policyStatus);
             this.dynamicFormGroup.get('ReceiptNumber')?.setValue(receiptResponse.ReceiptNumber);
-            console.log(this.dynamicFormGroup.value);   
+            console.log(this.dynamicFormGroup.value);
           } else {
             console.error("No valid data in response", response);
           }
-  
-        this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
-        sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-        this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
-        this.spinner.hide();
+
+          this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+          sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+          this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
+          this.spinner.hide();
         },
         error: (err) => {
           this.spinner.hide();
@@ -3074,7 +3080,7 @@ export class YatraComponent {
         }
       });
     }, 1100);
-    
+
 
     // this.spinner.show();
     // this.mainData = { ...this.mainData, ...this.dynamicFormGroup.value };
@@ -3140,6 +3146,7 @@ export class YatraComponent {
   onCheckboxChange(event: any, control: any, parentControl: any = null, index: number | null = null) {
     console.log(event.target, control, parentControl, index, this.dynamicFormGroup);
 
+    this.changesMade = true;
     if (parentControl != null && typeof parentControl === 'object') {
       this.parentControl = parentControl;
     }
@@ -3189,7 +3196,7 @@ export class YatraComponent {
             }
           }
         })
-
+        this.changeRecalculate(true);
         this.addOnRemoved(control, parentControl);
       }
       if (control.onChangeMethod)
@@ -3291,7 +3298,7 @@ export class YatraComponent {
         });
       }
     });
-    this.getPremiumAmount();
+    // this.getPremiumAmount();
 
   }
 
@@ -3477,7 +3484,7 @@ export class YatraComponent {
     });
 
     // Call the getPremiumAmount method after removing the add-on
-    this.getPremiumAmount();
+    // this.getPremiumAmount();
   }
 
 
@@ -3823,6 +3830,12 @@ export class YatraComponent {
   showOverlay(control: any) {
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
+        if (formControl.name == 'recalculate') {
+          formControl.visible = true;
+        }
+        if (formControl.name == 'next') {
+          formControl.visible = false;
+        }
         if (formControl.name == control.name && formControl.subControls) {
           formControl.subControls.forEach((subControl: any) => {
             if (subControl.name == 'addOnDetails') {
@@ -4132,6 +4145,19 @@ export class YatraComponent {
   jsonParse(string: any, extract: any) {
     const value = JSON.parse(string);
     return value[extract];
+  }
+
+  changeRecalculate(visiblility: boolean) {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name == 'recalculate') {
+          formControl.visible = visiblility;
+        }
+        if (formControl.name == 'next') {
+          formControl.visible = !visiblility;
+        }
+      })
+    })
   }
 
 }
