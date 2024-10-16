@@ -15,7 +15,6 @@
 	font-weight: 600;
 	font-size: 22px;
 }
-
 .searchWraperForm .searchHeader,
 .fw_form .searchHeader {
 	display: flex;
@@ -242,3 +241,15 @@ h6 {
 		filter: brightness(0) invert(1);
 	}
   }
+  .btn_quickFilter {
+	font-size: 11px;
+}   
+.filterSearch{
+	font-size: 11px;
+}
+.common_searchWraper .field_searchMain .filterSearch {
+	padding: 9px 25px 9px 16px;
+}
+.common_searchWraper .field_searchMain button{
+	right:5px
+}

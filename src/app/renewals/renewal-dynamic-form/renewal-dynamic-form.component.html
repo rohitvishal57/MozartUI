@@ -1,6 +1,6 @@
 <div class="siteBody siteBody_renewJourney">
   <div class="contentBody bodyColumns-3">
-      <div class="class=bodyColumns bodyColumnsLeft">
+      <div class="class=bodyColumns bodyColumnsLeft" *ngIf="hideSection">
           <div class="bcl_main">
               <div>Select from any customisation below</div>
               <div class="processBtnGroup">
@@ -1270,7 +1270,7 @@
           <div class="bi_right">
               <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection != 'payment' ">Proceed</button>
               <button type="button" value="renewnow" class="btn_red btn_redRenew" *ngIf="activeSection != 'payment' " (click)="renewNow()">Renew Now</button>
-              <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" *ngIf="activeSection === 'payment'"  (click)="proceed('back')">Back</button>
+              <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" *ngIf="activeSection === 'payment' && hideSection"  (click)="proceed('back')">Back</button>
               <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" *ngIf="activeSection === 'payment'">Next</button>
           </div>
       </div>
