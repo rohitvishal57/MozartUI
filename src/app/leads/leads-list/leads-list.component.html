@@ -232,13 +232,15 @@
                                     <button type="button" value="Assign to" title="Assign to" (click)="showAssigneLeadDialog(row)"
                                         class="btn_action btn_editAction"><img
                                             src="assets/Img/icon_profile.svg"></button>
-                                    <button type="button" value="Update Status" title="Update Status" (click)="updateStatus(row.leadNumber)"
+                                    <button type="button" value="Update Status" title="Update Status" (click)="updateLeadStatus(row.leadNumber)"
                                         class="btn_action btn_renewalAction"><img
                                             src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" value="Add Notes" title="Add Notes" (click)="showNotesDialog(row)"
+                                    <button type="button" value="Add Notes" title="Add Notes" (click)="addNotesLead(row.leadNumber)"
                                         class="btn_action btn_renewalAction"><img
                                             src="assets/Img/icon_add_notes.svg"></button>
-                                    <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                    <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
+                                    <button class="btn_action btn_renewalAction"  title="Quick Quote" ><img
+                                        src="assets/Img/icon_savenew_subquote.svg"></button>
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
@@ -277,14 +279,14 @@
                                 <div class="item_lable">Email</div>
                                 <div class="item_value">{{ row.email }}</div>
                             </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
+                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Campaign Name</div>
                                 <div class="item_value">{{ row.campaignName}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Campaign Number</div>
                                 <div class="item_value">{{ row.campaignNumber }}</div>
-                            </div>
+                            </div> -->
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Lead ID</div>
                                 <div class="item_value">{{ row.leadNumber }}</div>
