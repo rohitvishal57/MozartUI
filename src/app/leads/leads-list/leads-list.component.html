@@ -36,8 +36,6 @@
                 
              
                 <div class="quickFilterRight">
-                   
-
 
                     <div class="body_flex_row leads_searchWraper">
                         <div class="field_searchMain">
@@ -52,21 +50,13 @@
                             <button  type="button" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
-                 
-
-                
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()"
-                            class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}"
-                            aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg"
-                                alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
-                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop"
-                            [ngClass]="{'active': toggeledropdown}">
+                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
-                                <div class="filterHeader">
+                                <div class="filterHeader" >
                                     <header>Filter</header>
-                                    <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search"
-                                        (click)="cancel()">
+                                    <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
                                         <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
                                     </button>
                                 </div>
@@ -74,27 +64,51 @@
                                     <div class="fw_formRow">
                                         <h6>Products</h6>
                                         <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block"
-                                                *ngFor="let product of productsList; let i = index">
+                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" value="products"
-                                                        class="input-check" [(ngModel)]="product.selected"
-                                                        (change)="calculateAppliedFiltersCount()">
+                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
                                                     <label for="product{{i}}">{{product.productName}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>Policy Type</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                  <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <label for="policytype{{i}}">{{policyType.name}}</label>
+                                                </div>
+                                              </div>                                              
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>Date Range</h6>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block input-block-dob">
+                                                    <input type="date" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                    <span class="ui-error">Please enter date of birth</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block input-block-dob">
+                                                    <input type="date" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                    <span class="ui-error">Please enter date of birth</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <footer>
-                                    <button type="button" value="cancel" class="btn_white btn_fullWidth"
-                                        (click)="clear()">Clear</button>
-                                    <button type="button" value="apply" class="btn_red btn_fullWidth"
-                                        (click)="applyFilter()">Apply</button>
+                                    <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                    <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
                                 </footer>
                             </div>
                         </div>
                     </div>
+
                     <button type="button" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"
                         [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list"
                         (click)="renewalListView('list')"><img src="assets/Img/icon_grid_list_grey.svg"
@@ -123,9 +137,6 @@
                                     <th>Name</th>
                                     <th>Mobile Number</th>
                                     <th>Email ID</th>
-                                    <!-- <th>Product name</th> -->
-                                    <!-- <th>Compaign Name</th>
-                                    <th>Compain No</th> -->
                                     <th class="text-center">Notice</th>
                                 </tr>
                             </thead>
@@ -136,20 +147,16 @@
                                     <td>{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</td>
                                     <td>{{ row.phoneNumber }}</td>
                                     <td>{{row.email}}</td>
-                                    <!-- <td><span class="productName">{{ row.interestedInPlan }}</span></td> -->
-                                    <!-- <td>{{ row.campaignName }}</td>
-                                    <td><span class="table-modification">{{ row.campaignNumber }}</span></td> -->
                                     <td>
                                         <div class="btn_groupAction">
                                             <button class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
                                                     src="assets/Img/icon_profile.svg" /></button>
-                                            <button type="button" value="Update Status"
-                                                 title="Update Status" (click)="updateStatus(row.leadNumber)"
-                                                class="btn_action btn_renewalAction"><img
+                                            <button  class="btn_action btn_renewalAction" (click)="updateLeadStatus(row.leadNumber)"  title="Update Status"><img
                                                     src="assets/Img/icon_edit_grey.svg"></button>
-
-                                            <button class="btn_action btn_renewalAction" (click)="showNotesDialog(row)" title="Add Notes">
-                                                <img src="assets/Img/icon_add_notes.svg"></button>
+                                            <button class="btn_action btn_renewalAction" (click)="addNotesLead(row.leadNumber)" title="Add Notes"><img
+                                                     src="assets/Img/icon_add_notes.svg"></button>
+                                            <button class="btn_action btn_renewalAction"  title="Quick Quote" ><img
+                                                     src="assets/Img/icon_share_via_email_grey.svg"></button>
 
                                             <button type="button" value="more" title="More"
                                                 class="btn_action btn_moreAction" aria-label="item-moreaction"
@@ -160,12 +167,10 @@
                                                 class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
-                                                        <li class="actionItem">
-                                                            <a (click)="editLead(row.leadNumber)">
-                                                                <img src="assets/Img/icon_download2_grey.svg"
-                                                                    alt="Download">
+                                                        <!-- <li class="actionItem"> <a (click)="editLead(row.leadNumber)">
+                                                                <img src="assets/Img/icon_download2_grey.svg">
                                                                 <span>Edit Lead</span></a>
-                                                        </li>
+                                                        </li> -->
                                                         <li class="actionItem">
                                                             <a (click)="markDuplicate(row.leadNumber)">
                                                                 <img src="assets/Img/icon_delete_grey.svg" alt="Delete">
@@ -318,9 +323,9 @@
 </main>
 
 <div class="card flex justify-content-center ">
-    <p-dialog header="Allocate to" [modal]="true" [(visible)]="displayAssigneePopup"
+    <p-dialog header="Assign Lead" [modal]="true" [(visible)]="displayAssigneePopup"
         [style]="{ width: '75rem', height: '25rem' }">
-        <span class="p-text-secondary block mb-5">select user</span>
+        <span class="p-text-secondary block mb-5">Select Agent</span>
         <form (ngSubmit)="assineLead()" [formGroup]="assignLeadForm" novalidate autocomplete="false">
             <section class="white_container">
                 <div class="row mb-3">
@@ -400,7 +405,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="nomineeName" placeholder="" type="text"
                                     formControlName="title">
-                                <label>Activity Title *</label>
+                                <label>Activity Title*:</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 mb-3">

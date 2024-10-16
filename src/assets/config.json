@@ -1,6 +1,7 @@
 {
     "baseUrl":"https://usp.monocept.ai/",    
     "baseUrl1":"https://upuat.adityabirlahealth.com/",    
+
     "getRenewalList": "renewal/api/getrenewallist",
     "getRenewalInfo":"renewal/api/renewalinfotest",
     "sendRenewalWhatappsms":"renewal/api/sendrenewalwhatappsms",
@@ -11,6 +12,7 @@
     "updateaddress":"renewal/api/updateaddress",
     "getproductdetailsandfeatures":"renewal/api/getproductdetailsandfeatures",
     "getSubquotes":"renewal/api/getsubquotes",
+    "updateMemberDetails":"renewal/api/UpdateMemberDetails",
 
     "getLeadsListApi":"yatra/api/getleaddetailslist",
     "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",

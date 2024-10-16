@@ -616,12 +616,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
                     let event: any = Respevent;
                     if (Respevent && Respevent.statusCode == "200" && Respevent.isSuccess) {
                       this.toast.success({ detail: `Your request ${resp.response.caseId} has been registered`});
-                      this.backToEndorsment();
                     } 
                     else {
                       this.toast.error({ detail: `${resp.response.statusMessage}`});
-                      this.backToEndorsment();
                     }
+                    this.backToEndorsment();
                   }, (error:any) => {
                     console.log(error);
                   });
@@ -738,22 +737,15 @@ export class EndorsementsNewRequestComponent implements OnInit {
     };
     this.loginservice.validateOtpRequestApi(modal).subscribe(
       (resp:any) => {
-        if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 0) {
+        if (resp && resp.statusCode == "200" && resp.isSuccess) {
           if (resp && resp.statusMessage) {
-            this.toast.success({ detail: resp.statusMessage});
+             this.toast.success({ detail: resp.statusMessage});
           } else {
             this.toast.error({detail: "Something went wrong, please try again"})
           }
           this.isDisabled = false;
           this.sendOtptDisabled = true;
-        } else if (resp && resp.statusCode == "200" && resp.isSuccess && resp.status == 1) {
-          if (resp && resp.statusMessage) {
-            this.toast.success({ detail: resp.statusMessage});
-          } else {
-            this.toast.error({detail: "Something went wrong, please try again"})
-          }
-          this.sendOtptDisabled = false;
-        }
+        } 
         else {
           if (resp && resp.errorMessage) {
             this.toast.error({ detail: resp.errorMessage});

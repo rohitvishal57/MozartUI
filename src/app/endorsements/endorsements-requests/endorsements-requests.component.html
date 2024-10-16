@@ -63,20 +63,24 @@
                                 <th scope="col">Request Type</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Raised Date</th>
+                                <th scope="col">Notice</th>
                                 <!--<th scope="col">Download</th>-->
                             </tr>
                           </thead>
                           <tbody class="table-group-divider" >
                             <tr *ngFor="let row of endorsementDetails; let i = index"
-                    class="table-values" (click)="getEndorsementCaseDetails(row)">
+                    class="table-values">
                                 <td class="td-text-bold">{{ row?.caseId }}</td>
-                                <td >{{ row?.policyNumber }}</td>
-                                <td ><span class="text-break-w100">{{ row?.productName }}</span></td>
-                                <td ><span class="text-break-w100">{{ row?.memberName }}</span></td>
+                                <td>{{ row?.policyNumber }}</td>
+                                <td><span class="text-break-w100">{{ row?.productName }}</span></td>
+                                <td><span class="text-break-w100">{{ row?.memberName }}</span></td>
                                 <td align="center">{{ row?.memberRelation }}</td>
-                                <td ><span class="text-break-w100">{{ row?.requestType }}</span></td>
+                                <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
                                 <td align="center">{{ row?.status }}</td>
-                                <td >{{ row?.raisedOn }}</td>
+                                <td>{{ row?.raisedOn }}</td>
+                                <td>
+                                    <button type="button" value="Endorsements" title="Endorsements" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                </td>
                                 <!--<td>
                                     <button type="button" class="btn_icon" (click)="downloadRequest(row)">
                                         <img src="assets/Img/icon_download_grey.svg" width="9" height="9">
@@ -100,7 +104,7 @@
             </section>
             <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
                 <div class="cardViewWraper">
-                    <div class="cardViewItem" *ngFor="let row of endorsementDetails; let i = index" (click)="getEndorsementCaseDetails(row)">
+                    <div class="cardViewItem" *ngFor="let row of endorsementDetails; let i = index">
                         <header>
                             <div class="card_insureInfo">
                                 <h6>
@@ -108,6 +112,7 @@
                                 </h6>
                                 <div class="item_productName">{{ row?.caseId }}</div>
                             </div>
+                            <button type="button" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                             <!-- <div class="card_btnGroup">
                                 <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadRequest(row)"><img src="assets/Img/icon_download_grey.svg"></button>
                             </div> -->

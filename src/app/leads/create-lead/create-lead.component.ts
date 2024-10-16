@@ -14,6 +14,8 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 })
 export class CreateLeadComponent implements OnInit {
   userValidations!: FormGroup;
+  updateLeadStatus!:FormGroup;
+  addNoteForm!:FormGroup;
   submitted: boolean = false;
   otpEntered: boolean = false;
   enteredOTP: string = '';
@@ -31,6 +33,11 @@ export class CreateLeadComponent implements OnInit {
   AUSearchValue: string = "";
   agentCode: any='';
   submittedUser: any = {};
+  action :String ='';
+  leadNumber:String ='';
+  referenceStatus : any ;
+  referenceSubStatus : any;
+  activityTypes: any = [];
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -44,11 +51,15 @@ export class CreateLeadComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.inItForm();
-    let data: any = this.route.snapshot.paramMap.get('id');
-    if (data) {
-      this.getLeadInformationByLeadNumber(data);
+    this.route.queryParams.subscribe(params => {
+      this.leadNumber = params['leadNumber'];
+      this.action = params['action'];
+
+      console.log("updateStatus action",this.action);
+    });
+    if (this.leadNumber!='') {
+      this.getLeadInformationByLeadNumber(this.leadNumber);
     } 
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
@@ -60,8 +71,7 @@ export class CreateLeadComponent implements OnInit {
       console.log("agent code is not present in local storege");
     }
 
-
-
+ 
     let usr = storedAgentCode ? JSON.parse(storedAgentCode) : null;
     let obj = {
       "id": 0,
@@ -82,6 +92,17 @@ export class CreateLeadComponent implements OnInit {
     //     console.error("Error from getRenewalsList API:", error);
     //   }
     // );
+    this.getReferenceStatus();
+
+    let fetchActivityTypeRequest: any = {};
+    this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
+      (response) => {
+        console.log("ActivityType information : " + response.activityName);
+        this.activityTypes = response.activityName;
+      },
+      (error) => {
+
+      });
   }
   
   inItForm() {
@@ -124,6 +145,22 @@ export class CreateLeadComponent implements OnInit {
       leadnumber: [''],
       leadAssignee: [''],
       isUpdate: 0,
+      referenceStatus:[''],
+      referenceSubStatus:[''] 
+    });
+
+    // this.updateLeadStatus = this.formBuilder.group({
+    // referenceStatus:[''],
+    // referenceSubStatus:[''] });
+    
+    this.addNoteForm = this.formBuilder.group({
+      title: [''],
+      activityStartDate: [''],
+      activityStartTime: [''],
+      activityEndDate: [''],
+      activityEndTime: [''],
+      activityType: [''],
+      notes: [''],
     });
   }
 
@@ -157,29 +194,24 @@ export class CreateLeadComponent implements OnInit {
   }
   onSubmit() {
     this.submitted = true;
-    console.log(this.userValidations.value);
-    if (this.userValidations.invalid) {
-      console.log("Please Enter correct data!")
-      // this.disableFormFields()
 
+    if (this.userValidations.invalid) {
+      // this.disableFormFields()
       return;
     }
     else {
       // Continue with form submission if it's valid
       this.CreateLead = this.userValidations.value;
     }
-    console.log(this.agentCode);
     this.CreateLead.AgentCode = this.agentCode;
     this.CreateLead.PhoneNumber = this.userValidations.get('mobilenumber')?.value;
-    console.log(this.CreateLead);
-
     this.CreateLead.campaignname = 'Self'
     this.CreateLead.dob = this.userValidations?.get('dob')?.value;
     let dobFormatted = this.datePipe.transform(this.CreateLead.dob, 'yyyy-MM-dd');
     let timeDiff = Math.abs(Date.now() - new Date(dobFormatted as string).getTime());
     let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     this.CreateLead.age = age.toString();
-    console.log(this.CreateLead);
+
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
         console.log(response.data);
@@ -196,6 +228,7 @@ export class CreateLeadComponent implements OnInit {
         console.error("Error from getRenewalsList API:", error);
       }
     );
+
   }
 
   getLeadInformationByLeadNumber(leadNumber: any) {
@@ -257,8 +290,82 @@ export class CreateLeadComponent implements OnInit {
       leadAssignee: this.submittedUser.leadAssignee,
       isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
     });
-    console.log("userValidations form path ", this.userValidations.errors)
+
+this.userValidations.get('firstname')?.disable();
+this.userValidations.get('mobilenumber')?.disable();
+this.userValidations.get('lastname')?.disable();
+this.userValidations.get('email')?.disable();
+
 
   }
+
+  getReferenceStatus() {
+    this.leadsService.getReferenceStatus().subscribe(
+      (response) => {
+        console.log(response);
+        this.referenceStatus = response;
+      },
+      (error) => {
+        console.error("Error from getMyReportingUsers API:", error);
+      }
+    );
+  }
+
+  changeReferStatus(event: any) {
+    console.log(event.target.value);
+    let selectedStatus = event.target.value
+    this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
+  }
+
+
+  
+  updateStatusSubmit() {
+    let reqObj = {
+      agentcode: this.agentCode,
+      statusMessage: "Approval",
+      statusCode: "334",
+      sessionId: "8",
+      response: "ok",
+      leadnumber: this.leadNumber,
+      status: this.updateLeadStatus.get('referenceStatus')?.value,
+      substatus: this.updateLeadStatus.get('referenceSubStatus')?.value
+    }
+    this.leadsService.updateStatus(reqObj).subscribe(
+      (response) => {
+        this.toast.success({ detail: 'Lead updated  Added successfully' });
+        this.router.navigate(['leads/leadsList'])
+      },
+      (error) => {
+        console.error("Error from getMyReportingUsers API:", error);
+      }
+    );
+  }
+
+  addNotesSubmit() {
+    let addNotesRequestBody: any = {};
+    addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
+      addNotesRequestBody.activityenddate = this.addNoteForm.value.activityEndDate,
+      addNotesRequestBody.activityName = this.addNoteForm.value.title,
+      addNotesRequestBody.note = this.addNoteForm.value.notes,
+      addNotesRequestBody.name = this.addNoteForm.value.notes,
+      addNotesRequestBody.activitytype = this.addNoteForm.value.activityType,
+      addNotesRequestBody.agentcode = this.agentCode,
+      addNotesRequestBody.createdat = new Date(),
+      addNotesRequestBody.mobilenumber = this.submittedUser.phoneNumber,
+      addNotesRequestBody.leadnumber = this.leadNumber,
+      addNotesRequestBody.isupdate = 0
+
+    this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
+      (response) => {
+        if (response.statusMessage == "Success") {
+          this.toast.success({ detail: 'Note Added successfully' });
+          this.router.navigate(['leads/leadsList'])
+        }
+      }, (error) => {
+        console.error("Error from addLeadNotes API:", error);
+      }
+    );
+  }
+
 
 }
