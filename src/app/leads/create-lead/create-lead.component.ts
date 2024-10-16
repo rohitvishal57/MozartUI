@@ -14,8 +14,8 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 })
 export class CreateLeadComponent implements OnInit {
   userValidations!: FormGroup;
-  updateLeadStatus!:FormGroup;
-  addNoteForm!:FormGroup;
+  updateLeadStatus!: FormGroup;
+  addNoteForm!: FormGroup;
   submitted: boolean = false;
   otpEntered: boolean = false;
   enteredOTP: string = '';
@@ -31,13 +31,14 @@ export class CreateLeadComponent implements OnInit {
   AUSearchCategory: any;
   isIDFCUser = false;
   AUSearchValue: string = "";
-  agentCode: any='';
+  agentCode: any = '';
   submittedUser: any = {};
-  action :String ='';
-  leadNumber:String ='';
-  referenceStatus : any ;
-  referenceSubStatus : any;
+  action: String = '';
+  leadNumber: String = '';
+  referenceStatus: any;
+  referenceSubStatus: any;
   activityTypes: any = [];
+  isReadonly = false;
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -56,11 +57,11 @@ export class CreateLeadComponent implements OnInit {
       this.leadNumber = params['leadNumber'];
       this.action = params['action'];
 
-      console.log("updateStatus action",this.action);
+      console.log("updateStatus action", this.action);
     });
-    if (this.leadNumber!='') {
+    if (this.leadNumber != '') {
       this.getLeadInformationByLeadNumber(this.leadNumber);
-    } 
+    }
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
     this.agentCode = storedAgentCode;
@@ -71,7 +72,7 @@ export class CreateLeadComponent implements OnInit {
       console.log("agent code is not present in local storege");
     }
 
- 
+
     let usr = storedAgentCode ? JSON.parse(storedAgentCode) : null;
     let obj = {
       "id": 0,
@@ -104,7 +105,7 @@ export class CreateLeadComponent implements OnInit {
 
       });
   }
-  
+
   inItForm() {
     this.userValidations = this.formBuilder.group({
       // campaignname: ['', Validators.required],
@@ -145,12 +146,12 @@ export class CreateLeadComponent implements OnInit {
       leadnumber: [''],
       leadAssignee: [''],
       isUpdate: 0,
-      status:[''],
-      substatus:[''] 
+      status: [''],
+      substatus: ['']
     });
 
-    
-    
+
+
     this.addNoteForm = this.formBuilder.group({
       title: [''],
       activityStartDate: [''],
@@ -214,7 +215,11 @@ export class CreateLeadComponent implements OnInit {
       (response) => {
         console.log(response.data);
         if (response.success) {
-          this.toast.success({ detail: 'Lead is created successfully' });
+          if(this.action == 'updateStatus'){
+            this.toast.success({ detail: 'Lead is updated successfully' });
+          }else{
+            this.toast.success({ detail: 'Lead is created successfully' });
+          }
           console.log(response);
           this.router.navigate(['leads/leadsList'])
         }
@@ -289,10 +294,13 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
     });
 
-this.userValidations.get('firstname')?.disable();
-this.userValidations.get('mobilenumber')?.disable();
-this.userValidations.get('lastname')?.disable();
-this.userValidations.get('email')?.disable();
+    if(this.action ==  'updateStatus'){
+      this.isReadonly = true;
+    }
+    // this.userValidations.get('firstname')?.disable();
+    // this.userValidations.get('mobilenumber')?.disable();
+    // this.userValidations.get('lastname')?.disable();
+    // this.userValidations.get('email')?.disable();
 
 
   }
@@ -313,30 +321,6 @@ this.userValidations.get('email')?.disable();
     console.log(event.target.value);
     let selectedStatus = event.target.value
     this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
-  }
-
-
-  
-  updateStatusSubmit() {
-    let reqObj = {
-      agentcode: this.agentCode,
-      statusMessage: "Approval",
-      statusCode: "334",
-      sessionId: "8",
-      response: "ok",
-      leadnumber: this.leadNumber,
-      status: this.updateLeadStatus.get('referenceStatus')?.value,
-      substatus: this.updateLeadStatus.get('referenceSubStatus')?.value
-    }
-    this.leadsService.updateStatus(reqObj).subscribe(
-      (response) => {
-        this.toast.success({ detail: 'Lead updated  Added successfully' });
-        this.router.navigate(['leads/leadsList'])
-      },
-      (error) => {
-        console.error("Error from getMyReportingUsers API:", error);
-      }
-    );
   }
 
   addNotesSubmit() {
