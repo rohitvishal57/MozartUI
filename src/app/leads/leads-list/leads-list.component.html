@@ -323,8 +323,8 @@
         </div>
     </div>
 </main>
-
-<div class="card flex justify-content-center ">
+ 
+ <div class="card flex justify-content-center">
     <p-dialog header="Assign Lead" [modal]="true" [(visible)]="displayAssigneePopup"
         [style]="{ width: '75rem', height: '25rem' }">
         <span class="p-text-secondary block mb-5">Select Agent</span>
@@ -351,7 +351,9 @@
             </div>
         </form>
     </p-dialog>
-   
+</div>  
+  
+
     <div class="card flex justify-content-center ">
         <p-dialog header="Mark duplicate" [modal]="true" [(visible)]="markDuplicatePopup"
             [style]="{ width: '75rem', height: '30rem' }">
@@ -379,8 +381,8 @@
                 </div>
             </form>
         </p-dialog>
-
     </div>
+
     <div class="card flex justify-content-center ">
         <p-dialog header="Audit Trail Details" [modal]="true" [(visible)]="displayAuditTrailPopup"
             [style]="{ width: '75rem', height: '45rem' }">
