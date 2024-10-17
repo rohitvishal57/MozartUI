@@ -18,9 +18,59 @@ export class ProfileComponent implements OnInit {
     }
     this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
       if (res.success) {
-        this.profileDetails = res.data;
+        // this.profileDetails = res.data;
+        const output = Object.keys(res.data).map(key => ({
+          heading: key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+          icon: this.getIcons(key),
+          value: res.data[key]
+        }));
+        this.profileDetails = output
       }
     })
+  }
+
+  getIcons(key: string) {
+    switch (key) {
+      case 'agentCode':
+      case 'branchOfficeCode':
+      case 'branchOfficeName':
+      case 'smCode':
+        return 'icon_branch_office';
+        break;
+      case 'firstName':
+      case 'smName':
+        return 'name';
+        break;
+      case 'mobileNumber':
+      case 'alternateMobileNumber':
+      case 'smMobile':
+        return 'phone';
+        break;
+      case 'smEmail':
+      case 'emailId':
+      case 'alternateEmailId':
+        return 'email';
+        break;
+      case 'gender':
+        return 'gender';
+        break;
+      case 'dateOfBirth':
+        return 'dob';
+        break;
+      case 'agentCategory':
+        return 'spouse';
+        break;
+      case 'subChannel':
+        return 'icon_sub_channel';
+        break;
+      case 'parentName':
+        return 'icon_parent_name';
+        break;
+
+      default:
+        return 'spouse'
+        break;
+    }
   }
 
 

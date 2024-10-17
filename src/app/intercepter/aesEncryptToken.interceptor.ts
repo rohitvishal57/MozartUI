@@ -7,10 +7,12 @@ import { Router } from '@angular/router';
 @Injectable()
 export class EncryptionInterceptor implements HttpInterceptor {
 
+  isEncrypt : boolean = true
+
   constructor(private aesEncryptService: AesEncryptionService, private router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (req.body && !(req.body instanceof FormData)) {
+    if (req.body && this.isEncrypt && !(req.body instanceof FormData)) {
       // Encrypt the request body
       const encryptedBody = { encryptedData: this.aesEncryptService.encrypt(req.body) };
 
@@ -18,7 +20,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
       const clonedRequest = req.clone({
         body: encryptedBody,
         setHeaders: {
-          'Content-Type': 'application/json', // Ensure the content type is correct
+          'Content-Type': 'application/json'
         }
       });
 
@@ -28,16 +30,17 @@ export class EncryptionInterceptor implements HttpInterceptor {
           if (res?.body?.success) {
             const url = this.aesEncryptService.decrypt(res?.body?.data);
             if (url?.redirectUrl) {
-              window.open(url.redirectUrl, "_self")
+              const modifiedUrl = url?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
+              window.open(url?.redirectUrl, "_blank");
             } else {
               localStorage.setItem('token', res?.body?.token);
+              res.body.data = this.aesEncryptService.decrypt(res?.body?.data);
             }
           }
         }),
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
           if (error.status === 401) {
-            // Token expired or invalid, redirect to login or refresh token
             this.router.navigate(['/login']);
           }
           return throwError(error);
