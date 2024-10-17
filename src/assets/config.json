@@ -92,6 +92,6 @@
     "getquotefortopsellingproducts":"quote/api/getquotefortopsellingproducts",
     "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails",
     "profileDetails":"auth/api/GetAgentProfileDetails",
-    "fetchPolicyDetailsFromFile":"yatra/api/getcustomerpolicydetailsfrompolicydocument"
-
+    "fetchPolicyDetailsFromFile":"yatra/api/getcustomerpolicydetailsfrompolicydocument",
+    "justPayRedirection":"Yatra/api/Payment/JuspayOrder"
 }
