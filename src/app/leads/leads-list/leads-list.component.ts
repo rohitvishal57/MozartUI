@@ -34,6 +34,7 @@ export class LeadsListComponent {
   agentCode = localStorage.getItem('agentCode');
   placeholder: string = '';
   displayAssigneePopup = false;
+  assigneModal: any;
   agentCodes: any = [];
   assignLeadForm!: FormGroup;
   updateStatusForm!: FormGroup;
@@ -325,7 +326,7 @@ export class LeadsListComponent {
     if (!this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInformation.leadNumber)) {
       this.checkBoxSelectedLeads.push(leadInformation);
     }
-    this.displayAssigneePopup = true;
+    this.assigneModal = open;
   }
   showAuditTrailDialog(leadNumber: any) {
     this.leadsService.viewAuditTrail(leadNumber).subscribe(
