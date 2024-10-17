@@ -343,6 +343,12 @@ export class GetQuoteComponent {
     // this.saveDataToStorage();
   }
 
+  createLead() {
+    this.route.navigate(['/leads/createLead'], {
+    });
+  }
+
+
   continue() {
     console.log(this.quoteFormGroup);
     this.quoteFormGroup.get('insuredMemberDetails')?.value.forEach((item:any)=>{
