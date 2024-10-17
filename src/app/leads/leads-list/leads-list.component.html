@@ -18,11 +18,10 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li class="quickFilterHeading">Quick filter</li>
+                         <li class="quickFilterHeading">Quick filter</li> 
                         <li>
                             <button type="button" value="allpolicies" class="btn_quickFilter"
-                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All
-                                Leads</button>
+                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Leads</button>
                         </li>
                         <li>
                             <button type="button" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">Assigned Leads</button>
@@ -51,7 +50,7 @@
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
@@ -295,25 +294,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                <div class="tableNav" *ngIf="countsList.totalCount > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords"
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalCount"
                                     [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
                                     class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords
-                                    ? countsList.totalRecords : first + rows}}</span> of <span
-                                    class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalCount
+                                    ? countsList.totalCount : first + rows}}</span> of <span
+                                    class="pageCountTotal">{{countsList.totalCount}} entries</span>
                             </li>
                         </ul>
                     </nav>
                 </div>
             </section>
-            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalRecords === 0">
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalCount === 0">
                 <div class="cardViewWraper">
                     <div class="no_dataFound">
                         <img src="assets/Img/img_no_data_found.svg" alt="No data found">
