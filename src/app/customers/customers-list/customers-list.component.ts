@@ -26,16 +26,14 @@ export class CustomersListComponent {
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
   selected: string = "";
-  searchInputControl = new FormControl("",Validators.required);
+  searchInputControl = new FormControl("");
   isDesktopView:boolean=false
   filterType: string = "totalRecords";
   placeholder:string='';
   agentCode :any =localStorage.getItem('agentCode'); 
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
-    { name: 'RuG', selected: false },
     { name: 'Family Floater', selected: false },
-    { name: 'Groups', selected: false }
   ];
   
   constructor(
@@ -61,8 +59,6 @@ export class CustomersListComponent {
     "pincode": "",
     "filterType": ""
   }
-   
-
   ngOnInit(): void {
     this.getCustomerList();
     this.getProducts();
@@ -191,59 +187,24 @@ export class CustomersListComponent {
     this.customerListRequestBody.endDate = null;
     this.getCustomerList();
   }
-  toggleSearchDropdown() {
-    if(this.toggeledropdown==true)
-    {
-      this.toggeledropdown=false;
-    }
-    this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
-  }
   onSelectChanges(event: any): void {
     this.searchInputControl.setValue("");
-    this.searchInputControl.clearValidators();
+  }
+  getPlaceholder(): string {
     if (this.selected === "mobileNumber") {
-      this.placeholder = 'Mobile Number';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[6-9][0-9]{9}$")
-      ]);
+      return "Enter Mobile Number";
     } else if (this.selected === "proposerName") {
-      this.placeholder = 'Proposer Name';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
-      ]);
-    } 
-    else if (this.selected === "policyNumber") {
-      this.placeholder = 'Policy Number';
-
-      this.searchInputControl.setValidators([Validators.required]);
+      return "Enter Proposer Name";
+    } else if (this.selected === "policyNumber") {
+      return "Enter Policy Number";
+    } else if (this.selected === "proposalNumber") {
+      return "Enter Proposal Number";
     }
-    else if (this.selected === "proposalNumber") {
-      this.placeholder = 'Proposal Number';
-      this.searchInputControl.setValidators([Validators.required]);
-    } else if (this.selected= ''){
-      this.placeholder= '';
+    else {
+      return "Search...";
     }
-    this.searchInputControl.updateValueAndValidity();
   }
-  
-  getErrorMessage(): string {
-    if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
-    } 
-    else if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "mobileNumber") {
-        return "Invalid Mobile Number";
-      } else if (this.selected === "proposerName") {
-        return "Invalid Proposer Name";
-      }
-    }
-    return "";
-  }
-  
-  cancelSearch(menuTrigger: MatMenuTrigger) {
-    this.toggeleSearchdropdown = false;
+  cancelSearch() {
     this.selected = "";
     this.customerListRequestBody.mobileNumber = "";
     this.customerListRequestBody.name = "";
@@ -251,10 +212,8 @@ export class CustomersListComponent {
     this.customerListRequestBody.proposalNumber ="",
     this.searchInputControl.reset();
     this.getCustomerList();
-    menuTrigger.closeMenu();
   }
-  
-  applySearch(menuTrigger: MatMenuTrigger) {
+  applySearch() {    
     if (this.searchInputControl.valid) {
       if (this.selected === "mobileNumber") {
         this.customerListRequestBody.mobileNumber = this.searchInputControl.value!;
@@ -278,7 +237,6 @@ export class CustomersListComponent {
         this.customerListRequestBody.policyNumber = "";
       }
       this.getCustomerList();
-      menuTrigger.closeMenu();
     }
   }
   customerListView(view: string) {

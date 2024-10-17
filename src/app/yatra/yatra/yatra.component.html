@@ -990,6 +990,12 @@
                                       <!-- <hr> -->
                                       <ng-container [formGroupName]="k">
                                         <div class="details-element">
+                                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right" *ngIf="k > 0">
+                                            <hr>
+                                            <input type="button" class="add-btn"
+                                        (click)="removeDisease(subControl,control,k)" value="Remove" />
+                                        {{ k }}
+                                          </div>
                                           <ng-container *ngFor="let innerControl of allSubForm">
                                             <!-- <ng-container *ngIf="innerControl.visible"> -->
                                               <!-- {{ innerControl | json }} {{ question }} -->
@@ -997,8 +1003,8 @@
                                               <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(innerControl.type)"
                                                 [class]="innerControl.class" class="typecss" [hidden]="!innerControl.visible">
                                                 <div class="input-container">
-                                                  <input class="inputField_Text" formControlName="{{ innerControl.name }}"
-                                                       [type]="innerControl.type"
+                                                  <input class="inputField_Text" [formControlName]="innerControl.name"
+                                                       [type]="innerControl.type" [ngClass]="{'has-value': hasAnyValue(subControl)}"
                                                     (change)="onInputChange($event, innerControl,control,i-1)">
                                                     <label class="inputField_Label" *ngIf="innerControl.visibleLabel">{{
                                                       innerControl.label ?
@@ -1010,6 +1016,28 @@
                                                   (getValidationErrors(innerControl,control,i-1)| translate) : ''}}
                                                 </small> -->
               
+                                              </div>
+                                              <div *ngIf="innerControl.type==='select'" [class]="innerControl.class" class="typecss"
+                                              [hidden]="!innerControl.visible">
+                                              <div class="input-container">
+                                                <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
+                                                  <span *ngIf="innerControl.validators">*</span></label>
+                                                <select class="inputField_Select" [formControlName]="innerControl.name"
+                                                (change)="onInputChange($event, subControl,control)"
+                                                [ngClass]="{'has-value': hasAnyValue(subControl)}">
+                                                <option selected value="">Choose...</option>
+                                                  <ng-container *ngFor="let opt of innerControl.options">
+                                                    <option [value]="opt.id ? stringifyObject(opt) : opt.value">
+                                                      {{ opt.name }}</option>
+                                                  </ng-container>
+                                                </select>
+                                                <!-- <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}</label> -->
+                                              </div>
+                                              <!-- <small
+                                                *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
+                                                class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) :
+                                                ''}}
+                                              </small> -->
                                               </div>
                                               <div *ngIf="innerControl.type === 'checkbox'" style="margin-bottom: 15px;">
                                                 <div style="display: flex;">
@@ -1031,8 +1059,6 @@
     
                                       <input type="button" class="add-btn"
                                         (click)="addNewDisease(subControl,control)" value="Add" />
-                                      <input type="button" class="add-btn"
-                                        (click)="removeDisease(subControl,control)" value="Remove" />
                                     </div>
                                   </div>
                                 </ng-container>

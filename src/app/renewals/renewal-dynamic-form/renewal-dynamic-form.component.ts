@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
 import { Options } from '@angular-slider/ngx-slider';
 import { NgToastService } from 'ng-angular-popup';
+import { ClipboardModule } from '@angular/cdk/clipboard'
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -14,15 +15,15 @@ import { NgToastService } from 'ng-angular-popup';
 export class RenewalDynamicFormComponent implements OnInit {
   form: FormGroup = this.fb.group({});
   formId: number = 5001;
-  isEditEmail = false;
-  isEditMobile =false;
-  email:any;
-  mobileNo :any;
+  // isEditEmail = false;
+  // isEditMobile =false;
+  // email:any;
+  // mobileNo :any;
   selectedButton: string = 'primary'; 
   selectedCoverages: any[] = []; 
   isRadioSelected = false;
   selectedPaymentType: string = '';
-  selectedPaymentTypeLabel: string = '';
+  // selectedPaymentTypeLabel: string = '';
   isDropdownOpen: boolean = false;
   policySummary : boolean=false
   activeSection: string = 'primary';
@@ -66,21 +67,40 @@ export class RenewalDynamicFormComponent implements OnInit {
     }
   };
   requestObject: any = {policyNumber: "string",referenceNumber: "string",};
+  agentCode=localStorage.getItem('agentCode');
+  productsList:any[]=[];
+  hideSection:boolean=true;
+  link: string = ''; 
+  bankNameList:any
 
-  constructor(private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,private toast: NgToastService) {}
+  constructor(
+    private fb: FormBuilder,
+    private renewalService: RenewalsService,
+    private router: Router,
+    private toast: NgToastService,
+    private ac:ActivatedRoute,
+    private yatraService:YatraService) {}
 
   ngOnInit() {
-    this.renewalService.policy$.subscribe(policy => {
-     if(policy.policyNo){
-        this.policyNumber=policy.policyNo;
-        if(policy.activeSection == 'payment'){
-        this.activeSection=policy.activeSection;
-        }
-     }
+    this.ac.paramMap.subscribe((params) => {
+      const policyNumber = params.get('policyNumber');
+      const activeSection= params.get('activeSection')
+      if (policyNumber) {
+        this.policyNumber = policyNumber;
+      }
+      if(activeSection){
+        if(activeSection == 'payment'){
+          this.activeSection=activeSection;
+          this.hideSection=false
+        }else{
+        this.activeSection=activeSection}
+      }
+    });
+    this.renewalService.productsList$.subscribe((productsList) => {
+      this.productsList = productsList;
     });
    this.getRenewalInfo();
    this.initializeForm();
-   this.getproductdetailsandfeatures();
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
  }
 initializeForm() {
@@ -243,22 +263,22 @@ setActiveTab(tabName: string): void {
     this.preexistingConditionSelected=value
     console.log(this.preexistingConditionSelected);
    }
- toggleEditPaymentOption(value: any) {
-   if(value == 'email'){
-   this.isEditEmail = !this.isEditEmail;
-   this.isEditMobile = false;
-   } else if(value == 'mobileNo'){
-     this.isEditMobile = !this.isEditMobile;
-     this.isEditEmail=false;
-     }
- }
- handlePaymentEvent(value: any) {
-   if (this.email && this.email !== '' && value == 'email') {
-     this.isEditEmail = false;
-   }else if (this.mobileNo && this.mobileNo !== null && value == 'mobileNo') {
-     this.isEditMobile = false;
-   }
- }
+//  toggleEditPaymentOption(value: any) {
+//    if(value == 'email'){
+//    this.isEditEmail = !this.isEditEmail;
+//    this.isEditMobile = false;
+//    } else if(value == 'mobileNo'){
+//      this.isEditMobile = !this.isEditMobile;
+//      this.isEditEmail=false;
+//      }
+//  }
+//  handlePaymentEvent(value: any) {
+//    if (this.email && this.email !== '' && value == 'email') {
+//      this.isEditEmail = false;
+//    }else if (this.mobileNo && this.mobileNo !== null && value == 'mobileNo') {
+//      this.isEditMobile = false;
+//    }
+//  }
  selectButton(value?: any,content? : any,member?:number) {
   if (this.selectedButton === 'primary') {
     if (value == 5005) {
@@ -310,9 +330,21 @@ setActiveTab(tabName: string): void {
   }
 }
  selectPaymentType(option: any) {
-   this.selectedPaymentType = option.value;
-   this.selectedPaymentTypeLabel = option.label;
-   this.isDropdownOpen = false; 
+  if(option == 'offline'){
+    this.yatraService.getAllBankDetails().subscribe({
+      next: (res: any) => {
+        this.bankNameList = res.data;
+        console.log(this.bankNameList);
+        
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+   this.selectedPaymentType = option;
+  //  this.selectedPaymentTypeLabel = option.label;
+  //  this.isDropdownOpen = false; 
  }
  @HostListener('document:click', ['$event'])
  onDocumentClick(event: Event) {
@@ -362,25 +394,75 @@ setActiveTab(tabName: string): void {
    this.setSection('payment')
  }
   getRenewalInfo() {
-    this.renewalService.getRenewalInfoApi("21-24-0002334-00", {}).subscribe(
+    this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
       (res:any) => {
+        console.log("Renewal Info",res);
         this.renewalInfo = JSON.parse(res.data);
-        this.email=this.renewalInfo?.response?.policyData[0]?.Email
-        this.mobileNo=this.renewalInfo?.response?.policyData[0]?.Mobile
+        this.getTenureDetails();
+        this.getproductdetailsandfeatures();
         this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
       },
       (err) => {console.log("Error coming from getRenewalInfo API", err);}
     );
   }
+  getTenureDetails() {
+    const productName = this.renewalInfo?.response?.policyData[0]?.Name_of_product;
+    if (productName) {
+      const matchingProduct = this.productsList.find((product:any) => product.productName === productName);      
+      if (matchingProduct) {
+        const tenureRequestBody = {
+          agentCode: this.agentCode,
+          productId: matchingProduct.productId,  
+          quoteData: "{\n  \"proposerPincode\": \"500013\",\n  \"typeOfBusiness\": \"NB\",\n  \"isEmployee\": false,\n  \"sumInsured\": \"5000000\",\n  \"numberOfInsuredMembers\": \"1\",\n  \"familySize\": \"1A\",\n  \"proposerName\": \"Manjunath Saukar\",\n  \"mobileNumber\": \"9876543211\",\n  \"memberPolicyType\": \"Multi Individual\",\n  \"insuredMemberDetails\": [\n    {\n      \"roomCategory\": \"\",\n      \"memberAge\": \"43\",\n      \"sumInsured\": \"5000000\",\n      \"isChronic\": \"No\",\n      \"chronicDiseases\": null,\n  \"pincode\": \"360380\",\n     \"zone\": \"Zone II\",\n      \"memberGender\": \"M\",\n      \"memberDob\": \"1980-12-31\",\n      \"memberRelation\": \"self\",\n      \"memberRelationCode\": \"24\",\n      \"covers\": [\n        {\n          \"coverId\": \"CIL\",\n          \"value\": \"1000000\"\n        },\n        {\n          \"coverId\": \"DECOV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"SCOP\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"ANCANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"PCDED\",\n          \"value\": \"15000\"\n        },\n        {\n          \"coverId\": \"PPNDISC\",\n          \"value\": \"\"\n        },\n        {\n          \"coverId\": \"COMV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"CANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RVCV\",\n          \"value\": \"500\"\n        },\n        {\n          \"coverId\": \"TOPD\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RRTO\",\n          \"value\": \"YSY\"\n        }\n      ]\n    }\n  ]\n}"
+        };  
+        this.renewalService.getTenureDetailsApi(tenureRequestBody).subscribe(
+          (res) => {
+            console.log("Tenure details received:", res);
+          },
+          (err) => {
+            console.error("Error from getTenureDetails API:", err);
+          }
+        );
+      } 
+      else {
+        console.error("No matching product found for the productName:", productName);
+      }
+    } 
+    else {
+      console.error("Product name is not available in renewalInfo.");
+    }
+  }
   changeroute(){
     this.renewalService.setQuote(this.renewalInfo);
     this.router.navigate(["renewals/subquotes"]);
   }
-  getproductdetailsandfeatures(){
-    const request={"productId": 2,"agentCode":localStorage.getItem('agentCode')}
-    this.renewalService.getproductdetailsandfeatures(request).subscribe(
-      (res:any) => { this.optionalCovers=res.data},
-      (err) => {console.log("Error coming from getRenewalInfo API", err);}
-    );
-  }
+  getproductdetailsandfeatures() {
+    const productName = this.renewalInfo?.response?.policyData?.[0]?.Name_of_product;
+    if (productName) {
+      const matchingProduct = this.productsList.find((product: any) => product.productName === productName);
+      if (matchingProduct) {
+        const request = {
+          productId: matchingProduct.productId,
+          agentCode: this.agentCode
+        };  
+        this.renewalService.getproductdetailsandfeatures(request).subscribe(
+          (res: any) => {
+            this.optionalCovers = res.data;
+            console.log(res.data);
+          },
+          (err) => {
+            console.error("Error coming from getproductdetailsandfeatures API", err);
+          }
+        );
+      } else {
+        console.error(`No matching product found for the product name: ${productName}`);
+      }
+    } else {
+      console.error("Product name is not available in renewalInfo.");
+    }
+  }  
+  sendLink(){
+    this.link="https://www.paypal.com/invoice/p/#ABCDEFG123456"
+    }
+
 }

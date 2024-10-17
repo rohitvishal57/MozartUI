@@ -1,30 +1,34 @@
 <main class="siteBody">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
-            <div class="body_flex_row justify-content-between">
 
-                <h2 class="icon_withHeading"><a class="btn_backPage" (click)="navigateToListClaim()"></a> Claims</h2>
-                <!-- <button type="button" class="btn_white btn_newRequest" (click)="navigateToCreateClaim()">
-                <img src="assets/Img/icon_plus_red.svg">New Requests
-            </button> -->
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListClaim()"><a class="btn_backPage"></a>Claims</h2>
             </div>
+
             <section class="white_container white_container_shadow">
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-8 col-xl-8">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div class="details_claimsInfo">
-                            <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}</span></h5>
+                            <!-- <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5> -->
+                            <h5>{{ claims?.memberName }}</h5>
                             <h6>{{ claims?.productName }}<span class="info-dot"></span>{{ claims?.requestType }}<span class="info-dot"></span><b>{{ claims?.claimStatus }}</b></h6>
                         </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div class="details_claimsAmount">
+                            <div class="claim_amount">
+                                <h6>Policy Number</h6>
+                                <p>{{ claims?.policyNumber }}</p>
+                            </div>
                             <div class="claim_amount">
                                 <h6>Claim Amount</h6>
                                 <p>₹{{ claims?.claimedAmount }}</p>
                             </div>
                             <div class="claim_amount">
                                 <h6>Approved Amount</h6>
-                                <p>₹{{ claims?.approvedAmount }}</p>
+                                <!-- <p>₹{{ claims?.approvedAmount }}</p> -->
+                                <p>--</p>
                             </div>
                         </div>
                     </div>
@@ -34,29 +38,31 @@
                         <div class="white_container claim_underDeficiency">
                             <div class="info_underDeficiency">
                                 <h5>Under Deficiency</h5>
-                                <h6>Kindly provide Aadhaar card and doctor’s prescrition </h6>
+                                <h6>Kindly provide Aadhaar card and doctor’s prescription</h6>
                             </div>
                             <div class="button_underDeficiency">
-                                <button type="button" (click)="fileInput.click()" class="btn_red">Upload Documents</button>
+                                <button type="button" (click)="underDeficiencyFileInput.click()" class="btn_red">Upload Documents</button>
                                 <div class="btn_groupAction">
                                     <button href="" class="btn_iconText">View Details</button>
                                     <button href="" class="btn_iconText"><img src="../../../assets/Img/icon_phone_red.svg"> Care Manager</button>
                                 </div>
-                                <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
-
+                                <input type="file" #underDeficiencyFileInput name="underDeficiency" (change)="onUnderDeficiencyFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                             </div>
-
                         </div>
+                        <span class="ui-error block-show" *ngIf="uploadValidFormat">
+                      File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files.
+                    </span>
                     </div>
-                    <div class="uploadDocument_listMain mt-3" *ngIf="uploadedFiles.length > 0">
+
+                    <div class="uploadDocument_listMain" *ngIf="uploadedUnderDeficiencyFiles.length > 0">
                         <div class="uploadDocument_filesList">
                             <div class="filesList_head">
                                 <div class="filesList_headLeft">Uploads:</div>
-                                <div class="filesList_headRight">{{ uploadStatus }}</div>
+                                <div class="filesList_headRight">{{ underDeficiencyUploadStatus }}</div>
                             </div>
                             <div class="filesList_body">
                                 <ul class="uploadedFiles_main">
-                                    <li *ngFor="let file of uploadedFiles; let i = index" class="uploadedFiles_item">
+                                    <li *ngFor="let file of uploadedUnderDeficiencyFiles; let i = index" class="uploadedFiles_item">
                                         <div class="uploadedFiles_headInfo">
                                             <div class="headInfo_item">
                                                 <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
@@ -86,7 +92,7 @@
                                                 <p>{{ file.type }}</p>
                                             </div>
                                             <div class="uploadedFiles_infoItem">
-                                                <button class="delete-button" (click)="deleteFile(file)">
+                                                <button class="delete-button" (click)="deleteFile(file,false)">
                                                     <img src="../../../../../assets/Img/icon_delete_red2.svg">
                                                 </button>
                                                 <div class="size-align">
@@ -204,7 +210,7 @@
                                             </div>
                                         </div>
                                         <div class="uploadDocument_main">
-                                            <div class="uploadDocument_area" (click)="fileInput.click()">
+                                            <div class="uploadDocument_area" (click)="docUploadFileInput.click()">
                                                 <div class="ud_area_left">
                                                     <h6>Upload Documents</h6>
                                                     <p>JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)</p>
@@ -214,16 +220,44 @@
                                                         <span class="upload_icon"><img src="../../../../../assets/Img/icon_upload_white.svg"></span> Upload
                                                     </button>
                                                 </div>
-                                                <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
+                                                <input type="file" #docUploadFileInput name="docUpload" (change)="onDocUploadFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                                             </div>
+                                            <span class="ui-error block-show" *ngIf="uploadValidFormt">
+                                      File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files.
+                                    </span>
 
+                                            <div class="uploadedFiles_main" *ngIf="viewFileUploads.length > 0">
+                                                <h3 class="heading-20-black">Uploaded Documents</h3>
+                                                <ul class="uploadedFiles_list">
+                                                    <li class="uploadedFiles_item" *ngFor="let file of viewFileUploads">
+                                                        <div class="uploadedFiles_info">
+                                                            <div class="file-label">
+                                                                <span>{{ file.label }}</span>
+                                                            </div>
+                                                            <div class="file-details">
+                                                                <!-- <h6>{{ file.fileName }}</h6> -->
+                                                                <p>{{ file.type }}</p>
+                                                                <!-- <p>{{ convertBytesToKB(file.size) }} | Uploaded on {{ file.uploadDate | date:'short' }}</p> -->
+                                                            </div>
+                                                            <div class="file-actions">
+                                                                <!-- <a [href]="file.fileUrl" download class="btn-download">
+                                                  <img src="assets/Img/icon_download.svg" alt="Download" /> Download
+                                                </a> -->
 
+                                                                <!-- <button (click)="deleteFile(file.fileId)" class="btn-delete">
+                                                  <img src="assets/Img/icon_delete_red2.svg" alt="Delete" /> Delete
+                                                </button> -->
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
 
                                             <div class="uploadDocument_listMain" *ngIf="uploadedFiles.length > 0">
                                                 <div class="uploadDocument_filesList">
                                                     <div class="filesList_head">
                                                         <div class="filesList_headLeft">Uploads:</div>
-                                                        <div class="filesList_headRight">{{ uploadStatus }}</div>
+                                                        <!-- <div class="filesList_headRight">{{ documentsUploadStatus }}</div> -->
                                                     </div>
                                                     <div class="filesList_body">
                                                         <ul class="uploadedFiles_main">
@@ -257,18 +291,16 @@
                                                                         <p>{{ file.type }}</p>
                                                                     </div>
                                                                     <div class="uploadedFiles_infoItem">
-                                                                        <button class="delete-button" (click)="deleteFile(file)">
+                                                                        <button class="delete-button" (click)="deleteFile(file,true)">
                                                                             <img src="assets/Img/icon_delete_red2.svg">
                                                                         </button>
                                                                         <div class="size-align">
                                                                             <p>{{ convertBytesToKB(file.size) }}</p>
                                                                         </div>
-
                                                                     </div>
                                                                 </div>
                                                             </li>
                                                         </ul>
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -278,15 +310,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <div class="ud_area_right">
-                                      <button type="button" class="btn_uploadDocument">
-                                          <span class="upload_icon"><img
-                                src="assets/Img/icon_upload_white.svg"></span> Upload
-                                      </button>
-                                  </div> -->
                                     </div>
                                 </mat-tab>
-
                                 <mat-tab label="Tracker">
                                     <div class="row">
                                         <div class="col-12">
@@ -295,26 +320,26 @@
                                                     <div class="submain_claimProgressSteps">
                                                         <div class="item_claimProgressSteps" *ngFor="let status of customeStepperStatuses" [ngClass]="{'completed': status.active == '1' && status.colour == 'Green' , 'active': status.active  == '2' && status.colour  == 'Yellow', 'error': status.active  == '2' && status.colour == 'Red', 'next': status.active  == '0' && status.colour == 'Grey'}">
                                                             <span class="item_count">
-                                                                <em class="count p-0">{{status.count}}</em>
-                                                                <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
-                                                                <em class="img_error p-0"><img src="assets/Img/icon_danger.svg"></em>
-                                                            </span>
+                                                            <em class="count p-0">{{status.count}}</em>
+                                                            <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
+                                                            <em class="img_error p-0"><img src="assets/Img/icon_danger.svg"></em>
+                                                        </span>
                                                             <div class="item_info">
                                                                 <h6>{{status.title}}</h6>
                                                                 <small>{{status.sublabel}}</small>
                                                                 <small class="cursor" (click)="moveToDocsSection(-1)">{{status?.nextProcess}}</small>
                                                             </div>
                                                             <!-- <div class="item_claimProgressInfo">
-                                                                Your claim is intiated
-                                                            </div> -->
+                                                            Your claim is intiated
+                                                        </div> -->
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="item_claimProgressButtons">
-                                                    <button type="button" class="btn_iconText"><img src="assets/Img/icon_claimhistory.svg">Claims History</button>
-                                                    <button type="button" class="btn_red">View Details <img src="assets/Img/icon_right_arrow_black.svg"></button>
+                                                    <button type="button" class="btn_iconText" (click)="toggleViewDetails()"><img src="assets/Img/icon_claimhistory.svg">Claims History</button>
+                                                    <!-- <button type="button" class="btn_red">View Details <img src="assets/Img/icon_right_arrow_black.svg"></button> -->
                                                 </div>
-                                                <div class="detailsRow" *ngIf="claimsHistory && claimsHistory.length > 0">
+                                                <div class="detailsRow" *ngIf="claimsHistory && claimsHistory.length > 0 && isViewVisible">
                                                     <div class="row claim_historyData" *ngFor="let claimsHist of claimsHistory">
                                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                                             <label>Policy Number</label>
@@ -345,12 +370,12 @@
                                                             <h6>{{ claimsHist?.notes }}</h6>
                                                         </div>
                                                     </div>
-                                                    </div>
-                    
-                                                    <div *ngIf="claimsHistory && claimsHistory.length === 0" class="no-data">
-                                                        <p>No claim history found for the selected policy number.</p>
-                                                    </div>
-    
+                                                </div>
+
+                                                <div *ngIf="claimsHistory && claimsHistory.length === 0 && isViewVisible" class="no-data">
+                                                    <p>No claim history found for the selected policy number.</p>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>

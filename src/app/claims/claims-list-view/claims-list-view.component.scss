@@ -122,10 +122,9 @@ padding:0 0 0 10px !important;
 }
 
 /*---Common css start---*/
-.filterCnt{
-  padding: 15px 24px;
-  width: 50%;
-  min-width: 300px;
+.filterHeader{
+  display: flex;
+  justify-content: space-between;
 }
 .btn_quickFilter {
   &.btn_quickFilterClaim {

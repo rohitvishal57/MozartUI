@@ -15,6 +15,8 @@
                         <li><button type="button" value="active" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('active')" [ngClass]="{'active': selectedStatus === 'active'}">Active </button></li>
                         <li><button type="button" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">Resolved </button></li>
                         <li><button type="button" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('cancelled')" [ngClass]="{'active': selectedStatus === 'cancelled'}">Cancelled </button></li>
+
+                        
                     </ul>  
                 </div>
                 
@@ -24,13 +26,13 @@
                         <div class="field_searchMain">
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)">
                                 <option value="" disabled selected>Select an option</option>
-                                <option value="date">Date</option>
                                 <option value="requestType">Request Type</option>
                                 <option value="productName">Product Name</option>
                                 <option value="policyNumber">Policy Number</option>
                             </select>
-
-                            <div *ngIf="selected == 'date'" class="d-flex field_searchMain">
+                            <input type="search" id="filterSearch" value="" class="filterSearch" [placeholder]="getPlaceholder()"  [formControl]="searchInputControl">
+                            <button type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <!-- <div *ngIf="selected == 'date'" class="d-flex field_searchMain">
                                 <div class="input-block form-floating input-block-renew m-0">
                                     <input type="date" id="fromDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getFromDate($event)">
                                     <label for="fromDate">From Date</label>
@@ -40,11 +42,70 @@
                                     <label for="toDate">To Date</label>
                                 </div>
                                 <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" style="position: initial" (click)="applyFilter()"><img src="assets/Img/icon_magnify_grey.svg" alt="Search"></button>
-                            </div>
-                            <input *ngIf="selected != 'date'" class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button *ngIf="selected != 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            </div> -->
+                            <!-- <input *ngIf="selected != 'date'" class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <button *ngIf="selected != 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button> -->
                         </div>
                     </div>
+
+                    <div class="filterWraper">
+                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter ({{appliedFiltersCount}})</button>
+                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
+                            <div class="fw_form mobile_popupMain">
+                                <div class="filterHeader" >
+                                    <header>Filter</header>
+                                    <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
+                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
+                                    </button>
+                                </div> 
+                            <div class="fw_formBody"> 
+                                <div class="fw_formRow">
+                                    <h6>Products</h6>
+                                    <div class="fw_checkboxWraper">
+                                        <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                            <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                <label for="product{{i}}">{{product.productName}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="fw_formRow">
+                                    <h6>Request Type</h6>
+                                    <div class="fw_checkboxWraper">
+                                        <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
+                                            <div class="input-checkbox-feild">
+                                              <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                              <label for="policytype{{i}}">{{policyType.name}}</label>
+                                            </div>
+                                          </div>                                              
+                                    </div>
+                                </div>
+                                <div class="row">
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <div class="input-block input-block-dob">
+                                        <label>From Date</label>
+                                        <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')">
+                                        <span class="ui-error">Please enter start date</span>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <div class="input-block input-block-dob">
+                                        <label>To Date</label>
+                                        <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')">
+                                        <span class="ui-error">Please enter end date</span>
+                                    </div>
+                                </div>
+                                <footer>
+                                    <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                    <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                </footer>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+               
                     <button type="button" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
                     <button type="button" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
@@ -64,7 +125,7 @@
                                 <th scope="col" nowrap>Request Type</th>
                                 <th scope="col">Status</th>
                                 <th scope="col" nowrap>Raised Date</th>
-                                <th></th>
+                                <th scope="col">Action</th>
                             </tr>
                           </thead>
                           <tbody class="table-group-divider">
@@ -83,16 +144,13 @@
                                 <td>{{ row?.reportedDateTime | datepipe }}</td>
                                 <td>
                                     <div class="btn_groupAction">
-                                        <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="navigateToViewClaim(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                        <button type="button" value="view" title="View-Claim" class="btn_action btn_claimAction" (click)="navigateToViewClaim(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+
                                     </div>
                                 </td>
                               </tr>
                             </ng-container>
-                            <ng-container *ngIf="claims.length <= 0">
-                                <tr>
-                                    No Records Found...
-                                </tr>
-                            </ng-container>
+                      
                               <!-- <tr *ngIf="selectedClaim?.id === row.id" class="details-row visible-row">
                                 <td [attr.colspan]="8">
                                   <div class="additional-info">
@@ -116,6 +174,10 @@
                                     <div class="insureName">{{ gridClaims.claimInfoId }} </div>  
                                 </h6>
                                 <!-- <div class="item_value">{{ gridClaims.id }}</div> -->
+                            </div>
+                            <div class="btn_groupAction">
+                                <button type="button" value="view" title="View-Claim" class="btn_action btn_claimAction" (click)="navigateToViewClaim(gridClaims)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+
                             </div>
                             <div class="card_btnGroup">
                                 <!--<button type="button" class="btn_iconGrey btn_cardDownload"><img src="../../../../../assets/Img/icon_download_grey.svg"></button>-->
@@ -160,7 +222,7 @@
             </section>
 
 
-            <div class="tableNav">
+            <div class="tableNav" *ngIf="totalRecords > 0">
                 <nav>
                   <ul class="pagination">
                     <li class="page-item">
@@ -174,6 +236,15 @@
                   </ul>
                 </nav>
             </div>
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords === 0">
+                <div class="cardViewWraper">
+                    <div class="no_dataFound">
+                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                        <p>No data found</p>
+                    </div>
+                </div>
+            </section>
+ 
         </div>
     </div>
 </main>

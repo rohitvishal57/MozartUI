@@ -30,19 +30,27 @@ export class ClaimsListViewComponent implements OnInit {
   selectedStatus = 'all';
   toggleSearchdropdown: boolean = false;
   searchInputControl = new FormControl("");
-  selected: string = "date";
+  selected: string = "";
   userId!: number;
   selectedClaim: any = null;
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
   fromDate: any;
   toDate: any;
-  
+  appliedFiltersCount: number = 0;
+  productsList: any[] = [];
+  requestTypes: any[] = [];
+  agentCode = localStorage.getItem('agentCode')
+  StaticRequestTypes = [
+    { name: 'Cashless', selected: false },
+    { name: 'Reimbursement', selected: false },
+  ];
   
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
 
   ngOnInit(){
     this.fetchData(); 
+    this.getProducts();
   }
 
   claimsView(view:string){
@@ -79,17 +87,17 @@ getToDate(event:any){
 
 //---------API Call-------//
 claimsReqBody =  {
-    "sellerId": localStorage.getItem('agentCode'),
+    "sellerId": this.agentCode,
     "sortColumn": "ReportedDateTime",
-    "sortdirection": "DESC",
+    "sortdirection": "ASC",
     "status": "",
+    "requestType":"",
     "searchType": "string",
     "searchString": "string",
     "pageNumber": 1,
     "pageSize": 270,
     "fromDate": "2022-04-01",
     "toDate": "2024-04-01"
-
   }
 fetchData(): void {
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
@@ -114,11 +122,47 @@ fetchData(): void {
     this.toggeledropdown = !this.toggeledropdown;    
   }
 
+  getProducts() {
+    const reqData={
+      "agentCode": this.agentCode
+    }
+    this.commonService.Getproductlist(reqData).subscribe({
+      next: (res) => {
+        this.productsList = res.data;
+        console.log("product list",this.productsList)
+        const uniqueRequestTypes = Array.from(new Set(this.productsList
+         .map((product) => product.familyPlan)))
+         .map((requestType) => ({ name: requestType, selected: false }));
+         this.requestTypes = uniqueRequestTypes;
+      },
+      error: (err) => {
+         console.log("error coming form getproduct list API");
+      }
+    })
+  }
+  calculateAppliedFiltersCount(){
+    const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
+      (requestType) => requestType.selected).length;
+      // const selectedProductsCount = this.productsList.filter(
+      //   (product) => product.selected).length;
+        let count = selectedPolicyTypesCount;
+        if (this.fromDate && this.toDate) {
+          count++;
+        }
+        this.appliedFiltersCount = count;
+         this.appliedFiltersCount;
+  }
+
   applyFilter() {
+    this.calculateAppliedFiltersCount();
   this.formatDate("fromDate");
   this.formatDate("toDate");
   this.claimsReqBody.fromDate=this.fromDate;
   this.claimsReqBody.toDate=this.toDate;
+  const selectedPolicyTypes = this.StaticRequestTypes
+  .filter((requestType:any) => requestType.selected)
+  .map((requestType:any) => requestType.name);
+  this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
   this.fetchData();
   this.toggeledropdown=false;
 }
@@ -132,6 +176,18 @@ cancel() {
   this.fetchData();
 }
 
+clear(){
+  this.productsList.forEach((product) => (product.selected = false));
+  this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
+  this.fromDate = null;
+  this.toDate = null;
+  this.appliedFiltersCount = 0;
+ // this.claimsReqBody.productName = "";
+  this.claimsReqBody.requestType = "";
+  this.claimsReqBody.fromDate = "";
+  this.claimsReqBody.toDate = "";
+  this.fetchData();
+}
   //-----------search dropdown----------//
   // toggleSearchDropdown(event: any){
   //   if(this.toggledropdown==true)
@@ -152,9 +208,7 @@ cancel() {
      this.claimsReqBody.searchType = '';
       this.claimsReqBody.searchString = '';
       console.log('searchvalue', this.claimsReqBody.searchString);
-      console.log('searchtype', this.claimsReqBody.searchType);
-
-      
+      console.log('searchtype', this.claimsReqBody.searchType);    
     }
     else if(searchValue === ''){  
       this.selected = '';

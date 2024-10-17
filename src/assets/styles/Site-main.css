@@ -1600,10 +1600,28 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 12px;
   color: var(--primary-red-color);
 }
-.form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label {
+/*.form-floating>.form-control.input-selectBox~label,
+.form-floating>.form-control.input-selectBox:not(:placeholder-shown)~label{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    color: #799cae;
+    margin-bottom: 0;
+    position: absolute;
+    left: 16px !important;
+    top: 14px !important;
+    height: auto !important;
+    padding: 0 !important;
+    z-index: 1;
+    transform: scale(.85) translateY(-0.1rem) translateX(.15rem) !important;
+}*/
+.form-floating>.form-control:focus~label, .form-floating>.form-control:not(:placeholder-shown)~label, .form-floating>.form-select~label, .form-floating>.form-select.focus~label,.form-floating>.form-control.input-selectBox.focus~label {
     opacity: 1;
     transform: scale(.85) translateY(-2.5rem) translateX(.15rem) !important;
     color: var(--text-black-4c);
+}
+.form-floating>.form-control.input-selectBox.focus~label {
+    font-size: 10px;
 }
 .form-control:focus, .form-select:focus, .page-link:focus {
     box-shadow: 0 0 0 0 rgba(13, 110, 253, .25) !important;
@@ -2537,6 +2555,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .filterWraper {
   position: relative;
+  min-width: 120px;
 }
 
 .filterWraperForm {
@@ -4534,6 +4553,73 @@ input[type="search"]::-webkit-search-results-decoration {
   margin-top: -30px;
 }
 /*Post Buy Policy Number Generate end*/
+/*Claims start*/
+.btn_space_1032 {
+  padding: 10px 32px; 
+}
+.details_claimsInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.details_claimsInfo h5 {
+  font-weight: 600;
+  font-size: 24px;
+  color: #000;
+  margin: 0 !important;
+}
+.details_claimsInfo h5 span {
+  font-weight: 400;
+  font-size: 18px;
+}
+.details_claimsInfo h6 {
+  display: flex;
+  gap: 4px;
+  font-weight: 400;
+  font-size: 17px;
+  color: #4c4c4c;
+  margin: 0 !important;
+}
+.details_claimsInfo h6 .info-dot {
+  width: 5px;
+  height: 5px;
+  background: #4c4c4c;
+  border-radius: 10px;
+}
+.details_claimsInfo h6 b {
+  font-weight: 600;
+}
+.details_claimsAmount {
+  display: flex;
+  gap: 8px;
+}
+.details_claimsAmount .claim_amount {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #fff;
+  box-shadow: 0px 2px 4px 0px #d5d7de 33;
+  box-shadow: 0px 1px 10px 0px #d5d7de 1F;
+  box-shadow: 0px 4px 5px 0px #d5d7de 24;
+  font-weight: 400;
+  font-size: 16px;
+  color: #4c4c4c;
+  flex: auto;
+}
+.details_claimsAmount .claim_amount h6 {
+  font-weight: 400;
+  font-size: 16px;
+  margin: 0 !important;
+}
+.details_claimsAmount .claim_amount p {
+  font-weight: 600;
+  font-size: 18px;
+  color: #1f874c;
+  margin: 0 !important;
+}
+
+/*Claims end*/
 
 .tip_iconWithText {
     display: flex;

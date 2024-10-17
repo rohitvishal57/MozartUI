@@ -10,6 +10,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MyMaterialModule } from 'src/app/material.module';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     MyMaterialModule,
     RenewalsRoutingModule,
     NgxSliderModule,
+    ClipboardModule,
   ]
 })
 export class RenewalsModule { }
