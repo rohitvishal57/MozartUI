@@ -32,22 +32,29 @@ export class ProfileComponent implements OnInit {
   getIcons(key: string) {
     switch (key) {
       case 'agentCode':
+      case 'parentCode':
       case 'branchOfficeCode':
+      case 'spCode':
       case 'branchOfficeName':
       case 'smCode':
         return 'icon_branch_office';
         break;
       case 'firstName':
+      case 'lastName':
+      case 'middleName':
+      case 'spName':
       case 'smName':
         return 'name';
         break;
       case 'mobileNumber':
+      case 'spMobile':
       case 'alternateMobileNumber':
       case 'smMobile':
         return 'phone';
         break;
       case 'smEmail':
       case 'emailId':
+      case 'spEmail':
       case 'alternateEmailId':
         return 'email';
         break;
