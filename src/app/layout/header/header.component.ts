@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
@@ -12,11 +12,11 @@ export class HeaderComponent implements OnInit {
   currentLanguage: string = 'en';
   isSidenavOpen: boolean = false;
   isDesktopView: boolean = window.innerWidth >= 768;
-  isLogin: boolean
+  @Input() isLoggedIn: any;
+
   constructor(private router: Router,
     private loginService: CommonService, private toast: NgToastService
   ) {
-    this.isLogin = localStorage.getItem('agentCode') ? true : false;
   }
 
   ngOnInit() {
