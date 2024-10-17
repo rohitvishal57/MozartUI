@@ -2,8 +2,8 @@
 <main class="siteBody">
   <div class="contentBody bodyColumns-1">
       <div class="bodyColumn body_flex_column">
-          <div class="body_flex_row justify-content-between">
-            <h2 class="icon_withHeading"><a class="btn_backPage" (click)="navigateToListClaim()"></a>  My Claims</h2>
+          <div class="body_flex_row justify-content-between" >
+            <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListClaim()"><a class="btn_backPage"></a>My Claims</h2>
           </div>
           <section class="white_container">
               <h6 class="heading-16-red">Raise Request</h6>
@@ -33,7 +33,7 @@
                       </div>
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
-                              <select class="form-select input-selectBox" (change)="onClaimTypeChange($event)">
+                              <select class="form-select input-selectBox" formControlName="claimType" (change)="onClaimTypeChange($event)">
                                   <option value="" disabled selected>Select Claim Type</option>
                                   <option value="Cashless">Cashless</option>
                                   <option value="Reimbursement">Reimbursement</option>
@@ -47,7 +47,7 @@
 
                       <div class="col-12 mb-3" *ngIf="showCashlessFields">
                         <div class="row">
-                          <div *ngIf="showCashlessFields" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="text" class="form-control input-textBox" formControlName="coverName" [value]="'Hospitalisation'" readonly />
                                   <label for="coverName">Cover Name</label>
@@ -87,12 +87,6 @@
                                   <label for="dischargeTime">Time of Discharge (Tentative)</label>
                               </div>
                           </div>
-                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                              <div class="input-block form-floating input-block-renew">
-                                  <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
-                                  <label for="ailmentDescription">Description of the Ailment</label>
-                              </div>
-                          </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <select class="form-select input-selectBox" formControlName="state" (change)="onStateChange($event)">
@@ -106,7 +100,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <select class="form-select input-selectBox" formControlName="city" [disabled]="!selectedState">
+                                  <select class="form-select input-selectBox" formControlName="city"  (change)="onCityChange($event)" [disabled]="!selectedState">
                                       <option class="dropdown-options" value="" disabled selected>Select City</option>
                                       <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName }}</option>
                                   </select>
@@ -114,6 +108,30 @@
                                   <span class="ui-error">Please select city</span>
                               </div>
                           </div>
+
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                              <select class="form-select input-selectBox" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
+                                  <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
+                                  <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName }}</option>
+                              </select>
+                              <label for="city">Select Hospital</label>
+                              <span class="ui-error">Please select Hospital</span>
+                          </div>                      
+                          </div>
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                <label for="claimamount">Claim Amount</label>
+                                <span class="ui-error">Please enter claim amount</span>
+                            </div>
+                        </div>
+                          <!-- <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="input-block form-floating input-block-renew">
+                                <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
+                                <label for="ailmentDescription">Description of the Ailment</label>
+                            </div>
+                        </div> -->
                       </div>
                     </div>
 
@@ -136,11 +154,9 @@
                                   </div>
                               </div>
                           </div>
-                      </div>
 
-
-                      <div *ngIf="showFirstScenario" class="col-12" formArrayName="billsArray">
-                            <section class="main_addBills mb-5" >
+                          <div *ngIf="showFirstScenario" class="col-12" >
+                            <section class="main_addBills mb-5" formArrayName="billsArray">
                                 <button type="button" class="btn btn-add" (click)="addBillRow()">Add More Bills</button>
                             
                           <div class="row" *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i">
@@ -191,20 +207,20 @@
                               </div>
                           </div>
 
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" />
                                   <label for="dischargeDate">Date of Discharge</label>
                               </div>
                           </div>
 
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="time" class="form-control input-textBox" formControlName="dischargeTime" placeholder="Time of Discharge (Tentative)" />
                                   <label for="dischargeTime">Time of Discharge (Tentative)</label>
                               </div>
                           </div>
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <select class="form-select input-selectBox" formControlName="state" (change)="onStateChange($event)">
                                       <option class="dropdown-options" value="" disabled selected>Select State</option>
@@ -215,7 +231,7 @@
                               </div>
                           </div>
 
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <select class="form-select input-selectBox" formControlName="city" (change)="onCityChange($event)" [disabled]="!selectedState">
                                       <option class="dropdown-options" value="" disabled selected>Select City</option>
@@ -225,45 +241,42 @@
                                   <span class="ui-error">Please select city</span>
                               </div>
                           </div>
-                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                              <div class="input-block form-floating input-block-renew">
-                                  <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
-                                  <label for="ailmentDescription">Description of the Ailment</label>
-                              </div>
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                              <select class="form-select input-selectBox" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
+                                  <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
+                                  <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName }}</option>
+                              </select>
+                              <label for="city">Select Hospital</label>
+                              <span class="ui-error">Please select Hospital</span>
+                          </div>                      
                           </div>
+
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                <label for="claimamount">Claim Amount</label>
+                                <span class="ui-error">Please enter claim amount</span>
+                            </div>
+                        </div>
+                          
                       </div>
                     </div>
-                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                          <div class="input-block form-floating input-block-renew">
-                              <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
-                              <label for="claimamount">Claim Amount</label>
-                              <span class="ui-error">Please enter claim amount</span>
+                      </div>
+
+
+                     
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="input-block form-floating input-block-renew">
+                              <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
+                              <label for="ailmentDescription">Description of the Ailment</label>
                           </div>
                       </div>
+
+     
                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block form-floating input-block-renew">
-                          <select class="form-select input-selectBox" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
-                              <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
-                              <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName }}</option>
-                          </select>
-                          <label for="city">Select Hospital</label>
-                          <span class="ui-error">Please select Hospital</span>
-                      </div>                      
-                        <!-- <div class="input-block form-floating input-block-renew">
-                              <select class="form-select input-selectBox" formControlName="hospitalName">
-                                  <option value="" selected>Select Hospitals</option>
-                                  <option value="AIG">AIG</option>
-                                  <option value="Apollo">Apollo</option>
-                                  <option value="KIMS">KIMS</option>
-                                  <option value="Orthopedic">AB Orthopedic</option>
-                              </select>
-                              <label for="claimtype">Hospitals</label>
-                              <span class="ui-error">Please select hospitals</span>
-                          </div> -->
-                      </div>
-                      <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                          <div class="input-block form-floating input-block-renew">
-                              <textarea class="form-control input-textBox input-textarea" placeholder="Leave a comment here" id="addnotes" rows="2" cols="30" formControlName="notes" pInputTextarea></textarea>
+                          <div class="input-block form-floating input-block-renew" >
+                              <textarea class="form-control input-textBox" placeholder="Leave a comment here" id="addnotes" rows="2" cols="30" formControlName="notes" pInputTextarea></textarea>
                               <label for="addnotes">Add Notes</label>
                           </div>
                       </div>
@@ -308,7 +321,11 @@
                                   </button>
                               </div>
                               <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
+                            
                           </div>
+                          <span class="ui-error block-show" *ngIf="uploadValidFormat">
+                            File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files.
+                          </span>
                           <div class="uploadDocument_listMain" *ngIf="uploadedFiles.length > 0">
                               <div class="uploadDocument_filesList">
                                   <div class="filesList_head">
@@ -355,6 +372,7 @@
                                                       </div>
 
                                                   </div>
+                                                
                                               </div>
                                           </li>
                                       </ul>

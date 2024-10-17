@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-leads-list',
@@ -33,7 +34,7 @@ export class LeadsListComponent {
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
   placeholder: string = '';
-  displayAssigneePopup = false;
+  assigneLeadModal: any;
   agentCodes: any = [];
   assignLeadForm!: FormGroup;
   updateStatusForm!: FormGroup;
@@ -93,6 +94,7 @@ export class LeadsListComponent {
   }
 
   ngOnInit(): void {
+    this.assigneLeadModal = new bootstrap.Modal(document.getElementById('assigneLeadModal'));
     this.agentCode = localStorage.getItem('agentCode');
     this.getLeadsList();
     this.getProducts();
@@ -182,6 +184,10 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.myleads = true;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = true;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+	  this.startDate = "";
+    this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
@@ -321,7 +327,7 @@ export class LeadsListComponent {
     if (!this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInformation.leadNumber)) {
       this.checkBoxSelectedLeads.push(leadInformation);
     }
-    this.displayAssigneePopup = true;
+    this.assigneLeadModal.show();
   }
   showAuditTrailDialog(leadNumber: any) {
     this.leadsService.viewAuditTrail(leadNumber).subscribe(
@@ -364,7 +370,7 @@ export class LeadsListComponent {
         console.error("Error: Unable to assign lead. Please try again later.", error);
       }
     );
-    this.displayAssigneePopup = false;
+    this.assigneLeadModal.hide();
   }
   toggleAll(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -389,6 +395,10 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = false;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+	    this.startDate = "";
+    this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
@@ -401,6 +411,10 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = false;
     this.leadsInfoListRequestBody.unassignedleads = true;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+	    this.startDate = "";
+    this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";

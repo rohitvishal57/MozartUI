@@ -4,6 +4,7 @@
 
     "getRenewalList": "renewal/api/getrenewallist",
     "getRenewalInfo":"renewal/api/renewalinfotest",
+    "getTenureDetails":"renewal/api/getquoteforsingleproduct",
     "sendRenewalWhatappsms":"renewal/api/sendrenewalwhatappsms",
     "sendRenewalsms":"renewal/api/sendrenewalsms",
     "sendRenewalEmail":"renewal/api/sendrenewalnotice",

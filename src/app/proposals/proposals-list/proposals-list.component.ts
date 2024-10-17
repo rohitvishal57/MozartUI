@@ -26,43 +26,38 @@ export class ProposalsListComponent {
   endDate: any;
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
-  toggeleSearchdropdown: boolean = false;
   selected: string = "";
-  searchInputControl = new FormControl("",Validators.required);
+  searchInputControl = new FormControl("");
   isDesktopView:boolean=false
   filterType: string = "totalRecords";
   placeholder:string='';
-  agentCode :any =localStorage.getItem('agentCode'); 
+  agentCode=localStorage.getItem('agentCode');
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
-    { name: 'RUG', selected: false },
     { name: 'Family Floater', selected: false },
-    { name: 'Groups', selected: false }
   ];
+  proposalListRequestBody={
+    "proposer": "",
+    "productVarientName": "",  
+    "policyNumber": "",  
+    "proposalNumber": "", 
+    "intermediaryID": "5100003", 
+    "policyType": "",  
+    "startDate": null as string | null,
+    "endDate": null as string | null, 
+    "pageNumber": this.page,
+    "pageSize": this.rows, 
+    "mobileNumber": "",  
+    "filterType": "",  
+    "email": "",  
+    "leadId": ""
+ } 
 
   constructor(
     private proposalService: ProposalsService,
     private datePipe: DatePipe,
     private commonService:CommonService,
   ) {}
-
-  proposalListRequestBody={
-     "proposer": "",
-     "productVarientName": "",  
-     "policyNumber": "",  
-     "proposalNumber": "", 
-     "intermediaryID": "5100003", 
-     "policyType": "",  
-     "startDate": null as string | null,
-     "endDate": null as string | null, 
-     "pageNumber": this.page,
-     "pageSize": this.rows, 
-     "mobileNumber": "",  
-     "filterType": "",  
-     "email": "",  
-     "leadId": ""
-  }
-
   ngOnInit(): void {
     this.getProposalList();
     this.getProducts();
@@ -81,7 +76,7 @@ export class ProposalsListComponent {
         console.log(response.data);
         if (response.success) {
           this.proposalList = response.data.proposalList.map((item: any) => ({
-            ...item
+            ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
           })); 
           console.log("proposal List",this.proposalList);
           this.countsList = response.data;
@@ -99,6 +94,9 @@ export class ProposalsListComponent {
     this.getProposalList();
     this.activeFilter = filter;
     this.filterType = filterRange;
+  }
+  formatStartDate(datetime: string): string {
+    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
   }
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
@@ -126,10 +124,6 @@ export class ProposalsListComponent {
     })
   }
   toggleFilterDropdown() {
-    if(this.toggeleSearchdropdown==true)
-    {
-       this.toggeleSearchdropdown=false;
-    }
     this.toggeledropdown = !this.toggeledropdown;    
   }
   calculateAppliedFiltersCount() {
@@ -193,54 +187,24 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.endDate = null;
     this.getProposalList();
   }
-  toggleSearchDropdown() {
-    if(this.toggeledropdown==true)   {
-      this.toggeledropdown=false;
-    }
-    this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
-  }
   onSelectChanges(event: any): void {
     this.searchInputControl.setValue("");
-    this.searchInputControl.clearValidators();
+  }
+  getPlaceholder(): string {
     if (this.selected === "mobileNumber") {
-      this.placeholder = 'Mobile Number';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[6-9][0-9]{9}$")
-      ]);
+      return "Enter Mobile Number";
     } else if (this.selected === "proposerName") {
-      this.placeholder = 'Proposer Name';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
-      ]);
+      return "Enter Proposer Name";
     } else if (this.selected === "policyNumber") {
-      this.placeholder = 'Policy Number';
-      this.searchInputControl.setValidators([Validators.required]);
-    }else if (this.selected === "proposalNumber") {
-      this.placeholder = 'Proposal Number';
-      this.searchInputControl.setValidators([Validators.required]);
-    } else if (this.selected= ''){
-      this.placeholder= '';
+      return "Enter Policy Number";
+    } else if (this.selected === "proposalNumber") {
+      return "Enter Proposal Number";
     }
-    this.searchInputControl.updateValueAndValidity();
-  }
-  
-  getErrorMessage(): string {
-    if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
-    } 
-    else if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "mobileNumber") {
-        return "Invalid Mobile Number";
-      } else if (this.selected === "proposerName") {
-        return "Invalid Proposer Name";
-      }
+    else {
+      return "Search...";
     }
-    return "";
   }
-  cancelSearch(menuTrigger: MatMenuTrigger) {
-    this.toggeleSearchdropdown = false;
+  cancelSearch() {
     this.selected = "";
     this.proposalListRequestBody.mobileNumber = "";
     this.proposalListRequestBody.proposer = "";
@@ -248,16 +212,23 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposalNumber ="",
     this.searchInputControl.reset();
     this.getProposalList();
-    menuTrigger.closeMenu();
   }
-  applySearch(menuTrigger: MatMenuTrigger) {
+  applySearch() {
+    console.log("outside");
+    
     if (this.searchInputControl.valid) {
+      console.log("inside",this.selected);
+      
       if (this.selected === "mobileNumber") {
+        console.log(this.selected,this.proposalListRequestBody);
+
         this.proposalListRequestBody.mobileNumber = this.searchInputControl.value!;
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.policyNumber = "";
         this.proposalListRequestBody.proposalNumber =""
       } else if (this.selected === "proposerName") {
+        console.log("vgvdxgtf",this.selected,this.proposalListRequestBody);
+
         this.proposalListRequestBody.proposer = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.policyNumber = "";
@@ -268,13 +239,14 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.proposalNumber =""
       }else if (this.selected === "proposalNumber") {
+        console.log("dbfyed",this.selected,this.proposalListRequestBody);
+                
         this.proposalListRequestBody.proposalNumber = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.policyNumber = "";
       }
       this.getProposalList();
-      menuTrigger.closeMenu();
     }
   }
   customerListView(view: string) {

@@ -20,6 +20,8 @@ export class RenewalsService {
   policy$ = this.policyState.asObservable();
   private quote = new BehaviorSubject<any>({});
   quote$ = this.quote.asObservable();
+  private productsListSubject = new BehaviorSubject<any[]>([]);
+  productsList$ = this.productsListSubject.asObservable();
 
   setQuote(quoteObject: any) {
     this.quote.next(quoteObject);
@@ -33,6 +35,11 @@ export class RenewalsService {
   }
   setPolicyState(policyNo: string, activeSection: string) {
     this.policyState.next({ policyNo, activeSection });
+  }
+  setProductsList(productsList: any[]) {
+    this.productsListSubject.next(productsList);
+    console.log("service productsproductsList",this.productsListSubject);
+    
   }
   getRenewalListApi(reqBody: any) {
     const getRenewalList = this.configService.config.baseUrl + this.configService.config.getRenewalList;
@@ -55,8 +62,12 @@ export class RenewalsService {
     return this.httpService.post(generatepaymentlink, reqBody);
   }
   getRenewalInfoApi(policyNumber: string, requestBody: any) {
-    const getRenewalInfo = `${this.configService.config.baseUrl + this.configService.config.getRenewalInfo}?policyNumber=${policyNumber}`;
-    return this.httpService.post(getRenewalInfo, requestBody);
+    const getrenewalinfo = `${this.configService.config.baseUrl + this.configService.config.getRenewalInfo}?policyNumber=${policyNumber}`;
+    return this.httpService.post(getrenewalinfo, requestBody);
+  }
+  getTenureDetailsApi(reuestBody: any){
+    const gettenuredetails = this.configService.config.baseUrl1 + this.configService.config.getTenureDetails;
+    return this.httpService.post(gettenuredetails,reuestBody)
   }
   getSubquotesApi(policyNumber: string, requestBody: any){
     const getsubquotes = `${this.configService.config.baseUrl + this.configService.config.getSubquotes}?policyNumber=${policyNumber}`;

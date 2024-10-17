@@ -2,7 +2,7 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2>Upload Bulk File</h2>
+                <h2 class="icon_withHeading"><!--<a class="btn_backPage"></a>-->Upload Bulk File</h2>
             </div>
             <!-- <section class="white_container">
                 <h6 class="heading-16-red">Lead Details</h6>
@@ -54,7 +54,35 @@
                             File format not supported ! Please upload .xls, .xlsx or .csv files.
                         </span>
                     </div>
-                    
+                    <div class="uploadDocument_listMain" >
+                        <div class="uploadDocument_filesList">
+                            <div class="filesList_head">
+                                <div class="filesList_headLeft">Uploads:</div>
+                                <!-- <div class="filesList_headRight">{{ documentsUploadStatus }}</div> -->
+                            </div>
+                            <div class="filesList_body">
+                                <ul class="uploadedFiles_main">
+                                    <li class="uploadedFiles_item">
+                                        <div class="uploadedFiles_info">
+                                            <div class="uploadedFiles_infoItem">
+                                                <span class="file-index">1</span>
+                                                <h6>File Name</h6>
+                                                <p>File Type</p>
+                                            </div>
+                                            <div class="uploadedFiles_infoItem">
+                                                <button class="delete-button" >
+                                                    <img src="assets/Img/icon_delete_red2.svg">
+                                                </button>
+                                                <div class="size-align">
+                                                    <p>File Size</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 mt-5">
                         <button type="submit" (click)="continueFileUpload()" class="btn_red">Continue</button>
                     </div>

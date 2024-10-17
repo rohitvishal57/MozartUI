@@ -6,7 +6,7 @@ import { SubQuotesComponent } from './sub-quotes/sub-quotes.component';
 
 const routes: Routes = [
   { path: "renewalList", component: RenewalListComponent },
-  { path: "renewalDynamicForm", component: RenewalDynamicFormComponent },
+  { path: "renewalDynamicForm/:policyNumber/:activeSection", component: RenewalDynamicFormComponent },
   { path: "subquotes", component: SubQuotesComponent },
 ];
 

@@ -55,11 +55,11 @@ export class CreateLeadComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadNumber'];
       this.action = params['action'];
-
-      console.log("updateStatus action", this.action);
     });
-    if (this.leadNumber != '') {
+    if (this.leadNumber && this.action) {
       this.getLeadInformationByLeadNumber(this.leadNumber);
+      this.getReferenceStatus();
+      this.fetchActivityTypeInfo();
     }
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
@@ -70,7 +70,6 @@ export class CreateLeadComponent implements OnInit {
     else {
       console.log("agent code is not present in local storege");
     }
-
 
     let usr = storedAgentCode ? JSON.parse(storedAgentCode) : null;
     let obj = {
@@ -92,17 +91,8 @@ export class CreateLeadComponent implements OnInit {
     //     console.error("Error from getRenewalsList API:", error);
     //   }
     // );
-    this.getReferenceStatus();
 
-    let fetchActivityTypeRequest: any = {};
-    this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
-      (response) => {
-        console.log("ActivityType information : " + response.activityName);
-        this.activityTypes = response.activityName;
-      },
-      (error) => {
-
-      });
+  
   }
 
   inItForm() {
@@ -214,9 +204,9 @@ export class CreateLeadComponent implements OnInit {
       (response) => {
         console.log(response.data);
         if (response.success) {
-          if(this.action == 'updateStatus'){
+          if (this.action == 'updateStatus') {
             this.toast.success({ detail: 'Lead is updated successfully' });
-          }else{
+          } else {
             this.toast.success({ detail: 'Lead is created successfully' });
           }
           console.log(response);
@@ -299,6 +289,17 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('email')?.disable();
 
 
+  }
+
+  fetchActivityTypeInfo() {
+    let fetchActivityTypeRequest: any = {};
+    this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
+      (response) => {
+        this.activityTypes = response.activityName;
+      },
+      (error) => {
+        console.log("Failed to fetch ActivityType information : " ,error);
+      });
   }
 
   getReferenceStatus() {

@@ -18,11 +18,10 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li class="quickFilterHeading">Quick filter</li>
+                         <li class="quickFilterHeading">Quick filter</li> 
                         <li>
                             <button type="button" value="allpolicies" class="btn_quickFilter"
-                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All
-                                Leads</button>
+                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Leads</button>
                         </li>
                         <li>
                             <button type="button" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">Assigned Leads</button>
@@ -51,7 +50,7 @@
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
@@ -127,12 +126,19 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th class="text-center">
+                                    <th class="text-center icon_allAssignLead">
                                         <div class="icon_leads_check">
-                                        <input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">
-                                        <button type="button" *ngIf="this.checkBoxSelectedLeads.length != 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction" (click)="selectAllAssigneLeadDialog()"><img
-                                            src="assets/Img/icon_profile.svg"></button>
-                                        </div></th>
+                                            <div class="input-checkbox-block">
+                                                <div class="input-checkbox-feild input-checkbox-noSpace">
+                                                    <input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)" class="input-check">
+                                                    <label for="Select All"></label>
+                                                </div>
+                                            </div>
+                                            <!--<input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">-->
+                                            <button type="button" *ngIf="this.checkBoxSelectedLeads.length != 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
+                                                src="assets/Img/icon_profile.svg"></button>
+                                        </div>
+                                    </th>
                                     <th>Lead ID</th>
                                     <th>Name</th>
                                     <th>Mobile Number</th>
@@ -142,20 +148,26 @@
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of leadsList; let i = index">
-                                    <td align="center"> <input type="checkbox" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" ></td>
+                                    <td align="center">
+                                        <div class="input-checkbox-feild input-checkbox-noSpace">
+                                            <input type="checkbox" id={{i}} title="Select" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" class="input-check">
+                                            <label for={{i}}></label>
+                                        </div>
+                                        <!--<input type="checkbox" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" >-->
+                                    </td>
                                     <td>{{row.leadNumber}}</td>
                                     <td>{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</td>
                                     <td>{{ row.phoneNumber }}</td>
                                     <td>{{row.email}}</td>
                                     <td>
-                                        <div class="btn_groupAction">
+                                        <div class="btn_groupAction justify-content-center">
                                             <button class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
                                                     src="assets/Img/icon_profile.svg" /></button>
                                             <button  class="btn_action btn_renewalAction" (click)="updateLeadStatus(row.leadNumber)"  title="Update Status"><img
                                                     src="assets/Img/icon_edit_grey.svg"></button>
                                             <button class="btn_action btn_renewalAction" (click)="addNotesLead(row.leadNumber)" title="Add Notes"><img
                                                      src="assets/Img/icon_add_notes.svg"></button>
-                                            <button class="btn_action btn_renewalAction"  title="Quick Quote" ><img
+                                            <button class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote" ><img
                                                      src="assets/Img/icon_savenew_subquote.svg"></button>
 
                                             <!-- <button type="button" value="more" title="More"
@@ -239,7 +251,7 @@
                                         class="btn_action btn_renewalAction"><img
                                             src="assets/Img/icon_add_notes.svg"></button>
                                     <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
-                                    <button class="btn_action btn_renewalAction"  title="Quick Quote" ><img
+                                    <button class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote" ><img
                                         src="assets/Img/icon_savenew_subquote.svg"></button>
                                    
                                         <!-- <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
@@ -295,25 +307,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                <div class="tableNav" *ngIf="countsList.totalCount > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords"
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalCount"
                                     [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
                                     class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords
-                                    ? countsList.totalRecords : first + rows}}</span> of <span
-                                    class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalCount
+                                    ? countsList.totalCount : first + rows}}</span> of <span
+                                    class="pageCountTotal">{{countsList.totalCount}} entries</span>
                             </li>
                         </ul>
                     </nav>
                 </div>
             </section>
-            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalRecords === 0">
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalCount === 0">
                 <div class="cardViewWraper">
                     <div class="no_dataFound">
                         <img src="assets/Img/img_no_data_found.svg" alt="No data found">
@@ -324,35 +336,45 @@
         </div>
     </div>
 </main>
+ 
+ 
+<div class="modal fade popupModalMain popupModalOTP" id="assigneLeadModal" tabindex="-1" aria-labelledby="otpModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form (ngSubmit)="assineLead()" [formGroup]="assignLeadForm" novalidate autocomplete="false">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roomModalLabel">Assigne Leads</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+            </div>
 
-<div class="card flex justify-content-center ">
-    <p-dialog header="Assign Lead" [modal]="true" [(visible)]="displayAssigneePopup"
-        [style]="{ width: '75rem', height: '25rem' }">
-        <span class="p-text-secondary block mb-5">Select Agent</span>
-        <form (ngSubmit)="assineLead()" [formGroup]="assignLeadForm" novalidate autocomplete="false">
-            <section class="white_container">
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                        <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" formControlName="selectedAgentCode">
-                                <option *ngFor="let item of agentCodes " [value]="item">
-                                    {{ item }}
-                                </option>
-                            </select>
-                        </div>
+            <div class="modal-body">
+
+                <div class="detailsRow">
+                    <div class="detailsHeading">Select Agent</div>
+                    <div class="input-block form-floating input-block-renew">
+                        <select class="form-select input-selectBox" formControlName="selectedAgentCode">
+                <option *ngFor="let item of agentCodes " [value]="item">
+                    {{ item }}
+                </option>
+            </select>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <div class="row mt-4">
-                <div class="col-12 btn_container_leads">
-                    <button type="button" class="btn_red" (click)="displayAssigneePopup = false">Cancel</button>
-                    <button type="submit" class="btn_red">Save</button>
+            <div class="modal-footer modal_footerBtnGroup_column">
+                <button type="submit"  class="verify-btn btn_red btn_fullWidth">Save</button>
+                <div class="d-flex justify-content-center">
+                    <button type="button"  class="btn_linkText btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" >Cancel</button>
                 </div>
             </div>
-        </form>
-    </p-dialog>
-   
+         </form>
+        </div>
+    </div>
+</div>
+  
+  
+  
     <div class="card flex justify-content-center ">
         <p-dialog header="Mark duplicate" [modal]="true" [(visible)]="markDuplicatePopup"
             [style]="{ width: '75rem', height: '30rem' }">
@@ -380,8 +402,8 @@
                 </div>
             </form>
         </p-dialog>
-
     </div>
+
     <div class="card flex justify-content-center ">
         <p-dialog header="Audit Trail Details" [modal]="true" [(visible)]="displayAuditTrailPopup"
             [style]="{ width: '75rem', height: '45rem' }">
@@ -413,3 +435,6 @@
         </p-dialog>
 
     </div>
+
+    
+      

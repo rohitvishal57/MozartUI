@@ -145,7 +145,7 @@
                                     <h5>{{ quote.isBaseQuote ? 'Base Quote' : 'Sub Quote' }}</h5>
                                     <h6>₹{{ quote.annualPremium }}<span>{{quote.tenure}}/year</span></h6>
                                 </div>
-                                <button type="button" value="buyplan" class="btn_red btn_buyPlan">Buy Plan</button>
+                                <button type="button" value="buyplan" class="btn_red btn_buyPlan" (click)="handleAction(quote, 'payment')">Buy Plan</button>
                             </header>
                             <div class="upgradeInfo">{{ quote.discountPercentage }} Off on {{ quote.tenure }} years tenure</div>
                             <div class="qc_info">

@@ -337,6 +337,12 @@
     flex-direction: column;
     align-items: flex-start;
    }
+   .details_claimsAmount {
+    flex-direction: column;
+   }
+   .details_claimsAmount .claim_amount{
+    padding: 8px 0px !important;
+   }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
