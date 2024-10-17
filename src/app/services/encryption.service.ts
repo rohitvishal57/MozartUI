@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class EncryptionService {
-  private secretKey = '0123456789abcdef0123456789abcdef';
+  private secretKey = 'BANCA123456ASSURANCE54321PROJECT';
 
   encrypt(data: any) {
     const encryptedData = CryptoJS.AES.encrypt(
