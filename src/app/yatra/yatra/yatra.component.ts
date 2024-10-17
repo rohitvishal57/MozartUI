@@ -544,6 +544,8 @@ export class YatraComponent {
       this.flattenObject(this.formData);
       this.spinner.hide();
     }
+    console.log(this.dynamicFormGroup.value);
+    
   }
 
   initializeSubControls(subControls: any) {
@@ -736,7 +738,7 @@ export class YatraComponent {
     parentControl: IFormControl | null = null,
     index: number | null = null
   ): boolean {
-    console.log(control, parentControl, index);
+    // console.log(control, parentControl, index);
     let myControl: AbstractControl | null;
 
     if (parentControl != null && index != null) {
@@ -2503,7 +2505,7 @@ export class YatraComponent {
     this.spinner.show();
     console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
 
-    if(this.changesMade){
+    if (this.changesMade) {
       this.changeRecalculate(false);
     }
 
@@ -2557,13 +2559,13 @@ export class YatraComponent {
         this.formData['familySize'] = this.formData.insuredMemberDetails.length + 'A';
         this.formData['proposerName'] = this.formData['firstName'] + this.formData['lastName'];
 
-        if(this.formData.memberPolicyType== 'Family Floater'){
-          this.formData.insuredMemberDetails.forEach((member:any)=>{
-            member.pincode=this.formData['proposerPincode']
+        if (this.formData.memberPolicyType == 'Family Floater') {
+          this.formData.insuredMemberDetails.forEach((member: any) => {
+            member.pincode = this.formData['proposerPincode']
           })
         }
         else
-        this.formData['proposerPincode'] = this.formData.insuredMemberDetails[0].pincode;
+          this.formData['proposerPincode'] = this.formData.insuredMemberDetails[0].pincode;
 
         console.log(this.formData.insuredMemberDetails, this.productId, this.agentCode);
 
@@ -2943,7 +2945,7 @@ export class YatraComponent {
   //   console.log(this.formData);
   //   const data = await this.mappedFormDataFullQuote(this.formData);
   //   console.log(data);
-    
+
 
   //   var reqData: any = {
   //     agentCode: this.agentCode,
@@ -2958,13 +2960,13 @@ export class YatraComponent {
   //           const healthRes = response.data['ns0:ActiveHealthRes'];
   //           const polCreationResponse = healthRes.PolCreationRespons;
   //           const receiptResponse = healthRes.ReceiptCreationResponse;
-      
+
   //           this.quoteNo = polCreationResponse.quoteNumber;
   //           this.customerId = polCreationResponse.customerId;
   //           console.log(healthRes,polCreationResponse,receiptResponse.ReceiptNumber,this.quoteNo,this.customerId);
   //           console.log(this.dynamicFormGroup);
-            
-      
+
+
   //           // Setting the form values using FormGroup's setValue() method
   //           this.dynamicFormGroup.get('policyNumber')?.setValue(polCreationResponse.policyNumber);
   //           this.dynamicFormGroup.get('customerId')?.setValue(polCreationResponse.customerId);
@@ -2976,7 +2978,7 @@ export class YatraComponent {
   //         } else {
   //           console.error("No valid data in response", response);
   //         }
-  
+
   //       this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
   //       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
   //       this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
@@ -2987,7 +2989,7 @@ export class YatraComponent {
   //         console.error(err);
   //       }
   //     });
-      
+
   // }
 
   async fullQuotation(): Promise<void> {
@@ -2996,7 +2998,7 @@ export class YatraComponent {
       console.log(this.formData);
       this.mappedFormDataFullQuote(this.formData).then((data) => {
         console.log(data);
-        
+
         var reqData: any = {
           agentCode: this.agentCode,
           productId: this.productId,
@@ -3004,7 +3006,7 @@ export class YatraComponent {
           fullQuoteRequestJson: JSON.stringify(data)
         }
         console.log(reqData);
-        
+
         this.yatraService.getFullQuote(reqData).subscribe({
           next: (response: any) => {
             console.log(response);
@@ -3012,41 +3014,41 @@ export class YatraComponent {
               const healthRes = response.data['ns0:ActiveHealthRes'];
               const polCreationResponse = healthRes.PolCreationRespons;
               const receiptResponse = healthRes.ReceiptCreationResponse;
-  
+
               this.quoteNo = polCreationResponse.quoteNumber;
               this.customerId = polCreationResponse.customerId;
               console.log(healthRes, polCreationResponse, receiptResponse.ReceiptNumber, this.quoteNo, this.customerId);
               console.log(this.dynamicFormGroup);
-  
+
               // Setting the form values
               if (polCreationResponse.policyNumber) {
                 this.formData.policyNumber = polCreationResponse.policyNumber;
-            }
-            
-            if (polCreationResponse.customerId) {
+              }
+
+              if (polCreationResponse.customerId) {
                 this.formData.customerId = polCreationResponse.customerId;
-            }
-            
-            if (polCreationResponse.quoteValidFromDate) {
+              }
+
+              if (polCreationResponse.quoteValidFromDate) {
                 this.formData.quoteValidFromDate = polCreationResponse.quoteValidFromDate;
-            }
-            
-            if (polCreationResponse.quoteValidToDate) {
+              }
+
+              if (polCreationResponse.quoteValidToDate) {
                 this.formData.quoteValidToDate = polCreationResponse.quoteValidToDate;
-            }
-            
-            if (polCreationResponse.policyStatus) {
+              }
+
+              if (polCreationResponse.policyStatus) {
                 this.formData.policyStatus = polCreationResponse.policyStatus;
-            }
-            
-            if (receiptResponse.ReceiptNumber) {
+              }
+
+              if (receiptResponse.ReceiptNumber) {
                 this.formData.ReceiptNumber = receiptResponse.ReceiptNumber;
-            }
+              }
               console.log(this.dynamicFormGroup.value);
             } else {
               console.error("No valid data in response", response);
             }
-  
+
             this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
             this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully. ${this.customerId}`, duration: 3000 });
@@ -3790,7 +3792,7 @@ export class YatraComponent {
       dateOfBirth: formattedDOB,
       panNumber: panNumber
     };
-    console.log(reqData);
+    console.log(reqData, this.dynamicFormGroup.value);
 
     this.spinner.show();
 
@@ -3812,22 +3814,14 @@ export class YatraComponent {
                 }
               });
             }
-            console.log(this.dynamicFormGroup.value);
-
-            const formControl = this.dynamicFormGroup.get(key);
-              if (formControl) {
-                formControl.setValue(response.data[key]);
-                formControl.disable(); // Disable the form control
-              }
-
-              this.form.formSections.forEach((section: any) => {
-                    section.formControls.forEach((control: any) => {
-                      if (control.name === key) {
-                        control.disabled = true; // Disable the field in the JSON structure
-                        control.value = response.data[key]; // Update the value in the JSON as well
-                      }
-                    });
-                  });
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((control: any) => {
+                if (control.name === key) {
+                  control.disabled = true; // Disable the field in the JSON structure
+                  control.value = response.data[key]; // Update the value in the JSON as well
+                }
+              });
+            });
             // this.dynamicFormGroup.get(key)?.setValue(response.data[key])
             // if (key === 'preFix') {
             //   const prefixFromKYC = response.data[key].toLowerCase();
@@ -3930,7 +3924,7 @@ export class YatraComponent {
 
 
   addDiseaseList(subControl?: any, control?: any) {
-    console.log(this.dynamicFormGroup.value,this.form);
+    console.log(this.dynamicFormGroup.value, this.form);
     if (this.isOverlayVisible) {
       this.isOverlayVisible = false;
     }
@@ -3970,14 +3964,14 @@ export class YatraComponent {
     console.log(this.form);
   }
   removeDisease(subControl: any, control: any, index: any) {
-    console.log(subControl, control, index,this.form,this.dynamicFormGroup.value);
+    console.log(subControl, control, index, this.form, this.dynamicFormGroup.value);
     if (subControl.innerArrayControl.length > 1) {
-      this.form.formSections.forEach((sections:any)=>{
-        sections.formControls.forEach((controls:any)=>{
-          if(controls.name == control.name && controls.subControls){
-            controls.subControls.forEach((subControls:any)=>{
-              if(subControls.name == subControl.name){
-                subControls.innerArrayControl.splice(index,1);
+      this.form.formSections.forEach((sections: any) => {
+        sections.formControls.forEach((controls: any) => {
+          if (controls.name == control.name && controls.subControls) {
+            controls.subControls.forEach((subControls: any) => {
+              if (subControls.name == subControl.name) {
+                subControls.innerArrayControl.splice(index, 1);
                 console.log(subControls);
               }
             });
@@ -3989,7 +3983,7 @@ export class YatraComponent {
       // console.log(((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray));
       // subControl.innerArrayControl.pop();
     }
-    console.log(control, this.dynamicFormGroup,this.form);
+    console.log(control, this.dynamicFormGroup, this.form);
   }
   copyText(control: any) {
     console.log(control);
@@ -4001,13 +3995,13 @@ export class YatraComponent {
   async mappedFormDataFullQuote(formData: any): Promise<Partial<Root>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     console.log(formData);
-    
+
     const mappedData: Partial<Root> = {
       agentCode: this.agentCode || '',
       productName: formData?.productName || '',
       productCode: formData?.productId || '',
       planCode: formData?.planCode || '',
-      planName:formData?.productVariant || '',
+      planName: formData?.productVariant || '',
       proposalNum: this.proposalNum || '',
       policyType: formData?.memberPolicyType || '',
       businessType: formData?.typeOfBusiness || '',
