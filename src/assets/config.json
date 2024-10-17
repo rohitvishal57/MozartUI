@@ -91,5 +91,7 @@
     "getKycDetails":"quote/api/getkycdetails",
     "getquotefortopsellingproducts":"quote/api/getquotefortopsellingproducts",
     "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails",
-    "profileDetails":"auth/api/GetAgentProfileDetails"
+    "profileDetails":"auth/api/GetAgentProfileDetails",
+    "fetchPolicyDetailsFromFile":"yatra/api/getcustomerpolicydetailsfrompolicydocument"
+
 }

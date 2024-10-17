@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { retry } from 'rxjs';
 import { ConfigService } from 'src/app/services/config.service';
 import { HttpService } from 'src/app/services/http.service';
 
@@ -111,5 +112,10 @@ export class YatraService {
   getBranchDetails(reqData:any){
     const getBranchDetails=this.configService.config.baseUrl+this.configService.config.getBranchDetails;
     return this.httpService.post(getBranchDetails,reqData);
+  }
+
+  fetchPolicyDetailsFromFile(reqData:FormData){
+    const fetchPolicyDetailsFromFile= this.configService.config.baseUrl+this.configService.config.fetchPolicyDetailsFromFile;
+    return this.httpService.post(fetchPolicyDetailsFromFile,reqData);
   }
 }

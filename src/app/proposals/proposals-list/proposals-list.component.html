@@ -102,7 +102,7 @@
                                     <th scope="col">Status</th>
                                     <th scope="col" nowrap>Created On</th>
                                     <th scope="col" >Contact Details</th>
-                                    <th scope="col">Notice</th>
+                                    <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
@@ -130,8 +130,8 @@
                                     </td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" value="clone" title="clone" class="btn_action btn_editAction" ><img src="assets/Img/clone-regular.svg"></button>
-                                            <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                            <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="redirect()"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <!-- <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
