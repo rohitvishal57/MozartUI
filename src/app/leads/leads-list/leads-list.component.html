@@ -295,25 +295,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="tableNav" *ngIf="countsList.totalRecords > 0">
+                <div class="tableNav" *ngIf="countsList.totalCount > 0">
                     <nav>
                         <ul class="pagination">
                             <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalRecords"
+                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="countsList.totalCount"
                                     [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)"
                                     class="custom-paginator my-paginator">
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalRecords
-                                    ? countsList.totalRecords : first + rows}}</span> of <span
-                                    class="pageCountTotal">{{countsList.totalRecords}} entries</span>
+                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > countsList.totalCount
+                                    ? countsList.totalCount : first + rows}}</span> of <span
+                                    class="pageCountTotal">{{countsList.totalCount}} entries</span>
                             </li>
                         </ul>
                     </nav>
                 </div>
             </section>
-            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalRecords === 0">
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalCount === 0">
                 <div class="cardViewWraper">
                     <div class="no_dataFound">
                         <img src="assets/Img/img_no_data_found.svg" alt="No data found">
