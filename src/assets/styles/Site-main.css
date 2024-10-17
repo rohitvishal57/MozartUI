@@ -991,6 +991,10 @@ input:disabled, select:disabled, .input-block .input-textBox:disabled:hover, .in
 select:disabled, .input-block .input-selectBox:disabled, .input-block .input-selectBox:disabled:hover {
    background: var(--site-body-bg) url(../Img/down_arrow.svg) no-repeat 96% 50%; 
 }
+
+.input-block .input-textBox.input-textarea {
+  line-height: normal;
+}
 input[type="checkbox"]:focus + label:before {
   border: 1px solid #861f41;
   border: 2px solid #b4b4b4;
@@ -1619,6 +1623,9 @@ input[type="search"]::-webkit-search-results-decoration {
     opacity: 1;
     transform: scale(.85) translateY(-2.5rem) translateX(.15rem) !important;
     color: var(--text-black-4c);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(242, 243, 246, 1) 100%);
+    width: auto;
+    border-width: 0;
 }
 .form-floating>.form-control.input-selectBox.focus~label {
     font-size: 10px;

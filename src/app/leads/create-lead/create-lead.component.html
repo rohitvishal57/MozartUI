@@ -2,7 +2,7 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2>Create/Update Lead</h2>
+                <h2 class="icon_withHeading"><!--<a class="btn_backPage"></a>-->Create/Update Lead</h2>
             </div>
             <div *ngIf="isAUuser && !this.dataToDisplay">
                 <!-- <h2 class="sub-title mb-30 font-weight-bold"> AU User Details</h2> -->
@@ -568,9 +568,9 @@
                     </div>
 
             </form>
-           
+            <form (ngSubmit)="addNotesSubmit()" [formGroup] = "addNoteForm" >
             <section class="white_container mb-3" *ngIf="action=='addNotes'">
-                <form (ngSubmit)="addNotesSubmit()" [formGroup] = "addNoteForm" >
+                
                 <div class="row">
                     <div class="col-12 mb-4">
                         <h6 class="heading-16-red">Add Notes</h6>
@@ -643,14 +643,15 @@
                         </div>
                 
                 </div>
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <button type="submit" class="btn_red">Add Notes</button>
-                    </div>
-                </div>
-            </form>
             </section>
+            
+            <div class="row mt-4" *ngIf="action=='addNotes'">
+                <div class="col-12">
+                    <button type="submit" class="btn_red">Add Notes</button>
+                </div>
+            </div>
 
+        </form>
         </div>
     </div>
 </main>
