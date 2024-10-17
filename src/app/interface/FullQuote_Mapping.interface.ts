@@ -3,6 +3,8 @@ export interface Root {
     productName: string
     productCode: string
     planCode: string
+    planName:string
+    proposalNum:string
     policyType: string
     businessType: string
     insuredMemberDetails: InsuredMemberDetail[]

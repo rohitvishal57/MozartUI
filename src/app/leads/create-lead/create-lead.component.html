@@ -6,8 +6,8 @@
             </div>
             <div *ngIf="isAUuser && !this.dataToDisplay">
                 <!-- <h2 class="sub-title mb-30 font-weight-bold"> AU User Details</h2> -->
-                <section class="white_container mb-5">
-                    <div class="row mb-3">
+                <section class="white_container mb-3">
+                    <div class="row">
                         <div class="col-12 mb-4">
                             <h6 class="heading-16-red">AU User Details</h6>
                         </div>
@@ -41,8 +41,8 @@
              <div *ngIf="isIDFCUser &&  !this.dataToDisplay">
                 <!-- <h2 class="sub-title mb-30 font-weight-bold" > IDFC User Details</h2> -->
              
-                <section class="white_container mb-5">
-                    <div class="row mb-3">
+                <section class="white_container mb-3">
+                    <div class="row">
                         <div class="col-12 mb-4">
                             <h6 class="heading-16-red">IDFC User Details</h6>
                         </div>
@@ -75,8 +75,8 @@
             </div>
 
             <div *ngIf="isYESuser && !this.dataToDisplay">
-                <section class="white_container mb-5">
-                    <div class="row mb-3">
+                <section class="white_container mb-3">
+                    <div class="row">
                         <div class="col-12 mb-4">
                             <h6 class="heading-16-red">Yes Bank User Details</h6>
                         </div>
@@ -195,8 +195,8 @@
                 <section class="white_container">
                     <h6 class="heading-16-red">Personal Details</h6>
                 </section> -->
-                <section class="white_container mb-5">
-                    <div class="row mb-3">
+                <section class="white_container mb-3">
+                    <div class="row">
                         <div class="col-12 mb-4">
                             <h6 class="heading-16-red">Lead Details</h6>
                         </div>
@@ -204,7 +204,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder=""
                                     formControlName="firstname" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }" [readonly] ='isReadonly'>
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }" >
                                 <label for="firstname">First Name *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('firstname')?.errors">
@@ -229,7 +229,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="lastname" placeholder=""
                                     formControlName="lastname" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }" [readonly] ='isReadonly'>
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }" >
                                 <label for="lastname">Last Name *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('lastname')?.errors">
@@ -245,7 +245,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="nomineeName" placeholder=""
                                     formControlName="mobilenumber" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }" [readonly] ='isReadonly'>
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }" >
                                 <label for="nomineeName">Mobile Number *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
@@ -263,7 +263,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="email" placeholder=""
                                     formControlName="email" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }" [readonly] ='isReadonly'>
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }">
                                 <label for="email">Email *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('email')?.errors">
@@ -360,8 +360,8 @@
                         </div>
                     </div>
                 </section>
-                <section class="white_container mb-5" *ngIf="action!='addNotes'">
-                    <div class="row mb-3">
+                <section class="white_container mb-3" *ngIf="action!='addNotes'">
+                    <div class="row">
                         <div class="col-12 mb-4">
                             <h6 class="heading-16-red">Address</h6>
                         </div>
@@ -428,8 +428,8 @@
                     </div>
                 </section>
                 
-                <section class="white_container mb-5" *ngIf="action!='addNotes'">
-                    <div class="row mb-3">
+                <section class="white_container mb-3" *ngIf="action!='addNotes'">
+                    <div class="row">
                         <div class="col-12 mb-4">
                             <h6 class="heading-16-red">Product Details</h6>
                         </div>
@@ -514,8 +514,8 @@
                     </div>
 
                 </section>
-                    <section class="white_container mb-5" *ngIf="action=='updateStatus'">
-                        <div class="row mb-3">
+                    <section class="white_container mb-3" *ngIf="action=='updateStatus'">
+                        <div class="row">
                             <div class="col-12 mb-4">
                                 <h6 class="heading-16-red">Update Lead Status</h6>
                             </div>
@@ -569,9 +569,9 @@
 
             </form>
            
-            <section class="white_container mb-5" *ngIf="action=='addNotes'">
+            <section class="white_container mb-3" *ngIf="action=='addNotes'">
                 <form (ngSubmit)="addNotesSubmit()" [formGroup] = "addNoteForm" >
-                <div class="row mb-3">
+                <div class="row">
                     <div class="col-12 mb-4">
                         <h6 class="heading-16-red">Add Notes</h6>
                     </div>

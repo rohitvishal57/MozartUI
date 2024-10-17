@@ -233,11 +233,15 @@
 .data-row .data-item h6 {
 	font-size: 13px;
 }
-.radio_format{
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin-bottom: 20px;
+.radio_format {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 20px; 
+}
+.payment-radio-Cnt {
+    flex: 0 1 220px !important; 
+    max-width: 250px !important;
 }
 .raido_paymentType .input-radiolabel span{
 	padding: 13px 10px;
@@ -257,7 +261,14 @@
 //--
 .accordionMain .accordionItem .accordionBody .accordionBodyRow{
 	gap: 0px;
+	.detailsBorder:last-child {
+		display: none;
+	}
 }
 .bcl_main .processBtnGroup {
      gap: 0px;
+}
+.row .raido_paymentType .active{
+	border: 1px solid var(--primary-red-color);
+	border-radius: 16px;
 }

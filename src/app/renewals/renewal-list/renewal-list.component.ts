@@ -33,7 +33,7 @@ export class RenewalListComponent {
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
   selected: string = "";
-  searchInputControl = new FormControl("",Validators.required);
+  searchInputControl = new FormControl("");
   isDesktopView:boolean=false
   private onDestroy$: Subject<boolean> = new Subject<boolean>();
   agentCode=localStorage.getItem('agentCode');
@@ -42,9 +42,7 @@ export class RenewalListComponent {
   activeSection:string= "primary"
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
-    { name: 'RUG', selected: false },
     { name: 'Family Floater', selected: false },
-    { name: 'Groups', selected: false }
   ];
 
   constructor(
@@ -126,6 +124,7 @@ export class RenewalListComponent {
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res) => {
         this.productsList = res.data;
+        this.renewalService.setProductsList(this.productsList);
         console.log("product list",this.productsList)
         const uniquePolicyTypes = Array.from(new Set(this.productsList
          .map((product) => product.familyPlan)))
@@ -138,10 +137,6 @@ export class RenewalListComponent {
     })
   }
   toggleFilterDropdown() {
-    if(this.toggeleSearchdropdown==true)
-    {
-       this.toggeleSearchdropdown=false;
-    }
     this.toggeledropdown = !this.toggeledropdown;    
   }
   calculateAppliedFiltersCount() {
@@ -204,62 +199,30 @@ export class RenewalListComponent {
     this.renewalLisRequestBody.endDate = null;
     this.getRenewalsList();
   }
-  toggleSearchDropdown() {
-    if(this.toggeledropdown==true)
-    {
-      this.toggeledropdown=false;
-    }
-    this.toggeleSearchdropdown = !this.toggeleSearchdropdown;
-  }
   onSelectChanges(event: any): void {
     this.searchInputControl.setValue("");
-    this.searchInputControl.clearValidators();
-    if (this.selected === "mobileNumber") {
-      this.placeholder = 'Mobile Number';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[6-9][0-9]{9}$")
-      ]);
-    } else if (this.selected === "proposerName") {
-      this.placeholder = 'Proposer Name';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
-      ]);
-    } else if (this.selected === "policyNumber") {
-      this.placeholder = 'Policy Number';
-      this.searchInputControl.setValidators([Validators.required]);
-    } else if (this.selected= ''){
-      this.placeholder= '';
-    }
-    this.searchInputControl.updateValueAndValidity();
   }
-  getErrorMessage(): string {
-    if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
-    } 
-    else if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "mobileNumber") {
-        return "Invalid Mobile Number";
-      } else if (this.selected === "proposerName") {
-        return "Invalid Proposer Name";
-      }
-    }
-    return "";
-  }
-  
-  cancelSearch(menuTrigger: MatMenuTrigger) {
-    this.toggeleSearchdropdown = false;
+  cancelSearch() {
     this.selected = "";
     this.renewalLisRequestBody.mobileNumber = "";
     this.renewalLisRequestBody.proposer = "";
     this.renewalLisRequestBody.policyNumber = "";
     this.searchInputControl.reset();
     this.getRenewalsList();
-    menuTrigger.closeMenu();
   }
-  
-  applySearch(menuTrigger: MatMenuTrigger) {
+  getPlaceholder(): string {
+    if (this.selected === "mobileNumber") {
+      return "Enter Mobile Number";
+    } else if (this.selected === "proposerName") {
+      return "Enter Proposer Name";
+    } else if (this.selected === "policyNumber") {
+      return "Enter Policy Number";
+    }
+    else {
+      return "Search...";
+    }
+  }
+  applySearch() {
     if (this.searchInputControl.valid) {
       if (this.selected === "mobileNumber") {
         this.renewalLisRequestBody.mobileNumber = this.searchInputControl.value!;
@@ -275,7 +238,6 @@ export class RenewalListComponent {
         this.renewalLisRequestBody.proposer = "";
       }
       this.getRenewalsList();
-      menuTrigger.closeMenu();
     }
   }
   renewalListView(view: string) {
@@ -353,14 +315,14 @@ export class RenewalListComponent {
           customerMobileNo: item.proposerMobileNumber,
           agentMobileNo: "9177035634",
           eventName: "sending payment link to sms",
-          dueDate: "gvx",
+          dueDate: "",
           dateOfRenewal: item.policyEndDate,
-          renewedPolicyNo: item.policyNumber,
-          proposalNumber: "vasxb",
+          renewedPolicyNo: "",
+          proposalNumber: "",
           policyNumber: item.policyNumber,
           grossRenewalAmount: item.renewalPremiumAmount.toString(),
           isAutoSMS: true,
-          sessionId: "jbsaj"
+          sessionId: ""
         };
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
@@ -399,8 +361,8 @@ export class RenewalListComponent {
   }
   renewalJourney(proposerDetail : RenewalList) {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
-    this.renewalService.setPolicyState(proposerDetail.policyNumber, this.activeSection);
-    this.router.navigate(["renewals/renewalDynamicForm"]);
+    // this.renewalService.setPolicyState(proposerDetail.policyNumber, this.activeSection);
+    this.router.navigate([`renewals/renewalDynamicForm/${proposerDetail.policyNumber}/${this.activeSection}`]);
   }
   getStarClasses(index: number, rating: number): string[] {
     const starClasses = ['star'];

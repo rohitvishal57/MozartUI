@@ -25,6 +25,7 @@ export class ClaimsDetailsComponent {
   uploadDateTime: Date | null = null;
   formattedUploadDateTime: string = "";
   totalFilesCount = 0;
+  totalFilesDocCount = 0;
   uploadedFilesCount = 0;
   uploadStatus = "0 of 0 files uploaded";
   failedFilesCount = 0;
@@ -35,7 +36,38 @@ export class ClaimsDetailsComponent {
   uploadedFile: any;
   agentCode: any;
   selectMemberData: any = {};
+  isViewVisible: boolean = false;
+  allowedFileTypes: string[] = [
+    "application/pdf",
+    "image/jpeg",
+    "image/png",
+    "image/jpg",
+    "image/bmp",
+  ];
+  uploadValidFormat: boolean = false;
+  uploadValidFormt: boolean = false;
   selectedTabIndex: number = 0;
+  underDeficiencyUploadStatus: string = "";
+  documentsUploadStatus: string = "";
+  viewFileUploads: any[] = [];
+  @Input() uploadedUnderDeficiencyFiles: {
+    name: string;
+    type: string;
+    size: number;
+    label: string;
+    isEditing?: boolean;
+    isEdited?: boolean;
+    editableControl?: FormControl;
+    uploadDateTime?: Date;
+    formattedUploadDateTime?: string;
+    status: string;
+    file: File;
+    policyNumber?: string;
+    documentName?: string;
+    documentType?: string;
+    createdBy?: string;
+  }[] = [];
+
   @Input() uploadedFiles: {
     name: string;
     type: string;
@@ -147,11 +179,9 @@ export class ClaimsDetailsComponent {
   ngOnInit() {
     if (this.claimId && this.policyNumber && this.claimInfoId) {
       this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimInfoId);
-      this.updateStatusLabel();
+      this.updateStatusLabel("fileUpload");
     }
-
     this.fetchClaimTracker(this.claimInfoId);
-
     this.fetchClaimHistory(this.policyNumber);
 
     // this.claimId = this.route.snapshot.paramMap.get('id');
@@ -167,25 +197,23 @@ export class ClaimsDetailsComponent {
   // }
 
   fetchClaimTracker(claimInfoId: string): void {
-       
-    const claimsReqBody = {  
-      "claimNumber": "2000001993637736"
-    }
+    const claimsReqBody = {
+      claimNumber: "2000001993637736",
+    };
 
     this.claimsService.getClaimStatus(claimsReqBody).subscribe(
-        (response: any) => {
-          this.customeStepperStatuses = response.data.data;
-          console.log(this.customeStepperStatuses);
-          this.customeStepperStatuses.forEach((item, index) => {
-            item.count = index + 1;
-          });
-        },
-        (error: any) => {
-            console.error('Error fetching claim details', error);
-        }
+      (response: any) => {
+        this.customeStepperStatuses = response.data.data;
+        console.log(this.customeStepperStatuses);
+        this.customeStepperStatuses.forEach((item, index) => {
+          item.count = index + 1;
+        });
+      },
+      (error: any) => {
+        console.error("Error fetching claim details", error);
+      }
     );
-}
-
+  }
 
   fetchClaimDetails(
     claimId: string,
@@ -212,6 +240,143 @@ export class ClaimsDetailsComponent {
   }
 
   //  -------------- Method to handle file upload------------------//
+  //  fetchUploadedFiles() {
+  //   const policyNumber = this.policyNumber; // This should come from the logged-in user or claim data
+  //   this.claimsService.getUploadedFiles(policyNumber).subscribe((response: any[]) => {
+  //     this.viewFileUploads: any[] = [];  = response.map(file => ({
+  //       name: file.name,
+  //       type: file.type,
+  //       size: file.size,
+  //       label: file.label,
+  //       uploadDateTime: new Date(file.uploadDateTime),
+  //       formattedUploadDateTime: new Date(file.uploadDateTime).toLocaleString(),
+  //       status: "Uploaded"
+  //     }));
+  //   }, error => {
+  //     console.error('Error fetching uploaded files', error);
+  //   });
+  // }
+
+  onUnderDeficiencyFileSelected(event: any): void {
+    const files = event.target.files;
+    this.handleFileSelection(
+      files,
+      this.uploadedUnderDeficiencyFiles,
+      "underDeficiency"
+    );
+  }
+
+  onDocUploadFileSelected(event: any): void {
+    const files = event.target.files;
+    this.handleFileSelection(files, this.uploadedFiles, "docUpload");
+  }
+
+  handleFileSelection(
+    files: FileList,
+    uploadedFilesData: any[],
+    section: string
+  ): void {
+    const totalFilesCount = uploadedFilesData.length;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      if (this.allowedFileTypes.includes(file.type)) {
+        uploadedFilesData.push({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          label: `File ${totalFilesCount + i + 1}`,
+          file: file,
+          uploadDateTime: new Date(),
+          formattedUploadDateTime: new Date().toLocaleString(),
+          status: "Pending",
+        });
+      } else {
+        this.uploadValidFormat = true;
+      }
+    }
+  }
+
+  // submitClaim(): void {
+  //   const formData: FormData = new FormData();
+  //   const createdBy = localStorage.getItem('agentCode') || "defaultAgentCode";
+
+  //   this.uploadedFiles.forEach((fileData, index) => {
+  //     formData.append(`fileDetails[${index}].AgentCode`, createdBy);
+  //     formData.append(`fileDetails[${index}].policyNumber`, this.policyNumber);
+  //     formData.append(`fileDetails[${index}].Notes`, "Prescription");
+  //     formData.append(`fileDetails[${index}].documentName`, fileData.name);
+  //     formData.append(`fileDetails[${index}].documentType`, fileData.type.split('/')[1]);
+  //     formData.append(`fileDetails[${index}].createdBy`, createdBy);
+  //     formData.append(`fileDetails[${index}].file`, fileData.file, fileData.name);
+  //     formData.append(`fileDetails[${index}].memberid`, this.saveForm?.value.memberId || "PT85650665");
+  //   });
+
+  //   this.claimsService.uploadFiles(formData).subscribe({
+  //     next: (response) => {
+  //       this.handleSuccessResponse(response);
+  //     },
+  //     error: (error) => {
+  //       this.handleErrorResponse(error);
+  //     }
+  //   });
+  // }
+  // Submit claim method
+  submitClaim(): void {
+    if (
+      this.uploadedFiles.length === 0 &&
+      this.uploadedUnderDeficiencyFiles.length === 0
+    ) {
+      //   this.showError("Please upload at least one document");
+      return;
+    }
+
+    const allFiles = [
+      ...this.uploadedFiles,
+      ...this.uploadedUnderDeficiencyFiles,
+    ];
+
+    const formData: FormData = new FormData();
+    const createdBy = localStorage.getItem("agentCode") || "defaultAgentCode";
+
+    allFiles.forEach((fileData, index) => {
+      formData.append(`fileDetails[${index}].AgentCode`, createdBy);
+      formData.append(`fileDetails[${index}].policyNumber`, this.policyNumber);
+      formData.append(`fileDetails[${index}].Notes`, "Prescription");
+      formData.append(`fileDetails[${index}].documentName`, fileData.name);
+      formData.append(
+        `fileDetails[${index}].documentType`,
+        fileData.type.split("/")[1]
+      );
+      formData.append(`fileDetails[${index}].createdBy`, createdBy);
+      formData.append(
+        `fileDetails[${index}].file`,
+        fileData.file,
+        fileData.name
+      );
+      formData.append(
+        `fileDetails[${index}].memberid`,
+        this.saveForm?.value.memberId || ""
+      );
+    });
+
+    this.claimsService.uploadFiles(formData).subscribe({
+      next: (response) => {
+        this.handleSuccessResponse(response);
+      },
+      error: (error) => {
+        this.handleErrorResponse(error);
+      },
+    });
+  }
+  handleSuccessResponse(response: any): void {
+    // Logic to handle success
+  }
+
+  handleErrorResponse(error: any): void {
+    // Logic to handle error
+  }
+
   formatDate(date: Date): string {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
   }
@@ -224,41 +389,72 @@ export class ClaimsDetailsComponent {
       documentType: [this.documentType],
       createdBy: [localStorage.getItem("agentCode")],
       file: ["/D:/Downloads/ABHI_06_Ma"],
+      claimInfoId: "21727183717381",
+      // claimInfoId: this.claimInfoId || "",
+      // memberId: this.form.get("memberId")?.value || "",
+      memberId: "PT85650665",
+      documentId: "test2",
     });
   }
 
   onFileSelected(event: any): void {
     const files = event.target.files;
     this.totalFilesCount += files.length;
+    // this.totalFilesDocCount += files.length;
+    let uploadedFilesData =
+      event.target.name == "underDeficiency"
+        ? this.uploadedUnderDeficiencyFiles
+        : this.uploadedFiles;
+
     //this.uploadedFilesCount =  this.totalFilesCount; // Reset count for new batch
     //this.failedFilesCount = this.totalFilesCount   // Reset failed files count for new batch
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      this.uploadedFiles.push({
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        label: "Label this document",
-        isEditing: false,
-        editableControl: new FormControl("Label this document"),
-        uploadDateTime: new Date(),
-        formattedUploadDateTime: this.formatDate(new Date()),
-        status: "pending",
-        file: file,
-        policyNumber: this.saveForm?.value.policyNumber,
-        documentName: this.saveForm?.value.documentName,
-        documentType: this.saveForm?.value.documentType,
-        createdBy: this.saveForm?.value.createdBy,
-      });
+      if (this.allowedFileTypes.includes(file.type)) {
+        uploadedFilesData.push({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          label: "Label this document",
+          isEditing: false,
+          editableControl: new FormControl("Label this document"),
+          uploadDateTime: new Date(),
+          formattedUploadDateTime: this.formatDate(new Date()),
+          status: "pending",
+          file: file,
+          policyNumber: this.saveForm?.value.policyNumber,
+          documentName: this.saveForm?.value.documentName,
+          documentType: this.saveForm?.value.documentType,
+          createdBy: this.saveForm?.value.createdBy,
+        });
+        event.target.name == "underDeficiency"
+          ? (this.uploadValidFormat = false)
+          : (this.uploadValidFormt = false);
+      } else {
+        event.target.name == "underDeficiency"
+          ? (this.uploadValidFormat = true)
+          : (this.uploadValidFormt = true);
+        event.target.value = "";
+      }
     }
-    if (this.uploadedFiles.length > 0) {
+    if (
+      this.uploadedUnderDeficiencyFiles.length > 0 &&
+      event.target.name === "underDeficiency"
+    ) {
       // Update the saveForm with the latest file info
+      this.saveForm?.patchValue({
+        file: this.uploadedUnderDeficiencyFiles[0].file, // Assuming you want to take the first file
+      });
+    } else if (
+      this.uploadedFiles.length > 0 &&
+      event.target.name === "docUpload"
+    ) {
       this.saveForm?.patchValue({
         file: this.uploadedFiles[0].file, // Assuming you want to take the first file
       });
     }
-    this.updateStatusLabel();
-    this.uploadFiles(Array.from(files));
+    this.updateStatusLabel(event.target.name);
+    this.uploadFiles(Array.from(files), event.target.name);
   }
 
   convertBytesToKB(bytes: number): string {
@@ -266,66 +462,171 @@ export class ClaimsDetailsComponent {
     return `${kb.toFixed(2)} KB`;
   }
 
-  uploadFiles(files: File[]): void {
+  // uploadFiles(files: File[],  section: string): void {
+  //   const fileNames: string[] = files.map(file => file.name);
+  //   const fileTypes: string[] = files.map(file => file.type);
+  //   this.documentType = fileTypes;
+  //   this.namesVariable = fileNames;
+  //   const formData = new FormData();
+  //   this.uploadedUnderDeficiencyFiles.forEach((file, index) => {
+
+  //   const metadata = {
+  //     policyNumber:this.policyNumber || '',
+  //     labelName: file.label || '',
+  //     documentName: this.namesVariable || '',
+  //     documentType: this.documentType || '',
+  //     createdBy: file.createdBy || '',
+  //     claimInfoId: "21727183717381",
+  //     // claimInfoId: this.claimInfoId || "",
+  //      // memberId: this.form.get("memberId")?.value || "",
+  //      memberId: 'PT85650665',
+  //      documentId: "test2",
+
+  //     };
+  //     formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
+  //     formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
+  //     formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
+  //     formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
+  //     formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
+  //     formData.append(`fileDetails[${index}].file`, file.file, file.name);
+  //     formData.append(`fileDetails[${index}].claimInfoId`,metadata.claimInfoId );
+  //     formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
+  //     formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
+
+  //     });
+  //     this.claimsService.uploadFiles(formData).subscribe((response:any) => {
+  //     //const uploadedFile = this.uploadedFiles.find(f => f.file.name === file.name);
+  //     if (response.success) {
+  //       this.uploadedUnderDeficiencyFiles.map(file => file.status = 'success')
+  //       this.uploadSuccess = true;
+  //       this.uploadedFilesCount++;
+  //       }
+  //       this.updateStatusLabel();
+  //       this.cdr.markForCheck();
+  //       }, (_error: any) => {
+  //       this.uploadedFile = this.uploadedUnderDeficiencyFiles.find(f => f.file.name === f.file.name);
+  //       this.uploadedUnderDeficiencyFiles.map(file => file.status = 'failed')
+  //       this.uploadSuccess = false;
+  //       this.failedFilesCount++;
+  //       this.updateStatusLabel();
+  //       this.cdr.markForCheck();
+  //       });
+  //   }
+
+  uploadFiles(files: File[], section: string): void {
+    // Extract file names and types
     const fileNames: string[] = files.map((file) => file.name);
     const fileTypes: string[] = files.map((file) => file.type);
     this.documentType = fileTypes;
     this.namesVariable = fileNames;
+
     const formData = new FormData();
-    this.uploadedFiles.forEach((file, index) => {
-      const metadata = {
-        labelName: file.label || "",
-        documentName: this.namesVariable || "",
-        documentType: this.documentType || "",
-        createdBy: file.createdBy || "",
-      };
-      formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-      formData.append(
-        `fileDetails[${index}].documentName`,
-        metadata.documentName
+
+    // Loop through uploadedUnderDeficiencyFiles
+    this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
+      const matchingFile = files.find(
+        (file) => file.name === deficiencyFile.file.name
       );
-      formData.append(
-        `fileDetails[${index}].documentType`,
-        metadata.documentType
-      );
-      formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-      formData.append(`fileDetails[${index}].file`, file.file, file.name);
+
+      if (matchingFile) {
+        const metadata = {
+          policyNumber: this.policyNumber || "",
+          labelName: section || "",
+          documentName: matchingFile.name || "",
+          documentType: matchingFile.type || "",
+          createdBy: deficiencyFile.createdBy || "",
+          claimInfoId: "21727183717381",
+          memberId: "PT85650665",
+          documentId: "test2",
+        };
+
+        // Append metadata and file to FormData
+        formData.append(
+          `fileDetails[${index}].policyNumber`,
+          metadata.policyNumber
+        );
+        formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
+        formData.append(
+          `fileDetails[${index}].documentName`,
+          metadata.documentName
+        );
+        formData.append(
+          `fileDetails[${index}].documentType`,
+          metadata.documentType
+        );
+        formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
+        formData.append(
+          `fileDetails[${index}].file`,
+          matchingFile,
+          matchingFile.name
+        );
+        formData.append(
+          `fileDetails[${index}].claimInfoId`,
+          metadata.claimInfoId
+        );
+        formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
+        formData.append(
+          `fileDetails[${index}].documentId`,
+          metadata.documentId
+        );
+      }
     });
+
+    // Call the service to upload the files
     this.claimsService.uploadFiles(formData).subscribe(
       (response: any) => {
-        //const uploadedFile = this.uploadedFiles.find(f => f.file.name === file.name);
         if (response.success) {
-          this.uploadedFiles.map((file) => (file.status = "success"));
+          // Update status for each file as success
+          this.uploadedUnderDeficiencyFiles.forEach(
+            (file) => (file.status = "success")
+          );
           this.uploadSuccess = true;
           this.uploadedFilesCount++;
         }
-        this.updateStatusLabel();
-        this.cdr.markForCheck();
+        this.updateStatusLabel(section); // Update the status label on UI
+        this.cdr.markForCheck(); // Ensure the change detection runs
       },
-      (_error: any) => {
-        this.uploadedFile = this.uploadedFiles.find(
-          (f) => f.file.name === f.file.name
+      (error: any) => {
+        // Handle failure, mark all files as failed
+        this.uploadedUnderDeficiencyFiles.forEach(
+          (file) => (file.status = "failed")
         );
-        this.uploadedFiles.map((file) => (file.status = "failed"));
         this.uploadSuccess = false;
         this.failedFilesCount++;
-        this.updateStatusLabel();
+        this.updateStatusLabel(section); // Update status on UI for failed files
         this.cdr.markForCheck();
       }
     );
   }
 
-  updateStatusLabel(): void {
-    // this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
-    this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
+  updateStatusLabel(section: string): void {
+    if (section === "underDeficiency") {
+      this.underDeficiencyUploadStatus = `${this.uploadedUnderDeficiencyFiles.length} of ${this.uploadedUnderDeficiencyFiles.length} files uploaded`;
+    } else {
+      this.documentsUploadStatus = `${this.uploadedFiles.length} of ${this.uploadedFiles.length} files uploaded`;
+    }
   }
 
-  deleteFile(fileToDelete: any) {
-    this.uploadedFiles = this.uploadedFiles.filter(
-      (file) => file !== fileToDelete
-    );
-    this.totalFilesCount = this.uploadedFiles.length;
-    this.updateStatusLabel();
+  deleteFile(fileToDelete: any, isUploaded: boolean) {
+    if (isUploaded)
+      this.uploadedFiles = this.uploadedFiles.filter(
+        (file) => file !== fileToDelete
+      );
+    else
+      this.uploadedUnderDeficiencyFiles =
+        this.uploadedUnderDeficiencyFiles.filter(
+          (file) => file !== fileToDelete
+        );
+
+    this.totalFilesCount = isUploaded
+      ? this.uploadedFiles.length
+      : this.uploadedUnderDeficiencyFiles.length;
+
+    const section = isUploaded
+      ? "uploadedFiles"
+      : "uploadedUnderDeficiencyFiles";
+
+    this.updateStatusLabel(section);
   }
   //******* file upload input label *********//
   startEditing(file: any) {
@@ -342,6 +643,128 @@ export class ClaimsDetailsComponent {
     file.isEditing = false;
     file.isEdited = true;
   }
+
+  // submitClaim(files: File[], section: string) {
+
+  //   this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
+  //     const matchingFile = files.find(file => file.name === deficiencyFile.file.name);
+  //     const formData = new FormData();
+  //     if (matchingFile) {
+  //       // Create metadata for each file
+  //       const metadata = {
+  //         policyNumber: this.policyNumber || '',
+  //         labelName: section || '', // Use section value for label
+  //         documentName: matchingFile.name || '',
+  //         documentType: matchingFile.type || '',
+  //         createdBy: deficiencyFile.createdBy || '',  // Source from deficiencyFile
+  //         claimInfoId: "21727183717381",             // Static claimInfoId, replace dynamically if needed
+  //         memberId: 'PT85650665',                    // Static memberId, replace dynamically if needed
+  //         documentId: "test2",                       // Static documentId
+  //       };
+
+  //       // Append metadata and file to FormData
+  //       formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
+  //       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
+  //       formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
+  //       formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
+  //       formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
+  //       formData.append(`fileDetails[${index}].file`, matchingFile, matchingFile.name);
+  //       formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
+  //       formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
+  //       formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
+  //     }
+  //   });
+  //   // Prepare form data with uploaded files
+  //   const formData = this.uploadFiles(files, section);
+
+  //   // Call the service to upload the files
+  //   this.claimsService.uploadFiles(formData).subscribe(
+  //     (response: any) => {
+  //       if (response.success) {
+  //         // Update status for each file as success
+  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'success');
+  //         this.uploadSuccess = true;
+  //         this.uploadedFilesCount++;
+  //       } else {
+  //         // Handle any errors returned in the response
+  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
+  //         this.uploadSuccess = false;
+  //         this.failedFilesCount++;
+  //       }
+  //       this.updateStatusLabel(section); // Update the status label on UI
+  //       this.cdr.markForCheck();  // Ensure the change detection runs
+  //     },
+  //     (error: any) => {
+  //       // Handle failure, mark all files as failed
+  //       this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
+  //       this.uploadSuccess = false;
+  //       this.failedFilesCount++;
+  //       this.updateStatusLabel(section); // Update status on UI for failed files
+  //       this.cdr.markForCheck();
+  //     }
+  //   );
+  // }
+
+  // submitClaim(files: File[], section: string) {
+
+  //   this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
+  //     const matchingFile = files.find(file => file.name === deficiencyFile.file.name);
+  //     const formData = new FormData();
+  //     if (matchingFile) {
+  //       // Create metadata for each file
+  //       const metadata = {
+  //         policyNumber: this.policyNumber || '',
+  //         labelName: section || '', // Use section value for label
+  //         documentName: matchingFile.name || '',
+  //         documentType: matchingFile.type || '',
+  //         createdBy: deficiencyFile.createdBy || '',  // Source from deficiencyFile
+  //         claimInfoId: "21727183717381",             // Static claimInfoId, replace dynamically if needed
+  //         memberId: 'PT85650665',                    // Static memberId, replace dynamically if needed
+  //         documentId: "test2",                       // Static documentId
+  //       };
+
+  //       // Append metadata and file to FormData
+  //       formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
+  //       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
+  //       formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
+  //       formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
+  //       formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
+  //       formData.append(`fileDetails[${index}].file`, matchingFile, matchingFile.name);
+  //       formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
+  //       formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
+  //       formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
+  //     }
+  //   });
+  //   // Prepare form data with uploaded files
+  //   const formData = this.uploadFiles(files, section);
+
+  //   // Call the service to upload the files
+  //   this.claimsService.uploadFiles(formData).subscribe(
+  //     (response: any) => {
+  //       if (response.success) {
+  //         // Update status for each file as success
+  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'success');
+  //         this.uploadSuccess = true;
+  //         this.uploadedFilesCount++;
+  //       } else {
+  //         // Handle any errors returned in the response
+  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
+  //         this.uploadSuccess = false;
+  //         this.failedFilesCount++;
+  //       }
+  //       this.updateStatusLabel(section); // Update the status label on UI
+  //       this.cdr.markForCheck();  // Ensure the change detection runs
+  //     },
+  //     (error: any) => {
+  //       // Handle failure, mark all files as failed
+  //       this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
+  //       this.uploadSuccess = false;
+  //       this.failedFilesCount++;
+  //       this.updateStatusLabel(section); // Update status on UI for failed files
+  //       this.cdr.markForCheck();
+  //     }
+  //   );
+  // }
 
   fetchClaimHistory(policyNumber: string) {
     console.log(this.claimInfoId);
@@ -361,26 +784,21 @@ export class ClaimsDetailsComponent {
   navigateToListClaim() {
     this.router.navigate(["claims/claimsList"]);
   }
-
-  submitClaim() {
-    const claimDetailsReqBody = {
-      AgentCode: localStorage.getItem("agentCode"),
-      DERefereceClaimNumber: this.claimId,
-      claimSubmittedBy: "",
-    };
-    // this.claimsService.submitClaim(claimDetailsReqBody).subscribe(
-    //   (response: any) => {
-    //     if (response.success) {
-    //       console.log('Claim submitted successfully:', response);
-    //     }
-    //   },
-    //   (error: any) => {
-    //     console.error('Error submitting claim:', error);
-    //   }
-    // );
+  toggleViewDetails() {
+    this.isViewVisible = !this.isViewVisible;
   }
-
   moveToDocsSection(data: any) {
     this.selectedTabIndex = data;
   }
+
+  // this.claimsService.submitClaim(claimDetailsReqBody).subscribe(
+  //   (response: any) => {
+  //     if (response.success) {
+  //       console.log('Claim submitted successfully:', response);
+  //     }
+  //   },
+  //   (error: any) => {
+  //     console.error('Error submitting claim:', error);
+  //   }
+  // );
 }
