@@ -126,12 +126,19 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th class="text-center">
+                                    <th class="text-center icon_allAssignLead">
                                         <div class="icon_leads_check">
-                                        <input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">
-                                        <button type="button" *ngIf="this.checkBoxSelectedLeads.length != 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction" (click)="selectAllAssigneLeadDialog()"><img
-                                            src="assets/Img/icon_profile.svg"></button>
-                                        </div></th>
+                                            <div class="input-checkbox-block">
+                                                <div class="input-checkbox-feild input-checkbox-noSpace">
+                                                    <input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)" class="input-check">
+                                                    <label for="Select All"></label>
+                                                </div>
+                                            </div>
+                                            <!--<input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">-->
+                                            <button type="button" *ngIf="this.checkBoxSelectedLeads.length != 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
+                                                src="assets/Img/icon_profile.svg"></button>
+                                        </div>
+                                    </th>
                                     <th>Lead ID</th>
                                     <th>Name</th>
                                     <th>Mobile Number</th>
@@ -141,20 +148,26 @@
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of leadsList; let i = index">
-                                    <td align="center"> <input type="checkbox" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" ></td>
+                                    <td align="center">
+                                        <div class="input-checkbox-feild input-checkbox-noSpace">
+                                            <input type="checkbox" id={{i}} title="Select" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" class="input-check">
+                                            <label for={{i}}></label>
+                                        </div>
+                                        <!--<input type="checkbox" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" >-->
+                                    </td>
                                     <td>{{row.leadNumber}}</td>
                                     <td>{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</td>
                                     <td>{{ row.phoneNumber }}</td>
                                     <td>{{row.email}}</td>
                                     <td>
-                                        <div class="btn_groupAction">
+                                        <div class="btn_groupAction justify-content-center">
                                             <button class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
                                                     src="assets/Img/icon_profile.svg" /></button>
                                             <button  class="btn_action btn_renewalAction" (click)="updateLeadStatus(row.leadNumber)"  title="Update Status"><img
                                                     src="assets/Img/icon_edit_grey.svg"></button>
                                             <button class="btn_action btn_renewalAction" (click)="addNotesLead(row.leadNumber)" title="Add Notes"><img
                                                      src="assets/Img/icon_add_notes.svg"></button>
-                                            <button class="btn_action btn_renewalAction"  title="Quick Quote" ><img
+                                            <button class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote" ><img
                                                      src="assets/Img/icon_savenew_subquote.svg"></button>
 
                                             <!-- <button type="button" value="more" title="More"
@@ -238,7 +251,7 @@
                                         class="btn_action btn_renewalAction"><img
                                             src="assets/Img/icon_add_notes.svg"></button>
                                     <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
-                                    <button class="btn_action btn_renewalAction"  title="Quick Quote" ><img
+                                    <button class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote" ><img
                                         src="assets/Img/icon_savenew_subquote.svg"></button>
                                    
                                         <!-- <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">

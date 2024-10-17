@@ -259,9 +259,8 @@ h6 {
 	  gap:8px;
 	  margin-right: 5px;
 	  	  .filterSearch {
-		width: 160px;
 		height: auto;
-		padding: 12px 35px 12px 16px;
+		padding: 9px 35px 9px 16px;
 		&:focus {
 		  border-width: 0 !important;
 		}
@@ -269,11 +268,49 @@ h6 {
 	  button {
 		position: absolute;
 		right: 10px;
-		top: 10px;
+		top: 7px;
 		padding: 0;
 		img {
 		  position: initial;
 		}
 	  }
+	}
+  }
+  .icon_allAssignLead {
+	width: 70px;
+	.icon_leads_check {
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+	}
+  }
+  .input-checkbox-noSpace{
+		padding-right: 0;
+		.input-check + label:before{
+			margin-right: 0;
+		}
+	}
+  .btn_subQuote {
+	&:hover {
+		img {
+			filter: brightness(0) invert(1);
+			opacity: 1;
+		}
+	}
+	img {
+		filter: brightness(0) invert(0);
+		opacity: 0.3;
+		width: 10px;
+		height: 11px;
+	}
+  }
+  .btn_assignTo {
+	background: #4CAF50;
+	width: 16px;
+    height: 17px;
+    padding: 4px;
+	border-radius: 4px;
+	img {
+		filter: brightness(0) invert(1);
 	}
   }
