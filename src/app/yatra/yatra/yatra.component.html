@@ -70,10 +70,10 @@
                   class="typecss" [hidden]="!control.visible">
                   <div class="input-container">
                     <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
-                      [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}"
+                      [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}" [name]="control.name"
                       (change)="onInputChange($event, control)">
                     <input *ngIf="control.disabled" class="inputField_Text_disabled"
-                      formControlName="{{ control.name }}" [type]="control.type"
+                      formControlName="{{ control.name }}" [type]="control.type" [name]="control.name"
                       [ngClass]="{'disabled-has-value': hasAnyValue(control)}" (change)="onInputChange($event, control)"
                       readonly>
                     <label *ngIf="control.visibleLabel">{{ control.label?(control.label|translate):''}}</label>
@@ -88,10 +88,10 @@
 
                 <div *ngIf="control.type==='date'" [class]="control.class" class="typecss" [hidden]="!control.visible">
                   <div class="input-container">
-                    <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
+                    <input *ngIf="!control.disabled" class="inputField_Text" formControlName="{{ control.name }}" [name]="control.name"
                       [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}" [max]="currentDate"
                       (change)="onInputChange($event, control)">
-                    <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
+                    <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}" [name]="control.name"
                       [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}" [max]="currentDate"
                       (change)="onInputChange($event, control)" readonly>
                     <label *ngIf="control.visibleLabel">{{ control.label?(control.label|translate):''}}</label>
@@ -150,7 +150,7 @@
                 <div *ngIf="control.type === 'idnumber'" [class]="control.class" class="typecss">
                   <div class="input-container">
                     <input *ngIf="!control.disabled" class="inputField_Text"
-                      [ngClass]="{'has-value': hasAnyValue(control)}" formControlName="{{ control.name }}"
+                      [ngClass]="{'has-value': hasAnyValue(control)}" formControlName="{{ control.name }}" [name]="control.name"
                       type="text" />
                     <label *ngIf="control.visibleLabel">{{ control.label ? (control.label |
                       translate) : '' }} <span *ngIf="control.validators">*</span></label>
@@ -193,10 +193,10 @@
                         *ngIf="control.validators">*</span></label>
                     <div class="file-input-container">
                       <button *ngIf="!control.disabled" type="button" class="file-upload-btn"
-                        (click)="triggerFileInput(control.name)">Click here to Upload</button>
-                      <input *ngIf="!control.disabled" [id]="control.name" formControlName="{{ control.name }}"
+                        (click)="triggerFileInput(control.name)" [name]="control.name">Click here to Upload</button>
+                      <input *ngIf="!control.disabled" [id]="control.name" formControlName="{{ control.name }}" [name]="control.name"
                         type="file" style="display: none;" (change)="onFileSelected(control.name,$event)" />
-                      <input *ngIf="control.disabled == true" formControlName="{{ control.name }}" type="file"
+                      <input *ngIf="control.disabled == true" formControlName="{{ control.name }}" [name]="control.name" type="file"
                         readonly />
                     </div>
                     <div class="fileUploadInfo">File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed</div>
@@ -217,7 +217,7 @@
 
                 <div *ngIf="control.type === 'checkbox'">
                   <div [class]="control.class" style="display: -webkit-box;">
-                    <input type="checkbox" formControlName="{{ control.name }}" id="{{control.name}}"
+                    <input type="checkbox" formControlName="{{ control.name }}" [name]="control.name" id="{{control.name}}"
                       class="checkbox-label" (change)="onCheckboxSelect(control.name)" />
                     <label [for]="control.name" [innerHTML]="control.label ? (control.label | translate) : ''"
                       class="checkboxes"></label>
@@ -244,7 +244,7 @@
                 <div *ngIf="control.type === 'search'" class="search-bar">
                   <label *ngIf="control.visibleLabel">{{ control.label }}</label>
                   <div [class]="control.class">
-                    <input formControlName="{{ control.name }}" type="text" class="form-control"
+                    <input formControlName="{{ control.name }}" [name]="control.name" type="text" class="form-control"
                       placeholder="Search conditions">
                   </div>
                 </div>
@@ -285,7 +285,7 @@
                     <div *ngFor="let option of control.selectCheckboxOptions"
                       class="checkbox-wrapper col-6 col-md-6 col-lg-3">
                       <div *ngIf="dynamicFormGroup.get(control.name)?.get(option.value)">
-                        <input type="checkbox" [formControlName]="option.value" id="{{option.value}}"
+                        <input type="checkbox" [formControlName]="option.value" [name]="option.value" id="{{option.value}}"
                           (change)="logSelection($event, option, control)">
                         <label for="{{option.value}}" class="custom-checkbox">
                           <img [src]="option.imagePath" alt="{{option.label}}">
@@ -308,7 +308,7 @@
                   <label *ngIf="control.visibleLabel==true">{{ control.label }}</label>
                   <!-- <button (click)="decrement(control.name,control.text)">-</button> -->
                   <button (click)="decrement(control.name,control.text)">-</button>
-                  <input formControlName="{{ control.name }}" type="number" value="{{control.value}}" readonly>
+                  <input formControlName="{{ control.name }}" [name]="control.name" type="number" value="{{control.value}}" readonly>
                   <button (click)="increment(control.name,control.text)">+</button>
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
@@ -326,13 +326,13 @@
                                 <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
                                   [class]="subControl.class" class="typecss" [hidden]="!control.visible">
                                   <div class="input-container">
-                                    <input *ngIf="!subControl.disabled" [formControlName]="subControl.name"
+                                    <input *ngIf="!subControl.disabled" [formControlName]="subControl.name" [name]="subControl.name"
                                       class="inputField_Text" [type]="subControl.type"
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                       (change)="onInputChange($event, subControl,control,i-1)">
                                     <input style="border: none;font-weight: 700;" *ngIf="subControl.disabled"
                                       [ngClass]="{'disabled-has-value': hasAnyValue(subControl,control,i-1)}"
-                                      [formControlName]="subControl.name" class="inputField_Text_disabled"
+                                      [formControlName]="subControl.name" [name]="subControl.name" class="inputField_Text_disabled"
                                       [type]="subControl.type" readonly>
                                     <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
                                       translate) : '' }} <span *ngIf="subControl.validators"></span></label>
@@ -346,7 +346,7 @@
                                 <div *ngIf="subControl.type === 'select'" [class]="subControl.class" class="typecss">
                                   <div class="input-container">
                                     <select class="inputField_Select" *ngIf="!subControl.disabled"
-                                      [formControlName]="subControl.name" aria-label="Default select example"
+                                      [formControlName]="subControl.name" [name]="subControl.name" aria-label="Default select example"
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                       (change)="onInputChange($event, subControl,control,i-1)">
                                       <!-- <option value="" disabled selected>Select {{
@@ -357,7 +357,7 @@
                                       </ng-container>
                                     </select>
                                     <select class="inputField_Select" *ngIf="subControl.disabled"
-                                      [formControlName]="subControl.name"
+                                      [formControlName]="subControl.name" [name]="subControl.name"
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                       aria-label="Default select example">
                                       <!-- <option value="" disabled selected>Select {{
@@ -381,7 +381,7 @@
                                       translate) : '' }}<span *ngIf="subControl.validators"></span></label>
                                     <div class="radio-button">
                                       <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
-                                        <input type="radio" formControlName="{{subControl.name}}" [value]="option.value"
+                                        <input type="radio" formControlName="{{subControl.name}}" [name]="subControl.name" [value]="option.value"
                                           style="margin-right: 10px;">
                                         <label>
                                           {{ option.label }}
@@ -392,7 +392,7 @@
 
                                   <div *ngIf="subControl.type === 'checkbox'"
                                     class="typecss checkboxes-without-border {{ subControl.class }} ">
-                                    <input type="checkbox" formControlName="{{ subControl.name }}" />
+                                    <input type="checkbox" formControlName="{{ subControl.name }}" [name]="subControl.name" />
                                     <label [for]="subControl.name" [innerHTML]="subControl.label"
                                       class="popup-checkbox-label"></label>
                                   </div>
@@ -425,22 +425,22 @@
                                     <div class="input-container">
                                       <input class="inputField_Text"
                                         *ngIf="!subControl.bigFont && !subControl.disabled && subControl.type !== 'date'"
-                                        formControlName="{{ subControl.name }}" [type]="subControl.type"
+                                        formControlName="{{ subControl.name }}" [name]="subControl.name" [type]="subControl.type"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                         (change)="onInputChange($event, subControl)">
                                       <input class="inputField_Text"
                                         *ngIf="!subControl.bigFont && !subControl.disabled && subControl.type === 'date'"
-                                        formControlName="{{ subControl.name }}" [type]="subControl.type"
+                                        formControlName="{{ subControl.name }}" [name]="subControl.name" [type]="subControl.type"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                         (change)="onInputChange($event, subControl)">
 
                                       <input class="inputField_Text"
                                         *ngIf="!subControl.bigFont && subControl.disabled==true"
-                                        formControlName="{{ subControl.name }}" [type]="subControl.type"
+                                        formControlName="{{ subControl.name }}" [name]="subControl.name" [type]="subControl.type"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}" readonly>
                                       <input style="border: none;font-weight: 700;"
                                         *ngIf="subControl.bigFont==true && !subControl.disabled"
-                                        formControlName="{{ subControl.name }}" [type]="subControl.type"
+                                        formControlName="{{ subControl.name }}" [name]="subControl.name" [type]="subControl.type"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}" readonly>
                                       <label class="inputField_Label" *ngIf="subControl.visibleLabel">{{
                                         subControl.label ?
@@ -455,7 +455,7 @@
 
                                   <div *ngIf="subControl.type==='select'" [class]="subControl.class" class="typecss">
                                     <div class="input-container">
-                                      <select class="inputField_Select" [formControlName]="subControl.name"
+                                      <select class="inputField_Select" [formControlName]="subControl.name" [name]="subControl.name"
                                         aria-label="Default select example"
                                         (change)="onInputChange($event, subControl,control,i-1)"
                                         [attr.disabled]="subControl.disabled ? 'disabled' : null"
@@ -468,7 +468,7 @@
                                         </ng-container>
                                       </select>
                                       <select class="inputField_Select" *ngIf="subControl.disabled"
-                                        formControlName="{{ subControl.name }}" class="line-border"
+                                        formControlName="{{ subControl.name }}" [name]="subControl.name" class="line-border"
                                         aria-label="Default select example"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}">
                                         <!-- <option value="" disabled selected>Select {{
@@ -494,7 +494,7 @@
                                         *ngIf="subControl.validators"></span></label>
                                     <div class="radio-button">
                                       <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
-                                        <input type="radio" [formControlName]="subControl.name" [value]="option.value"
+                                        <input type="radio" [formControlName]="subControl.name" [name]="subControl.name" [value]="option.value"
                                           style="margin-right: 10px;">
                                         <label [innerHTML]="option.label">
                                         </label>
@@ -505,11 +505,11 @@
                                     class="typecss">
                                     <div class="input-container">
                                       <input *ngIf="!subControl.disabled" class="inputField_Text"
-                                        formControlName="{{ subControl.name }}" type="number" maxlength="10"
+                                        formControlName="{{ subControl.name }}" [name]="subControl.name" type="number" maxlength="10"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                         (input)="onPhoneNumberInputChange($event, control, subControl,i-1)" />
                                       <input *ngIf="subControl.disabled" class="inputField_Text"
-                                        formControlName="{{ subControl.name }}" [type]="subControl.type"
+                                        formControlName="{{ subControl.name }}" [name]="subControl.name" [type]="subControl.type"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                         (change)="onInputChange($event, subControl)" readonly>
                                       <label *ngIf="control.visibleLabel">{{ subControl.label ? (subControl.label |
@@ -539,7 +539,7 @@
                                   <div *ngIf="subControl.type === 'search'" class="search-bar">
                                     <label *ngIf="subControl.visibleLabel">{{ subControl.label }}</label>
                                     <div [class]="subControl.class">
-                                      <input formControlName="{{ subControl.name }}" type="text" class="form-control"
+                                      <input formControlName="{{ subControl.name }}" [name]="subControl.name" type="text" class="form-control"
                                         placeholder="Search conditions">
                                     </div>
                                   </div>
@@ -560,7 +560,7 @@
                                             <div *ngFor="let option of tab.selectCheckboxOptions"
                                               class="checkbox-wrapper col-6 col-md-6 col-lg-6">
                                               <div>
-                                                <input type="checkbox" [formControlName]="option.value"
+                                                <input type="checkbox" [formControlName]="option.value" [name]="option.value"
                                                   id="{{option.value}}_{{tab.name}}_{{i}}" [value]="option.value">
                                                 <label for="{{option.value}}_{{tab.name}}_{{i}}"
                                                   class="custom-checkbox">
@@ -576,7 +576,7 @@
                                   </div>
                                   <div *ngIf="subControl.type === 'checkbox'">
                                     <div [class]="subControl.class" style="display: -webkit-box;">
-                                      <input type="checkbox" [formControlName]="subControl.name"
+                                      <input type="checkbox" [formControlName]="subControl.name" [name]="subControl.name"
                                         id="{{subControl.name}}_{{i}}" [value]="subControl.value"
                                         class="checkbox-label" />
                                       <label for="{{subControl.name}}_{{i}}"
@@ -591,7 +591,7 @@
                                       <div *ngFor="let option of subControl.selectCheckboxOptions"
                                         class="checkbox-wrapper col-6 col-md-6 col-lg-3">
                                         <div>
-                                          <input type="checkbox" [formControlName]="option.value"
+                                          <input type="checkbox" [formControlName]="option.value" [name]="option.value"
                                             id="{{option.value}}_{{i}}" [value]="option.value">
                                           <label for="{{option.value}}_{{i}}" class="custom-checkbox">
                                             <img src="{{ option.imagePath }}" alt="{{option.label}}">
@@ -630,7 +630,7 @@
                                     <span *ngIf="subControl.validators">*</span>
                                   </label>
                                   <input *ngIf="subControl.disabled" class="view_Text"
-                                    formControlName="{{ subControl.name }}" [type]="subControl.type" readonly>
+                                    formControlName="{{ subControl.name }}" [name]="subControl.name" [type]="subControl.type" readonly>
                                 </div>
                               </ng-container>
                             </ng-container>
@@ -651,7 +651,7 @@
                     <div style="display: flex; flex-direction: row;">
                       <p>{{ control.value }}</p>
                       <input *ngIf="control.disabled" class="inputField_Text_disabled"
-                        formControlName="{{ control.name }}" 
+                        formControlName="{{ control.name }}" [name]="control.name"
                         [ngClass]="{'disabled-has-value': hasAnyValue(control)}" readonly>
                         <button pButton type="button" class="custom-copy-button" (click)="copyText(control)">
                           <i class="fa-regular fa-copy"></i>
@@ -662,9 +662,9 @@
                 <div *ngIf="control.type==='phonenumber'" [class]="control.class" class="typecss">
                   <div class="input-container">
                     <input *ngIf="!control.disabled" class="inputField_Text"
-                      [ngClass]="{'has-value': hasAnyValue(control)}" formControlName="{{ control.name }}" type="number"
+                      [ngClass]="{'has-value': hasAnyValue(control)}" formControlName="{{ control.name }}" [name]="control.name" type="number"
                       maxlength="10" (input)="onPhoneNumberInputChange($event, control)" />
-                    <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}"
+                    <input *ngIf="control.disabled" class="inputField_Text" formControlName="{{ control.name }}" [name]="control.name"
                       [type]="control.type" [ngClass]="{'has-value': hasAnyValue(control)}"
                       (change)="onInputChange($event, control)" readonly>
                     <label *ngIf="control.visibleLabel">{{ control.label ? (control.label |
@@ -684,7 +684,7 @@
                   </label>
                   <div class="radio-button">
                     <div [class]="control.class" *ngFor="let option of control.radioOptions">
-                      <input type="radio" [formControlName]="control.name" [value]="option.value"
+                      <input type="radio" [formControlName]="control.name" [name]="control.name" [value]="option.value"
                         style="margin-right: 10px;" (change)="onInputChange($event, control)">
                       <label [innerHTML]="option.label"></label>
                     </div>
@@ -695,7 +695,7 @@
                 <div *ngIf="control.type === 'bigbutton'" [class]="control.class">
                   <label for="">{{ control.label ? (control.label | translate) : '' }}</label>
                   <div class="select-button">
-                    <button type="button" class="bigbutton">SELECT</button>
+                    <button [name]="control.name" type="button" class="bigbutton">SELECT</button>
                   </div>
                 </div>
 
@@ -710,10 +710,10 @@
                   [hidden]="!control.visible">
                   <label *ngIf="control.visibleLabel==true" class="boldtext-label">{{ control.label ? (control.label |
                     translate) : '' }}</label>
-                  <input *ngIf="!control.disabled" class="boldtext_input colorbold" formControlName="{{ control.name }}"
+                  <input *ngIf="!control.disabled" class="boldtext_input colorbold" formControlName="{{ control.name }}" [name]="control.name"
                     [type]="control.type" [placeholder]="control.label" (change)="onInputChange($event, control)">
                   <input *ngIf="control.disabled" class="boldtext_input colorbold no-border"
-                    formControlName="{{ control.name }}" [type]="control.type" [placeholder]="control.label"
+                    formControlName="{{ control.name }}" [name]="control.name" [type]="control.type" [placeholder]="control.label"
                     (change)="onInputChange($event, control)" readonly>
                   <span style="font-size: 12px;">{{ control.text ? (control.text | translate) : '' }}</span>
                 </div>
@@ -726,7 +726,7 @@
                 <div *ngIf="control.type === 'custom-radio'">
                   <div class="radio-card-container">
                     <ng-container *ngFor="let option of control.radioOptions">
-                      <input type="radio" [id]="option.name" [formControlName]="control.name" [value]="option.value"
+                      <input type="radio" [id]="option.name" [formControlName]="control.name" [name]="control.name" [value]="option.value"
                         class="radio-card" />
                       <label [for]="option.name" class="radio-card-label">
                         <div class="year">{{ option.year }}</div>
@@ -754,10 +754,10 @@
                               subControl.label
                               }} <span *ngIf="subControl.validators"></span></label>
                             <input class="inputField_Text" *ngIf="!subControl.disabled"
-                              [formControlName]="subControl.name" [type]="subControl.type"
+                              [formControlName]="subControl.name" [name]="subControl.name" [type]="subControl.type"
                               (change)="onInputChange($event,control)">
                             <input class="inputField_Text" style="border: none;font-weight: 700;"
-                              *ngIf="subControl.disabled" [formControlName]="subControl.name" [type]="subControl.type"
+                              *ngIf="subControl.disabled" [formControlName]="subControl.name" [name]="subControl.name" [type]="subControl.type"
                               readonly>
                             <small
                               *ngIf="dynamicFormGroup.get(subControl.name)?.invalid && (dynamicFormGroup.get(subControl.name)?.markAsDirty)"
@@ -806,7 +806,7 @@
                               translate) : '' }}<span *ngIf="subControl.validators"></span></label>
                             <div class="radio-button">
                               <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
-                                <input type="radio" formControlName="{{subControl.name}}" [value]="option.value"
+                                <input type="radio" formControlName="{{subControl.name}}" [name]="subControl.name" [value]="option.value"
                                   style="margin-right: 10px;">
                                 <label>
                                   {{ option.label }}
@@ -816,7 +816,7 @@
                           </div>
                           <div *ngIf="subControl.type === 'checkbox'" class="col-lg-8">
                             <div style="display: flex;">
-                              <input type="checkbox" formControlName="{{ subControl.name }}"
+                              <input type="checkbox" formControlName="{{ subControl.name }}" [name]="subControl.name"
                                 (click)="onCheckboxChange($event, subControl,control)"
                                 style="height:25px; width:25px; margin-left: 10px;" />
                               <label [for]="subControl.name" [innerHTML]="subControl.label" class="checkbox-label"
@@ -855,7 +855,7 @@
                                                 <span *ngIf="innerControl.validators">*</span></label>
                                               <select class="inputField_Select" *ngIf="!innerControl.disabled"
                                                 (change)="onInputChange($event, subControl,control)"
-                                                [formControlName]="innerControl.name"
+                                                [formControlName]="innerControl.name" [name]="innerControl.name"
                                                 aria-label="Default select example">
                                                 <option selected value="">Choose...</option>
                                                 <ng-container *ngFor="let opt of innerControl.options">
@@ -871,7 +871,7 @@
 
                                             <div *ngIf="innerControl.type === 'checkbox'" style="margin-bottom: 15px;">
                                               <div style="display: flex;">
-                                                <input type="checkbox" formControlName="{{ innerControl.name }}"
+                                                <input type="checkbox" formControlName="{{ innerControl.name }}" [name]="innerControl.name"
                                                   style="height:25px; width:25px; margin-left: 10px;"
                                                   (change)="onInputChange($event, subControl,control)" />
                                                 <label [for]="innerControl.name" [innerHTML]="innerSubForm.label"
@@ -891,8 +891,8 @@
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
 
                                           <input *ngIf="innerSubForm.disabled == false" type="button" class="next-btn"
-                                            (click)="addOnMemberAdded(subControl,control)" value="Done" />
-                                          <input *ngIf="innerSubForm.disabled == true" type="button"
+                                            (click)="addOnMemberAdded(subControl,control)" [name]="control.name" value="Done" />
+                                          <input *ngIf="innerSubForm.disabled == true" [name]="control.name" type="button"
                                             class="next-btn disable" [disabled]="true" value="Done" />
                                         </div>
                                       </div>
@@ -1003,7 +1003,7 @@
                                               <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(innerControl.type)"
                                                 [class]="innerControl.class" class="typecss" [hidden]="!innerControl.visible">
                                                 <div class="input-container">
-                                                  <input class="inputField_Text" [formControlName]="innerControl.name"
+                                                  <input class="inputField_Text" [formControlName]="innerControl.name" [name]="innerControl.name"
                                                        [type]="innerControl.type" [ngClass]="{'has-value': hasAnyValue(subControl)}"
                                                     (change)="onInputChange($event, innerControl,control,i-1)">
                                                     <label class="inputField_Label" *ngIf="innerControl.visibleLabel">{{
@@ -1022,7 +1022,7 @@
                                               <div class="input-container">
                                                 <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
                                                   <span *ngIf="innerControl.validators">*</span></label>
-                                                <select class="inputField_Select" [formControlName]="innerControl.name"
+                                                <select class="inputField_Select" [formControlName]="innerControl.name" [name]="innerControl.name"
                                                 (change)="onInputChange($event, subControl,control)"
                                                 [ngClass]="{'has-value': hasAnyValue(subControl)}">
                                                 <option selected value="">Choose...</option>
@@ -1041,7 +1041,7 @@
                                               </div>
                                               <div *ngIf="innerControl.type === 'checkbox'" style="margin-bottom: 15px;">
                                                 <div style="display: flex;">
-                                                  <input type="checkbox" formControlName="{{ innerControl.name }}"
+                                                  <input type="checkbox" formControlName="{{ innerControl.name }}" [name]="innerControl.name"
                                                     style="display:block; height:25px; width:25px; margin-left: 10px;"
                                                     (change)="onInputChange($event, subControl,control)" />
                                                   <label [for]="innerControl.name" [innerHTML]="subControl.label"

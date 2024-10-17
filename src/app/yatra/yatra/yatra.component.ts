@@ -807,6 +807,66 @@ export class YatraComponent {
     }
   }
 
+  uploadPolicyDocument() {
+    const insurerControl = this.dynamicFormGroup.get('getInsurerDetails');
+    console.log(insurerControl?.value);
+    
+  
+    if (this.selectedFile && insurerControl && insurerControl.value) {
+      const formData = new FormData();
+      formData.append('Files', this.selectedFile);
+      formData.append('NameOfInsuranceCompany', insurerControl.value); // Dynamic value from the form control
+  
+      this.spinner.show();
+      
+      this.yatraService.fetchPolicyDetailsFromFile(formData).subscribe({
+        next: (response: any) => {
+          console.log('File uploaded and policy details fetched:', response);
+          this.toast.success({ detail: "SUCCESS", summary: "Policy document uploaded and processed successfully.", duration: 3000 });
+          this.spinner.hide();
+
+          this.isPolicyDetailsFetch = true;
+
+          if (response.data['insuredMemberDetails'].length > 0) {
+            this.formData['insuredMemberDetails'] = response.data['insuredMemberDetails'];
+            const insuredMembers: { [key: string]: boolean } = {};
+  
+            response.data['insuredMemberDetails'].forEach((member: any) => {
+              insuredMembers[member.relation] = true;
+            });
+  
+            this.formData['insuredMembers'] = insuredMembers;
+            console.log(insuredMembers);
+            
+          }
+
+          Object.keys(response.data).forEach((key: string) => {
+            this.dynamicFormGroup.get(key)?.setValue(response.data[key]);
+  
+            if (key === 'memberPolicyType') {
+              this.form.formSections.forEach((section: any) => {
+                const targetControl = section.formControls.find((formControl: any) => formControl.name === 'memberPolicyType');
+                if (targetControl) {
+                  this.handlePolicyTypeChange(targetControl, response.data['memberPolicyTypeChange']);
+                }
+              });
+            }
+          });
+  
+          console.log(this.formData);
+        },
+        error: (error) => {
+          this.spinner.hide();
+          this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
+          console.error('Error fetching Policy details:', error);
+        }
+      });
+    } else {
+      console.error('No file selected or insurer not chosen');
+    }
+  }
+  
+
   toggleContent(index: number): void {
     this.expandedCardIndex = this.expandedCardIndex === index ? null : index;
   }
@@ -3006,6 +3066,8 @@ export class YatraComponent {
           fullQuoteRequestJson: JSON.stringify(data)
         }
         console.log(reqData);
+        console.log("Kamla");
+        
 
         this.yatraService.getFullQuote(reqData).subscribe({
           next: (response: any) => {
@@ -3547,7 +3609,7 @@ export class YatraComponent {
                 option.value = this.tenureAmount[index];
                 option.year = "3 years"
                 option.discount = "10% off"
-                if (this.selectedIndex == index || this.selectedIndex == -1) {
+                if (this.selectedIndex == index) {
                   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   this.selectedIndex = index;
                   this.formData.tenure = this.selectedIndex;
@@ -3868,7 +3930,7 @@ export class YatraComponent {
   }
 
   getPolicyDetails() {
-    const policyNumberDetails = this.dynamicFormGroup.get('policyNumber')?.value;
+    const policyNumberDetails = this.dynamicFormGroup.get('getPolicyNumber')?.value;
     const reqData = {
       policyNumber: policyNumberDetails
     };
@@ -4089,7 +4151,7 @@ export class YatraComponent {
       micrNo: formData?.micrCode || '',
       premiumAmount: formData?.totalPremium || '',
       selectedTenure: (parseInt(formData?.tenure) + 1).toString() || '',
-      paymentDate: formData.chequeDate || '',
+      paymentDate: new Date().toISOString().split("T")[0] as any || '',
       paymentCollectionMode: formData.paymentOption || '',
       paymentByRelationship: 'Self',
       payerName: formData?.accountHolderName || '',

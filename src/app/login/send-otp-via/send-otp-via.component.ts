@@ -17,7 +17,7 @@ export class SendOtpViaComponent implements OnInit{
 
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {   
     this.filteredContacts = this.fitlerCommunicationValue(this.data.data);
   }
 

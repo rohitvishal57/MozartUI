@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit{
       this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
         .subscribe({  
           next: (res:any)=>{
-            this.contactInfoData = res?.contactInfo?.map((obj: any) => obj.communicationValue);
+            this.contactInfoData = (res || res?.data).contactInfo?.map((obj: any) => obj.communicationValue);
             this.openModal(this.contactInfoData);
           },
           error: (err => {

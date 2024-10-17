@@ -5,6 +5,7 @@ import { ProposalList } from 'src/app/interface/proposals.interface';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { ProposalsService } from '../proposals.service';
 import { CommonService } from 'src/app/services/common.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-proposals-list',
   templateUrl: './proposals-list.component.html',
@@ -56,7 +57,7 @@ export class ProposalsListComponent {
   constructor(
     private proposalService: ProposalsService,
     private datePipe: DatePipe,
-    private commonService:CommonService,
+    private commonService:CommonService, private router: Router
   ) {}
   ngOnInit(): void {
     this.getProposalList();
@@ -261,5 +262,15 @@ export class ProposalsListComponent {
       default:
         console.warn('Unknown action:', event);
     }
+  }
+
+  redirect(){
+    const productData = {
+      partnerId :1,
+      productId : 1
+    }
+    this.router.navigate(['yatra'], {
+      state: { productData: productData}
+    });
   }
 }

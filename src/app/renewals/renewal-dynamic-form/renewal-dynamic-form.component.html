@@ -1,5 +1,5 @@
 <div class="siteBody siteBody_renewJourney">
-  <div class="contentBody bodyColumns-3">
+  <div class="contentBody bodyColumns-3 alignCenter">
       <div class="class=bodyColumns bodyColumnsLeft" *ngIf="hideSection">
           <div class="bcl_main">
               <div>Select from any customisation below</div>
@@ -145,6 +145,39 @@
                               <div class="detailsBorder detailsBorder-w104"></div>
                           </div>
                       </div>
+                  </div>
+                  <div class="accordionItem" *ngIf="formId == 5001">
+                    <header>Bank Account Details
+                    </header>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="detailsRow">
+                                <div class="detailsHeading">xbebnepiyd</div>
+                                <div class="data-row">
+                                    <div class="data-item data-item-28">
+                                        <label>Account No</label>
+                                        <h6>695874987924</h6>
+                                    </div>
+                                    <div class="data-item data-item-20">
+                                        <label>Bank Name</label>
+                                        <h6>Indian Bank</h6>
+                                    </div>
+                                    <div class="data-item data-item-20">
+                                        <label>IFSC Code</label>
+                                        <h6>HDVJ867979Hj</h6>
+                                    </div>
+                                    <div class="data-item data-item-20">
+                                        <label>Bank Branch Name</label>
+                                        <h6>Telangana</h6>
+                                    </div>
+                                    <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5006,'editBankDetails')">
+                                        <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="detailsBorder detailsBorder-w104"></div>
+                        </div>
+                    </div>
                   </div>
               </div>
               <div class="accordionMain">
@@ -746,7 +779,8 @@
                           </div>
                       </div>
                       <footer>
-                          <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
+                        <button type="button" value="next" class="btn_red btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
                       </footer>
                   </div>
               </div>
@@ -829,6 +863,91 @@
                       </footer>
                   </div>
               </div>
+              <div class="accordionMain">
+                <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5006">
+                    <header>Edit Bank Details</header>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="detailsRow">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="holderName" name="holderName" formControlName="" placeholder="" class="form-control input-textBox">
+                                            <label for="holderName">Account Holder Name</label>
+                                            <!-- <span class="ui-error" *ngIf="form?.get('firstName')?.invalid && form?.get('firstName')?.touched">Please enter Account Holder Name</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="number" id="account_Number" name="account_Number" placeholder="" class="form-control input-textBox">
+                                            <label for="account_Number">Account Number</label>
+                                            <!-- <span class="ui-error">Please enter Mobile Number</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="account_type" name="account_type" formControlName="" placeholder="" class="form-control input-selectBox">
+                                                <option value="">Select account type</option>
+                                                <option value="saving">saving</option>
+                                                <option value="current">current</option>
+                                            </select>
+                                            <label for="account_type">Account Type</label>
+                                            <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="bank_Name" name="bank_Name" placeholder="" class="form-control input-selectBox">
+                                                <option value="">Select Bank Name</option>
+                                                <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
+                                            </select>
+                                            <label for="bank_Name">Bank Name</label>
+                                            <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="bank_City" name="bank_City" placeholder="" class="form-control input-selectBox">
+                                                <option value="">Select Bank City</option>
+                                                <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
+                                            </select>
+                                            <label for="bank_City">Bank City</label>
+                                            <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="bank_Branch" name="bank_Branch" placeholder="" class="form-control input-selectBox">
+                                                <option value="">Select Bank Branch</option>
+                                                <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
+                                            </select>
+                                            <label for="bank_Branch">Bank Branch</label>
+                                            <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="IFSC_COde" name="IFSC_COde" placeholder="" class="form-control input-textBox">
+                                            <label for="IFSC_COde">IFSC Code</label>
+                                            <!-- <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="MICR_COde" name="MICR_COde" placeholder="" class="form-control input-textBox">
+                                            <label for="MICR_COde">MICR Code</label>
+                                            <!-- <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer>
+                      <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editBankDetails')">Save Updates</button>
+                    </footer>
+                </div>
+            </div>
           </div>
       </div>
       <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'additional'">
@@ -961,7 +1080,7 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3 d-flex align-items-center">
                                         <button type="button" class="btn_red btn_sendLink" (click)="sendLink()">Send Link</button>
                                         <div class="d-flex align-items-center" style="padding-left:40px;">
-                                            <input type="text" class="form-control" disabled [(ngModel)]="link" placeholder="" style="flex: 1; min-width: 250px;" />
+                                            <input type="text" class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6 form-control" disabled [(ngModel)]="link" placeholder="" style="flex: 1; min-width: 250px;" />
                                             <button type="button" class="btn btn-secondary btn_copyLink" [cdkCopyToClipboard]="link">Copy Link</button>
                                         </div>
                                     </div>
@@ -1044,6 +1163,17 @@
                                                     <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
                                                 </div>
                                             </div>
+                                            <div id="ovdUpload" class="col-12">
+                                                <div class="row align-items-center mt-2">
+                                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                        <div class="ovd_uploadMain">
+                                                            <h6>Upload CHQ/DD/NEFT Copy</h6>
+                                                            <div class="ovdUpload">Click here to upload<input type="file" class="input-upload" /></div>
+                                                            <div class="upload-required-info">File size: max 2mb. In case of bank statement, it must be of last 3 months</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                           </div>
                                     </div>
                                 </div>
@@ -1061,15 +1191,15 @@
                     <header>Policy Summary
                         <div class="btn_groupAction">
                             <!-- <button type="button" value="copylink" class="btn_pink btn_copylink btn_copiedlink">Link copied!</button> -->
-                            <button type="button" value="copylink" class="btn_pink btn_copylink">Copy link to share <img src="assets/Img/icon_link.svg"></button>
-                            <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')"></button>
+                            <button type="button" value="copylink" class="btn_pink btn_copylink" *ngIf="hideSection">Copy link to share <img src="assets/Img/icon_link.svg"></button>
+                            <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                         </div>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
                                 <section class="block_bg_lightGrey memberPoliySummary">
-                                    <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-grey">Original</span>
+                                    <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-grey" *ngIf="hideSection">Original</span>
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Members</label>
@@ -1134,7 +1264,7 @@
                                         </div>
                                     </div>
                                 </section> -->
-                                <div class="detailsHeading-12">Free benefits included with your plan</div>
+                                <!-- <div class="detailsHeading-12">Free benefits included with your plan</div>
                                 <section class="plan_freeBenefits">
                                     <div class="item_freeBenefits">
                                         <span class="img_freeBenefits">
@@ -1148,7 +1278,7 @@
                                         </span>
                                         <span class="text_freeBenefits">Access To Expert Health Coaches</span>
                                     </div>
-                                    <!-- <div class="item_freeBenefits">
+                                    <div class="item_freeBenefits">
                                         <span class="img_freeBenefits">
                                             <img src="assets/Img/icon_handheart.svg">
                                         </span>
@@ -1159,15 +1289,15 @@
                                             <img src="assets/Img/icon_handheart.svg">
                                         </span>
                                         <span class="text_freeBenefits">Free Wellness Services</span>
-                                    </div> -->
-                                </section>
+                                    </div>
+                                </section> -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="accordionItem">
                     <header>Member Details
-                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')"></button>
+                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow" >
@@ -1205,7 +1335,7 @@
                 </div>                       
                 <div class="accordionItem">
                     <header>Contact Details
-                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')"></button>
+                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
@@ -1235,7 +1365,7 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsRight" *ngIf="activeSection != 'payment' && formId != 5002 && formId != 5003">
+      <div class="bodyColumns bodyColumnsRight" *ngIf="activeSection != 'payment' && formId != 5002 && formId != 5003 && hideSection">
           <div class="bcr_main planDetails">
               <header>
                   <h6>Plan details</h6>

@@ -15,30 +15,20 @@ import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 export class RenewalDynamicFormComponent implements OnInit {
   form: FormGroup = this.fb.group({});
   formId: number = 5001;
-  // isEditEmail = false;
-  // isEditMobile =false;
-  // email:any;
-  // mobileNo :any;
   selectedButton: string = 'primary'; 
   selectedCoverages: any[] = []; 
   isRadioSelected = false;
   selectedPaymentType: string = '';
-  // selectedPaymentTypeLabel: string = '';
-  isDropdownOpen: boolean = false;
   policySummary : boolean=false
   activeSection: string = 'primary';
   policyNumber:string=''; 
   renewalInfo: any;
   formObject: any = {};
   subObject:any = {};
-  request:any;
   selectedSumInsured: any;
   optionalCovers:any;
   referenceNumber:any=null;
   selectedTenure: string=''; 
-  baseQuote:string='';
-  productId:any;
-  member:any;
   activeTab: string = 'chronicCondition';
   memberRole: string='';
   preexistingConditionSelected: string = 'no'; 
@@ -71,15 +61,14 @@ export class RenewalDynamicFormComponent implements OnInit {
   productsList:any[]=[];
   hideSection:boolean=true;
   link: string = ''; 
-  bankNameList:any
+  bankNameList:any;
+  payNow:any;
 
   constructor(
-    private fb: FormBuilder,
-    private renewalService: RenewalsService,
-    private router: Router,
-    private toast: NgToastService,
-    private ac:ActivatedRoute,
-    private yatraService:YatraService) {}
+    private fb: FormBuilder,private renewalService: RenewalsService,
+    private router: Router,private toast: NgToastService,
+    private ac:ActivatedRoute,private yatraService:YatraService) {
+    }
 
   ngOnInit() {
     this.ac.paramMap.subscribe((params) => {
@@ -90,54 +79,50 @@ export class RenewalDynamicFormComponent implements OnInit {
       }
       if(activeSection){
         if(activeSection == 'payment'){
-          this.activeSection=activeSection;
+          this.activeSection='policySummary';
           this.hideSection=false
-        }else{
-        this.activeSection=activeSection}
+        }else{this.activeSection=activeSection}
       }
     });
     this.renewalService.productsList$.subscribe((productsList) => {
       this.productsList = productsList;
     });
-   this.getRenewalInfo();
-   this.initializeForm();
-   this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
- }
-initializeForm() {
-  const group: { [key: string]: any } = {}; 
-    Object.keys(this.formObject).forEach((key: string) => {
-    const controlValue = this.formObject[key];
-    if (controlValue instanceof Object && !(controlValue instanceof Array)) {
-      group[key] = this.fb.group(
-        Object.keys(controlValue).reduce((subForms: { [nestedKey: string]: any }, nestedKey: string) => {
-          subForms[nestedKey] = [controlValue[nestedKey]]; 
-          return subForms;
-        }, {})
-      );
-    } else {
-      group[key] = [controlValue]; 
-    }
-  });
-  this.form = this.fb.group(group);
-}
-
- onSumInsuredChange(eventValue: any) {
-  this.selectedSumInsured = eventValue;
-}
-formatTickLabel(value: number, forSlider: boolean): string {
-  if (value >= 10000000) {
-    return forSlider == true ? (value / 10000000) + 'Cr' : '₹' + (value / 10000000) + ' Crores';
-  } else if (value >= 100000 && value < 1000000) {
-    return forSlider == true ? (value / 100000) + 'L' : '₹' + (value / 100000) + ' Lakhs';
-  } else if (value >= 100000 ) {
-    return forSlider == true ? (value / 100000) + 'L' : '₹' + (value / 100000) + ' Lakhs';
+    this.getRenewalInfo();
+    this.initializeForm();
+    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
   }
-  return value.toString();
-}
-setActiveTab(tabName: string): void {
-  this.activeTab = tabName;
-}
- handleAction(event: string,item?: any) {
+  initializeForm() {
+    const group: { [key: string]: any } = {}; 
+    Object.keys(this.formObject).forEach((key: string) => {
+      const controlValue = this.formObject[key];
+      if (controlValue instanceof Object && !(controlValue instanceof Array)) {
+        group[key] = this.fb.group(
+          Object.keys(controlValue).reduce((subForms: { [nestedKey: string]: any }, nestedKey: string) => {
+            subForms[nestedKey] = [controlValue[nestedKey]]; 
+            return subForms;
+          }, {})
+        );
+      } else {group[key] = [controlValue]; }
+    });
+    this.form = this.fb.group(group);
+  }
+  onSumInsuredChange(eventValue: any) {
+   this.selectedSumInsured = eventValue;
+  }
+  formatTickLabel(value: number, forSlider: boolean): string {
+    if (value >= 10000000) {
+      return forSlider == true ? (value / 10000000) + 'Cr' : '₹' + (value / 10000000) + ' Crores';
+    } else if (value >= 100000 && value < 1000000) {
+      return forSlider == true ? (value / 100000) + 'L' : '₹' + (value / 100000) + ' Lakhs';
+    } else if (value >= 100000 ) {
+      return forSlider == true ? (value / 100000) + 'L' : '₹' + (value / 100000) + ' Lakhs';
+    }
+    return value.toString();
+  }
+  setActiveTab(tabName: string): void {
+    this.activeTab = tabName;
+  }
+  handleAction(event: string,item?: any) {
      switch (event) {
        case 'Member':
          this.formId=5001;
@@ -191,9 +176,7 @@ setActiveTab(tabName: string): void {
                 console.log("Error coming from updateMemberDetails API", err);}
             );
          } 
-         else {
-           console.log('Form is invalid');
-         } 
+         else {console.log('Form is invalid');} 
          break;
        case 'editMember':
          this.formId=5001;
@@ -221,12 +204,10 @@ setActiveTab(tabName: string): void {
                 this.toast.error({ detail: "Error", summary: "Failed to Update Address.", duration: 1500 });
                 console.log("Error coming from updateaddressApi API", err);}
             );
-          } 
-          else {
-            console.log('Form is invalid');
-          }         
+         } 
+         else {console.log('Form is invalid');}         
          break;
-         case 'editNominee':
+        case 'editNominee':
           this.formId=5001;
           if (event === 'editNominee') {
             this.requestObject.updatedNomineeDetails=JSON.stringify(this.form.value);
@@ -248,40 +229,31 @@ setActiveTab(tabName: string): void {
               console.log("Error coming from updatenomineeApi", err);}
             );
           } 
-          else {
-            console.log('Form is invalid');
-          } 
+          else {console.log('Form is invalid');} 
           break; 
         case 'summary':
-        this.activeSection='primary'
-        break;
-       default:
+          this.activeSection='primary'
+          break;
+        case 'editBankDetails':
+          this.formId=5001;
+          break;  
+        default:
          console.warn('Unknown action:', event);
      }
-   }
-   preexistingCondition(value:any){
-    this.preexistingConditionSelected=value
-    console.log(this.preexistingConditionSelected);
-   }
-//  toggleEditPaymentOption(value: any) {
-//    if(value == 'email'){
-//    this.isEditEmail = !this.isEditEmail;
-//    this.isEditMobile = false;
-//    } else if(value == 'mobileNo'){
-//      this.isEditMobile = !this.isEditMobile;
-//      this.isEditEmail=false;
-//      }
-//  }
-//  handlePaymentEvent(value: any) {
-//    if (this.email && this.email !== '' && value == 'email') {
-//      this.isEditEmail = false;
-//    }else if (this.mobileNo && this.mobileNo !== null && value == 'mobileNo') {
-//      this.isEditMobile = false;
-//    }
-//  }
+  }
+  preexistingCondition(value:any){
+   this.preexistingConditionSelected=value
+  }
  selectButton(value?: any,content? : any,member?:number) {
   if (this.selectedButton === 'primary') {
-    if (value == 5005) {
+    if (value == 5006) {
+      if (this.renewalInfo?.response?.policyData?.length > 0) {
+        this.formObject = {...this.renewalInfo?.response?.policyData[0]?.HomeAddress };
+      } 
+      this.initializeForm();
+      this.formId = value;
+    }
+    else if (value == 5005) {
       if (this.renewalInfo?.response?.policyData?.length > 0) {
         this.formObject = {...this.renewalInfo?.response?.policyData[0]?.HomeAddress };
       } 
@@ -332,44 +304,11 @@ setActiveTab(tabName: string): void {
  selectPaymentType(option: any) {
   if(option == 'offline'){
     this.yatraService.getAllBankDetails().subscribe({
-      next: (res: any) => {
-        this.bankNameList = res.data;
-        console.log(this.bankNameList);
-        
-      },
-      error: (err) => {
-        console.error(err);
-      }
+      next: (res: any) => {this.bankNameList = res.data;},
+      error: (err) => {console.error(err);}
     });
   }
    this.selectedPaymentType = option;
-  //  this.selectedPaymentTypeLabel = option.label;
-  //  this.isDropdownOpen = false; 
- }
- @HostListener('document:click', ['$event'])
- onDocumentClick(event: Event) {
-   const target = event.target as HTMLElement;
-   const dropdown = document.querySelector('.custom-dropdown');
-   if (dropdown && !dropdown.contains(target)) {
-     this.isDropdownOpen = false;
-   }
- }
- selectCoverage(coverage: any): void {
-   const index = this.selectedCoverages.findIndex(c => c.id === coverage.id);
-   if (index > -1) {
-     this.selectedCoverages.splice(index, 1);
-   } else {
-     this.selectedCoverages.push(coverage);
-   }
- }
- isCoverageSelected(coverage: any): boolean {
-   return this.selectedCoverages.some(c => c.id === coverage.id);
- }
- onRadioChanges() {
-   this.isRadioSelected = true;
-   }
- applyRoomUpgrade() {
-   this.isRadioSelected = false;
  }
  setSection(section: string) {
   if(section == 'additional'){ this.formId = 5001;}
@@ -393,18 +332,29 @@ setActiveTab(tabName: string): void {
  renewNow() {
    this.setSection('payment')
  }
-  getRenewalInfo() {
-    this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
-      (res:any) => {
-        console.log("Renewal Info",res);
+ getRenewalInfo() {
+  this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
+    (res: any) => {
+      console.log("Renewal Info", res);
+      try {
         this.renewalInfo = JSON.parse(res.data);
-        this.getTenureDetails();
-        this.getproductdetailsandfeatures();
-        this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
-      },
-      (err) => {console.log("Error coming from getRenewalInfo API", err);}
-    );
-  }
+        if (this.renewalInfo?.response?.policyData?.length > 0) {
+          this.selectedTenure = this.renewalInfo.response.policyData[0].Tenure;
+          this.getTenureDetails();
+          this.getproductdetailsandfeatures();
+        } else {
+          console.error("Invalid or empty renewal info data structure.");
+        }
+      } catch (error) {
+        console.error("Error parsing renewal info:", error);
+      }
+    },
+    (err) => {
+      console.error("Error coming from getRenewalInfo API", err);
+    }
+  );
+}
+
   getTenureDetails() {
     const productName = this.renewalInfo?.response?.policyData[0]?.Name_of_product;
     if (productName) {

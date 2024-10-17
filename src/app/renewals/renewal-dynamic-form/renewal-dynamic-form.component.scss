@@ -1,73 +1,76 @@
-.input-container {
-	position: relative;
-	width: 100%;
+.siteBody_renewJourney .alignCenter{
+	justify-content: center;
 }
-.input-container.col-md-6 {
-	width: 48.8%;
-}
-.input-container.col-md-3 {
-	width: 23.2%;
-}
-.input-container.col-md-4 {
-	width: 31.6%;
-}
-.input-container label {
-	position: absolute;
-	top: 50%;
-	left: 12px;
-	transform: translateY(-50%);
-	font-size: 14px;
-	font-family: "Anek Latin", sans-serif;
-	color: #aaa;
-	transition: all 0.2s ease;
-	background-color: #f2f3f6;
-	padding: 0 5px;
-	pointer-events: none;
-}
-.input-container {
-	position: relative;
-	.inputField_Text,
-	.inputField_Select,
-	.inputField_Text_disabled {
-		font-weight: 400;
-		height: 40px;
-		width: 100%;
-		background-color: #f1f3f6;
-		color: #979CAE;
-		padding: 8px 6px 8px 16px;
-		border-radius: 12px;
-		border: 1px;
-		font-family: "Anek Latin", sans-serif;
-		box-sizing: border-box;
-		position: relative;
-		z-index: 0;
-	}
-	.inputField_Text:focus+label,
-	.inputField_Text.has-value+label,
-	.inputField_Select:focus+label,
-	.inputField_Select.has-value+label {
-		top: 3px;
-		left: 12px;
-		font-size: 12px;
-		color: #666;
-		background-color: #fff;
-		z-index: 1;
-		padding: 0 3px;
-		border-radius: 2px;
-	}
-	.inputField_Text:focus,
-	.inputField_Select:focus,
-	.inputField_Text_disabled:focus {
-		outline: none;
-	}
-	.inputField_Text:focus+label,
-	.inputField_Text.has-value+label,
-	.inputField_Select:focus+label,
-	.inputField_Select.has-value+label {
-		background: rgb(255, 255, 255);
-		background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(242, 243, 246, 1) 100%);
-	}
-}
+// .input-container {
+// 	position: relative;
+// 	width: 100%;
+// }
+// .input-container.col-md-6 {
+// 	width: 48.8%;
+// }
+// .input-container.col-md-3 {
+// 	width: 23.2%;
+// }
+// .input-container.col-md-4 {
+// 	width: 31.6%;
+// }
+// .input-container label {
+// 	position: absolute;
+// 	top: 50%;
+// 	left: 12px;
+// 	transform: translateY(-50%);
+// 	font-size: 14px;
+// 	font-family: "Anek Latin", sans-serif;
+// 	color: #aaa;
+// 	transition: all 0.2s ease;
+// 	background-color: #f2f3f6;
+// 	padding: 0 5px;
+// 	pointer-events: none;
+// }
+// .input-container {
+// 	position: relative;
+// 	.inputField_Text,
+// 	.inputField_Select,
+// 	.inputField_Text_disabled {
+// 		font-weight: 400;
+// 		height: 40px;
+// 		width: 100%;
+// 		background-color: #f1f3f6;
+// 		color: #979CAE;
+// 		padding: 8px 6px 8px 16px;
+// 		border-radius: 12px;
+// 		border: 1px;
+// 		font-family: "Anek Latin", sans-serif;
+// 		box-sizing: border-box;
+// 		position: relative;
+// 		z-index: 0;
+// 	}
+// 	.inputField_Text:focus+label,
+// 	.inputField_Text.has-value+label,
+// 	.inputField_Select:focus+label,
+// 	.inputField_Select.has-value+label {
+// 		top: 3px;
+// 		left: 12px;
+// 		font-size: 12px;
+// 		color: #666;
+// 		background-color: #fff;
+// 		z-index: 1;
+// 		padding: 0 3px;
+// 		border-radius: 2px;
+// 	}
+// 	.inputField_Text:focus,
+// 	.inputField_Select:focus,
+// 	.inputField_Text_disabled:focus {
+// 		outline: none;
+// 	}
+// 	.inputField_Text:focus+label,
+// 	.inputField_Text.has-value+label,
+// 	.inputField_Select:focus+label,
+// 	.inputField_Select.has-value+label {
+// 		background: rgb(255, 255, 255);
+// 		background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(242, 243, 246, 1) 100%);
+// 	}
+// }
 .slider {
 	display: flex;
 	align-items: center;
@@ -114,7 +117,6 @@
   }
   
   ::ng-deep .ngx-slider .ngx-slider-tooltip-wrapper {
-  
 	margin-top: 1px !important;
   }
 .selected-value {
@@ -271,4 +273,10 @@
 .row .raido_paymentType .active{
 	border: 1px solid var(--primary-red-color);
 	border-radius: 16px;
+}
+.btn_cancel{
+	background-color: white;
+	border: 1px solid black;
+	margin-right: 10px;
+	color: var(--primary-red-color);
 }
