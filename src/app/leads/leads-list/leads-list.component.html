@@ -18,11 +18,10 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li class="quickFilterHeading">Quick filter</li>
+                        <!-- <li class="quickFilterHeading">Quick filter</li> -->
                         <li>
                             <button type="button" value="allpolicies" class="btn_quickFilter"
-                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All
-                                Leads</button>
+                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Leads</button>
                         </li>
                         <li>
                             <button type="button" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">Assigned Leads</button>
@@ -51,7 +50,7 @@
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
