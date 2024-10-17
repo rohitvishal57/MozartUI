@@ -182,6 +182,10 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.myleads = true;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = true;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+	  this.startDate = "";
+    this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
@@ -389,6 +393,10 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = false;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+	    this.startDate = "";
+    this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
@@ -401,6 +409,10 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = false;
     this.leadsInfoListRequestBody.unassignedleads = true;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+	    this.startDate = "";
+    this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
