@@ -337,35 +337,7 @@
     </div>
 </main>
  
- <!-- <div class="card flex justify-content-center">
-    <p-dialog header="Assign Lead" [modal]="true" [(visible)]="displayAssigneePopup"
-        [style]="{ width: '75rem', height: '25rem' }">
-        <span class="p-text-secondary block mb-5">Select Agent</span>
-        <form (ngSubmit)="assineLead()" [formGroup]="assignLeadForm" novalidate autocomplete="false">
-            <section class="white_container">
-                <div class="row mb-3">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                        <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" formControlName="selectedAgentCode">
-                                <option *ngFor="let item of agentCodes " [value]="item">
-                                    {{ item }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <div class="row mt-4">
-                <div class="col-12 btn_container_leads">
-                    <button type="button" class="btn_red" (click)="displayAssigneePopup = false">Cancel</button>
-                    <button type="submit" class="btn_red">Save</button>
-                </div>
-            </div>
-        </form>
-    </p-dialog>
-</div>    -->
-
+ 
 <div class="modal fade popupModalMain popupModalOTP" id="assigneLeadModal" tabindex="-1" aria-labelledby="otpModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">

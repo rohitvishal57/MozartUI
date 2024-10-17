@@ -34,7 +34,6 @@ export class LeadsListComponent {
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
   placeholder: string = '';
-  displayAssigneePopup = false;
   assigneLeadModal: any;
   agentCodes: any = [];
   assignLeadForm!: FormGroup;
@@ -96,7 +95,6 @@ export class LeadsListComponent {
 
   ngOnInit(): void {
     this.assigneLeadModal = new bootstrap.Modal(document.getElementById('assigneLeadModal'));
-
     this.agentCode = localStorage.getItem('agentCode');
     this.getLeadsList();
     this.getProducts();
@@ -329,8 +327,6 @@ export class LeadsListComponent {
     if (!this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInformation.leadNumber)) {
       this.checkBoxSelectedLeads.push(leadInformation);
     }
-    //this.displayAssigneePopup = true;
-    debugger
     this.assigneLeadModal.show();
   }
   showAuditTrailDialog(leadNumber: any) {
@@ -374,7 +370,6 @@ export class LeadsListComponent {
         console.error("Error: Unable to assign lead. Please try again later.", error);
       }
     );
-    this.displayAssigneePopup = false;
     this.assigneLeadModal.hide();
   }
   toggleAll(event: Event) {
