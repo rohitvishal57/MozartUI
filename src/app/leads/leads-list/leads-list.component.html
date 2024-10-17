@@ -324,7 +324,7 @@
     </div>
 </main>
  
- <div class="card flex justify-content-center">
+ <!-- <div class="card flex justify-content-center">
     <p-dialog header="Assign Lead" [modal]="true" [(visible)]="displayAssigneePopup"
         [style]="{ width: '75rem', height: '25rem' }">
         <span class="p-text-secondary block mb-5">Select Agent</span>
@@ -351,7 +351,42 @@
             </div>
         </form>
     </p-dialog>
-</div>   
+</div>    -->
+
+<div class="modal fade popupModalMain popupModalOTP" id="assigneLeadModal" tabindex="-1" aria-labelledby="otpModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <form (ngSubmit)="assineLead()" [formGroup]="assignLeadForm" novalidate autocomplete="false">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roomModalLabel">Assigne Leads</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="detailsRow">
+                    <div class="detailsHeading">Select Agent</div>
+                    <div class="input-block form-floating input-block-renew">
+                        <select class="form-select input-selectBox" formControlName="selectedAgentCode">
+                <option *ngFor="let item of agentCodes " [value]="item">
+                    {{ item }}
+                </option>
+            </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer modal_footerBtnGroup_column">
+                <button type="submit"  class="verify-btn btn_red btn_fullWidth">Save</button>
+                <div class="d-flex justify-content-center">
+                    <button type="button"  class="btn_linkText btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" >Cancel</button>
+                </div>
+            </div>
+         </form>
+        </div>
+    </div>
+</div>
   
   
   
@@ -415,3 +450,6 @@
         </p-dialog>
 
     </div>
+
+    
+      

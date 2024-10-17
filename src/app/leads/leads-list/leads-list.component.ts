@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-leads-list',
@@ -34,6 +35,7 @@ export class LeadsListComponent {
   agentCode = localStorage.getItem('agentCode');
   placeholder: string = '';
   displayAssigneePopup = false;
+  assigneLeadModal: any;
   agentCodes: any = [];
   assignLeadForm!: FormGroup;
   updateStatusForm!: FormGroup;
@@ -93,6 +95,8 @@ export class LeadsListComponent {
   }
 
   ngOnInit(): void {
+    this.assigneLeadModal = new bootstrap.Modal(document.getElementById('assigneLeadModal'));
+
     this.agentCode = localStorage.getItem('agentCode');
     this.getLeadsList();
     this.getProducts();
@@ -325,7 +329,9 @@ export class LeadsListComponent {
     if (!this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInformation.leadNumber)) {
       this.checkBoxSelectedLeads.push(leadInformation);
     }
-    this.displayAssigneePopup = true;
+    //this.displayAssigneePopup = true;
+    debugger
+    this.assigneLeadModal.show();
   }
   showAuditTrailDialog(leadNumber: any) {
     this.leadsService.viewAuditTrail(leadNumber).subscribe(
@@ -369,6 +375,7 @@ export class LeadsListComponent {
       }
     );
     this.displayAssigneePopup = false;
+    this.assigneLeadModal.hide();
   }
   toggleAll(event: Event) {
     const input = event.target as HTMLInputElement;
