@@ -3019,12 +3019,29 @@ export class YatraComponent {
               console.log(this.dynamicFormGroup);
   
               // Setting the form values
-              this.dynamicFormGroup.get('policyNumber')?.setValue(polCreationResponse.policyNumber);
-              this.dynamicFormGroup.get('customerId')?.setValue(polCreationResponse.customerId);
-              this.dynamicFormGroup.get('quoteValidFromDate')?.setValue(polCreationResponse.quoteValidFromDate);
-              this.dynamicFormGroup.get('quoteValidToDate')?.setValue(polCreationResponse.quoteValidToDate);
-              this.dynamicFormGroup.get('policyStatus')?.setValue(polCreationResponse.policyStatus);
-              this.dynamicFormGroup.get('ReceiptNumber')?.setValue(receiptResponse.ReceiptNumber);
+              if (polCreationResponse.policyNumber) {
+                this.formData.policyNumber = polCreationResponse.policyNumber;
+            }
+            
+            if (polCreationResponse.customerId) {
+                this.formData.customerId = polCreationResponse.customerId;
+            }
+            
+            if (polCreationResponse.quoteValidFromDate) {
+                this.formData.quoteValidFromDate = polCreationResponse.quoteValidFromDate;
+            }
+            
+            if (polCreationResponse.quoteValidToDate) {
+                this.formData.quoteValidToDate = polCreationResponse.quoteValidToDate;
+            }
+            
+            if (polCreationResponse.policyStatus) {
+                this.formData.policyStatus = polCreationResponse.policyStatus;
+            }
+            
+            if (receiptResponse.ReceiptNumber) {
+                this.formData.ReceiptNumber = receiptResponse.ReceiptNumber;
+            }
               console.log(this.dynamicFormGroup.value);
             } else {
               console.error("No valid data in response", response);
@@ -3983,6 +4000,8 @@ export class YatraComponent {
 
   async mappedFormDataFullQuote(formData: any): Promise<Partial<Root>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
+    console.log(formData);
+    
     const mappedData: Partial<Root> = {
       agentCode: this.agentCode || '',
       productName: formData?.productName || '',
