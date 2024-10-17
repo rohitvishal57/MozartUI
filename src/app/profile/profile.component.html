@@ -1,0 +1,22 @@
+<div class="main-container">
+    <h2>Profile Info</h2>
+    <div class="profile-details">
+        <div style=" padding-left: 28px;">
+            <img src="../../assets/images/img_profile.png" />
+        </div>
+        <div class="profile-fields">
+
+            <div class="field" *ngFor="let pr of profileDetails">
+                <div class="name-field">
+                    <div>
+                        <img src="../../assets/images/{{pr.icon}}.png" />
+                    </div>
+                    <div>
+                        <p>{{pr.heading}}</p>
+                        <p class="bind_profile">{{pr.value}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
@@ -8,15 +8,15 @@ import { CommonService } from 'src/app/services/common.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit{
-  currentLanguage: string = 'en'; 
+export class HeaderComponent implements OnInit {
+  currentLanguage: string = 'en';
   isSidenavOpen: boolean = false;
   isDesktopView: boolean = window.innerWidth >= 768;
+  @Input() isLoggedIn: any;
 
-  constructor(private router:Router,
-    private loginService: CommonService,private toast: NgToastService
-  ){
-
+  constructor(private router: Router,
+    private loginService: CommonService, private toast: NgToastService
+  ) {
   }
 
   ngOnInit() {
@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit{
 
   toggleSidenav() {
     this.isSidenavOpen = !this.isSidenavOpen;
-    console.log('a',this.isSidenavOpen,this.isDesktopView);
+    console.log('a', this.isSidenavOpen, this.isDesktopView);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit{
       this.isSidenavOpen = false;
     }
   }
-  redirect(value:any){
+  redirect(value: any) {
     this.router.navigate([value]);
   }
 

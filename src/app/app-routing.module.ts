@@ -38,6 +38,9 @@ const routes: Routes = [
    {path:'proposals',
     loadChildren:() => import("./proposals/proposals.module").then((m)=>m.ProposalsModule)
    },
+   {path:'profile',
+    loadChildren:() => import("./profile/profile.module").then((m)=>m.ProfileModule)
+   },
    {path:'declaration',
     loadChildren:() => import("./declaration/declaration.module").then((m)=>m.DeclarationModule)
    },

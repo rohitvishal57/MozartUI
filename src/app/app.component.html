@@ -1,6 +1,6 @@
 <ng-toast></ng-toast>
 <div>
-    <app-header></app-header>
+    <app-header [isLoggedIn]="showNavbar"></app-header>
     <app-side-navbar *ngIf="showNavbar"></app-side-navbar>
 </div>
 <div>
