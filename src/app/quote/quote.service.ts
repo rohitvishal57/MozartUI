@@ -24,7 +24,7 @@ export class QuoteService {
   }
   Getproductlist2(reqData:any){
     // const  getquotefortopsellingproducts = `https://localhost:7188/api/getquotefortopsellingproducts`;
-    const  getquotefortopsellingproducts = this.configService.config.baseUrl1 + this.configService.config.getquotefortopsellingproducts;
+    const  getquotefortopsellingproducts = this.configService.config.baseUrl + this.configService.config.getquotefortopsellingproducts;
     return this.httpService.post(getquotefortopsellingproducts,reqData)
   }
   Getproductdetailsandfeatures(reqData:any){

@@ -528,10 +528,8 @@ getRenewalInfo() {
     comeBack(){
       if(this.activeSection == 'policySummary'){
       }else if(this.activeSection == 'kyc'){
-          if(this.actionKyc == 3001){
+          if(this.actionKyc == 3002){
             this.setSection('policySummary')
-          }else if(this.actionKyc == 3002){
-            this.actionKyc = 3001;
           }else if(this.actionKyc == 3003){
             this.actionKyc = 3002;
           }
