@@ -1372,29 +1372,20 @@
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
-                            <div class="detailsRow">
-                                <div class="row" *ngIf="actionKyc == 3001">
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
-                                        <div class="detailsHeading mb-3">Proceed Your KYC with CKYC</div>
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
-                                                <div class="makePaymentOnline">
-                                                    <div class="row">
-                                                        <div class="raido_policyTenure raido_paymentType radio_format">
-                                                         <div class="input-radiolabel payment-radio-Cnt col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="handleKyc(3002)" [ngClass]="{'active': selectedPaymentType == 'E-Nach'}">
-                                                             <input type="radio" name="paymentType" value="E - Nach">
-                                                             <span><em class="label">CKYC</em><img src="assets/Img/icon_faster_process.svg"></span>
-                                                         </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>   
+                            <div class="detailsRow">   
                                 <div class="row" *ngIf="actionKyc == 3002">
                                     <form [formGroup]="kycFormGroup" (ngSubmit)="handleKyc(3003)">
                                         <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input type="date" id="ckyc-dob" name="ckyc-dob" placeholder="" class="form-control input-textBox" formControlName="dateOfBirth">
+                                                <label for="ckyc-dob">Date Of Birth</label>
+                                                <div *ngIf="kycFormGroup.get('dateOfBirth')?.invalid && (kycFormGroup.get('dateOfBirth')?.touched || kycDetailsSubmitted)" class="error-message text-danger">
+                                                    <small *ngIf="kycFormGroup.get('dateOfBirth')?.errors?.['required']">Date of Birth is required.</small>
+                                                    <small *ngIf="kycFormGroup.controls['dateOfBirth'].errors?.['pattern']"> Please enter DOB in yyyy-mm-dd format</small>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                             <div class="input-block form-floating input-block-renew">
                                                 <input type="text" id="ckyc-panno" name="ckyc-panno" placeholder="" class="form-control input-textBox" formControlName="panNumber">
@@ -1404,17 +1395,7 @@
                                                     <small *ngIf="kycFormGroup.get('panNumber')?.errors?.['pattern']">Invalid PAN format. Example: ABCDE1234F</small>
                                                 </div>
                                             </div>
-                                        </div> 
-                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                            <div class="input-block form-floating input-block-renew">
-                                                <input type="text" id="ckyc-dob" name="ckyc-dob" placeholder="" class="form-control input-textBox" formControlName="dateOfBirth">
-                                                <label for="ckyc-dob">DOB</label>
-                                                <div *ngIf="kycFormGroup.get('dateOfBirth')?.invalid && (kycFormGroup.get('dateOfBirth')?.touched || kycDetailsSubmitted)" class="error-message text-danger">
-                                                    <small *ngIf="kycFormGroup.get('dateOfBirth')?.errors?.['required']">Date of Birth is required.</small>
-                                                    <small *ngIf="kycFormGroup.controls['dateOfBirth'].errors?.['pattern']"> Please enter DOB in yyyy-mm-dd format</small>
-                                                </div>
-                                            </div>
-                                        </div> 
+                                        </div>  
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                             <div class="input-block form-floating input-block-renew">
                                                 <button type="submit" class="btn_red btn_redRenew">Verify KYC</button>
@@ -1556,7 +1537,7 @@
               <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="renewNow()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Renew Now</button>
               <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()" *ngIf="activeSection == 'payment' || activeSection == 'policySummary' || activeSection == 'kyc' ">Back</button>
               <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" (click)="next1()" *ngIf="activeSection == 'policySummary' || activeSection == 'kyc' ||activeSection == 'payment' && (selectedPaymentType =='offline' || selectedPaymentType =='' )">Next</button>
-              <button type="button" value="renewnow" class="btn_red btn_redRenew" 
+              <button type="button" value="paynow" class="btn_red btn_redRenew" 
               (click)="payNow()" 
               *ngIf="activeSection == 'payment' && 
                       (selectedPaymentType == 'E-Nach' || 

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
@@ -67,7 +67,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   kycData:any
   kycFormGroup!: FormGroup;
   kycDetailsSubmitted = false;
-  actionKyc:number=3001;
+  actionKyc:number=3002;
   // payNow:any;
   submit:boolean=true;
   fileName: string | null = null;
