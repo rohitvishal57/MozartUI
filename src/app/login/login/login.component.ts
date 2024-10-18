@@ -132,7 +132,7 @@ export class LoginComponent implements OnInit{
     this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
           next: (res:any)=>{
-            localStorage.setItem("requestId", res?.requestId);
+            localStorage.setItem("requestId", res?.data.requestId);
             this.toast.warning({ detail: "SUCCESS", summary: "Sent OTP again to "+this.maskedUserCode, duration: 3000 });
             this.startTimer();
           },
