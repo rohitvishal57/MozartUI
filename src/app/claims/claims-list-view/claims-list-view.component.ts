@@ -90,7 +90,7 @@ claimsReqBody =  {
     "sellerId": this.agentCode,
     "sortColumn": "ReportedDateTime",
     "sortdirection": "ASC",
-    "status": "reimbursement",
+    "status": "",
     "requestType": "",
     "searchType": "",
     "searchString": "",
