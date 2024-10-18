@@ -6,6 +6,9 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { ProposalsService } from '../proposals.service';
 import { CommonService } from 'src/app/services/common.service';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { NgToastService } from 'ng-angular-popup';
+import { EncryptionService } from 'src/app/services/encryption.service';
 @Component({
   selector: 'app-proposals-list',
   templateUrl: './proposals-list.component.html',
@@ -53,11 +56,17 @@ export class ProposalsListComponent {
     "email": "",  
     "leadId": ""
  } 
+  proposalNum: any;
+  formSequence: any[] = [];
+  allJsonFormData: any[] = []
+  formData: any = {}
 
   constructor(
     private proposalService: ProposalsService,
     private datePipe: DatePipe,
-    private commonService:CommonService, private router: Router
+    private commonService:CommonService, private router: Router,
+    private toast: NgToastService,
+       private encryptionService: EncryptionService
   ) {}
   ngOnInit(): void {
     this.getProposalList();
@@ -264,13 +273,59 @@ export class ProposalsListComponent {
     }
   }
 
-  redirect(){
-    const productData = {
-      partnerId :1,
-      productId : 1
+  async redirect(){
+    try {
+      await this.getProposalNum();
+      const productData = {
+        partnerId : 1,
+        productId : 1,
+        proposalNum: this.proposalNum
+
+      }
+      await this.getFormSequence(productData);
+      console.log(productData)
+      if (this.formSequence != null && this.formSequence.length > 0) {
+        this.router.navigate(['yatra'], {
+          state: { productData: productData, formSequence: this.formSequence }
+        });
+      }
+    } catch (error) {
+      console.error(error);
     }
-    this.router.navigate(['yatra'], {
-      state: { productData: productData}
-    });
+  }
+
+  async getProposalNum() {
+    try {
+      const res = await firstValueFrom(this.commonService.getProposalNumber());
+      this.proposalNum = res.data.proposalNumber;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getFormSequence(item: any) {
+    console.log(item);
+    try {
+      sessionStorage.clear();
+      const reqData = {
+        "partnerId": item.partnerId,
+        "productId": item.productId
+      }
+      console.log(reqData);
+      const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
+      console.log(res);
+      this.formSequence = JSON.parse(res.data.formSequence);
+      console.log(this.formSequence);
+
+      if (this.formSequence != null && this.formSequence.length > 0) {
+        this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+        sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
+      }
+      console.log(this.allJsonFormData);
+      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+      localStorage.setItem("formIndex", "0");
+    } catch (err) {
+      this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+    }
   }
 }
