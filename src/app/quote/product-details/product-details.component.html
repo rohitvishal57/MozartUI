@@ -63,7 +63,7 @@
                 <p>Details about Activ Health services would be displayed here.</p>
               </div> -->
               <div class="row" *ngSwitchCase=activeIndex>
-                <div class="card" style="width: 100%;">
+                <div class="card">
                 <div *ngFor="let section of groupedFeatures | keyvalue" >
                   <!-- <div class="card"> -->
                     <div *ngIf="section.key === displayInfo">
