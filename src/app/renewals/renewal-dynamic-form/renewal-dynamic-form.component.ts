@@ -1,11 +1,13 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component,OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
 import { Options } from '@angular-slider/ngx-slider';
 import { NgToastService } from 'ng-angular-popup';
 import { ClipboardModule } from '@angular/cdk/clipboard'
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { CommonService } from 'src/app/services/common.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -62,15 +64,29 @@ export class RenewalDynamicFormComponent implements OnInit {
   hideSection:boolean=true;
   link: string = ''; 
   bankNameList:any;
-  payNow:any;
+  kycData:any
+  kycFormGroup!: FormGroup;
+  kycDetailsSubmitted = false;
+  actionKyc:number=3002;
+  // payNow:any;
+  submit:boolean=true;
+  fileName: string | null = null;
 
   constructor(
-    private fb: FormBuilder,private renewalService: RenewalsService,
-    private router: Router,private toast: NgToastService,
-    private ac:ActivatedRoute,private yatraService:YatraService) {
-    }
+    private fb: FormBuilder,
+    private renewalService: RenewalsService,
+    private router: Router,
+    private toast: NgToastService,
+    private ac:ActivatedRoute,
+    private yatraService:YatraService,
+  private commonService:CommonService,
+  private spinner: NgxSpinnerService) {}
 
   ngOnInit() {
+    this.kycFormGroup = this.fb.group({
+      panNumber: ['',[Validators.required, Validators.pattern('[A-Z]{5}[0-9]{4}[A-Z]{1}')]],
+      dateOfBirth: ['', [Validators.required,Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
+    });
     this.ac.paramMap.subscribe((params) => {
       const policyNumber = params.get('policyNumber');
       const activeSection= params.get('activeSection')
@@ -84,13 +100,10 @@ export class RenewalDynamicFormComponent implements OnInit {
         }else{this.activeSection=activeSection}
       }
     });
-    this.renewalService.productsList$.subscribe((productsList) => {
-      this.productsList = productsList;
-    });
-    this.getRenewalInfo();
-    this.initializeForm();
-    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
-  }
+   this.getRenewalInfo();
+   this.initializeForm();
+   this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
+ }
   initializeForm() {
     const group: { [key: string]: any } = {}; 
     Object.keys(this.formObject).forEach((key: string) => {
@@ -185,9 +198,9 @@ export class RenewalDynamicFormComponent implements OnInit {
          this.formId=5001;
          if (event === 'editAddress') {
             this.requestObject.updatedAddress=JSON.stringify(this.form.value);
-            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.policyNumber=this.policyNumber;
             this.requestObject.referenceNumber=this.referenceNumber; 
-            console.log(this.requestObject);
+            console.log("editAddress",this.requestObject);
             this.renewalService.updateaddressApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
@@ -212,7 +225,9 @@ export class RenewalDynamicFormComponent implements OnInit {
           if (event === 'editNominee') {
             this.requestObject.updatedNomineeDetails=JSON.stringify(this.form.value);
             this.requestObject.policyNumber='21-24-0002334-00';
-            this.requestObject.referenceNumber=this.referenceNumber;            
+            this.requestObject.referenceNumber=this.referenceNumber;  
+            console.log("updateNominee",this.requestObject);
+                      
             this.renewalService.updatenomineeApi(this.requestObject).subscribe(
              (res:any) => {
               if(res.data.isUpdateSuccess == true){
@@ -237,6 +252,9 @@ export class RenewalDynamicFormComponent implements OnInit {
         case 'editBankDetails':
           this.formId=5001;
           break;  
+        case 'cancel':
+          this.formId=5001;
+          break;
         default:
          console.warn('Unknown action:', event);
      }
@@ -303,12 +321,16 @@ export class RenewalDynamicFormComponent implements OnInit {
 }
  selectPaymentType(option: any) {
   if(option == 'offline'){
+    this.selectedPaymentType = option;
     this.yatraService.getAllBankDetails().subscribe({
       next: (res: any) => {this.bankNameList = res.data;},
       error: (err) => {console.error(err);}
     });
   }
-   this.selectedPaymentType = option;
+  if(option == 'E-Nach' || option == 'E-Mandate' || option == 'Auto_Debit'){
+    this.selectedPaymentType = option;
+    console.log("payment type",this.selectedPaymentType);
+  }
  }
  setSection(section: string) {
   if(section == 'additional'){ this.formId = 5001;}
@@ -328,33 +350,84 @@ export class RenewalDynamicFormComponent implements OnInit {
    else if (this.activeSection === 'payment') {
     if(value == 'back') this.setSection('policySummary');
   }
+  console.log("active section",this.activeSection);
+  
  }
  renewNow() {
-   this.setSection('payment')
+   this.setSection('policySummary')
  }
- getRenewalInfo() {
-  this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
-    (res: any) => {
-      console.log("Renewal Info", res);
-      try {
-        this.renewalInfo = JSON.parse(res.data);
-        if (this.renewalInfo?.response?.policyData?.length > 0) {
-          this.selectedTenure = this.renewalInfo.response.policyData[0].Tenure;
-          this.getTenureDetails();
-          this.getproductdetailsandfeatures();
-        } else {
-          console.error("Invalid or empty renewal info data structure.");
-        }
-      } catch (error) {
-        console.error("Error parsing renewal info:", error);
-      }
-    },
-    (err) => {
-      console.error("Error coming from getRenewalInfo API", err);
+ next1(){
+  if(this.activeSection== 'policySummary'){
+    this.setSection('kyc')
+  }
+  else if(this.activeSection== 'kyc'){
+    if(this.kycData){
+      this.setSection('payment')
     }
-  );
+    else{
+      this.toast.error({ detail: 'ERROR',summary: 'Please complete the KYC',duration: 1000});
+    }
+  } else if(this.activeSection== 'payment' && this.selectedPaymentType == 'offline'){
+    this.submit=false
+  }
 }
-
+payNow(){
+   const paymentRequestBody={
+    "agentcode": this.agentCode,
+    "proposalNumber": this.policyNumber,
+    "paymentMethod": this.selectedPaymentType,
+    "source": "Retail",
+    "policyType": "Renewal",
+    "policyNumber": "",
+    "quoteNumber": ""
+   }
+   if (paymentRequestBody.paymentMethod == "E-Nach" ||
+    paymentRequestBody.paymentMethod == "E-Mandate" ||
+    paymentRequestBody.paymentMethod == "Auto_Debit") {
+    console.log("if calling",paymentRequestBody.paymentMethod);
+    console.log("KYC completed",this.kycData);
+    this.renewalService.paymentGatewayApi(paymentRequestBody).subscribe({
+      next: (response: any) => {
+        if (response.isSuccess==false && response.paymentURL) {
+          window.open(response.paymentURL, '_blank');
+        }
+        else {
+          console.log('Payment initiation failed:', response.errorMessage || 'Unknown error');
+        }
+      },
+      error: (error: any) => {
+        this.toast.error({ detail: 'ERROR',summary: 'Failed to payment ',duration: 3000});
+      }
+    });
+   }
+}
+ getProducts() {
+  const reqData={
+    "agentCode": this.agentCode
+  }
+  this.commonService.Getproductlist(reqData).subscribe({
+    next: (res) => {
+      this.productsList = res.data;
+      this.getTenureDetails();
+      this.getproductdetailsandfeatures();
+      console.log("products list",this.productsList);
+    },
+    error: (err) => {
+       console.log("error coming form getproduct list API");
+    }
+  })
+}
+getRenewalInfo() {
+    this.renewalService.getRenewalInfoApi(this.policyNumber, {}).subscribe(
+      (res:any) => {
+        console.log("Renewal Info",res);
+        this.renewalInfo = JSON.parse(res.data);
+        this.getProducts();
+        this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
+      },
+      (err) => {console.log("Error coming from getRenewalInfo API", err);}
+    );
+  }
   getTenureDetails() {
     const productName = this.renewalInfo?.response?.policyData[0]?.Name_of_product;
     if (productName) {
@@ -414,5 +487,57 @@ export class RenewalDynamicFormComponent implements OnInit {
   sendLink(){
     this.link="https://www.paypal.com/invoice/p/#ABCDEFG123456"
     }
+    handleKyc(action: any) {
+      if (action === 3001) {
+        // Handle action 3001
+      } else if (action === 3002) {
+        this.actionKyc = action;
+      } else if (action === 3003) {
+        this.kycDetailsSubmitted = true;
+        if (this.kycFormGroup.invalid) {
+          console.log("Form is invalid");
+          this.toast.error({ detail: 'ERROR',summary: 'Please enter valid KYC details',duration: 3000});
+        } else {
+          const reqData = this.kycFormGroup.value;
+          console.log("KYC request body", reqData);    
+          this.yatraService.GetKycDetails(reqData).subscribe(
+            (response: any) => {
+              console.log("responsec body",response.success);
+              if (response.success === true) {
+                this.kycData = response.data;
+                this.actionKyc = action;
+                console.log("responsec body(if)",response.success);
+                this.toast.success({detail: 'SUCCESS',summary: 'KYC Details Fetched Successfully', duration: 1000}); 
+             } 
+             console.log("responsec body",response.success);
+            },
+            (error: any) => {
+              console.log("error body",error);
+              this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
+            }
+          );          
+        }
+      }
+    }
+    onFileSelected(event: any) {
+      const file: File = event.target.files[0];
+      if (file) {
+        this.fileName = file.name;
+      }
+    }
+    comeBack(){
+      if(this.activeSection == 'policySummary'){
+      }else if(this.activeSection == 'kyc'){
+          if(this.actionKyc == 3001){
+            this.setSection('policySummary')
+          }else if(this.actionKyc == 3002){
+            this.actionKyc = 3001;
+          }else if(this.actionKyc == 3003){
+            this.actionKyc = 3002;
+          }
+      }else if(this.activeSection == "payment"){
+        this.setSection('kyc');
+      }
 
+    }
 }

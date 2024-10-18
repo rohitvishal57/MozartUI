@@ -160,6 +160,9 @@
     .radio_additionalInfo .input-radiolabel span {
         min-width: 50px;
     }
+    .main_userDetails .info_userDetails .details_userProfile h6 span{
+        max-width:100%;
+    }
 }
 @media (max-width:820px) {
     .mobile-flex-column {
@@ -343,6 +346,7 @@
    .details_claimsAmount .claim_amount{
     padding: 8px 0px !important;
    }
+   
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {

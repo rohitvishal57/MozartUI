@@ -1,10 +1,12 @@
 .main-container {
   background-color: #fff;
   padding: 11rem;
-  .detail{
+
+  .detail {
     font-size: 24px;
     font-weight: 500;
   }
+
   .box {
     // padding: 1% 1%;
     // margin: 1% 4%;
@@ -37,12 +39,14 @@
       color: rgb(21, 21, 99);
       margin: 1%;
     }
-    .key{
+
+    .key {
       padding: 1%;
-      .keypoint{
-          margin: 1%;
+
+      .keypoint {
+        margin: 1%;
       }
-  }
+    }
 
     p {
       font-size: 12px;
@@ -121,22 +125,23 @@
             border-radius: 12px;
             width: 45%;
             margin: 2%;
+
             .key {
               display: flex;
               flex-direction: column;
               gap: 1rem; // Spacing between items
-              
+
               .keypoint {
                 display: flex; // Align items horizontally
                 align-items: center;
                 gap: 0.5rem; // Space between icon and text
                 // padding: 0.5rem 0;
-                
+
                 .icon {
                   width: 20px; // Adjust the icon size
                   height: 20px;
                 }
-            
+
                 .feature-text {
                   font-size: 16px;
                   color: #333;
@@ -147,7 +152,15 @@
         }
       }
 
-
+      .buyNow-btn {
+        font-family: "Anek Latin", sans-serif;
+        background-color: #C7222A;
+        color: white;
+        border: none;
+        padding: 10px 36px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
 
     }
 
@@ -173,10 +186,13 @@
       }
 
       &.p-highlight .p-tabview-nav-link {
-        background: #C7222A;
-        color: #ffffff;
+        font-family: "Anek Latin", sans-serif;
+        background-color: #C7222A;
+        color: white;
         border: none;
+        padding: 10px 36px;
         border-radius: 8px;
+        cursor: pointer;
       }
     }
   }

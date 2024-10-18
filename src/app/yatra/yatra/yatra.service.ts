@@ -118,4 +118,9 @@ export class YatraService {
     const fetchPolicyDetailsFromFile= this.configService.config.baseUrl+this.configService.config.fetchPolicyDetailsFromFile;
     return this.httpService.post(fetchPolicyDetailsFromFile,reqData);
   }
+
+  justPayRedirection(reqData:any){
+    const paymentRedirection= this.configService.config.baseUrl+this.configService.config.justPayRedirection;
+    return this.httpService.post(paymentRedirection,reqData);
+  }
 }

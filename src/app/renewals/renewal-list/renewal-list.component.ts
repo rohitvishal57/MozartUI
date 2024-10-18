@@ -124,7 +124,6 @@ export class RenewalListComponent {
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res) => {
         this.productsList = res.data;
-        this.renewalService.setProductsList(this.productsList);
         console.log("product list",this.productsList)
         const uniquePolicyTypes = Array.from(new Set(this.productsList
          .map((product) => product.familyPlan)))
