@@ -68,6 +68,9 @@ export class RenewalDynamicFormComponent implements OnInit {
   kycFormGroup!: FormGroup;
   kycDetailsSubmitted = false;
   actionKyc:number=3001;
+  // payNow:any;
+  submit:boolean=true;
+  fileName: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -195,9 +198,9 @@ export class RenewalDynamicFormComponent implements OnInit {
          this.formId=5001;
          if (event === 'editAddress') {
             this.requestObject.updatedAddress=JSON.stringify(this.form.value);
-            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.policyNumber=this.policyNumber;
             this.requestObject.referenceNumber=this.referenceNumber; 
-            console.log(this.requestObject);
+            console.log("editAddress",this.requestObject);
             this.renewalService.updateaddressApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
@@ -222,7 +225,9 @@ export class RenewalDynamicFormComponent implements OnInit {
           if (event === 'editNominee') {
             this.requestObject.updatedNomineeDetails=JSON.stringify(this.form.value);
             this.requestObject.policyNumber='21-24-0002334-00';
-            this.requestObject.referenceNumber=this.referenceNumber;            
+            this.requestObject.referenceNumber=this.referenceNumber;  
+            console.log("updateNominee",this.requestObject);
+                      
             this.renewalService.updatenomineeApi(this.requestObject).subscribe(
              (res:any) => {
               if(res.data.isUpdateSuccess == true){
@@ -247,7 +252,10 @@ export class RenewalDynamicFormComponent implements OnInit {
         case 'editBankDetails':
           this.formId=5001;
           break;  
-       default:
+        case 'cancel':
+          this.formId=5001;
+          break;
+        default:
          console.warn('Unknown action:', event);
      }
   }
@@ -346,7 +354,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   
  }
  renewNow() {
-   this.setSection('payment')
+   this.setSection('policySummary')
  }
  next1(){
   if(this.activeSection== 'policySummary'){
@@ -359,6 +367,8 @@ export class RenewalDynamicFormComponent implements OnInit {
     else{
       this.toast.error({ detail: 'ERROR',summary: 'Please complete the KYC',duration: 1000});
     }
+  } else if(this.activeSection== 'payment' && this.selectedPaymentType == 'offline'){
+    this.submit=false
   }
 }
 payNow(){
@@ -371,13 +381,16 @@ payNow(){
     "policyNumber": "",
     "quoteNumber": ""
    }
-   if(paymentRequestBody.paymentMethod!= "offline" && ''){
+   if (paymentRequestBody.paymentMethod == "E-Nach" ||
+    paymentRequestBody.paymentMethod == "E-Mandate" ||
+    paymentRequestBody.paymentMethod == "Auto_Debit") {
+    console.log("if calling",paymentRequestBody.paymentMethod);
     console.log("KYC completed",this.kycData);
     this.renewalService.paymentGatewayApi(paymentRequestBody).subscribe({
       next: (response: any) => {
         if (response.isSuccess==false && response.paymentURL) {
           window.open(response.paymentURL, '_blank');
-        } 
+        }
         else {
           console.log('Payment initiation failed:', response.errorMessage || 'Unknown error');
         }
@@ -386,9 +399,6 @@ payNow(){
         this.toast.error({ detail: 'ERROR',summary: 'Failed to payment ',duration: 3000});
       }
     });
-   }
-   else if(paymentRequestBody.paymentMethod == ""){
-    this.toast.error({ detail: 'ERROR',summary: 'select any one paymnet method',duration: 3000});
    }
 }
  getProducts() {
@@ -509,9 +519,14 @@ getRenewalInfo() {
         }
       }
     }
+    onFileSelected(event: any) {
+      const file: File = event.target.files[0];
+      if (file) {
+        this.fileName = file.name;
+      }
+    }
     comeBack(){
       if(this.activeSection == 'policySummary'){
-
       }else if(this.activeSection == 'kyc'){
           if(this.actionKyc == 3001){
             this.setSection('policySummary')
