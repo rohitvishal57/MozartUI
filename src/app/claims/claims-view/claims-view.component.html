@@ -18,8 +18,11 @@
                                   <option class="dropdown-options" *ngFor="let policy of policyNumbers" [value]="policy">{{ policy }}</option>
                               </select>
                               <label for="idgender">Select Policy Number</label>
-                              <span class="ui-error">Please select policy number</span>
-                          </div>
+                              <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
+                                Policy Number is required.
+                              </small>
+                                                     
+                            </div>
                       </div>
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
@@ -28,7 +31,10 @@
                                   <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
                               </select>
                               <label for="member">Select Member</label>
-                              <span class="ui-error">Please select member</span>
+                              <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
+                                Member name is required.
+                              </small>
+                                         
                           </div>
                       </div>
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -37,14 +43,16 @@
                                   <option value="" disabled selected>Select Claim Type</option>
                                   <option value="Cashless">Cashless</option>
                                   <option value="Reimbursement">Reimbursement</option>
-                              </select>
+                              </select>                          
                               <label for="claimtype">Claim Type</label>
-                              <span class="ui-error">Please select claim type</span>
+                              <!-- <span class="ui-error">Please select claim type</span> -->      
+                                <!-- <small class="ui-error block-show" *ngIf="form.get('claimType')?.hasError('required') && form.get('claimType')?.touched">
+                                    Claim type is required
+                                </small>                                 -->
                           </div>
                       </div>
 
                       <!-- Cashless Fields -->
-
                       <div class="col-12 mb-3" *ngIf="showCashlessFields">
                         <div class="row">
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -54,11 +62,13 @@
                               </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                              <div class="input-block form-floating input-block-renew">
-                                  <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" placeholder="Hospital Address" />
-                                  <label for="addnotes">Hospital Address</label>
-                              </div>
-                          </div>
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                <label for="claimamount">Claim Amount</label>
+                                <span class="ui-error">Please enter claim amount</span>
+                            </div>
+                        </div>
+                        
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
@@ -100,8 +110,8 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <select class="form-select input-selectBox" formControlName="city"  (change)="onCityChange($event)" [disabled]="!selectedState">
-                                      <option class="dropdown-options" value="" disabled selected>Select City</option>
+                                  <select class="form-select input-selectBox" formControlName="city" (change)="onCityChange($event)" [disabled]="!selectedState">
+                                      <option class="dropdown-options" value="" disabled selected [selected]="!form.get('city')?.value || form.get('city')?.value === ''">Select City</option>
                                       <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName }}</option>
                                   </select>
                                   <label for="city">Select City</label>
@@ -121,11 +131,11 @@
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
-                                <label for="claimamount">Claim Amount</label>
-                                <span class="ui-error">Please enter claim amount</span>
+                                <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" placeholder="Hospital Address" readonly/>
+                                <label for="addnotes">Hospital Address</label>
                             </div>
                         </div>
+                        
                           <!-- <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <div class="input-block form-floating input-block-renew">
                                 <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
@@ -137,12 +147,6 @@
 
                       <!-- Reimbursement Fields -->
                       <div class="col-12" *ngIf="showReimbursementFields">
-                          <!-- <div *ngIf="showCashlessFields" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                    <div class="input-block form-floating input-block-renew">
-                      <input type="text" class="form-control input-textBox" formControlName="coverName" [value]=""  />
-                      <label for="coverName">Cover Name</label>
-                    </div>
-                  </div> -->
                           <div class="row mb-3">
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
@@ -186,13 +190,15 @@
                       </div>
                       <div class="col-12" *ngIf="showSecondScenario">
                       <div  class="row mb-3">
-                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                              <div class="input-block form-floating input-block-renew">
-                                  <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" placeholder="Hospital Address" />
-                                  <label for="addnotes">Hospital Address</label>
-                              </div>
-                          </div>
 
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                <label for="claimamount">Claim Amount</label>
+                                <span class="ui-error">Please enter claim amount</span>
+                            </div>
+                        </div>
+                         
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" />
@@ -254,11 +260,13 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
-                                <label for="claimamount">Claim Amount</label>
-                                <span class="ui-error">Please enter claim amount</span>
+                                <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" placeholder="Hospital Address" readonly/>
+                                <label for="addnotes">Hospital Address</label>
                             </div>
                         </div>
+
+
+                         
                           
                       </div>
                     </div>

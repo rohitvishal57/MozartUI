@@ -55,9 +55,10 @@
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
                                     <header>Filter</header>
-                                    <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
+                                    <!--<button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
                                         <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                    </button>
+                                    </button>-->
+                                    <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
@@ -338,34 +339,37 @@
 </main>
  
  
-<div class="modal fade popupModalMain popupModalOTP" id="assigneLeadModal" tabindex="-1" aria-labelledby="otpModalLabel"
+<div class="modal fade popupModalMain modal-bgWhite" id="assigneLeadModal" tabindex="-1" aria-labelledby="otpModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
           <form (ngSubmit)="assineLead()" [formGroup]="assignLeadForm" novalidate autocomplete="false">
             <div class="modal-header">
                 <h5 class="modal-title" id="roomModalLabel">Assigne Leads</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>-->
             </div>
 
             <div class="modal-body">
 
-                <div class="detailsRow">
-                    <div class="detailsHeading">Select Agent</div>
-                    <div class="input-block form-floating input-block-renew">
-                        <select class="form-select input-selectBox" formControlName="selectedAgentCode">
-                <option *ngFor="let item of agentCodes " [value]="item">
-                    {{ item }}
-                </option>
-            </select>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="input-block form-floating input-block-renew">
+                            <select class="form-select input-selectBox" formControlName="selectedAgentCode">
+                                <option *ngFor="let item of agentCodes " [value]="item">
+                                    {{ item }}
+                                </option>
+                            </select>
+                            <label for="">Select Agent</label>
+                        </div>
                     </div>
+                    
                 </div>
             </div>
 
             <div class="modal-footer modal_footerBtnGroup_column">
                 <button type="submit"  class="verify-btn btn_red btn_fullWidth">Save</button>
                 <div class="d-flex justify-content-center">
-                    <button type="button"  class="btn_linkText btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" >Cancel</button>
+                    <button type="button"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" >Cancel</button>
                 </div>
             </div>
          </form>

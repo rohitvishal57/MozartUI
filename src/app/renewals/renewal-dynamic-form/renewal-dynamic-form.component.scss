@@ -241,9 +241,16 @@
     flex-wrap: wrap;
     margin-bottom: 20px; 
 }
-.payment-radio-Cnt {
-    flex: 0 1 220px !important; 
-    max-width: 250px !important;
+// .payment-radio-Cnt {
+//     flex: 0 1 220px !important; 
+//     max-width: 250px !important;
+// }
+.raido_paymentType .input-radiolabel .label{
+	// width: fit-content;
+	font-size: 13px;
+}
+.raido_paymentType .input-radiolabel img{
+	width: 70px;
 }
 .raido_paymentType .input-radiolabel span{
 	padding: 13px 10px;
@@ -275,8 +282,5 @@
 	border-radius: 16px;
 }
 .btn_cancel{
-	background-color: white;
-	border: 1px solid black;
 	margin-right: 10px;
-	color: var(--primary-red-color);
 }

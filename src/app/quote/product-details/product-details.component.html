@@ -28,7 +28,9 @@
                   <p-tabPanel header="FAQs"></p-tabPanel>
                   <p-tabPanel header="Claims"></p-tabPanel>
                   <p-tabPanel header="Activ Health"></p-tabPanel> -->
-                  <!-- <p-tabPanel header="Cover"></p-tabPanel> -->
+                 <p-tabPanel header="Health Add-Ons"></p-tabPanel> 
+                 <p-tabPanel header="Optional Covers"></p-tabPanel> 
+
                 </p-tabView>
               </div>
             </div>
@@ -60,36 +62,38 @@
               <div *ngSwitchCase="4">
                 <p>Details about Activ Health services would be displayed here.</p>
               </div> -->
-              <div class="row" *ngSwitchCase="0">
-                <div *ngFor="let section of groupedFeatures | keyvalue" class="card">
+              <div class="row" *ngSwitchCase=activeIndex>
+                <div class="card">
+                <div *ngFor="let section of groupedFeatures | keyvalue" >
                   <!-- <div class="card"> -->
-                    <h3>{{ section.key }}</h3>
+                    <div *ngIf="section.key === displayInfo">
+                      <!-- <h3>{{ section.key }}</h3> -->
                     <!-- <ul> -->
                       <!-- <li *ngFor="let feature of section.value">
                         {{ feature.featureName }}
                       </li> -->
-                      <div class="key">
-                        <div *ngFor="let feature of section.value" class="keypoint">
+                      <div class="key" >
+                        <div *ngFor="let feature of section.value" class="keypoint" >
                           <img src="assets/logo/greenpoint.svg" alt="checkmark" class="icon">
                           <div class="feature-text">
                             {{ feature.featureName }}
                           </div>
                         </div>
                       </div>
-                      
+                      </div>
                     <!-- </ul> -->
                   <!-- </div> -->
                 </div>
               </div>
+              </div>
             </div>
-       
-            <button (click)="buyNow(state)" class="buyNow-btn">
-              Buy Now
-            </button>
           </div>
         <!-- <div class="custom-tabview"> -->
           <!-- <div> -->
-            
+            <button class="btn_red btn_products btn_buy" (click)="buyNow(state)">
+              <img src="assets/Img/trolley1.svg" alt="">
+              Buy Now
+          </button>
           <!-- </div> -->
         <!-- </div> -->
     </div>

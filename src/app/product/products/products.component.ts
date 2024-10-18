@@ -147,6 +147,7 @@ export class ProductsComponent implements OnInit {
     this.formData = { ...this.formData, productName: item.productName }
     try {
       await this.getProposalNum();
+      console.log(item)
       await this.getFormSequence(item);
       console.log(item)
       const productData = {

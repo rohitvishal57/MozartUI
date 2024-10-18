@@ -185,9 +185,9 @@
 }
 
 .header-right-cnt {
-  display: flex;
+  /*display: flex;
   gap: 9%;
-  width: 25%;
+  width: 25%;*/
     
   .language-selector {
     position: relative;
@@ -229,5 +229,14 @@
     color: #fff;
     font-size: 16px;
     cursor: pointer;
+  }
+}
+.headerProfile {
+  a {
+    display: flex;
+    img {
+      width: 25px;
+      height: 25px;
+    }
   }
 }

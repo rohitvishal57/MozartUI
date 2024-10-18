@@ -6,7 +6,7 @@ import { EndorsementsNewRequestComponent } from '../endorsements-new-request/end
 import { EndorsementsRequestsComponent } from './endorsements-requests.component';
 import { PrimeNgModule } from 'src/app/prime-ng.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { EndorsementDetailsComponent } from '../endorsement-details/endorsement-details.component';
 
@@ -18,6 +18,7 @@ import { EndorsementDetailsComponent } from '../endorsement-details/endorsement-
     NgxSpinnerModule,
     ReactiveFormsModule,
     NgxPaginationModule,
+    FormsModule,
     EndorsementsRoutingModule
   ]
 })
