@@ -11,6 +11,7 @@ import { tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-yatra',
@@ -92,6 +93,11 @@ export class YatraComponent {
   question: any;
   leadnumber: string = "";
   QuoteNumber: any = [];
+  customerFeedbackModule: any;
+  customerFeedbackForm !: FormGroup;
+  formIndexValue : number = 0;
+  stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
+  rating: number = 0; // Holds the current selected rating
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
@@ -133,9 +139,15 @@ export class YatraComponent {
     // console.log(this.formData)
     // this.formData = { ...this.formData, ...{ productName: this.productName } }
     // this.formData = { ...this.formData, ...{ productName: this.productName } }
-    if(sessionStorage.getItem('allJsonForm'))
-    this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
+    if (sessionStorage.getItem('allJsonForm'))
+      this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+    this.customerFeedbackModule = new bootstrap.Modal(document.getElementById('customerFeedbackModule'));
+    this.customerFeedbackForm = this.fb.group({
+      feedback: [''],
+      message: [''],
+      rating: [null, Validators.required], // Add rating to the form
+    });
   }
 
   initializeRequiredData() {
@@ -779,7 +791,7 @@ export class YatraComponent {
 
   triggerFileInput(controlName: string) {
     console.log("getting called");
-    
+
     const fileInputControl = this.document.getElementById(controlName);
     fileInputControl?.click();
   }
@@ -2163,6 +2175,10 @@ export class YatraComponent {
 
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
+    console.log("formIndex",formIndex);
+    if ( formIndex === '8') {
+      this.customerFeedbackModule.show();
+    }
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
   setFormIndexValue(value: number) {
@@ -2250,9 +2266,9 @@ export class YatraComponent {
 
     const paymentModeControl = this.dynamicFormGroup.get('paymentMode');
     if (paymentModeControl) {
-      paymentModeControl.setValue(this.selectedButton); 
-    }  
-  
+      paymentModeControl.setValue(this.selectedButton);
+    }
+
     if (this.selectedButton !== 'offline') {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((controls: any) => {
@@ -2269,7 +2285,7 @@ export class YatraComponent {
         });
       });
     }
-  
+
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
@@ -2281,11 +2297,11 @@ export class YatraComponent {
         policyNumber: '',
         quoteNumber: ''
       };
-  
+
       this.yatraService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
           console.log('Juspay API Response:', response);
-  
+
           if (response.paymentURL && response.paymentURL !== null && response.paymentURL !== '') {
             window.location.href = response.paymentURL; // Redirect to Juspay Payment URL
           } else {
@@ -2299,7 +2315,7 @@ export class YatraComponent {
         }
       });
     }
-  
+
     // Handle showing dependent controls if any are specified for the clicked button
     if (control.dependentControls) {
       this.form.formSections.forEach((section: any) => {
@@ -2327,7 +2343,7 @@ export class YatraComponent {
       });
     }
   }
-  
+
 
   onEmailClick(control: any) {
     this.form.formSections.forEach((section: any) => {
@@ -4303,6 +4319,19 @@ export class YatraComponent {
   redirectToCreateABHAID() {
     const abhaIDUrl = "https://mtpre.adityabirlahealth.com/healthinsurance/abha";
     window.open(abhaIDUrl, '_blank'); // Opens the URL in a new tab
+  }
+
+  setRating(star: number) {
+    this.rating = star;
+    this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
+  }
+
+  submitFeedback() {
+    if (this.customerFeedbackForm.valid) {
+      const feedback = this.customerFeedbackForm.value;
+      console.log('Feedback Submitted: ', feedback);
+      // Call service to submit feedback
+    }
   }
 
 }

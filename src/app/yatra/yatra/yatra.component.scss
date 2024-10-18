@@ -1,0 +1,118 @@
+/* General Modal Styling */
+.modal-content {
+    border-radius: 12px;
+    padding: 20px;
+    background-color: #fff;
+  }
+  
+  .modal-header {
+    text-align: center;
+    border-bottom: none;
+    margin-bottom: 20px;  /* Adjust the value to increase/decrease the gap */
+
+} 
+  /* Optional: Add spacing to the paragraph */
+  .modal-header + p {
+    margin-top: 15px; /* You can also adjust the gap above the paragraph */
+  }
+  .modal-title {
+    font-size: 24px;
+    font-weight: 700;
+  }
+  
+  p {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+  
+  /* Star Rating */
+  .star-rating {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  .star {
+    font-size: 32px;
+    cursor: pointer;
+    color: #ccc;
+    margin-right: 8px;
+  }
+  
+  .star.selected {
+    color: #ffc107; /* Gold color for selected stars */
+  }
+  
+  .star:last-child {
+    margin-right: 0;
+  }
+  
+  /* Styling for Feedback Buttons */
+.btn_quickFilter {
+    display: inline-block;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    padding: 10px 20px;
+    margin: 5px 10px;  /* Add space between buttons */
+    font-size: 14px;
+    background-color: #f7f7f7;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .btn_quickFilter:hover {
+    background-color: #e7e7e7;
+  }
+  
+  .btn_quickFilter.selected {
+    border-color: #d9534f;
+    background-color: #fef1f1;
+    color: #d9534f;
+  }
+  
+  .btn_quickFilter:focus {
+    outline: none;
+  }
+  
+  /* Input Styling */
+  .input-textBox {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
+  /* Submit Button */
+  .verify-btn {
+    background-color: #d9534f;
+    color: #fff;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .verify-btn:hover {
+    background-color: #c12d2a;
+  }
+  
+  .btn_linkText_black {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 14px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  
+  .btn_fullWidth {
+    width: 100%;
+  }
+  
