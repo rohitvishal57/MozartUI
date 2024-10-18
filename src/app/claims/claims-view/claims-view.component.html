@@ -157,9 +157,27 @@
                                       <label for="coverName">Cover Name</label>
                                   </div>
                               </div>
+
+                            <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="input-block form-floating input-block-renew">
+                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                    <label for="claimamount">Claim Amount</label>
+                                    <span class="ui-error">Please enter claim amount</span>
+                                </div>
+                            </div>
+                             
+                              <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                  <div class="input-block form-floating input-block-renew">
+                                      <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" />
+                                      <label for="admissionDate">Date of Admission</label>
+                                  </div>
+                              </div>
                           </div>
 
+                      
+
                           <div *ngIf="showFirstScenario" class="col-12" >
+                           
                             <section class="main_addBills mb-5" formArrayName="billsArray">
                                 <button type="button" class="btn btn-add" (click)="addBillRow()">Add More Bills</button>
                             
@@ -176,12 +194,20 @@
                                       <label for="addnotes">Date</label>
                                   </div>
                               </div>
-                              <div class="col-10 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                              <!-- <div class="col-10 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
-                                      <input type="number" class="form-control input-textBox" placeholder="Amount" formControlName="billAmount" />
-                                      <label for="addnotes">Amount</label>
+                                      <input type="number" class="form-control input-textBox" placeholder="Amount" id="claimamount" formControlName="billAmount" />
+                                      <label for="claimamount">Amount</label>
                                   </div>
-                              </div>
+                              </div> -->
+                              <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                <div class="input-block form-floating input-block-renew">
+                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                    <label for="claimamount">Claim Amount</label>
+                                    <!-- <span class="ui-error">Please enter claim amount</span> -->
+                                </div>
+                            </div>
+
                               <div class="col-2 col-sm-12 col-md-1 col-lg-1 col-xl-1 text-center">
                                 <button type="button" class="btn btn_bill_delete" (click)="removeBillRow(i)"> <img src="assets/Img/icon_delete_red2.svg"></button>
                               </div>
@@ -191,7 +217,7 @@
                       <div class="col-12" *ngIf="showSecondScenario">
                       <div  class="row mb-3">
 
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
                                 <label for="claimamount">Claim Amount</label>
@@ -204,7 +230,7 @@
                                   <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" />
                                   <label for="admissionDate">Date of Admission</label>
                               </div>
-                          </div>
+                          </div> -->
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">

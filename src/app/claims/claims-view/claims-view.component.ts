@@ -190,7 +190,7 @@ export class ClaimsViewComponent {
         this.fb.group({
           billNo: [""],
           billDate: [""],
-          billAmount: [""],
+          claimedAmount: [""],
         }),
       ]),
     });
@@ -257,6 +257,11 @@ export class ClaimsViewComponent {
       });
     } else if (selectedType === "Reimbursement") {
       this.showCashlessFields = false;
+      this.showSecondScenario = false;
+      this.showFirstScenario = false;
+      this.form.patchValue({
+        coverName: "",
+      });
       this.showReimbursementFields = true;
     } else {
       this.showCashlessFields = true;
