@@ -1,22 +1,34 @@
-<div class="main-container">
-    <h2>Profile Info</h2>
-    <div class="profile-details">
-        <div style=" padding-left: 28px;">
-            <img src="../../assets/images/img_profile.png" />
-        </div>
-        <div class="profile-fields">
-
-            <div class="field" *ngFor="let pr of profileDetails">
-                <div class="name-field">
-                    <div>
-                        <img src="../../assets/images/{{pr.icon}}.png" />
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>Profile Info</h2>
+            </div>
+            <section class="white_container">
+                <div class="row mb-5">
+                  <div class="col-12">
+                    <div class="userProfilePic">
+                        <img src="../../assets/images/img_profile.png" />
                     </div>
-                    <div>
-                        <p>{{pr.heading}}</p>
-                        <p class="bind_profile">{{pr.value}}</p>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item data-item-mb-15 " *ngFor="let pr of profileDetails">
+                        <div class="main_userDetails">
+                            <div class="info_userDetails">
+                                <div class="img_userProfile">
+                                    <img src="../../assets/images/{{pr.icon}}.png" />
+                                </div>
+                                <div class="details_userProfile">
+                                    <label>{{pr.heading}}</label>
+                                    <h6><span title={{pr.value}}>{{pr.value}}</span></h6>
+                                </div>
+                            </div>
+                            <div class="edit_userDetails"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
-</div>
+</main>

@@ -527,6 +527,7 @@ button {
 .siteHeader .logoMain .logoMainRight .logoRightNav {
   display: flex;
   gap: 7px;
+  align-items: center;
 }
 
 .siteHeader .logoTagMain {
@@ -3901,6 +3902,9 @@ input[type="search"]::-webkit-search-results-decoration {
   border: 2px solid #FFFFFF;
   box-shadow: 0px 12px 20px 0px #00000026;
 }
+.popupModalMain.modal-bgWhite .modal-content {
+  background: #ffffff;
+}
 .popupModalMain .modal-body {
   padding: 32px 0 24px;
   display: flex;
@@ -4123,6 +4127,9 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .memberPoliySummary .data-item {
   margin-bottom: 16px;
+}
+.data-item-mb-15 {
+  margin-bottom: 15px;
 }
 .list_addons {
   display: flex;
@@ -4675,6 +4682,22 @@ input[type="search"]::-webkit-search-results-decoration {
 .btn_linkText:hover {
   opacity: 0.8;
 }
+.btn_linkText_black {
+  background: transparent;
+  border-width: 0;
+  border-radius: 0;
+  padding: 0px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--text-black-2e);
+  align-items: center;
+  gap: 8px;
+}
+
+.btn_linkText_black:hover {
+  opacity: 0.8;
+}
 .common_searchWraper{
   width: auto;
 }
@@ -4699,3 +4722,51 @@ input[type="search"]::-webkit-search-results-decoration {
 .common_searchWraper .field_searchMain button img {
   position: initial;
 }
+/*---Profile styles Start--*/
+.userProfilePic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+.userProfilePic img {
+  width: 100%;
+  height: 100%;
+}
+.main_userDetails {
+  display: flex;
+  border-radius: 8px;
+  padding: 12px 16px;
+  background: #F9FAFB;
+  justify-content: space-between;
+}
+.main_userDetails .info_userDetails {
+  display: flex;
+  gap:12px;
+}
+.main_userDetails .info_userDetails .img_userProfile{
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFE7E5;
+}
+.main_userDetails .info_userDetails .details_userProfile {
+  display: flex;
+  flex-direction: column;
+  gap:4px;
+}
+.main_userDetails .info_userDetails .details_userProfile label{
+  font-weight: 500;
+  font-size: 12px;
+}
+.main_userDetails .info_userDetails .details_userProfile h6 {
+  margin: 0;
+  line-height: normal;
+}
+.main_userDetails .info_userDetails .details_userProfile h6 span {
+  display: block;
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/*---Profile styles Start--*/
