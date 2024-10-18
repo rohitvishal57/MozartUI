@@ -239,6 +239,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
   isDesktop: boolean = false;
   documentSize: any;
   uploadDoc: boolean = true;
+  otpErrorMsge:boolean = false;
+  errorMessage: string | undefined;
+
   constructor(private formBuilder: FormBuilder,
     private modalService: BsModalService,
     private endorsement_service: EndorsementsRequestsService,
@@ -260,9 +263,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       member: ['', Validators.required],
       endorsementType: ['', Validators.required],
       currentPolicyDetails: [''],
-      address1: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
-      address2: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
-      pincode: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
+      address1: [''],
+      address2: [''],
+      pincode: [''],
       endorsementDetails: this.formBuilder.group({
         // otpValue: [''],
         aadharNumber: [''],
@@ -280,12 +283,15 @@ export class EndorsementsNewRequestComponent implements OnInit {
         memberAlternateEmail: [''],
         memberPrimaryContactNumber: [''],
         memberAlternateContactNumber: [''],
-        CorrectionintheemailID:['']
-
       }),
       asignedTeam: ['Endorsement - Non financial'],
       addNotes: ['']
     });
+  }
+  validatePanInput(event: any): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.toUpperCase();  // Convert to uppercase for PAN format
+    this.caseCreationForm.get('endorsementDetails.panNumber')?.setValue(input.value);
   }
   get f(): { [key: string]: AbstractControl } {
     return this.caseCreationForm.get('endorsementDetails')['controls'];
@@ -308,6 +314,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
     // this._baseService.getReq(environment.baseURL + environment.api_URLs.user.validateToken + "?token=" + token + "&source=SELLER&action=" + action, this.authenticationEvent.ValidateToken);
   }
+  validateNumberInput(event: any): void {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, '');  // Remove non-numeric characters
+    if (input.value.length > 6) {
+      input.value = input.value.slice(0, 6);  // Limit the input to 6 digits
+    }
+    this.caseCreationForm.get('pincode')?.setValue(input.value);  // Update form control value
+  }
   removeDuplicates(myArray:any, Prop:any) {
     return myArray.filter((obj:any, pos:any, arr:any) => {
       return arr.map((mapObj:any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
@@ -317,6 +331,10 @@ export class EndorsementsNewRequestComponent implements OnInit {
     const value = event.target.value;
     // this.caseCreationForm.get('endorsementType').reset();
     this.caseCreationForm.get('asignedTeam').reset();
+    this.caseCreationForm.get('member').reset();
+    this.caseCreationForm.get('member').setValue('');
+    this.caseCreationForm.get('endorsementType').reset();
+    this.caseCreationForm.get('endorsementType').setValue('');
     this.caseCreationForm.get('asignedTeam').setValue('Endorsement - Non financial');
     this.caseCreationForm.get('endorsementDetails').reset();
     this.caseCreationForm.get('addNotes').reset();
@@ -325,6 +343,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if(value == ""){
       this.caseCreationForm.get('policyNumber').reset();
     }
+
+    // Reset filteredActivity to display all policy numbers again after each selection
+    this.filteredActivity = this.caseCreationForm.controls['policyNumber'].valueChanges.pipe(
+      startWith(''),
+      map((val: any) => this.activityList.slice())  // Ensure full list is restored
+    );
   }
   getActivityType(content = null) {
     this.activityList = this.policiesListData;
@@ -376,6 +400,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('aadharNumber').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.aadharCradNo);
     }
+    if (value == 'ChangeinInternationalAddress') {
+      this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]);
+      this.caseCreationForm.get('address1').updateValueAndValidity();
+      this.caseCreationForm.get('address2').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]);
+      this.caseCreationForm.get('address2').updateValueAndValidity();
+      this.caseCreationForm.get('pincode').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]);
+      this.caseCreationForm.get('pincode').updateValueAndValidity();
+    }
     if (value == 'alternateContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').updateValueAndValidity();
@@ -426,15 +458,10 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('email').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryEmailId);
     }
-    if (value == 'CorrectionintheemailID') {
-      this.caseCreationForm.get("endorsementDetails").get('CorrectionintheemailID').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
-      this.caseCreationForm.get("endorsementDetails").get('CorrectionintheemailID').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryEmailId);
-    }
     if (value == 'alternateEmail') {
       this.caseCreationForm.get("endorsementDetails").get('alternateEmail').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('alternateEmail').updateValueAndValidity();
-      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0].alternate_Email_Id);
+      this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Email_Id);
 
     }
     if (value == 'memberEmail') {
@@ -451,8 +478,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('panNumber').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.panNo);
     }
-   
-    if (value === 'panNumber' || value === 'nomineeContact' || value === 'aadharNumber'||value=='ChangeinInternationalAddress') {
+
+    if (value === 'panNumber' || value === 'aadharNumber'|| value=='ChangeinInternationalAddress') {
       this.uploadDoc = true;
       this.showOtpSection = false;
       this.isDisabled = false;
@@ -461,8 +488,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.showOtpSection = true;
       this.isDisabled = true;
     }
-    this.controlOfInput = value;
-    // this.setDefault();
+
+    if (value === 'nomineeContact') {
+      this.showOtpSection = false;
+    }
+
     if ((value === 'panNumber' || value === 'aadharNumber') && this.submitted) {
       // this.isFilenotSelected = true;
     }
@@ -473,6 +503,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   onKeydown(e:any) {
     return Helper.isNumberValidation(e);
+  }
+  onKeydownInternationalContactNumber(event:any){
+    const allowedKeys = [
+      'Backspace',
+      'Tab',
+      'ArrowLeft',
+      'ArrowRight',
+      'Delete'
+  ];
+
+  // Allow number keys and hyphen
+  const isNumberOrHyphen = /^[0-9-]$/.test(event.key);
+
+  if (!allowedKeys.includes(event.key) && !isNumberOrHyphen) {
+      event.preventDefault();
+  }
   }
   setDefault() {
     this.caseCreationForm.get("endorsementDetails").get('aadharNumber').clearValidators();
@@ -603,13 +649,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
               let file = this.selectedFile;
               let fileExt = file.name.replace(/^.*\./, '');
               const data = new FormData();
-              if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png') {
-                if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png') {
-                  data.append('Files', file)
-                  data.append('CaseId', ccID)
-                  data.append('ReferenceId', this.policyInfoDetails?.policyDetails?.qouteId)
-                  data.append('agentCode', this.agentCode)
-                }
+              if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png' || fileExt == 'jpg') {
+                data.append('Files', file)
+                data.append('CaseId', ccID)
+                data.append('ReferenceId', this.policyInfoDetails?.policyDetails?.qouteId)
+                data.append('agentCode', this.agentCode)
+                
                 this.endorsement_service.endorsementUploadFilesApi(data)
                   .pipe()
                   .subscribe((Respevent:any) => {
@@ -671,7 +716,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.documentType = file.type;
     this.documentSize = this.convertBytesToKB(file.size);
 
-    if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png') {
+    if (fileExt == 'pdf' || fileExt == 'jpeg' || fileExt === 'png' || fileExt == 'jpg') {
       this.showNote = false;
       this.showDocInfo = true;
     } else {
@@ -685,6 +730,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   
   openOtpPopup() {
+    this.otp = ['', '', '', '', '', ''];
     this.otpModal.show();
   }
 
@@ -693,6 +739,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
 
   sendOTP() {
+    this.otpErrorMsge = false;
     let selectedType = this.caseCreationForm.get('endorsementType').value;
     this.otpObj = {
       agentCode: this.agentCode,
@@ -712,8 +759,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
             otp: "",
           };
           this.openOtpPopup();
+          this.timeLeft = 60;
           this.startTimer();
-          this.sendOtptDisabled = true;
+          this.sendOtptDisabled = false;
         }
         else {
           this.sendOtptDisabled = false;
@@ -728,41 +776,55 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   validateOTP() {
     const otpCode = this.otp.join('');
-    let modal = {
-      agentCode: this.agentCode,
-      RequestId: this.otpInfoObject.requestId,
-      OTPNumber: otpCode,
-      emailId: this.otpObj.EmailId,
-      Mobile: this.otpObj.MobileNumber,
-    };
-    this.loginservice.validateOtpRequestApi(modal).subscribe(
-      (resp:any) => {
-        if (resp && resp.statusCode == "200" && resp.isSuccess) {
-          if (resp && resp.statusMessage) {
-             this.toast.success({ detail: resp.statusMessage});
-          } else {
-            this.toast.error({detail: "Something went wrong, please try again"})
+    if(otpCode.length == 6){
+      let modal = {
+        agentCode: this.agentCode,
+        RequestId: this.otpInfoObject.requestId,
+        OTPNumber: otpCode,
+        emailId: this.otpObj.EmailId,
+        Mobile: this.otpObj.MobileNumber,
+      };
+      this.loginservice.validateOtpRequestApi(modal).subscribe(
+        (resp:any) => {
+          if (resp && resp.statusCode == "200" && resp.isSuccess) {
+            if (resp && resp.statusMessage) {
+               this.toast.success({ detail: resp.statusMessage});
+               this.closeOtpPopup();
+               this.isDisabled = false;
+               this.sendOtptDisabled = true;
+            } else {
+              this.otpErrorMsge = true;
+              this.errorMessage = "Something went wrong, please try again";
+              this.isDisabled = false;
+              this.sendOtptDisabled = false;
+             // this.toast.error({detail: "Something went wrong, please try again"})
+            }
+           
+          } 
+          else {
+            if (resp && resp.errorMessage) {
+              this.otpErrorMsge = true;
+              this.errorMessage = resp.errorMessage;
+              // this.toast.error({ detail: resp.errorMessage});
+            } else {
+              this.toast.error({detail: "Something went wrong, please try again"})
+            }
+            this.sendOtptDisabled = false;
           }
-          this.isDisabled = false;
-          this.sendOtptDisabled = true;
-        } 
-        else {
-          if (resp && resp.errorMessage) {
-            this.toast.error({ detail: resp.errorMessage});
-          } else {
-            this.toast.error({detail: "Something went wrong, please try again"})
-          }
-          this.sendOtptDisabled = false;
+        },
+        (err:any) => {
+            this.otpInfoObject = null;
+            this.sendOtptDisabled = false;
+            this.closeOtpPopup();
+            this.toast.error({detail: "Something went wrong, please try again"});
         }
-        this.closeOtpPopup();
-      },
-      (err:any) => {
-          this.otpInfoObject = null;
-          this.sendOtptDisabled = false;
-          this.closeOtpPopup();
-          this.toast.error({detail: "Something went wrong, please try again"});
-      }
-    );
+      );
+      this.otpErrorMsge = false;
+    }else{
+      this.otpErrorMsge = true;
+      this.errorMessage = "Please Enter Valid OTP"
+    }
+  
   }
   memberIdChange(event:any) {
     const member = event.target.value;
@@ -800,32 +862,36 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   
   resendOTP(){
+    this.otpErrorMsge = false;
     this.sendOTP();
   }
 
-  //Start OTP timer
-  startTimer() {
-    this.timeLeft = 60;
-    this.isTimerRunning = false;
-    if (this.isTimerRunning) return; // Prevent multiple timers from starting
-    this.isTimerRunning = true;
-
-    // RxJS interval emits every second (1000ms)
-    const timer$ = interval(1000).pipe(
-      take(this.timeLeft) // Complete the observable after 'timeLeft' seconds
-    );
-
-    // Subscribe to the interval
-    timer$.subscribe({
-      next: () => {
-        this.timeLeft--; // Decrease the time left by 1 every second
-      },
-      complete: () => {
-        this.isTimerRunning = false; // Reset once the timer completes
-      }
-    });
+ // Start OTP timer
+startTimer() {
+  if (this.isTimerRunning) {
+    return; // Prevent multiple timers from starting
   }
-  
+
+  // Initialize the timer
+ 
+  this.isTimerRunning = true;
+
+  // RxJS interval emits every second (1000ms)
+  const timer$ = interval(1000).pipe(
+    take(this.timeLeft) // Complete the observable after 'timeLeft' seconds
+  );
+
+  // Subscribe to the interval only once
+  timer$.subscribe({
+    next: () => {
+      this.timeLeft--; // Decrease the time left by 1 every second
+    },
+    complete: () => {
+      this.isTimerRunning = false; // Reset the flag once the timer completes
+    }
+  });
+}
+
   omit_special_char(event:any) {
     var k;
     k = event.charCode;  //         k = event.keyCode;  (Both can be used)
