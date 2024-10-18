@@ -43,7 +43,12 @@
               <option value="te">Telugu</option>
             </select>
           </div>
-          <img *ngIf="isLoggedIn" src="../../../assets/images/name.png" [routerLink]="['/profile']">
+          
+        </div>
+        <div class="headerProfile" >
+          <a [routerLink]="['/profile']" *ngIf="isLoggedIn">
+            <img  src="../../../assets/images/name.png" >
+          </a>
         </div>
       </div>
     </div>

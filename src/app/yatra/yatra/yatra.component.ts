@@ -103,7 +103,8 @@ export class YatraComponent {
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
     console.log(this.formSequence);
-    this.Code = localStorage.getItem('code');
+    if (localStorage.getItem('code'))
+      this.Code = localStorage.getItem('code');
     // this.verticalCode = localStorage.getItem('verticalCode');
     // this.insurancetypecode = history.state.productData.insurancetypecode;
     // this.productid = history.state.productData.productid;
@@ -111,11 +112,15 @@ export class YatraComponent {
     // this.productEndDate = history.state.productData.productEndDate;
     // this.productStartDate = history.state.productData.productStartDate;
     // this.proposalNum = history.state.productData.proposalNumber;
-    this.agentCode = localStorage.getItem('agentCode');
+    if (localStorage.getItem('agentCode'))
+      this.agentCode = localStorage.getItem('agentCode');
     // this.agencyCode = history.state.productData.agencyCode;
-    this.productId = history.state.productData.productId;
-    this.partnerId = history.state.productData.partnerId;
-    this.proposalNum = history.state.productData.proposalNum;
+    if (history.state.productData.productId)
+      this.productId = history.state.productData.productId;
+    if (history.state.productData.partnerId)
+      this.partnerId = history.state.productData.partnerId;
+    if (history.state.productData.proposalNum)
+      this.proposalNum = history.state.productData.proposalNum;
     if (history.state.productData.tenureAmounts) {
       this.tenureAmount = history.state.productData.tenureAmounts
     }
@@ -128,6 +133,7 @@ export class YatraComponent {
     // console.log(this.formData)
     // this.formData = { ...this.formData, ...{ productName: this.productName } }
     // this.formData = { ...this.formData, ...{ productName: this.productName } }
+    if(sessionStorage.getItem('allJsonForm'))
     this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
   }
@@ -546,6 +552,7 @@ export class YatraComponent {
     }
     console.log(this.dynamicFormGroup.value);
 
+
   }
 
   initializeSubControls(subControls: any) {
@@ -771,6 +778,8 @@ export class YatraComponent {
   }
 
   triggerFileInput(controlName: string) {
+    console.log("getting called");
+    
     const fileInputControl = this.document.getElementById(controlName);
     fileInputControl?.click();
   }
@@ -3178,6 +3187,7 @@ export class YatraComponent {
           fullQuoteRequestJson: JSON.stringify(data)
         }
         console.log(reqData);
+
 
         this.yatraService.getFullQuote(reqData).subscribe({
           next: (response: any) => {
