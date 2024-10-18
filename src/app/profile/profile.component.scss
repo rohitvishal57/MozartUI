@@ -8,6 +8,10 @@
     .profile-details {
         padding-top: 16px;
 
+        .profile-img {
+            padding: 32px 0 0 20px;
+        }
+
         .profile-fields {
             display: flex;
             flex-wrap: wrap;
