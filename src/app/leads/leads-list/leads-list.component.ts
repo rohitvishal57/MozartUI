@@ -133,6 +133,7 @@ export class LeadsListComponent {
           console.log("Renewal List", this.leadsList);
           this.countsList = response;
           this.totalRecords = this.countsList.totalCount;
+          this.appliedFiltersCount =0;
           if (this.filterLeads == true) {
             this.appliedFiltersCount = response.totalCount;
           }
