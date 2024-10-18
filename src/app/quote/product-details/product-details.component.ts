@@ -13,20 +13,23 @@ import { QuoteService } from '../quote.service';
 })
 export class ProductDetailsComponent {
 
-  state:any
+  state: any
   productId: any
-  partnerId : any;
-  tab:any[]=[]
-  activeIndex:any=0
-  groupedFeatures:any[]=[]
+  partnerId: any;
+  tab: any[] = []
+  activeIndex: any = 0
+  groupedFeatures: any[] = []
+  healthAddOns : any[] =[]
+  optionalCovers :any[]=[]
   formData: any;
   formSequence: any[] = [];
+  displayInfo : string ='Health Add On';
   private allJsonFormData: any[] = []
 
-  
 
-  constructor(private quoteservices: QuoteService,private router: Router,private toast: NgToastService,
-    private encryptionService: EncryptionService,private commonService:CommonService
+
+  constructor(private quoteservices: QuoteService, private router: Router, private toast: NgToastService,
+    private encryptionService: EncryptionService, private commonService: CommonService
   ) {
 
   }
@@ -44,16 +47,16 @@ export class ProductDetailsComponent {
     let features: any
     const reqData = {
       "productId": this.productId,
-      "agentCode":localStorage.getItem('agentCode')
+      "agentCode": localStorage.getItem('agentCode')
     }
     console.log(reqData);
     this.quoteservices.Getproductdetailsandfeatures(reqData).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res.data);
         this.state = res.data;
         this.state.keyFeatures = JSON.parse(this.state.keyFeatures);
         features = res.data.productFeatures
-        this.groupedFeatures = features.reduce((result:any, { categoryName, featureName, featureDescription }:any) => {
+        this.groupedFeatures = features.reduce((result: any, { categoryName, featureName, featureDescription }: any) => {
           if (!result[categoryName]) {
             result[categoryName] = [];
           }
@@ -70,6 +73,11 @@ export class ProductDetailsComponent {
 
   onTabChange(event: any) {
     this.activeIndex = event.index;
+    if (this.activeIndex == 0) {
+     this.displayInfo = 'Health Add On';
+    } else if (this.activeIndex == 1) {
+      this.displayInfo = 'Optional Covers';
+    }
   }
   async buyNow(item: any) {
     this.formData = { ...this.formData, productName: item.productName }
@@ -77,8 +85,8 @@ export class ProductDetailsComponent {
       await this.getFormSequence(item);
       console.log(item)
       const productData = {
-        partnerId : item.partnerId,
-        productId : item.productId
+        partnerId: item.partnerId,
+        productId: item.productId
 
       }
       console.log(productData)
