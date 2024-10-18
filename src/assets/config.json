@@ -3,7 +3,7 @@
     "baseUrl1":"https://upuat.adityabirlahealth.com/",    
 
     "getRenewalList": "renewal/api/getrenewallist",
-    "getRenewalInfo":"renewal/api/renewalinfotest",
+    "getRenewalInfo":"renewal/api/renewalinfo",
     "getTenureDetails":"renewal/api/getquoteforsingleproduct",
     "sendRenewalWhatappsms":"renewal/api/sendrenewalwhatappsms",
     "sendRenewalsms":"renewal/api/sendrenewalsms",
@@ -93,5 +93,6 @@
     "getPolicyNumberDetails":"yatra/api/getcustomerpolicydetails",
     "profileDetails":"auth/api/GetAgentProfileDetails",
     "fetchPolicyDetailsFromFile":"yatra/api/getcustomerpolicydetailsfrompolicydocument",
-    "justPayRedirection":"Yatra/api/Payment/JuspayOrder"
+    "justPayRedirection":"Yatra/api/Payment/JuspayOrder",
+    "paymentGateway":"yatra/api/Payment/JuspayOrder"
 }

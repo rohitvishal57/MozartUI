@@ -20,8 +20,6 @@ export class RenewalsService {
   policy$ = this.policyState.asObservable();
   private quote = new BehaviorSubject<any>({});
   quote$ = this.quote.asObservable();
-  private productsListSubject = new BehaviorSubject<any[]>([]);
-  productsList$ = this.productsListSubject.asObservable();
 
   setQuote(quoteObject: any) {
     this.quote.next(quoteObject);
@@ -35,11 +33,6 @@ export class RenewalsService {
   }
   setPolicyState(policyNo: string, activeSection: string) {
     this.policyState.next({ policyNo, activeSection });
-  }
-  setProductsList(productsList: any[]) {
-    this.productsListSubject.next(productsList);
-    console.log("service productsproductsList",this.productsListSubject);
-    
   }
   getRenewalListApi(reqBody: any) {
     const getRenewalList = this.configService.config.baseUrl + this.configService.config.getRenewalList;
@@ -88,5 +81,9 @@ export class RenewalsService {
   updateMemberDetailsApi(reqBody: any){
     const updateMemberDetails = this.configService.config.baseUrl + this.configService.config.updateMemberDetails;
     return this.httpService.post(updateMemberDetails, reqBody);
+  }
+  paymentGatewayApi(reqBody:any){
+    const paymentGateway = this.configService.config.baseUrl + this.configService.config.paymentGateway;
+    return this.httpService.post(paymentGateway, reqBody);
   }
 }

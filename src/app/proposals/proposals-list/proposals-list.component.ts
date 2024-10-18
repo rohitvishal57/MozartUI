@@ -42,7 +42,7 @@ export class ProposalsListComponent {
     "productVarientName": "",  
     "policyNumber": "",  
     "proposalNumber": "", 
-    "intermediaryID": "5100003", 
+    "intermediaryID": this.agentCode, 
     "policyType": "",  
     "startDate": null as string | null,
     "endDate": null as string | null, 

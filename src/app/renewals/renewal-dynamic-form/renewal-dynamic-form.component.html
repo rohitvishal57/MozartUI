@@ -4,15 +4,15 @@
           <div class="bcl_main">
               <div>Select from any customisation below</div>
               <div class="processBtnGroup">
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'primary', 'active-green': activeSection === 'additional' || activeSection === 'payment' ||  activeSection === 'policySummary' }" (click)="setSection('primary')">
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'primary', 'active-green': activeSection === 'additional' || activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc' }" (click)="setSection('primary')">
                       <div><i class="fa-solid fa-users"></i></div>
                       <div>Primary</div>
                   </div>
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'additional', 'active-green': activeSection === 'payment' ||  activeSection === 'policySummary' }" (click)="setSection('additional')">
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'additional', 'active-green': activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc'}" (click)="setSection('additional')">
                       <div><i class="fa-solid fa-square-plus"></i></div>
                       <div>Additional</div>
                   </div>
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'payment' ||  activeSection === 'policySummary' }" (click)="setSection('policySummary')">
+                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc'}" (click)="setSection('policySummary')">
                       <div><i>₹</i></div>
                       <div>Payment</div>
                   </div>
@@ -253,17 +253,6 @@
                                               <span class="ui-prefix">kg</span>
                                           </div>
                                       </div>
-                                      <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                          <div class="input-block input-block-renew focus">
-                                              <div class="fields-blockHeight">
-                                                  <input type="text" formControlName="height" placeholder="Enter height" class="input-textBox">
-                                                  <input type="text" formControlName="heightin" placeholder="Enter height" class="input-textBox">
-                                                  <span class="ui-prefix ft-prefix">ft</span>
-                                                  <span class="ui-prefix in-prefix">in</span>
-                                              </div>
-                                              <span class="ui-error" *ngIf="form.get('height')?.invalid || form.get('height')?.invalid">Please enter height</span>
-                                          </div>
-                                      </div> -->
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="gender" name="gender" formControlName="Gender" placeholder="" class="form-control input-selectBox">
@@ -1191,7 +1180,6 @@
                     <header>Policy Summary
                         <div class="btn_groupAction">
                             <!-- <button type="button" value="copylink" class="btn_pink btn_copylink btn_copiedlink">Link copied!</button> -->
-                            <button type="button" value="copylink" class="btn_pink btn_copylink" *ngIf="hideSection">Copy link to share <img src="assets/Img/icon_link.svg"></button>
                             <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                         </div>
                     </header>
@@ -1365,6 +1353,124 @@
             </div>
         </div>
       </div>
+      <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'kyc' ">
+        <div class="bcc_main">
+            <div class="accordionMain">  
+                <div class="accordionItem">
+                    <header>
+                        KYC
+                        <!-- <button type="button" value="sectionedit" class="btn_iconText accordionArrow"><img src="images/icon_arrow_back_mobile.svg"></button> -->
+                    </header>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="detailsRow">
+                                <div class="row" *ngIf="actionKyc == 3001">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                        <div class="detailsHeading mb-3">Proceed Your KYC with CKYC</div>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4">
+                                                <div class="makePaymentOnline">
+                                                    <div class="row">
+                                                        <div class="raido_policyTenure raido_paymentType radio_format">
+                                                         <div class="input-radiolabel payment-radio-Cnt col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="handleKyc(3002)" [ngClass]="{'active': selectedPaymentType == 'E-Nach'}">
+                                                             <input type="radio" name="paymentType" value="E - Nach">
+                                                             <span><em class="label">CKYC</em><img src="assets/Img/icon_faster_process.svg"></span>
+                                                         </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>   
+                                <div class="row" *ngIf="actionKyc == 3002">
+                                    <form [formGroup]="kycFormGroup" (ngSubmit)="handleKyc(3003)">
+                                        <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input type="text" id="ckyc-panno" name="ckyc-panno" placeholder="" class="form-control input-textBox" formControlName="panNumber">
+                                                <label for="ckyc-panno">PAN Number</label>
+                                                <div *ngIf="kycFormGroup.get('panNumber')?.invalid && (kycFormGroup.get('panNumber')?.touched || kycDetailsSubmitted)" class="error-message text-danger">
+                                                    <small *ngIf="kycFormGroup.get('panNumber')?.errors?.['required']">PAN Number is required.</small>
+                                                    <small *ngIf="kycFormGroup.get('panNumber')?.errors?.['pattern']">Invalid PAN format. Example: ABCDE1234F</small>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input type="text" id="ckyc-dob" name="ckyc-dob" placeholder="" class="form-control input-textBox" formControlName="dateOfBirth">
+                                                <label for="ckyc-dob">DOB</label>
+                                                <div *ngIf="kycFormGroup.get('dateOfBirth')?.invalid && (kycFormGroup.get('dateOfBirth')?.touched || kycDetailsSubmitted)" class="error-message text-danger">
+                                                    <small *ngIf="kycFormGroup.get('dateOfBirth')?.errors?.['required']">Date of Birth is required.</small>
+                                                    <small *ngIf="kycFormGroup.controls['dateOfBirth'].errors?.['pattern']"> Please enter DOB in yyyy-mm-dd format</small>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <button type="submit" class="btn_red btn_redRenew">Verify KYC</button>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    </form>
+                                </div>
+                                <div class="row" *ngIf="actionKyc == 3003">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="ckyc-fname" name="ckyc-fname" [(ngModel)]="kycData.firstName" placeholder="" class="form-control input-textBox" >
+                                            <label for="ckyc-fname">First Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="ckyc-idnumber" name="ckyc-idnumber" [(ngModel)]="kycData.panNo" placeholder="" class="form-control input-textBox" >
+                                            <label for="ckyc-idnumber">ID Number</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="ckyc-dob" name="ckyc-dob" [(ngModel)]="kycData.memberDobProposer" placeholder="" class="form-control input-textBox" >
+                                            <label for="ckyc-dob">DOB</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="ckyc-address1" name="ckyc-address1" [(ngModel)]="kycData.proposerAddress1" placeholder="" class="form-control input-textBox" >
+                                            <label for="ckyc-address1">Address Line 1</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="ckyc-address1" name="ckyc-address2" [(ngModel)]="kycData.proposerAddress2" placeholder="" class="form-control input-textBox" >
+                                            <label for="ckyc-address2">Address Line 2</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="ckyc-city" name="ckyc-city" [(ngModel)]="kycData.city" placeholder="" class="form-control input-textBox" >
+                                            <label for="ckyc-city">City</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="ckyc-idnumber" name="ckyc-state" [(ngModel)]="kycData.state" placeholder="" class="form-control input-textBox" >
+                                            <label for="ckyc-state">State</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="ckyc-mobileno" name="ckyc-mobileno" [(ngModel)]="kycData.mobileNumber" placeholder="" class="form-control input-textBox" >
+                                            <label for="ckyc-mobileno">Mobile Number</label>
+                                        </div>
+                                    </div>
+                                </div>                     
+                            </div>                   
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+      </div>
       <div class="bodyColumns bodyColumnsRight" *ngIf="activeSection != 'payment' && formId != 5002 && formId != 5003 && hideSection">
           <div class="bcr_main planDetails">
               <header>
@@ -1437,11 +1543,19 @@
               </div>
           </div>
           <div class="bi_right">
-              <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection != 'payment' ">Proceed</button>
-              <button type="button" value="renewnow" class="btn_red btn_redRenew" *ngIf="activeSection != 'payment' " (click)="renewNow()">Renew Now</button>
-              <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" *ngIf="activeSection === 'payment' && hideSection"  (click)="proceed('back')">Back</button>
-              <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" *ngIf="activeSection === 'payment'">Next</button>
-          </div>
+              <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Proceed</button>
+              <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="renewNow()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Renew Now</button>
+              <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()" *ngIf="activeSection == 'payment' || activeSection == 'policySummary' || activeSection == 'kyc' ">Back</button>
+              <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" (click)="next1()" *ngIf="activeSection == 'policySummary' || activeSection == 'kyc' ||activeSection == 'payment' && (selectedPaymentType =='offline' || selectedPaymentType =='' )">Next</button>
+              <button type="button" value="renewnow" class="btn_red btn_redRenew" 
+              (click)="payNow()" 
+              *ngIf="activeSection == 'payment' && 
+                      (selectedPaymentType == 'E-Nach' || 
+                       selectedPaymentType == 'E-Mandate' || 
+                       selectedPaymentType == 'Auto_Debit')">
+              Pay Now
+            </button>
+         </div>
       </div>
   </div>
 </div>
