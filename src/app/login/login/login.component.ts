@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit{
       this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
         .subscribe({  
           next: (res:any)=>{
-            this.contactInfoData = (res || res?.data).contactInfo?.map((obj: any) => obj.communicationValue);
+            this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
             this.openModal(this.contactInfoData);
           },
           error: (err => {
@@ -241,9 +241,9 @@ export class LoginComponent implements OnInit{
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody)
         .subscribe({  
           next: (res:any)=> {
-            if(res.isSuccess && res.token !== null && res.statusMessage === "OTP Successfully Validated") {
+            if(res.data.isSuccess && res.data.token !== null && res.data.statusMessage === "OTP Successfully Validated") {
               this.loginService.storeToken(res.token);
-              localStorage.setItem('agentCode', res.agentCode);
+              localStorage.setItem('agentCode', res.data.agentCode);
               this.router.navigate(['dashboard']);
             } else {
               this.errorMessage = res.errorMessage;

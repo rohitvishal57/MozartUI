@@ -62,7 +62,7 @@ export class SendOtpViaComponent implements OnInit{
     this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
           next: (res:any) => {
-            localStorage.setItem("requestId", res?.requestId);
+            localStorage.setItem("requestId", res?.data?.requestId);
             if(res?.requestId == null) {
               this.dialogRef.close({data: res.errorMessage, status:'Failure'});
             }
