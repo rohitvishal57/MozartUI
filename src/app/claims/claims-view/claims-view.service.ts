@@ -58,6 +58,7 @@ export class ClaimsViewService {
   }
 
   getClaimStatus(claimsReqBody: any) {
-    return this.httpService.post("https://localhost:7026/api/getclaimstatus", claimsReqBody);
+    const getClaimStatus = this.configService.config.baseUrl + this.configService.config.getClaimStatus
+    return this.httpService.post(getClaimStatus, claimsReqBody)
   }
 }

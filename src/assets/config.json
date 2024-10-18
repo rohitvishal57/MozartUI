@@ -41,6 +41,7 @@
     "blackListedHospitals":"claims/api/blacklistedhospitals",
     "getClaimsDetails":"claims/api/getclaimdetails",
     "getHospitals":"claims/api/gethospitaldetails",
+    "getClaimStatus":"claims/api/getclaimstatus",
 
     "partnerlogin":"auth/api/login",
     "validateadfstoken":"auth/api/validateadfstoken?Idtoken=",

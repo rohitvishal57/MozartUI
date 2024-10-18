@@ -90,14 +90,14 @@ claimsReqBody =  {
     "sellerId": this.agentCode,
     "sortColumn": "ReportedDateTime",
     "sortdirection": "ASC",
-    "status": "",
-    "requestType":"",
-    "searchType": "string",
-    "searchString": "string",
+    "status": "reimbursement",
+    "requestType": "",
+    "searchType": "",
+    "searchString": "",
     "pageNumber": 1,
     "pageSize": 270,
-    "fromDate": "2022-04-01",
-    "toDate": "2024-04-01"
+    "fromDate": null,
+    "toDate": null
   }
 fetchData(): void {
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
@@ -164,14 +164,15 @@ fetchData(): void {
   .map((requestType:any) => requestType.name);
   this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
   this.fetchData();
+  this.getProducts();
   this.toggeledropdown=false;
 }
 
 cancel() {
   this.fromDate = null;
   this.toDate = null;
-  this.claimsReqBody.fromDate = '';
-  this.claimsReqBody.toDate = '';
+  this.claimsReqBody.fromDate = null;
+  this.claimsReqBody.toDate = null;
   this.toggeledropdown = false;
   this.fetchData();
 }
@@ -184,8 +185,8 @@ clear(){
   this.appliedFiltersCount = 0;
  // this.claimsReqBody.productName = "";
   this.claimsReqBody.requestType = "";
-  this.claimsReqBody.fromDate = "";
-  this.claimsReqBody.toDate = "";
+  this.claimsReqBody.fromDate = null;
+  this.claimsReqBody.toDate = null;
   this.fetchData();
 }
   //-----------search dropdown----------//
@@ -205,7 +206,7 @@ clear(){
 
       this.fetchData();
      // this.toggleSearchdropdown = false;
-     this.claimsReqBody.searchType = '';
+    //  this.claimsReqBody.searchType = '';
       this.claimsReqBody.searchString = '';
       console.log('searchvalue', this.claimsReqBody.searchString);
       console.log('searchtype', this.claimsReqBody.searchType);    
