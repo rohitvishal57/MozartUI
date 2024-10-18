@@ -786,9 +786,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       };
       this.loginservice.validateOtpRequestApi(modal).subscribe(
         (resp:any) => {
-          if (resp && resp.statusCode == "200" && resp.isSuccess) {
-            if (resp && resp.statusMessage) {
-               this.toast.success({ detail: resp.statusMessage});
+          if (resp && resp.data.statusCode == "200" && resp.data.isSuccess) {
+            if (resp && resp.data.statusMessage) {
+               this.toast.success({ detail: resp.data.statusMessage});
                this.closeOtpPopup();
                this.isDisabled = false;
                this.sendOtptDisabled = true;
@@ -799,15 +799,15 @@ export class EndorsementsNewRequestComponent implements OnInit {
               this.sendOtptDisabled = false;
              // this.toast.error({detail: "Something went wrong, please try again"})
             }
-           
           } 
           else {
-            if (resp && resp.errorMessage) {
+            if (resp && resp.data.errorMessage) {
               this.otpErrorMsge = true;
-              this.errorMessage = resp.errorMessage;
+              this.errorMessage = resp.data.errorMessage;
               // this.toast.error({ detail: resp.errorMessage});
             } else {
-              this.toast.error({detail: "Something went wrong, please try again"})
+              this.errorMessage = "Something went wrong, please try again";
+              // this.toast.error({detail: "Something went wrong, please try again"})
             }
             this.sendOtptDisabled = false;
           }

@@ -233,9 +233,9 @@ export class EndorsementsRequestsComponent implements OnInit {
   calculateAppliedFiltersCount(){
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
       (requestType:any) => requestType.selected).length;
-      // const selectedProductsCount = this.productsList.filter(
-      //   (product) => product.selected).length;
-        let count = selectedPolicyTypesCount;
+      const selectedProductsCount = this.productsList.filter(
+        (product:any) => product.selected).length;
+        let count = selectedPolicyTypesCount + selectedProductsCount;
         if (this.fromDate && this.toDate) {
           count++;
         }
