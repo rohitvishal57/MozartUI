@@ -2175,7 +2175,6 @@ export class YatraComponent {
 
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
-    console.log("formIndex",formIndex);
     if ( formIndex === '8') {
       this.customerFeedbackModule.show();
     }
