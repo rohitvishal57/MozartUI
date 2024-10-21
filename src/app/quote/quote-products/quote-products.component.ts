@@ -397,6 +397,8 @@ export class QuoteProductsComponent implements OnInit {
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
+        console.log(reqdata);
+        
         // Proceed with deletion if confirmed
         this.quoteService.deleteagentcartitems(reqdata).subscribe({
           next: (res) => {
@@ -413,9 +415,9 @@ export class QuoteProductsComponent implements OnInit {
       }
     });
   }
-  deleteallcartitems(){
+  async deleteallcartitems(){
     const list:any=[];
-    this.cartProductList.forEach((item:any)=>{
+    await this.cartProductList.forEach((item:any)=>{
       list.push(item.id)
     })
     this.deleteagentcartitems(list);
