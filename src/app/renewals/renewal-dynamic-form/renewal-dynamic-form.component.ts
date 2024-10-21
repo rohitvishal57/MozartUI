@@ -91,12 +91,17 @@ export class RenewalDynamicFormComponent implements OnInit {
       if (policyNumber) {this.policyNumber = policyNumber;}
       if(activeSection){
         if(activeSection == 'payment'){
+          this.getRenewalInfo();
           this.activeSection='policySummary';
           this.hideSection=false
-        }else{this.activeSection=activeSection}
+        }
+        else{
+          this.getRenewalInfo();
+          this.getProducts();
+          this.activeSection=activeSection
+        }
       }
     });
-   this.getRenewalInfo();
    this.initializeForm();
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
  }
@@ -424,7 +429,6 @@ getRenewalInfo() {
           this.renewalInfo.response.policyData[0].Members[0].upsellPropensityDetails[2].upsellNetPremium=Math.round(this.renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium);
           this.renewalInfo.response.policyData[0].Members[0].upsellPropensityDetails[1].upsellNetPremium=Math.round(this.renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium);
         }
-        this.getProducts();
         this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
       },
       (err) => {console.log("Error coming from getRenewalInfo API", err);}

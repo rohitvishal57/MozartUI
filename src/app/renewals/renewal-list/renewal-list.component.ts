@@ -51,7 +51,8 @@ export class RenewalListComponent {
     private router: Router,
     private datePipe: DatePipe,
     private commonService:CommonService,
-    private toast: NgToastService,private encryptionService: EncryptionService
+    private toast: NgToastService,
+    private encryptionService: EncryptionService
   ) {}
 
   renewalLisRequestBody={
