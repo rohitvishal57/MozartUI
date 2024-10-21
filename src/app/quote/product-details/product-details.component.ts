@@ -79,6 +79,8 @@ export class ProductDetailsComponent {
       this.displayInfo = 'Optional Covers';
     }
   }
+
+
   async buyNow(item: any) {
     this.formData = { ...this.formData, productName: item.productName }
     try {
@@ -125,4 +127,5 @@ export class ProductDetailsComponent {
       this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
+  
 }
