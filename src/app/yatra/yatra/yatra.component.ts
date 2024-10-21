@@ -370,31 +370,40 @@ export class YatraComponent {
             //   }
             // })
             if (control.type == 'questionnaire') {
+              let demoMember:any;
               let demoTypeIndex: any;
               let doneButton: any;
+              console.log(control);
               if (control.subControls) {
+                demoMember = control.subControls.findIndex(control => control.name === 'demoMember')
                 demoTypeIndex = control.subControls.findIndex(control => control.name === 'demoType');
                 doneButton = control.subControls.find(control => control.name === 'doneButton');
+                console.log(control);
                 control.subControls = [
+                  ...control.subControls.slice(demoMember, demoMember + 1),
                   ...control.subControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
                 ]; // Keep the first control (or reset)
+                console.log(control);
               }
               console.log(this.formData['insuredMemberDetails']);
               this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {
                 if (control.subControls) {
-                  let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[0]));
+                  let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
+                  let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
 
                   const tempRelationshipType = JSON.parse(member.relationshipType);
+                  tempMemberControl.label = tempRelationshipType.value;
+                  tempMemberControl.name = tempRelationshipType.value.toLowerCase();
                   tempInnerControl.label = tempRelationshipType.value;
                   tempInnerControl.name = tempRelationshipType.value;
-                  console.log(tempInnerControl);
-
+                  tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
+                  control.subControls?.push(tempMemberControl);
                   control.subControls?.push(tempInnerControl);
                 }
               });
               control.subControls?.push(doneButton);
               console.log(control);
-              this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
+              this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls.slice(2)));
             }
             else {
               control.subControls.forEach((subControl: ISubControl) => {
@@ -430,7 +439,6 @@ export class YatraComponent {
                 }
               });
             }
-
 
             console.log(this.initializeSubControls(control.subControls));
 
@@ -592,11 +600,8 @@ export class YatraComponent {
         if (control.innerArrayControl) {
           let tempFormArray = this.fb.array([]);
           console.log(control.innerArrayControl);
-          for (let i = 0; i < control.innerArrayControl.length; i++) {
-            control.innerArrayControl?.forEach((element: any) => {
-              console.log(element);
-              tempFormArray.push(this.initializeDynamicFormControls(element, i));
-            });
+          for (let i = 1; i < control.innerArrayControl.length; i++) {
+              tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i));
           }
           formGroup.addControl(control.name, tempFormArray);
         }
@@ -787,6 +792,9 @@ export class YatraComponent {
 
   hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean {
     return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
+  }
+  hasInnerValue(control:any, parentControl: any | null = null,innerControl: any | null = null, index: any | null = null) {
+    return parentControl != null && index != null ? ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(innerControl.name)?.value : this.dynamicFormGroup.get(control.name)?.value
   }
 
   triggerFileInput(controlName: string) {
@@ -1195,10 +1203,10 @@ export class YatraComponent {
   }
 
 
-  onInputChange(event: any, control: any, parentControl: any = null, index: any = null) {
+  onInputChange(event: any, control: any, parentControl: any = null, index: any = null,subControl: any = null) {
     this.changesMade = true;
-    // console.log(event.target.value,event);
     let eventValue = event.target.value;
+    console.log(event,eventValue,control,parentControl,index);
     if (control.name === "chequeNumber") {
       const chequeNumber = event.target.value;
       if (chequeNumber.length > 6) {
@@ -1406,7 +1414,6 @@ export class YatraComponent {
         });
       });
     }
-
   }
 
   // calculateAge(dob: string): number {
@@ -3271,7 +3278,7 @@ export class YatraComponent {
   /* AddOn Related Method */
 
   onCheckboxChange(event: any, control: any, parentControl: any = null, index: number | null = null) {
-    console.log(event.target, control, parentControl, index, this.dynamicFormGroup);
+    console.log(event,event.target, control, parentControl, index, this.dynamicFormGroup);
 
     this.changesMade = true;
     if (parentControl != null && typeof parentControl === 'object') {
@@ -3289,12 +3296,34 @@ export class YatraComponent {
       if (control.onChangeMethod)
         this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, true, control?.name, parentControl?.name, index, 'add');
     }
+    if ((event.target.type === 'checkbox')) {
+      if (parentControl != null &&  parentControl.type == 'questionnaire') {
+        const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
+        console.log('questionnaire',arrayName);
+        parentControl.subControls.forEach((subControl: any) => {
+          if (subControl.name === arrayName) {
+            subControl.visible = event.target.checked;
+            console.log(subControl, event.target.value);
+          }
+          
+          if (subControl.name === 'doneButton') {
+            subControl.disabled = !event.target.checked;
+            console.log(subControl, event.target.value);
+          }
+        });
+        this.openPopUp();
+        // this.showOverlay(parentControl);
+      }
+
+      // Call the method only if the 'method' key is present in the JSON and the checkbox is checked  this.resolveMethod(control.method, control?.popUpFormId, control?.name, control?.dependentControls, 'add')
+    }
     if ((event.target.type === 'button')) {
       if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'questionnaire') {
         console.log(event.target.type, event.target.checked);
         console.log(control, parentControl);
-        this.question = parentControl.name
-        this.showOverlay(parentControl);
+        this.question = parentControl.name;
+        this.openPopUp();
+        // this.showOverlay(parentControl);
       }
     }
     else {
@@ -3724,7 +3753,7 @@ export class YatraComponent {
                 if (this.selectedIndex == index) {
                   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   this.selectedIndex = index;
-                  this.formData.tenure = this.selectedIndex;
+                  this.formData.tenure = this.selectedIndex+1;
                 }
                 console.log(this.selectedIndex);
               } else if (index === 1) {
@@ -3736,7 +3765,7 @@ export class YatraComponent {
                 if (this.selectedIndex == index) {
                   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   this.selectedIndex = index;
-                  this.formData.tenure = this.selectedIndex;
+                  this.formData.tenure = this.selectedIndex+1;
                 }
               } else if (index === 2) {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
@@ -3747,7 +3776,7 @@ export class YatraComponent {
                 if (this.selectedIndex == index) {
                   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
                   this.selectedIndex = index;
-                  this.formData.tenure = this.selectedIndex;
+                  this.formData.tenure = this.selectedIndex+1;
                 }
               }
             });
@@ -3928,9 +3957,12 @@ export class YatraComponent {
   }
 
   closeOverlay(subControl: any) {
-
-    this.isOverlayVisible = false;
+    this.closePopUp();
     subControl.visible = false;
+  }
+  closePopUp(){
+    this.isOverlayVisible = false;
+
   }
 
   changeOverLayDone(control: any, parentControl: any, changeValue: boolean = false) {
@@ -3957,6 +3989,7 @@ export class YatraComponent {
   showOverlay(control: any) {
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
+        console.log(formControl,control);
         if (formControl.name == 'recalculate') {
           formControl.visible = true;
         }
@@ -3972,10 +4005,11 @@ export class YatraComponent {
         }
       })
     })
-
+    this.openPopUp();
+  }
+  openPopUp(){
     this.isOverlayVisible = true;
   }
-
   verifyKYC() {
     const proposerDOB = this.dynamicFormGroup.get('memberDobProposer')?.value;
     const panNumber = this.dynamicFormGroup.get('panNo')?.value;
@@ -4128,59 +4162,58 @@ export class YatraComponent {
     else {
       this.isOverlayVisible = true;
     }
-    console.log(subControl, control);
+    console.log(subControl, control,this.form);
   }
   addNewDisease(subControl: any, control: any) {
     console.log(subControl, control);
-    if (subControl.innerArrayControl.length < 2) {
-      const innerarrayControl = subControl.innerArrayControl[0]
-      const firstKey = innerarrayControl.shift();  // This is the checkbox object
-      console.log(innerarrayControl, firstKey);
-      // Step 2: Group the checkbox with the rest of the controls in a new array
-      const groupedControls = [
-        [firstKey, ...innerarrayControl],  // First group with checkbox
-        [...innerarrayControl]  // Second group without checkbox
-      ];
-      subControl.innerArrayControl = groupedControls;
-    }
-    else {
-      subControl.innerArrayControl.push(subControl.innerArrayControl[1]);
-    }
+    // if (subControl.innerArrayControl.length < 2) {
+    //   const innerarrayControl = subControl.innerArrayControl[0]
+    //   const firstKey = innerarrayControl.shift();  // This is the checkbox object
+    //   console.log(innerarrayControl, firstKey);
+    //   // Step 2: Group the checkbox with the rest of the controls in a new array
+    //   const groupedControls = [
+    //     [firstKey, ...innerarrayControl],  // First group with checkbox
+    //     [...innerarrayControl]  // Second group without checkbox
+    //   ];
+    //   subControl.innerArrayControl = groupedControls;
+    // }
+    // else {
+    //   subControl.innerArrayControl.push(subControl.innerArrayControl[1]);
+    // }
+    let tempControl = subControl.innerArrayControl[0].map((element: any) => ({ ...element }));
 
-
+    subControl.innerArrayControl.push(tempControl);
     const controlNames = Object.keys((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls || {});
-    const abc = controlNames.find(name => name === subControl.name);
+    const subName = controlNames.find(name => name === subControl.name);
 
-    if (abc) {  // Check if abc is not undefined
-      console.log(abc);
-      console.log(abc, (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[abc]);
-      const formArr = (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[abc] as FormArray;
-      formArr.push(this.initializeDynamicFormControls(subControl.innerArrayControl[0], subControl.innerArrayControl.length - 1));
+    if (subName) {  // Check if abc is not undefined
+      console.log(subName);
+      // console.log(abc, (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[abc]);
+      // const formArr = (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[abc] as FormArray;
+      let formArr = (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subName] as FormArray;
+          formArr.push(this.initializeDynamicFormControls(tempControl,subControl.innerArrayControl.length - 1));
+      // formArr.push(this.initializeDynamicFormControls(subControl.innerArrayControl[0], subControl.innerArrayControl.length - 1));
     }
     console.log(this.dynamicFormGroup, this.dynamicFormGroup.get(control.name) as FormGroup);
     console.log(this.form);
   }
   removeDisease(subControl: any, control: any, index: any) {
     console.log(subControl, control, index, this.form, this.dynamicFormGroup.value);
+    // this.spinner.show();
+
     if (subControl.innerArrayControl.length > 1) {
-      this.form.formSections.forEach((sections: any) => {
-        sections.formControls.forEach((controls: any) => {
-          if (controls.name == control.name && controls.subControls) {
-            controls.subControls.forEach((subControls: any) => {
-              if (subControls.name == subControl.name) {
-                subControls.innerArrayControl.splice(index, 1);
-                console.log(subControls);
-              }
-            });
-          }
-        });
-      });
+      subControl.innerArrayControl?.splice(index, 1);
+        let formArray = (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray;
+        formArray.removeAt(index-1);
+      // setTimeout(() => { 
+      //   // this.spinner.hide();
+      // }, 0);
       // subControl.innerArrayControl.splice(index, 1);
-      ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray)?.removeAt(index);
-      // console.log(((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray));
-      // subControl.innerArrayControl.pop();
+
+      // ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray)?.removeAt(index);
+      this.changeDetectorRef.detectChanges();
     }
-    console.log(control, this.dynamicFormGroup, this.form);
+   console.log(control, this.dynamicFormGroup.value, this.form);
   }
   copyText(control: any) {
     console.log(control);
