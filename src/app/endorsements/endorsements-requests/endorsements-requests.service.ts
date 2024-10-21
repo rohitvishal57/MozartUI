@@ -11,8 +11,8 @@ export class EndorsementsRequestsService {
   constructor(private configService: ConfigService,private httpService: HttpService) { }
 
   getEndorsementDetailsApi(reqBody: any) {
-    const getEndorsementDetailsApi = this.configService.config.baseUrl + this.configService.config.endorsementdetails;
-    return this.httpService.post(getEndorsementDetailsApi, reqBody);
+    // const getEndorsementDetailsApi = this.configService.config.baseUrl + this.configService.config.endorsementdetails;
+    return this.httpService.post("https://localhost:7026/api/endorsementdetails", reqBody);
   }
 
   getactivepolicynumbersApi(reqBody: any) {

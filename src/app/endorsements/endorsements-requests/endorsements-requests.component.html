@@ -38,54 +38,52 @@
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
                                     <header>Filter</header>
-                                    <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
-                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                    </button>
+                                    <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
-                            <div class="fw_formBody"> 
-                                <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
-                                    <h6>Products</h6>
-                                    <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                <label for="product{{i}}">{{product.productName}}</label>
+                                <div class="fw_formBody"> 
+                                    <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
+                                        <h6>Products</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                    <label for="product{{i}}">{{product.productName}}</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- <div class="fw_formRow">
-                                    <h6>Request Type</h6>
-                                    <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
-                                            <div class="input-checkbox-feild">
-                                              <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                              <label for="policytype{{i}}">{{policyType.name}}</label>
+                                    <!-- <div class="fw_formRow">
+                                        <h6>Request Type</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                <label for="policytype{{i}}">{{policyType.name}}</label>
+                                                </div>
+                                            </div>                                              
+                                        </div>
+                                    </div> -->
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="input-block input-block-dob">
+                                                <label>From Date</label>
+                                                <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')">
+                                                <span class="ui-error">Please enter start date</span>
                                             </div>
-                                          </div>                                              
-                                    </div>
-                                </div> -->
-                                <div class="row">
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="input-block input-block-dob">
-                                        <label>From Date</label>
-                                        <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')">
-                                        <span class="ui-error">Please enter start date</span>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="input-block input-block-dob">
-                                        <label>To Date</label>
-                                        <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')">
-                                        <span class="ui-error">Please enter end date</span>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="input-block input-block-dob">
+                                                <label>To Date</label>
+                                                <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')">
+                                                <span class="ui-error">Please enter end date</span>
+                                            </div>
+                                        </div>
+                                        <footer>
+                                            <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                            <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                        </footer>
                                     </div>
                                 </div>
-                                <footer>
-                                    <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
-                                </footer>
-                                </div>
-                            </div>
                             </div>
                         </div>
                     </div>

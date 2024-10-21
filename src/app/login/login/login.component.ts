@@ -241,13 +241,13 @@ export class LoginComponent implements OnInit{
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody)
         .subscribe({  
           next: (res:any)=> {
-            if(res.data.isSuccess && res.data.token !== null && res.data.statusMessage === "OTP Successfully Validated") {
+            if(res.data.isSuccess && res.token !== null && res.data.statusMessage === "OTP Successfully Validated") {
               this.loginService.storeToken(res.token);
               localStorage.setItem('agentCode', res.data.agentCode);
               this.router.navigate(['dashboard']);
             } else {
-              this.errorMessage = res.errorMessage;
-              res.errorMessage.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;
+              this.errorMessage = res.data.errorMessage;
+              res.data.errorMessage.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;
             }
           },
           error: (err => {
