@@ -43,6 +43,11 @@
     "getHospitals":"claims/api/gethospitaldetails",
     "getClaimStatus":"claims/api/getclaimstatus",
 
+
+    "getPerformanceDetails":"yatra/api/getPerformanceDetails",
+    "getPerformanceDetailedViewList":"yatra/api/getPerformanceDetailedViewList",
+    "getPerformanceDetailedViewLatestCount":"yatra/api/getPerformanceDetailedViewLatestCount",
+
     "partnerlogin":"auth/api/login",
     "validateadfstoken":"auth/api/validateadfstoken?Idtoken=",
     "validatecyberarktoken":"auth/api/validatecyberarktoken?Idtoken=",
