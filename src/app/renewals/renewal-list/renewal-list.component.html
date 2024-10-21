@@ -120,7 +120,7 @@
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of renewalsList; let i = index">
-                                    <td>{{ row.proposerFirstName }}</td>
+                                    <td><span class="text-break-w100">{{ row.proposerFirstName }}</span></td>
                                     <td><span class="productName">{{ row.productName }}</span></td>
                                     <td>{{ row.policyType }}</td>
                                     <td>{{ row.policyNumber }}</td>

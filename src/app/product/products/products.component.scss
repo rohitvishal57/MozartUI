@@ -458,6 +458,8 @@
                     display: flex;
                     gap: 6px;
                     align-items: center;
+                    justify-content: center;
+                    width: 100%;
                     @media (max-width:912px) {
                         justify-content: center;
                     }
