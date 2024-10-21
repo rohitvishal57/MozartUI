@@ -164,7 +164,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       "sortColumn": "RaisedOn",
       "searchColumn": "",
       "sortDirection": "DESC",
-      "searchString": "",
+      "searchString": [],
       "uiStatus": ""
   }
    
@@ -240,7 +240,7 @@ export class EndorsementsRequestsComponent implements OnInit {
           count++;
         }
         this.appliedFiltersCount = count;
-         this.appliedFiltersCount;
+        this.appliedFiltersCount;
   }
   clear(){
     this.productsList.forEach((product:any) => (product.selected = false));
@@ -248,24 +248,33 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.fromDate = null;
     this.toDate = null;
     this.appliedFiltersCount = 0;
-   // this.claimsReqBody.productName = "";
-    this.requestsListRequestBody.requestType = "";
+    this.requestsListRequestBody.searchString = [];
     this.requestsListRequestBody.fromDate = "";
     this.requestsListRequestBody.toDate = "";
     this.getRequestList();
   }
   applyFilter() {
+    this.selected = "";
+    this.searchInputControl.reset();
     this.calculateAppliedFiltersCount();
-  this.formatDate("fromDate");
-  this.formatDate("toDate");
-  this.requestsListRequestBody.fromDate=this.fromDate;
-  this.requestsListRequestBody.toDate=this.toDate;
-  const selectedPolicyTypes = this.StaticRequestTypes
-  .filter((requestType:any) => requestType.selected)
-  .map((requestType:any) => requestType.name);
-  // this.requestsListRequestBody.requestType = selectedPolicyTypes.join(", ");
-  this.getRequestList();
-  this.toggeledropdown=false;
+    this.formatDate("fromDate");
+    this.formatDate("toDate");
+    this.requestsListRequestBody.fromDate=this.fromDate;
+    this.requestsListRequestBody.toDate=this.toDate;
+    const selectedProducts = this.productsList.filter((product: any) => product.selected)
+      .map((product: any) => product.productName);
+    if(selectedProducts.length > 0) {
+      this.requestsListRequestBody.searchColumn = "ProductName"
+      this.requestsListRequestBody.searchString = selectedProducts;
+    }
+
+    /* const selectedPolicyTypes = this.StaticRequestTypes
+    .filter((requestType:any) => requestType.selected)
+    .map((requestType:any) => requestType.name);
+    this.requestsListRequestBody.requestType = selectedPolicyTypes.join(", "); */
+
+    this.getRequestList();
+    this.toggeledropdown=false;
 }
   onSelectChanges(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
@@ -329,15 +338,15 @@ export class EndorsementsRequestsComponent implements OnInit {
     if (this.searchInputControl.valid) {
       if (this.selected === "caseId") {
         this.requestsListRequestBody.searchColumn = "CaseId";
-        this.requestsListRequestBody.searchString = searchValue;
+        this.requestsListRequestBody.searchString = [searchValue];
       }
       else if (this.selected === "memberName") {
         this.requestsListRequestBody.searchColumn = "MemberName";
-        this.requestsListRequestBody.searchString = searchValue;
+        this.requestsListRequestBody.searchString = [searchValue];
       }
       else if (this.selected === "policyNumber") {
         this.requestsListRequestBody.searchColumn = "PolicyNumber";
-        this.requestsListRequestBody.searchString = searchValue;
+        this.requestsListRequestBody.searchString = [searchValue];
       }
     this.isSearch = true;
     this.first = 0;

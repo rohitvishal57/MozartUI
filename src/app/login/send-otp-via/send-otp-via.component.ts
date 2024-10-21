@@ -64,7 +64,7 @@ export class SendOtpViaComponent implements OnInit{
           next: (res:any) => {
             localStorage.setItem("requestId", res?.data?.requestId);
             if(res?.data.requestId == null) {
-              this.dialogRef.close({data: res.errorMessage, status:'Failure'});
+              this.dialogRef.close({data: res.data.errorMessage, status:'Failure'});
             }
           },
           error: (err => {
@@ -73,7 +73,7 @@ export class SendOtpViaComponent implements OnInit{
           })
         })
 
-    this.dialogRef.close({data:data,status:'Success'})
+    this.dialogRef.close({data:data, status:'Success'})
   }
   close(){
     this.dialogRef.close();
