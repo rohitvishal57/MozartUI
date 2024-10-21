@@ -1,4 +1,4 @@
-<main class="siteBody  main_productDetails">
+<main class="siteBody  main_productDetails" >
   <div class="contentBody bodyColumns-1">
     <div class="bodyColumn body_flex_column">
 
@@ -47,13 +47,13 @@
                       </p-tabView>
                     </div>
                   </div>
-                  <div class="tabview_bottomContainer" [ngSwitch]="activeIndex">
+                  <div class="tabview_bottomContainer" [ngSwitch]="activeIndex" >
                       <div class="tabview_cardContentMain" *ngSwitchCase=activeIndex>
                           <div class="tabview_cardContent" *ngFor="let section of groupedFeatures | keyvalue">
                             <div class="tabview_cardItem" *ngIf="section.key === displayInfo">
                               
                               <div class="tabview_cardMain" >
-                                <div  class="tabview_cardItem" >
+                                <div  class="tabview_cardItem"  >
                                   <ul class="tick_round">
                                       <li *ngFor="let feature of section.value"><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
                                         {{ feature.featureName }}
@@ -82,7 +82,7 @@
     </div>
   </div>
 </main>
-<div class="main-container" style="display:none">
+<div class="main-container" style="display: none;">
   <div class="detail">
     Product Details
   </div>
@@ -147,7 +147,7 @@
                 <p>Details about Activ Health services would be displayed here.</p>
               </div> -->
               <div class="row" *ngSwitchCase=activeIndex>
-                <div class="card">
+                <div class="card" style="width: 100%;">
                 <div *ngFor="let section of groupedFeatures | keyvalue" >
                   <!-- <div class="card"> -->
                     <div *ngIf="section.key === displayInfo">
@@ -159,11 +159,12 @@
                       <div class="key" >
                         <div *ngFor="let feature of section.value" class="keypoint" >
                           <img src="assets/logo/greenpoint.svg" alt="checkmark" class="icon">
-                          <div class="feature-text">
+                          <div class="feature-text" style="width: 50%;">
                             {{ feature.featureName }}
                           </div>
                         </div>
                       </div>
+                      
                       </div>
                     <!-- </ul> -->
                   <!-- </div> -->

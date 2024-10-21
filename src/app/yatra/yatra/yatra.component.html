@@ -17,7 +17,7 @@
           <h1>Your Progress</h1>
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
-              <div class="step-count" (click)="addNavbar(i)">
+              <div class="step-count" (click)="addNavbar(i,case)">
                 <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
                   {{ i + 1 }}
                 </button>

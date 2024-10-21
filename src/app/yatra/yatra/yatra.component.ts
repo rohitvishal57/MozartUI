@@ -906,7 +906,10 @@ export class YatraComponent {
     this.expandedItem = '';
   }
 
-  addNavbar(index: number) {
+  addNavbar(index: number , value : any) {
+    if ( value.formName === 'Confirmation') {
+      this.customerFeedbackModule.show();
+    }
     this.setFormIndexValue(index);
 
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
@@ -2175,9 +2178,6 @@ export class YatraComponent {
 
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
-    if ( formIndex === '8') {
-      this.customerFeedbackModule.show();
-    }
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
   setFormIndexValue(value: number) {
