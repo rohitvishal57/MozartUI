@@ -130,6 +130,11 @@ export class YatraComponent {
     if (history.state.productData.tenureAmounts) {
       this.tenureAmount = history.state.productData.tenureAmounts
     }
+    if(history.state.productData.tenure){
+      this.formData = {...this.formData,tenure: history.state.productData.tenure}
+    }
+    console.log(this.formData);
+    
 
     if (history.state.productData.selectedAddons) {
       this.selectedAddons = history.state.productData.selectedAddons
@@ -535,7 +540,7 @@ export class YatraComponent {
                     if (formControl.name == 'totalPremium' && formControl.type == 'custom-radio') {
                       this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
                       this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
-                      this.formData.tenure = this.selectedIndex;
+                      this.formData.tenure = this.selectedIndex + 1;
                       console.log(this.selectedIndex, this.formData);
                     }
                   });
@@ -3082,7 +3087,7 @@ export class YatraComponent {
     Object.keys(obj).forEach(key => {
       const value = obj[key];
       const newKey = prefix + key;
-      console.log(newKey);
+      // console.log(newKey);
       if (typeof value === 'object' && value !== null && Object.keys(value).length > 0) {
         if (typeof value === 'object' && value !== null && 'id' in value) {
           this.dynamicFormGroup.get(newKey)?.patchValue(value);
