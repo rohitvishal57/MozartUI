@@ -622,6 +622,7 @@ button {
 }
 .siteSidenav.expand {
     width: 200px;
+    box-shadow: 4px 0px 80px 0px #00000014;
 }
 .siteSidenav.expand .sidenavMenu {
     align-items: flex-start;
