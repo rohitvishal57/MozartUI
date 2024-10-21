@@ -101,7 +101,7 @@
                                           </div>
                                           <div class="data-item data-item-20">
                                               <label>Cover</label>
-                                              <h6>₹ {{ member.SumInsured }}</h6>
+                                              <h6>₹ {{ member.SumInsured | number:'1.2-2' }}</h6>
                                           </div>
                                           <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5002,'editMember',i)">
                                               <button type="button" value="dataedit" class="btn_editGrey"></button>
@@ -939,20 +939,20 @@
                                             <label class="input-radiolabel ">
                                                 <input type="radio" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" >
                                                 <span><em class="tenure-year">1 Year</em>
-                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium}}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium | number:'1.2-2'}}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
                                                 <input type="radio" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" >
                                                 <span><em class="tenure-year">2 Years</em>
-                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium}}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium | number:'1.2-2'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 7.5 off</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
                                                 <input type="radio" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" >
                                                 <span><em class="tenure-year">3 Years</em>
-                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium}}<em>/ yr</em></em>
+                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium | number:'1.2-2'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 10 off</em>
                                             </span>
                                                 <em class="badge-recommended">Recommended</em>
@@ -1191,11 +1191,11 @@
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Premium</label>
-                                            <h6>₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</h6>
+                                            <h6>₹{{renewalInfo?.response?.policyData[0]?.BasicPremium | number:'1.2-2'}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Cover</label>
-                                            <h6>₹{{ renewalInfo?.response?.policyData[0]?.Members[0].SumInsuredPerUnit }}</h6>
+                                            <h6>₹{{ renewalInfo?.response?.policyData[0]?.Members[0].SumInsuredPerUnit | number:'1.2-2' }}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Tenure</label>
@@ -1355,7 +1355,7 @@
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">   
-                                <div class="row" *ngIf="actionKyc == 3002">
+                                <div class="row">
                                     <form [formGroup]="kycFormGroup" (ngSubmit)="handleKyc(3003)">
                                         <div class="row">
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -1378,15 +1378,18 @@
                                                 </div>
                                             </div>
                                         </div>  
-                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="actionKyc != 3003">
                                             <div class="input-block form-floating input-block-renew">
                                                 <button type="submit" class="btn_red btn_redRenew">Verify KYC</button>
                                             </div>
                                         </div> 
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="actionKyc == 3003">
+                                            <div class="tickImg"><img src="assets/Img/istockphoto.jpg"></div>
+                                        </div> 
                                     </div>
                                     </form>
                                 </div>
-                                <div class="row" *ngIf="actionKyc == 3003">
+                                <!-- <div class="row" *ngIf="actionKyc == 3003">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="ckyc-fname" name="ckyc-fname" [(ngModel)]="kycData.firstName" placeholder="" class="form-control input-textBox" >
@@ -1435,7 +1438,7 @@
                                             <label for="ckyc-mobileno">Mobile Number</label>
                                         </div>
                                     </div>
-                                </div>                     
+                                </div>                      -->
                             </div>                   
                         </div>
                     </div>
@@ -1454,12 +1457,12 @@
                       <div class="ppi_info">
                           <h4>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h4>
                           <h5>Aditya Birla Health Insurance</h5>
-                          <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6>
+                          <!-- <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6> -->
                       </div>
                   </div>
                   <div class="planProductQuote">
                       <div class="label">Base Quote/ incl tax</div>
-                      <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
+                      <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium | number:'1.2-2'}}</div>
                   </div>
                   <div class="planProductQuote">
                       <div class="label">Term</div>
@@ -1488,7 +1491,7 @@
               <footer>
                   <div class="workingQuote">
                       <span>Working Quote/ incl tax</span>
-                      <label>₹{{(renewalInfo?.response?.policyData[0]?.BasicPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn)}}</label>
+                      <label>₹{{(renewalInfo?.response?.policyData[0]?.BasicPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn ) | number:'1.2-2'}}</label>
                   </div>
                   <button type="button" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
                   <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewals/subQuotes']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
@@ -1511,7 +1514,8 @@
               </div>
               <div class="planProductQuote">
                   <div class="label">Total Premium/ incl tax</div>
-                  <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
+                  <div class="value">₹{{ renewalInfo?.response?.policyData[0]?.BasicPremium | number:'1.2-2' }}
+                </div>
               </div>
           </div>
           <div class="bi_right">

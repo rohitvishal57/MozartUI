@@ -275,7 +275,9 @@ export class RenewalDynamicFormComponent implements OnInit {
     else if (value == 5004) {
       if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
         this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Nominee_Details};
-      } 
+        if (this.formObject.nominee_dob) {
+          this.formObject.nominee_dob = new Date(this.formObject.nominee_dob).toISOString().split('T')[0];
+        }      } 
       this.initializeForm();
       this.formId = value;
     }
@@ -293,11 +295,18 @@ export class RenewalDynamicFormComponent implements OnInit {
         this.memberRole='Add';
       this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
           .reduce((acc: any, key: any) => { acc[key] = '';return acc; }, {});
-      this.formObject = {...this.subObject};
+      this.formObject = {...this.subObject};  
     }
     else if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editMember'){
       this.memberRole='Update';
-      this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0]};      
+      this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0]};    
+      this.formObject.DoB=new Date(this.formObject.DoB).toISOString().split('T')[0]
+      if (!isNaN(this.formObject?.SumInsured)) {
+        const sumInsuredValue = Number(this.formObject.SumInsured);
+        const closestValue = this.sliderOptions?.stepsArray?.reduce((prev, curr) => {
+          return Math.abs(curr.value - sumInsuredValue) < Math.abs(prev.value - sumInsuredValue) ? curr : prev;});
+        this.selectedSumInsured = closestValue?.value ?? 0;
+      } else {this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;}
     }
      this.initializeForm();
       this.formId = value;
@@ -401,7 +410,7 @@ payNow(){
     });
    }
 }
- getProducts() {
+getProducts() {
   const reqData={
     "agentCode": this.agentCode
   }
@@ -494,11 +503,12 @@ getRenewalInfo() {
     this.link=""
     }
     handleKyc(action: any) {
-      if (action === 3001) {
-        // Handle action 3001
-      } else if (action === 3002) {
-        this.actionKyc = action;
-      } else if (action === 3003) {
+      // if (action === 3001) {
+      //   // Handle action 3001
+      // } else if (action === 3002) {
+      //   this.actionKyc = action;
+      // } else 
+      if (action === 3003) {
         this.kycDetailsSubmitted = true;
         if (this.kycFormGroup.invalid) {
           console.log("Form is invalid");
@@ -539,11 +549,11 @@ getRenewalInfo() {
           this.setSection('additional')
         }
       }else if(this.activeSection == 'kyc'){
-          if(this.actionKyc == 3002){
+          // if(this.actionKyc == 3002){
             this.setSection('policySummary')
-          }else if(this.actionKyc == 3003){
-            this.actionKyc = 3002;
-          }
+          // }else if(this.actionKyc == 3003){
+          //   this.actionKyc = 3002;
+          // }
       }else if(this.activeSection == "payment"){
         this.setSection('kyc');
       }
