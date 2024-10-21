@@ -208,3 +208,106 @@
     padding-left: 0;
   }
 }
+
+/*Products details styles start*/
+.main_productDetails {
+  .productInfoDetails .planProductInfo .ppi_img {
+    width: 46px;
+    height: 46px;
+    img {
+      width: 100%;
+    }
+  }
+  .productInfoDetails .planProductInfo .ppi_info {
+    h4 {
+      font-size: 20px;
+      line-height: 22px;
+    }
+  }
+  p {
+    line-height: 20px;
+  }
+  .tick_round {
+    font-weight: 400;
+    font-size: 14px;
+    color:#2e2e2e;
+    li {
+      cursor: auto;
+    }
+  }
+  .btn_buy {
+    &:hover {
+      img {
+        filter: brightness(0) invert(0);
+        opacity: 0.5;
+      }
+    }
+  }
+}
+:host::ng-deep .custom_tabView{
+  .tabview_topContainer {
+    .p-tabview-nav li{
+      
+      &.p-highlight .p-tabview-nav-link {
+        background-color: #C7222A;
+        color: #fff;
+      }
+      a {
+        position: relative;
+        &::after {
+          content: '';
+          background: rgba(0,0,0,0.1);
+          width: 1px;
+          height: 17px;
+          position: absolute;
+          left: 0;
+        }
+      }
+    }
+    .p-tabview-nav li {
+      &:nth-child(1) {
+        a {
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+    .p-tabview-nav li .p-tabview-nav-link {
+      border: none;
+      padding: 8px 18px;
+      background-color: #fff;
+      font-weight: 500;
+      font-size: 16px;
+      color: #000;
+      margin: 0;
+    }
+    
+  }
+  .tabview_bottomContainer {
+    padding: 30px 0 0;
+    .tabview_cardMain {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      .tabview_cardItem {
+        width:48% ;
+        background: #F9FAFB;
+        padding: 16px;
+        border-radius: 12px;
+        .tick_round {
+          flex-direction: row;
+          flex-wrap: wrap;
+          li {
+            width: 49%;
+            cursor: auto;
+            .feature-text{
+              line-height: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+/*Products details styles end*/

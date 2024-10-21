@@ -92,12 +92,12 @@ export class YatraService {
     return this.httpService.post(GetHalfQuote,reqData);
   }
   getFullQuote(reqData: any){
-    const  GetFullQuote = this.configService.config.baseUrl + this.configService.config.getFullQuote;
+    const  GetFullQuote = this.configService.config.baseUrl1 + this.configService.config.getFullQuote;
     // const getFullQuoteUrl='https://localhost:7070/api/getfullquote';
     return this.httpService.post(GetFullQuote,reqData);
   }
   GetKycDetails(reqData:any){
-    const getKycDetails=this.configService.config.baseUrl + this.configService.config.getKycDetails;
+    const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.getKycDetails;
     // const getKycDetails='https://localhost:7188/api/getkycdetails';
     return this.httpService.post<any>(getKycDetails,reqData);
   }
