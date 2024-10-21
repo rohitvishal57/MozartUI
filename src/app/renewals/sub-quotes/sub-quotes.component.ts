@@ -87,6 +87,6 @@ export class SubQuotesComponent {
   handleAction(renewObject:any,event:any){
       console.log("proposer PolicyNumber",renewObject.policyNumber);
       this.renewalService.setPolicyState(renewObject.policyNumber, event);
-      this.router.navigate(["renewals/renewalDynamicForm"]);
+      this.router.navigate(["renewals/payment"]);
   }
 }
