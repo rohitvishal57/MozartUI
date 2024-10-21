@@ -3301,6 +3301,15 @@ export class YatraComponent {
       if (control.onChangeMethod)
         this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, true, control?.name, parentControl?.name, index, 'add');
     }
+    if ((event.target.type === 'button')) {
+      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'questionnaire') {
+        console.log(event.target.type, event.target.checked);
+        console.log(control, parentControl);
+        this.question = parentControl.name;
+        this.openPopUp();
+        // this.showOverlay(parentControl);
+      }
+    }
     if ((event.target.type === 'checkbox')) {
       if (parentControl != null &&  parentControl.type == 'questionnaire') {
         const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
@@ -3321,15 +3330,6 @@ export class YatraComponent {
       }
 
       // Call the method only if the 'method' key is present in the JSON and the checkbox is checked  this.resolveMethod(control.method, control?.popUpFormId, control?.name, control?.dependentControls, 'add')
-    }
-    if ((event.target.type === 'button')) {
-      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'questionnaire') {
-        console.log(event.target.type, event.target.checked);
-        console.log(control, parentControl);
-        this.question = parentControl.name;
-        this.openPopUp();
-        // this.showOverlay(parentControl);
-      }
     }
     else {
 
@@ -3974,6 +3974,12 @@ export class YatraComponent {
 
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((controls: any) => {
+        if (controls.name == 'recalculate') {
+          controls.visible = true;
+        }
+        if (controls.name == 'next') {
+          controls.visible = false;
+        }
         if (controls.name == parentControl.name) {
           if (parentControl.subControls) {
             parentControl.subControls.forEach((subControl: any) => {
@@ -3995,12 +4001,6 @@ export class YatraComponent {
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         console.log(formControl,control);
-        if (formControl.name == 'recalculate') {
-          formControl.visible = true;
-        }
-        if (formControl.name == 'next') {
-          formControl.visible = false;
-        }
         if (formControl.name == control.name && formControl.subControls) {
           formControl.subControls.forEach((subControl: any) => {
             if (subControl.name == 'addOnDetails') {
