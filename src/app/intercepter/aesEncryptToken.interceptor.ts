@@ -31,7 +31,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
             const url = this.aesEncryptService.decrypt(res?.body?.data);
             if (url?.redirectUrl) {
               const modifiedUrl = url?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
-              window.open(url?.redirectUrl, "_blank");
+              window.open(modifiedUrl, "_blank");
             } else {
               localStorage.setItem('token', res?.body?.token);
               res.body.data = this.aesEncryptService.decrypt(res?.body?.data);
