@@ -8,6 +8,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
+import { EncryptionService } from 'src/app/services/encryption.service';
 
 
 @Component({
@@ -50,7 +51,7 @@ export class RenewalListComponent {
     private router: Router,
     private datePipe: DatePipe,
     private commonService:CommonService,
-    private toast: NgToastService
+    private toast: NgToastService,private encryptionService: EncryptionService
   ) {}
 
   renewalLisRequestBody={
@@ -360,8 +361,9 @@ export class RenewalListComponent {
   }
   renewalJourney(proposerDetail : RenewalList) {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
-    // this.renewalService.setPolicyState(proposerDetail.policyNumber, this.activeSection);
-    this.router.navigate([`renewals/renewalDynamicForm/${proposerDetail.policyNumber}/${this.activeSection}`]);
+    sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
+    sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(this.activeSection));
+    this.router.navigate([`renewals/payment`]);
   }
   getStarClasses(index: number, rating: number): string[] {
     const starClasses = ['star'];

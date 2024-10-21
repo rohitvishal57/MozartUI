@@ -1,13 +1,15 @@
 import { Component,OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
 import { Options } from '@angular-slider/ngx-slider';
 import { NgToastService } from 'ng-angular-popup';
-import { ClipboardModule } from '@angular/cdk/clipboard'
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { CommonService } from 'src/app/services/common.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { validationConfig }  from 'src/app/interface/renewal-list.interface';
+import { EncryptionService } from 'src/app/services/encryption.service';
+
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -68,31 +70,25 @@ export class RenewalDynamicFormComponent implements OnInit {
   kycFormGroup!: FormGroup;
   kycDetailsSubmitted = false;
   actionKyc:number=3002;
-  // payNow:any;
   submit:boolean=true;
   fileName: string | null = null;
+  memberDetails:boolean=false;
 
   constructor(
-    private fb: FormBuilder,
-    private renewalService: RenewalsService,
-    private router: Router,
-    private toast: NgToastService,
-    private ac:ActivatedRoute,
-    private yatraService:YatraService,
-  private commonService:CommonService,
-  private spinner: NgxSpinnerService) {}
+    private fb: FormBuilder,private renewalService: RenewalsService,
+    private router: Router,private toast: NgToastService,
+    private ac:ActivatedRoute,private yatraService:YatraService,
+    private commonService:CommonService,private encryptionService: EncryptionService) {}
 
-  ngOnInit() {
+  ngOnInit() {    
     this.kycFormGroup = this.fb.group({
       panNumber: ['',[Validators.required, Validators.pattern('[A-Z]{5}[0-9]{4}[A-Z]{1}')]],
       dateOfBirth: ['', [Validators.required,Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
     });
     this.ac.paramMap.subscribe((params) => {
-      const policyNumber = params.get('policyNumber');
-      const activeSection= params.get('activeSection')
-      if (policyNumber) {
-        this.policyNumber = policyNumber;
-      }
+      const policyNumber = this.encryptionService.decrypt(sessionStorage.getItem('policyNumberRen') as string);
+      const activeSection = this.encryptionService.decrypt(sessionStorage.getItem('policyActionRen') as string);
+      if (policyNumber) {this.policyNumber = policyNumber;}
       if(activeSection){
         if(activeSection == 'payment'){
           this.activeSection='policySummary';
@@ -105,20 +101,17 @@ export class RenewalDynamicFormComponent implements OnInit {
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
  }
   initializeForm() {
-    const group: { [key: string]: any } = {}; 
-    Object.keys(this.formObject).forEach((key: string) => {
-      const controlValue = this.formObject[key];
-      if (controlValue instanceof Object && !(controlValue instanceof Array)) {
-        group[key] = this.fb.group(
-          Object.keys(controlValue).reduce((subForms: { [nestedKey: string]: any }, nestedKey: string) => {
-            subForms[nestedKey] = [controlValue[nestedKey]]; 
-            return subForms;
-          }, {})
-        );
-      } else {group[key] = [controlValue]; }
-    });
+    const group: { [key: string]: any } = {};
+    if (this.formObject && Object.keys(this.formObject).length > 0) {
+      Object.keys(this.formObject).forEach((key: string) => {
+        const controlValue = this.formObject[key];
+        const validators = validationConfig[key] || [];        
+        group[key] = [controlValue || '', validators];
+      });
+    } else {console.warn('formObject is empty or undefined.');}
     this.form = this.fb.group(group);
   }
+  
   onSumInsuredChange(eventValue: any) {
    this.selectedSumInsured = eventValue;
   }
@@ -138,7 +131,6 @@ export class RenewalDynamicFormComponent implements OnInit {
   handleAction(event: string,item?: any) {
      switch (event) {
        case 'Member':
-         this.formId=5001;
          if (this.memberRole === 'Add' && this.form.valid) {
             this.form.value.SumInsured=this.selectedSumInsured;
             this.requestObject.member=JSON.stringify(this.form.value);
@@ -147,7 +139,6 @@ export class RenewalDynamicFormComponent implements OnInit {
             this.requestObject.agentCode="4620973";
             this.requestObject.productId=2;
             this.requestObject.quoteData="";
-            console.log(this.requestObject);
             this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
@@ -156,12 +147,11 @@ export class RenewalDynamicFormComponent implements OnInit {
                   this.renewalInfo.response.policyData[0].Members[newMemberIndex].SumInsured = this.selectedSumInsured;
                   this.referenceNumber=res.data.referenceNumber;
                 }
-                console.log('updated',res);
               },
               (err) => {
                 this.toast.error({ detail: "Error", summary: "Failed to Add New Member.", duration: 1500 });
-                console.log("Error coming from updateMemberDetails API", err);}
-            );
+              }
+            );this.formId=5001;
          } 
          else if (this.memberRole === 'Update' && this.form.valid) {
             this.form.value.SumInsured=this.selectedSumInsured;
@@ -171,7 +161,6 @@ export class RenewalDynamicFormComponent implements OnInit {
             this.requestObject.agentCode="4620973";
             this.requestObject.productId=2;
             this.requestObject.quoteData="";
-            console.log(this.requestObject);
             this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
@@ -182,25 +171,29 @@ export class RenewalDynamicFormComponent implements OnInit {
                   } else {console.log('Member not found for update');}
                   this.referenceNumber=res.data.referenceNumber;
                 }
-                console.log('updated',res);
               },
               (err) => {
                 this.toast.error({ detail: "Error", summary: "Failed to Update Member.", duration: 1500 });
-                console.log("Error coming from updateMemberDetails API", err);}
-            );
+                }
+            );this.formId=5001;
          } 
-         else {console.log('Form is invalid');} 
+         else {console.log('Form is invalid'); return;} 
          break;
        case 'editMember':
-         this.formId=5001;
+        if(this.form.valid){
+          this.formId=5001;
+        }else{
+          console.log('Form is invalid');
+          return;
+        }
          break;
        case 'editAddress':
-         this.formId=5001;
-         if (event === 'editAddress') {
+         if(this.form.invalid){   
+          return;
+         }else if (event === 'editAddress' && this.form.valid) {
             this.requestObject.updatedAddress=JSON.stringify(this.form.value);
             this.requestObject.policyNumber=this.policyNumber;
             this.requestObject.referenceNumber=this.referenceNumber; 
-            console.log("editAddress",this.requestObject);
             this.renewalService.updateaddressApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
@@ -211,23 +204,19 @@ export class RenewalDynamicFormComponent implements OnInit {
                   })
                   this.referenceNumber=res.data.referenceNumber;
                 }
-                console.log('updated',this.renewalInfo);
               },
               (err) => {
                 this.toast.error({ detail: "Error", summary: "Failed to Update Address.", duration: 1500 });
-                console.log("Error coming from updateaddressApi API", err);}
-            );
+                }
+            ); this.formId=5001; 
          } 
-         else {console.log('Form is invalid');}         
+         else { console.log('Form is invalid' , this.formObject);}    
          break;
         case 'editNominee':
-          this.formId=5001;
-          if (event === 'editNominee') {
+          if (event === 'editNominee' && this.form.valid) {
             this.requestObject.updatedNomineeDetails=JSON.stringify(this.form.value);
             this.requestObject.policyNumber='21-24-0002334-00';
-            this.requestObject.referenceNumber=this.referenceNumber;  
-            console.log("updateNominee",this.requestObject);
-                      
+            this.requestObject.referenceNumber=this.referenceNumber;                        
             this.renewalService.updatenomineeApi(this.requestObject).subscribe(
              (res:any) => {
               if(res.data.isUpdateSuccess == true){
@@ -241,10 +230,10 @@ export class RenewalDynamicFormComponent implements OnInit {
              },
              (err) => {
               this.toast.error({ detail: "Error", summary: "Failed to Update Nominee Details.", duration: 1500 });
-              console.log("Error coming from updatenomineeApi", err);}
-            );
+              }
+            );this.formId=5001;
           } 
-          else {console.log('Form is invalid');} 
+          else {console.log('Form is invalid'); return;} 
           break; 
         case 'summary':
           this.activeSection='primary'
@@ -286,7 +275,13 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.formId = value;
     }
     else if (value == 5003) {
-      this.formId = value;
+      if(this.form.valid){
+        this.formId = value;
+      }else{
+        this.memberDetails=true;
+        console.log('Form is invalid');
+        return;
+      }
     }
     else if (value == 5002) {
       if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'addMember'){
@@ -422,6 +417,13 @@ getRenewalInfo() {
       (res:any) => {
         console.log("Renewal Info",res);
         this.renewalInfo = JSON.parse(res.data);
+        if (this.renewalInfo?.response?.policyData?.[0]?.Tenure !== undefined) {
+          console.log(Math.round(this.renewalInfo.response.policyData[0]?.BasicPremium));
+          
+          this.renewalInfo.response.policyData[0].BasicPremium = Math.round(this.renewalInfo.response.policyData[0]?.BasicPremium);
+          this.renewalInfo.response.policyData[0].Members[0].upsellPropensityDetails[2].upsellNetPremium=Math.round(this.renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium);
+          this.renewalInfo.response.policyData[0].Members[0].upsellPropensityDetails[1].upsellNetPremium=Math.round(this.renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium);
+        }
         this.getProducts();
         this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
       },
@@ -457,7 +459,7 @@ getRenewalInfo() {
   }
   changeroute(){
     this.renewalService.setQuote(this.renewalInfo);
-    this.router.navigate(["renewals/subquotes"]);
+    this.router.navigate(["renewals/subQuotes"]);
   }
   getproductdetailsandfeatures() {
     const productName = this.renewalInfo?.response?.policyData?.[0]?.Name_of_product;
@@ -485,7 +487,7 @@ getRenewalInfo() {
     }
   }  
   sendLink(){
-    this.link="https://www.paypal.com/invoice/p/#ABCDEFG123456"
+    this.link=""
     }
     handleKyc(action: any) {
       if (action === 3001) {
@@ -527,6 +529,11 @@ getRenewalInfo() {
     }
     comeBack(){
       if(this.activeSection == 'policySummary'){
+        if(this.hideSection == false){
+          this.router.navigate([`renewals/renewalList`]);
+        }else if(this.activeSection == 'policySummary'){
+          this.setSection('additional')
+        }
       }else if(this.activeSection == 'kyc'){
           if(this.actionKyc == 3002){
             this.setSection('policySummary')

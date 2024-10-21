@@ -6,8 +6,8 @@ import { SubQuotesComponent } from './sub-quotes/sub-quotes.component';
 
 const routes: Routes = [
   { path: "renewalList", component: RenewalListComponent },
-  { path: "renewalDynamicForm/:policyNumber/:activeSection", component: RenewalDynamicFormComponent },
-  { path: "subquotes", component: SubQuotesComponent },
+  { path: "payment", component: RenewalDynamicFormComponent },
+  { path: "subQuotes", component: SubQuotesComponent },
 ];
 
 @NgModule({
