@@ -2095,7 +2095,7 @@ export class YatraComponent {
                     let parsedValue = JSON.parse(element[0].value);
                     if (parsedValue.value === option.value) {
                       element.forEach((control: any) => {
-                        if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName') {
+                        if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName' || control.name == 'sumInsured') {
                           control.disabled = true
                         }
                       })
@@ -2120,7 +2120,7 @@ export class YatraComponent {
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
               (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+              // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
 
             }
             console.log(this.dynamicFormGroup.get('memberPolicyType')?.value);
@@ -2464,6 +2464,10 @@ export class YatraComponent {
         }
         console.log(this.dynamicFormGroup.value);
 
+        if (this.formData['sumInsured'] == null) {
+          this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+        }
+
         this.flattenObjectInsert(this.dynamicFormGroup.value);
         this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
         console.log(this.formData);
@@ -2492,7 +2496,6 @@ export class YatraComponent {
           sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
           sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
         }
-
 
 
         if (this.dynamicFormGroup.get('leadFirstName') && this.dynamicFormGroup.get('leadMiddleName') &&
@@ -4027,7 +4030,7 @@ export class YatraComponent {
   openPopUp(){
     this.isOverlayVisible = true;
   }
-  verifyKYC() {
+  verifyKYC(control:any) {
     const proposerDOB = this.dynamicFormGroup.get('memberDobProposer')?.value;
     const panNumber = this.dynamicFormGroup.get('panNo')?.value;
 
@@ -4049,6 +4052,7 @@ export class YatraComponent {
         console.log('KYC details:', response);
         this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
         this.spinner.hide();
+        control.disabled=true;
         if (typeof response.data === 'object' && response.data !== null) {
           Object.keys(response.data).forEach((key: any) => {
             this.dynamicFormGroup.get(key)?.setValue(response.data[key])
@@ -4398,6 +4402,16 @@ export class YatraComponent {
   }
   onSelectValue(value : String){
    this.feedbackImpressedValue = value;
+  }
+
+  redirectToGooglePlay(){
+    const googlePayUrl = "https://play.google.com/store/apps/details?id=com.adityabirlahealth.insurance&pcampaignid=web_share";
+    window.open(googlePayUrl, '_blank');
+  }
+
+  redirectToAppStore(){
+    const appleStoreUrl = "https://apps.apple.com/in/app/activ-health/id1179005764";
+    window.open(appleStoreUrl, '_blank');
   }
 
 }
