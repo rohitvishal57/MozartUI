@@ -34,7 +34,8 @@ export class MyPerformaceComponent {
     }
     this.performanceService.getPerformanceDataApi(reqObj).subscribe(
       (response) => {
-        if (response.isSuccess == true && response.statusCode == "200") {
+        // if (response.isSuccess == true && response.statusCode == "200") {
+          if (response) {
           this.agentPerformanceData = response;
         this.annualClubPerformance = response.annualClubPermormance;
         this.campaignPerformance = response.campaignPermormance;
@@ -72,7 +73,8 @@ export class MyPerformaceComponent {
   }
   this.performanceService.getPerformanceDetailedViewList(reqObj).subscribe(
     (response) => {
-      if (response.isSuccess == true && response.statusCode == "200") {
+      // if (response.isSuccess == true && response.statusCode == "200") {
+        if (response) {
         this.detailedList = response.agentProposalsDetailedViewLists;
       }
       else { console.error("API request was not successful."); }
