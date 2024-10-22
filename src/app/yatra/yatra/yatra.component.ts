@@ -1214,7 +1214,6 @@ export class YatraComponent {
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null,subControl: any = null) {
     this.changesMade = true;
     let eventValue = event.target.value;
-    console.log(event,eventValue,control,parentControl,index);
     if (control.name === "chequeNumber") {
       const chequeNumber = event.target.value;
       if (chequeNumber.length > 6) {

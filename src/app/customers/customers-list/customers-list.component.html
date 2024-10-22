@@ -116,7 +116,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ row.productVarientName }}</td>
+                                    <td>{{ row.productVariantName }}</td>
                                     <td>{{ row.policyStatus }}</td>
                                     <td>{{ row.policyStartDate }}</td>   
                                     <td>{{ row.mobileNumber }}</td>
@@ -127,16 +127,16 @@
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
-                                                        <li class="actionItem" (click)="handleAction(row, 'download')">
+                                                        <li class="actionItem" (click)="download(row, 'download')">
                                                             <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
                                                         </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'email')">
+                                                        <li class="actionItem" (click)="sendCustomerDetails(row,1)">
                                                             <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email </span></a>
                                                         </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'sms')">
+                                                        <li class="actionItem" (click)="sendCustomerDetails(row,2)">
                                                             <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
                                                         </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
+                                                        <li class="actionItem" (click)="sendCustomerDetails(row,3)">
                                                             <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                                         </li>
                                                     </ul>
@@ -172,7 +172,7 @@
                                     <div class="insureName">{{ row.firstName }} {{ row.lastName }}</div>
                                     
                                 </h6>
-                                <div class="item_productName">{{ row.productVarientName}}</div>
+                                <div class="item_productName">{{ row.productVariantName}}</div>
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
@@ -181,16 +181,16 @@
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
-                                                <li class="actionItem" (click)="handleAction(row, 'download')">
+                                                <li class="actionItem" (click)="download(row, 'download')">
                                                     <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
                                                 </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'email')">
+                                                <li class="actionItem" (click)="sendCustomerDetails(row,1)">
                                                     <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email</span></a>
                                                 </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'sms')">
+                                                <li class="actionItem" (click)="sendCustomerDetails(row,2)">
                                                     <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
                                                 </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'whatsapp')">
+                                                <li class="actionItem" (click)="sendCustomerDetails(row,3)">
                                                     <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                                 </li>
                                             </ul>
