@@ -38,29 +38,29 @@ export class ClaimsListViewComponent implements OnInit {
   fromDate: any;
   toDate: any;
   appliedFiltersCount: number = 0;
-  productsList: any[] = [];
   requestTypes: any[] = [];
   maxDate: string | undefined;
+  isSearch:boolean = false;
+  productList:any;
   agentCode = localStorage.getItem('agentCode')
   StaticRequestTypes = [
     { name: 'Cashless', selected: false },
     { name: 'Reimbursement', selected: false },
   ];
-  statuses = [
-    { name: 'Intimated', selected: false },
-    { name: 'Inward Completed	', selected: false },
-    { name: 'RI Registration Raised', selected: false},
-    { name: 'Approved', selected: false},
-    { name: 'Scanning Completed', selected: false},
-    { name: 'Cancelled', selected: false}
+  // statuses = [
+  //   { name: 'Intimated', selected: false },
+  //   { name: 'Inward Completed	', selected: false },
+  //   { name: 'RI Registration Raised', selected: false},
+  //   { name: 'Approved', selected: false},
+  //   { name: 'Scanning Completed', selected: false},
+  //   { name: 'Cancelled', selected: false}
 
-  ]
+  // ]
   
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
 
   ngOnInit(){
     this.fetchData(); 
-    this.getProducts();
   }
 
   claimsView(view:string){
@@ -85,6 +85,8 @@ onPageChange(event:any) {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first/this.rows)+1
+    this.isSearch = false;
+    this.fetchData();
 }
 
 getFromDate(event:any){
@@ -103,17 +105,27 @@ claimsReqBody =  {
     "status": "",
     "requestType": "",
     "searchType": "",
-    "searchString": "",
-    "pageNumber": 1,
-    "pageSize": 270,
+    "searchString": [""],
+    "start": 1,
+    "pageSize": 10,
     "fromDate": null,
     "toDate": null
   }
+
 fetchData(): void {
+  if (!this.isSearch) {
+    this.claimsReqBody.start = (this.page - 1) * this.rows;
+    this.claimsReqBody.pageSize = this.rows;
+  } else {
+    this.claimsReqBody.start = 0;
+  }
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
-    this.claims = res.data;       
-    this.gridClaimsData = res.data; 
-    this.totalRecords = this.claims.length;    
+    this.claims = res.claimDetails;      
+    this.productList = res.claimDetails 
+    console.log(this.claims);
+    
+    this.gridClaimsData = res.claimDetails; 
+    this.totalRecords = res.totalRecords;    
   });
   }
 
@@ -138,29 +150,11 @@ fetchData(): void {
  
   }
 
-  getProducts() {
-    const reqData={
-      "agentCode": this.agentCode
-    }
-    this.commonService.Getproductlist(reqData).subscribe({
-      next: (res) => {
-        this.productsList = res.data;
-        console.log("product list",this.productsList)
-        const uniqueRequestTypes = Array.from(new Set(this.productsList
-         .map((product) => product.familyPlan)))
-         .map((requestType) => ({ name: requestType, selected: false }));
-         this.requestTypes = uniqueRequestTypes;
-      },
-      error: (err) => {
-         console.log("error coming form getproduct list API");
-      }
-    })
-  }
   calculateAppliedFiltersCount(){
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
       (requestType) => requestType.selected).length;
-      const selectedProductsCount = this.productsList.filter(
-        (product) => product.selected).length;
+      const selectedProductsCount = this.productList.filter(
+        (product:any) => product.selected).length;
         let count = selectedPolicyTypesCount + selectedProductsCount;
         if (this.fromDate && this.toDate) {
           count++;
@@ -170,6 +164,8 @@ fetchData(): void {
   }
 
   applyFilter() {
+    this.selected = "";
+    this.searchInputControl.reset();
   this.calculateAppliedFiltersCount();
   this.formatDate("fromDate");
   this.formatDate("toDate");
@@ -179,10 +175,16 @@ fetchData(): void {
   .filter((requestType:any) => requestType.selected)
   .map((requestType:any) => requestType.name);
   this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
-  this.fetchData();
-  this.getProducts();
-  this.toggeledropdown=false;
+
+  const selectedProducts = this.productList.filter((searchType: any) => searchType.selected)
+  .map((searchType: any) => searchType.productName);
+if(selectedProducts.length > 0) {
+  this.claimsReqBody.searchType = "productName";
+  this.claimsReqBody.searchString = selectedProducts;
 }
+this.fetchData();
+this.toggeledropdown=false;
+  }
 
 cancel() {
   this.fromDate = null;
@@ -194,7 +196,7 @@ cancel() {
 }
 
 clear(){
-  this.productsList.forEach((product) => (product.selected = false));
+  this.claims.forEach((product) => (product.selected = false));
   this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
   this.fromDate = null;
   this.toDate = null;
@@ -218,9 +220,11 @@ clear(){
     let searchValue = this.searchInputControl.value?.trim();
     if (searchValue) {
       this.claimsReqBody.searchType = this.selected;
-      this.claimsReqBody.searchString = searchValue;    
+      this.claimsReqBody.searchString = [searchValue];    
     }
+    this.isSearch = true;
     this.fetchData();
+    
   }
 
 onSelectChanges(event: any): void {

@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, O
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClaimData } from 'src/app/interface/claims.interface';
 import { formatDate } from '@angular/common';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, map, startWith } from 'rxjs/operators';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { ClaimsViewService } from './claims-view.service';
@@ -39,7 +39,7 @@ export class ClaimsViewComponent {
   activePolicyNumbers: string[] = [];
   saveForm!: FormGroup;
   proposalNumbers: string[] = [];
-  policyNumbers: string[] = [];
+  policyNumbers:  Observable<any[]> | any;
   productNames: string[] = [];
   memberNames: string[] = [];
   claimTypes: string[] = [];
@@ -77,9 +77,10 @@ export class ClaimsViewComponent {
   allowedFileTypes: string[] = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/bmp']; 
   uploadValidFormat: boolean = false;
   hospitalAddress: any;
-  filteredPolicyNumbers: string[] = [];
   searchText: string = '';
   isDropdownOpen: boolean = false;  
+  activityList : any[] = []
+  selectedPolicyNumber:any;
   coverNames = [
     "AYUSH Treatment",
     "Domiciliary Hospitalization",
@@ -128,7 +129,7 @@ export class ClaimsViewComponent {
     this.saveUpload();
     this.getProposalDetails();
     this.fetchStates();
-    this.filteredPolicyNumbers = [...this.policyNumbers]; 
+    // this.filteredPolicyNumbers = [...this.policyNumbers]; 
   }
   
   navigateToListClaim(){
@@ -160,7 +161,7 @@ export class ClaimsViewComponent {
     this.form = this.fb.group({
       id: localStorage.getItem("agentCode"),
       policyNumber: ["",Validators.required],
-      proposalNumber: ["", Validators.required],
+      proposalNumber: ["",],
       memberName: ["",Validators.required],
       productName: [""],
       fullName: [""],
@@ -214,6 +215,7 @@ export class ClaimsViewComponent {
             allData,
             "policyNumber"
           );
+     
           // this.memberNames = this.extractUniqueValues(allData, 'fullName');
           this.claimTypes = this.extractUniqueValues(allData, "policyType");
           this.cdr.markForCheck();
@@ -228,14 +230,48 @@ export class ClaimsViewComponent {
   extractUniqueValues(data: any[], key: string): any[] {
     return [...new Set(data.map((item) => item[key]).filter((val) => val))];
   }
+  removeDuplicates(myArray:any, Prop:any) {
+    return myArray.filter((obj:any, pos:any, arr:any) => {
+      return arr.map((mapObj:any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
+    });
+  }
 
-  handleDropdownChange(event: any): void {
-    const selectedPolicyNumber = event.target.value;  
-    this.form.get('policyNumber')?.setValue(selectedPolicyNumber); 
+  getActivityType(content = null) {
+    this.activityList = this.policyNumbers;
+    this.policyNumbers = this.form.controls['policyNumber'].valueChanges.pipe(
+      startWith(''),
+      map((value:any) => value ? this._filter(value) : this.activityList.slice()));
+  }
+  _filter(value: string) {
+    const filterValue = this._normalizeValue(this._removealphabets(value));
+    const filteredValue = this.activityList.filter((x:any) => this._normalizeValue(x.policynumber).includes(filterValue));
+    this.selectedPolicyNumber = filteredValue;
+    if(this.selectedPolicyNumber.length > 0){
+      this.getMemberIdList(this.selectedPolicyNumber);
+    }
+    return filteredValue;
+  }
+  getMemberIdList(policyNumber:any) {
+    let selectedValue = policyNumber[0].policynumber;
+    const result = this.response.filter((x:any) => selectedValue.includes(x.policynumber));
+   // this.MemberIdList = result;
+  }
+_normalizeValue(value: string): string {
+    return value.toLowerCase().replace(/\s/g, '');
+  }
+  _removealphabets(value: any) {
+    return value.replace(/[^\d.-]/g, '');
+  }
+
+  handleDropdownChange(value:string): void {
+    
+    const selectedPolicyNumber = value; 
+    // this.form.get('policyNumber')?.setValue(selectedPolicyNumber); 
     const filteredMembers = this.response.data.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
     this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
+    console.log(selectedPolicyNumber, this.memberNames);
     this.form.get("memberName")?.setValue("");
     this.cdr.markForCheck();
   }
@@ -246,12 +282,9 @@ export class ClaimsViewComponent {
     this.isDropdownOpen = open;
   }
 
-  filterPolicyNumbers(): void {
+  filterPolicyNumbers(value: unknown): void {
     console.log('filterPolicyNumbers');
     const query = this.searchText.toLowerCase();
-    this.filteredPolicyNumbers = this.policyNumbers.filter(policy =>
-      policy.toLowerCase().includes(query)
-    );
   }
 
   // Handle selection from the dropdown

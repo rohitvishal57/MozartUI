@@ -24,7 +24,7 @@
                     <div class="body_flex_row claims_searchWraper">
                         <div class="field_searchMain">
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)">
-                                <option value="" disabled selected>Select an option</option>
+                                <option value=""  selected>Select an option</option>
                                 <option value="claimInfoId">Request ID</option>
                                 <!-- <option value="productName">Product Name</option> -->
                                 <option value="policyNumber">Policy Number</option>
@@ -48,10 +48,10 @@
                                     <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
                             <div class="fw_formBody"> 
-                                <div class="fw_formRow">
+                                <div class="fw_formRow" *ngIf="productList && productList.length > 0">
                                     <h6>Products</h6>
                                     <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                        <div class="input-checkbox-block" *ngFor="let product of productList; let i = index">
                                             <div class="input-checkbox-feild">
                                                 <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
                                                 <label for="product{{i}}">{{product.productName}}</label>
@@ -70,7 +70,7 @@
                                           </div>                                              
                                     </div>
                                 </div>
-                                <div class="fw_formRow">
+                                <!-- <div class="fw_formRow">
                                     <h6>Status</h6>
                                     <div class="fw_checkboxWraper">
                                         <div class="input-checkbox-block" *ngFor="let status of statuses; let i = index">
@@ -80,7 +80,7 @@
                                             </div>
                                           </div>                                              
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="row">
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                     <div class="input-block input-block-dob">
@@ -132,7 +132,7 @@
                             <ng-container *ngIf="claims.length > 0">
 
                             
-                              <tr class="table-values"  *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index">
+                              <tr class="table-values"  *ngFor="let row of claims;let i = index">
                                 <td class="card_insureInfo">{{ row?.claimInfoId }}</td>
                                 <td>{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
@@ -166,7 +166,7 @@
             </section>
             <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView === 'grid' ">
                 <div class="cardViewWraper">
-                    <div class="cardViewItem" *ngFor="let gridClaims of gridClaimsData| paginate: {itemsPerPage: rows, currentPage: page} ">
+                    <div class="cardViewItem" *ngFor="let gridClaims of gridClaimsData">
                         <header>
                             <div class="card_insureInfo">
                                  <h6>

@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ClaimsViewService } from "../claims-view/claims-view.service";
 import { formatDate } from "@angular/common";
+import { NgToastService } from "ng-angular-popup";
 
 @Component({
   selector: "app-claims-details",
@@ -37,6 +38,7 @@ export class ClaimsDetailsComponent {
   agentCode: any;
   selectMemberData: any = {};
   isViewVisible: boolean = false;
+  underDef: boolean = false;
   allowedFileTypes: string[] = [
     "application/pdf",
     "image/jpeg",
@@ -167,7 +169,9 @@ export class ClaimsDetailsComponent {
     private route: ActivatedRoute,
     private claimsService: ClaimsViewService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toast: NgToastService
+
   ) {
     this.route.queryParams.subscribe((params) => {
       this.claimId = this.route.snapshot.paramMap.get("id");
@@ -204,10 +208,11 @@ export class ClaimsDetailsComponent {
     this.claimsService.getClaimStatus(claimsReqBody).subscribe(
       (response: any) => {
         this.customeStepperStatuses = response.data.data;
-        console.log(this.customeStepperStatuses);
         this.customeStepperStatuses.forEach((item, index) => {
           item.count = index + 1;
         });
+        const filterValue = this.customeStepperStatuses.filter((obj)=> obj.title === "Under Deficiency")
+        filterValue?this.underDef = true:this.underDef=false      
       },
       (error: any) => {
         console.error("Error fetching claim details", error);
@@ -363,9 +368,13 @@ export class ClaimsDetailsComponent {
     this.claimsService.uploadFiles(formData).subscribe({
       next: (response) => {
         this.handleSuccessResponse(response);
+        this.toast.success({ detail: "Claim submitted successfully" });
+        this.router.navigate(["claims/claimsList"]);
+
       },
       error: (error) => {
         this.handleErrorResponse(error);
+        this.toast.error({ detail: "Error occurred during claims submission" });
       },
     });
   }
