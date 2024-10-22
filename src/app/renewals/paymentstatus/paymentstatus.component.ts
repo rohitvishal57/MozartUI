@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-paymentstatus',
@@ -11,7 +12,11 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 export class PaymentstatusComponent {
   orderId: string | undefined;
   paymentStatus:string | undefined
-  constructor(private route: ActivatedRoute,private renewalService:RenewalsService,private router: Router, private encryptionService: EncryptionService) { }
+  constructor(private route: ActivatedRoute,
+    private renewalService:RenewalsService,
+    private router: Router,
+    private encryptionService: EncryptionService,
+    private toast: NgToastService) { }
 
   ngOnInit(){
     const pathArray = this.route.snapshot.url;
@@ -24,18 +29,33 @@ export class PaymentstatusComponent {
     this.getPaymentStatus();
   }
   getPaymentStatus(){
-    this.renewalService.getPaymentStatusApi(this.orderId,{}).subscribe(
+    this.renewalService.getPaymentStatusApi("UP_241017_f100868d",{}).subscribe(
       (res:any)=>{
         console.log("payment response",res);
-        this.paymentStatus=res.Paymentstatus
-        if(this.paymentStatus=="success")
-        {
-          sessionStorage.setItem("paymentStatus", "1");
+        if(res.isSuccess==true){
+          this.paymentStatus=res.paymentStatus
+          if(this.paymentStatus=="success")
+            {
+              console.log("payment status",this.paymentStatus);
+              sessionStorage.setItem("paymentStatus", "1");
+              this.router.navigate([`renewal/payment`]);
+              this.toast.success({ detail: "success", summary: "policy renewed uccessfully", duration: 1500 });
 
-          this.router.navigate([`renewals/payment`]);
+            }
+          else{
+            console.log("payment status",this.paymentStatus);
+            sessionStorage.setItem("paymentStatus", "2");
+            this.router.navigate([`renewal/payment`]);
+            this.toast.error({ detail: "Error", summary: "Failed to renew the policy.", duration: 1500 });
+
+          }
         }
+        else{
+          console.log("Failed");
+        } 
       },
       (err:any)=>{
+        sessionStorage.setItem("paymentStatus", "2");
         console.log("Error is coming from getPaymentStatus Api");
       }
     )

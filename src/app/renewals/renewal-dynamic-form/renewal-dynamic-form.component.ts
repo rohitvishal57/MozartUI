@@ -91,7 +91,6 @@ export class RenewalDynamicFormComponent implements OnInit {
     this.ac.paramMap.subscribe((params) => {
       const policyNumber = this.encryptionService.decrypt(sessionStorage.getItem('policyNumberRen') as string);
       const activeSection = this.encryptionService.decrypt(sessionStorage.getItem('policyActionRen') as string);
-      if(sessionStorage.getItem('paymentStatus') as string == "1"){this.submit=false}
       if (policyNumber) {this.policyNumber = policyNumber;}
       if(activeSection){
         if(activeSection == 'payment'){
@@ -105,6 +104,8 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.activeSection=activeSection
         }
       }
+      if(sessionStorage.getItem('paymentStatus') as string == "1"){this.submit=false}
+      else if(sessionStorage.getItem('paymentStatus') as string == "2"){this.activeSection='payment'};
     });
    this.initializeForm();
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
