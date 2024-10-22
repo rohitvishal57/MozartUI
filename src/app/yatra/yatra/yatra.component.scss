@@ -1,80 +1,24 @@
-/* General Modal Styling */
-.modal-content {
-    border-radius: 12px;
-    padding: 20px;
-    background-color: #fff;
-  }
-  
-  .modal-header {
-    text-align: center;
-    border-bottom: none;
-    margin-bottom: 20px;  /* Adjust the value to increase/decrease the gap */
-
-} 
-  /* Optional: Add spacing to the paragraph */
-  .modal-header + p {
-    margin-top: 15px; /* You can also adjust the gap above the paragraph */
-  }
-  .modal-title {
-    font-size: 24px;
-    font-weight: 700;
-  }
-  
-  p {
-    font-size: 16px;
-    margin-bottom: 15px;
-  }
-  
+/* Rating Modal Styling */ 
   /* Star Rating */
   .star-rating {
     display: flex;
     justify-content: center;
+    gap: 16px;
     margin-bottom: 15px;
   }
-  
   .star {
-    font-size: 32px;
+    font-size: 40px;
     cursor: pointer;
     color: #ccc;
-    margin-right: 8px;
+    margin-right: 0px;
   }
-  
   .star.selected {
     color: #ffc107; /* Gold color for selected stars */
   }
-  
   .star:last-child {
     margin-right: 0;
   }
-  
-  /* Styling for Feedback Buttons */
-.btn_quickFilter {
-    display: inline-block;
-    border: 1px solid #ddd;
-    border-radius: 30px;
-    padding: 10px 20px;
-    margin: 5px 10px;  /* Add space between buttons */
-    font-size: 14px;
-    background-color: #f7f7f7;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-  
-  .btn_quickFilter:hover {
-    background-color: #e7e7e7;
-  }
-  
-  .btn_quickFilter.selected {
-    border-color: #d9534f;
-    background-color: #fef1f1;
-    color: #d9534f;
-  }
-  
-  .btn_quickFilter:focus {
-    outline: none;
-  }
-  
+
   /* Input Styling */
   .input-textBox {
     width: 100%;
@@ -106,13 +50,83 @@
   .btn_linkText_black {
     background: none;
     border: none;
-    color: #333;
+    color: #c12d2a;
+    font-weight: 500;
     font-size: 14px;
     margin-top: 10px;
     cursor: pointer;
   }
-  
   .btn_fullWidth {
     width: 100%;
   }
+
+
+  /*Modal CSS start*/
+  .modal-customerFeedback {
+    .modal-dialog {
+      max-width: 400px;
+      @media (max-width:767px) {
+        max-width: 100%;
+      }
+    }
+    .modal-body {
+      gap:16px;
+    }
+    .para-rate-18 {
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 24px;
+      color: #4c4c4c;
+      margin: 0;
+    }
+    .para-rate-16 {
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+      color: #4c4c4c;
+      margin: 0;
+    }
+    .para-rate-lable {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 19px;
+      color: #4c4c4c;
+      margin: 0;
+    }
+    .star-rating{
+      justify-content: flex-start;
+    }
+  }
+  .btn_red {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .btn_feedbackGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap:8px;
+    .btn_quickFilter{
+      background: transparent;
+      border: 1px solid #D5D7DE;
+      padding: 8px 16px;
+      margin: 0;
+      font-size: 12px;
+      color: #4c4c4c;
+      cursor: pointer;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .btn_quickFilter:hover {
+      border-color: #C7222A;
+    }
+    .btn_quickFilter.selected {
+      border-color: #C7222A;
+      color: #000;
+    }
+    .btn_quickFilter:focus {
+      outline: none;
+    }
+    
+  }
+  /*Modal CSS end*/
   
