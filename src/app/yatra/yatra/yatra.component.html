@@ -1193,7 +1193,7 @@
             <div class="col-12">
               <!-- Feedback Buttons -->
               <div class="btn_feedbackGroup" *ngFor="let value of feedbackImpressedValues;" >
-                <button type="button" class="btn_quickFilter" >{{value}}</button>
+                <button type="button" class="btn_quickFilter" (click)="onSelectValue(value)"  [ngClass]="{'selected': feedbackImpressedValue === value}" >{{value}}</button>
               </div>
             </div>
           </div>

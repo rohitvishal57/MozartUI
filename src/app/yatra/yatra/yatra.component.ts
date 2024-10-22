@@ -103,6 +103,7 @@ export class YatraComponent {
   impressedValues: boolean =false;
   feedbackSubmit :boolean = false;
   impressedLable : String = "";
+  feedbackImpressedValue : String ='';
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -155,7 +156,6 @@ export class YatraComponent {
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     this.customerFeedbackModule = new bootstrap.Modal(document.getElementById('customerFeedbackModule'));
     this.customerFeedbackForm = this.fb.group({
-      feedback: [''],
       message: [''],
       rating: [null, Validators.required], // Add rating to the form
     });
@@ -933,6 +933,7 @@ export class YatraComponent {
       this.feedbackSubmit = false;
       this.impressedValues = false;
       this.feedBackMessage = false;
+      this.rating=0;
     }
     this.setFormIndexValue(index);
 
@@ -4369,28 +4370,32 @@ export class YatraComponent {
   }
 
   setRating(star: number) {
-    debugger;
     this.rating = star;
     this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
     this.feedbackSubmit = true;
     this.impressedValues = true;
-     debugger
     if(star >3){
     this.impressedLable = 'What Impressed you ?';
     this.feedBackMessage  =false;
    }else{
     this.impressedLable = 'Why aren\'t you happy?';
     this.feedBackMessage  =true;
-
    }
   }
-
   submitFeedback() {
-    if (this.customerFeedbackForm.valid) {
-      const feedback = this.customerFeedbackForm.value;
-      console.log('Feedback Submitted: ', feedback);
-      // Call service to submit feedback
-    }
+    let reqData: any = {};
+    reqData.agentCode = this.agentCode;
+    reqData.rating = this.customerFeedbackForm.value.rating;
+    reqData.remarks = this.feedbackImpressedValue +":"+  this.customerFeedbackForm.value.message;
+    reqData.customerId = ""; 
+    this.yatraService.submitFeedback(reqData).subscribe((response) => {
+      this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
+    }, (error) => {
+      this.toast.error({detail:'Failed to submit feedback. Please try again later.'});
+    });
+  }
+  onSelectValue(value : String){
+   this.feedbackImpressedValue = value;
   }
 
 }

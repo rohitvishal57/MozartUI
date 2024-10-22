@@ -34,6 +34,7 @@
     "sendCustomerDetails":"yatra/api/Communication/api/updateCustomerDetails",
     "download":"yatra/api/downloadcustomer",
     "addLeadNotes":"yatra/api/addnotes",
+    "addfeedback":"yatra/api/feedback",
     "getClaimsList":"claims/api/getclaimlist", 
     "getProposalDetails":"claims/api/getproposaldetails?AgentCode",
     "saveClaims":"claims/api/saveclaim",
