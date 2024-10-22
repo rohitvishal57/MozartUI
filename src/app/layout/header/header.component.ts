@@ -1,5 +1,6 @@
 import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
 
@@ -14,9 +15,10 @@ export class HeaderComponent implements OnInit {
   isDesktopView: boolean = window.innerWidth >= 768;
   @Input() isLoggedIn: any;
 
-  constructor(private router: Router,
+  constructor(private router: Router, private translate: TranslateService,
     private loginService: CommonService, private toast: NgToastService
   ) {
+    translate.setDefaultLang('en');
   }
 
   ngOnInit() {
@@ -30,10 +32,9 @@ export class HeaderComponent implements OnInit {
   }
 
   setLanguage(event: any) {
-    console.log(event);
-    let language = event.target.value;
-    localStorage.setItem('preferredLanguage', language);
-    this.currentLanguage = language;
+    localStorage.setItem('preferredLanguage', event.target.value);
+    this.currentLanguage = event.target.value;
+    this.translate.use(event.target.value);
   }
 
   getLanguage(): string {
