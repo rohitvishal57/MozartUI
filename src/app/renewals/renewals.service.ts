@@ -54,8 +54,8 @@ export class RenewalsService {
     const generatepaymentlink = this.configService.config.baseUrl + this.configService.config.generatePaymentlink;
     return this.httpService.post(generatepaymentlink, reqBody);
   }
-  getRenewalInfoApi(policyNumber: string, requestBody: any) {
-    const getrenewalinfo = `${this.configService.config.baseUrl + this.configService.config.getRenewalInfo}?policyNumber=${policyNumber}`;
+  getRenewalInfoApi(requestBody: any) {
+    const getrenewalinfo = this.configService.config.baseUrl + this.configService.config.getRenewalInfo;
     return this.httpService.post(getrenewalinfo, requestBody);
   }
   getTenureDetailsApi(reuestBody: any){
@@ -85,5 +85,9 @@ export class RenewalsService {
   paymentGatewayApi(reqBody:any){
     const paymentGateway = this.configService.config.baseUrl + this.configService.config.paymentGateway;
     return this.httpService.post(paymentGateway, reqBody);
+  }
+  kycUpdate(reqBody:any){
+    const updateKycValue = this.configService.config.baseUrl + this.configService.config.kycUpdate;
+    return this.httpService.post(updateKycValue, reqBody);
   }
 }
