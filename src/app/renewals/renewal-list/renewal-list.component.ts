@@ -98,7 +98,7 @@ export class RenewalListComponent {
         }
       },
       (error) => {
-        this.toast.error({ detail: "Error", summary: "Error while generating Subquotes List.", duration: 1500 });
+        this.toast.error({ detail: "Error", summary: "Error while generating Renewal List.", duration: 1500 });
         console.error("Error from getRenewalsList API:", error);
       }
     );

@@ -1935,6 +1935,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 18px;
   line-height: 19px;
   color: var(--text-black-4c);
+  margin: 0;
 }
 
 .quoteComparisonWraper .qc_item header .heading h6 {
@@ -1942,6 +1943,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 18px;
   line-height: 19px;
   color: var(--text-black-4c);
+  margin: 0;
 }
 
 .quoteComparisonWraper .qc_item header .heading h6 span {
@@ -2923,7 +2925,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .head_quoteType {
-  color: var(--primary-red-color);
+  color: var(--primary-red-color) !important;
   background: rgba(254, 224, 221, 0.7) !important;
   border-right: 4px solid var(--white-color);
 }
@@ -2975,7 +2977,9 @@ input[type="search"]::-webkit-search-results-decoration {
 .userGridView .card_btnGroup .btn_action {
   background: var(--bg-grey-tr);
 }
-
+.userGridView .card_btnGroup .btn_action:hover {
+  background: var(--primary-red-color);
+}
 .userGridView .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems {
   width: 29%;
 }

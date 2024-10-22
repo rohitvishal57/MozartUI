@@ -40,11 +40,21 @@ export class ClaimsListViewComponent implements OnInit {
   appliedFiltersCount: number = 0;
   productsList: any[] = [];
   requestTypes: any[] = [];
+  maxDate: string | undefined;
   agentCode = localStorage.getItem('agentCode')
   StaticRequestTypes = [
     { name: 'Cashless', selected: false },
     { name: 'Reimbursement', selected: false },
   ];
+  statuses = [
+    { name: 'Intimated', selected: false },
+    { name: 'Inward Completed	', selected: false },
+    { name: 'RI Registration Raised', selected: false},
+    { name: 'Approved', selected: false},
+    { name: 'Scanning Completed', selected: false},
+    { name: 'Cancelled', selected: false}
+
+  ]
   
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
 
@@ -89,7 +99,7 @@ getToDate(event:any){
 claimsReqBody =  {
     "sellerId": this.agentCode,
     "sortColumn": "ReportedDateTime",
-    "sortdirection": "ASC",
+    "sortdirection": "DESC",
     "status": "",
     "requestType": "",
     "searchType": "",
@@ -113,13 +123,19 @@ fetchData(): void {
     } else if (dateType === "toDate" && this.toDate) {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
+    if(this.toDate < this.fromDate) {
+      this.toDate = "";
+    }
   }
+
   toggleFilterDropdown() {
     if(this.toggeleSearchdropdown==true)
     {
        this.toggeleSearchdropdown=false;
     }
-    this.toggeledropdown = !this.toggeledropdown;    
+    this.toggeledropdown = !this.toggeledropdown;   
+    this.maxDate = new Date().toISOString().split('T')[0];  
+ 
   }
 
   getProducts() {
@@ -154,7 +170,7 @@ fetchData(): void {
   }
 
   applyFilter() {
-    this.calculateAppliedFiltersCount();
+  this.calculateAppliedFiltersCount();
   this.formatDate("fromDate");
   this.formatDate("toDate");
   this.claimsReqBody.fromDate=this.fromDate;
@@ -202,27 +218,9 @@ clear(){
     let searchValue = this.searchInputControl.value?.trim();
     if (searchValue) {
       this.claimsReqBody.searchType = this.selected;
-      this.claimsReqBody.searchString = searchValue;
-
-      this.fetchData();
-     // this.toggleSearchdropdown = false;
-    //  this.claimsReqBody.searchType = '';
-      this.claimsReqBody.searchString = '';
-      console.log('searchvalue', this.claimsReqBody.searchString);
-      console.log('searchtype', this.claimsReqBody.searchType);    
+      this.claimsReqBody.searchString = searchValue;    
     }
-    else if(searchValue === ''){  
-      this.selected = '';
-      this.searchInputControl.setValue('');
-      this.claimsReqBody.searchType = '';
-      this.claimsReqBody.searchString = '';
-      this.fetchData();      
-    }
-    else{
-      this.fetchData();
-    }
-    this.selected = '';
-    this.searchInputControl.reset();
+    this.fetchData();
   }
 
 onSelectChanges(event: any): void {
@@ -231,12 +229,18 @@ onSelectChanges(event: any): void {
   this.searchInputControl.setValue('');
   this.searchInputControl.clearValidators();
 
-  if (this.selected === 'policyNumber' || this.selected === 'productName' || this.selected === 'requestType') {
+  // if (this.selected === 'mobileNumber') {
+  //   this.searchInputControl.setValidators([
+  //     Validators.required,
+  //     Validators.pattern('^[0-9]*$') 
+  //   ]);
+  // }
+   if (this.selected === 'claimInfoId' || this.selected === 'policyNumber' || this.selected === 'memberId') {
     this.searchInputControl.setValidators([
       Validators.required,
-      Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$')
+      Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
     ]);
-  }    
+  }
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched(); 
   }
@@ -244,11 +248,16 @@ onSelectChanges(event: any): void {
 getPlaceholder(): string {
   if (this.selected === 'policyNumber') {
       return 'Enter Policy Number';
-    } else if (this.selected === 'productName') {
-      return 'Enter Product Name';
-    } else if (this.selected === 'requestType') {
-      return 'Enter Request Type';
+    } else if (this.selected === 'claimInfoId') {
+      return 'Enter Request ID';
+    } else if (this.selected === 'memberId') {
+      return 'Enter Member ID';
     }
+    //  else if (this.selected === 'mobileNumber') {
+    //   return 'Enter Mobile Number';
+    // } else if (this.selected === 'memberId') {
+    //   return 'Enter Member Id';
+    // }
   else {
       return 'Search...';
     }

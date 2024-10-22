@@ -13,7 +13,7 @@
                   <div class="row mb-3">
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
-                              <select class="form-select input-selectBox" formControlName="policyNumber" (change)="handleDropdownChange($event)">
+                              <select class="form-select input-selectBox" formControlName="policyNumber"  [(ngModel)]="searchText" (ngModelChange)="filterPolicyNumbers()" (change)="handleDropdownChange($event)">
                                   <option class="dropdown-options" value="" disabled selected>Select Policy Number</option>
                                   <option class="dropdown-options" *ngFor="let policy of policyNumbers" [value]="policy">{{ policy }}</option>
                               </select>
@@ -23,6 +23,61 @@
                               </small>
                                                      
                             </div>
+
+                            <!-- <div class="input-block form-floating input-block-renew">
+                                <div class="custom-dropdown">
+                                  <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    placeholder="Search Policy Number" 
+                                    [(ngModel)]="searchText" 
+                                    (focus)="toggleDropdown(true)" 
+                                    (input)="filterPolicyNumbers()"
+                                  />
+                              
+                                  <select class="form-select input-selectBox" formControlName="policyNumber" (change)="handleDropdownChange($event)">
+                                    <option class="dropdown-options" value="" disabled selected>Select Policy Number</option>
+                                    <option class="dropdown-options" *ngFor="let policy of filteredPolicyNumbers" [value]="policy">{{ policy }}</option>
+                                  </select>
+                                </div>
+                              
+                                <label for="idgender">Select Policy Number</label>
+                                <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
+                                  Policy Number is required.
+                                </small>
+                              </div> -->
+                              
+
+                            <!-- <div class="input-block form-floating input-block-renew">
+                                <div class="custom-dropdown">
+                                  <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    placeholder="Search Policy Number" 
+                                    [(ngModel)]="searchText" 
+                                    (focus)="toggleDropdown(true)" 
+                                    (input)="filterPolicyNumbers()"
+                                  />
+                              
+                                  <ul *ngIf="isDropdownOpen" class="dropdown-list">
+                                    <li 
+                                      *ngFor="let policy of filteredPolicyNumbers" 
+                                      (click)="selectPolicyNumber(policy)"
+                                    >
+                                      {{ policy }}
+                                    </li>
+                                    <li *ngIf="filteredPolicyNumbers.length === 0">
+                                      No results found
+                                    </li>
+                                  </ul>
+                                </div>
+                              
+                                <label for="policyNumber">Select Policy Number</label>
+                                <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
+                                  Policy Number is required.
+                                </small>
+                              </div> -->
+                        
                       </div>
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
@@ -46,9 +101,9 @@
                               </select>                          
                               <label for="claimtype">Claim Type</label>
                               <!-- <span class="ui-error">Please select claim type</span> -->      
-                                <!-- <small class="ui-error block-show" *ngIf="form.get('claimType')?.hasError('required') && form.get('claimType')?.touched">
+                                <small class="ui-error block-show" *ngIf="form.get('claimType')?.hasError('required') && form.get('claimType')?.touched">
                                     Claim type is required
-                                </small>                                 -->
+                                </small>                                
                           </div>
                       </div>
 
@@ -65,7 +120,10 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
                                 <label for="claimamount">Claim Amount</label>
-                                <span class="ui-error">Please enter claim amount</span>
+                                <!-- <span class="ui-error">Please enter claim amount</span> -->
+                                <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
+                                    Claim amount is required
+                                </small> 
                             </div>
                         </div>
                         
@@ -74,6 +132,9 @@
                               <div class="input-block form-floating input-block-renew">
                                   <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" />
                                   <label for="admissionDate">Date of Admission</label>
+                                  <small class="ui-error block-show" *ngIf="form.get('admissionDate')?.hasError('required') && form.get('admissionDate')?.touched" >
+                                    Date of Admission is required
+                                </small>
                               </div>
                           </div>
 
@@ -162,7 +223,10 @@
                                 <div class="input-block form-floating input-block-renew">
                                     <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
                                     <label for="claimamount">Claim Amount</label>
-                                    <span class="ui-error">Please enter claim amount</span>
+                                    <!-- <span class="ui-error">Please enter claim amount</span> -->
+                                    <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
+                                        Claim amount is required
+                                    </small> 
                                 </div>
                             </div>
                              
