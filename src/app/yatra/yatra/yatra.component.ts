@@ -1980,88 +1980,18 @@ export class YatraComponent {
     const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     this.form.formSections.forEach(formsection => {
       formsection.formControls.forEach(formControl => {
-        // if (checkbox.checked == true) {
-        //   if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-        //     formsection.visible = true;
-        //     let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-        //     tempControl[1].value = option.value;
-        //     tempControl[0].value = JSON.stringify(option);
-
-        //     let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
-
-        //     console.log(formArr, this.dynamicFormGroup.value, this.form);
-
-        //     // Check if the form group already exists in the FormArray
-        //     let existingIndex = formArr.controls.findIndex((control: AbstractControl) => {
-        //       const group = control as FormGroup; // Cast the control to FormGroup
-        //       return group.get('relation')?.value === option.value;
-        //     });
-
-        //     // if (existingIndex !== -1 && existingIndex !== undefined) {
-        //     //   // Update existing form group with the new controls/values
-        //     //   let existingGroup = formArr.controls[existingIndex] as FormGroup;
-
-        //     //   // Iterate through tempControl and update the existingGroup
-        //     //   tempControl.forEach((control: any) => {
-        //     //     if (existingGroup.contains(control.name)) {
-        //     //       // If the control exists, update the value
-        //     //       existingGroup.get(control.name)?.setValue(control.value);
-        //     //     } else {
-        //     //       // If the control doesn't exist, add the control
-        //     //       existingGroup.addControl(control.name, this.fb.control(control.value));
-        //     //     }
-        //     //   });
-
-        //     // } 
-        //     // else {
-        //     //   // If the form group doesn't exist, create a new one
-        //     //   if (!formArr) {
-        //     //     formArr = this.fb.array([]);
-        //     //     this.dynamicFormGroup.addControl(controls.idProperty, formArr);
-        //     //   }
-
-        //     //   // Initialize the new form group and add it to the array
-        //     //   let newFormGroup = this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1);
-        //     //   formArr.push(newFormGroup);
-        //     // }
-
-        //     // Special handling for the 'Self' option
-        //     // if (option.value === 'Self') {
-        //     //   let index = formArr.controls.findIndex((control: AbstractControl) => {
-        //     //     const group = control as FormGroup; // Cast the control to FormGroup
-        //     //     return group.get('relation')?.value === option.value;
-        //     //   });
-
-        //     //   if (index !== -1) {
-        //     //     let selfGroup = formArr.controls[index] as FormGroup;
-        //     //     selfGroup.get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
-        //     //     selfGroup.get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
-        //     //     selfGroup.get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
-        //     //     selfGroup.get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
-        //     //     selfGroup.get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
-        //     //     selfGroup.get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
-        //     //     selfGroup.get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
-        //     //     selfGroup.get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
-        //     //     selfGroup.get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
-        //     //     selfGroup.get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
-        //     //     selfGroup.get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
-        //     //     selfGroup.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
-        //     //   }
-        //     // }
-
-        //     // Handle 'Family Floater' plan type by setting 'sumInsured' for all insured members
-        //     // if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-        //     //   formArr.controls.forEach((control: any) => {
-        //     //     control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
-        //     //   });
-        //     // }
-
-        //     // this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(formArr.length);
-        //   }
-        // }
         if (checkbox.checked == true) {
+          // if(formControl.name == 'totalPremium' && this.isPolicyDetailsFetch){
+          //   formControl.value = "";
+          //   this.dynamicFormGroup.get("totalPremium")?.setValue("");
+          // }
           if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
             formsection.visible = true;
+            if(this.isQuote == true && this.isPolicyDetailsFetch){
+              formControl.dynamicControls = formControl.dynamicControls.slice(0,1);
+              console.log(this.form,this.dynamicFormGroup.value);
+              this.isQuote = false;
+            }
             let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
             tempControl[1].value = option.value;
             tempControl[0].value = JSON.stringify(option);
