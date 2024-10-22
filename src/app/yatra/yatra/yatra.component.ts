@@ -4394,6 +4394,7 @@ export class YatraComponent {
     }, (error) => {
       this.toast.error({detail:'Failed to submit feedback. Please try again later.'});
     });
+    this.customerFeedbackModule.hide();
   }
   onSelectValue(value : String){
    this.feedbackImpressedValue = value;
