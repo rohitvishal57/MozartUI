@@ -17,7 +17,7 @@ export class AppComponent {
   ngOnInit(){
     this.router.events.subscribe(() => {
       this.showNavbar = !this.router.url.includes('login');
-      console.log(this.showNavbar);
+      // console.log(this.showNavbar);
     });
   }
 }
