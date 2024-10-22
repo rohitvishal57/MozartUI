@@ -934,6 +934,7 @@ export class YatraComponent {
       this.impressedValues = false;
       this.feedBackMessage = false;
       this.rating=0;
+      this.feedbackImpressedValue ='';
     }
     this.setFormIndexValue(index);
 
