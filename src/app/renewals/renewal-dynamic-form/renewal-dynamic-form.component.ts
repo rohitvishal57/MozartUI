@@ -6,10 +6,8 @@ import { Options } from '@angular-slider/ngx-slider';
 import { NgToastService } from 'ng-angular-popup';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { CommonService } from 'src/app/services/common.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { validationConfig }  from 'src/app/interface/renewal-list.interface';
 import { EncryptionService } from 'src/app/services/encryption.service';
-
 
 @Component({
   selector: 'app-renewal-dynamic-form',
@@ -104,8 +102,12 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.activeSection=activeSection
         }
       }
-      if(sessionStorage.getItem('paymentStatus') as string == "1"){this.submit=false}
-      else if(sessionStorage.getItem('paymentStatus') as string == "2"){this.activeSection='payment'};
+      const paymentStatus = this.renewalService.getPaymentStatus();
+      if (paymentStatus === '1') {
+        this.submit = false;
+      } else if (paymentStatus === '2') {
+        this.activeSection = 'payment';
+      }
     });
    this.initializeForm();
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
@@ -349,10 +351,11 @@ export class RenewalDynamicFormComponent implements OnInit {
  }
  proceed(value? :any) {
    if (this.activeSection === 'primary') {
-    this.formId = 5001
+     this.formId = 5001;
      this.setSection('additional');
    } 
    else if (this.activeSection === 'additional') {
+     this.formId = 5001;
      this.setSection('policySummary');
    } 
    else if (this.activeSection === 'policySummary') {
@@ -365,20 +368,19 @@ export class RenewalDynamicFormComponent implements OnInit {
   
  }
  renewNow() {
+   this.formId = 5001;
    this.setSection('policySummary')
  }
  next1(){
   if(this.activeSection== 'policySummary'){
     if(this.kycFlag==false){
-      console.log("kyc is not done",this.kycFlag);
       this.setSection('kyc')
     }
-    else{
-      console.log("kyc was done",this.kycFlag);
+    else if(this.kycFlag == true){
       this.setSection('payment')
     }
   }
-  else if(this.activeSection== 'kyc'){
+  else if(this.activeSection == 'kyc'){
     if(this.kycData){
       this.setSection('payment')
     }
@@ -507,8 +509,8 @@ getRenewalInfo() {
   }  
   sendLink(){
     this.link=" "
-    }
-    handleKyc(action: any) {
+  }
+  handleKyc(action: any) {
         this.kycDetailsSubmitted = true;
         if (this.kycFormGroup.invalid) {
           console.log("Form is invalid");
@@ -571,6 +573,7 @@ getRenewalInfo() {
     comeBack(){
       if(this.activeSection == 'policySummary'){
         if(this.hideSection == false){
+          this.renewalService.clearPaymentStatus();
           this.router.navigate([`renewal/renewalList`]);
         }else if(this.activeSection == 'policySummary'){
           this.setSection('additional')

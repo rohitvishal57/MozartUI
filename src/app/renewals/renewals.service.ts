@@ -11,6 +11,7 @@ interface PolicyState {
   providedIn: 'root'
 })
 export class RenewalsService {
+  private paymentStatus: string = '';
 
   constructor(private configService: ConfigService,private httpService: HttpService) { }
 
@@ -27,7 +28,15 @@ export class RenewalsService {
   getQuote(): Observable<any> {
     return this.quote$;
   }
-  
+  setPaymentStatus(status: string): void {
+    this.paymentStatus = status;
+  }
+  getPaymentStatus(): string {
+    return this.paymentStatus;
+  }
+  clearPaymentStatus(): void {
+    this.paymentStatus = '';
+  }
   updateState(button: string, value?: any) {
     this.stateSource.next({ button, value });
   }

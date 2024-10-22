@@ -37,14 +37,14 @@ export class PaymentstatusComponent {
           if(this.paymentStatus=="success")
             {
               console.log("payment status",this.paymentStatus);
-              sessionStorage.setItem("paymentStatus", "1");
+              this.renewalService.setPaymentStatus('1');
               this.router.navigate([`renewal/payment`]);
               this.toast.success({ detail: "success", summary: "policy renewed uccessfully", duration: 1500 });
 
             }
           else{
             console.log("payment status",this.paymentStatus);
-            sessionStorage.setItem("paymentStatus", "2");
+            this.renewalService.setPaymentStatus('2');
             this.router.navigate([`renewal/payment`]);
             this.toast.error({ detail: "Error", summary: "Failed to renew the policy.", duration: 1500 });
 
