@@ -68,7 +68,7 @@ export class MyPerformaceComponent {
       agentCode: "ABH1101006",
       start: this.page,
       length: this.rows,
-      isViewed: false
+      isViewed: true
   }
   this.performanceService.getPerformanceDetailedViewList(reqObj).subscribe(
     (response) => {
