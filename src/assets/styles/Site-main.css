@@ -2494,7 +2494,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .tableSubMain .table td {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--text-black-2e);
   vertical-align: top;
