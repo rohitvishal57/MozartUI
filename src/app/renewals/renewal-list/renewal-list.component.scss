@@ -55,7 +55,7 @@ h6 {
 }
 
 .tableSubMain .table td {
-	line-height: 10px;
+	/*line-height: 10px;*/
 }
 
 .btn_quickFilter {
@@ -329,6 +329,13 @@ h6 {
 }
 .common_searchWraper .field_searchMain .filterSearch {
 	padding: 9px 25px 9px 16px;
+}
+.common_searchWraper .field_searchMain select.filterSearch {
+	padding: 9px 5px 9px 10px;
+	width: 120px;
+	@media (max-width:767px) {
+		width: 100%;
+	}
 }
 .common_searchWraper .field_searchMain button{
 	right:5px

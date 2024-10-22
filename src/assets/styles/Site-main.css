@@ -551,7 +551,7 @@ button {
   position: fixed;
   left: 0;
   top: 88px;
-  z-index: 9;
+  z-index: 1;
 }
 
 .siteSidenav .siteSidenavMain {
@@ -2498,6 +2498,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 400;
   color: var(--text-black-2e);
   vertical-align: top;
+  line-height: normal;
 }
 
 .tableSubMain .table th, .tableSubMain .table td {
