@@ -26,7 +26,7 @@
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
-                                <tr *ngFor="let quote of subQuotesList; let i = index" class="base_quoteRow">
+                                <tr *ngFor="let quote of subQuotesList; let i = index" [ngClass]="quote.isBaseQuote ? 'base_quoteRow' : ''">
                                     <td  [ngClass]="quote.isBaseQuote ? 'base_quote' : 'sub_quote'">
                                         <div class="input-checkbox-block">
                                             <div class="input-checkbox-feild">
