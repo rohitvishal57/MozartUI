@@ -1185,24 +1185,23 @@
             </span>
           </div>
 
-          <div class="row">
-            <div class="col-12 mb-3">
-              <p class="para-rate-16">What impressed you?</p>
+          <div class="row" *ngIf="impressedValues" >
+            <div class="col-12 mb-3" >
+              <p class="para-rate-16">{{impressedLable}}</p>
             </div>
+  
             <div class="col-12">
               <!-- Feedback Buttons -->
-              <div class="btn_feedbackGroup">
-                <button type="button" class="btn_quickFilter" >Seamless payment</button>
-                <button type="button" class="btn_quickFilter selected">Ease of policy modification</button>
-                <button type="button" class="btn_quickFilter">Speedy Policy renewal</button>
-                <button type="button" class="btn_quickFilter">Receipting & confirm</button>
+              <div class="btn_feedbackGroup" *ngFor="let value of feedbackImpressedValues;" >
+                <button type="button" class="btn_quickFilter" >{{value}}</button>
               </div>
             </div>
           </div>
-          <div class="row mt-3">
+          <div class="row mt-3" *ngIf="feedBackMessage" >
             <div class="col-12">
               <p class="para-rate-lable">What can we do to improve your experience?</p>
             </div>
+            
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
               <div class="input-block form-floating input-block-renew">
                 <textarea class="form-control input-textBox" id="notes" placeholder="Enter your message" formControlName="message"></textarea>
@@ -1211,7 +1210,7 @@
           </div>  
         </div>
         <div class="modal-footer modal_footerBtnGroup_column">
-          <button type="submit" class=" btn_red btn_fullWidth">Submit</button>
+          <button *ngIf="feedbackSubmit" type="submit" class=" btn_red btn_fullWidth">Submit</button>
           <div class="d-flex justify-content-center">
             <button type="button" class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal"
               aria-label="Close">Skip for now</button>

@@ -98,6 +98,12 @@ export class YatraComponent {
   formIndexValue : number = 0;
   stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
   rating: number = 0; // Holds the current selected rating
+  feedbackImpressedValues : String [] = ['Seamless payment','Ease of policy modification','Speedy Policy renewal','Payment receipt & confirm']
+  feedBackMessage : boolean =false;
+  impressedValues: boolean =false;
+  feedbackSubmit :boolean = false;
+  impressedLable : String = "";
+
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
@@ -153,6 +159,8 @@ export class YatraComponent {
       message: [''],
       rating: [null, Validators.required], // Add rating to the form
     });
+
+
   }
 
   initializeRequiredData() {
@@ -922,6 +930,9 @@ export class YatraComponent {
   addNavbar(index: number , value : any) {
     if ( value.formName === 'Confirmation') {
       this.customerFeedbackModule.show();
+      this.feedbackSubmit = false;
+      this.impressedValues = false;
+      this.feedBackMessage = false;
     }
     this.setFormIndexValue(index);
 
@@ -4358,8 +4369,20 @@ export class YatraComponent {
   }
 
   setRating(star: number) {
+    debugger;
     this.rating = star;
     this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
+    this.feedbackSubmit = true;
+    this.impressedValues = true;
+     debugger
+    if(star >3){
+    this.impressedLable = 'What Impressed you ?';
+    this.feedBackMessage  =false;
+   }else{
+    this.impressedLable = 'Why aren\'t you happy?';
+    this.feedBackMessage  =true;
+
+   }
   }
 
   submitFeedback() {
