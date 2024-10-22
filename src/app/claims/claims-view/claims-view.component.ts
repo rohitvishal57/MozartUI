@@ -77,6 +77,9 @@ export class ClaimsViewComponent {
   allowedFileTypes: string[] = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/bmp']; 
   uploadValidFormat: boolean = false;
   hospitalAddress: any;
+  filteredPolicyNumbers: string[] = [];
+  searchText: string = '';
+  isDropdownOpen: boolean = false;  
   coverNames = [
     "AYUSH Treatment",
     "Domiciliary Hospitalization",
@@ -125,6 +128,7 @@ export class ClaimsViewComponent {
     this.saveUpload();
     this.getProposalDetails();
     this.fetchStates();
+    this.filteredPolicyNumbers = [...this.policyNumbers]; 
   }
   
   navigateToListClaim(){
@@ -157,7 +161,7 @@ export class ClaimsViewComponent {
       id: localStorage.getItem("agentCode"),
       policyNumber: ["",Validators.required],
       proposalNumber: ["", Validators.required],
-      memberName: ["",],
+      memberName: ["",Validators.required],
       productName: [""],
       fullName: [""],
       policyType: ["",],
@@ -167,7 +171,7 @@ export class ClaimsViewComponent {
       raisedDate: [""],
       hospitalName: [""],
       isFileUploadRequired: [true],
-      claimedAmount: ["",],
+      claimedAmount: ["",Validators.required],
       approvedAmount: [""],
       deductedAmount: [""],
       deductionReason: [""],
@@ -175,13 +179,13 @@ export class ClaimsViewComponent {
       reasonForCoPay: [""],
       coverName: [""],
       AgentCode: localStorage.getItem("agentCode"),
-      claimType: ["",],
+      claimType: ["",Validators.required],
       notes: [""],
       proposerName: [""],
       state: [""],
       city: [""],
       hospitalAddress: "",
-      admissionDate: ["2023-10-15"],
+      admissionDate: ["2023-10-15",],
       dischargeDate: ["2024-10-15"],
       admissionTime: [""],
       dischargeTime: [""],
@@ -203,7 +207,6 @@ export class ClaimsViewComponent {
         if (response.success) {
           this.response = response;
           const allData: ClaimData[] = response.data;
-          // Extract unique values for dropdowns
           this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');
           console.log('prop', this.proposalNumbers);
           
@@ -222,13 +225,13 @@ export class ClaimsViewComponent {
     );
   }
 
-  // to extract unique values
   extractUniqueValues(data: any[], key: string): any[] {
     return [...new Set(data.map((item) => item[key]).filter((val) => val))];
   }
 
   handleDropdownChange(event: any): void {
     const selectedPolicyNumber = event.target.value;  
+    this.form.get('policyNumber')?.setValue(selectedPolicyNumber); 
     const filteredMembers = this.response.data.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
@@ -237,8 +240,43 @@ export class ClaimsViewComponent {
     this.cdr.markForCheck();
   }
 
-  resetValues(){
+  toggleDropdown(open: boolean): void {
+    console.log('togglke');
+    
+    this.isDropdownOpen = open;
+  }
 
+  filterPolicyNumbers(): void {
+    console.log('filterPolicyNumbers');
+    const query = this.searchText.toLowerCase();
+    this.filteredPolicyNumbers = this.policyNumbers.filter(policy =>
+      policy.toLowerCase().includes(query)
+    );
+  }
+
+  // Handle selection from the dropdown
+  selectPolicyNumber(policy: string): void {
+    console.log('selectPolicyNumber');
+    this.form.get('policyNumber')?.setValue(policy);
+    this.searchText = policy; 
+    this.isDropdownOpen = false; 
+  }
+
+  // Close dropdown when clicked outside
+  handleClickOutside(event: Event): void {
+    console.log('handleClickOutside');
+    const target = event.target as HTMLElement;
+    if (!target.closest('.custom-dropdown')) {
+      this.isDropdownOpen = false;
+    }
+  }
+
+  ngAfterViewInit() {
+    document.addEventListener('click', this.handleClickOutside.bind(this));
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('click', this.handleClickOutside.bind(this));
   }
 
   onClaimTypeChange(event: any): void {
@@ -274,7 +312,6 @@ export class ClaimsViewComponent {
     console.log("selectedCover");
     this.selectedCoverName = selectedCover;
 
-    // Toggle between the two UIs based on cover name
     if (
       [
         "AYUSH Treatment",

@@ -9,17 +9,39 @@
             <section class="white_container white_container_shadow">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-                        <div class="details_claimsInfo">
-                            <!-- <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5> -->
+                        <!-- <div class="details_claimsInfo">
+                             <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5> 
                             <h5>{{ claims?.memberName }}</h5>
                             <h6>{{ claims?.productName }}<span class="info-dot"></span>{{ claims?.requestType }}<span class="info-dot"></span><b>{{ claims?.claimStatus }}</b></h6>
+                        </div> -->
+                        <div class="details_claimsAmount">
+                        <div class="claim_amount">
+                            <h6>Policy Number</h6>
+                            <p>{{ claims?.policyNumber }}</p>
+                        </div>
+                        <div class="claim_amount">
+                            <h6>Member Name</h6>
+                            <p>{{ claims?.memberName }}</p>
                         </div>
                     </div>
+                    <br/>
+                    <div class="details_claimsAmount">
+                        <div class="claim_amount">
+                            <h6>Product Name</h6>
+                            <p>{{ claims?.productName }}</p>
+                            </div>
+                            <div class="claim_amount">
+                            <h6>Claim Status</h6>
+                            <p>{{ claims?.claimStatus }}</p>
+                        </div>
+                    </div> 
+                </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div class="details_claimsAmount">
+                           
                             <div class="claim_amount">
-                                <h6>Policy Number</h6>
-                                <p>{{ claims?.policyNumber }}</p>
+                                <h6>Request Type</h6>
+                                <p>{{ claims?.requestType }}</p>
                             </div>
                             <div class="claim_amount">
                                 <h6>Claim Amount</h6>
@@ -34,11 +56,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12" *ngIf="selectedTabIndex === 1">
+                    <div class="col-12" >
                         <div class="white_container claim_underDeficiency">
                             <div class="info_underDeficiency">
                                 <h5>Under Deficiency</h5>
-                                <h6>Kindly provide Aadhaar card and doctor’s prescription</h6>
+                                <!-- <h6>Kindly provide Aadhaar card and doctor’s prescription</h6> -->
                             </div>
                             <div class="button_underDeficiency">
                                 <button type="button" (click)="underDeficiencyFileInput.click()" class="btn_red">Upload Documents</button>
@@ -53,8 +75,8 @@
                       File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files.
                     </span>
                     </div>
-
-                    <div class="uploadDocument_listMain" *ngIf="uploadedUnderDeficiencyFiles.length > 0">
+                  
+                    <div class="uploadDocument_listMain" *ngIf="uploadedUnderDeficiencyFiles.length > 0">  
                         <div class="uploadDocument_filesList">
                             <div class="filesList_head">
                                 <div class="filesList_headLeft">Uploads:</div>
