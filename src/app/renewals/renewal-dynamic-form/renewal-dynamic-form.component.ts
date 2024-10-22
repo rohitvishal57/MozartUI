@@ -91,11 +91,12 @@ export class RenewalDynamicFormComponent implements OnInit {
     this.ac.paramMap.subscribe((params) => {
       const policyNumber = this.encryptionService.decrypt(sessionStorage.getItem('policyNumberRen') as string);
       const activeSection = this.encryptionService.decrypt(sessionStorage.getItem('policyActionRen') as string);
+      if(sessionStorage.getItem('paymentStatus') as string == "1"){this.submit=false}
       if (policyNumber) {this.policyNumber = policyNumber;}
       if(activeSection){
         if(activeSection == 'payment'){
-          this.getRenewalInfo();
           this.activeSection='policySummary';
+          this.getRenewalInfo();          
           this.hideSection=false
         }
         else{
@@ -476,7 +477,7 @@ getRenewalInfo() {
   }
   changeroute(){
     this.renewalService.setQuote(this.renewalInfo);
-    this.router.navigate(["renewals/subQuotes"]);
+    this.router.navigate(["renewal/quote"]);
   }
   getproductdetailsandfeatures() {
     const productName = this.renewalInfo?.response?.policyData?.[0]?.Name_of_product;
@@ -574,9 +575,13 @@ getRenewalInfo() {
           this.setSection('additional')
         }
       }else if(this.activeSection == 'kyc'){
-            this.setSection('policySummary');
+        this.setSection('policySummary')
       }else if(this.activeSection == "payment"){
+        if(this.kycFlag){
+          this.setSection('policySummary');
+        }else if(!this.kycFlag){
         this.setSection('kyc');
+        }
       }
 
     }

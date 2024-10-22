@@ -26,6 +26,7 @@
     "referencestatus":"yatra/api/referencestatus",
     "updatestatus":"yatra/api/updatestatus",
     "getduplicateLead":"yatra/api/getduplicateLead",
+    "getPaymentStatus":"yatra/api/paymentstatus",
 
     "assineLead":"yatra/api/LeadAssigne",
     "getMyReportingUsers": "yatra/api/getmyreportingusers",

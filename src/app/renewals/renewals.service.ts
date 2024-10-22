@@ -94,4 +94,9 @@ export class RenewalsService {
     const kycURL = this.configService.config.baseUrl + this.configService.config.getkycURL;
     return this.httpService.post(kycURL, reqBody);
   }
+  getPaymentStatusApi(orderId:any,reqBody:any){
+    const paymentStatus = `${this.configService.config.baseUrl}${this.configService.config.getPaymentStatus}?orderId=${orderId}`;
+    return this.httpService.post(paymentStatus,reqBody)
+  }
+
 }
