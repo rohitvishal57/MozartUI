@@ -90,4 +90,8 @@ export class RenewalsService {
     const updateKycValue = this.configService.config.baseUrl + this.configService.config.kycUpdate;
     return this.httpService.post(updateKycValue, reqBody);
   }
+  getkycURL(reqBody:any){
+    const kycURL = this.configService.config.baseUrl + this.configService.config.getkycURL;
+    return this.httpService.post(kycURL, reqBody);
+  }
 }

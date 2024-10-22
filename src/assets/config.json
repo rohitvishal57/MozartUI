@@ -15,6 +15,7 @@
     "getSubquotes":"renewal/api/getsubquotes",
     "updateMemberDetails":"renewal/api/UpdateMemberDetails",
     "kycUpdate":"/renewal/api/kycUpdate",
+    "getkycURL":"quote/api/getkycURL",
 
     "getLeadsListApi":"yatra/api/getleaddetailslist",
     "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",

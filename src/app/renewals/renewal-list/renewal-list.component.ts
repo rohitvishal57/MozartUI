@@ -364,7 +364,7 @@ export class RenewalListComponent {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
     sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
     sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(this.activeSection));
-    this.router.navigate([`renewals/payment`]);
+    this.router.navigate([`renewal/payment`]);
   }
   getStarClasses(index: number, rating: number): string[] {
     const starClasses = ['star'];

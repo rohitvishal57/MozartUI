@@ -1348,10 +1348,7 @@
         <div class="bcc_main">
             <div class="accordionMain">  
                 <div class="accordionItem">
-                    <header>
-                        KYC
-                        <!-- <button type="button" value="sectionedit" class="btn_iconText accordionArrow"><img src="images/icon_arrow_back_mobile.svg"></button> -->
-                    </header>
+                    <header>KYC</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">   
@@ -1389,56 +1386,16 @@
                                     </div>
                                     </form>
                                 </div>
-                                <!-- <div class="row" *ngIf="actionKyc == 3003">
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-fname" name="ckyc-fname" [(ngModel)]="kycData.firstName" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-fname">First Name</label>
-                                        </div>
+                                <div class="row" *ngIf="kycLink">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                      <div class="block_or_line"><span>OR</span></div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-idnumber" name="ckyc-idnumber" [(ngModel)]="kycData.panNo" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-idnumber">ID Number</label>
-                                        </div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 15px;">
+                                      <div class="input-block form-floating input-block-renew">
+                                        <a [href]="kycLink" target="_blank" class="form-control input-textBox" style="text-decoration: none;" >{{ kycLink }}</a>
+                                      </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-dob" name="ckyc-dob" [(ngModel)]="kycData.memberDobProposer" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-dob">DOB</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-address1" name="ckyc-address1" [(ngModel)]="kycData.proposerAddress1" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-address1">Address Line 1</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-address1" name="ckyc-address2" [(ngModel)]="kycData.proposerAddress2" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-address2">Address Line 2</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-city" name="ckyc-city" [(ngModel)]="kycData.city" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-city">City</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-idnumber" name="ckyc-state" [(ngModel)]="kycData.state" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-state">State</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-mobileno" name="ckyc-mobileno" [(ngModel)]="kycData.mobileNumber" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-mobileno">Mobile Number</label>
-                                        </div>
-                                    </div>
-                                </div>                      -->
+                                  </div>                                  
                             </div>                   
                         </div>
                     </div>
@@ -1494,7 +1451,7 @@
                       <label>₹{{(renewalInfo?.response?.policyData[0]?.NetPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn ) | number:'1.0-0'}}</label>
                   </div>
                   <button type="button" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
-                  <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewals/subQuotes']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
+                  <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
               </footer>
           </div>
       </div>

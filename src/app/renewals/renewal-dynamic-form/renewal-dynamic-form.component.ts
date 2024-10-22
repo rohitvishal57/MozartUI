@@ -73,7 +73,9 @@ export class RenewalDynamicFormComponent implements OnInit {
   actionKyc:number=3002;
   submit:boolean=true;
   fileName: string | null = null;
+  kycLink:any
   memberDetails:boolean=false;
+  
 
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,
@@ -298,7 +300,13 @@ export class RenewalDynamicFormComponent implements OnInit {
     }
     else if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editMember'){
       this.memberRole='Update';
-      this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0]};      
+      this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0]}; 
+      if (!isNaN(this.formObject?.SumInsured)) {
+        const sumInsuredValue = Number(this.formObject.SumInsured);
+        const closestValue = this.sliderOptions?.stepsArray?.reduce((prev, curr) => {
+          return Math.abs(curr.value - sumInsuredValue) < Math.abs(prev.value - sumInsuredValue) ? curr : prev;});
+        this.selectedSumInsured = closestValue?.value ?? 0;
+      } else {this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;}     
     }
      this.initializeForm();
       this.formId = value;
@@ -496,14 +504,9 @@ getRenewalInfo() {
     }
   }  
   sendLink(){
-    this.link=""
+    this.link=" "
     }
     handleKyc(action: any) {
-      if (action === 3001) {
-        // Handle action 3001
-      } else if (action === 3002) {
-        this.actionKyc = action;
-      } else if (action === 3003) {
         this.kycDetailsSubmitted = true;
         if (this.kycFormGroup.invalid) {
           console.log("Form is invalid");
@@ -520,27 +523,42 @@ getRenewalInfo() {
                   policy_Number:this.policyNumber
                 }
                 this.renewalService.kycUpdate(kycRequestBody).subscribe(
-                  (res)=>{
-                    console.log("kyc value",res);
-                    this.kycFlag=res
-                  },
-                  (err)=>{
-                    console.log(err);
-                  }
+                  (res)=>{this.kycFlag=res},
+                  (err)=>{console.log(err);}
                 )
                 this.actionKyc = action;
                 console.log("responsec body(if)",response.success);
                 this.toast.success({detail: 'SUCCESS',summary: 'KYC Details Fetched Successfully', duration: 1000}); 
-             } 
+             } else if(response.success === false){console.log("kyc failed");
+             }
              console.log("responsec body",response.success);
             },
             (error: any) => {
+              // this.getkycURL();
               console.log("error body",error);
               this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
             }
           );          
-        }
       }
+    }
+    getkycURL(){
+      const requestBody = {
+        policyNumber: this.policyNumber,
+        fullName: '',  
+        panNumber: this.formObject?.panNumber || '', 
+        dob: this.formObject?.dob || '', 
+        pepCheck: ''
+      };
+        this.renewalService.getkycURL(requestBody).subscribe(
+        response => {
+          console.log('Success:', response);
+          if(!response){this.kycLink=response;}else{
+          this.kycLink="link";}
+        },
+        error => {
+          console.log('Error:', error);
+        }
+      );
     }
     onFileSelected(event: any) {
       const file: File = event.target.files[0];
@@ -551,16 +569,12 @@ getRenewalInfo() {
     comeBack(){
       if(this.activeSection == 'policySummary'){
         if(this.hideSection == false){
-          this.router.navigate([`renewals/renewalList`]);
+          this.router.navigate([`renewal/renewalList`]);
         }else if(this.activeSection == 'policySummary'){
           this.setSection('additional')
         }
       }else if(this.activeSection == 'kyc'){
-          if(this.actionKyc == 3002){
-            this.setSection('policySummary')
-          }else if(this.actionKyc == 3003){
-            this.actionKyc = 3002;
-          }
+            this.setSection('policySummary');
       }else if(this.activeSection == "payment"){
         this.setSection('kyc');
       }
