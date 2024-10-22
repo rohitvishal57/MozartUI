@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
+import { PerformanceService } from '../performance.service';
 
 @Component({
   selector: 'app-upload-performace',
@@ -11,10 +12,13 @@ export class UploadPerformaceComponent implements OnInit{
   showNote: boolean = false;
   isFilenotSelected: boolean = false;
   selctedFileName: any;
+  selectedFile: any;
   AgentCode: any;
   performanceUploadForm!: FormGroup;
   submitted: boolean = false;
-  constructor( private formBuilder: FormBuilder, private toast: NgToastService){
+  isPerformance: any;
+  isDetailedView: any;
+  constructor( private formBuilder: FormBuilder, private toast: NgToastService, private performanceService: PerformanceService,){
 
   }
   ngOnInit(){
@@ -28,9 +32,61 @@ export class UploadPerformaceComponent implements OnInit{
     // this.getActiveCampaignList();
   }
   continueFileUpload() {
+    let file = this.selectedFile;
+    let fileExt = file.name.replace(/^.*\./, '');
+    const data = new FormData();
+    console.log(this.performanceUploadForm.get('selectedView')?.value);
+    if(this.performanceUploadForm.get('')?.value == "performance"){
+      this.isPerformance = true
+      this.isDetailedView = false
+    }else{
+      this.isDetailedView = true
+      this.isPerformance = false
+    }
+    if (fileExt == 'xlsx' || fileExt == 'csv'||fileExt==='xls') {
+      if (fileExt == 'xlsx' || fileExt == 'csv'|| fileExt==='xls') {
+         data.append('FormFile', file)
+         data.append('Performace', this.isPerformance)
+         data.append('DetailedView', this.isDetailedView)
+         data.append('AgentCode', this.AgentCode)
+         data.append('uploadrange', "null")
+       }
+        this.performanceService.uploadPerformancefile(data).subscribe(
+          (response: any) => { 
+            console.log(response);
+            if (response) {
+              console.log(response);
+              this.toast.success({ detail: response.statusName });
+            } 
+            else {console.error("API request was not successful.");}
+          },
+          (error: any) => {
+            console.error("Error from getRenewalsList API:", error);
+          }
+        );
+     }
   }
   newfile(event: any){
+    let files;
+    let file;
+    let fileExt;
+    this.isFilenotSelected = false;
+    if (event) {
+      files = event.target.files;
+      file = files[0];
+      if (!file) {
+        return;
+      }
+      this.selectedFile = file;
+      this.selctedFileName = this.selectedFile.name;
+      fileExt = this.selectedFile.name.replace(/^.*\./, '');
+      event.target.value = '';
+    }
 
+    if (fileExt == 'xlsx' || fileExt == 'csv' ||fileExt==='xls') {
+    } else {
+      this.showNote = true;
+    }
   }
   viewSelected(event: any){
     console.log(event.target.value);

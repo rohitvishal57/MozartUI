@@ -49,6 +49,7 @@
     "getPerformanceDetails":"yatra/api/getPerformanceDetails",
     "getPerformanceDetailedViewList":"yatra/api/getPerformanceDetailedViewList",
     "getPerformanceDetailedViewLatestCount":"yatra/api/getPerformanceDetailedViewLatestCount",
+    "uploadAgencyPerformance":"yatra/api/UploadAgencyPerformance",
 
     "partnerlogin":"auth/api/login",
     "validateadfstoken":"auth/api/validateadfstoken?Idtoken=",

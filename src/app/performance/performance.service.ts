@@ -24,4 +24,10 @@ export class PerformanceService {
     const getPerformanceDetailedLatestCountApi = this.configService.config.baseUrl + this.configService.config.getPerformanceDetailedViewLatestCount;
     return this.http.post<any>(getPerformanceDetailedLatestCountApi, requestBody);
   }
+  uploadPerformancefile(file: any) {
+    return this.http.post<any>(`${this.configService.config.baseUrl}${this.configService.config.uploadAgencyPerformance}`, file)
+      .pipe(map(data => {
+        return data;
+      }));
+  }
 }
