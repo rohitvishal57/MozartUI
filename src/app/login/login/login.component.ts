@@ -241,7 +241,7 @@ export class LoginComponent implements OnInit{
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody)
         .subscribe({  
           next: (res:any)=> {
-            if(res.data.isSuccess && res.token !== null && res.data.statusMessage === "OTP Successfully Validated") {
+            if(res.data.isSuccess && res.token !== null) {
               this.loginService.storeToken(res.token);
               localStorage.setItem('agentCode', res.data.agentCode);
               this.router.navigate(['dashboard']);
