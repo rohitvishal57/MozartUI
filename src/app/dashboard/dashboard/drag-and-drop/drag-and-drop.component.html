@@ -5,7 +5,7 @@
       <div class="top-widgets-title">Performance Overview</div>
       <div class="drag-boundary">
         <div class="dashboard" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropCard($event)">
-          <div class="card" *ngFor="let card of cards" cdkDrag>
+          <div class="card" *ngFor="let card of cards; let i = index" cdkDrag>
             <div class="card-header">
               <i class="icon">{{ card.icon }}</i>
               <span>{{ card.title }}</span>
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="widgets-cnt" cdkDropList (cdkDropListDropped)="drop($event)">
-        <ng-container *ngFor="let item of getItemsToShow()">
+        <ng-container *ngFor="let item of getItemsToShow(); let i = index">
           <div class="widget-cnt" cdkDrag>
             <div class="widget-header-cnt">
               <div class="widget-title">{{ item.title }}</div>
@@ -154,22 +154,45 @@
     <div class="due-for-renewal-cnt">
       <h2>Due for Renewal</h2>
       <div class="base-quote-container">
-        <ng-container *ngFor="let quote of baseQuotes">
-          <div class="quote-card">
+        <ng-container *ngFor="let quote of baseQuotes; let i = index">
+          <div class="card quote-card">
             <div class="quote-header">
               <div class="quote-info">
-                <span>{{quote.quoteName}}</span>
-                <span>{{quote.subQuoteName}}</span>
+                <h2>{{quote.quoteName}}</h2>
+                <h3>{{quote.subQuoteName}}</h3>
               </div>
               <div class="quote-actions">
-                <button *ngFor="let bt of quote?.actionButtons">
-                  {{bt}}
-                </button>
+                <ul class="unorderList ul_withIcon">
+                  <li *ngFor="let bt of quote?.actionButtons" (click)="onClickbtn(bt, i)"><img
+                      src="../../../../assets/images/{{bt}}.png"></li>
+                </ul>
               </div>
             </div>
             <div class="quote-body">
-                <span>Product</span>
-                {{quote.renewInfo.product}}
+              <div class="bind-field">
+                <h3>Product</h3>
+                <span>{{quote?.renewInfo?.product}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Policy No</h3>
+                <span>{{quote?.renewInfo?.policyNo}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Proposer</h3>
+                <span>{{quote?.renewInfo?.proposer}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Renewal Premium</h3>
+                <span>{{quote?.renewInfo?.renewalPremium}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Mobile No</h3>
+                <span>{{quote?.renewInfo?.mobileNo}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Date of renewal</h3>
+                <span>{{quote?.renewInfo?.dateofRenewal}}</span>
+              </div>
             </div>
           </div>
         </ng-container>
@@ -209,10 +232,8 @@
             <ng-container *ngIf="tab.tabName == 'Renewals'">
               erg4egrther
             </ng-container>
-
           </mat-tab>
         </div>
-
       </mat-tab-group>
     </div>
   </div>

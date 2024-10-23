@@ -164,11 +164,12 @@ export class DragAndDropComponent {
       quoteName: 'Base Quote 1',
       subQuoteName: 'Sub Quote 1',
       actionButtons: [
-        'edit', 'reply', 'details'
+        'edit-pen', 'renew', 'detail'
       ],
       renewInfo: {
         product: 'Active User',
         policyNo: 'Active User',
+        proposer : 'sukhadev',
         renewalPremium: 'Active User',
         mobileNo: 'Active User',
         dateofRenewal: 'Active User',
@@ -184,14 +185,16 @@ export class DragAndDropComponent {
       quoteName: 'Base Quote 2',
       subQuoteName: 'Sub Quote 2',
       actionButtons: [
-        'edit', 'reply', 'details'
+        'edit-pen', 'renew', 'detail'
       ],
       renewInfo: {
         product: 'Active User',
         policyNo: 'Active User',
+        proposer : 'sukhadev',
         renewalPremium: 'Active User',
         mobileNo: 'Active User',
         dateofRenewal: 'Active User',
+
         modifiedDetails: {
           members: '1',
           tenure: '1 year'
@@ -203,11 +206,12 @@ export class DragAndDropComponent {
       quoteName: 'Base Quote 3',
       subQuoteName: 'Sub Quote 3',
       actionButtons: [
-        'edit', 'reply', 'details'
+        'edit-pen', 'renew', 'detail'
       ],
       renewInfo: {
         product: 'Active User',
         policyNo: 'Active User',
+        proposer : 'sukhadev',
         renewalPremium: 'Active User',
         mobileNo: 'Active User',
         dateofRenewal: 'Active User',
@@ -555,5 +559,8 @@ export class DragAndDropComponent {
 
   shouldShowXButton(item: any) {
     return this.showAllItems && this.previouslyVisibleItems.has(item);
+  }
+
+  onClickbtn(btnName : any, index : number){
   }
 }

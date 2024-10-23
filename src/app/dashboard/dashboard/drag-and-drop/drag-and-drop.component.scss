@@ -8,6 +8,7 @@
   background: #F1F3F6;
 
 }
+
 .performance-overview-cnt {
   width: 100%;
   height: 316px;
@@ -536,15 +537,32 @@
     justify-content: space-between;
 
     .quote-card {
+      width: 30%;
+
       .quote-header {
         display: flex;
+        justify-content: space-between;
+
         .quote-info {
           display: flex;
           flex-direction: column;
         }
+
+        .quote-actions ul {
+          display: flex;
+        }
       }
-      .quote-body{
-        
+
+      .quote-body {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .bind-field {
+          display: flex;
+          flex-direction: column;
+        }
       }
     }
   }
