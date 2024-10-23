@@ -30,8 +30,8 @@ export class EndorsementsRequestsComponent implements OnInit {
   toggeleSearchdropdown: boolean = false;
   toggeledropdown: boolean = false;
   appliedFiltersCount: number = 0;
-  StaticRequestTypes = [
-   
+  maxDate: string | undefined
+  /* StaticRequestTypes = [
     {
       name: "Aadhar Card Update",
       value: "aadharNumber",
@@ -42,63 +42,62 @@ export class EndorsementsRequestsComponent implements OnInit {
       value: "panNumber",
       selected: false
     },
-    // {
-    //   name: "Change my Primary Registered Number",
-    //   value: "primaryContactNumber",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change my Alternate number",
-    //   value: "alternateContactNumber",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change in my Email ID",
-    //   value: "email",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change my Alternate Email ID",
-    //   value: "alternateEmail",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change my Primary Registered Number- Member",
-    //   value: "memberPrimaryContactNumber",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change my Alternate number- member",
-    //   value: "memberAlternateContactNumber",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change in my Email ID- member",
-    //   value: "memberEmail",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change my Alternate Email ID - member",
-    //   value: "memberAlternateEmail",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change of Nominee",
-    //   value: "nomineeContact",
-    //   selected: false
-    // },
-    // {
-    //   name: "Change in International Contact Number",
-    //   value: "internationalContactNumber",
-    //   selected: false
-    // },  
-    // {
-    //   name: "Change in International Address",
-    //   value: "ChangeinInternationalAddress",
-    //   selected: false
-    // },
-
-  ];
+    {
+      name: "Change my Primary Registered Number",
+      value: "primaryContactNumber",
+      selected: false
+    },
+    {
+      name: "Change my Alternate number",
+      value: "alternateContactNumber",
+      selected: false
+    },
+    {
+      name: "Change in my Email ID",
+      value: "email",
+      selected: false
+    },
+    {
+      name: "Change my Alternate Email ID",
+      value: "alternateEmail",
+      selected: false
+    },
+    {
+      name: "Change my Primary Registered Number- Member",
+      value: "memberPrimaryContactNumber",
+      selected: false
+    },
+    {
+      name: "Change my Alternate number- member",
+      value: "memberAlternateContactNumber",
+      selected: false
+    },
+    {
+      name: "Change in my Email ID- member",
+      value: "memberEmail",
+      selected: false
+    },
+    {
+      name: "Change my Alternate Email ID - member",
+      value: "memberAlternateEmail",
+      selected: false
+    },
+    {
+      name: "Change of Nominee",
+      value: "nomineeContact",
+      selected: false
+    },
+    {
+      name: "Change in International Contact Number",
+      value: "internationalContactNumber",
+      selected: false
+    },  
+    {
+      name: "Change in International Address",
+      value: "ChangeinInternationalAddress",
+      selected: false
+    },
+  ]; */
   agentCode: any;
   productsList: any = [];
   requestTypes:any =[];
@@ -201,26 +200,24 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.activeFilter = filter;
   }
 
-  getFromDate(event:any){
-    this.fromDate = event.target.value;
-  }
-
-  getToDate(event:any){
-    this.toDate = event.target.value;
-  }
   formatDate(dateType: "fromDate" | "toDate") {
     if (dateType === "fromDate" && this.fromDate) {
       this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
     } else if (dateType === "toDate" && this.toDate) {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
+    if(this.toDate < this.fromDate) {
+      this.toDate = "";
+    }
   }
+
   toggleFilterDropdown() {
     if(this.toggeleSearchdropdown==true)
     {
-       this.toggeleSearchdropdown=false;
+      this.toggeleSearchdropdown=false;
     }
-    this.toggeledropdown = !this.toggeledropdown;    
+    this.toggeledropdown = !this.toggeledropdown;
+    this.maxDate = new Date().toISOString().split('T')[0];  
   }
   cancel() {
     this.fromDate = null;
@@ -231,20 +228,18 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.getRequestList();
   }
   calculateAppliedFiltersCount(){
-    const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
-      (requestType:any) => requestType.selected).length;
-      const selectedProductsCount = this.productsList.filter(
-        (product:any) => product.selected).length;
-        let count = selectedPolicyTypesCount + selectedProductsCount;
-        if (this.fromDate && this.toDate) {
-          count++;
-        }
-        this.appliedFiltersCount = count;
-        this.appliedFiltersCount;
+    // const selectedPolicyTypesCount = this.StaticRequestTypes.filter((requestType:any) => requestType.selected).length;
+    const selectedProductsCount = this.productsList.filter((product:any) => product.selected).length;
+    let count = selectedProductsCount;
+    if (this.fromDate && this.toDate) {
+      count++;
+    }
+    this.appliedFiltersCount = count;
+    this.appliedFiltersCount;
   }
   clear(){
     this.productsList.forEach((product:any) => (product.selected = false));
-    this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
+    // this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
     this.fromDate = null;
     this.toDate = null;
     this.appliedFiltersCount = 0;
@@ -301,6 +296,10 @@ export class EndorsementsRequestsComponent implements OnInit {
       this.searchInputControl.setValidators([
         Validators.required
       ]);
+    } else if (this.selected === "") {
+      this.requestsListRequestBody.searchColumn = "";
+      this.requestsListRequestBody.searchString = [];
+      this.getRequestList();
     }
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched();
@@ -313,7 +312,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       return "Enter Member Name";
     } else if (this.selected === "policyNumber") {
       return "Enter Policy Number";
-    }
+    } 
     else {
       return "Search...";
     }

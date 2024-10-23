@@ -39,7 +39,7 @@ export class ClaimsViewComponent {
   activePolicyNumbers: string[] = [];
   saveForm!: FormGroup;
   proposalNumbers: string[] = [];
-  policyNumbers:  Observable<any[]> | any;
+  policyNumbers: string[] = [];
   productNames: string[] = [];
   memberNames: string[] = [];
   claimTypes: string[] = [];
@@ -105,6 +105,7 @@ export class ClaimsViewComponent {
   billsForm!: FormGroup;
   claimInfoId: any;
   documentId: any;
+  filteredPolicyList: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -208,15 +209,12 @@ export class ClaimsViewComponent {
         if (response.success) {
           this.response = response;
           const allData: ClaimData[] = response.data;
-          this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');
-          console.log('prop', this.proposalNumbers);
-          
+          this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');          
           this.policyNumbers = this.extractUniqueValues(
             allData,
             "policyNumber"
           );
-     
-          // this.memberNames = this.extractUniqueValues(allData, 'fullName');
+          this.filteredPolicyList = [...this.policyNumbers];
           this.claimTypes = this.extractUniqueValues(allData, "policyType");
           this.cdr.markForCheck();
         } else {
@@ -230,41 +228,8 @@ export class ClaimsViewComponent {
   extractUniqueValues(data: any[], key: string): any[] {
     return [...new Set(data.map((item) => item[key]).filter((val) => val))];
   }
-  removeDuplicates(myArray:any, Prop:any) {
-    return myArray.filter((obj:any, pos:any, arr:any) => {
-      return arr.map((mapObj:any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
-    });
-  }
-
-  getActivityType(content = null) {
-    this.activityList = this.policyNumbers;
-    this.policyNumbers = this.form.controls['policyNumber'].valueChanges.pipe(
-      startWith(''),
-      map((value:any) => value ? this._filter(value) : this.activityList.slice()));
-  }
-  _filter(value: string) {
-    const filterValue = this._normalizeValue(this._removealphabets(value));
-    const filteredValue = this.activityList.filter((x:any) => this._normalizeValue(x.policynumber).includes(filterValue));
-    this.selectedPolicyNumber = filteredValue;
-    if(this.selectedPolicyNumber.length > 0){
-      this.getMemberIdList(this.selectedPolicyNumber);
-    }
-    return filteredValue;
-  }
-  getMemberIdList(policyNumber:any) {
-    let selectedValue = policyNumber[0].policynumber;
-    const result = this.response.filter((x:any) => selectedValue.includes(x.policynumber));
-   // this.MemberIdList = result;
-  }
-_normalizeValue(value: string): string {
-    return value.toLowerCase().replace(/\s/g, '');
-  }
-  _removealphabets(value: any) {
-    return value.replace(/[^\d.-]/g, '');
-  }
-
+  
   handleDropdownChange(value:string): void {
-    
     const selectedPolicyNumber = value; 
     // this.form.get('policyNumber')?.setValue(selectedPolicyNumber); 
     const filteredMembers = this.response.data.filter(
@@ -276,9 +241,14 @@ _normalizeValue(value: string): string {
     this.cdr.markForCheck();
   }
 
-  toggleDropdown(open: boolean): void {
-    console.log('togglke');
-    
+  filterList(event: KeyboardEvent): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredPolicyList = this.policyNumbers.filter((item : any) =>
+      item.toLowerCase().includes(input)
+    );
+  }
+
+  toggleDropdown(open: boolean): void {    
     this.isDropdownOpen = open;
   }
 

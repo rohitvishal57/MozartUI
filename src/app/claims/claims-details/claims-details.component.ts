@@ -88,81 +88,8 @@ export class ClaimsDetailsComponent {
     createdBy?: string;
   }[] = [];
 
-  // customeStepperStatuses: any[] = [
-  //   {
-  //     label: "Claim Initiated",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "1",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Under Hospital Review",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "2",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "With Processing Team",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "3",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Discharge Requested",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "4",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Cashless Pre-Approved",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "5",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Cashless Authorized",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "6",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Claim Approved",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "No",
-  //     count: "7",
-  //     progress: "processing",
-  //   },
-  //   {
-  //     label: "Claim Settled",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "No",
-  //     count: "8",
-  //     nextProcess: "Upload Documents",
-  //     progress: "Danger",
-  //   },
-  //   {
-  //     label: "Claim Approved",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "No",
-  //     count: "9",
-  //     progress: "pending",
-  //   },
-  //   {
-  //     label: "Claim Settled",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "No",
-  //     count: "10",
-  //     progress: "pending",
-  //   },
-  // ];
-
   customeStepperStatuses: any[] = [];
+  statusMessage: string | undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -185,6 +112,7 @@ export class ClaimsDetailsComponent {
       this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimInfoId);
       this.updateStatusLabel("fileUpload");
     }
+    this.fetchClaimStatus(this.claimInfoId);
     this.fetchClaimTracker(this.claimInfoId);
     this.fetchClaimHistory(this.policyNumber);
 
@@ -200,19 +128,33 @@ export class ClaimsDetailsComponent {
   // }
   // }
 
-  fetchClaimTracker(claimInfoId: string): void {
+  fetchClaimStatus(claimInfoId: string): void {
     const claimsReqBody = {
-      claimNumber: "2000001993637736",
+      claimNumber: claimInfoId,
     };
 
     this.claimsService.getClaimStatus(claimsReqBody).subscribe(
+      (response: any) => {
+        this.statusMessage = response.data.notes;
+        (response.data.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
+      },
+      (error: any) => {
+        console.error("Error fetching claim details", error);
+      }
+    );
+  }
+
+  fetchClaimTracker(claimInfoId: string): void {
+    const claimsReqBody = {
+      claimNumber: claimInfoId,
+    };
+
+    this.claimsService.getClaimTracker(claimsReqBody).subscribe(
       (response: any) => {
         this.customeStepperStatuses = response.data.data;
         this.customeStepperStatuses.forEach((item, index) => {
           item.count = index + 1;
         });
-        const filterValue = this.customeStepperStatuses.filter((obj)=> obj.title === "Under Deficiency")
-        filterValue?this.underDef = true:this.underDef=false      
       },
       (error: any) => {
         console.error("Error fetching claim details", error);

@@ -61,4 +61,9 @@ export class ClaimsViewService {
     const getClaimStatus = this.configService.config.baseUrl + this.configService.config.getClaimStatus
     return this.httpService.post(getClaimStatus, claimsReqBody)
   }
+
+  getClaimTracker(claimsReqBody: any) {
+    const getClaimTracker = this.configService.config.baseUrl + this.configService.config.getClaimTracker
+    return this.httpService.post(getClaimTracker, claimsReqBody)
+  }
 }

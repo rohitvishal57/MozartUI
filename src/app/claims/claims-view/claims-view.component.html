@@ -11,24 +11,22 @@
           <section class="white_container">
               <form [formGroup]="form">
                   <div class="row mb-3">
-                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                          <div class="input-block form-floating input-block-renew">
-                              <input class="form-select input-selectBox"  [matAutocomplete]="auto"  id="policyNumber" formControlName="policyNumber"  />
-                                  <!-- <option class="dropdown-options" value="" disabled selected>Select Policy Number</option>
-                                  <option class="dropdown-options" *ngFor="let policy of policyNumbers" [value]="policy">{{ policy }}</option> -->
-                              <label for="policyNumber">Select Policy Number</label>
-                              <div *ngIf="form.get('policyNumber')?.invalid && (form.get('policyNumber')?.touched || form.get('policyNumber')?.dirty)">
-                              <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
-                                Policy Number is required.
-                              </small>
-                              </div>
-                             <mat-autocomplete #auto="matAutocomplete"  (optionSelected)="handleDropdownChange($event.option.value)">
-                                <mat-option *ngFor="let policy of policyNumbers | async" [value]="policy">
-                                    {{ policy }}  
-                                </mat-option>
-                             </mat-autocomplete>
-                             </div>
-                             
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <div class="input-block form-floating input-block-renew">
+                            <input class="form-control input-textBox"  [matAutocomplete]="auto"  id="policyNumber" formControlName="policyNumber" (keydown)="filterList($event)" placeholder="Search Policy Number"/>
+                            <label for="policyNumber">Search Policy Number</label>
+                            <div *ngIf="form.get('policyNumber')?.invalid && (form.get('policyNumber')?.touched || form.get('policyNumber')?.dirty)">
+                                <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
+                                    Policy Number is required.
+                                </small>
+                            </div>
+                        </div>
+                        <mat-autocomplete #auto="matAutocomplete"  (optionSelected)="handleDropdownChange($event.option.value)">
+                            <mat-option *ngFor="let policy of filteredPolicyList" [value]="policy">
+                                {{ policy }}  
+                            </mat-option>
+                         </mat-autocomplete>
+                    </div>        
                             <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                 <div class="input-block form-floating input-block-renew">
                                   <input class="form-control input-textBox"  [matAutocomplete]="auto"  id="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
@@ -98,8 +96,7 @@
                                   Policy Number is required.
                                 </small>
                               </div> -->
-                        
-                      </div>
+
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
                               <select class="form-select input-selectBox" formControlName="memberName">

@@ -23,7 +23,7 @@
                     <div class="body_flex_row claims_searchWraper">
                         <div class="field_searchMain">
                             <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)">
-                                <option value="" disabled selected>Select an option</option>
+                                <option value="">Select an option</option>
                                 <option value="caseId">Request ID</option>
                                 <option value="memberName">Member Name</option>
                                 <option value="policyNumber">Policy Number</option>
@@ -67,14 +67,14 @@
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="input-block input-block-dob">
                                                 <label>From Date</label>
-                                                <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')">
+                                                <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (change)="formatDate('fromDate')" [max]="maxDate">
                                                 <span class="ui-error">Please enter start date</span>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="input-block input-block-dob">
                                                 <label>To Date</label>
-                                                <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')">
+                                                <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (change)="formatDate('toDate')" [max]="maxDate">
                                                 <span class="ui-error">Please enter end date</span>
                                             </div>
                                         </div>
