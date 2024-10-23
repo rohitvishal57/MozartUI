@@ -418,7 +418,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get('pincode').updateValueAndValidity();
     }
     if (value == 'alternateContactNumber') {
-      this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?:[6789]\d{9})$")]);
+      this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Mobile_Number);
       
@@ -432,7 +432,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
     }
     if (value == 'nomineeContact') {
-      this.caseCreationForm.get("endorsementDetails").get('nomineeContact').setValidators([Validators.required, Validators.pattern("^(?:[6789]\d{9})$")]);
+      this.caseCreationForm.get("endorsementDetails").get('nomineeContact').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeContact').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
@@ -443,21 +443,21 @@ export class EndorsementsNewRequestComponent implements OnInit {
       }
     }
     if (value == 'primaryContactNumber') {
-      this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?:[6789]\d{9})$")]);
+      this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').updateValueAndValidity();
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryMobile);
     }
     if (value == 'memberPrimaryContactNumber') {
-      this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?:[6789]\d{9})$")]);
+      this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
       this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').updateValueAndValidity();
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();memberMobileNo
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberMobileNo);
     }
     if (value == 'memberAlternateContactNumber') {
-      this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?:[6789]\d{9})$")]);
+      this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
       this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').updateValueAndValidity();
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
