@@ -528,3 +528,12 @@
   border-radius: 50%;
   margin-right: 10px;
 }
+
+.leads-proposal-cnt {
+
+  ::ng-deep {
+    mat-tab-group .mat-mdc-tab-body-wrapper mat-tab-body .mat-mdc-tab-body-content {
+      display: flex;
+    }
+  }
+}

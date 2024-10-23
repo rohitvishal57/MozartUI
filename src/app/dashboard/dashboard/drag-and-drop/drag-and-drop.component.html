@@ -152,6 +152,45 @@
     </div>
 
     <div class="due-for-renewal-cnt"></div>
-    <div class="leads-proposal-cnt"></div>
+    <div class="leads-proposal-cnt">
+      <mat-tab-group cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropTab($event)"
+        cdkDropListElementContainer=".mat-mdc-tab-labels" class="example-drag-tabs" [(selectedIndex)]="selectedIndex"
+        animationDuration="0">
+        <div *ngFor="let tab of tabsInfo; let i = index">
+          <mat-tab style="display: flex;">
+            <ng-template mat-tab-label>
+              <span cdkDrag cdkDragPreviewClass="example-drag-tabs-preview"
+                cdkDragRootElement=".mat-mdc-tab">{{tab.tabName}}</span>
+            </ng-template>
+            <ng-container *ngIf="tab.tabName == 'Leads'">
+              <div class="lead-categories-list" *ngFor="let cat of tab?.category">
+                <h2>{{cat.name}}</h2>
+                <div *ngFor="let catInfo of cat?.catInfoList">
+                  <mat-accordion class="example-headers-align" multi>
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title><span>{{catInfo?.name}}</span></mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <span>{{catInfo?.status}}</span>
+                      <span>{{catInfo?.desc}}</span>
+                      <span>{{catInfo?.noteInfo}}</span>
+                      <span>{{catInfo?.redirentlink}}</span>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="tab.tabName == 'Proposal'">
+              erg4egrther
+            </ng-container>
+            <ng-container *ngIf="tab.tabName == 'Renewals'">
+              erg4egrther
+            </ng-container>
+
+          </mat-tab>
+        </div>
+
+      </mat-tab-group>
+    </div>
   </div>
 </div>
