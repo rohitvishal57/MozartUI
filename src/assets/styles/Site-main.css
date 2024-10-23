@@ -4296,7 +4296,7 @@ input[type="search"]::-webkit-search-results-decoration {
   position: relative;
   padding-top: 24px;
   flex: auto;
-  max-width: 150px;
+  min-width: 150px;
 }
 .submain_claimProgressSteps .item_claimProgressSteps:before {
   content: "";
@@ -4339,7 +4339,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-weight: 400;
   font-size: 16px;
   color: #000;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
