@@ -151,7 +151,30 @@
       </div>
     </div>
 
-    <div class="due-for-renewal-cnt"></div>
+    <div class="due-for-renewal-cnt">
+      <h2>Due for Renewal</h2>
+      <div class="base-quote-container">
+        <ng-container *ngFor="let quote of baseQuotes">
+          <div class="quote-card">
+            <div class="quote-header">
+              <div class="quote-info">
+                <span>{{quote.quoteName}}</span>
+                <span>{{quote.subQuoteName}}</span>
+              </div>
+              <div class="quote-actions">
+                <button *ngFor="let bt of quote?.actionButtons">
+                  {{bt}}
+                </button>
+              </div>
+            </div>
+            <div class="quote-body">
+                <span>Product</span>
+                {{quote.renewInfo.product}}
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
     <div class="leads-proposal-cnt">
       <mat-tab-group cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropTab($event)"
         cdkDropListElementContainer=".mat-mdc-tab-labels" class="example-drag-tabs" [(selectedIndex)]="selectedIndex"

@@ -159,6 +159,68 @@ export class DragAndDropComponent {
     }
   ];
 
+  baseQuotes = [
+    {
+      quoteName: 'Base Quote 1',
+      subQuoteName: 'Sub Quote 1',
+      actionButtons: [
+        'edit', 'reply', 'details'
+      ],
+      renewInfo: {
+        product: 'Active User',
+        policyNo: 'Active User',
+        renewalPremium: 'Active User',
+        mobileNo: 'Active User',
+        dateofRenewal: 'Active User',
+
+        modifiedDetails: {
+          members: '1',
+          tenure: '1 year'
+        }
+
+      }
+    },
+    {
+      quoteName: 'Base Quote 2',
+      subQuoteName: 'Sub Quote 2',
+      actionButtons: [
+        'edit', 'reply', 'details'
+      ],
+      renewInfo: {
+        product: 'Active User',
+        policyNo: 'Active User',
+        renewalPremium: 'Active User',
+        mobileNo: 'Active User',
+        dateofRenewal: 'Active User',
+        modifiedDetails: {
+          members: '1',
+          tenure: '1 year'
+        }
+
+      }
+    },
+    {
+      quoteName: 'Base Quote 3',
+      subQuoteName: 'Sub Quote 3',
+      actionButtons: [
+        'edit', 'reply', 'details'
+      ],
+      renewInfo: {
+        product: 'Active User',
+        policyNo: 'Active User',
+        renewalPremium: 'Active User',
+        mobileNo: 'Active User',
+        dateofRenewal: 'Active User',
+
+        modifiedDetails: {
+          members: '1',
+          tenure: '1 year'
+        }
+
+      }
+    }
+  ]
+
   tabsInfo = [
     {
       tabName: 'Leads',

@@ -529,6 +529,27 @@
   margin-right: 10px;
 }
 
+.due-for-renewal-cnt {
+
+  .base-quote-container {
+    display: flex;
+    justify-content: space-between;
+
+    .quote-card {
+      .quote-header {
+        display: flex;
+        .quote-info {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+      .quote-body{
+        
+      }
+    }
+  }
+}
+
 .leads-proposal-cnt {
 
   ::ng-deep {
