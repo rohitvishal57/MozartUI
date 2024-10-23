@@ -400,6 +400,7 @@ export class YatraComponent {
               }
               console.log(this.formData['insuredMemberDetails']);
               this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {
+                console.log(member,this.formData[control.name],control);
                 if (control.subControls) {
                   let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
                   let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
@@ -409,9 +410,31 @@ export class YatraComponent {
                   tempMemberControl.name = tempRelationshipType.value.toLowerCase();
                   tempInnerControl.label = tempRelationshipType.value;
                   tempInnerControl.name = tempRelationshipType.value;
-                  tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
-                  control.subControls?.push(tempMemberControl);
-                  control.subControls?.push(tempInnerControl);
+                  console.log(tempInnerControl);
+                  debugger;
+                  if(this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true){
+                    for (const key in this.formData[control.name]) {
+                      const value = this.formData[control.name][key];
+                      if(key == tempRelationshipType.value.toLowerCase()){
+                        if(typeof this.formData[control.name][key] === 'boolean' && this.formData[control.name][key] == true){
+                          // const arrayName = (key).charAt(0).toUpperCase() + (key).slice(1);
+                          console.log(key,value);
+                          tempMemberControl.value = true;
+                          tempInnerControl.visible = true;
+                          this.formData[control.name][tempRelationshipType.value].forEach((item:any) =>{
+                            tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
+                          })
+                        }
+                      }
+                    }
+                  }
+                  else{
+                    tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
+                  }
+                    
+                    control.subControls?.push(tempMemberControl);
+                    control.subControls?.push(tempInnerControl);
+                    console.log(control);
                 }
               });
               control.subControls?.push(doneButton);
@@ -3028,7 +3051,6 @@ export class YatraComponent {
 
   flattenObject(obj: any, prefix = '') {
     console.log(obj);
-
     Object.keys(obj).forEach(key => {
       const value = obj[key];
       const newKey = prefix + key;
@@ -3038,6 +3060,7 @@ export class YatraComponent {
           this.dynamicFormGroup.get(newKey)?.patchValue(value);
         }
         else if (this.dynamicFormGroup.get(newKey) instanceof FormGroup) {
+          debugger;
           const formGroup = this.dynamicFormGroup.get(newKey);
           Object.keys(value).forEach((key2) => {
             console.log(value[key2], key2);
@@ -3066,11 +3089,11 @@ export class YatraComponent {
                   });
                   formArray.push(group);
                 }
-                else {
-                  const group = formArray.controls[0]
-                  console.log(group);
-                  formArray.push(group)
-                }
+                // else {
+                //   const group = formArray.controls[0]
+                //   console.log(group);
+                //   formArray.push(group)
+                // }
               });
             }
             else
@@ -3258,10 +3281,43 @@ export class YatraComponent {
     if ((event.target.type === 'checkbox')) {
       if (parentControl != null &&  parentControl.type == 'questionnaire') {
         const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
-        console.log('questionnaire',arrayName);
+        console.log('questionnaire',arrayName,event.target.checked);
         parentControl.subControls.forEach((subControl: any) => {
           if (subControl.name === arrayName) {
             subControl.visible = event.target.checked;
+            if(event.target.checked == false){
+              subControl.innerArrayControl = subControl.innerArrayControl?.slice(0, 2);
+
+              let formArray = (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[arrayName] as FormArray;
+              console.log(formArray);
+// Remove all items from the FormArray
+              while (formArray.length > 1) {
+                formArray.removeAt(1);
+              }
+
+// Reset the value of the first element in the FormArray to an empty string.
+              const firstControl = formArray.at(0) as FormGroup;
+              Object.keys(firstControl.controls).forEach(key => {
+                firstControl.get(key)?.setValue('');
+              });
+
+              Object.keys(this.formData).forEach(key => {             
+                const baseKey = `${control.name}.${subControl.name}.`;
+  
+  // Check if the key starts with the baseKey.
+                if (key.startsWith(baseKey)) {
+                    const index = key.substring(baseKey.length).split('.')[0];
+
+      // If the index is not "0", remove the key; otherwise, reset its value.
+                    if (index !== '0') {
+                        delete this.formData[key];
+                    } else {
+                        this.formData[key] = ''; // Reset value for index 0.
+                    }
+                }
+              });
+              console.log(this.formData,this.dynamicFormGroup.value,this.form);
+            }
             console.log(subControl, event.target.value);
           }
           
@@ -3912,7 +3968,7 @@ export class YatraComponent {
   }
   closePopUp(){
     this.isOverlayVisible = false;
-
+    this.mappingForQuestionnaire();
   }
 
   changeOverLayDone(control: any, parentControl: any, changeValue: boolean = false) {
@@ -4156,6 +4212,14 @@ export class YatraComponent {
       subControl.innerArrayControl?.splice(index, 1);
         let formArray = (this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[subControl.name] as FormArray;
         formArray.removeAt(index-1);
+        Object.keys(this.formData).forEach(key => {
+          if (key.startsWith(`${control.name}.${subControl.name}.${index - 1}.`)) {
+            delete this.formData[key];
+          }
+          // if (key.includes(option.value)) {
+          //   delete this.formData[key]
+          // }
+        });
       // setTimeout(() => { 
       //   // this.spinner.hide();
       // }, 0);
@@ -4342,6 +4406,12 @@ export class YatraComponent {
   redirectToAppStore(){
     const appleStoreUrl = "https://apps.apple.com/in/app/activ-health/id1179005764";
     window.open(appleStoreUrl, '_blank');
+  }
+  mappingForQuestionnaire(){
+    console.log(this.formData,this.dynamicFormGroup.value);
+    this.formData.insuredMemberDetails.forEach((member:any) => {
+      console.log(member.relation);
+    })
   }
 
 }
