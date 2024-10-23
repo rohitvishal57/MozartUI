@@ -199,7 +199,7 @@
 }
 //--
 .accordionMain .accordionItem .accordionBody .accordionBodyRow{
-	gap: 0px;
+	gap: 14px;
 	.detailsBorder:last-child {
 		display: none;
 	}
@@ -220,4 +220,7 @@
 .tickImg img{
 	width: 50px;
     height: 50px;
+}
+.pl-0 {
+	padding-left: 0;
 }

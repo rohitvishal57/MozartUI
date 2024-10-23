@@ -1,6 +1,6 @@
 <div class="siteBody siteBody_renewJourney">
-  <div class="contentBody bodyColumns-3 alignCenter" *ngIf="submit">
-      <div class="class=bodyColumns bodyColumnsLeft" *ngIf="hideSection && activeSection != 'kyc'">
+  <div class="contentBody bodyColumns-3 " *ngIf="submit">
+      <div class="bodyColumns bodyColumnsLeft" *ngIf="hideSection && activeSection != 'kyc'">
           <div class="bcl_main">
               <div>Select from any customisation below</div>
               <div class="processBtnGroup">
@@ -1182,8 +1182,8 @@
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Members</label>
-                                            <div *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members">
-                                            <span >{{ member.Relation | titlecase }}</span></div>
+                                            <div>
+                                            <span *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members">{{ member.Relation | titlecase }}, </span></div>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Policy</label>
@@ -1285,15 +1285,15 @@
                                     <div class="item member-card" *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index">
                                         <header>{{ member.FirstName }} {{ member.MiddleNameme }} {{ member.LastName }} <span *ngIf="i === 0" class="common-badge common-badge-rounded  bg-dark-org">Proposer</span></header>
                                         <div class="row">
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
-                                                <label>Height</label>
-                                                <h6>{{ member.height }}</h6>
+                                            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item">
+                                                <label>Height </label>
+                                                <h6>{{ member.height }} cm</h6>
                                             </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
-                                                <label>Weight</label>
-                                                <h6>{{ member.weight }}</h6>
+                                            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item">
+                                                <label>Weight </label>
+                                                <h6>{{ member.weight }} kgs</h6>
                                             </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
+                                            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item pl-0">
                                                 <label>DOB</label>
                                                 <h6>{{ member.DoB | date: 'dd/MM/yyyy' }}</h6>
                                             </div>

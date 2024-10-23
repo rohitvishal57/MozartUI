@@ -48,10 +48,21 @@
                                     <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
                             <div class="fw_formBody"> 
-                                <div class="fw_formRow" *ngIf="productList && productList.length > 0">
+                                <!-- <div class="fw_formRow" *ngIf="productList && productList.length > 0">
                                     <h6>Products</h6>
                                     <div class="fw_checkboxWraper">
                                         <div class="input-checkbox-block" *ngFor="let product of productList; let i = index">
+                                            <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                <label for="product{{i}}">{{product.productName}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
+                                    <h6>Products</h6>
+                                    <div class="fw_checkboxWraper">
+                                        <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                             <div class="input-checkbox-feild">
                                                 <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
                                                 <label for="product{{i}}">{{product.productName}}</label>

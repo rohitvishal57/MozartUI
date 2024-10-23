@@ -23,14 +23,14 @@
                         </div>
                     </div>
                     <br/>
-                    <div class="details_claimsAmount">
-                        <div class="claim_amount">
+                    <div class="details_claimsAmount col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="claim_amount col-5">
                             <h6>Product Name</h6>
                             <p>{{ claims?.productName }}</p>
                             </div>
-                            <div class="claim_amount">
+                            <div class="claim_amount col-4">
                             <h6>Claim Status</h6>
-                            <p>{{ claims?.claimStatus }}</p>
+                            <p>{{ status?.claimStatus }}</p>
                         </div>
                     </div> 
                 </div>
@@ -47,8 +47,8 @@
                             </div>
                             <div class="claim_amount">
                                 <h6>Approved Amount</h6>
-                                <!-- <p>₹{{ claims?.approvedAmount }}</p> -->
-                                <p>--</p>
+                                <p>₹{{ claims?.approvedAmount }}</p>
+                                <!-- <p>--</p> -->
                             </div>
                         </div>
                     </div>
