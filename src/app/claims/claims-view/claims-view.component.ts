@@ -130,7 +130,8 @@ export class ClaimsViewComponent {
     this.saveUpload();
     this.getProposalDetails();
     this.fetchStates();
-    // this.filteredPolicyNumbers = [...this.policyNumbers]; 
+    const policyNumberControl = this.form.get('policyNumber');
+   // this.filteredPolicyNumbers = [...this.policyNumbers]; 
   }
   
   navigateToListClaim(){

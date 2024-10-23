@@ -36,6 +36,7 @@ export class ClaimsDetailsComponent {
   response: any;
   uploadedFile: any;
   agentCode: any;
+  status:any;
   selectMemberData: any = {};
   isViewVisible: boolean = false;
   underDef: boolean = false;
@@ -127,14 +128,14 @@ export class ClaimsDetailsComponent {
   //   this.uploadedFiles = JSON.parse(storedFiles);
   // }
   // }
-
   fetchClaimStatus(claimInfoId: string): void {
     const claimsReqBody = {
       claimNumber: claimInfoId,
     };
-
+ 
     this.claimsService.getClaimStatus(claimsReqBody).subscribe(
       (response: any) => {
+        this.status = response.data;
         this.statusMessage = response.data.notes;
         (response.data.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
       },
@@ -151,8 +152,8 @@ export class ClaimsDetailsComponent {
 
     this.claimsService.getClaimTracker(claimsReqBody).subscribe(
       (response: any) => {
-        this.customeStepperStatuses = response.data.data;
-        this.customeStepperStatuses.forEach((item, index) => {
+        this.customeStepperStatuses = response.data.data;        
+        this.customeStepperStatuses.forEach((item:any, index: number) => {
           item.count = index + 1;
         });
       },

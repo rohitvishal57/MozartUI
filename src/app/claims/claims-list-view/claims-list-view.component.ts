@@ -41,7 +41,7 @@ export class ClaimsListViewComponent implements OnInit {
   requestTypes: any[] = [];
   maxDate: string | undefined;
   isSearch:boolean = false;
-  productList:any;
+  productsList:any;
   agentCode = localStorage.getItem('agentCode')
   StaticRequestTypes = [
     { name: 'Cashless', selected: false },
@@ -61,6 +61,7 @@ export class ClaimsListViewComponent implements OnInit {
 
   ngOnInit(){
     this.fetchData(); 
+    this.getProducts();
   }
 
   claimsView(view:string){
@@ -121,8 +122,8 @@ fetchData(): void {
   }
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
     this.claims = res.claimDetails;      
-    this.productList = res.claimDetails 
-    console.log(this.claims);
+   // this.productsList = res.claimDetails 
+    console.log(this.productsList);
     
     this.gridClaimsData = res.claimDetails; 
     this.totalRecords = res.totalRecords;    
@@ -153,7 +154,7 @@ fetchData(): void {
   calculateAppliedFiltersCount(){
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
       (requestType) => requestType.selected).length;
-      const selectedProductsCount = this.productList.filter(
+      const selectedProductsCount = this.productsList.filter(
         (product:any) => product.selected).length;
         let count = selectedPolicyTypesCount + selectedProductsCount;
         if (this.fromDate && this.toDate) {
@@ -161,6 +162,26 @@ fetchData(): void {
         }
         this.appliedFiltersCount = count;
          this.appliedFiltersCount;
+  }
+
+  getProducts() {
+    this.agentCode =  localStorage.getItem("agentCode");
+    const reqData={
+      "agentCode": this.agentCode
+    }
+    this.commonService.Getproductlist(reqData).subscribe({
+      next: (res:any) => {
+        this.productsList = res.data;
+        console.log("product list",this.productsList)
+        const uniqueRequestTypes = Array.from(new Set(this.productsList
+         .map((product:any) => product.familyPlan)))
+         .map((requestType) => ({ name: requestType, selected: false }));
+         this.requestTypes = uniqueRequestTypes;
+      },
+      error: (err:any) => {
+         console.log("error coming form getproduct list API");
+      }
+    })
   }
 
   applyFilter() {
@@ -176,12 +197,13 @@ fetchData(): void {
   .map((requestType:any) => requestType.name);
   this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
 
-  const selectedProducts = this.productList.filter((searchType: any) => searchType.selected)
+  const selectedProducts = this.productsList.filter((searchType: any) => searchType.selected)
   .map((searchType: any) => searchType.productName);
 if(selectedProducts.length > 0) {
   this.claimsReqBody.searchType = "productName";
   this.claimsReqBody.searchString = selectedProducts;
 }
+this.getProducts();
 this.fetchData();
 this.toggeledropdown=false;
   }
@@ -196,7 +218,7 @@ cancel() {
 }
 
 clear(){
-  this.claims.forEach((product) => (product.selected = false));
+  this.productsList.forEach((product:any) => (product.selected = false));
   this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
   this.fromDate = null;
   this.toDate = null;
@@ -244,6 +266,9 @@ onSelectChanges(event: any): void {
       Validators.required,
       Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
     ]);
+  }
+  else if(this.selected === 'refreshData'){
+    this.fetchData();
   }
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched(); 
