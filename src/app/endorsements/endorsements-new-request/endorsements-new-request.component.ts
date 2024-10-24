@@ -302,11 +302,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.getactivepolicynumbersApi(data).subscribe(
       (resp:any) => {
-        if (resp && resp.statusCode == "200" && resp.isSuccess) {
-          this.policies = resp.getPolicydetails;
+        if (resp.data && resp.data.statusCode == "200" && resp.data.isSuccess) {
+          this.policies = resp.data.getPolicydetails;
           this.policiesListData = this.removeDuplicates(this.policies, "policynumber");
           this.getActivityType();
-          this.getMemberActivityType();
+          // this.getMemberActivityType();
         }
       },
       (err) => {
@@ -317,6 +317,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
   onKeyDown(event: KeyboardEvent) {
     const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
     const regex = /^[0-9-]$/; // Allow only numbers and hyphens
+
+    const inputValue = (event.target as HTMLInputElement).value;
+
+    if (inputValue === '') {
+      this.caseCreationForm.get('member').setValue('');
+      this.MemberIdList = [];
+    }
 
     // Allow backspace and other special keys
     if (allowedKeys.includes(event.key)) {
@@ -366,8 +373,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       map((value:any) => value ? this._filter(value) : this.activityList.slice()));
   }
   _filter(value: string) {
+    console.log(value);
     const filterValue = this._normalizeValue(this._removealphabets(value));
-    const filteredValue = this.activityList.filter((x:any) => this._normalizeValue(x.policynumber).includes(filterValue));
+    const filteredValue = this.activityList.filter((x:any) => this._normalizeValue(x.policynumber) === filterValue);
     this.selectedPolicyNumber = filteredValue;
     if(this.selectedPolicyNumber.length > 0){
       this.getMemberIdList(this.selectedPolicyNumber);
@@ -376,7 +384,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   getMemberIdList(policyNumber:any) {
     let selectedValue = policyNumber[0].policynumber;
-    const result = this.policies.filter((x:any) => selectedValue.includes(x.policynumber));
+    const result = this.policies.filter((x: any) => selectedValue === x.policynumber);
     this.MemberIdList = result;
   }
   getMemberActivityType(content = null) {
@@ -418,7 +426,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get('pincode').updateValueAndValidity();
     }
     if (value == 'alternateContactNumber') {
-      this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
+      this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Mobile_Number);
       
@@ -432,7 +440,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
     }
     if (value == 'nomineeContact') {
-      this.caseCreationForm.get("endorsementDetails").get('nomineeContact').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
+      this.caseCreationForm.get("endorsementDetails").get('nomineeContact').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeContact').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
@@ -443,21 +451,21 @@ export class EndorsementsNewRequestComponent implements OnInit {
       }
     }
     if (value == 'primaryContactNumber') {
-      this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
+      this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').updateValueAndValidity();
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryMobile);
     }
     if (value == 'memberPrimaryContactNumber') {
-      this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
+      this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').updateValueAndValidity();
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();memberMobileNo
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberMobileNo);
     }
     if (value == 'memberAlternateContactNumber') {
-      this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
+      this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').updateValueAndValidity();
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
@@ -646,14 +654,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
       (resp) => {
-        if (resp && resp.statusCode == "200" && resp.isSuccess) {
-          if (resp.response.caseId != null) {
+        if (resp.data && resp.data.statusCode == "201" && resp.data.isSuccess) {
+          if (resp.data.response.caseId != null) {
             if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
               if (!this.selectedFile) {
                 this.isFilenotSelected = true;
                 return;
               }
-              let caseID = resp.response.caseId;
+              let caseID = resp.data.response.caseId;
               let ccID = caseID.replace(/[$-]/g, '');
               let file = this.selectedFile;
               let fileExt = file.name.replace(/^.*\./, '');
@@ -668,11 +676,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   .pipe()
                   .subscribe((Respevent:any) => {
                     let event: any = Respevent;
-                    if (Respevent && Respevent.statusCode == "200" && Respevent.isSuccess) {
-                      this.toast.success({ detail: `Your request ${resp.response.caseId} has been registered`});
+                    if (Respevent.data && Respevent.data.statusCode == "200" && Respevent.data.isSuccess) {
+                      this.toast.success({ detail: `Your request ${resp.data.response.caseId} has been registered`});
                     } 
                     else {
-                      this.toast.error({ detail: `${resp.response.statusMessage}`});
+                      this.toast.error({ detail: `${resp.data.response.statusMessage}`});
                     }
                     this.backToEndorsment();
                   }, (error:any) => {
@@ -681,12 +689,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
               }
             }
             else {
-              this.toast.success({ detail: `Your request ${resp.response.caseId} has been registered`});
+              this.toast.success({ detail: `Your request ${resp.data.response.caseId} has been registered`});
               this.backToEndorsment();
             }
           }
           else {
-            this.toast.error({ detail: `${resp.response.statusMessage}`});
+            this.toast.error({ detail: `${resp.data.response.statusMessage}`});
             this.backToEndorsment();
           }
         }
@@ -762,9 +770,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementSendOtpApi(this.otpObj).subscribe(
       (resp : any) => {
-        if (resp && resp.statusCode == "200" && resp.isSuccess) {
+        if (resp && resp.data.statusCode == "200" && resp.data.isSuccess && resp.data.requestId !== null) {
           this.otpInfoObject = {
-            requestId: resp.requestId,
+            requestId: resp.data.requestId,
             otp: "",
           };
           this.openOtpPopup();
@@ -774,13 +782,19 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
         else {
           this.sendOtptDisabled = false;
-          this.toast.error({ detail: resp.errorMessage});
+          this.toast.error({
+            detail: 'ERROR',
+            summary: resp.message,
+          });
         }
       },
       (err) => {
         console.log(err);
         this.sendOtptDisabled = false;
-        this.toast.error({ detail: "Something went wrong! Please try again later."});
+        this.toast.error({
+          detail: 'ERROR',
+          summary: "Something went wrong! Please try again later.",
+        });
       });
   }
   validateOTP() {
@@ -795,9 +809,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
       };
       this.loginservice.validateOtpRequestApi(modal).subscribe(
         (resp:any) => {
-          if (resp && resp.data.statusCode == "200" && resp.data.isSuccess) {
-            if (resp && resp.data.statusMessage) {
-               this.toast.success({ detail: resp.data.statusMessage});
+          if (resp.data && resp.data.statusCode == "200" && resp.data.isSuccess) {
+            if (resp.message) {
+              this.toast.success({
+                detail: 'SUCCESS',
+                summary: resp.message,
+                duration: 3000,
+              });
                this.closeOtpPopup();
                this.isDisabled = false;
                this.sendOtptDisabled = true;
@@ -810,9 +828,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
             }
           } 
           else {
-            if (resp && resp.data.errorMessage) {
+            if (resp && resp.message) {
               this.otpErrorMsge = true;
-              this.errorMessage = resp.data.errorMessage;
+              this.errorMessage = resp.message;
               // this.toast.error({ detail: resp.errorMessage});
             } else {
               this.errorMessage = "Something went wrong, please try again";
@@ -822,10 +840,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
           }
         },
         (err:any) => {
-            this.otpInfoObject = null;
-            this.sendOtptDisabled = false;
-            this.closeOtpPopup();
-            this.toast.error({detail: "Something went wrong, please try again"});
+          this.otpInfoObject = null;
+          this.sendOtptDisabled = false;
+          this.otpErrorMsge = true;
+          this.errorMessage = err;
+          // this.closeOtpPopup();
+          // this.toast.error({detail: "Something went wrong, please try again"});
         }
       );
       this.otpErrorMsge = false;
@@ -833,8 +853,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.otpErrorMsge = true;
       this.errorMessage = "Please Enter Valid OTP"
     }
-  
   }
+
   memberIdChange(event:any) {
     const member = event.target.value;
     this.selectedMember = this.policies.find((obj:any) => {
@@ -847,12 +867,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       }
       this.endorsement_service.getEndorsementPolicyInfoApi(policyObj).subscribe(
         (resp:any) => {
-          if (resp && resp.statusCode == "200" && resp.isSuccess) {
-            this.policyInfoDetails = resp;
+          if (resp && resp.data.statusCode == "200" && resp.data.isSuccess) {
+            this.policyInfoDetails = resp.data;
             this.externalPolicyData = this.policyInfoDetails.externalPolicyData.response;
           }
           else {
-            this.toast.error({ detail: `${resp.response.statusMessage}`});
+            this.toast.error({ detail: `${resp.message}`});
           }
         },
         (err) => {
