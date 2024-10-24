@@ -576,7 +576,7 @@ button {
   font-weight: 300;
   font-size: 16px;
   color: var(--text-grey-79);
-  padding: 9px 9px 9px 25px;
+  padding: 7px 9px 7px 25px;
   transition: 0.3s;
 }
 .siteSidenav .sidenavMenu a .img_link {
@@ -629,7 +629,7 @@ button {
 }
 .siteSidenav.expand .sidenavMenu a{  
   width: 100%;
-  padding: 9px 9px 9px 25px;
+  padding: 7px 9px 7px 25px;
 }
 .siteSidenav.expand .sidenavMenu a:hover {
     background: #fee0dd;
@@ -1631,6 +1631,20 @@ input[type="search"]::-webkit-search-results-decoration {
     width: auto;
     border-width: 0;
 }
+.filterWraperForm .form-floating.input-block-dob>.input-textBox~label {
+  opacity: 1;
+    transform: scale(.85) translateY(-0.5rem) translateX(1.85rem) !important;
+    color: var(--text-black-4c);
+    background: linear-gradient(180deg, rgba(242, 243, 246, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    width: auto;
+    border-width: 0;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 5px;
+    height: auto;
+    line-height: normal;
+    font-weight: 500;
+}
 .form-floating>.form-control.input-selectBox.focus~label {
     font-size: 10px;
 }
@@ -2356,7 +2370,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .bottomInfoMain .bottomInfoSubMain .planProductInfo {
   gap: 8px;
 }
-
+.bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_img img {
+  width: 40px;
+  height: 40px;
+}
 .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info {
   font-weight: 300;
   font-size: 12px;
@@ -2514,10 +2531,10 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .tableSubMain .table .row-renewalPremium {
-  font-size: 9px;
+  font-size: 11px;
   line-height: 9px;
   justify-content: space-between;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--text-black-2e);
 }
 
@@ -4726,6 +4743,7 @@ input[type="search"]::-webkit-search-results-decoration {
   right: 10px;
   top: 6px;
   padding: 0 6px;
+  background: #f1f3f6;
 }
 .common_searchWraper .field_searchMain button img {
   position: initial;

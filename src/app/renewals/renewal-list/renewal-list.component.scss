@@ -298,7 +298,7 @@ h6 {
 	gap:4px;
   }
   .quickFilterMain .quickFilterRight .filterWraper{
-	width: 120px;
+	min-width: 110px;
 	.btn_filter {
 		padding: 4px 14px;
 	}
@@ -328,7 +328,7 @@ h6 {
 	font-size: 11px;
 }
 .common_searchWraper .field_searchMain .filterSearch {
-	padding: 9px 25px 9px 16px;
+	padding: 9px 37px 9px 16px;
 }
 .common_searchWraper .field_searchMain select.filterSearch {
 	padding: 9px 5px 9px 10px;
