@@ -90,10 +90,10 @@
                                 <!-- <h6>Kindly provide Aadhaar card and doctor’s prescription</h6> -->
                             </div>
                             <div class="button_underDeficiency">
-                                <button type="button" (click)="underDeficiencyFileInput.click()" class="btn_red">Upload Documents</button>
+                                <button type="button" name="uploaddocument" id="uploaddocument" (click)="underDeficiencyFileInput.click()" class="btn_red">Upload Documents</button>
                                 <div class="btn_groupAction">
-                                    <button href="" class="btn_iconText">View Details</button>
-                                    <button href="" class="btn_iconText"><img src="../../../assets/Img/icon_phone_red.svg"> Care Manager</button>
+                                    <button name="viewdetails" id="viewdetails" href="" class="btn_iconText">View Details</button>
+                                    <button name="caremanager" id="caremanager" href="" class="btn_iconText"><img src="../../../assets/Img/icon_phone_red.svg"> Care Manager</button>
                                 </div>
                                 <input type="file" #underDeficiencyFileInput name="underDeficiency" (change)="onUnderDeficiencyFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                             </div>
@@ -117,7 +117,7 @@
                                                 <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
                                                     <ng-container *ngIf="!file.isEditing">
                                                         <span class="label-text">{{ file.label }}</span>
-                                                        <button (click)="startEditing(file)" class="edit-button">
+                                                        <button name="uploadedit" id="uploadedit" (click)="startEditing(file)" class="edit-button">
                                                             <img src="assets/Img/icon_pencil_blue.svg" alt="Edit">
                                                         </button>
                                                     </ng-container>
@@ -141,7 +141,7 @@
                                                 <p>{{ file.type }}</p>
                                             </div>
                                             <div class="uploadedFiles_infoItem">
-                                                <button class="delete-button" (click)="deleteFile(file,false)">
+                                                <button name="filedelete" id="filedelete" class="delete-button" (click)="deleteFile(file,false)">
                                                     <img src="../../../../../assets/Img/icon_delete_red2.svg">
                                                 </button>
                                                 <div class="size-align">
@@ -265,7 +265,7 @@
                                                     <p>JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)</p>
                                                 </div>
                                                 <div class="ud_area_right">
-                                                    <button type="button" class="btn_uploadDocument">
+                                                    <button type="button" name="uploadfile" id="uploadfile" class="btn_uploadDocument">
                                                         <span class="upload_icon"><img src="../../../../../assets/Img/icon_upload_white.svg"></span> Upload
                                                     </button>
                                                 </div>
@@ -316,7 +316,7 @@
                                                                         <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
                                                                             <ng-container *ngIf="!file.isEditing">
                                                                                 <span class="label-text">{{ file.label }}</span>
-                                                                                <button (click)="startEditing(file)" class="edit-button">
+                                                                                <button name="labeledit" id="labeledit" (click)="startEditing(file)" class="edit-button">
                                                                                     <img src="assets/Img/icon_pencil_blue.svg" alt="Edit">
                                                                                 </button>
                                                                             </ng-container>
@@ -340,7 +340,7 @@
                                                                         <p>{{ file.type }}</p>
                                                                     </div>
                                                                     <div class="uploadedFiles_infoItem">
-                                                                        <button class="delete-button" (click)="deleteFile(file,true)">
+                                                                        <button name="deletefile" id="deletefile" class="delete-button" (click)="deleteFile(file,true)">
                                                                             <img src="assets/Img/icon_delete_red2.svg">
                                                                         </button>
                                                                         <div class="size-align">
@@ -355,7 +355,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 text-center">
-                                                    <button class="button_red" type="button" (click)="submitClaim()">Submit</button>
+                                                    <button name="submit" id="submit" class="button_red" type="button" (click)="submitClaim()">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -383,7 +383,7 @@
                                                 </div>
                                                 <div class="item_claimProgressInfo" *ngIf="statusMessage">{{statusMessage}}</div>
                                                 <div class="item_claimProgressButtons">
-                                                    <button type="button" class="btn_iconText" (click)="toggleViewDetails()"><img src="assets/Img/icon_claimhistory.svg">Claims History</button>
+                                                    <button type="button" name="claimshistory" id="claimshistory" class="btn_iconText" (click)="toggleViewDetails()"><img src="assets/Img/icon_claimhistory.svg">Claims History</button>
                                                     <!-- <button type="button" class="btn_red">View Details <img src="assets/Img/icon_right_arrow_black.svg"></button> -->
                                                 </div>
                                                 <div class="detailsRow" *ngIf="claimsHistory && claimsHistory.length > 0 && isViewVisible">
