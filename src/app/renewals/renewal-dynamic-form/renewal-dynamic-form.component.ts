@@ -103,6 +103,8 @@ export class RenewalDynamicFormComponent implements OnInit {
         }
       }
       const paymentStatus = this.renewalService.getPaymentStatus();
+      console.log(paymentStatus);
+      
       if (paymentStatus === '1') {
         this.submit = false;
       } else if (paymentStatus === '2') {

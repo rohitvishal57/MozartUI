@@ -244,6 +244,39 @@ export class RenewalListComponent {
   handleAction(item: RenewalList, event?: string) {
     switch (event) {
       case 'download':
+        const downloadRequestBody={
+          EventName:"Search policy kit request from customers",
+          AgentCode:this.agentCode,
+          ReferenceId:this.agentCode,
+          SearchOperator:"AND",
+          SearchRequest: [
+            {
+              CategoryID: "",
+              DocumentID: "",
+              ReferenceID: "",
+              FileName: "",
+              Description: "",
+              DataClassParam: [
+                {
+                    DocSearchParamId: "2",
+                    Value: "21-24-0002917-00"
+                },
+                {
+                    DocSearchParamId: "15",
+                    Value: "PS_04"
+                }
+              ]
+            }
+          ],
+          Category: "N/A",
+          UserRole: "Guest",
+          SessionId: "0000",
+          UserLevel: "Basic",
+          BranchCode: "000",
+          Designation: "N/A",
+          IntCategory: "N/A",
+          SourceSystemName: "Portal"
+        }
         break;
       case 'payment':
         this.activeSection = event;
@@ -345,7 +378,7 @@ export class RenewalListComponent {
             if (response.isSuccess) {
               this.toast.success({ detail: "Success", summary: "WhatsApp message sent successfully.", duration: 1500});
             } else {
-              this.toast.error({ detail: "Error", summary: "Failed to send WhatsApp message.", duration: 1500 });
+              this.toast.error({ detail: "Error", summary: response.errorMessage, duration: 1500 });
             }
           },
           (error: any) => {

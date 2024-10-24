@@ -7,7 +7,8 @@ export interface RenewalList {
     productName: string;
     policyType: string;
     policyNumber: string;
-    status: string;
+    renewalStatus:string;
+    renewalStatusDescription: string;
     renewalPremiumAmount: number;
     healthReturn: number;
     proposerMobileNumber: string;

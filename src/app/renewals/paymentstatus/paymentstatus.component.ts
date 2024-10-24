@@ -29,12 +29,12 @@ export class PaymentstatusComponent {
     this.getPaymentStatus();
   }
   getPaymentStatus(){
-    this.renewalService.getPaymentStatusApi("UP_241017_f100868d",{}).subscribe(
+    this.renewalService.getPaymentStatusApi(this.orderId,{}).subscribe(
       (res:any)=>{
         console.log("payment response",res);
         if(res.isSuccess==true){
           this.paymentStatus=res.paymentStatus
-          if(this.paymentStatus=="success")
+          if(this.paymentStatus=="SUCCESS")
             {
               console.log("payment status",this.paymentStatus);
               this.renewalService.setPaymentStatus('1');
@@ -42,12 +42,17 @@ export class PaymentstatusComponent {
               this.toast.success({ detail: "success", summary: "policy renewed uccessfully", duration: 1500 });
 
             }
-          else{
+          else if(this.paymentStatus=="INTIATED"){
             console.log("payment status",this.paymentStatus);
             this.renewalService.setPaymentStatus('2');
             this.router.navigate([`renewal/payment`]);
-            this.toast.error({ detail: "Error", summary: "Failed to renew the policy.", duration: 1500 });
-
+            this.toast.error({ detail: "Error", summary: "Your payment is in processing", duration: 1500 });
+          }
+          else {
+            console.log("payment status",this.paymentStatus);
+            this.renewalService.setPaymentStatus('2');
+            this.router.navigate([`renewal/payment`]);
+            this.toast.error({ detail: "Error", summary: "Your payment is Failed try again once", duration: 1500 });
           }
         }
         else{

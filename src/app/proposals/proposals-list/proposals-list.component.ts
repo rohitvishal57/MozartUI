@@ -37,13 +37,12 @@ export class ProposalsListComponent {
   placeholder:string='';
   agentCode=localStorage.getItem('agentCode');
   StaticPolicyTypes = [
-    { name: 'Individual', selected: false },
+    { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   proposalListRequestBody={
     "proposer": "",
     "productVarientName": "",  
-    "policyNumber": "",  
     "proposalNumber": "", 
     "intermediaryID": this.agentCode, 
     "policyType": "",  
@@ -209,6 +208,8 @@ export class ProposalsListComponent {
       return "Enter Policy Number";
     } else if (this.selected === "proposalNumber") {
       return "Enter Proposal Number";
+    } else if (this.selected === "leadId") {
+      return "Enter Lead ID";
     }
     else {
       return "Search...";
@@ -218,7 +219,7 @@ export class ProposalsListComponent {
     this.selected = "";
     this.proposalListRequestBody.mobileNumber = "";
     this.proposalListRequestBody.proposer = "";
-    this.proposalListRequestBody.policyNumber = "";
+    this.proposalListRequestBody.leadId = "";
     this.proposalListRequestBody.proposalNumber ="",
     this.searchInputControl.reset();
     this.getProposalList();
@@ -230,21 +231,17 @@ export class ProposalsListComponent {
       console.log("inside",this.selected);
       
       if (this.selected === "mobileNumber") {
-        console.log(this.selected,this.proposalListRequestBody);
-
         this.proposalListRequestBody.mobileNumber = this.searchInputControl.value!;
         this.proposalListRequestBody.proposer = "";
-        this.proposalListRequestBody.policyNumber = "";
+        this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
       } else if (this.selected === "proposerName") {
-        console.log("vgvdxgtf",this.selected,this.proposalListRequestBody);
-
         this.proposalListRequestBody.proposer = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
-        this.proposalListRequestBody.policyNumber = "";
+        this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
-      } else if (this.selected === "policyNumber") {
-        this.proposalListRequestBody.policyNumber = this.searchInputControl.value!;
+      } else if (this.selected === "leadId") {
+        this.proposalListRequestBody.leadId = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.proposalNumber =""
@@ -254,7 +251,7 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposalNumber = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
-        this.proposalListRequestBody.policyNumber = "";
+        this.proposalListRequestBody.leadId = "";
       }
       this.getProposalList();
     }

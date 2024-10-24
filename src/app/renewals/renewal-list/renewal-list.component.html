@@ -104,14 +104,12 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th scope="col">Proposer</th>
+                                    <th scope="col">Proposer Name</th>
                                     <th scope="col" nowrap>Product</th>
                                     <th scope="col" nowrap>Policy Type</th>
                                     <th scope="col" nowrap>Policy Number</th>
-                                    <th scope="col" nowrap>Renewal Premium
-                                        <button type="button" value="sort" class="btn_sort"></button>
-                                    </th>
-                                    <th scope="col" nowrap>Mobile No.</th>
+                                    <th scope="col" nowrap>Renewal Premium</th>
+                                    <th scope="col" nowrap>Mobile Number</th>
                                     <th scope="col" nowrap>Date of Renewal</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Notice</th>
@@ -141,7 +139,7 @@
                                     </td>
                                     <td>{{row.proposerMobileNumber}}</td>
                                     <td>{{ row.policyEndDate }}</td>
-                                    <td>{{ row.status }}</td>
+                                    <td>{{ row.renewalStatusDescription }}</td>
                                     <td>
                                         <div class="btn_groupAction">
                                             <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="renewalJourney(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
@@ -160,7 +158,7 @@
                                                             <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                                         </li>
                                                         <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                            <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Send Renewal Notice</span></a>
+                                                            <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email</span></a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -215,12 +213,11 @@
                                                     <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="handleAction(row, 'email')">
-                                                    <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="generate payment link"><span>Send Renewal Notice</span></a>
+                                                    <a> <img src="assets/Img/icon_share_via_email_grey.svg" alt="generate payment link"><span>Share via Email</span></a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </mat-menu>
-
                                 </div>
                             </div>
                         </header>
@@ -235,7 +232,7 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Status</div>
-                                <div class="item_value">{{ row.status }}</div>
+                                <div class="item_value">{{ row.renewalStatusDescription }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Mobile No.</div>

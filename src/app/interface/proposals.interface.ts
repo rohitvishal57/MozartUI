@@ -1,5 +1,4 @@
 export interface ProposalList {
-    policyNumber: string;
     policyStartDate: string;
     policyEndDate: string;
     intermediaryID: number;
@@ -14,4 +13,5 @@ export interface ProposalList {
     mobileNo: number;
     totalPremiumInt: number;
     emailID: string;
+    leadId:string;
   }

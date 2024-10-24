@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: "renewalList", component: RenewalListComponent },
   { path: "payment", component: RenewalDynamicFormComponent },
   { path: "quote", component: SubQuotesComponent },
-  {path:"paymentstatus",component:PaymentstatusComponent}
+  {path:"paymentstatus/UP_241021_c7511c98",component:PaymentstatusComponent}
 ];
 
 @NgModule({
