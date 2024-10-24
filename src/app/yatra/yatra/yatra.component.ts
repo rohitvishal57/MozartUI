@@ -2417,11 +2417,9 @@ export class YatraComponent {
         }
         console.log(this.dynamicFormGroup.value);
 
-        
         this.flattenObjectInsert(this.dynamicFormGroup.value);
         this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
         console.log(this.formData);
-        
         if (this.formData['sumInsured'] == null) {
           this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
         }
@@ -2448,6 +2446,8 @@ export class YatraComponent {
           sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
           sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
           sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+          console.log(this.QuoteNumber,this.selectedIndex);
+          this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
         }
 
 
@@ -2757,6 +2757,7 @@ export class YatraComponent {
           tap((res: any) => {
             this.spinner.hide();
             // Update tenureAmount and discountList after receiving the response
+            this.QuoteNumber=[];
             for (let i = 1; i <= 3; i++) {
               const premiumKey = `tenure${i}Premium`;
               const discountKey = `t${i}DiscountPercentage`;
@@ -2767,6 +2768,7 @@ export class YatraComponent {
               this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
               this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
             }
+            console.log(this.QuoteNumber,this.selectedIndex); 
             this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
             // this.formData.tenure = this.selectedIndex;
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));

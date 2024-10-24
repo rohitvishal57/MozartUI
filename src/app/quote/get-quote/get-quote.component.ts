@@ -18,6 +18,7 @@ export class GetQuoteComponent {
   selectedPlan: string = "Family Floater";
   selectedRelationships: string[] = [];
   selectedRelation: string = "";
+  minimumMembersRequired = 2;
   activeDropdown: number | null = null;
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
@@ -210,9 +211,10 @@ export class GetQuoteComponent {
   }
 
   onRelationChange(event: any, relation: any) {
+    const isChecked = event.target.checked;
     const selectedValue = relation.value;
 
-    if (event.target.checked) {
+    if (isChecked) {
       if (!this.selectedRelationships.some(
         (existingRelation: any) => existingRelation.name === relation.name
       )) {
@@ -222,7 +224,6 @@ export class GetQuoteComponent {
       this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
     }
-
     // this.saveDataToStorage();
   }
 
@@ -563,10 +564,15 @@ export class GetQuoteComponent {
 
   // Add new member details
   addInsuredMemberDetails(): void {
-    // Mark required fields as touched
-    // this.quoteFormGroup.get('proposerName')?.markAsTouched();
-    // this.quoteFormGroup.get('proposerPincode')?.markAsTouched();
-    // this.quoteFormGroup.get('mobileNumber')?.markAsTouched();
+
+    if (this.selectedRelationships.length < 2 && this.selectedPlan === 'Family Floater') {
+      this.toast.error({
+        detail: "Error",
+        summary: "At least 2 members must be selected.",
+        duration: 3000
+      });
+      return; // Prevent proceeding if fewer than 2 members are selected
+    }  
 
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid) {

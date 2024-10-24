@@ -195,7 +195,7 @@
                                 <input type="checkbox" id="{{relation.value}}"
                                   [checked]="selectedRelation.includes(relation.value)"
                                   (change)="onRelationChange($event, relation)" value="{{relation.id}}"
-                                  class="input-check">
+                                  class="input-check" [disabled]="selectedPlan !== 'Family Floater' && selectedRelation.length >= 1">
                                 <label for="{{relation.value}}"><img
                                     src="{{relation.imagePath}}">{{relation.name}}</label>
                                 <div class="member_extraInfo">
@@ -207,7 +207,7 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
+                                <div *ngIf="relation.isIncrement == true && selectedPlan === 'Family Floater'" class="input-checkbox-feild">
                                 <button type="button" class="btn_white btn_addChildren" (click)="incrementMember(relation)">
                                   <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
                                   <img src="assets/Img/icon_round_plus_red.svg">
