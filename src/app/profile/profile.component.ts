@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
         const output = Object.keys(res.data).map(key => ({
           heading: key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
           icon: this.getIcons(key),
-          value: res.data[key]
+          value: key === 'dateOfBirth' ?  new Date(res.data[key]).toLocaleDateString('en-US') : res.data[key]
         }));
         this.profileDetails = output
       }
