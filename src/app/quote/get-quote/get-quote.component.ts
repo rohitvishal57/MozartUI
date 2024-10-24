@@ -183,17 +183,17 @@ export class GetQuoteComponent {
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     this.quoteFormGroup = this.fb.group({
-      proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$')]],
-      proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]],
-      mobileNumber: [null, [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
+      proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
+      mobileNumber: [null, [Validators.required, Validators.pattern('^[6-9][0-9]{9}$'), Validators.maxLength(10)]],
       typeOfBusiness: ["NB"],
       isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
       numberOfInsuredMembers: [null],
       familySize: [null],
       memberPolicyType: [this.selectedPlan],
-      memberDobProposer:[''],
-      memberAgeProposer:[''],
+      memberDobProposer: [''],
+      memberAgeProposer: [''],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
@@ -352,8 +352,8 @@ export class GetQuoteComponent {
 
   continue() {
     console.log(this.quoteFormGroup);
-    this.quoteFormGroup.get('insuredMemberDetails')?.value.forEach((item:any)=>{
-      if(item.relation == 'Self'){
+    this.quoteFormGroup.get('insuredMemberDetails')?.value.forEach((item: any) => {
+      if (item.relation == 'Self') {
         this.quoteFormGroup.get('memberDobProposer')?.setValue(item.memberdob);
         this.quoteFormGroup.get('memberAgeProposer')?.setValue(item.memberAge);
         console.log(item);
@@ -572,7 +572,7 @@ export class GetQuoteComponent {
         duration: 3000
       });
       return; // Prevent proceeding if fewer than 2 members are selected
-    }  
+    }
 
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid) {
@@ -631,6 +631,14 @@ export class GetQuoteComponent {
   get insuredMemberDetails(): FormArray {
     return this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
   }
+
+  enforceMaxLength(event: any, maxLength: number) {
+    const input = event.target;
+    if (input.value.length > maxLength) {
+      input.value = input.value.slice(0, maxLength);  // Truncate the input to maxLength
+    }
+  }
+
 
 
   // getProposerPincode(event: any) {

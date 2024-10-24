@@ -149,16 +149,16 @@
                           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block input-block-renew input-filed-white">
                               <input type="text" id="nameproposer" formControlName="proposerName"
-                                placeholder="Enter name of proposer" class="input-textBox">
+                                placeholder="Enter name of proposer" class="input-textBox" maxlength="30">
                               <span class="ui-error"
                                 *ngIf="quoteFormGroup.get('proposerName')?.invalid && (quoteFormGroup.get('proposerName')?.touched || quoteFormGroup.get('proposerName')?.dirty)">
-                                Please enter the name of the proposer</span>
+                                Please enter a valid name (only alphabets, max 30 characters)</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block input-block-renew input-filed-white">
                               <input type="text" id="pincodeproposer" [required]="true"
-                                formControlName="proposerPincode" value="" placeholder="Enter your 6 digit pincode"
+                                formControlName="proposerPincode" value="" placeholder="Enter your 6 digit pincode" maxlength="6" (input)="enforceMaxLength($event, 6)"
                                 class="input-textBox">
                               <span class="ui-error"
                                 *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && (quoteFormGroup.get('proposerPincode')?.touched || quoteFormGroup.get('proposerPincode')?.dirty)">
@@ -169,7 +169,7 @@
                           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block input-block-renew input-filed-white">
                               <input type="text" id="mobileNumber" formControlName="mobileNumber" value=""
-                                placeholder="Enter mobile no of proposer" class="input-textBox">
+                                placeholder="Enter mobile no of proposer" class="input-textBox" maxlength="10" (input)="enforceMaxLength($event, 10)">
                               <span class="ui-error"
                                 *ngIf="quoteFormGroup.get('mobileNumber')?.invalid && (quoteFormGroup.get('mobileNumber')?.touched || quoteFormGroup.get('mobileNumber')?.dirty)">
                                 Please enter a valid 10-digit mobile number
