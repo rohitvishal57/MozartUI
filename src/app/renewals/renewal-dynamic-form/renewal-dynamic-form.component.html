@@ -1,31 +1,30 @@
 <div class="siteBody siteBody_renewJourney">
-  <div class="contentBody bodyColumns-3 " *ngIf="submit">
+  <div class="contentBody bodyColumns-3" *ngIf="submit">
       <div class="bodyColumns bodyColumnsLeft" *ngIf="hideSection && activeSection != 'kyc'">
           <div class="bcl_main">
-              <div>Select from any customisation below</div>
+              <h3>Select from any customisation below</h3>
               <div class="processBtnGroup">
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'primary', 'active-green': activeSection === 'additional' || activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc' }" (click)="setSection('primary')">
-                      <div><i class="fa-solid fa-users"></i></div>
-                      <div>Primary</div>
-                  </div>
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'additional', 'active-green': activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc'}" (click)="setSection('additional')">
-                      <div><i class="fa-solid fa-square-plus"></i></div>
-                      <div>Additional</div>
-                  </div>
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc'}" (click)="setSection('policySummary')">
-                      <div><i>₹</i></div>
-                      <div>Payment</div>
-                  </div>
-              </div>
+                <button type="button" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('primary')">
+                    <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                    <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">Primary
+                </button>
+                <button type="button" value="primary" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
+                    <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['payment', 'policySummary', 'kyc','additional'].includes(activeSection)}">
+                    <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'additional', 'block-hide': activeSection !== 'additional'}">
+                    <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Additional
+                </button>            
+                <button type="button" value="primary" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
+                    <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': !['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                    <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Payment
+                </button>
+            </div>
           </div>
       </div>
       <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'primary'">
           <div class="bcc_main">
               <div class="accordionMain">
                   <div class="accordionItem" *ngIf="formId == 5001">
-                      <header>Proposer
-                          <!-- <button type="button" value="sectionedit" class="btn_editRed"></button> -->
-                      </header>
+                      <header>Proposer</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="data-row" *ngIf="renewalInfo?.response?.policyData?.length > 0">
@@ -114,8 +113,7 @@
                       </div>
                   </div>
                   <div class="accordionItem" *ngIf="formId == 5001">
-                      <header>Nominee Details
-                      </header>
+                      <header>Nominee Details</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="detailsRow">
@@ -147,8 +145,7 @@
                       </div>
                   </div>
                   <div class="accordionItem" *ngIf="formId == 5001">
-                    <header>Bank Account Details
-                    </header>
+                    <header>Bank Account Details</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
@@ -1170,7 +1167,6 @@
                 <div class="accordionItem">
                     <header>Policy Summary
                         <div class="btn_groupAction">
-                            <!-- <button type="button" value="copylink" class="btn_pink btn_copylink btn_copiedlink">Link copied!</button> -->
                             <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                         </div>
                     </header>
@@ -1387,9 +1383,9 @@
                                     </form>
                                 </div>
                                 <div class="row" *ngIf="kycLink">
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                    <!-- <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
                                       <div class="block_or_line"><span>OR</span></div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 15px;">
                                       <div class="input-block form-floating input-block-renew">
                                         <a [href]="kycLink" target="_blank" class="form-control input-textBox" style="text-decoration: none;" >{{ kycLink }}</a>

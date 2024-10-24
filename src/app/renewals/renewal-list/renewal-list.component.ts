@@ -1,4 +1,4 @@
-import { Component  } from '@angular/core';
+import { Component, HostListener  } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
@@ -47,12 +47,8 @@ export class RenewalListComponent {
   ];
 
   constructor(
-    private renewalService: RenewalsService,
-    private router: Router,
-    private datePipe: DatePipe,
-    private commonService:CommonService,
-    private toast: NgToastService,
-    private encryptionService: EncryptionService
+    private renewalService: RenewalsService,private router: Router,private datePipe: DatePipe,
+    private commonService:CommonService,private toast: NgToastService,private encryptionService: EncryptionService
   ) {}
 
   renewalLisRequestBody={
@@ -137,7 +133,8 @@ export class RenewalListComponent {
       }
     })
   }
-  toggleFilterDropdown() {
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
     this.toggeledropdown = !this.toggeledropdown;    
   }
   calculateAppliedFiltersCount() {
@@ -388,6 +385,14 @@ export class RenewalListComponent {
       return 'gold-color';
     } else {
       return 'green-color';
+    }
+  }
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    const clickedInside = (event.target as HTMLElement).closest('.filterWraperForm');
+    const clickedButton = (event.target as HTMLElement).closest('.jsFilterBtnClick');
+    if (!clickedInside && !clickedButton && this.toggeledropdown) {
+      this.toggeledropdown = false;
     }
   }
   ngOnDestroy(): void {

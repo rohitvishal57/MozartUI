@@ -282,6 +282,9 @@ export class RenewalDynamicFormComponent implements OnInit {
     else if (value == 5004) {
       if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
         this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Nominee_Details};
+        // if (this.formObject.nominee_dob) {
+        //   this.formObject.nominee_dob = new Date(this.formObject.nominee_dob).toISOString().split('T')[0];
+        // }
       } 
       this.initializeForm();
       this.formId = value;
@@ -305,6 +308,11 @@ export class RenewalDynamicFormComponent implements OnInit {
     else if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editMember'){
       this.memberRole='Update';
       this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0]}; 
+      console.log(this.formObject);
+      console.log(this.renewalInfo);
+      // if(this.formObject.DoB != null){
+      //   this.formObject.DoB = new Date(this.formObject.DoB).toISOString().split('T')[0];
+      // }
       if (!isNaN(this.formObject?.SumInsured)) {
         const sumInsuredValue = Number(this.formObject.SumInsured);
         const closestValue = this.sliderOptions?.stepsArray?.reduce((prev, curr) => {
@@ -538,7 +546,7 @@ getRenewalInfo() {
              console.log("responsec body",response.success);
             },
             (error: any) => {
-              // this.getkycURL();
+              this.getkycURL();
               console.log("error body",error);
               this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
             }
@@ -547,20 +555,16 @@ getRenewalInfo() {
     }
     getkycURL(){
       const requestBody = {
-        policyNumber: this.policyNumber,
-        fullName: '',  
-        panNumber: this.formObject?.panNumber || '', 
-        dob: this.formObject?.dob || '', 
-        pepCheck: ''
+        policyNumber: this.policyNumber,fullName: '',  
+        panNumber: '', dob: '', pepCheck: ''
       };
-        this.renewalService.getkycURL(requestBody).subscribe(
-        response => {
+      this.renewalService.getkycURL(requestBody, { responseType: 'text' }).subscribe(
+        (response) => {
           console.log('Success:', response);
-          if(!response){this.kycLink=response;}else{
-          this.kycLink="link";}
+          this.kycLink = response;
         },
         error => {
-          console.log('Error:', error);
+          console.error('Error:kyc', error);
         }
       );
     }
