@@ -88,8 +88,8 @@ export class RenewalListComponent {
           })); 
           console.log("Renewal List",this.renewalsList);
           this.countsList = response.data;
-          this.totalRecords = response.data[this.filterType];         } 
-        else {
+          this.totalRecords = response.data[this.filterType];  
+        }else {
           this.toast.error({ detail: "Error", summary: "Failed to generate Renewals List.", duration: 1500 });
           console.error("API request was not successful.");
         }
@@ -170,6 +170,8 @@ export class RenewalListComponent {
     .map((policyType) => policyType.name);
     this.renewalLisRequestBody.policyType = selectedPolicyTypes.join(", ");
     console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType); 
+    this.first = 0;
+    this.page = 1;
     this.getRenewalsList();
     this.toggeledropdown=false;
   }

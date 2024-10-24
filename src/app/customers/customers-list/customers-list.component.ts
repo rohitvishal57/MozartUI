@@ -171,6 +171,8 @@ export class CustomersListComponent {
       console.log("selecteed policy types",selectedPolicyTypes);  
     this.customerListRequestBody.policyType = selectedPolicyTypes.join(", ");
     console.log("policy types which are taking by request body",this.customerListRequestBody.policyType); 
+    this.first = 0;
+    this.page = 1;
     this.getCustomerList();
     this.toggeledropdown=false;
   }

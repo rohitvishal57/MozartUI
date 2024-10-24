@@ -178,6 +178,8 @@ export class ProposalsListComponent {
       console.log("selecteed policy types",selectedPolicyTypes);  
     this.proposalListRequestBody.policyType = selectedPolicyTypes.join(", ");
     console.log("policy types which are taking by request body",this.proposalListRequestBody.policyType); 
+    this.first = 0;
+    this.page = 1;
     this.getProposalList();
     this.toggeledropdown=false;
   }
