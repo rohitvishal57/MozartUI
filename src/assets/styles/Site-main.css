@@ -551,7 +551,7 @@ button {
   position: fixed;
   left: 0;
   top: 88px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .siteSidenav .siteSidenavMain {
@@ -1785,7 +1785,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .siteBody {
   width: 100%;
   padding: 23px;
-  padding-bottom: 9rem;
+  padding-bottom: 12rem;
   padding-top: 11rem;
   background: var(--bg-verylight-grey);
     min-height: 100vh;
@@ -4777,4 +4777,89 @@ input[type="search"]::-webkit-search-results-decoration {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/*---Profile styles Start--*/
+/*---Profile styles End--*/
+/*---Compare Polices start---*/
+.bottomInfoMain.bottomInfoMain_comparePolices {
+  width: 90%;
+  left: 6%;
+  border: 1px solid #ededed;
+  border-bottom-width: 0;
+}
+.bottomInfoMain_comparePolices .bottomInfoSubMain .bi_left {
+  align-items: center;
+}
+.bottomInfoMain_comparePolices .policePlans {
+  width: 235px;
+  height: 64px;
+  background: #fff;
+  border: 1px solid #dfe1e6;
+  flex-direction: row;
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+  box-shadow: 0px 4px 6px 0px #0000000D;
+}
+.bottomInfoMain_comparePolices .policePlans .planProductInfo {
+  align-items: center;
+  gap: 15px;
+}
+.bottomInfoMain_comparePolices .policePlans .planProductInfo .ppi_img {
+  width: 40px;
+  height: 40px;
+}
+.bottomInfoMain_comparePolices .policePlans .planProductInfo .ppi_img  img {
+  width: 100%;
+}
+.bottomInfoMain_comparePolices .planSeparator {
+  display: flex;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #dfe1e6;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4c4c4c;
+  align-items: center;
+  justify-content: center;
+}
+.bottomInfoMain_comparePolices .planSeparator:before {
+  content: "";
+  width: 55px;
+  height: 1px;
+  background: #dfe1e6;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-60deg);
+  z-index: -1;
+}
+.removePlan{
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border: 1px solid #dfe1e6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  right: -6px;
+  top: -6px;
+}
+.removePlan .btn-close {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+}
+.bottomInfoMain_comparePolices .btn_redRenew, .bottomInfoMain_comparePolices .btn_pinkNext {
+  padding: 10px 40px;
+  font-size: 16px;
+  margin: 8px 0;
+}
+.bottomInfoMain_comparePolices .btn_pinkNext{
+  background: transparent;
+  border-width: 0;
+}
+/*---Compare Polices end---*/
