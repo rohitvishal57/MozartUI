@@ -8,12 +8,12 @@
                     <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">Primary
                 </button>
-                <button type="button" value="primary" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
+                <button type="button" value="additional" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
                     <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['payment', 'policySummary', 'kyc','additional'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'additional', 'block-hide': activeSection !== 'additional'}">
                     <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Additional
                 </button>            
-                <button type="button" value="primary" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
+                <button type="button" value="payment" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
                     <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': !['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Payment
                 </button>
@@ -218,7 +218,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="MiddleName" formControlName="MiddleName" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="MiddleName" name="MiddleName" formControlName="MiddleName" placeholder="" class="form-control input-textBox">
                                               <label for="MiddleName">Middle Name</label>
                                               <span class="ui-error" *ngIf="form?.get('MiddleName')?.invalid && form?.get('MiddleName')?.touched">
                                               Please enter Middle Name
@@ -236,7 +236,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="height" formControlName="height" placeholder="" class="form-control input-textBox">
+                                            <input type="text" id="height" name="height" formControlName="height" placeholder="" class="form-control input-textBox">
                                             <label for="height">Height</label>
                                             <span class="ui-error" *ngIf="form.get('height')?.invalid && (form.get('height')?.touched || memberDetails)">Please enter height</span>
                                             <span class="ui-prefix">cms</span>
@@ -244,7 +244,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="weight" formControlName="weight" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="weight" name="weight" formControlName="weight" placeholder="" class="form-control input-textBox">
                                               <label for="weight">Weight</label>
                                               <span class="ui-error" *ngIf="form.get('weight')?.invalid && (form.get('weight')?.touched   || memberDetails)">Please enter weight</span>
                                               <span class="ui-prefix">kg</span>
@@ -264,7 +264,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="date" id="dob" formControlName="DoB" placeholder="" class="form-control input-textBox">
+                                              <input type="date" id="dob" name="dob" formControlName="DoB" placeholder="" class="form-control input-textBox">
                                               <label for="dob">Date of birth</label>
                                               <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">Please enter date of birth</span>
                                           </div>
@@ -350,23 +350,23 @@
                                           <div class="input-checkbox-condition">
                                               <div class="input-checkbox-block input-checkbox-withIcon">
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-alcohol" class="input-check" />
+                                                      <input type="checkbox" id="condition-alcohol" name="condition-alcohol" class="input-check" />
                                                       <label for="condition-alcohol"><img src="assets/Img/icon_alcohol.svg">Alcohol</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-tobacco" class="input-check" />
+                                                      <input type="checkbox" id="condition-tobacco" name="condition-tobacco" class="input-check" />
                                                       <label for="condition-tobacco"><img src="assets/Img/icon_tabacco.svg">Tobacco</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-panmasala" class="input-check" />
+                                                      <input type="checkbox" id="condition-panmasala" name="condition-panmasala" class="input-check" />
                                                       <label for="condition-panmasala"><img src="assets/Img/icon_alcohol.svg">Pan Masala/Guthka</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-smoking" class="input-check" />
+                                                      <input type="checkbox" id="condition-smoking" name="condition-smoking" class="input-check" />
                                                       <label for="condition-smoking"><img src="assets/Img/icon_smoking.svg">Smoking</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-other" class="input-check" />
+                                                      <input type="checkbox" id="condition-other" name="condition-other" class="input-check" />
                                                       <label for="condition-other"><img src="assets/Img/icon_other.svg">Other</label>
                                                   </div>
                                               </div>
@@ -377,7 +377,7 @@
                                       <h6>Do you have any health conditions?</h6>
                                       <p>We require to know this data to provide you with the best solution possible.</p>
                                       <div class="searchConditionMain">
-                                          <input type="search" placeholder="Search conditions">
+                                          <input type="search" id="search" name="search" placeholder="Search conditions">
                                           <button type="button" name="search" class="btn_text">Search now</button>
                                       </div>
                                   </div>
@@ -394,15 +394,15 @@
                                               <div class="input-checkbox-condition">
                                                   <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                       <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-highblood" class="input-check" />
+                                                          <input type="checkbox" id="condition-highblood" name="condition-highblood" class="input-check" />
                                                           <label for="condition-highblood"><img src="assets/Img/icon_alcohol.svg">High Blood Pressure (Hypertension)</label>
                                                       </div>
                                                       <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-asthma" class="input-check" />
+                                                          <input type="checkbox" id="condition-asthma" name="condition-asthma" class="input-check" />
                                                           <label for="condition-asthma"><img src="assets/Img/icon_tabacco.svg">Asthma/Chronic Pulmonary Obstructive Disease</label>
                                                       </div>
                                                       <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-diabetes" class="input-check" />
+                                                          <input type="checkbox" id="condition-diabetes" name="condition-diabetes" class="input-check" />
                                                           <label for="condition-diabetes"><img src="assets/Img/icon_alcohol.svg">Diabetes</label>
                                                       </div>
                                                   </div>
@@ -412,23 +412,23 @@
                                             <div class="input-checkbox-condition">
                                                 <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Heart" class="input-check" />
+                                                        <input type="checkbox" id="condition-Heart" name="condition-Heart" class="input-check" />
                                                         <label for="condition-Heart"><img src="assets/Img/icon_alcohol.svg">Heart related</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-lung" class="input-check" />
+                                                        <input type="checkbox" id="condition-lung" name="condition-lung" class="input-check" />
                                                         <label for="condition-lung"><img src="assets/Img/icon_alcohol.svg">Lung/respiratory</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-ENT" class="input-check" />
+                                                        <input type="checkbox" id="condition-ENT" name="condition-ENT" class="input-check" />
                                                         <label for="condition-ENT"><img src="assets/Img/icon_alcohol.svg">ENT Disease/optical</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Kidney" class="input-check" />
+                                                        <input type="checkbox" id="condition-Kidney" name="condition-Kidney" class="input-check" />
                                                         <label for="condition-Kidney"><img src="assets/Img/icon_alcohol.svg">Kidney/urinary</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Brain" class="input-check" />
+                                                        <input type="checkbox" id="condition-Brain" name="condition-Brain" class="input-check" />
                                                         <label for="condition-Brain"><img src="assets/Img/icon_alcohol.svg">Brain/nervous</label>
                                                     </div>
                                                 </div>
@@ -438,19 +438,19 @@
                                             <div class="input-checkbox-condition">
                                                 <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Cancer" class="input-check" />
+                                                        <input type="checkbox" id="condition-Cancer" name="condition-Cancer" class="input-check" />
                                                         <label for="condition-Cancer"><img src="assets/Img/icon_alcohol.svg">Cancer/turnour</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Sexually" class="input-check" />
+                                                        <input type="checkbox" id="condition-Sexually" name="condition-Sexually" class="input-check" />
                                                         <label for="condition-Sexually"><img src="assets/Img/icon_alcohol.svg">Sexually Transmitted Disease</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Anemia" class="input-check" />
+                                                        <input type="checkbox" id="condition-Anemia" name="condition-Anemia" class="input-check" />
                                                         <label for="condition-Anemia"><img src="assets/Img/icon_alcohol.svg">Anemia</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Accidental" class="input-check" />
+                                                        <input type="checkbox" id="condition-Accidental" name="condition-Accidental" class="input-check" />
                                                         <label for="condition-Accidental"><img src="assets/Img/icon_alcohol.svg">Accidental injury</label>
                                                     </div>
                                                 </div>
@@ -487,11 +487,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="priorpolicies" value="yes">
+                                                  <input type="radio" id="priorpolicies" name="priorpolicies" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="priorpolicies" value="no" checked>
+                                                  <input type="radio" id="priorpolicies" name="priorpolicies" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -546,11 +546,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="citizenship" value="yes">
+                                                  <input type="radio" id="citizenship" name="citizenship" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="citizenship" value="no" checked>
+                                                  <input type="radio" id="citizenship" name="citizenship" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -605,11 +605,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="extraneousconditions" value="yes">
+                                                  <input type="radio" id="extraneousconditions" name="extraneousconditions" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="extraneousconditions" value="no" checked>
+                                                  <input type="radio" id="extraneousconditions" name="extraneousconditions" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -653,11 +653,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="preexistingconditions" value="Y" (change)="preexistingCondition('yes')" >
+                                                  <input type="radio" id="preexistingconditions" name="preexistingconditions" value="Y" (change)="preexistingCondition('yes')" >
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="preexistingconditions" value="No" (change)="preexistingCondition('no')" checked>
+                                                  <input type="radio" id="preexistingconditions" name="preexistingconditions" value="No" (change)="preexistingCondition('no')" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -766,7 +766,7 @@
                                       <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                           <div class="input-checkbox-block">
                                               <div class="input-checkbox-feild no-radius-checkbox">
-                                                  <input type="checkbox" id="nominee-spouse" value="" class="input-check">
+                                                  <input type="checkbox" id="nominee-spouse" name="nominee-spouse" value="" class="input-check">
                                                   <label for="nominee-spouse">Make your spouse a nominee</label>
                                               </div>
                                           </div>
@@ -785,13 +785,13 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="nomine-lname" name="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-lname">Last Name</label>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="date" id="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
+                                              <input type="date" id="nomine-dob" name="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-dob">DOB</label>
                                               <span class="ui-error" *ngIf="form?.get('nominee_dob')?.invalid && form?.get('nominee_dob')?.touched">
                                           Please enter DOB
@@ -817,7 +817,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="nomine-contactno" name="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-contactno">Nominee Contact No.</label>
                                               <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">
                                               Please enter Nominee contact no.
@@ -934,20 +934,20 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-radio-block raido_policyTenure ">
                                             <label class="input-radiolabel ">
-                                                <input type="radio" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" >
                                                 <span><em class="tenure-year">1 Year</em>
                                                     <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
-                                                <input type="radio" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" >
                                                 <span><em class="tenure-year">2 Years</em>
                                                     <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 7.5 off</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
-                                                <input type="radio" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" >
                                                 <span><em class="tenure-year">3 Years</em>
                                                 <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 10 off</em>
@@ -974,7 +974,7 @@
                                         <div class="input-checkbox-block checkbox_optionalCoverages">
                                            <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers?.productFeatures">
                                               <div *ngIf="cover.categoryName == 'Optional Covers'">
-                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check">
+                                                <input type="checkbox" [id]="cover.featureName" name="" [value]="cover.featureName" class="input-check">
                                                 <label [for]="cover.featureName">
                                                     <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
                                                     <em class="head">{{cover.featureName}}</em>
@@ -999,7 +999,7 @@
                                         <div class="input-checkbox-block checkbox_optionalCoverages checkbox_healthAddOns">
                                             <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers?.productFeatures">
                                               <div *ngIf="cover.categoryName == 'Health Add On'"> 
-                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" >
+                                                <input type="checkbox" [id]="cover.featureName" name="" [value]="cover.featureName" class="input-check" >
                                                 <label [for]="cover.featureName">
                                                     <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
                                                     <!-- <img src="assets/Img/icon_cancer_booster.svg" class="inactive"> -->
@@ -1018,7 +1018,7 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'payment'">
+      <div class="bodyColumns bodyColumnsCenter m-auto" *ngIf="activeSection === 'payment'">
         <div class="bcc_main">
             <div class="accordionMain">
                 <div class="accordionItem">
@@ -1069,19 +1069,19 @@
                                         <div class="row">
                                             <div class="raido_policyTenure raido_paymentType radio_format">
                                              <div class="input-radiolabel  col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Nach')" [ngClass]="{'active': selectedPaymentType == 'E-Nach'}">
-                                                 <input type="radio" name="paymentType" value="E - Nach">
+                                                 <input type="radio" id="paymentType" name="paymentType" value="E - Nach">
                                                  <span><em class="label">E - Nach</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Mandate')" [ngClass]="{'active': selectedPaymentType == 'E-Mandate'}">
-                                                 <input type="radio" name="paymentType" value="E - Mandate" >
+                                                 <input type="radio" id="paymentType" name="paymentType" value="E - Mandate" >
                                                  <span><em class="label">E - Mandate</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('Auto_Debit')" [ngClass]="{'active': selectedPaymentType == 'Auto_Debit'}">
-                                                 <input type="radio" name="paymentType" value="Auto Debit" >
+                                                 <input type="radio" id="paymentType" name="paymentType" value="Auto Debit" >
                                                  <span><em class="label">Auto Debit</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('offline')" [ngClass]="{'active': selectedPaymentType == 'offline'}">
-                                                <input type="radio" name="paymentType" value="Auto Debit" >
+                                                <input type="radio" id="paymentType" name="paymentType" value="Auto Debit" >
                                                 <span><em class="label">offline</em></span>
                                             </div>
                                             </div>
@@ -1144,7 +1144,7 @@
                                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                         <div class="ovd_uploadMain">
                                                             <h6>Upload CHQ/DD/NEFT Copy</h6>
-                                                            <div class="ovdUpload">Click here to upload<input type="file" class="input-upload" (change)="onFileSelected($event)"/></div>
+                                                            <div class="ovdUpload">Click here to upload<input type="file" id="file" name="file" class="input-upload" (change)="onFileSelected($event)"/></div>
                                                             <div class="upload-required-info">File size: max 2mb. In case of bank statement, it must be of last 3 months</div>
                                                             <div *ngIf="fileName" class="mt-2"><strong>Uploaded File:</strong> {{ fileName }}</div>
                                                         </div>
@@ -1340,7 +1340,7 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'kyc' ">
+      <div class="bodyColumns bodyColumnsCenter m-auto" *ngIf="activeSection === 'kyc' ">
         <div class="bcc_main">
             <div class="accordionMain">  
                 <div class="accordionItem">
@@ -1432,7 +1432,7 @@
                       <span class="label">
                       <div class="input-checkbox-block">
                           <div class="input-checkbox-feild">
-                              <input type="checkbox" id="health-return" value="healthreturn" class="input-check" checked>
+                              <input type="checkbox" id="health-return" name="health-return" value="healthreturn" class="input-check" checked>
                               <label for="health-return"></label>
                           </div>
                       </div>

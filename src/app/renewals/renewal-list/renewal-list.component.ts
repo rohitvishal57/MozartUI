@@ -45,6 +45,7 @@ export class RenewalListComponent {
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
+  currentDate = new Date().toISOString().split('T')[0];
 
   constructor(
     private renewalService: RenewalsService,private router: Router,private datePipe: DatePipe,

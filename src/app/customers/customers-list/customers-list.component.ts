@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, HostListener} from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { MatMenuTrigger } from '@angular/material/menu';
@@ -33,9 +33,10 @@ export class CustomersListComponent {
   placeholder:string='';
   agentCode :any =localStorage.getItem('agentCode'); 
   StaticPolicyTypes = [
-    { name: 'Individual', selected: false },
+    { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
+  currentDate = new Date().toISOString().split('T')[0];
   
   constructor(
     private customerService: CustomersService ,
@@ -122,11 +123,20 @@ export class CustomersListComponent {
       }
     })
   }
-  toggleFilterDropdown() {
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
     if(this.toggeleSearchdropdown==true){
        this.toggeleSearchdropdown=false;
     }
     this.toggeledropdown = !this.toggeledropdown;    
+  }
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    const clickedInside = (event.target as HTMLElement).closest('.filterWraperForm');
+    const clickedButton = (event.target as HTMLElement).closest('.jsFilterBtnClick');
+    if (!clickedInside && !clickedButton && this.toggeledropdown) {
+      this.toggeledropdown = false;
+    }
   }
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(

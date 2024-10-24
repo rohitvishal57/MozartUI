@@ -559,10 +559,10 @@ getRenewalInfo() {
       const requestBody = {
         policyNumber: this.policyNumber,fullName: '',  
         panNumber: '', dob: '', pepCheck: ''
+        ,businessType: "ren"
       };
       this.renewalService.getkycURL(requestBody, { responseType: 'text' }).subscribe(
         (response) => {
-          console.log('Success:', response);
           this.kycLink = response;
         },
         error => {

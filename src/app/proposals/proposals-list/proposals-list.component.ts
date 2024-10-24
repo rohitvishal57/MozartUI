@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { ProposalList } from 'src/app/interface/proposals.interface';
@@ -59,6 +59,7 @@ export class ProposalsListComponent {
   formSequence: any[] = [];
   allJsonFormData: any[] = []
   formData: any = {}
+  currentDate = new Date().toISOString().split('T')[0];
 
   constructor(
     private proposalService: ProposalsService,
@@ -132,8 +133,17 @@ export class ProposalsListComponent {
       }
     })
   }
-  toggleFilterDropdown() {
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
     this.toggeledropdown = !this.toggeledropdown;    
+  }
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    const clickedInside = (event.target as HTMLElement).closest('.filterWraperForm');
+    const clickedButton = (event.target as HTMLElement).closest('.jsFilterBtnClick');
+    if (!clickedInside && !clickedButton && this.toggeledropdown) {
+      this.toggeledropdown = false;
+    }
   }
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(
