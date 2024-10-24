@@ -719,7 +719,7 @@ export class YatraComponent {
 
         }
         if (control.type === 'subtabview') {
-          control.tabs.forEach(element => {
+          control.tabs?.forEach(element => {
             // this.callMethod(control.methodName, control);
             const controlGroup = this.fb.group({});
             element.selectCheckboxOptions?.forEach(option => {
