@@ -86,6 +86,7 @@ export interface IFormControl {
   details?: any;
   button?:any;
   icon?:string;
+  imageUrl?:string;
 }
 export interface ISubControl {
   name: string;

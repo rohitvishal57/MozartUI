@@ -23,7 +23,7 @@
                     <div class="body_flex_row claims_searchWraper">
                         <div class="field_searchMain">
                             <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)">
-                                <option value="" disabled selected>Select an option</option>
+                                <option value="">Select an option</option>
                                 <option value="caseId">Request ID</option>
                                 <option value="memberName">Member Name</option>
                                 <option value="policyNumber">Policy Number</option>
@@ -38,54 +38,52 @@
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
                                     <header>Filter</header>
-                                    <button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
-                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                    </button>
+                                    <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
-                            <div class="fw_formBody"> 
-                                <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
-                                    <h6>Products</h6>
-                                    <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                <label for="product{{i}}">{{product.productName}}</label>
+                                <div class="fw_formBody"> 
+                                    <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
+                                        <h6>Products</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                    <label for="product{{i}}">{{product.productName}}</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- <div class="fw_formRow">
-                                    <h6>Request Type</h6>
-                                    <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
-                                            <div class="input-checkbox-feild">
-                                              <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                              <label for="policytype{{i}}">{{policyType.name}}</label>
+                                    <!-- <div class="fw_formRow">
+                                        <h6>Request Type</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                <label for="policytype{{i}}">{{policyType.name}}</label>
+                                                </div>
+                                            </div>                                              
+                                        </div>
+                                    </div> -->
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="input-block input-block-dob">
+                                                <label>From Date</label>
+                                                <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (change)="formatDate('fromDate')" [max]="maxDate">
+                                                <span class="ui-error">Please enter start date</span>
                                             </div>
-                                          </div>                                              
-                                    </div>
-                                </div> -->
-                                <div class="row">
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="input-block input-block-dob">
-                                        <label>From Date</label>
-                                        <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')">
-                                        <span class="ui-error">Please enter start date</span>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="input-block input-block-dob">
-                                        <label>To Date</label>
-                                        <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')">
-                                        <span class="ui-error">Please enter end date</span>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="input-block input-block-dob">
+                                                <label>To Date</label>
+                                                <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (change)="formatDate('toDate')" [max]="maxDate">
+                                                <span class="ui-error">Please enter end date</span>
+                                            </div>
+                                        </div>
+                                        <footer>
+                                            <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                            <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                        </footer>
                                     </div>
                                 </div>
-                                <footer>
-                                    <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
-                                </footer>
-                                </div>
-                            </div>
                             </div>
                         </div>
                     </div>
@@ -100,11 +98,11 @@
                         <table class="table table-borderless table-search">
                           <thead>
                             <tr>
-                                <th scope="col">Request</th>
+                                <th scope="col" >Request</th>
                                 <th scope="col">Policy No.</th>
                                 <th scope="col">Product Name</th>
                                 <th scope="col">Member Name</th>
-                                <th scope="col">Member Relation</th>
+                                <!--<th scope="col">Member Relation</th>-->
                                 <th scope="col">Request Type</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Raised Date</th>
@@ -116,10 +114,10 @@
                             <tr *ngFor="let row of endorsementDetails; let i = index"
                     class="table-values">
                                 <td class="td-text-bold">{{ row?.caseId }}</td>
-                                <td>{{ row?.policyNumber }}</td>
+                                <td >{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
                                 <td><span class="text-break-w100">{{ row?.memberName }}</span></td>
-                                <td align="center">{{ row?.memberRelation }}</td>
+                                <!--<td align="center">{{ row?.memberRelation }}</td>-->
                                 <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
                                 <td align="center">{{ row?.status }}</td>
                                 <td>{{ row?.raisedOn }}</td>

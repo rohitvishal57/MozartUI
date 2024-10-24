@@ -123,4 +123,9 @@ export class YatraService {
     const paymentRedirection= this.configService.config.baseUrl+this.configService.config.justPayRedirection;
     return this.httpService.post(paymentRedirection,reqData);
   }
+
+  submitFeedback(reqData:any){
+    const feedbackServiceURL = this.configService.config.baseUrl+this.configService.config.addfeedback;
+    return this.httpService.post(feedbackServiceURL,reqData);
+  }
 }

@@ -14,6 +14,8 @@
     "getproductdetailsandfeatures":"renewal/api/getproductdetailsandfeatures",
     "getSubquotes":"renewal/api/getsubquotes",
     "updateMemberDetails":"renewal/api/UpdateMemberDetails",
+    "kycUpdate":"/renewal/api/kycUpdate",
+    "getkycURL":"quote/api/getkycURL",
 
     "getLeadsListApi":"yatra/api/getleaddetailslist",
     "getActiveCampaignDetails":"yatra/api/getactivecampaignsdetails",
@@ -24,13 +26,17 @@
     "referencestatus":"yatra/api/referencestatus",
     "updatestatus":"yatra/api/updatestatus",
     "getduplicateLead":"yatra/api/getduplicateLead",
+    "getPaymentStatus":"yatra/api/paymentstatus",
 
     "assineLead":"yatra/api/LeadAssigne",
     "getMyReportingUsers": "yatra/api/getmyreportingusers",
     "fetchActivityType":"yatra/api/fetchactivitytype",
     "getProposalListApi":"yatra/api/getproposallist",
     "getCustomerDetailsList":"yatra/api/getCustomerDetailsList",
+    "sendCustomerDetails":"yatra/api/Communication/api/updateCustomerDetails",
+    "download":"yatra/api/downloadcustomer",
     "addLeadNotes":"yatra/api/addnotes",
+    "addfeedback":"yatra/api/feedback",
     "getClaimsList":"claims/api/getclaimlist", 
     "getProposalDetails":"claims/api/getproposaldetails?AgentCode",
     "saveClaims":"claims/api/saveclaim",
@@ -42,6 +48,13 @@
     "getClaimsDetails":"claims/api/getclaimdetails",
     "getHospitals":"claims/api/gethospitaldetails",
     "getClaimStatus":"claims/api/getclaimstatus",
+    "getClaimTracker":"claims/api/getclaimtracker",
+
+
+    "getPerformanceDetails":"yatra/api/getPerformanceDetails",
+    "getPerformanceDetailedViewList":"yatra/api/getPerformanceDetailedViewList",
+    "getPerformanceDetailedViewLatestCount":"yatra/api/getPerformanceDetailedViewLatestCount",
+    "uploadAgencyPerformance":"yatra/api/UploadAgencyPerformance",
 
     "partnerlogin":"auth/api/login",
     "validateadfstoken":"auth/api/validateadfstoken?Idtoken=",

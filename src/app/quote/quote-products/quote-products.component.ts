@@ -51,6 +51,7 @@ export class QuoteProductsComponent implements OnInit {
   isOverlayVisible = false;
   popIndex: any
   selectedAddons: string[] = [];
+  selectedPlanIndex: any;
 
   constructor(private quoteService: QuoteService, private router: Router, private toast: NgToastService,
     private service: CommonService, private encryptionService: EncryptionService, private spinner: NgxSpinnerService,
@@ -190,7 +191,7 @@ export class QuoteProductsComponent implements OnInit {
     item.tenureAmounts = [];
     this.formData = {
       ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount,
-      firstName: this.formData.proposerName, quoteId:item.quoteNumber
+      firstName: this.formData.proposerName, quoteId:item.quoteNumber, tenure : this.selectedPlanIndex + ' years'
     }
     console.log(this.formData);
     try {
@@ -207,7 +208,8 @@ export class QuoteProductsComponent implements OnInit {
         productId: item.productId,
         tenureAmounts: item.tenureAmounts,
         selectedAddons: item.selectedAddons,
-        proposalNum:this.proposalNum
+        proposalNum:this.proposalNum,
+        tenure: this.selectedPlanIndex
       }
       sessionStorage.setItem("isQuote", true.toString());
       console.log(productData)
@@ -224,9 +226,11 @@ export class QuoteProductsComponent implements OnInit {
   async addToCart(item: any) {
     item.tenureAmounts = [];
     console.log(item);
-    const selectedPlanIndex = this.selectedPlans[this.ProductList.indexOf(item)];
-    const selectedPremiumKey = `tenure${selectedPlanIndex}Premium`;
-    const QuoteNumber = `tenure${selectedPlanIndex}QuoteNumber`
+    this.selectedPlanIndex = this.selectedPlans[this.ProductList.indexOf(item)];
+    console.log(this.selectedPlanIndex);
+    
+    const selectedPremiumKey = `tenure${this.selectedPlanIndex}Premium`;
+    const QuoteNumber = `tenure${this.selectedPlanIndex}QuoteNumber`
     for (let i = 1; i <= 3; i++) {
       const premiumKey = `tenure${i}Premium`;
       console.log(item[premiumKey]);
@@ -234,7 +238,6 @@ export class QuoteProductsComponent implements OnInit {
     }
     item.selectedPremiumAmount = item[selectedPremiumKey];
     item.QuoteNumber = item[QuoteNumber];
-    console.log(item);
     console.log(item);
 
     await this.getProposalNum();
@@ -394,6 +397,8 @@ export class QuoteProductsComponent implements OnInit {
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
+        console.log(reqdata);
+        
         // Proceed with deletion if confirmed
         this.quoteService.deleteagentcartitems(reqdata).subscribe({
           next: (res) => {
@@ -410,9 +415,9 @@ export class QuoteProductsComponent implements OnInit {
       }
     });
   }
-  deleteallcartitems(){
+  async deleteallcartitems(){
     const list:any=[];
-    this.cartProductList.forEach((item:any)=>{
+    await this.cartProductList.forEach((item:any)=>{
       list.push(item.id)
     })
     this.deleteagentcartitems(list);

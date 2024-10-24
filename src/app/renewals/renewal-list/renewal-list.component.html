@@ -37,14 +37,11 @@
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
                                     <header>Filter</header>
-                                    <!--<button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
-                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                    </button>-->
                                     <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">

@@ -380,6 +380,14 @@
       }
     }
   }
+  .btn_campaignPerformance .btn_grid {
+    border-radius: 20px;
+    font-size: 12px;
+    padding: 4px 12px;
+    &.active, &:hover {
+      color: #ffffff;
+    }
+  }
   /*-----Claims Details start-----*/
   .table>:not(caption)>*>* {
     background-color: inherit;

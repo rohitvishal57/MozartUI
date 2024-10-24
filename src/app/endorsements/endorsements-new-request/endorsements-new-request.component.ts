@@ -312,8 +312,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
       (err) => {
         console.log(err);
       });
-    // this._baseService.getReq(environment.baseURL + environment.api_URLs.user.validateToken + "?token=" + token + "&source=SELLER&action=" + action, this.authenticationEvent.ValidateToken);
   }
+  
+  onKeyDown(event: KeyboardEvent) {
+    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+    const regex = /^[0-9-]$/; // Allow only numbers and hyphens
+
+    // Allow backspace and other special keys
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+    // Prevent default if the key is not allowed
+    if (!regex.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
   validateNumberInput(event: any): void {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(/[^0-9]/g, '');  // Remove non-numeric characters
@@ -327,8 +341,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
       return arr.map((mapObj:any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
     });
   }
-  onChange(event:any) {
-    const value = event.target.value;
+
+  onChange(value: string) {
     // this.caseCreationForm.get('endorsementType').reset();
     this.caseCreationForm.get('asignedTeam').reset();
     this.caseCreationForm.get('member').reset();
@@ -343,13 +357,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if(value == ""){
       this.caseCreationForm.get('policyNumber').reset();
     }
-
-    // Reset filteredActivity to display all policy numbers again after each selection
-    this.filteredActivity = this.caseCreationForm.controls['policyNumber'].valueChanges.pipe(
-      startWith(''),
-      map((val: any) => this.activityList.slice())  // Ensure full list is restored
-    );
   }
+
   getActivityType(content = null) {
     this.activityList = this.policiesListData;
     this.filteredActivity = this.caseCreationForm.controls['policyNumber'].valueChanges.pipe(
@@ -401,9 +410,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.aadharCradNo);
     }
     if (value == 'ChangeinInternationalAddress') {
-      this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]);
+      this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$'), Validators.maxLength(250)]);
       this.caseCreationForm.get('address1').updateValueAndValidity();
-      this.caseCreationForm.get('address2').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]);
+      this.caseCreationForm.get('address2').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$'), Validators.maxLength(250)]);
       this.caseCreationForm.get('address2').updateValueAndValidity();
       this.caseCreationForm.get('pincode').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]);
       this.caseCreationForm.get('pincode').updateValueAndValidity();
@@ -608,7 +617,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         ModifiedOn: null,
         NotesDescription: null,
         NotesTitle: null,
-        Origin: "DE-ABHICONNECT",
+        Origin: "USP-ABHICONNECT",
         Policy: this.caseCreationForm.get("policyNumber").value,
         PolicyStatus: null,
         Priority: null,

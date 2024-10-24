@@ -1,4 +1,4 @@
-import { Component  } from '@angular/core';
+import { Component, HostListener  } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
@@ -8,6 +8,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
+import { EncryptionService } from 'src/app/services/encryption.service';
 
 
 @Component({
@@ -46,11 +47,8 @@ export class RenewalListComponent {
   ];
 
   constructor(
-    private renewalService: RenewalsService,
-    private router: Router,
-    private datePipe: DatePipe,
-    private commonService:CommonService,
-    private toast: NgToastService
+    private renewalService: RenewalsService,private router: Router,private datePipe: DatePipe,
+    private commonService:CommonService,private toast: NgToastService,private encryptionService: EncryptionService
   ) {}
 
   renewalLisRequestBody={
@@ -96,7 +94,7 @@ export class RenewalListComponent {
         }
       },
       (error) => {
-        this.toast.error({ detail: "Error", summary: "Error while generating Subquotes List.", duration: 1500 });
+        this.toast.error({ detail: "Error", summary: "Error while generating Renewal List.", duration: 1500 });
         console.error("Error from getRenewalsList API:", error);
       }
     );
@@ -135,7 +133,8 @@ export class RenewalListComponent {
       }
     })
   }
-  toggleFilterDropdown() {
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
     this.toggeledropdown = !this.toggeledropdown;    
   }
   calculateAppliedFiltersCount() {
@@ -360,8 +359,9 @@ export class RenewalListComponent {
   }
   renewalJourney(proposerDetail : RenewalList) {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
-    // this.renewalService.setPolicyState(proposerDetail.policyNumber, this.activeSection);
-    this.router.navigate([`renewals/renewalDynamicForm/${proposerDetail.policyNumber}/${this.activeSection}`]);
+    sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
+    sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(this.activeSection));
+    this.router.navigate([`renewal/payment`]);
   }
   getStarClasses(index: number, rating: number): string[] {
     const starClasses = ['star'];
@@ -385,6 +385,14 @@ export class RenewalListComponent {
       return 'gold-color';
     } else {
       return 'green-color';
+    }
+  }
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    const clickedInside = (event.target as HTMLElement).closest('.filterWraperForm');
+    const clickedButton = (event.target as HTMLElement).closest('.jsFilterBtnClick');
+    if (!clickedInside && !clickedButton && this.toggeledropdown) {
+      this.toggeledropdown = false;
     }
   }
   ngOnDestroy(): void {

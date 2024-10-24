@@ -38,13 +38,24 @@ export class ClaimsListViewComponent implements OnInit {
   fromDate: any;
   toDate: any;
   appliedFiltersCount: number = 0;
-  productsList: any[] = [];
   requestTypes: any[] = [];
+  maxDate: string | undefined;
+  isSearch:boolean = false;
+  productsList:any;
   agentCode = localStorage.getItem('agentCode')
   StaticRequestTypes = [
     { name: 'Cashless', selected: false },
     { name: 'Reimbursement', selected: false },
   ];
+  // statuses = [
+  //   { name: 'Intimated', selected: false },
+  //   { name: 'Inward Completed	', selected: false },
+  //   { name: 'RI Registration Raised', selected: false},
+  //   { name: 'Approved', selected: false},
+  //   { name: 'Scanning Completed', selected: false},
+  //   { name: 'Cancelled', selected: false}
+
+  // ]
   
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
 
@@ -75,6 +86,8 @@ onPageChange(event:any) {
     this.first = event.first;
     this.rows = event.rows;
     this.page = Math.floor(this.first/this.rows)+1
+    this.isSearch = false;
+    this.fetchData();
 }
 
 getFromDate(event:any){
@@ -89,21 +102,31 @@ getToDate(event:any){
 claimsReqBody =  {
     "sellerId": this.agentCode,
     "sortColumn": "ReportedDateTime",
-    "sortdirection": "ASC",
+    "sortdirection": "DESC",
     "status": "",
     "requestType": "",
     "searchType": "",
-    "searchString": "",
-    "pageNumber": 1,
-    "pageSize": 270,
+    "searchString": [""],
+    "start": 1,
+    "pageSize": 10,
     "fromDate": null,
     "toDate": null
   }
+
 fetchData(): void {
+  if (!this.isSearch) {
+    this.claimsReqBody.start = (this.page - 1) * this.rows;
+    this.claimsReqBody.pageSize = this.rows;
+  } else {
+    this.claimsReqBody.start = 0;
+  }
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
-    this.claims = res.data;       
-    this.gridClaimsData = res.data; 
-    this.totalRecords = this.claims.length;    
+    this.claims = res.claimDetails;      
+   // this.productsList = res.claimDetails 
+    console.log(this.productsList);
+    
+    this.gridClaimsData = res.claimDetails; 
+    this.totalRecords = res.totalRecords;    
   });
   }
 
@@ -113,38 +136,26 @@ fetchData(): void {
     } else if (dateType === "toDate" && this.toDate) {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
+    if(this.toDate < this.fromDate) {
+      this.toDate = "";
+    }
   }
+
   toggleFilterDropdown() {
     if(this.toggeleSearchdropdown==true)
     {
        this.toggeleSearchdropdown=false;
     }
-    this.toggeledropdown = !this.toggeledropdown;    
+    this.toggeledropdown = !this.toggeledropdown;   
+    this.maxDate = new Date().toISOString().split('T')[0];  
+ 
   }
 
-  getProducts() {
-    const reqData={
-      "agentCode": this.agentCode
-    }
-    this.commonService.Getproductlist(reqData).subscribe({
-      next: (res) => {
-        this.productsList = res.data;
-        console.log("product list",this.productsList)
-        const uniqueRequestTypes = Array.from(new Set(this.productsList
-         .map((product) => product.familyPlan)))
-         .map((requestType) => ({ name: requestType, selected: false }));
-         this.requestTypes = uniqueRequestTypes;
-      },
-      error: (err) => {
-         console.log("error coming form getproduct list API");
-      }
-    })
-  }
   calculateAppliedFiltersCount(){
     const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
       (requestType) => requestType.selected).length;
       const selectedProductsCount = this.productsList.filter(
-        (product) => product.selected).length;
+        (product:any) => product.selected).length;
         let count = selectedPolicyTypesCount + selectedProductsCount;
         if (this.fromDate && this.toDate) {
           count++;
@@ -153,8 +164,30 @@ fetchData(): void {
          this.appliedFiltersCount;
   }
 
+  getProducts() {
+    this.agentCode =  localStorage.getItem("agentCode");
+    const reqData={
+      "agentCode": this.agentCode
+    }
+    this.commonService.Getproductlist(reqData).subscribe({
+      next: (res:any) => {
+        this.productsList = res.data;
+        console.log("product list",this.productsList)
+        const uniqueRequestTypes = Array.from(new Set(this.productsList
+         .map((product:any) => product.familyPlan)))
+         .map((requestType) => ({ name: requestType, selected: false }));
+         this.requestTypes = uniqueRequestTypes;
+      },
+      error: (err:any) => {
+         console.log("error coming form getproduct list API");
+      }
+    })
+  }
+
   applyFilter() {
-    this.calculateAppliedFiltersCount();
+    this.selected = "";
+    this.searchInputControl.reset();
+  this.calculateAppliedFiltersCount();
   this.formatDate("fromDate");
   this.formatDate("toDate");
   this.claimsReqBody.fromDate=this.fromDate;
@@ -163,10 +196,17 @@ fetchData(): void {
   .filter((requestType:any) => requestType.selected)
   .map((requestType:any) => requestType.name);
   this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
-  this.fetchData();
-  this.getProducts();
-  this.toggeledropdown=false;
+
+  const selectedProducts = this.productsList.filter((searchType: any) => searchType.selected)
+  .map((searchType: any) => searchType.productName);
+if(selectedProducts.length > 0) {
+  this.claimsReqBody.searchType = "productName";
+  this.claimsReqBody.searchString = selectedProducts;
 }
+this.getProducts();
+this.fetchData();
+this.toggeledropdown=false;
+  }
 
 cancel() {
   this.fromDate = null;
@@ -178,7 +218,7 @@ cancel() {
 }
 
 clear(){
-  this.productsList.forEach((product) => (product.selected = false));
+  this.productsList.forEach((product:any) => (product.selected = false));
   this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
   this.fromDate = null;
   this.toDate = null;
@@ -202,27 +242,11 @@ clear(){
     let searchValue = this.searchInputControl.value?.trim();
     if (searchValue) {
       this.claimsReqBody.searchType = this.selected;
-      this.claimsReqBody.searchString = searchValue;
-
-      this.fetchData();
-     // this.toggleSearchdropdown = false;
-    //  this.claimsReqBody.searchType = '';
-      this.claimsReqBody.searchString = '';
-      console.log('searchvalue', this.claimsReqBody.searchString);
-      console.log('searchtype', this.claimsReqBody.searchType);    
+      this.claimsReqBody.searchString = [searchValue];    
     }
-    else if(searchValue === ''){  
-      this.selected = '';
-      this.searchInputControl.setValue('');
-      this.claimsReqBody.searchType = '';
-      this.claimsReqBody.searchString = '';
-      this.fetchData();      
-    }
-    else{
-      this.fetchData();
-    }
-    this.selected = '';
-    this.searchInputControl.reset();
+    this.isSearch = true;
+    this.fetchData();
+    
   }
 
 onSelectChanges(event: any): void {
@@ -231,12 +255,21 @@ onSelectChanges(event: any): void {
   this.searchInputControl.setValue('');
   this.searchInputControl.clearValidators();
 
-  if (this.selected === 'policyNumber' || this.selected === 'productName' || this.selected === 'requestType') {
+  // if (this.selected === 'mobileNumber') {
+  //   this.searchInputControl.setValidators([
+  //     Validators.required,
+  //     Validators.pattern('^[0-9]*$') 
+  //   ]);
+  // }
+   if (this.selected === 'claimInfoId' || this.selected === 'policyNumber' || this.selected === 'memberId') {
     this.searchInputControl.setValidators([
       Validators.required,
-      Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$')
+      Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
     ]);
-  }    
+  }
+  else if(this.selected === 'refreshData'){
+    this.fetchData();
+  }
     this.searchInputControl.updateValueAndValidity();
     this.searchInputControl.markAsUntouched(); 
   }
@@ -244,11 +277,16 @@ onSelectChanges(event: any): void {
 getPlaceholder(): string {
   if (this.selected === 'policyNumber') {
       return 'Enter Policy Number';
-    } else if (this.selected === 'productName') {
-      return 'Enter Product Name';
-    } else if (this.selected === 'requestType') {
-      return 'Enter Request Type';
+    } else if (this.selected === 'claimInfoId') {
+      return 'Enter Request ID';
+    } else if (this.selected === 'memberId') {
+      return 'Enter Member ID';
     }
+    //  else if (this.selected === 'mobileNumber') {
+    //   return 'Enter Mobile Number';
+    // } else if (this.selected === 'memberId') {
+    //   return 'Enter Member Id';
+    // }
   else {
       return 'Search...';
     }

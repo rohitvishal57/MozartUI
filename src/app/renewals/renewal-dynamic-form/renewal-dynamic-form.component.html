@@ -1,31 +1,30 @@
 <div class="siteBody siteBody_renewJourney">
-  <div class="contentBody bodyColumns-3 alignCenter" *ngIf="submit">
-      <div class="class=bodyColumns bodyColumnsLeft" *ngIf="hideSection && activeSection != 'kyc'">
+  <div class="contentBody bodyColumns-3" *ngIf="submit">
+      <div class="bodyColumns bodyColumnsLeft" *ngIf="hideSection && activeSection != 'kyc'">
           <div class="bcl_main">
-              <div>Select from any customisation below</div>
+              <h3>Select from any customisation below</h3>
               <div class="processBtnGroup">
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'primary', 'active-green': activeSection === 'additional' || activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc' }" (click)="setSection('primary')">
-                      <div><i class="fa-solid fa-users"></i></div>
-                      <div>Primary</div>
-                  </div>
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'additional', 'active-green': activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc'}" (click)="setSection('additional')">
-                      <div><i class="fa-solid fa-square-plus"></i></div>
-                      <div>Additional</div>
-                  </div>
-                  <div class="left-cnt-btn" [ngClass]="{ 'active-red': activeSection === 'payment' ||  activeSection === 'policySummary' || activeSection === 'kyc'}" (click)="setSection('policySummary')">
-                      <div><i>₹</i></div>
-                      <div>Payment</div>
-                  </div>
-              </div>
+                <button type="button" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('primary')">
+                    <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                    <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">Primary
+                </button>
+                <button type="button" value="primary" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
+                    <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['payment', 'policySummary', 'kyc','additional'].includes(activeSection)}">
+                    <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'additional', 'block-hide': activeSection !== 'additional'}">
+                    <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Additional
+                </button>            
+                <button type="button" value="primary" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
+                    <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': !['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                    <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Payment
+                </button>
+            </div>
           </div>
       </div>
       <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'primary'">
           <div class="bcc_main">
               <div class="accordionMain">
                   <div class="accordionItem" *ngIf="formId == 5001">
-                      <header>Proposer
-                          <!-- <button type="button" value="sectionedit" class="btn_editRed"></button> -->
-                      </header>
+                      <header>Proposer</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="data-row" *ngIf="renewalInfo?.response?.policyData?.length > 0">
@@ -101,7 +100,7 @@
                                           </div>
                                           <div class="data-item data-item-20">
                                               <label>Cover</label>
-                                              <h6>₹ {{ member.SumInsured }}</h6>
+                                              <h6>₹ {{ member.SumInsured | number:'1.0-0' }}</h6>
                                           </div>
                                           <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5002,'editMember',i)">
                                               <button type="button" value="dataedit" class="btn_editGrey"></button>
@@ -114,8 +113,7 @@
                       </div>
                   </div>
                   <div class="accordionItem" *ngIf="formId == 5001">
-                      <header>Nominee Details
-                      </header>
+                      <header>Nominee Details</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="detailsRow">
@@ -147,28 +145,27 @@
                       </div>
                   </div>
                   <div class="accordionItem" *ngIf="formId == 5001">
-                    <header>Bank Account Details
-                    </header>
+                    <header>Bank Account Details</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
-                                <div class="detailsHeading">xbebnepiyd</div>
+                                <div class="detailsHeading"></div>
                                 <div class="data-row">
                                     <div class="data-item data-item-28">
                                         <label>Account No</label>
-                                        <h6>695874987924</h6>
+                                        <h6></h6>
                                     </div>
                                     <div class="data-item data-item-20">
                                         <label>Bank Name</label>
-                                        <h6>Indian Bank</h6>
+                                        <h6></h6>
                                     </div>
                                     <div class="data-item data-item-20">
                                         <label>IFSC Code</label>
-                                        <h6>HDVJ867979Hj</h6>
+                                        <h6></h6>
                                     </div>
                                     <div class="data-item data-item-20">
                                         <label>Bank Branch Name</label>
-                                        <h6>Telangana</h6>
+                                        <h6></h6>
                                     </div>
                                     <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5006,'editBankDetails')">
                                         <button type="button" value="dataedit" class="btn_editGrey"></button>
@@ -205,7 +202,7 @@
                                                 <option value="Daughter">Daughter</option>
                                             </select>
                                             <label for="Relation">Relation</label>
-                                            <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span>
+                                            <span class="ui-error" *ngIf="form.get('Relation')?.invalid && (form?.get('Relation')?.touched || memberDetails)">Please Select Relation</span>
                                         </div>
                                     </div>
                                   </div>
@@ -214,7 +211,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="FirstName" name="FirstName" formControlName="FirstName" placeholder="" class="form-control input-textBox">
                                             <label for="FirstName">First Name</label>
-                                            <span class="ui-error" *ngIf="form?.get('FirstName')?.invalid && form?.get('FirstName')?.touched">
+                                            <span class="ui-error" *ngIf="form?.get('FirstName')?.invalid && (form?.get('FirstName')?.touched || memberDetails)">
                                             Please enter First Name
                                         </span>
                                         </div>
@@ -232,7 +229,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="LastName" name="LastName" formControlName="LastName" placeholder="" class="form-control input-textBox">
                                             <label for="LastName">Last Name</label>
-                                            <span class="ui-error" *ngIf="form?.get('LastName')?.invalid && form?.get('LastName')?.touched">
+                                            <span class="ui-error" *ngIf="form?.get('LastName')?.invalid && (form?.get('LastName')?.touched || memberDetails)">
                                             Please enter Last Name
                                         </span>
                                         </div>
@@ -241,7 +238,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="height" formControlName="height" placeholder="" class="form-control input-textBox">
                                             <label for="height">Height</label>
-                                            <span class="ui-error" *ngIf="form.get('height')?.invalid && form.get('height')?.touched">Please enter height</span>
+                                            <span class="ui-error" *ngIf="form.get('height')?.invalid && (form.get('height')?.touched || memberDetails)">Please enter height</span>
                                             <span class="ui-prefix">cms</span>
                                         </div>
                                       </div>
@@ -249,7 +246,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="weight" formControlName="weight" placeholder="" class="form-control input-textBox">
                                               <label for="weight">Weight</label>
-                                              <span class="ui-error" *ngIf="form.get('weight')?.invalid && form.get('weight')?.touched">Please enter weight</span>
+                                              <span class="ui-error" *ngIf="form.get('weight')?.invalid && (form.get('weight')?.touched   || memberDetails)">Please enter weight</span>
                                               <span class="ui-prefix">kg</span>
                                           </div>
                                       </div>
@@ -262,46 +259,26 @@
                                                   <option value="O">Other</option>
                                               </select>
                                               <label for="gender">Gender</label>
-                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && form.get('Gender')?.touched">Please select gender</span>
+                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">Please select gender</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="date" id="dob" formControlName="DoB" placeholder="" class="form-control input-textBox">
                                               <label for="dob">Date of birth</label>
-                                              <span class="ui-error" *ngIf="form.get('DoB')?.invalid && form.get('DoB')?.touched">Please enter date of birth</span>
+                                              <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">Please enter date of birth</span>
                                           </div>
                                       </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                          <div class="input-block form-floating input-block-renew">
-                                              <select id="Idtype" name="Idtype" formControlName="IdProof" placeholder="" class="form-select input-selectBox">
-                                                  <option value="" disabled selected>Select ID type</option>
-                                                  <option value="aadhaar">Aadhaar</option>
-                                                  <option value="pan">PAN</option>
-                                              </select>
-                                              <label for="Idtype">ID type</label>
-                                              <span class="ui-error" *ngIf="form.get('IdProof')?.invalid && form.get('IdProof')?.touched">Please select ID</span>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="idtype" name="idtype" formControlName="IdProofNumber" placeholder="" class="form-control input-textBox">
-                                            <label for="idtype">ID Number</label>
-                                            <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="number" id="Mobile_Number" name="Mobile_Number" formControlName="Mobile_Number" placeholder="" class="form-control input-textBox">
                                             <label for="Mobile_Number">Mobile Number</label>
-                                            <span class="ui-error">Please enter Mobile Number</span>
                                         </div>
                                       </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="email" id="Email" name="Email" formControlName="Email" placeholder="" class="form-control input-textBox">
                                             <label for="Email">Email Address</label>
-                                            <span class="ui-error">Please enter Email Address</span>
                                         </div>
                                       </div>
                                   </div>
@@ -330,10 +307,10 @@
                                                   <option value="1000000">5L to 10L</option>
                                                   <option value="1500000">10L to 15L</option>
                                                   <option value="2000000">15L to 10L</option>
-                                                  <option value=">20L"> >20L</option>
+                                                  <option value="2500000"> >20L</option>
                                               </select>
                                               <label for="air">Annual income range</label>
-                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && form.get('AnnualIncome')?.touched">Please select annual income range</span>
+                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && (form.get('AnnualIncome')?.touched || memberDetails)">Please select annual income range</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -347,7 +324,7 @@
                                                   <option value="Self Employed">Self Employed</option>
                                               </select>
                                               <label for="occupation">Occupation</label>
-                                              <span class="ui-error" *ngIf="form.get('occupation')?.invalid && form.get('occupation')?.touched">Please select occupation</span>
+                                              <span class="ui-error" *ngIf="form.get('occupation')?.invalid && (form.get('occupation')?.touched || memberDetails)">Please select occupation</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -532,7 +509,7 @@
                                                   <option value="Daughter">Daughter</option>
                                               </select>
                                               <!--<label for="pp-son">Gender</label>-->
-                                              <span class="ui-error">Please select Relation</span>
+                                              <!-- <span class="ui-error">Please select Relation</span> -->
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
@@ -543,21 +520,21 @@
                                                   <option value="2"></option>
                                               </select>
                                               <label for="pp-benefit">Benefit type</label>
-                                              <span class="ui-error">Please select Benefit type</span>
+                                              <!-- <span class="ui-error">Please select Benefit type</span> -->
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="pp-policynumber" name="pp-policynumber" placeholder="" class="form-control input-textBox">
                                               <label for="pp-policynumber">Policy Number</label>
-                                              <span class="ui-error">Please enter Policy Number</span>
+                                              <!-- <span class="ui-error">Please enter Policy Number</span> -->
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="pp-sumassured" name="pp-sumassured" placeholder="" class="form-control input-textBox">
                                               <label for="pp-sumassured">Sum assured</label>
-                                              <span class="ui-error">Please enter Sum assured</span>
+                                              <!-- <span class="ui-error">Please enter Sum assured</span> -->
                                           </div>
                                       </div>
                                   </div>
@@ -591,7 +568,7 @@
                                                 <option value="Daughter">Daughter</option>
                                             </select>
                                               <!--<label for="citizenship-son">Gender</label>-->
-                                              <span class="ui-error">Please select Relation</span>
+                                              <!-- <span class="ui-error">Please select Relation</span> -->
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
@@ -602,21 +579,21 @@
                                                   <option value="2"></option>
                                               </select>
                                               <label for="citizenship-benefit">Benefit type</label>
-                                              <span class="ui-error">Please select Benefit type</span>
+                                              <!-- <span class="ui-error">Please select Benefit type</span> -->
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="citizenship-policynumber" name="citizenship-policynumber" value="" placeholder="" class="form-control input-textBox">
                                               <label for="citizenship-policynumber">Policy Number</label>
-                                              <span class="ui-error">Please enter Policy Number</span>
+                                              <!-- <span class="ui-error">Please enter Policy Number</span> -->
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="citizenship-sumassured" name="citizenship-sumassured" placeholder="" class="form-control input-textBox">
                                               <label for="citizenship-sumassured">Sum assured</label>
-                                              <span class="ui-error">Please enter Sum assured</span>
+                                              <!-- <span class="ui-error">Please enter Sum assured</span> -->
                                           </div>
                                       </div>
                                   </div>
@@ -650,7 +627,7 @@
                                                 <option value="Daughter">Daughter</option>
                                             </select>
                                               <!--<label for="extraneous-son">Gender</label>-->
-                                              <span class="ui-error">Please select Relation</span>
+                                              <!-- <span class="ui-error">Please select Relation</span> -->
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
@@ -664,7 +641,7 @@
                                                   <option value="Self Employed">Self Employed</option>
                                               </select>
                                               <label for="extraneous-occupation">Occupation</label>
-                                              <span class="ui-error">Please select Occupation</span>
+                                              <!-- <span class="ui-error">Please select Occupation</span> -->
                                           </div>
                                       </div>
                                   </div>
@@ -717,63 +694,67 @@
                   </div>
               </div>
               <div class="accordionMain">
-                  <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5005">
-                      <header>Edit Address</header>
-                      <div class="accordionBody">
-                          <div class="accordionBodyRow">
-                              <div class="detailsRow">
-                                  <div class="row">
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                          <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="address1" name="address1" formControlName="Home_Address_1" placeholder="" class="form-control input-textBox" >
-                                              <label for="address1">Address Line 1</label>
-                                              <span class="ui-error" *ngIf="form?.get('home_Address_1')?.invalid && form?.get('home_Address_1')?.touched">Please enter Address Line 1</span>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                          <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="address2" name="address2" placeholder="" class="form-control input-textBox" formControlName="Home_Address_2">
-                                              <label for="address2">Address Line 2</label>
-                                              <span class="ui-error" *ngIf="form?.get('home_Address_2')?.invalid && form?.get('home_Address_2')?.touched">Please enter Address Line 2</span>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                          <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="city" name="city" placeholder="" class="form-control input-textBox" formControlName="Home_City">
-                                              <label for="city">City</label>
-                                              <span class="ui-error" *ngIf="form?.get('home_City')?.invalid && form?.get('home_City')?.touched">Please enter City</span>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                          <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="state" name="state" placeholder="" class="form-control input-textBox" formControlName="Home_State">
-                                              <label for="state">State</label>
-                                              <span class="ui-error" *ngIf="form?.get('home_State')?.invalid && form?.get('home_State')?.touched">Please enter State</span>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                          <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="pincode" name="pincode" placeholder="" class="form-control input-textBox" formControlName="Home_Pincode">
-                                              <label for="pincode">Pin Code</label>
-                                              <span class="ui-error" *ngIf="form?.get('home_Pincode')?.invalid && form?.get('home_Pincode')?.touched">Please enter Pin Code</span>
-                                          </div>
-                                      </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="address3" name="address3" placeholder="" class="form-control input-textBox" formControlName="Home_Address_3">
-                                            <label for="address3">Landmark</label>
-                                            <span class="ui-error" *ngIf="form?.get('home_Address_3')?.invalid && form?.get('Home_Address_3')?.touched">Please enter Landmark</span>
-                                        </div>
-                                    </div>
-                                  </div>
-                              </div>
+                <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5005">
+                  <header>Edit Address</header>
+                  <div class="accordionBody">
+                    <div class="accordionBodyRow">
+                      <div class="detailsRow">
+                        <div class="row">
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                              <input type="text" id="address1" name="address1" formControlName="Home_Address_1" placeholder="" class="form-control input-textBox" />
+                              <label for="address1">Address Line 1</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_1')?.invalid">Please enter Address Line 1</span>
+                            </div>
                           </div>
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                              <input type="text" id="address2" name="address2" placeholder="" class="form-control input-textBox" formControlName="Home_Address_2" />
+                              <label for="address2">Address Line 2</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_2')?.invalid && form?.get('Home_Address_2')?.touched">Please enter Address Line 2 </span>
+                            </div>
+                          </div>
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                              <input type="text" id="city" name="city" placeholder="" class="form-control input-textBox" formControlName="Home_City" />
+                              <label for="city">City</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_City')?.invalid && form?.get('Home_City')?.touched">Please enter City </span>
+                            </div>
+                          </div>
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                              <input type="text" id="state" name="state" placeholder="" class="form-control input-textBox" formControlName="Home_State" />
+                              <label for="state">State</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_State')?.invalid && form?.get('Home_State')?.touched">Please enter State </span>
+                            </div>
+                          </div>
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                              <input type="text" id="pincode" name="pincode" placeholder="" class="form-control input-textBox" formControlName="Home_Pincode" />
+                              <label for="pincode">Pin Code</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_Pincode')?.invalid && form?.get('Home_Pincode')?.touched">Please enter a valid Pin Code</span>
+                            </div>
+                          </div>
+                          <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <div class="input-block form-floating input-block-renew">
+                              <input type="text" id="address3" name="address3" placeholder="" class="form-control input-textBox" formControlName="Home_Address_3" />
+                              <label for="address3">Landmark</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_3')?.invalid && form?.get('Home_Address_3')?.touched">Please enter Landmark </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <footer>
-                        <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save Updates</button>
-                      </footer>
+                    </div>
                   </div>
+                  <footer>
+                    <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">
+                      Cancel
+                    </button>
+                    <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">
+                      Save Updates
+                    </button>
+                  </footer>
+                </div>
               </div>
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5004">
@@ -797,7 +778,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-fname" name="nomine-fname" formControlName="nominee_first_name" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-fname">First Name</label>
-                                              <span class="ui-error" *ngIf="form?.get('firstName')?.invalid && form?.get('firstName')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">
                                               Please enter First Name
                                           </span>
                                           </div>
@@ -806,16 +787,13 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-lname">Last Name</label>
-                                              <span class="ui-error" *ngIf="form?.get('lastName')?.invalid && form?.get('lastName')?.touched">
-                                              Please enter Last Name
-                                          </span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="date" id="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-dob">DOB</label>
-                                              <span class="ui-error" *ngIf="form?.get('dob')?.invalid && form?.get('dob')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('nominee_dob')?.invalid && form?.get('nominee_dob')?.touched">
                                           Please enter DOB
                                           </span>
                                           </div>
@@ -829,9 +807,10 @@
                                                   <option value="Father">Father</option>
                                                   <option value="Mother">Mother</option>
                                                   <option value="Daughter">Daughter</option>
+                                                  <option value="Uncle">Uncle</option>
                                               </select>
                                               <label for="nomine-relation">Relation with Nominee</label>
-                                              <span class="ui-error" *ngIf="form?.get('relationship')?.invalid && form?.get('relationship')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('Relationship')?.invalid && form?.get('Relationship')?.touched">
                                               Please select Relation with Nominee
                                           </span>
                                           </div>
@@ -840,7 +819,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-contactno">Nominee Contact No.</label>
-                                              <span class="ui-error" *ngIf="form?.get('contactNo')?.invalid && form?.get('contactNo')?.touched">
+                                              <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">
                                               Please enter Nominee contact no.
                                           </span>
                                           </div>
@@ -957,20 +936,20 @@
                                             <label class="input-radiolabel ">
                                                 <input type="radio" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" >
                                                 <span><em class="tenure-year">1 Year</em>
-                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium}}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
                                                 <input type="radio" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" >
                                                 <span><em class="tenure-year">2 Years</em>
-                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium}}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 7.5 off</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
                                                 <input type="radio" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" >
                                                 <span><em class="tenure-year">3 Years</em>
-                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium}}<em>/ yr</em></em>
+                                                <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 10 off</em>
                                             </span>
                                                 <em class="badge-recommended">Recommended</em>
@@ -1188,7 +1167,6 @@
                 <div class="accordionItem">
                     <header>Policy Summary
                         <div class="btn_groupAction">
-                            <!-- <button type="button" value="copylink" class="btn_pink btn_copylink btn_copiedlink">Link copied!</button> -->
                             <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                         </div>
                     </header>
@@ -1200,8 +1178,8 @@
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Members</label>
-                                            <div *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members">
-                                            <span >{{ member.Relation | titlecase }}</span></div>
+                                            <div>
+                                            <span *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members">{{ member.Relation | titlecase }}, </span></div>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Policy</label>
@@ -1209,11 +1187,11 @@
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Premium</label>
-                                            <h6>₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</h6>
+                                            <h6>₹{{renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0'}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Cover</label>
-                                            <h6>₹{{ renewalInfo?.response?.policyData[0]?.Members[0].SumInsuredPerUnit }}</h6>
+                                            <h6>₹{{ renewalInfo?.response?.policyData[0]?.Members[0].SumInsuredPerUnit | number:'1.0-0' }}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Tenure</label>
@@ -1303,15 +1281,15 @@
                                     <div class="item member-card" *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index">
                                         <header>{{ member.FirstName }} {{ member.MiddleNameme }} {{ member.LastName }} <span *ngIf="i === 0" class="common-badge common-badge-rounded  bg-dark-org">Proposer</span></header>
                                         <div class="row">
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
-                                                <label>Height</label>
-                                                <h6>{{ member.height }}</h6>
+                                            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item">
+                                                <label>Height </label>
+                                                <h6>{{ member.height }} cm</h6>
                                             </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-3 col-xl-3 data-item">
-                                                <label>Weight</label>
-                                                <h6>{{ member.weight }}</h6>
+                                            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item">
+                                                <label>Weight </label>
+                                                <h6>{{ member.weight }} kgs</h6>
                                             </div>
-                                            <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
+                                            <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item pl-0">
                                                 <label>DOB</label>
                                                 <h6>{{ member.DoB | date: 'dd/MM/yyyy' }}</h6>
                                             </div>
@@ -1366,14 +1344,11 @@
         <div class="bcc_main">
             <div class="accordionMain">  
                 <div class="accordionItem">
-                    <header>
-                        KYC
-                        <!-- <button type="button" value="sectionedit" class="btn_iconText accordionArrow"><img src="images/icon_arrow_back_mobile.svg"></button> -->
-                    </header>
+                    <header>KYC</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">   
-                                <div class="row" *ngIf="actionKyc == 3002">
+                                <div class="row">
                                     <form [formGroup]="kycFormGroup" (ngSubmit)="handleKyc(3003)">
                                         <div class="row">
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -1396,64 +1371,27 @@
                                                 </div>
                                             </div>
                                         </div>  
-                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="actionKyc != 3003">
                                             <div class="input-block form-floating input-block-renew">
                                                 <button type="submit" class="btn_red btn_redRenew">Verify KYC</button>
                                             </div>
                                         </div> 
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="actionKyc == 3003">
+                                            <div class="tickImg"><img src="assets/Img/istockphoto.jpg"></div>
+                                        </div> 
                                     </div>
                                     </form>
                                 </div>
-                                <div class="row" *ngIf="actionKyc == 3003">
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-fname" name="ckyc-fname" [(ngModel)]="kycData.firstName" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-fname">First Name</label>
-                                        </div>
+                                <div class="row" *ngIf="kycLink">
+                                    <!-- <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                                      <div class="block_or_line"><span>OR</span></div>
+                                    </div> -->
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 15px;">
+                                      <div class="input-block form-floating input-block-renew">
+                                        <a [href]="kycLink" target="_blank" class="form-control input-textBox" style="text-decoration: none;" >{{ kycLink }}</a>
+                                      </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-idnumber" name="ckyc-idnumber" [(ngModel)]="kycData.panNo" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-idnumber">ID Number</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-dob" name="ckyc-dob" [(ngModel)]="kycData.memberDobProposer" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-dob">DOB</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-address1" name="ckyc-address1" [(ngModel)]="kycData.proposerAddress1" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-address1">Address Line 1</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-address1" name="ckyc-address2" [(ngModel)]="kycData.proposerAddress2" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-address2">Address Line 2</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-city" name="ckyc-city" [(ngModel)]="kycData.city" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-city">City</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-idnumber" name="ckyc-state" [(ngModel)]="kycData.state" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-state">State</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="ckyc-mobileno" name="ckyc-mobileno" [(ngModel)]="kycData.mobileNumber" placeholder="" class="form-control input-textBox" >
-                                            <label for="ckyc-mobileno">Mobile Number</label>
-                                        </div>
-                                    </div>
-                                </div>                     
+                                  </div>                                  
                             </div>                   
                         </div>
                     </div>
@@ -1472,12 +1410,12 @@
                       <div class="ppi_info">
                           <h4>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h4>
                           <h5>Aditya Birla Health Insurance</h5>
-                          <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6>
+                          <!-- <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6> -->
                       </div>
                   </div>
                   <div class="planProductQuote">
                       <div class="label">Base Quote/ incl tax</div>
-                      <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
+                      <div class="value">₹{{renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0'}}</div>
                   </div>
                   <div class="planProductQuote">
                       <div class="label">Term</div>
@@ -1506,10 +1444,10 @@
               <footer>
                   <div class="workingQuote">
                       <span>Working Quote/ incl tax</span>
-                      <label>₹{{(renewalInfo?.response?.policyData[0]?.BasicPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn)}}</label>
+                      <label>₹{{(renewalInfo?.response?.policyData[0]?.NetPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn ) | number:'1.0-0'}}</label>
                   </div>
                   <button type="button" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
-                  <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewals/subquotes']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
+                  <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
               </footer>
           </div>
       </div>
@@ -1524,12 +1462,13 @@
                   <div class="ppi_info">
                       <h4>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h4>
                       <h5>Aditya Birla Health Insurance</h5>
-                      <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6>
+                      <!-- <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6> -->
                   </div>
               </div>
               <div class="planProductQuote">
                   <div class="label">Total Premium/ incl tax</div>
-                  <div class="value">₹{{renewalInfo?.response?.policyData[0]?.BasicPremium}}</div>
+                  <div class="value">₹{{ renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0' }}
+                </div>
               </div>
           </div>
           <div class="bi_right">
@@ -1599,8 +1538,8 @@
                                     <img src="assets/Img/icon_scan_img.png">
                                 </div>
                                 <div class="col-7 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <a href="#"><img src="assets/Img/icon_app_store.png"></a>
-                                    <a href="#"><img src="assets/Img/icon_google_play_store.png"></a>
+                                    <a href="https://apps.apple.com/in/app/activ-health/id1179005764"><img src="assets/Img/icon_app_store.png"></a>
+                                    <a href="https://play.google.com/store/apps/details?id=com.adityabirlahealth.insurance&pcampaignid=web_share"><img src="assets/Img/icon_google_play_store.png"></a>
                                 </div>
                             </div>
                         </div>
@@ -1631,7 +1570,7 @@
                         <h5>Creating your customersABHA ID with ABHI.</h5>
                         <h6>Simple, Fast & Easy</h6>
                         <p>Do you have a few minutes? Because that is all it takes to create your ABHA ID on the Aditya Birla Health Insurance website.</p>
-                        <button type="button" class="btn_red btn_autoDebit">Create ABHA ID</button>
+                        <a href="https://mtpre.adityabirlahealth.com/healthinsurance/abha"><button type="button" class="btn_red btn_autoDebit">Create ABHA ID</button></a>
                     </div>
                     <div class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
                         <img src="assets/Img/img_abha_id.png" class="img_fullWidth_mobile">

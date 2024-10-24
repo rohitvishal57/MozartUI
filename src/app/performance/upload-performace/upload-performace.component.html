@@ -2,18 +2,18 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2>Upload Bulk File</h2>
+                <h2>Upload Reports - Bulk Files</h2>
             </div>
             <form (ngSubmit)="onSubmit()" [formGroup]="performanceUploadForm" novalidate autocomplete="false">
                 <section class="white_container">
                     <div class="row mb-3">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                            <div class="input-radio-block radio_additionalInfo">
-                                <label>
+                            <div class="input-radio-block">
+                                <label class="input-radiolabel ">
                                     <input type="radio" name="priorpolicies" (change)="viewSelected($event)" formControlName="selectedView" value="performance" checked>
                                     <span>Performance</span>
                                 </label>
-                                <label>
+                                <label class="input-radiolabel ">
                                     <input type="radio" name="priorpolicies" (change)="viewSelected($event)" formControlName="selectedView" value="detailedView">
                                     <span>Detailed View</span>
                                 </label>

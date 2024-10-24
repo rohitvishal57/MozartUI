@@ -11,6 +11,7 @@ interface PolicyState {
   providedIn: 'root'
 })
 export class RenewalsService {
+  private paymentStatus: string = '';
 
   constructor(private configService: ConfigService,private httpService: HttpService) { }
 
@@ -27,7 +28,15 @@ export class RenewalsService {
   getQuote(): Observable<any> {
     return this.quote$;
   }
-  
+  setPaymentStatus(status: string): void {
+    this.paymentStatus = status;
+  }
+  getPaymentStatus(): string {
+    return this.paymentStatus;
+  }
+  clearPaymentStatus(): void {
+    this.paymentStatus = '';
+  }
   updateState(button: string, value?: any) {
     this.stateSource.next({ button, value });
   }
@@ -54,8 +63,8 @@ export class RenewalsService {
     const generatepaymentlink = this.configService.config.baseUrl + this.configService.config.generatePaymentlink;
     return this.httpService.post(generatepaymentlink, reqBody);
   }
-  getRenewalInfoApi(policyNumber: string, requestBody: any) {
-    const getrenewalinfo = `${this.configService.config.baseUrl + this.configService.config.getRenewalInfo}?policyNumber=${policyNumber}`;
+  getRenewalInfoApi(requestBody: any) {
+    const getrenewalinfo = this.configService.config.baseUrl + this.configService.config.getRenewalInfo;
     return this.httpService.post(getrenewalinfo, requestBody);
   }
   getTenureDetailsApi(reuestBody: any){
@@ -86,4 +95,17 @@ export class RenewalsService {
     const paymentGateway = this.configService.config.baseUrl + this.configService.config.paymentGateway;
     return this.httpService.post(paymentGateway, reqBody);
   }
+  kycUpdate(reqBody:any){
+    const updateKycValue = this.configService.config.baseUrl + this.configService.config.kycUpdate;
+    return this.httpService.post(updateKycValue, reqBody);
+  }
+  getkycURL(reqBody:any, options?: any){
+    const kycURL = this.configService.config.baseUrl1 + this.configService.config.getkycURL;
+    return this.httpService.post(kycURL, reqBody,options);
+  }
+  getPaymentStatusApi(orderId:any,reqBody:any){
+    const paymentStatus = `${this.configService.config.baseUrl}${this.configService.config.getPaymentStatus}?orderId=${orderId}`;
+    return this.httpService.post(paymentStatus,reqBody)
+  }
+
 }

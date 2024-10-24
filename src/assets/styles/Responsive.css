@@ -17,6 +17,11 @@
         max-width: 730px;
     }
 }
+@media (max-width:1280px) {
+    .bottomInfoMain_comparePolices .policePlans {
+        width: 210px;
+    }
+}
 @media (max-width:1093px) {
     
     .siteHeader .abcLinksMain {
@@ -151,6 +156,13 @@
     .icon_menuMobile {
         display: block;
     }
+    .bottomInfoMain.bottomInfoMain_comparePolices {
+        width: 100%;
+        left: 0;
+    }
+    .bottomInfoMain_comparePolices .policePlans {
+        width: 180px;
+    }
 }
 @media (max-width:912px){
     .bottomInfoMain, .bottomInfoMessage {
@@ -162,6 +174,17 @@
     }
     .main_userDetails .info_userDetails .details_userProfile h6 span{
         max-width:100%;
+    }
+    
+    .bottomInfoMain_comparePolices .bottomInfoSubMain {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .bottomInfoMain_comparePolices .policePlans {
+        width: 100%;
+    }
+    .bottomInfoMain_comparePolices .bottomInfoSubMain .bi_right {
+        justify-content:flex-end;
     }
 }
 @media (max-width:820px) {
@@ -208,7 +231,7 @@
         width: 100%;
     }
     .quickFilterMain {
-        padding: 0;
+        
     }
     .quickFilterLeft {
         overflow-x: auto;
@@ -346,7 +369,9 @@
    .details_claimsAmount .claim_amount{
     padding: 8px 0px !important;
    }
-   
+   .bottomInfoMain_comparePolices .policePlans .planProductInfo .ppi_img {
+        display: none;
+    }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {

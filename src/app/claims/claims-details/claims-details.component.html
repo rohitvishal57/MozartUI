@@ -1,25 +1,45 @@
 <main class="siteBody">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
-
             <div class="body_flex_row justify-content-between">
                 <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListClaim()"><a class="btn_backPage"></a>Claims</h2>
             </div>
-
             <section class="white_container white_container_shadow">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-                        <div class="details_claimsInfo">
-                            <!-- <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5> -->
+                        <!-- <div class="details_claimsInfo">
+                             <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5> 
                             <h5>{{ claims?.memberName }}</h5>
                             <h6>{{ claims?.productName }}<span class="info-dot"></span>{{ claims?.requestType }}<span class="info-dot"></span><b>{{ claims?.claimStatus }}</b></h6>
+                        </div> -->
+                        <div class="details_claimsAmount">
+                        <div class="claim_amount">
+                            <h6>Policy Number</h6>
+                            <p>{{ claims?.policyNumber }}</p>
+                        </div>
+                        <div class="claim_amount">
+                            <h6>Member Name</h6>
+                            <p>{{ claims?.memberName }}</p>
                         </div>
                     </div>
+                    <br/>
+                    <div class="details_claimsAmount col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="claim_amount col-5">
+                            <h6>Product Name</h6>
+                            <p>{{ claims?.productName }}</p>
+                            </div>
+                            <div class="claim_amount col-4">
+                            <h6>Claim Status</h6>
+                            <p>{{ status?.claimStatus }}</p>
+                        </div>
+                    </div> 
+                </div>
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div class="details_claimsAmount">
+                           
                             <div class="claim_amount">
-                                <h6>Policy Number</h6>
-                                <p>{{ claims?.policyNumber }}</p>
+                                <h6>Request Type</h6>
+                                <p>{{ claims?.requestType }}</p>
                             </div>
                             <div class="claim_amount">
                                 <h6>Claim Amount</h6>
@@ -27,18 +47,18 @@
                             </div>
                             <div class="claim_amount">
                                 <h6>Approved Amount</h6>
-                                <!-- <p>₹{{ claims?.approvedAmount }}</p> -->
-                                <p>--</p>
+                                <p>₹{{ claims?.approvedAmount }}</p>
+                                <!-- <p>--</p> -->
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12" *ngIf="selectedTabIndex === 1">
+                <div class="row" *ngIf="underDef">
+                    <div class="col-12" >
                         <div class="white_container claim_underDeficiency">
                             <div class="info_underDeficiency">
                                 <h5>Under Deficiency</h5>
-                                <h6>Kindly provide Aadhaar card and doctor’s prescription</h6>
+                                <!-- <h6>Kindly provide Aadhaar card and doctor’s prescription</h6> -->
                             </div>
                             <div class="button_underDeficiency">
                                 <button type="button" (click)="underDeficiencyFileInput.click()" class="btn_red">Upload Documents</button>
@@ -53,8 +73,8 @@
                       File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files.
                     </span>
                     </div>
-
-                    <div class="uploadDocument_listMain" *ngIf="uploadedUnderDeficiencyFiles.length > 0">
+                  
+                    <div class="uploadDocument_listMain" *ngIf="uploadedUnderDeficiencyFiles.length > 0">  
                         <div class="uploadDocument_filesList">
                             <div class="filesList_head">
                                 <div class="filesList_headLeft">Uploads:</div>
@@ -320,21 +340,19 @@
                                                     <div class="submain_claimProgressSteps">
                                                         <div class="item_claimProgressSteps" *ngFor="let status of customeStepperStatuses" [ngClass]="{'completed': status.active == '1' && status.colour == 'Green' , 'active': status.active  == '2' && status.colour  == 'Yellow', 'error': status.active  == '2' && status.colour == 'Red', 'next': status.active  == '0' && status.colour == 'Grey'}">
                                                             <span class="item_count">
-                                                            <em class="count p-0">{{status.count}}</em>
-                                                            <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
-                                                            <em class="img_error p-0"><img src="assets/Img/icon_danger.svg"></em>
-                                                        </span>
+                                                                <em class="count p-0">{{status.count}}</em>
+                                                                <em class="img_tick"><img src="assets/Img/icon_tick_greenbg.svg"></em>
+                                                                <em class="img_error p-0"><img src="assets/Img/icon_danger.svg"></em>
+                                                            </span>
                                                             <div class="item_info">
                                                                 <h6>{{status.title}}</h6>
-                                                                <small>{{status.sublabel}}</small>
+                                                                <p *ngIf="status.statusDate">({{status.statusDate}})</p>
                                                                 <small class="cursor" (click)="moveToDocsSection(-1)">{{status?.nextProcess}}</small>
                                                             </div>
-                                                            <!-- <div class="item_claimProgressInfo">
-                                                            Your claim is intiated
-                                                        </div> -->
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="item_claimProgressInfo" *ngIf="statusMessage">{{statusMessage}}</div>
                                                 <div class="item_claimProgressButtons">
                                                     <button type="button" class="btn_iconText" (click)="toggleViewDetails()"><img src="assets/Img/icon_claimhistory.svg">Claims History</button>
                                                     <!-- <button type="button" class="btn_red">View Details <img src="assets/Img/icon_right_arrow_black.svg"></button> -->

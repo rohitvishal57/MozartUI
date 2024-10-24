@@ -1819,6 +1819,7 @@ body {
 
 .accordionCard .accordionCardBody {
     padding: 16px 16px 25px !important;
+    position: relative;
 }
 
 .accordionCard.collapsed .accordionCardBody {
@@ -2279,6 +2280,7 @@ input[type=checkbox]:checked {
     position: absolute;
     top: -20px;
     left: 48%;
+    display: none;
 }
 .main-container .right-panel .bottom-product .boldtext_input {
     font-family: Anek Latin;
@@ -2341,16 +2343,68 @@ input[type=checkbox]:checked {
     color: #000;
 }
 .advertisementSection .mobileScreen {
-    width: 100%;
-    padding: 0;
+    width: 210px;
+    padding: 20px;
 }
 .advertisementSection .mobileScreen  .img1Popup {
-    width: 100% !important;
-    height: 100% !important;
+    height: 112% !important;
     margin: 0 !important;
 }
 .autoDebitSection.accordionCard .accordionCardBody {
     padding:25px 25px 25px !important ;
+}
+
+.select-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .image-button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  .image-button img {
+    max-width: 100%;  
+    height: auto;    
+    display: block;
+  }
+
+.QR-scanner{
+    display: flex;
+    position: absolute;
+    top: 50px;
+    left: 250px;
+  }
+
+.image-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.app-store-button {
+    text-align: center;
+    margin-bottom: 15px;
+    position: absolute;
+    top: 80px;
+    left: 450px;
+  }
+  
+  .google-play-button {
+    text-align: center;
+    margin-bottom: 15px;
+    position: absolute;
+    top: 140px;
+    left: 450px;
+  }
+  @media (min-width: 768px) {
+    .app-store-button, .google-play-button {
+      max-width: 200px; 
+    }
 }
 .autoDebitLabel1 p {
     font-family: Anek Latin;

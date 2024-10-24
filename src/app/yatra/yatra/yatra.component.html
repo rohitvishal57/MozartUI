@@ -17,7 +17,7 @@
           <h1>Your Progress</h1>
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
-              <div class="step-count" (click)="addNavbar(i)">
+              <div class="step-count" (click)="addNavbar(i,case)">
                 <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
                   {{ i + 1 }}
                 </button>
@@ -286,7 +286,8 @@
               </div> -->
 
                 <div *ngIf="control.type === 'multiSelectCheckbox'">
-                  <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label }}<span *ngIf="control.validators">*</span></label>
+                  <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label }}<span
+                      *ngIf="control.validators">*</span></label>
                   <div [formGroupName]="control.name" class="checkbox-container"
                     *ngIf="dynamicFormGroup.get(control.name)">
                     <div *ngFor="let option of control.selectCheckboxOptions"
@@ -717,29 +718,54 @@
                   </div>
                 </div>
 
-                <div *ngIf="control.type == 'image'">
-                  <div *ngFor="let image of control.images" class="{{control.class}}">
-                    <img class="img1Popup" [src]="image.src" alt="{{image.alt}}" width="{{image.width}}"
-                      height="{{image.height}}">
-                  </div>
-                </div>
 
-                <div *ngIf="control.type == 'boldtext'" [class]="control.class" class="typecss"
-                  [hidden]="!control.visible">
-                  <label *ngIf="control.visibleLabel==true" class="boldtext-label">{{ control.label ? (control.label |
-                    translate) : '' }}<span *ngIf="control.validators">*</span></label>
-                  <input *ngIf="!control.disabled" class="boldtext_input colorbold" formControlName="{{ control.name }}"
-                    [name]="control.name" [type]="control.type" [placeholder]="control.label"
-                    (change)="onInputChange($event, control)">
-                  <input *ngIf="control.disabled" class="boldtext_input colorbold no-border"
-                    formControlName="{{ control.name }}" [name]="control.name" [type]="control.type"
-                    [placeholder]="control.label" (change)="onInputChange($event, control)" readonly>
+                  <div *ngIf="control.type == 'image'" class="{{control.class}}">
+                    <div *ngFor="let image of control.images">
+                      <img class="img1Popup" [src]="image.src" alt="{{image.alt}}" width="{{image.width}}"
+                        height="{{image.height}}">
+                    </div>
+                  </div>
+                  <div *ngIf="control.type === 'imageButton'" [class]="control.class">
+                    <button [name]="control.name" type="button" class="image-button"
+                      (click)="callMethod(control.methodName, control)">
+                      <img [src]="control.imageUrl" alt="Button Image">
+                    </button>
+                  </div>
+
+
+                  <div *ngIf="control.type == 'boldtext'" [class]="control.class" class="typecss" [hidden]="!control.visible">
+                  <label *ngIf="control.visibleLabel==true" class="boldtext-label">
+                    {{ control.label ? (control.label | translate) : '' }}
+                    <span *ngIf="control.validators">*</span>
+                  </label>
+                  
+                  <div class="d-flex">
+                    <!-- Show the rupee symbol only for totalPremium control -->
+                    <span *ngIf="control.name === 'totalPremium'" class="boldtext_input colorbold" style="width: 10px">₹</span>
+                    
+                    <input *ngIf="!control.disabled" class="boldtext_input colorbold" 
+                           formControlName="{{ control.name }}" 
+                           [name]="control.name" 
+                           [type]="control.type" 
+                           [placeholder]="control.label"
+                           (change)="onInputChange($event, control)">
+                    
+                    <input *ngIf="control.disabled" class="boldtext_input colorbold no-border" 
+                           formControlName="{{ control.name }}" 
+                           [name]="control.name" 
+                           [type]="control.type" 
+                           [placeholder]="control.label" 
+                           (change)="onInputChange($event, control)" 
+                           readonly>
+                  </div>
+                
                   <span style="font-size: 12px;">{{ control.text ? (control.text | translate) : '' }}</span>
                 </div>
 
                 <!-- <div *ngIf="control.type==='button'"> -->
                 <input *ngIf="control.type==='button' && control.visible == true" type="button"
-                  (click)="callMethod(control.methodName,control)" [ngClass]="[control.class, getButtonClass(control)]"
+                  (click)="callMethod(control.methodName,control)" [disabled]="control.disabled"
+                  [ngClass]="[control.class, getButtonClass(control)]"
                   value="{{ control.label ? (control.label | translate) : '' }}">
 
                 <div *ngIf="control.type === 'custom-radio'">
@@ -749,7 +775,7 @@
                         [value]="option.value" class="radio-card" />
                       <label [for]="option.name" class="radio-card-label">
                         <div class="year">{{ option.year }}</div>
-                        <div class="price">{{ option.value }}</div>
+                        <div class="price">₹{{ option.value }}.00</div>
                         <div class="discount">{{ option.discount }}</div>
                       </label>
                     </ng-container>
@@ -995,89 +1021,109 @@
                             <p>Add Disease</p>
                           </div>
                           <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
-                            <i class="fa-solid fa-xmark" (click)="addDiseaseList(control)"></i>
+                            <i class="fa-solid fa-xmark" (click)="closePopUp(control)"></i>
                           </div>
                         </div>
                         <div class="row" style="height: 95%; overflow-y: scroll;">
                           <ng-container *ngFor="let subControl of control.subControls; index as j">
-                            <div *ngIf="j>0">
+                            <div *ngIf="j>1">
                               <!-- <div > -->
-                              <ng-container *ngIf="subControl.innerArrayControl" [formArrayName]="subControl.name">
+                              <div *ngIf="subControl.type === 'checkbox'" class="col-lg-8">
+                                <div style="display: flex;">
+                                  <input type="checkbox" [formControlName]="subControl.name"
+                                    (click)="onCheckboxChange($event, subControl,control,j-1)"
+                                    style="display:block; height:25px; width:25px; margin-left: 10px;" />
+                                  <label [for]="subControl.name" [innerHTML]="subControl.label" class="checkbox-label"
+                                    style="padding-left: 15px; font-weight: 600; font-size: 16px; margin-top: 0px;"></label>
+                                </div>
+                              </div>
+                              <ng-container *ngIf="subControl.innerArrayControl && subControl.visible"
+                                [formArrayName]="subControl.name">
                                 <br>
-                                <ng-container *ngFor="let allSubForm of subControl.innerArrayControl; index as k">
-                                  <!-- <ng-container *ngIf="k>=0"> -->
-                                  <!-- {{allSubForm | json}} -->
-                                  <!-- <hr> -->
-                                  <ng-container [formGroupName]="k">
-                                    <div class="details-element">
-                                      <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right"
-                                        *ngIf="k > 0">
-                                        <hr>
-                                        <input type="button" class="add-btn"
-                                          (click)="removeDisease(subControl,control,k)" value="Remove" />
-                                        {{ k }}
-                                      </div>
-                                      <ng-container *ngFor="let innerControl of allSubForm">
-                                        <!-- <ng-container *ngIf="innerControl.visible"> -->
-                                        <!-- {{ innerControl | json }} {{ question }} -->
-                                        <!-- <hr> -->
-                                        <div
-                                          *ngIf="['text', 'email', 'password', 'number', 'date'].includes(innerControl.type)"
-                                          [class]="innerControl.class" class="typecss" [hidden]="!innerControl.visible">
-                                          <div class="input-container">
-                                            <input class="inputField_Text" [formControlName]="innerControl.name"
-                                              [name]="innerControl.name" [type]="innerControl.type"
-                                              [ngClass]="{'has-value': hasAnyValue(subControl)}"
-                                              (change)="onInputChange($event, innerControl,control,i-1)">
-                                            <label class="inputField_Label" *ngIf="innerControl.visibleLabel">{{
-                                              innerControl.label ?
-                                              (innerControl.label | translate) : '' }}<span
-                                                *ngIf="innerControl.validators"></span></label>
-                                          </div>
-                                          <!-- <small *ngIf="checkValidations(innerControl,control,i-1)" class="text-danger">{{
+                                <ng-container *ngFor="let allSubForm of subControl.innerArrayControl; index as k;">
+                                  <ng-container *ngIf="k>0">
+                                    <!-- {{allSubForm | json}} -->
+                                    <!-- <hr> -->
+                                    <ng-container [formGroupName]="k-1">
+                                      <div class="details-element">
+                                        <div *ngIf="k>1"
+                                          class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
+                                          <hr>
+                                          <input type="button" class="add-btn"
+                                            (click)="removeDisease(subControl,control,k)" value="Remove" />
+                                          {{ k-1 }}
+                                        </div>
+                                        <ng-container *ngFor="let innerControl of allSubForm">
+                                          <!-- <ng-container *ngIf="innerControl.visible"> -->
+                                          <!-- {{ innerControl | json }} {{ question }} -->
+                                          <!-- <hr> -->
+                                          <div
+                                            *ngIf="['text', 'email', 'password', 'number', 'date'].includes(innerControl.type)"
+                                            [class]="innerControl.class" class="typecss"
+                                            [hidden]="!innerControl.visible">
+                                            <div class="input-container">
+                                              <input class="inputField_Text" [formControlName]="innerControl.name"
+                                                [type]="innerControl.type"
+                                                [ngClass]="{'has-value': hasInnerValue(control,subControl,innerControl,k-1)}"
+                                                (change)="onInputChange($event, innerControl,control,k-1)">
+                                              <label class="inputField_Label" *ngIf="innerControl.visibleLabel">{{
+                                                innerControl.label ?
+                                                (innerControl.label | translate) : '' }}<span
+                                                  *ngIf="innerControl.validators"></span></label>
+                                            </div>
+                                            <!-- <small *ngIf="checkValidations(innerControl,control,i-1)" class="text-danger">{{
                                                   getValidationErrors(innerControl,control,i-1)?
                                                   (getValidationErrors(innerControl,control,i-1)| translate) : ''}}
                                                 </small> -->
 
-                                        </div>
-                                        <div *ngIf="innerControl.type==='select'" [class]="innerControl.class"
-                                          class="typecss" [hidden]="!innerControl.visible">
-                                          <div class="input-container">
-                                            <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
-                                              <span *ngIf="innerControl.validators">*</span></label>
-                                            <select class="inputField_Select" [formControlName]="innerControl.name"
-                                              [name]="innerControl.name"
-                                              (change)="onInputChange($event, subControl,control)"
-                                              [ngClass]="{'has-value': hasAnyValue(subControl)}">
-                                              <option selected value="">Choose...</option>
-                                              <ng-container *ngFor="let opt of innerControl.options">
-                                                <option [value]="opt.id ? stringifyObject(opt) : opt.value">
-                                                  {{ opt.name }}</option>
-                                              </ng-container>
-                                            </select>
-                                            <!-- <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}</label> -->
                                           </div>
-                                          <!-- <small
+                                          <div *ngIf="innerControl.type==='select'" [class]="innerControl.class"
+                                            class="typecss" [hidden]="!innerControl.visible">
+                                            <div class="input-container">
+                                              <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
+                                                <span *ngIf="innerControl.validators">*</span></label>
+                                              <select class="inputField_Select" [formControlName]="innerControl.name"
+                                                (change)="onInputChange($event, subControl,control,k-1,innerControl)"
+                                                [ngClass]="{'has-value': hasAnyValue(subControl)}">
+                                                <option selected value="">Choose...</option>
+                                                <option *ngFor="let opt of innerControl.options"
+                                                  [value]="opt.id ? stringifyObject(opt) : opt.value">
+                                                  {{ opt.name }}
+                                                </option>
+                                              </select>
+                                              <!-- <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}</label> -->
+                                            </div>
+                                            <!-- <small
                                                 *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
                                                 class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) :
                                                 ''}}
                                               </small> -->
-                                        </div>
-                                        <div *ngIf="innerControl.type === 'checkbox'" style="margin-bottom: 15px;">
-                                          <div style="display: flex;">
-                                            <input type="checkbox" formControlName="{{ innerControl.name }}"
-                                              [name]="innerControl.name"
-                                              style="display:block; height:25px; width:25px; margin-left: 10px;"
-                                              (change)="onInputChange($event, subControl,control)" />
-                                            <label [for]="innerControl.name" [innerHTML]="subControl.label"
-                                              style="padding-left: 15px; font-weight: 600; font-size: 16px; margin-top: 0px;"></label>
                                           </div>
+                                          <div *ngIf="innerControl.type === 'checkbox'" style="margin-bottom: 15px;">
+                                            <div style="display: flex;">
+                                              <input type="checkbox" [formControlName]="innerControl.name"
+                                                style="display:block; height:25px; width:25px; margin-left: 10px;"
+                                                (change)="onInputChange($event, subControl,control)" />
+                                              <label [for]="innerControl.name" [innerHTML]="subControl.label"
+                                                style="padding-left: 15px; font-weight: 600; font-size: 16px; margin-top: 0px;"></label>
+                                            </div>
+                                          </div>
+                                          <!-- </ng-container> -->
+                                        </ng-container>
+                                      </div>
+                                      <div *ngIf="subControl.type === 'checkbox'" style="margin-bottom: 15px;">
+                                        <div style="display: flex;">
+                                          <input type="checkbox" formControlName="{{ subControl.name }}"
+                                            [name]="subControl.name"
+                                            style="display:block; height:25px; width:25px; margin-left: 10px;"
+                                            (change)="onInputChange($event, subControl,control)" />
+                                          <label [for]="subControl.name" [innerHTML]="subControl.label"
+                                            style="padding-left: 15px; font-weight: 600; font-size: 16px; margin-top: 0px;"></label>
                                         </div>
-                                        <!-- </ng-container> -->
-                                      </ng-container>
-                                    </div>
+                                      </div>
+                                      <!-- </ng-container> -->
+                                    </ng-container>
                                   </ng-container>
-                                  <!-- </ng-container> -->
                                 </ng-container>
                                 <div *ngIf="subControl.isButton" class="row">
                                   <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right"
@@ -1087,13 +1133,20 @@
                                       value="Add" />
                                   </div>
                                 </div>
+                                <br>
+                                <!-- </ng-container> -->
                               </ng-container>
+                              <!-- </div> -->
                               <!-- </div> -->
                               <div *ngIf="subControl.type == 'button'" class="row">
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
 
-                                  <input type="button" class="next-btn" (click)="addDiseaseList(subControl,control)"
-                                    value="Done" />
+                                  <input *ngIf="subControl.disabled == false" type="button" class="next-btn"
+                                    (click)="closePopUp()" value="Done" />
+                                  <!-- <input *ngIf="innerSubForm.disabled == false" type="button" class="next-btn"
+                                    (click)="addOnMemberAdded(subControl,control)" value="Done" /> -->
+                                  <input *ngIf="subControl.disabled == true" type="button" class="next-btn disable"
+                                    [disabled]="true" value="Done" />
                                 </div>
                               </div>
                             </div>
@@ -1143,42 +1196,53 @@
 
 
 <!-- Customer Feedback module  -->
-<div class="modal fade popupModalMain modal-bgWhite" id="customerFeedbackModule" tabindex="-1"
+<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" id="customerFeedbackModule" tabindex="-1"
   aria-labelledby="otpModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content" style="width: 90%;">
+    <div class="modal-content">
       <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
         <div class="modal-header">
           <h5 class="modal-title" id="roomModalLabel">Rate Your Experience</h5>
         </div>
-        <p>Please rate your online renewal <br>experience with us.</p>
+        <div class="modal-body">
+          <p class="para-rate-18">Please rate your online renewal experience with us.</p>
 
-        <!-- Star Rating -->
-        <div class="star-rating">
-          <span class="star" 
-                *ngFor="let star of stars; let i = index"
-                [ngClass]="{'selected': i < rating}"
-                (click)="setRating(i + 1)">
-            ★
-          </span>
-        </div>
-
-        <p>What impressed you?</p>
-
-        <!-- Feedback Buttons -->
-        <button type="button" class="btn_quickFilter" >Seamless payment</button>
-        <button type="button" class="btn_quickFilter">Ease of policy modification</button>
-        <button type="button" class="btn_quickFilter">Speedy Policy renewal</button>
-        <button type="button" class="btn_quickFilter">Receipting & confirm</button>
-
-        <p>What can we do to improve <br> your experience?</p>
-        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-          <div class="input-block form-floating input-block-renew">
-            <textarea class="form-control input-textBox" id="notes" placeholder="Enter your message" formControlName="message"></textarea>
+          <!-- Star Rating -->
+          <div class="star-rating">
+            <span class="star" 
+                  *ngFor="let star of stars; let i = index"
+                  [ngClass]="{'selected': i < rating}"
+                  (click)="setRating(i + 1)">
+              ★
+            </span>
           </div>
+
+          <div class="row" *ngIf="impressedValues" >
+            <div class="col-12 mb-3" >
+              <p class="para-rate-16">{{impressedLable}}</p>
+            </div>
+  
+            <div class="col-12">
+              <!-- Feedback Buttons -->
+              <div class="btn_feedbackGroup"  >
+                <button type="button" class="btn_quickFilter" (click)="onSelectValue(value)"  [ngClass]="{'selected': feedbackImpressedValue === value}" *ngFor="let value of feedbackImpressedValues;">{{value}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3" *ngIf="feedBackMessage" >
+            <div class="col-12">
+              <p class="para-rate-lable">What can we do to improve your experience?</p>
+            </div>
+            
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+              <div class="input-block form-floating input-block-renew">
+                <textarea class="form-control input-textBox" id="notes" placeholder="Enter your message" formControlName="message"></textarea>
+              </div>
+            </div>
+          </div>  
         </div>
         <div class="modal-footer modal_footerBtnGroup_column">
-          <button type="submit" class="verify-btn btn_red btn_fullWidth">Submit</button>
+          <button *ngIf="feedbackSubmit" type="submit" class=" btn_red btn_fullWidth">Submit</button>
           <div class="d-flex justify-content-center">
             <button type="button" class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal"
               aria-label="Close">Skip for now</button>

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
+import { EncryptionService } from 'src/app/services/encryption.service';
 
 @Component({
   selector: 'app-sub-quotes',
@@ -19,7 +20,8 @@ export class SubQuotesComponent {
   selected: any = [];
 
   constructor(private renewalService:RenewalsService,
-    private router:Router,private toast: NgToastService
+    private router:Router,private toast: NgToastService,private encryptionService: EncryptionService
+
   ){}
 
   ngOnInit()
@@ -85,8 +87,10 @@ export class SubQuotesComponent {
     this.subQuotes=false;
   }
   handleAction(renewObject:any,event:any){
-      console.log("proposer PolicyNumber",renewObject.policyNumber);
-      this.renewalService.setPolicyState(renewObject.policyNumber, event);
-      this.router.navigate(["renewals/renewalDynamicForm"]);
+      // console.log("proposer PolicyNumber",renewObject.policyNumber);
+      // this.renewalService.setPolicyState(renewObject.policyNumber, event);
+      sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(renewObject.policyNumber));
+      sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(event));
+      this.router.navigate(["renewal/payment"]);
   }
 }

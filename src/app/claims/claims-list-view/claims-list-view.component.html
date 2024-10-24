@@ -10,7 +10,6 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li class="quickFilterHeading">Claim Status</li>
                         <li><button type="button" value="all" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('all')"  [ngClass]="{'active': selectedStatus === 'all'}">All </button></li>
                         <li><button type="button" value="active" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('active')" [ngClass]="{'active': selectedStatus === 'active'}">Active </button></li>
                         <li><button type="button" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">Resolved </button></li>
@@ -25,26 +24,15 @@
                     <div class="body_flex_row claims_searchWraper">
                         <div class="field_searchMain">
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)">
-                                <option value="" disabled selected>Select an option</option>
-                                <option value="requestType">Request Type</option>
-                                <option value="productName">Product Name</option>
+                                <option value=""  selected>Select an option</option>
+                                <option value="claimInfoId">Request ID</option>
+                                <!-- <option value="productName">Product Name</option> -->
                                 <option value="policyNumber">Policy Number</option>
+                                <!-- <option type="number" value="mobileNumber">Mobile Number</option>-->
+                                <option value="memberId">Member Id</option> 
                             </select>
                             <input type="search" id="filterSearch" value="" class="filterSearch" [placeholder]="getPlaceholder()"  [formControl]="searchInputControl">
                             <button type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                            <!-- <div *ngIf="selected == 'date'" class="d-flex field_searchMain">
-                                <div class="input-block form-floating input-block-renew m-0">
-                                    <input type="date" id="fromDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getFromDate($event)">
-                                    <label for="fromDate">From Date</label>
-                                </div>
-                                <div class="input-block form-floating input-block-renew m-0">
-                                    <input type="date" id="toDate" name="name" value="" placeholder="" class="form-control input-textBox" (change)="getToDate($event)">
-                                    <label for="toDate">To Date</label>
-                                </div>
-                                <button type="button" value="search" class="btn_iconGrey jsFilterBtnClick" style="position: initial" (click)="applyFilter()"><img src="assets/Img/icon_magnify_grey.svg" alt="Search"></button>
-                            </div> -->
-                            <!-- <input *ngIf="selected != 'date'" class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button *ngIf="selected != 'date'" type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button> -->
                         </div>
                     </div>
 
@@ -60,7 +48,18 @@
                                     <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
                             <div class="fw_formBody"> 
-                                <div class="fw_formRow">
+                                <!-- <div class="fw_formRow" *ngIf="productList && productList.length > 0">
+                                    <h6>Products</h6>
+                                    <div class="fw_checkboxWraper">
+                                        <div class="input-checkbox-block" *ngFor="let product of productList; let i = index">
+                                            <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                <label for="product{{i}}">{{product.productName}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
                                     <h6>Products</h6>
                                     <div class="fw_checkboxWraper">
                                         <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
@@ -82,18 +81,29 @@
                                           </div>                                              
                                     </div>
                                 </div>
+                                <!-- <div class="fw_formRow">
+                                    <h6>Status</h6>
+                                    <div class="fw_checkboxWraper">
+                                        <div class="input-checkbox-block" *ngFor="let status of statuses; let i = index">
+                                            <div class="input-checkbox-feild">
+                                              <input type="checkbox" id="status{{i}}" value="policytype" class="input-check" [(ngModel)]="status.selected" (change)="calculateAppliedFiltersCount()">
+                                              <label for="status{{i}}">{{status.name}}</label>
+                                            </div>
+                                          </div>                                              
+                                    </div>
+                                </div> -->
                                 <div class="row">
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                     <div class="input-block input-block-dob">
                                         <label>From Date</label>
-                                        <input type="date" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')">
+                                        <input type="date" name="fromate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (change)="formatDate('fromDate')" [max]="maxDate">
                                         <span class="ui-error">Please enter start date</span>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                     <div class="input-block input-block-dob">
                                         <label>To Date</label>
-                                        <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')">
+                                        <input type="date" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (change)="formatDate('toDate')" [max]="maxDate">
                                         <span class="ui-error">Please enter end date</span>
                                     </div>
                                 </div>
@@ -120,9 +130,9 @@
                                 <th scope="col">Request</th>
                                 <th scope="col">Policy No.</th>
                                 <th scope="col" nowrap>Product Name</th>
-                                <th scope="col" nowrap>Member Name</th>
-                                <th scope="col" nowrap>Member Id</th>
-                                <th scope="col" nowrap>Mobile Number</th>
+                                <!-- <th scope="col" nowrap>Member Name</th> -->
+                               <th scope="col" nowrap>Member Id</th>
+                             <!--  <th scope="col" nowrap>Mobile Number</th> -->
                                 <th scope="col" nowrap>Request Type</th>
                                 <th scope="col">Status</th>
                                 <th scope="col" nowrap>Raised Date</th>
@@ -133,20 +143,19 @@
                             <ng-container *ngIf="claims.length > 0">
 
                             
-                              <tr class="table-values"  *ngFor="let row of claims | paginate: { itemsPerPage: rows, currentPage: page }; let i = index">
+                              <tr class="table-values"  *ngFor="let row of claims;let i = index">
                                 <td class="card_insureInfo">{{ row?.claimInfoId }}</td>
                                 <td>{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
-                                <td>{{ row?.memberName }}</td>
+                                <!-- <td>{{ row?.memberName }}</td> -->
                                 <td>{{ row?.memberId }}</td>
-                                <td>{{ row?.mobileNumber }}</td>
+                                <!-- <td>{{ row?.mobileNumber }}</td> -->
                                 <td>{{ row?.requestType }}</td>
                                 <td><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
                                 <td>{{ row?.reportedDateTime | datepipe }}</td>
                                 <td>
                                     <div class="btn_groupAction">
                                         <button type="button" value="view" title="View-Claim" class="btn_action btn_claimAction" (click)="navigateToViewClaim(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-
                                     </div>
                                 </td>
                               </tr>
@@ -168,7 +177,7 @@
             </section>
             <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView === 'grid' ">
                 <div class="cardViewWraper">
-                    <div class="cardViewItem" *ngFor="let gridClaims of gridClaimsData| paginate: {itemsPerPage: rows, currentPage: page} ">
+                    <div class="cardViewItem" *ngFor="let gridClaims of gridClaimsData">
                         <header>
                             <div class="card_insureInfo">
                                  <h6>

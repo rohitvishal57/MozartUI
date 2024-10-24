@@ -11,13 +11,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MyMaterialModule } from 'src/app/material.module';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { PaymentstatusComponent } from './paymentstatus/paymentstatus.component';
 
 
 @NgModule({
   declarations: [
     RenewalListComponent,
     RenewalDynamicFormComponent,
-    SubQuotesComponent
+    SubQuotesComponent,
+    PaymentstatusComponent
   ],
   imports: [
     CommonModule,

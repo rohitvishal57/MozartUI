@@ -1,8 +1,8 @@
 export interface CustomerList {
     id: number;
     policyNumber: string;
-    policyStartDate: string;  // Consider using Date if you plan to work with dates
-    policyEndDate: string;    // Same as above
+    policyStartDate: string;  
+    policyEndDate: string;   
     noOfInsured: number;
     policyTerm: string;
     policyStatus: string;
@@ -15,7 +15,7 @@ export interface CustomerList {
     firstName: string;
     middleName: string | null;
     lastName: string;
-    dateOfBirth: string;      // Consider using Date if needed
+    dateOfBirth: string;      
     mobileNumber: string;
     emailID: string;
     city: string;
@@ -26,10 +26,10 @@ export interface CustomerList {
     source: string;
     businessType: string;
     receiptNo: string;
-    issuanceDate: string;     // Consider using Date if needed
+    issuanceDate: string;     
     oldPolicyNo: string | null;
     planName: string;
-    productVarientName: string;
+    productVariantName: string;
     leadId: string;
     quotationNumber: string;
     proposalNumber: string;

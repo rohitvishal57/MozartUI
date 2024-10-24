@@ -5,6 +5,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { CustomerList } from 'src/app/interface/customers.interface';
 import { CustomersService } from '../customers.service';
 import { CommonService } from 'src/app/services/common.service';
+import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-customers-list',
   templateUrl: './customers-list.component.html',
@@ -40,6 +41,7 @@ export class CustomersListComponent {
     private customerService: CustomersService ,
     private datePipe: DatePipe,
     private commonService:CommonService,
+    private toast: NgToastService
   ) {}
 
   customerListRequestBody={
@@ -242,15 +244,76 @@ export class CustomersListComponent {
   customerListView(view: string) {
     this.selectedView = view;
   }
-  handleAction(item: any, event: string) {
-    switch (event) {
-      case 'download':
-        break;
-      case 'delete':
-        break;
-      default:
-        console.warn('Unknown action:', event);
-    }
+  sendCustomerDetails(data:any,event:number){
+    const RequestBody = {
+      agentcode:this.agentCode,
+      requestType: event,
+      policyNumber: data.policyNumber,
+      proposalNumber: data.proposalNumber,
+      memberId: "",
+      mobileNo: data.mobileNumber,
+      emailId: data.emailID
+    };
+    this.customerService.sendCustomerDetails(RequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess) {
+          this.toast.success({ detail: "Success", summary: "customer data shared successfully.", duration: 1500 });
+        } else {
+          this.toast.error({ detail: "Error", summary: "Failed to send customer data.", duration: 1500 });
+        }
+      },
+      (error: any) => {
+        this.toast.error({ detail: "Error", summary: "Error while sending customer data.", duration: 1500 });
+      }
+    );
   }
+  download(item: any, event: string) {
+    const downloadRequestBody={
+      EventName:"Search policy kit request from customers",
+      AgentCode:this.agentCode,
+      ReferenceId:this.agentCode,
+      SearchOperator:"AND",
+      SearchRequest: [
+        {
+          CategoryID: "",
+          DocumentID: "",
+          ReferenceID: "",
+          FileName: "",
+          Description: "",
+          DataClassParam: [
+            {
+                DocSearchParamId: "2",
+                Value: "21-24-0002917-00"
+            },
+            {
+                DocSearchParamId: "15",
+                Value: "PS_04"
+            }
+          ]
+        }
+      ],
+      Category: "N/A",
+      UserRole: "Guest",
+      SessionId: "0000",
+      UserLevel: "Basic",
+      BranchCode: "000",
+      Designation: "N/A",
+      IntCategory: "N/A",
+      SourceSystemName: "Portal"
+    }
+    this.customerService.downloadCustomerData(downloadRequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess) {
+          this.toast.success({ detail: "Success", summary: "customer data downloaded successfully.", duration: 1500 });
+        } else {
+          this.toast.error({ detail: "Error", summary: "Failed to downloaded customer data.", duration: 1500 });
+        }
+      },
+      (error: any) => {
+        this.toast.error({ detail: "Error", summary: "Error while downloaded customer data.", duration: 1500 });
+      }
+    )
+  }
+
 
 }

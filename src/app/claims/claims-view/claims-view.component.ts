@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, O
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClaimData } from 'src/app/interface/claims.interface';
 import { formatDate } from '@angular/common';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { catchError, map, startWith } from 'rxjs/operators';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { ClaimsViewService } from './claims-view.service';
@@ -77,6 +77,10 @@ export class ClaimsViewComponent {
   allowedFileTypes: string[] = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/bmp']; 
   uploadValidFormat: boolean = false;
   hospitalAddress: any;
+  searchText: string = '';
+  isDropdownOpen: boolean = false;  
+  activityList : any[] = []
+  selectedPolicyNumber:any;
   coverNames = [
     "AYUSH Treatment",
     "Domiciliary Hospitalization",
@@ -101,6 +105,7 @@ export class ClaimsViewComponent {
   billsForm!: FormGroup;
   claimInfoId: any;
   documentId: any;
+  filteredPolicyList: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -125,6 +130,8 @@ export class ClaimsViewComponent {
     this.saveUpload();
     this.getProposalDetails();
     this.fetchStates();
+    const policyNumberControl = this.form.get('policyNumber');
+   // this.filteredPolicyNumbers = [...this.policyNumbers]; 
   }
   
   navigateToListClaim(){
@@ -156,8 +163,8 @@ export class ClaimsViewComponent {
     this.form = this.fb.group({
       id: localStorage.getItem("agentCode"),
       policyNumber: ["",Validators.required],
-      proposalNumber: ["", Validators.required],
-      memberName: ["",],
+      proposalNumber: ["",],
+      memberName: ["",Validators.required],
       productName: [""],
       fullName: [""],
       policyType: ["",],
@@ -167,7 +174,7 @@ export class ClaimsViewComponent {
       raisedDate: [""],
       hospitalName: [""],
       isFileUploadRequired: [true],
-      claimedAmount: ["",],
+      claimedAmount: ["",Validators.required],
       approvedAmount: [""],
       deductedAmount: [""],
       deductionReason: [""],
@@ -175,13 +182,13 @@ export class ClaimsViewComponent {
       reasonForCoPay: [""],
       coverName: [""],
       AgentCode: localStorage.getItem("agentCode"),
-      claimType: ["",],
+      claimType: ["",Validators.required],
       notes: [""],
       proposerName: [""],
       state: [""],
       city: [""],
       hospitalAddress: "",
-      admissionDate: ["2023-10-15"],
+      admissionDate: ["2023-10-15",],
       dischargeDate: ["2024-10-15"],
       admissionTime: [""],
       dischargeTime: [""],
@@ -203,15 +210,12 @@ export class ClaimsViewComponent {
         if (response.success) {
           this.response = response;
           const allData: ClaimData[] = response.data;
-          // Extract unique values for dropdowns
-          this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');
-          console.log('prop', this.proposalNumbers);
-          
+          this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');          
           this.policyNumbers = this.extractUniqueValues(
             allData,
             "policyNumber"
           );
-          // this.memberNames = this.extractUniqueValues(allData, 'fullName');
+          this.filteredPolicyList = [...this.policyNumbers];
           this.claimTypes = this.extractUniqueValues(allData, "policyType");
           this.cdr.markForCheck();
         } else {
@@ -222,23 +226,61 @@ export class ClaimsViewComponent {
     );
   }
 
-  // to extract unique values
   extractUniqueValues(data: any[], key: string): any[] {
     return [...new Set(data.map((item) => item[key]).filter((val) => val))];
   }
-
-  handleDropdownChange(event: any): void {
-    const selectedPolicyNumber = event.target.value;  
+  
+  handleDropdownChange(value:string): void {
+    const selectedPolicyNumber = value; 
+    // this.form.get('policyNumber')?.setValue(selectedPolicyNumber); 
     const filteredMembers = this.response.data.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
     this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
+    console.log(selectedPolicyNumber, this.memberNames);
     this.form.get("memberName")?.setValue("");
     this.cdr.markForCheck();
   }
 
-  resetValues(){
+  filterList(event: KeyboardEvent): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredPolicyList = this.policyNumbers.filter((item : any) =>
+      item.toLowerCase().includes(input)
+    );
+  }
 
+  toggleDropdown(open: boolean): void {    
+    this.isDropdownOpen = open;
+  }
+
+  filterPolicyNumbers(value: unknown): void {
+    console.log('filterPolicyNumbers');
+    const query = this.searchText.toLowerCase();
+  }
+
+  // Handle selection from the dropdown
+  selectPolicyNumber(policy: string): void {
+    console.log('selectPolicyNumber');
+    this.form.get('policyNumber')?.setValue(policy);
+    this.searchText = policy; 
+    this.isDropdownOpen = false; 
+  }
+
+  // Close dropdown when clicked outside
+  handleClickOutside(event: Event): void {
+    console.log('handleClickOutside');
+    const target = event.target as HTMLElement;
+    if (!target.closest('.custom-dropdown')) {
+      this.isDropdownOpen = false;
+    }
+  }
+
+  ngAfterViewInit() {
+    document.addEventListener('click', this.handleClickOutside.bind(this));
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('click', this.handleClickOutside.bind(this));
   }
 
   onClaimTypeChange(event: any): void {
@@ -274,7 +316,6 @@ export class ClaimsViewComponent {
     console.log("selectedCover");
     this.selectedCoverName = selectedCover;
 
-    // Toggle between the two UIs based on cover name
     if (
       [
         "AYUSH Treatment",

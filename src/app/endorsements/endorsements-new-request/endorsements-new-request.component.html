@@ -15,19 +15,17 @@
           <div class="row mb-3">
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
-                <select class="form-select input-selectBox" formControlName="policyNumber" (change)="onChange($event)">
-                  <option value="" disabled selected>Select Policy Number</option>
-                  <option *ngFor="let item of filteredActivity | async" [value]="item.policynumber">
-                    {{ item.policynumber }}
-                  </option>
-                  <option *ngIf="filteredActivity?.length === 0">No Record Found</option>
-                </select>
-                <label for="policyNumber">Policy Number</label>
-                <!-- <span *ngIf="submitted && caseCreationForm.get('policyNumber').invalid" class="ui-error block-show">Please select policy number</span> -->
+                <input class="form-control input-textBox" (keydown)="onKeyDown($event)" [matAutocomplete]="auto"  id="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
+                <label for="policyNumber">Search Policy Number </label>
                 <div *ngIf="caseCreationForm.get('policyNumber')?.invalid && (caseCreationForm.get('policyNumber')?.touched || caseCreationForm.get('policyNumber')?.dirty)">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('policyNumber')?.errors?.required">Policy Number is required.</small>
-                </div>
+                </div>     
               </div>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onChange($event.option.value)">
+                <mat-option *ngFor="let option of filteredActivity | async" [value]="option.policynumber">
+                    {{ option?.policynumber }}  
+                </mat-option>
+             </mat-autocomplete>
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
@@ -77,10 +75,11 @@
                 <div class="row">
                   <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
                     <div class="input-block form-floating input-block-renew">
-                      <input class="form-control input-textBox" id="address1" placeholder="" formControlName="address1" type="text">
+                      <input class="form-control input-textBox" id="address1" placeholder="" formControlName="address1" type="text" [max]="250">
                       <label for="address1">Address 1</label>
                       <div *ngIf="caseCreationForm.get('address1')?.invalid && (caseCreationForm.get('address1')?.touched || caseCreationForm.get('address1')?.dirty)">
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('address1')?.errors?.required">Address1 is required.</small>
+                        <small class="ui-error block-show" *ngIf="caseCreationForm.get('address1')?.errors?.maxlength">Max length is 250 characters.</small>
                       </div>
                     </div>
                   </div>
@@ -90,6 +89,7 @@
                       <label for="address1">Address 2</label>
                       <div *ngIf="caseCreationForm.get('address2')?.invalid && (caseCreationForm.get('address2')?.touched || caseCreationForm.get('address2')?.dirty)">
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('address2')?.errors?.required">Address2 is required.</small>
+                        <small class="ui-error block-show" *ngIf="caseCreationForm.get('address2')?.errors?.maxlength">Max length is 250 characters.</small>
                       </div>
                     </div>
                   </div>
@@ -205,7 +205,7 @@
                             valid number</span></span> -->
                         <div *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.primaryContactNumber')?.touched || caseCreationForm.get('endorsementDetails.primaryContactNumber')?.dirty)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.required">Mobile Number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.email">Enter Valid Mobile Number.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
                         </div>
                       </div>
                     </div>
@@ -220,7 +220,7 @@
                             *ngIf="f['memberPrimaryContactNumber'].errors['pattern']">Enter valid number</span></span> -->
                         <div *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.touched || caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.dirty)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.required">Mobile Number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.email">Enter Valid Mobile Number.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
                         </div>
                       </div>
                     </div>
@@ -235,7 +235,7 @@
                             *ngIf="f['memberAlternateContactNumber'].errors['pattern']">Enter valid number</span></span> -->
                         <div *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.dirty)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.required">Mobile Number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.email">Enter Valid Mobile Number.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
                         </div>
                       </div>
                     </div>
@@ -250,7 +250,7 @@
                             *ngIf="f['internationalContactNumber'].errors['pattern']">Enter valid number</span></span> -->
                         <div *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.internationalContactNumber')?.touched || caseCreationForm.get('endorsementDetails.internationalContactNumber')?.dirty)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.errors?.required">Mobile Number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.errors?.email">Enter Valid Mobile Number.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
                         </div>
                       </div>
                     </div>
@@ -265,7 +265,7 @@
                             valid number</span></span> -->
                         <div *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.alternateContactNumber')?.touched || caseCreationForm.get('endorsementDetails.alternateContactNumber')?.dirty)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.errors?.required">Mobile Number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.errors?.email">Enter Valid Mobile Number.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
                         </div>
                       </div>
                     </div>

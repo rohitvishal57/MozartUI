@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { RenewalListComponent } from './renewal-list/renewal-list.component';
 import { RenewalDynamicFormComponent } from './renewal-dynamic-form/renewal-dynamic-form.component';
 import { SubQuotesComponent } from './sub-quotes/sub-quotes.component';
+import { PaymentstatusComponent } from './paymentstatus/paymentstatus.component';
 
 const routes: Routes = [
   { path: "renewalList", component: RenewalListComponent },
-  { path: "renewalDynamicForm/:policyNumber/:activeSection", component: RenewalDynamicFormComponent },
-  { path: "subquotes", component: SubQuotesComponent },
+  { path: "payment", component: RenewalDynamicFormComponent },
+  { path: "quote", component: SubQuotesComponent },
+  {path:"paymentstatus",component:PaymentstatusComponent}
 ];
 
 @NgModule({

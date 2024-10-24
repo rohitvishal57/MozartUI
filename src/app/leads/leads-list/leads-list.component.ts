@@ -29,7 +29,7 @@ export class LeadsListComponent {
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
-  selected: string = "leadId";
+  selected: string = "Select an option";
   searchInputControl = new FormControl("", Validators.required);
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
@@ -242,6 +242,8 @@ export class LeadsListComponent {
     this.toggeledropdown = false;
     this.startDate = "";
     this.endDate = "";
+    this.leadsInfoListRequestBody.searchby = "";
+    debugger
     this.getLeadsList();
   }
   clear() {
@@ -289,8 +291,9 @@ export class LeadsListComponent {
       this.searchInputControl.setValidators([
         Validators.required
       ]);
-    } else if (this.selected = '') {
-      this.placeholder = '';
+    }
+     else if (this.selected = '') {
+      this.placeholder = 'Select an option';
     }
     this.searchInputControl.updateValueAndValidity();
     this.getPlaceholder();
@@ -319,7 +322,10 @@ export class LeadsListComponent {
     } else {
       this.leadsInfoListRequestBody.searchby = "";
     }
-    this.getLeadsList();
+    debugger;
+    if(this.selected!='Select an option'){
+      this.getLeadsList();
+    }
   }
   renewalListView(view: string) {
     this.selectedView = view;

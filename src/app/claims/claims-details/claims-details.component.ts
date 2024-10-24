@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ClaimsViewService } from "../claims-view/claims-view.service";
 import { formatDate } from "@angular/common";
+import { NgToastService } from "ng-angular-popup";
 
 @Component({
   selector: "app-claims-details",
@@ -35,8 +36,10 @@ export class ClaimsDetailsComponent {
   response: any;
   uploadedFile: any;
   agentCode: any;
+  status:any;
   selectMemberData: any = {};
   isViewVisible: boolean = false;
+  underDef: boolean = false;
   allowedFileTypes: string[] = [
     "application/pdf",
     "image/jpeg",
@@ -86,88 +89,17 @@ export class ClaimsDetailsComponent {
     createdBy?: string;
   }[] = [];
 
-  // customeStepperStatuses: any[] = [
-  //   {
-  //     label: "Claim Initiated",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "1",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Under Hospital Review",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "2",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "With Processing Team",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "3",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Discharge Requested",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "4",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Cashless Pre-Approved",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "5",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Cashless Authorized",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "Yes",
-  //     count: "6",
-  //     progress: "Done",
-  //   },
-  //   {
-  //     label: "Claim Approved",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "No",
-  //     count: "7",
-  //     progress: "processing",
-  //   },
-  //   {
-  //     label: "Claim Settled",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "No",
-  //     count: "8",
-  //     nextProcess: "Upload Documents",
-  //     progress: "Danger",
-  //   },
-  //   {
-  //     label: "Claim Approved",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "No",
-  //     count: "9",
-  //     progress: "pending",
-  //   },
-  //   {
-  //     label: "Claim Settled",
-  //     sublabel: "(December 4th, 2023)",
-  //     completed: "No",
-  //     count: "10",
-  //     progress: "pending",
-  //   },
-  // ];
-
   customeStepperStatuses: any[] = [];
+  statusMessage: string | undefined;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private claimsService: ClaimsViewService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private toast: NgToastService
+
   ) {
     this.route.queryParams.subscribe((params) => {
       this.claimId = this.route.snapshot.paramMap.get("id");
@@ -181,6 +113,7 @@ export class ClaimsDetailsComponent {
       this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimInfoId);
       this.updateStatusLabel("fileUpload");
     }
+    this.fetchClaimStatus(this.claimInfoId);
     this.fetchClaimTracker(this.claimInfoId);
     this.fetchClaimHistory(this.policyNumber);
 
@@ -195,17 +128,32 @@ export class ClaimsDetailsComponent {
   //   this.uploadedFiles = JSON.parse(storedFiles);
   // }
   // }
+  fetchClaimStatus(claimInfoId: string): void {
+    const claimsReqBody = {
+      claimNumber: claimInfoId,
+    };
+ 
+    this.claimsService.getClaimStatus(claimsReqBody).subscribe(
+      (response: any) => {
+        this.status = response.data;
+        this.statusMessage = response.data.notes;
+        (response.data.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
+      },
+      (error: any) => {
+        console.error("Error fetching claim details", error);
+      }
+    );
+  }
 
   fetchClaimTracker(claimInfoId: string): void {
     const claimsReqBody = {
-      claimNumber: "2000001993637736",
+      claimNumber: claimInfoId,
     };
 
-    this.claimsService.getClaimStatus(claimsReqBody).subscribe(
+    this.claimsService.getClaimTracker(claimsReqBody).subscribe(
       (response: any) => {
-        this.customeStepperStatuses = response.data.data;
-        console.log(this.customeStepperStatuses);
-        this.customeStepperStatuses.forEach((item, index) => {
+        this.customeStepperStatuses = response.data.data;        
+        this.customeStepperStatuses.forEach((item:any, index: number) => {
           item.count = index + 1;
         });
       },
@@ -363,9 +311,13 @@ export class ClaimsDetailsComponent {
     this.claimsService.uploadFiles(formData).subscribe({
       next: (response) => {
         this.handleSuccessResponse(response);
+        this.toast.success({ detail: "Claim submitted successfully" });
+        this.router.navigate(["claims/claimsList"]);
+
       },
       error: (error) => {
         this.handleErrorResponse(error);
+        this.toast.error({ detail: "Error occurred during claims submission" });
       },
     });
   }
