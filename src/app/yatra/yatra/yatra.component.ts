@@ -2417,14 +2417,14 @@ export class YatraComponent {
         }
         console.log(this.dynamicFormGroup.value);
 
-        if (this.formData['sumInsured'] == null) {
-          this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
-        }
-
+        
         this.flattenObjectInsert(this.dynamicFormGroup.value);
         this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
         console.log(this.formData);
-
+        
+        if (this.formData['sumInsured'] == null) {
+          this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+        }
 
         this.allJsonForm[this.getFormIndexValue()] = this.form;
 
@@ -3257,18 +3257,6 @@ export class YatraComponent {
     if (parentControl != null && typeof parentControl === 'object') {
       this.parentControl = parentControl;
     }
-
-    if ((event.target.type === 'checkbox' && event.target.checked)) {
-      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'combinedCheckbox') {
-        const firstKey = Object.keys((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls)[0];
-        (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[firstKey].setValue(false);
-        this.showOverlay(parentControl);
-      }
-
-      // Call the method only if the 'method' key is present in the JSON and the checkbox is checked  this.resolveMethod(control.method, control?.popUpFormId, control?.name, control?.dependentControls, 'add');
-      if (control.onChangeMethod)
-        this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, true, control?.name, parentControl?.name, index, 'add');
-    }
     if ((event.target.type === 'button')) {
       if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'questionnaire') {
         console.log(event.target.type, event.target.checked);
@@ -3278,7 +3266,65 @@ export class YatraComponent {
         // this.showOverlay(parentControl);
       }
     }
-    if ((event.target.type === 'checkbox')) {
+    if ((event.target.type === 'checkbox' && event.target.checked)) {
+      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'combinedCheckbox') {
+        const firstKey = Object.keys((this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls)[0];
+        (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[firstKey].setValue(false);
+        this.showOverlay(parentControl);
+      }
+
+      if (parentControl != null &&  parentControl.type == 'questionnaire') {
+        const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
+        console.log('questionnaire',arrayName,event.target.checked);
+        parentControl.subControls.forEach((subControl: any) => {
+          if (subControl.name === arrayName) {
+            subControl.visible = event.target.checked;
+            console.log(subControl, event.target.value);
+          }
+          
+          if (subControl.name === 'doneButton') {
+            subControl.disabled = !event.target.checked;
+            console.log(subControl, event.target.value);
+          }
+        });
+        this.openPopUp();
+        // this.showOverlay(parentControl);
+      }
+
+      // Call the method only if the 'method' key is present in the JSON and the checkbox is checked  this.resolveMethod(control.method, control?.popUpFormId, control?.name, control?.dependentControls, 'add');
+      if (control.onChangeMethod)
+        this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, true, control?.name, parentControl?.name, index, 'add');
+    }
+    
+    else if(event.target.type === 'checkbox' && event.target.checked == false) {
+
+      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'combinedCheckbox') {
+        // if()
+        // console.log(parentControl,this.dynamicFormGroup.get(parentControl.name),this.dynamicFormGroup);
+
+        parentControl.subControls.forEach((subControl: any) => {
+          if (subControl.innerSubControls) {
+            for (let i = 1; i < subControl.innerSubControls.length; i++) {
+              console.log(subControl.innerSubControls[i]);
+
+              if (subControl.innerSubControls[i].coreControls) {
+                for (let j = 0; j < subControl.innerSubControls[i].coreControls.length; j++) {
+                  console.log(subControl.innerSubControls[i].coreControls[j], this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`));
+                  if (this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == true) {
+
+                    this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue(false);
+                  }
+                  else {
+                    this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
+                  }
+                }
+              }
+            }
+          }
+        })
+        this.changeRecalculate(true);
+        this.addOnRemoved(control, parentControl);
+      }
       if (parentControl != null &&  parentControl.type == 'questionnaire') {
         const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
         console.log('questionnaire',arrayName,event.target.checked);
@@ -3322,44 +3368,12 @@ export class YatraComponent {
           }
           
           if (subControl.name === 'doneButton') {
-            subControl.disabled = !event.target.checked;
+            subControl.disabled = false;
             console.log(subControl, event.target.value);
           }
         });
         this.openPopUp();
         // this.showOverlay(parentControl);
-      }
-
-      // Call the method only if the 'method' key is present in the JSON and the checkbox is checked  this.resolveMethod(control.method, control?.popUpFormId, control?.name, control?.dependentControls, 'add')
-    }
-    else {
-
-      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'combinedCheckbox') {
-        // if()
-        // console.log(parentControl,this.dynamicFormGroup.get(parentControl.name),this.dynamicFormGroup);
-
-        parentControl.subControls.forEach((subControl: any) => {
-          if (subControl.innerSubControls) {
-            for (let i = 1; i < subControl.innerSubControls.length; i++) {
-              console.log(subControl.innerSubControls[i]);
-
-              if (subControl.innerSubControls[i].coreControls) {
-                for (let j = 0; j < subControl.innerSubControls[i].coreControls.length; j++) {
-                  console.log(subControl.innerSubControls[i].coreControls[j], this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`));
-                  if (this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == true) {
-
-                    this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue(false);
-                  }
-                  else {
-                    this.dynamicFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
-                  }
-                }
-              }
-            }
-          }
-        })
-        this.changeRecalculate(true);
-        this.addOnRemoved(control, parentControl);
       }
       if (control.onChangeMethod)
         this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, false, control?.name, parentControl?.name, index, 'remove');
@@ -3966,9 +3980,10 @@ export class YatraComponent {
     this.closePopUp();
     subControl.visible = false;
   }
-  closePopUp(){
+  closePopUp(control:any=null){
+    console.log(control);
     this.isOverlayVisible = false;
-    this.mappingForQuestionnaire();
+    this.mappingForQuestionnaire(control);
   }
 
   changeOverLayDone(control: any, parentControl: any, changeValue: boolean = false) {
@@ -4407,11 +4422,61 @@ export class YatraComponent {
     const appleStoreUrl = "https://apps.apple.com/in/app/activ-health/id1179005764";
     window.open(appleStoreUrl, '_blank');
   }
-  mappingForQuestionnaire(){
+  mappingForQuestionnaire(controls:any){
+    console.log(controls);
+    let productQuestionnaire:any=[];
     console.log(this.formData,this.dynamicFormGroup.value);
+    const dynamicValue = this.dynamicFormGroup.value;
+    console.log(dynamicValue);
     this.formData.insuredMemberDetails.forEach((member:any) => {
       console.log(member.relation);
+      let memberData:any =[];
+      if(controls.subControls){
+        controls.subControls.forEach((sub:any)=>{
+          if(sub.name == member.relation){
+            sub.innerArrayControl[0].forEach((data:any)=>{
+              if(data.name == 'dName'){
+                memberData = data.options;
+              }
+            })
+          }
+        })
+      }
+      else{
+        memberData = [];
+      }
+      console.log(memberData);
+      Object.keys(dynamicValue).forEach((item:any)=>{
+        if(dynamicValue[item] != null && typeof(dynamicValue[item]) == 'object'){
+          const innerValue = dynamicValue[item];
+          Object.keys(innerValue).forEach((subItem:any)=>{
+            if(member.relation == subItem){
+              console.log(subItem,innerValue[subItem]);
+              innerValue[subItem].forEach((innerArray:any)=>{
+                if (innerArray.dName){
+                  if(member.length > 0){
+                    const newOption = memberData.find((item:any) => item.value === innerArray.dName)
+                    console.log(innerArray,newOption);
+                    innerArray.subQuestionCode = newOption.value;
+                    innerArray.dName = newOption.name
+                    productQuestionnaire.push(innerArray);
+                  }
+                  else{
+                    innerArray.subQuestionCode = "";
+                    productQuestionnaire.push(innerArray);
+                  }
+                }
+                else{
+                  productQuestionnaire.push(innerArray);
+                }
+              })
+            }
+          })
+          console.log(item,dynamicValue[item],typeof(item),typeof(dynamicValue[item]));
+        }
+      })
     })
+    console.log(productQuestionnaire);
   }
 
 }
