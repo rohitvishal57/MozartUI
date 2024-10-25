@@ -17,7 +17,7 @@
           <h1>Your Progress</h1>
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
-              <div class="step-count" (click)="addNavbar(i,case)">
+              <div class="step-count" >
                 <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
                   {{ i + 1 }}
                 </button>
@@ -1080,17 +1080,18 @@
                                           <div *ngIf="innerControl.type==='select'" [class]="innerControl.class"
                                             class="typecss" [hidden]="!innerControl.visible">
                                             <div class="input-container">
-                                              <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
-                                                <span *ngIf="innerControl.validators">*</span></label>
+                                              
                                               <select class="inputField_Select" [formControlName]="innerControl.name"
                                                 (change)="onInputChange($event, subControl,control,k-1,innerControl)"
-                                                [ngClass]="{'has-value': hasAnyValue(subControl)}">
+                                                [ngClass]="{'has-value': hasInnerValue(control,subControl,innerControl,k-1)}">
                                                 <option selected value="">Choose...</option>
                                                 <option *ngFor="let opt of innerControl.options"
                                                   [value]="opt.id ? stringifyObject(opt) : opt.value">
                                                   {{ opt.name }}
                                                 </option>
                                               </select>
+                                              <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
+                                                <span *ngIf="innerControl.validators">*</span></label>
                                               <!-- <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}</label> -->
                                             </div>
                                             <!-- <small

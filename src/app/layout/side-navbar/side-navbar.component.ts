@@ -61,6 +61,6 @@ export class SideNavbarComponent {
     this.router.navigate([value]);
   }
   isRouteActive(route: string): boolean {
-    return this.router.url === route;
+    return this.router.url.includes(route);
   }
 }
