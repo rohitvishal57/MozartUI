@@ -290,7 +290,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="dob" placeholder="" formControlName="dob"
-                                    type="date" (change)="changeDob($event)">
+                                    type="date" [max]="today" (change)="changeDob($event)">
                                 <label for="nomineeName">DOB</label>
                             </div>
                         </div>

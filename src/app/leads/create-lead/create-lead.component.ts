@@ -38,6 +38,7 @@ export class CreateLeadComponent implements OnInit {
   referenceStatus: any;
   referenceSubStatus: any;
   activityTypes: any = [];
+  today:string='';
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -92,7 +93,8 @@ export class CreateLeadComponent implements OnInit {
     //   }
     // );
 
-  
+    const date = new Date();
+    this.today = date.toISOString().split('T')[0];
   }
 
   inItForm() {
