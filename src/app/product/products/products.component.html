@@ -45,7 +45,7 @@
 <!--Bottom: ADD TO CAMPARE PRODUCTS START-->
 <div class="bottomInfoMain bottomInfoMain_comparePolices">
     <div class="bottomInfoSubMain">
-        <div class="bi_left" *ngFor="let item of compareItems;">
+        <div class="bi_left" *ngFor="let item of compareItems; let i = index">
             <div class="policePlans">
                 <!--Police Info start-->
                 <div class="planProductInfo">
@@ -59,7 +59,7 @@
                 </div>
                 <!--Police Info end-->
             </div>
-            <div class="planSeparator">vs</div>
+            <div class="planSeparator" *ngIf="i < compareItems.length - 1">vs</div>
         </div>
         <div class="bi_right">
             <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()">Compare now</button>

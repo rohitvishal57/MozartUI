@@ -33,7 +33,6 @@ export class ProductsComponent implements OnInit {
   partnerId:any
   productId:any
   compareItems: any[] = [];
-
   private dynamicStyle!: HTMLLinkElement;
 
   displayNoProductsMessage: boolean = false;
