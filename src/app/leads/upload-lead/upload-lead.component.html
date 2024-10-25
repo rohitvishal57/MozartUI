@@ -36,7 +36,7 @@
                                     {{selctedFileName}}
                                 </div>
                                 <div class="ud_area_right">
-                                    <button type="button" class="btn_uploadDocument">
+                                    <button type="button" id="uploadfiles" name="uploadfiles" class="btn_uploadDocument">
                                         <span class="upload_icon"><img
                                                 src="assets/Img/icon_upload_white.svg"></span>
                                         Upload
@@ -70,7 +70,7 @@
                                                 <p>File Type</p>
                                             </div>
                                             <div class="uploadedFiles_infoItem">
-                                                <button class="delete-button" >
+                                                <button type="button" id="deletefile" name="deletefile" class="delete-button" >
                                                     <img src="assets/Img/icon_delete_red2.svg">
                                                 </button>
                                                 <div class="size-align">
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-5">
-                        <button type="submit" (click)="continueFileUpload()" class="btn_red">Continue</button>
+                        <button type="submit" id="leadcontinue" name="leadcontinue" (click)="continueFileUpload()" class="btn_red">Continue</button>
                     </div>
                 </section>
 

@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="col-sm-4 col-lg-3 col-md-3 mb-30">
-                            <button class="au-search btn_red" type="button" (click)="SETAUDATA()">Search</button>
+                            <button id="leadsearch" name="leadsearch" class="au-search btn_red" type="button" (click)="SETAUDATA()">Search</button>
                         </div>
 
                     </div>
@@ -67,7 +67,7 @@
                         </div>
 
                         <div class="col-sm-4 col-lg-3 col-md-3 mb-30">
-                            <button class="au-search btn_red" type="button" (click)="SETIDFCDATA()">Search</button>
+                            <button id="leadsearch2" name="leadsearch2" class="au-search btn_red" type="button" (click)="SETIDFCDATA()">Search</button>
                         </div>
 
                     </div>
@@ -101,7 +101,7 @@
                         </div>
                         <div class="col-sm-4 col-lg-2 col-md-2 mb-30">
                             <label class="label label-height label-form-builder">&nbsp;</label>
-                            <button class="au-search yes-search btn_red" type="button" [disabled]="!sendOTPEnabled"
+                            <button id="sendotp" name="sendotp" class="au-search yes-search btn_red" type="button" [disabled]="!sendOTPEnabled"
                                 (click)="sendOTP()">Send OTP
                             </button>
                         </div>
@@ -114,7 +114,7 @@
                         </div>
                         <div class="col-sm-4 col-lg-1 col-md-1 mb-30" *ngIf="otpEntered">
                             <label class="label label-height label-form-builder">&nbsp;</label>
-                            <button class="au-search yes-search btn_red" type="button" (click)="validate()">Validate
+                            <button id="validateotp" name="validateotp" class="au-search yes-search btn_red" type="button" (click)="validate()">Validate
                             </button>
                         </div>
                     </div>
@@ -563,7 +563,7 @@
  
                     <div class="row mt-4" *ngIf="action!='addNotes'">
                         <div class="col-12">
-                            <button type="submit" class="btn_red">Save</button>
+                            <button type="submit" id="addnotesave" name="addnotesave" class="btn_red">Save</button>
                         </div>
                     </div>
 
@@ -647,7 +647,7 @@
             
             <div class="row mt-4" *ngIf="action=='addNotes'">
                 <div class="col-12">
-                    <button type="submit" class="btn_red">Add Notes</button>
+                    <button type="submit" id="addnotes" name="addnotes" class="btn_red">Add Notes</button>
                 </div>
             </div>
 
