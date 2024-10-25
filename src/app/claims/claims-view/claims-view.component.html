@@ -261,7 +261,7 @@
                           <div *ngIf="showFirstScenario" class="col-12" >
                            
                             <section class="main_addBills mb-5" formArrayName="billsArray">
-                                <button type="button" class="btn btn-add" (click)="addBillRow()">Add More Bills</button>
+                                <button type="button" id="addmorebills" name="addmorebills" class="btn btn-add" (click)="addBillRow()">Add More Bills</button>
                             
                           <div class="row" *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i">
                               <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
@@ -291,7 +291,7 @@
                             </div>
 
                               <div class="col-2 col-sm-12 col-md-1 col-lg-1 col-xl-1 text-center">
-                                <button type="button" class="btn btn_bill_delete" (click)="removeBillRow(i)"> <img src="assets/Img/icon_delete_red2.svg"></button>
+                                <button type="button" id="billdelete" name="billdelete" class="btn btn_bill_delete" (click)="removeBillRow(i)"> <img src="assets/Img/icon_delete_red2.svg"></button>
                               </div>
                           </div>
                         </section>
@@ -432,7 +432,7 @@
                                   <p>JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)</p>
                               </div>
                               <div class="ud_area_right">
-                                  <button type="button" class="btn_uploadDocument">
+                                  <button type="button" id="uploadfile" name="uploadfile" class="btn_uploadDocument">
                                       <span class="upload_icon"><img src="assets/Img/icon_upload_white.svg"></span> Upload
                                   </button>
                               </div>
@@ -456,7 +456,7 @@
                                                       <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
                                                           <ng-container *ngIf="!file.isEditing">
                                                               <span class="label-text">{{ file.label }}</span>
-                                                              <button (click)="startEditing(file)" class="edit-button">
+                                                              <button type="button" id="labeledit" name="labeledit" (click)="startEditing(file)" class="edit-button">
                                                                   <img src="assets/Img/icon_pencil_blue.svg">
                                                               </button>
                                                           </ng-container>
@@ -480,7 +480,7 @@
                                                       <p>{{ file.type }}</p>
                                                   </div>
                                                   <div class="uploadedFiles_infoItem">
-                                                      <button class="delete-button" (click)="deleteFile(file)">
+                                                      <button type="button" id="deletefile" name="deletefile" class="delete-button" (click)="deleteFile(file)">
                                                           <img src="assets/Img/icon_delete_red2.svg">
                                                       </button>
                                                       <div class="size-align">
@@ -505,7 +505,7 @@
           <div class="row">
               <div class="col-12">
                   <!-- <button type="button" class="btn_red" [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid" (click)="submitRequest()">Submit Request</button> -->
-                  <button type="button" class="btn_red" (click)="submitRequest()" [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid" >Submit Request</button>
+                  <button type="button" id="submitrequest" name="submitrequest" class="btn_red" (click)="submitRequest()" [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid" >Submit Request</button>
               </div>
           </div>
       </div>
