@@ -167,13 +167,14 @@
   .details_claimsAmount {
     display: flex;
     gap:8px;
+    justify-content: flex-end;
     .claim_amount {
       display: flex;
       flex-direction: column;
-      gap:8px;
+      gap:12px;
       border-radius: 8px;
       padding: 8px 16px;
-      background: #f3f0f08c;
+      /*background: #f3f0f08c;*/
       box-shadow: 0px 2px 4px 0px #D5D7DE33;
       box-shadow: 0px 1px 10px 0px #D5D7DE1F;
       box-shadow: 0px 4px 5px 0px #D5D7DE24;
@@ -183,12 +184,12 @@
       flex:auto;
       h6 {
         font-weight: 400;
-        font-size: 14px;
+        font-size: 16px;
         margin: 0 !important;
       }
       p {
         font-weight: 600;
-        font-size: 13px;
+        font-size: 20px;
         color: #1F874C;
         margin: 0 !important;
       }
@@ -408,5 +409,29 @@
     height: 5px;
     background: #4c4c4c;
     border-radius: 10px;
+    margin-bottom: 4px;
+  }
+  .details_claimsInfo .row_claimsInfo {
+    display: flex;
+	  flex-direction: row;
+	  gap: 8px;
+    align-items: flex-end;
+    line-height: normal;
+  }
+  .details_claimsInfo .row_claimsInfo label {
+    font-weight: 400;
+    font-size: 11px;
+    color: #a7a7a7;
+    line-height: 9px;
+  }
+  .details_claimsInfo .row_claimsInfo h6 {
+    font-weight: 400;
+	  font-size: 17px;
+	  color: #4c4c4c;
+	  margin: 0 !important;
+    line-height: normal;
+  }
+  .details_claimsInfo  .sub_claimsInfo h6 {
+    font-size: 16px;
   }
   /*-----Claims Details start-----*/
