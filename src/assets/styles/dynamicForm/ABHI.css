@@ -2253,6 +2253,12 @@ input[type=checkbox]:checked {
 .bottom-section .accordionCardBody > .typecss {
     padding: 0;
 }
+.bottom-section .accordionCardBody > .typecss:first-child {
+    display: none;
+}
+.accordionCard.bottom-section .accordionCardBody{
+    padding: 6px 16px 5px !important;
+}
 .bottom-section .label-value-container {
     display: flex;
     flex-direction: column;
@@ -2266,6 +2272,7 @@ input[type=checkbox]:checked {
     text-align: center;
     color: #2e2e2e;
     position: relative;
+    display: none;
 }
 .bottom-section .label-value-container .label-text {
     text-transform: uppercase;
