@@ -2828,7 +2828,7 @@ input[type="search"]::-webkit-search-results-decoration {
   padding: 12px 12px 14px;
   border-radius: 16px;
   background: var(--white-color);
-  gap: 24px;
+  gap: 14px;
 }
 
 .cardViewMain .cardViewWraper .cardViewItem header {
@@ -2841,6 +2841,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 12px;
   line-height: 12px;
   color:var(--text-black-4c);
+  width: 100%;
 }
 
 .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 {
@@ -2851,8 +2852,11 @@ input[type="search"]::-webkit-search-results-decoration {
   color: var(--text-black-2e);
   margin: 0;
   padding: 0;
+  min-height: 32px;
 }
-
+.cardViewMain .cardViewWraper .cardViewItem header .card_btnGroup {
+  max-width: 100px;
+}
 .cardViewMain .cardViewWraper .cardViewItem .cardViewBody {
   flex-wrap: wrap;
   gap: 16px;
@@ -2884,6 +2888,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems .item_value {
   font-weight: 600;
   font-size: 12px;
+  word-break: break-all;
 }
 
 .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems .item_value .table-renewalPremium {
@@ -3681,7 +3686,7 @@ input[type="search"]::-webkit-search-results-decoration {
 /*Table th,td space start*/
 .tableSubMain .table th, 
 .tableSubMain .table td {
-  padding: 8px 12px;
+  padding: 8px 8px;
 }
 /*Table th,td space end*/
 /*Optional coverages checkbox start*/
