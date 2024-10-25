@@ -238,6 +238,8 @@ export class RenewalListComponent {
         this.renewalLisRequestBody.mobileNumber = "";
         this.renewalLisRequestBody.proposer = "";
       }
+      this.first = 0;
+      this.page = 1;
       this.getRenewalsList();
     }
   }

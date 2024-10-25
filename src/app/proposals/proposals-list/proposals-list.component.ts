@@ -265,6 +265,8 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
       }
+      this.first = 0;
+      this.page = 1;
       this.getProposalList();
     }
   }

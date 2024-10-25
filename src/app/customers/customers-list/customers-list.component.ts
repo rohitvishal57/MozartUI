@@ -250,6 +250,8 @@ export class CustomersListComponent {
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.policyNumber = "";
       }
+      this.first = 0;
+      this.page = 1;
       this.getCustomerList();
     }
   }
