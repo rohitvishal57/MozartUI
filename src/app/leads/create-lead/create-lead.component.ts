@@ -33,6 +33,7 @@ export class CreateLeadComponent implements OnInit {
   AUSearchValue: string = "";
   agentCode: any = '';
   submittedUser: any = {};
+  notesSubmitted : boolean = false;
   action: String = '';
   leadNumber: String = '';
   referenceStatus: any;
@@ -144,7 +145,7 @@ export class CreateLeadComponent implements OnInit {
 
 
     this.addNoteForm = this.formBuilder.group({
-      title: ['', Validators.required], // Title is required
+      activityTitle: ['', Validators.required], // activityTitle is required
       activityStartDate: ['', Validators.required], // Start date is required
       activityStartTime: ['', Validators.required], // Start time is required
       activityEndDate: ['', Validators.required], // End date is required
@@ -324,9 +325,12 @@ export class CreateLeadComponent implements OnInit {
 
   addNotesSubmit() {
     let addNotesRequestBody: any = {};
-    addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
+    console.log('activityType',this.addNoteForm.errors);
+    this.notesSubmitted =true;
+    if(this.addNoteForm.valid){
+      addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
       addNotesRequestBody.activityenddate = this.addNoteForm.value.activityEndDate,
-      addNotesRequestBody.activityName = this.addNoteForm.value.title,
+      addNotesRequestBody.activityName = this.addNoteForm.value.activityTitle,
       addNotesRequestBody.note = this.addNoteForm.value.notes,
       addNotesRequestBody.name = this.addNoteForm.value.notes,
       addNotesRequestBody.activitytype = this.addNoteForm.value.activityType,
@@ -335,6 +339,8 @@ export class CreateLeadComponent implements OnInit {
       addNotesRequestBody.mobilenumber = this.submittedUser.phoneNumber,
       addNotesRequestBody.leadnumber = this.leadNumber,
       addNotesRequestBody.isupdate = 0
+
+      console.log('addNoteForm',this.addNoteForm.errors);
 
     this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
       (response) => {
@@ -346,13 +352,15 @@ export class CreateLeadComponent implements OnInit {
         console.error("Error from addLeadNotes API:", error);
       }
     );
+        
+  }
   }
 
   backToleads(){
     this.router.navigate(['/leads/leadsList'], {
   });
   }
-  
+
   isNumber(event: KeyboardEvent) {
     const pattern = /[0-9]/; // Only allow digits
     const inputChar = String.fromCharCode(event.charCode);
