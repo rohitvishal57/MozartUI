@@ -32,8 +32,7 @@ export class ProductsComponent implements OnInit {
   agentCode=localStorage.getItem('agentCode');
   partnerId:any
   productId:any
-
-
+  compareItems: any[] = [];
 
   private dynamicStyle!: HTMLLinkElement;
 
@@ -193,9 +192,37 @@ export class ProductsComponent implements OnInit {
     }
   }
   productsDetail(item: any) {
+    debugger;
     console.log(item);
     this.router.navigate(['quote/productDetails'], {
       state: { item: item }
+    });
+  }
+
+
+  addToCompare(item: any) {
+    if(this.compareItems.length>2){
+    this.toast.error({ detail: 'Only three products can be added to compare!'});
+    return; 
+  }
+    // Check if the item already exists in the array
+    const isAlreadyPresent = this.compareItems.some(existingItem => existingItem === item);
+    if (isAlreadyPresent) {
+      console.log('Item already exists, ignoring.');
+      return; // Skip adding the item
+    }
+    // Add the item if it's not already in the array
+    this.compareItems.push(item);
+    console.log('Item added to comparison.');
+  }
+
+  removeCompareItem(item:any){
+    this.compareItems = this.compareItems.filter(existingItem => existingItem !== item);
+    console.log('Item removed from comparison.');
+  }
+  navigateToProductComparison(){
+    sessionStorage.setItem('compareItems', JSON.stringify(this.compareItems));
+    this.router.navigate(['/products/comparison'], {
     });
   }
 }

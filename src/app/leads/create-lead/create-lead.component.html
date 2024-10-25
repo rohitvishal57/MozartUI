@@ -2,7 +2,7 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"><!--<a class="btn_backPage"></a>-->Create/Update Lead</h2>
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()"></a> Create/Update Lead</h2>
             </div>
             <div *ngIf="isAUuser && !this.dataToDisplay">
                 <!-- <h2 class="sub-title mb-30 font-weight-bold"> AU User Details</h2> -->
@@ -290,7 +290,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="dob" placeholder="" formControlName="dob"
-                                    type="date" (change)="changeDob($event)">
+                                    type="date" [max]="today" (change)="changeDob($event)">
                                 <label for="nomineeName">DOB</label>
                             </div>
                         </div>
@@ -460,7 +460,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="sumInsured" placeholder=""
-                                    formControlName="sumInsured" type="text">
+                                    formControlName="sumInsured" type="number">
                                 <label for="sumInsured">Interested Sum Insured</label>
                                 <span class="ui-error block-show"
                                 *ngIf="submitted && userValidations.get('sumInsured')?.errors?.['pattern']">Please
@@ -470,7 +470,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="premium" placeholder=""
-                                    formControlName="premium" type="text" OnlyCharacter>
+                                    formControlName="premium" type="number" OnlyCharacter>
                                 <label for="premium">Interested Premium</label>
                                 <span class="ui-error block-show"
                                 *ngIf="submitted && userValidations.get('premium')?.errors?.['pattern']">Please
@@ -501,7 +501,7 @@
                                 <label for="policyType">Policy Type</label>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="policyNumber" placeholder=""
                                     formControlName="policyNumber" type="text">
@@ -510,7 +510,7 @@
                                 *ngIf="submitted && userValidations.get('policyNumber')?.errors?.['pattern']">Please
                                 enter proper value</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                 </section>
