@@ -27,89 +27,47 @@
                             </mat-option>
                          </mat-autocomplete>
                     </div>        
-                            <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
-                                <div class="input-block form-floating input-block-renew">
-                                  <input class="form-control input-textBox"  [matAutocomplete]="auto"  id="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
-                                  <label for="policyNumber">Policy Number</label>
-                                  <div *ngIf="caseCreationForm.get('policyNumber')?.invalid && (caseCreationForm.get('policyNumber')?.touched || caseCreationForm.get('policyNumber')?.dirty)">
-                                    <small class="ui-error block-show" *ngIf="caseCreationForm.get('policyNumber')?.errors?.required">Policy Number is required.</small>
-                                  </div>     
-                                </div>
-                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onChange($event.option.value)">
-                                  <mat-option style="font-size: 13px !important;" *ngFor="let option of filteredActivity | async" [value]="option.policynumber">
-                                      {{ option?.policynumber }}  
-                                  </mat-option>
-                               </mat-autocomplete>
-                              </div> -->
-                  
 
-                            <!-- <div class="input-block form-floating input-block-renew">
-                                <div class="custom-dropdown">
-                                  <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    placeholder="Search Policy Number" 
-                                    [(ngModel)]="searchText" 
-                                    (focus)="toggleDropdown(true)" 
-                                    (input)="filterPolicyNumbers()"
-                                  />
-                              
-                                  <select class="form-select input-selectBox" formControlName="policyNumber" (change)="handleDropdownChange($event)">
-                                    <option class="dropdown-options" value="" disabled selected>Select Policy Number</option>
-                                    <option class="dropdown-options" *ngFor="let policy of filteredPolicyNumbers" [value]="policy">{{ policy }}</option>
-                                  </select>
+                              <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-floating input-block-renew">
+                                    <select class="form-select" 
+                                            formControlName="memberName" 
+                                            [ngClass]="{'has-value': hasAnyValue() || isFocused}"
+                                            (focus)="onFocus()"
+                                            (blur)="onBlur()">
+                                        <option value="" selected disabled></option>
+                                        <ng-container *ngFor="let member of memberNames">
+                                            <option [value]="member">{{ member }}</option>
+                                        </ng-container>
+                                    </select>
+                                    <label class="form-label">Select Member</label>
+                                    
+                                    <small class="ui-error text-danger" 
+                                           *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
+                                        Member name is required.
+                                    </small>
                                 </div>
-                              
-                                <label for="idgender">Select Policy Number</label>
-                                <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
-                                  Policy Number is required.
-                                </small>
-                              </div> -->
-                              
-
-                            <!-- <div class="input-block form-floating input-block-renew">
-                                <div class="custom-dropdown">
-                                  <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    placeholder="Search Policy Number" 
-                                    [(ngModel)]="searchText" 
-                                    (focus)="toggleDropdown(true)" 
-                                    (input)="filterPolicyNumbers()"
-                                  />
-                              
-                                  <ul *ngIf="isDropdownOpen" class="dropdown-list">
-                                    <li 
-                                      *ngFor="let policy of filteredPolicyNumbers" 
-                                      (click)="selectPolicyNumber(policy)"
-                                    >
-                                      {{ policy }}
-                                    </li>
-                                    <li *ngIf="filteredPolicyNumbers.length === 0">
-                                      No results found
-                                    </li>
-                                  </ul>
-                                </div>
-                              
-                                <label for="policyNumber">Select Policy Number</label>
-                                <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
-                                  Policy Number is required.
-                                </small>
-                              </div> -->
+                            </div> -->
+                            
 
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
-                              <select class="form-select input-selectBox" formControlName="memberName">
+                              <select class="form-select input-selectBox" formControlName="memberName" [ngClass]="{'has-value': true}">
                                   <option class="dropdown-options" value="" disabled selected>Select Member</option>
                                   <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
                               </select>
-                              <label for="member">Select Member</label>
+                              <label for="member" [ngClass]="{'move-up': hasAnyValue()}">Select Member</label>
                               <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
                                 Member name is required.
                               </small>
                                          
                           </div>
                       </div>
+
+       
+                      
+                      
+                      
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
                               <select class="form-select input-selectBox" formControlName="claimType" (change)="onClaimTypeChange($event)">
@@ -136,7 +94,8 @@
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount"
+                                (input)="onInput($event)">
                                 <label for="claimamount">Claim Amount</label>
                                 <!-- <span class="ui-error">Please enter claim amount</span> -->
                                 <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
@@ -239,7 +198,7 @@
 
                             <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (input)="onInput($event)">
                                     <label for="claimamount">Claim Amount</label>
                                     <!-- <span class="ui-error">Please enter claim amount</span> -->
                                     <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
@@ -284,7 +243,7 @@
                               </div> -->
                               <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount">
+                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (input)="onInput($event)">
                                     <label for="claimamount">Claim Amount</label>
                                     <!-- <span class="ui-error">Please enter claim amount</span> -->
                                 </div>
