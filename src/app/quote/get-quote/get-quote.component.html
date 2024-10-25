@@ -30,7 +30,7 @@
                 <!-- Label -->
                 <label class="field_label">{{ dropdown.label }}</label>
                 <!-- Button for each dropdown -->
-                <button class="dropdown-button" type="button" (click)="openCustomDiv(dropdown.label, i)">
+                <button class="dropdown-button" type="button" id="dropdownlabel-custom" name="dropdownlabel-custom" (click)="openCustomDiv(dropdown.label, i)">
                   <div class="selected-value">
                     <span>
                       <ng-container *ngIf="dropdown.label === 'Policy Type'">
@@ -132,7 +132,7 @@
 
 
                       </div>
-                      <button class="suminsured-button" (click)="updateSumInsured()">
+                      <button type="button" id="continue" name="continue" class="suminsured-button" (click)="updateSumInsured()">
                         Continue
                       </button>
                     </div>
@@ -208,7 +208,7 @@
                                   </div>
                                 </div>
                                 <div *ngIf="relation.isIncrement == true && selectedPlan === 'Family Floater'" class="input-checkbox-feild">
-                                <button type="button" class="btn_white btn_addChildren" (click)="incrementMember(relation)">
+                                <button type="button" id="incrementMember" name="incrementMember" class="btn_white btn_addChildren" (click)="incrementMember(relation)">
                                   <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
                                   <img src="assets/Img/icon_round_plus_red.svg">
                                 </button>
@@ -290,7 +290,7 @@
                             <img src="assets/Img/icon_right_arrow_black.svg" width="7">
                           </button> -->
                         </div>
-                        <button type="button" class="btn_red btn_fullWidth" (click)="addInsuredMemberDetails()">Next</button>
+                        <button type="button" id="next" name="next" class="btn_red btn_fullWidth" (click)="addInsuredMemberDetails()">Next</button>
                       </div>
                 </div>
 
@@ -348,7 +348,7 @@
                           </div>
                         </div>
                       </div>
-                      <button type="button" class="btn_red btn_fullWidth" (click)="diseaseSelection()">Continue</button>
+                      <button type="button" id="diseaseContinue" name="diseaseContinue" class="btn_red btn_fullWidth" (click)="diseaseSelection()">Continue</button>
                     </div>
                   </div>
 
@@ -359,7 +359,7 @@
             </div>
 
             <div class="continue-btn-container">
-              <button type="button" class="continue-btn btn_grey" (click)="continue()">Continue</button>
+              <button type="button" id="mainContinue" name="mainContinue" class="continue-btn btn_grey" (click)="continue()">Continue</button>
             </div>
           </div>
         </div>
