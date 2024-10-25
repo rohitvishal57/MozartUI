@@ -346,5 +346,9 @@ export class CreateLeadComponent implements OnInit {
     );
   }
 
+  backToleads(){
+    this.router.navigate(['/leads/leadsList'], {
+  });
+  }
 
 }

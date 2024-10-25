@@ -6,9 +6,10 @@ import { ProductsComponent } from './products.component';
 import { PrimeNgModule } from 'src/app/prime-ng.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ProductComparisonComponent } from './product-comparison/product-comparison.component';
 
 @NgModule({
-  declarations: [ProductsComponent],
+  declarations: [ProductsComponent, ProductComparisonComponent],
   imports: [
     CommonModule,
     PrimeNgModule,

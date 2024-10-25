@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LeadsService } from '../leads.service';
 import { NgToastService } from 'ng-angular-popup';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-upload-lead',
   templateUrl: './upload-lead.component.html',
@@ -16,7 +18,7 @@ export class UploadLeadComponent implements OnInit{
   selctedFileName: string = '';
   selectedFile: any;
   AgentCode: string = '';
-  constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService){
+  constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService,    private router: Router  ){
 
   }
   ngOnInit(){
@@ -192,4 +194,10 @@ export class UploadLeadComponent implements OnInit{
   onSubmit(){
 
   }
+
+  backToleads(){
+    this.router.navigate(['/leads/leadsList'], {
+  });
+  }
+  
 }
