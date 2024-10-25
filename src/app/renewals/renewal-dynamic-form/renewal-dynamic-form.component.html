@@ -4,16 +4,16 @@
           <div class="bcl_main">
               <h3>Select from any customisation below</h3>
               <div class="processBtnGroup">
-                <button type="button" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('primary')">
+                <button type="button" id="customisation-primary" name="customisation-primary" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('primary')">
                     <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">Primary
                 </button>
-                <button type="button" value="additional" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
+                <button type="button" id="customisation-additional" name="customisation-additional" value="additional" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
                     <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['payment', 'policySummary', 'kyc','additional'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'additional', 'block-hide': activeSection !== 'additional'}">
                     <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Additional
                 </button>            
-                <button type="button" value="payment" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
+                <button type="button" id="customisation-payment" name="customisation-payment" value="payment" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
                     <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': !['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Payment
                 </button>
@@ -69,7 +69,7 @@
                                           </div>
                                       </div>
                                       <div class="data-item data-itemEdit" (click)="selectButton(5005)">
-                                          <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                          <button type="button" id="dataedit" name="dataedit" value="dataedit" class="btn_editGrey"></button>
                                       </div>
                                   </div>
                               </div>
@@ -78,7 +78,7 @@
                   </div>
                   <div class="accordionItem" *ngIf="formId == 5001">
                       <header>Member Details
-                          <button type="button" value="another" class="btn_iconText" (click)="selectButton(5002,'addMember')"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
+                          <button type="button" id="addMember" name="addMember" value="another" class="btn_iconText" (click)="selectButton(5002,'addMember')"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -103,7 +103,7 @@
                                               <h6>₹ {{ member.SumInsured | number:'1.0-0' }}</h6>
                                           </div>
                                           <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5002,'editMember',i)">
-                                              <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                              <button type="button" id="editMember" name="editMember" value="dataedit" class="btn_editGrey"></button>
                                           </div>
                                       </div>
                                   </div>
@@ -136,7 +136,7 @@
                                           <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code || 'N/A' }}</h6>
                                       </div>
                                       <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5004,'editNominee')">
-                                          <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                          <button type="button" id="editNominee" name="editNominee" value="dataedit" class="btn_editGrey"></button>
                                       </div>
                                   </div>
                               </div>
@@ -168,7 +168,7 @@
                                         <h6></h6>
                                     </div>
                                     <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5006,'editBankDetails')">
-                                        <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                        <button type="button" id="editBankDetails" name="editBankDetails" value="dataedit" class="btn_editGrey"></button>
                                     </div>
                                 </div>
                             </div>
@@ -378,7 +378,7 @@
                                       <p>We require to know this data to provide you with the best solution possible.</p>
                                       <div class="searchConditionMain">
                                           <input type="search" id="search" name="search" placeholder="Search conditions">
-                                          <button type="button" name="search" class="btn_text">Search now</button>
+                                          <button type="button" id="searchnow" name="search" class="btn_text">Search now</button>
                                       </div>
                                   </div>
                                   <div class="tabsMain">
@@ -462,8 +462,8 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" value="next" class="btn_pink btn_pinkNext" (click)="selectButton(5003)">Next</button>
+                        <button type="button" id="cancel" name="cancel" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                        <button type="button" id="next" name="next" value="next" class="btn_pink btn_pinkNext" (click)="selectButton(5003)">Next</button>
                       </footer>
                   </div>
               </div>
@@ -471,7 +471,7 @@
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5003">
                       <header>
                           {{memberRole}} Details of your {{ form.get('Relation')?.value || '' }}
-                          <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
+                          <button type="button" id="another" name="another" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -688,8 +688,8 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('Member')">{{memberRole}} Member</button>
+                        <button type="button" id="cancel2" name="cancel2" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                        <button type="button" id="next2" name="next2" value="next" class="btn_red btn_redRenew" (click)="handleAction('Member')">{{memberRole}} Member</button>
                       </footer>
                   </div>
               </div>
@@ -747,10 +747,10 @@
                     </div>
                   </div>
                   <footer>
-                    <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">
+                    <button type="button" id="cancel3" name="cancel3" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">
                       Cancel
                     </button>
-                    <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">
+                    <button type="button" id="saveupdate" name="saveupdate" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">
                       Save Updates
                     </button>
                   </footer>
@@ -829,8 +829,8 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editNominee')">Save Updates</button>
+                        <button type="button" id="cancel4" name="cancel4" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                        <button type="button" id="saveupdate2" name="saveupdate2" value="next" class="btn_red btn_redRenew" (click)="handleAction('editNominee')">Save Updates</button>
                       </footer>
                   </div>
               </div>
@@ -915,8 +915,8 @@
                         </div>
                     </div>
                     <footer>
-                      <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                      <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editBankDetails')">Save Updates</button>
+                      <button type="button" id="cancel4" name="cancel4" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                      <button type="button" id="saveupdate3" name="saveupdate3" value="next" class="btn_red btn_redRenew" (click)="handleAction('editBankDetails')">Save Updates</button>
                     </footer>
                 </div>
             </div>
@@ -1051,7 +1051,7 @@
                                     </div>
                                     
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <button type="button" class="btn_red btn_redRenew" (click)="sendLink()">Send Link</button>
+                                        <button type="button" id="sendlink" name="sendlink" class="btn_red btn_redRenew" (click)="sendLink()">Send Link</button>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="link != ''">
                                         <div class="input-block form-floating input-block-renew">
@@ -1059,7 +1059,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2" *ngIf="link != ''">
-                                        <button  type="button" class="btn_red btn_redRenew"  [cdkCopyToClipboard]="link"><i class="fa-regular fa-copy"></i></button>                        
+                                        <button  type="button" id="copy" name="copy" class="btn_red btn_redRenew"  [cdkCopyToClipboard]="link"><i class="fa-regular fa-copy"></i></button>                        
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
                                         <div class="block_or_line"><span>OR</span></div>
@@ -1167,7 +1167,7 @@
                 <div class="accordionItem">
                     <header>Policy Summary
                         <div class="btn_groupAction">
-                            <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
+                            <button type="button" id="sectionedit" name="sectionedit" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                         </div>
                     </header>
                     <div class="accordionBody">
@@ -1272,7 +1272,7 @@
                 </div>
                 <div class="accordionItem">
                     <header>Member Details
-                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
+                        <button type="button" id="sectionedit2" name="sectionedit2" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow" >
@@ -1310,7 +1310,7 @@
                 </div>                       
                 <div class="accordionItem">
                     <header>Contact Details
-                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
+                        <button type="button" id="sectionedit3" name="sectionedit2" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
@@ -1373,7 +1373,7 @@
                                         </div>  
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="actionKyc != 3003">
                                             <div class="input-block form-floating input-block-renew">
-                                                <button type="submit" class="btn_red btn_redRenew">Verify KYC</button>
+                                                <button type="submit" id="verifykyc" name="verifykyc" class="btn_red btn_redRenew">Verify KYC</button>
                                             </div>
                                         </div> 
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="actionKyc == 3003">
@@ -1446,8 +1446,8 @@
                       <span>Working Quote/ incl tax</span>
                       <label>₹{{(renewalInfo?.response?.policyData[0]?.NetPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn ) | number:'1.0-0'}}</label>
                   </div>
-                  <button type="button" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
-                  <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
+                  <button type="button" id="savenew" name="savenew" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
+                  <button type="button" id="viewall" name="viewall" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
               </footer>
           </div>
       </div>
@@ -1472,11 +1472,11 @@
               </div>
           </div>
           <div class="bi_right">
-              <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Proceed</button>
-              <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="renewNow()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Renew Now</button>
-              <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()" *ngIf="activeSection == 'payment' || activeSection == 'policySummary' || activeSection == 'kyc' ">Back</button>
-              <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" (click)="next1()" *ngIf="activeSection == 'policySummary' || activeSection == 'kyc' ||activeSection == 'payment' && (selectedPaymentType =='offline' || selectedPaymentType =='' )">Next</button>
-              <button type="button" value="paynow" class="btn_red btn_redRenew" 
+              <button type="button" id="proceed" name="proceed" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Proceed</button>
+              <button type="button" id="renewnow" name="renewnow" value="renewnow" class="btn_red btn_redRenew" (click)="renewNow()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Renew Now</button>
+              <button type="button" id="proceedback" name="proceedback" value="proceed" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()" *ngIf="activeSection == 'payment' || activeSection == 'policySummary' || activeSection == 'kyc' ">Back</button>
+              <button type="button" id="renewnownext" name="renewnownext" value="renewnow" class="btn_red btn_darkGrey btn_w_120" (click)="next1()" *ngIf="activeSection == 'policySummary' || activeSection == 'kyc' ||activeSection == 'payment' && (selectedPaymentType =='offline' || selectedPaymentType =='' )">Next</button>
+              <button type="button" id="paynow" name="paynow" value="paynow" class="btn_red btn_redRenew" 
               (click)="payNow()" 
               *ngIf="activeSection == 'payment' && 
                       (selectedPaymentType == 'E-Nach' || 
@@ -1516,7 +1516,7 @@
                     <div class="col-12 mt-3">
                         <div class="download_policyKit">
                             <h6>Download Your Insurance Policy Kit</h6>
-                            <button type="button" class="btn_downloadKit">Download Kit <img src="assets/Img/icon_download_kit_blue.svg"></button>
+                            <button type="button" id="downloadkit" name="downloadkit" class="btn_downloadKit">Download Kit <img src="assets/Img/icon_download_kit_blue.svg"></button>
                         </div>
                     </div>
                 </div>
@@ -1561,7 +1561,7 @@
                         <img src="assets/Img/icon_time_saving.svg"><span>Time Saving</span>
                     </div>
                 </div>
-                <button type="button" class="btn_red btn_autoDebit">Update to Auto-debit</button>
+                <button type="button" id="updateautodebit" name="updateautodebit" class="btn_red btn_autoDebit">Update to Auto-debit</button>
             </section>
             <section class="white_container customer_abhaID">
                 <div class="row">
@@ -1570,7 +1570,7 @@
                         <h5>Creating your customersABHA ID with ABHI.</h5>
                         <h6>Simple, Fast & Easy</h6>
                         <p>Do you have a few minutes? Because that is all it takes to create your ABHA ID on the Aditya Birla Health Insurance website.</p>
-                        <a href="https://mtpre.adityabirlahealth.com/healthinsurance/abha"><button type="button" class="btn_red btn_autoDebit">Create ABHA ID</button></a>
+                        <a href="https://mtpre.adityabirlahealth.com/healthinsurance/abha"><button type="button" id="createabhaid" name="createabhaid" class="btn_red btn_autoDebit">Create ABHA ID</button></a>
                     </div>
                     <div class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
                         <img src="assets/Img/img_abha_id.png" class="img_fullWidth_mobile">
