@@ -16,8 +16,11 @@ export class UploadLeadComponent implements OnInit{
   showNote: boolean = false;
   isFilenotSelected: boolean | any;
   selctedFileName: string = '';
+  fileExt : string = '';
+  fileSize : string ='';
   selectedFile: any;
   AgentCode: string = '';
+  uploadedFiles : boolean = false;
   constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService,    private router: Router  ){
 
   }
@@ -55,9 +58,9 @@ export class UploadLeadComponent implements OnInit{
     );
   }
   newfile(e: any) {
+    this.uploadedFiles = true;
     let files;
     let file;
-    let fileExt;
     this.isFilenotSelected = false;
     if (e) {
       files = e.target.files;
@@ -68,11 +71,12 @@ export class UploadLeadComponent implements OnInit{
       this.selectedFile = file;
       console.log(this.selectedFile);
       this.selctedFileName = this.selectedFile.name;
-      fileExt = this.selectedFile.name.replace(/^.*\./, '');
+      this.fileExt = this.selectedFile.name.replace(/^.*\./, '');
+      this.fileSize = file.size;
       e.target.value = '';
     }
 
-    if (fileExt == 'xlsx' || fileExt == 'csv' ||fileExt==='xls') {
+    if (this.fileExt == 'xlsx' || this.fileExt == 'csv' ||this.fileExt==='xls') {
     } else {
       this.showNote = true;
     }
@@ -200,4 +204,10 @@ export class UploadLeadComponent implements OnInit{
   });
   }
   
+
+  removeFile(){
+    debugger;
+    this.selctedFileName='';
+    this.uploadedFiles=false;
+  }
 }
