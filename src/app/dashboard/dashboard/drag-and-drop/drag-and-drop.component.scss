@@ -557,11 +557,25 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        gap: 20px;
 
         .bind-field {
           display: flex;
           flex-direction: column;
+          padding: 0 0 25px 38px;
+        }
+
+        .footer {
+          display: flex;
+          width: Fill (282.67px)px;
+          height: Hug (56px)px;
+          padding: 12px 0px 0px 0px;
+          gap: 16px;
+          border-radius: 8px 0px 0px 0px;
+          opacity: 0px;
+
+          .detail-footer{
+            
+          }
         }
       }
     }

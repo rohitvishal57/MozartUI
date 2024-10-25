@@ -52,11 +52,10 @@
               <div class="widget-title">{{ item.title }}</div>
               <div>
                 <div class="dropdown-name"><span>{{ item.dropdownName }}</span></div>
-                <div (click)="hideItem(item)" *ngIf="item.visible && allowDragging">x</div>
-                <div (click)="addItem(item)" *ngIf="!item.visible && allowDragging">Add</div>
+                <div (click)="hideItem(item, i)" *ngIf="item.visible && allowDragging">x</div>
+                <div (click)="addItem(item, i)" *ngIf="!item.visible && allowDragging">Add</div>
               </div>
             </div>
-
             <div class="inner-list">
               <!-- Handle Products -->
               <div class="inner-box" *ngFor="let product of item.products">
@@ -192,6 +191,17 @@
               <div class="bind-field">
                 <h3>Date of renewal</h3>
                 <span>{{quote?.renewInfo?.dateofRenewal}}</span>
+              </div>
+              <div class="footer">
+                  <div class="detail-footer">modifiedDetails</div>
+                  <div class="bind-field">
+                    <h3>Members</h3>
+                    <span>{{quote?.renewInfo?.modifiedDetails?.members}}</span>
+                  </div>
+                  <div class="bind-field">
+                    <h3>Tenure</h3>
+                    <span>{{quote?.renewInfo?.modifiedDetails?.tenure}}</span>
+                  </div>
               </div>
             </div>
           </div>

@@ -541,12 +541,14 @@ export class DragAndDropComponent {
     moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
   }
 
-  hideItem(item: any) {
+  hideItem(item: any, index : any) {
     item.visible = false;
+    this.items.filter(item => item.visible);
   }
 
-  addItem(item: any) {
+  addItem(item: any, index : any) {
     item.visible = true;
+    this.items.filter(item => item.visible);
   }
 
   getItemsToShow() {
