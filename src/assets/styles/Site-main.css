@@ -144,7 +144,7 @@ a:not(href) {
 a {
   text-decoration: none !important;
 }
-img, li{
+li{
   cursor: pointer;
 }
 .siteHeader, .siteSidenav .sidenavMenu, .body_flex_column, .tableSubMain .table .table-policyType, .tableSubMain .table .table-renewalPremium, .tableSubMain .table .row-policyType, .moreActionItems ul, .filterWraperForm .fw_form, .filterWraperForm .fw_form .fw_formBody, .filterWraperForm .fw_form .fw_formRow, .createNewQuoteWraper .createNewQuoteMain .cnqLeft, .cardViewMain .cardViewWraper .cardViewItem, .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo, .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems, .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems .item_value .table-renewalPremium, .userQuotes, .quoteComparisonWraper .qc_item header, .quoteComparisonWraper .qc_item header .heading, .quoteComparisonWraper .qc_item .qc_info ul, .bcl_main, .bcl_main .processBtnGroup, .bcc_main, .accordionMain, .accordionMain .accordionItem, .accordionMain .accordionItem .accordionBody .accordionBodyRow, .planDetails, .planDetails header, .planDetails header .planProductInfo .ppi_info, .planDetails header .planProductQuote, .planDetails .planProductBody, .planDetails .planProductBody .benefitCoverMain .bc_info, .planDetails footer, .detailsRow, .data-row .data-item, .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info, .bottomInfoMain .bottomInfoSubMain .planProductQuote, .searchConditionWraper, .tabsMain {
