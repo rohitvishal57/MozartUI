@@ -460,7 +460,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="sumInsured" placeholder=""
-                                    formControlName="sumInsured" type="number">
+                                    formControlName="sumInsured" (keypress)="isNumber($event)" >
                                 <label for="sumInsured">Interested Sum Insured</label>
                                 <span class="ui-error block-show"
                                 *ngIf="submitted && userValidations.get('sumInsured')?.errors?.['pattern']">Please
@@ -470,7 +470,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="premium" placeholder=""
-                                    formControlName="premium" type="number" OnlyCharacter>
+                                    formControlName="premium"   (keypress)="isNumber($event)">
                                 <label for="premium">Interested Premium</label>
                                 <span class="ui-error block-show"
                                 *ngIf="submitted && userValidations.get('premium')?.errors?.['pattern']">Please

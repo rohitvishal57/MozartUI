@@ -150,7 +150,7 @@ export class CreateLeadComponent implements OnInit {
       activityEndDate: ['', Validators.required], // End date is required
       activityEndTime: ['', Validators.required], // End time is required
       activityType: ['', Validators.required], // Activity type is required
-      notes: [''] // Notes can be optional
+      notes: ['', Validators.required] // Notes can be optional
     });
   }
 
@@ -352,5 +352,14 @@ export class CreateLeadComponent implements OnInit {
     this.router.navigate(['/leads/leadsList'], {
   });
   }
+  
+  isNumber(event: KeyboardEvent) {
+    const pattern = /[0-9]/; // Only allow digits
+    const inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault(); // Block non-numeric input
+    }
+  }
+  
 
 }
