@@ -59,6 +59,7 @@ export class LeadsListComponent {
   startDate: any;
   endDate: any;
   filterLeads = false;
+  today : String = '';
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
@@ -106,6 +107,8 @@ export class LeadsListComponent {
       leadId: ['']
     });
 
+    const date = new Date();
+    this.today = date.toISOString().split('T')[0];
   }
   fetchActivityType(event: any) {
     let fetchActivityTypeRequest: any = {};

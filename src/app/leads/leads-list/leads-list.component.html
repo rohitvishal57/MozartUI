@@ -66,7 +66,8 @@
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected"> 
+                                                    <!-- (change)="calculateAppliedFiltersCount()"> -->
                                                     <label for="product{{i}}">{{product.productName}}</label>
                                                 </div>
                                             </div>
@@ -88,14 +89,14 @@
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                    <input type="date" [max]="today" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
                                                     <label for="startdate">Start Date</label>
                                                     <span class="ui-error">Please enter date of birth</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                    <input type="date" [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
                                                     <label for="enddate">End Date</label>
                                                     <span class="ui-error">Please enter date of birth</span>
                                                 </div>
