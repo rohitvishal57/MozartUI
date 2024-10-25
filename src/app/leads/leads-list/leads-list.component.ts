@@ -107,8 +107,8 @@ export class LeadsListComponent {
       leadId: ['']
     });
 
-    const date = new Date();
-    this.today = date.toISOString().split('T')[0];
+    this.today = new Date().toISOString().split('T')[0];
+
   }
   fetchActivityType(event: any) {
     let fetchActivityTypeRequest: any = {};
