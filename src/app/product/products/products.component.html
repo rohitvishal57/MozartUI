@@ -23,12 +23,12 @@
                                 </div>
                                 <footer>
                                     <div class="btn_groupAction">
-                                        <button class="btn_red btn_products btn_buy" (click)="buyNow(item)">
+                                        <button type="button" id="buynow" name="buynow" class="btn_red btn_products btn_buy" (click)="buyNow(item)">
                                             <img src="assets/Img/trolley1.svg" alt="">
                                             Buy Now
                                         </button>
-                                        <button class="btn_pink btn_products" (click)="productsDetail(item)">View details</button>
-                                        <button class="btn_grey btn_products btn_addtocompare" >
+                                        <button type="button" id="viewdetails" name="viewdetails" class="btn_pink btn_products" (click)="productsDetail(item)">View details</button>
+                                        <button type="button" id="addtocompare" name="addtocompare" class="btn_grey btn_products btn_addtocompare" >
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                             Add to Compare
                                         </button>
@@ -55,7 +55,7 @@
                     <div class="ppi_info">
                         <h4>Activ One NXT</h4>
                     </div>
-                    <span class="removePlan"><button type="button" class="btn-close"></button></span>
+                    <span class="removePlan"><button type="button" id="removeproduct" name="removeproduct" class="btn-close"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
@@ -69,7 +69,7 @@
                     <div class="ppi_info">
                         <h4>Activ One Max Plus</h4>
                     </div>
-                    <span class="removePlan"><button type="button" class="btn-close"></button></span>
+                    <span class="removePlan"><button type="button" id="removeproduct" name="removeproduct" class="btn-close"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
@@ -80,8 +80,8 @@
             </div>
         </div>
         <div class="bi_right">
-            <button type="button" value="renewnow" class="btn_red btn_redRenew">Compare now</button>
-            <button type="button" value="proceed" class="btn_pink btn_pinkNext">Close</button>
+            <button type="button" id="comparenow" name="comparenow" value="comparenow" class="btn_red btn_redRenew">Compare now</button>
+            <button type="button" id="compareclose" name="compareclose" value="close" class="btn_pink btn_pinkNext">Close</button>
         </div>
     </div>
   </div>
@@ -109,12 +109,12 @@
                             {{item.productName}}</div>
                         <p>{{item.productDescription}}</p>
                         <div class="product-button">
-                            <button class="get" (click)="buyNow(item)">
+                            <button type="button" id="buynow2" name="buynow2" class="get" (click)="buyNow(item)">
                                <img src="assets/Img/trolley1.svg" alt="">
                                Buy Now
                             </button>
-                            <button class="get1" (click)="productsDetail(item)">View Recommended Add-Ons</button>
-                            <button class="get2" >
+                            <button type="button" id="viewaddons" name="viewaddons" class="get1" (click)="productsDetail(item)">View Recommended Add-Ons</button>
+                            <button type="button" id="addtocompare2" name="addtocompare2" class="get2" >
                                 <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                 Add to Compare
                             </button>
