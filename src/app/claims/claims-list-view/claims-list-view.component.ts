@@ -141,6 +141,7 @@ fetchData(): void {
     }
   }
 
+
   toggleFilterDropdown() {
     if(this.toggeleSearchdropdown==true)
     {
@@ -184,6 +185,8 @@ fetchData(): void {
     })
   }
 
+
+  
   applyFilter() {
     this.selected = "";
     this.searchInputControl.reset();
@@ -225,6 +228,8 @@ clear(){
   this.appliedFiltersCount = 0;
  // this.claimsReqBody.productName = "";
   this.claimsReqBody.requestType = "";
+  this.claimsReqBody.searchType = "";
+  this.claimsReqBody.searchString = [];
   this.claimsReqBody.fromDate = null;
   this.claimsReqBody.toDate = null;
   this.fetchData();
@@ -245,6 +250,7 @@ clear(){
       this.claimsReqBody.searchString = [searchValue];    
     }
     this.isSearch = true;
+    this.first = 0;
     this.fetchData();
     
   }

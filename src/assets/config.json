@@ -49,6 +49,7 @@
     "getHospitals":"claims/api/gethospitaldetails",
     "getClaimStatus":"claims/api/getclaimstatus",
     "getClaimTracker":"claims/api/getclaimtracker",
+    "getUploadedFiles":"claims/api/getclaimsdocument",
 
 
     "getPerformanceDetails":"yatra/api/getPerformanceDetails",

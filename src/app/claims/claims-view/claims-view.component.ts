@@ -81,6 +81,8 @@ export class ClaimsViewComponent {
   isDropdownOpen: boolean = false;  
   activityList : any[] = []
   selectedPolicyNumber:any;
+  isFocused: boolean = false;
+
   coverNames = [
     "AYUSH Treatment",
     "Domiciliary Hospitalization",
@@ -197,10 +199,24 @@ export class ClaimsViewComponent {
         this.fb.group({
           billNo: [""],
           billDate: [""],
-          claimedAmount: [""],
+          claimedAmount: [""]
         }),
       ]),
     });
+  }
+
+  onFocus() {
+    this.isFocused = true;
+  }
+
+  onBlur() {
+    if (!this.form.get('memberName')?.value) {
+      this.isFocused = false;
+    }
+  }
+
+  hasAnyValue(): boolean {
+    return this.form.get('memberName')?.value ? true : false;
   }
 
   getProposalDetails(): void {
@@ -229,26 +245,44 @@ export class ClaimsViewComponent {
   extractUniqueValues(data: any[], key: string): any[] {
     return [...new Set(data.map((item) => item[key]).filter((val) => val))];
   }
-  
-  handleDropdownChange(value:string): void {
-    const selectedPolicyNumber = value; 
-    // this.form.get('policyNumber')?.setValue(selectedPolicyNumber); 
+
+  handleDropdownChange(value: string): void {
+    const selectedPolicyNumber = value;
+      this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
+      if (!policyValue) {
+        this.form.get('memberName')?.setValue('');
+        this.memberNames = []; 
+      }
+    });
     const filteredMembers = this.response.data.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
-    this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
-    console.log(selectedPolicyNumber, this.memberNames);
-    this.form.get("memberName")?.setValue("");
-    this.cdr.markForCheck();
+      this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
+      this.form.get("memberName")?.setValue("");
+      this.cdr.markForCheck();
   }
+  
 
   filterList(event: KeyboardEvent): void {
+
     const input = (event.target as HTMLInputElement).value.toLowerCase();
+    this.form.patchValue({
+      "memberName":"",
+     
+    })
     this.filteredPolicyList = this.policyNumbers.filter((item : any) =>
       item.toLowerCase().includes(input)
     );
   }
 
+  onInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let sanitizedValue = input.value.replace(/[^0-9]/g, ''); 
+      if (sanitizedValue.length > 0 && sanitizedValue.charAt(0) === '0') {
+      sanitizedValue = sanitizedValue.substring(1);
+      this.form.get('claimedAmount')?.setValue(sanitizedValue);
+  }
+  }
   toggleDropdown(open: boolean): void {    
     this.isDropdownOpen = open;
   }
@@ -288,7 +322,8 @@ export class ClaimsViewComponent {
       "state":"",
       "hospitalName":"",
       "hospitalAddress":"",
-      "city":""
+      "city":"",
+      "claimedAmount":""
     })
     const selectedType = event.target.value;
     if (selectedType === "Cashless") {

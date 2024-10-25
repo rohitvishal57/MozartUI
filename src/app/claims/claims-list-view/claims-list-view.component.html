@@ -93,19 +93,22 @@
                                     </div>
                                 </div> -->
                                 <div class="row">
+                             
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="input-block form-floating input-block-dob">
-                                        <input type="date" id="fromate" name="fromate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (change)="formatDate('fromDate')" [max]="maxDate">
-                                        <label for="fromate">From Date</label>
+                                    <div class="input-block input-block-dob">
+                                        <label>From Date</label>
+                                        <input type="date" name="fromDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate"  (change)="formatDate('fromDate')"  [max]="maxDate">
                                         <span class="ui-error">Please enter start date</span>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="input-block form-floating input-block-dob">
-                                        <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (change)="formatDate('toDate')" [max]="maxDate">
-                                        <label for="toDate">To Date</label>
-                                        <span class="ui-error">Please enter end date</span>
+                                    <div class="input-block input-block-dob">
+                                        <label>To Date</label>
+                                        <input type="date" name="toDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate"  (change)="formatDate('toDate')"  [max]="maxDate">
+                                        <span class="ui-error">Please enter to date</span>
                                     </div>
+                                </div>
+                                <!-- </div> -->
                                 </div>
                                 <footer>
                                     <button type="button" id="claimfilterclear" name="claimfilterclear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
@@ -115,7 +118,6 @@
                             </div>
                             </div>
                         </div>
-                    </div>
                
                     <button type="button" id="claimgridlist" name="claimgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
                     <button type="button" id="claimgridcard" name="claimgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
@@ -196,21 +198,21 @@
                                 <div class="item_value">{{ gridClaims.policyNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Policy Name</div>
+                                <div class="item_lable">Product Name</div>
                                 <div class="item_value">{{ gridClaims.productName }}</div>
                             </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
+                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Member Name</div>
                                 <div class="item_value">{{ gridClaims.memberName }}</div>
-                            </div>
+                            </div> -->
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Member Id</div>
                                 <div class="item_value">{{ gridClaims.memberId }}</div>
                             </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
+                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Mobile Number</div>
                                 <div class="item_value">{{ gridClaims.mobileNumber }}</div>
-                            </div>
+                            </div> -->
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Request Type</div>
                                 <div class="item_value">{{ gridClaims.requestType }}</div>
@@ -219,7 +221,7 @@
                                 <div class="item_lable">Raised Date</div>
                                 <div class="item_value">{{ gridClaims.reportedDateTime | datepipe }}</div>
                             </div>
-                            <div class="cv_bodyItems cv_bodyItems_100">
+                            <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Status</div>
                                 <div class="item_value">{{ gridClaims.claimStatus }}</div>
                             </div>
@@ -227,8 +229,14 @@
                     </div>
                 </div>
             </section>
-
-
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords == 0">
+                <div class="cardViewWraper">
+                    <div class="no_dataFound">
+                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                        <p>No data found</p>
+                    </div>
+                </div>
+            </section>
             <div class="tableNav" *ngIf="totalRecords > 0">
                 <nav>
                   <ul class="pagination">
@@ -243,15 +251,6 @@
                   </ul>
                 </nav>
             </div>
-            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="totalRecords === 0">
-                <div class="cardViewWraper">
-                    <div class="no_dataFound">
-                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
-                        <p>No data found</p>
-                    </div>
-                </div>
-            </section>
- 
         </div>
     </div>
 </main>
