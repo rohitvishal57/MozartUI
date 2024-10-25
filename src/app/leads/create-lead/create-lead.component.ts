@@ -144,13 +144,13 @@ export class CreateLeadComponent implements OnInit {
 
 
     this.addNoteForm = this.formBuilder.group({
-      title: [''],
-      activityStartDate: [''],
-      activityStartTime: [''],
-      activityEndDate: [''],
-      activityEndTime: [''],
-      activityType: [''],
-      notes: [''],
+      title: ['', Validators.required], // Title is required
+      activityStartDate: ['', Validators.required], // Start date is required
+      activityStartTime: ['', Validators.required], // Start time is required
+      activityEndDate: ['', Validators.required], // End date is required
+      activityEndTime: ['', Validators.required], // End time is required
+      activityType: ['', Validators.required], // Activity type is required
+      notes: [''] // Notes can be optional
     });
   }
 
