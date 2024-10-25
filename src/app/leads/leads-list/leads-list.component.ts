@@ -385,6 +385,7 @@ export class LeadsListComponent {
         console.error("Error: Unable to assign lead. Please try again later.", error);
       }
     );
+    this.checkBoxSelectedLeads ='';
     this.assigneLeadModal.hide();
   }
   toggleAll(event: Event) {
