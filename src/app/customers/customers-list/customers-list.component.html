@@ -14,10 +14,10 @@
                         <div class="field_searchMain">
                             <select class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
                                 <option value="" (click)="cancelSearch()">Select an Option</option>
+                                <option value="name">Name</option>
                                 <option value="mobileNumber">Mobile Number</option>
-                                <option value="proposerName">Proposer Name</option>
                                 <option value="policyNumber">Policy Number</option>
-                                <option value="proposalNumber">Proposal Number</option>
+                                <option value="emailID">Email</option>
                             </select>
                             <input  class="filterSearch" id="filterSearch"  type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
                             <button  type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
@@ -29,9 +29,6 @@
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader">
                                     <header>Filter</header>
-                                    <!--<button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
-                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                    </button>-->
                                     <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
@@ -64,14 +61,12 @@
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
                                                     <label for="startdate">Select Start Date</label>
-                                                    <span class="ui-error">Please enter date of birth</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
                                                     <label for="enddate">Select End Date</label>
-                                                    <span class="ui-error">Please enter date of birth</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -95,9 +90,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
-                                    <th scope="col" nowrap>Proposal No</th>
-                                    <th scope="col">Premium</th>
-                                    <th scope="col" nowrap>Policy Type & No</th>
+                                    <th scope="col" nowrap>Customer Id</th>
+                                    <th scope="col" nowrap>Policy Number & type</th>
+                                    <th scope="col">No.Of.Policies</th>
                                     <th scope="col" nowrap>Product Name</th>
                                     <th scope="col">Status</th>
                                     <th scope="col" nowrap>Created On</th>
@@ -108,20 +103,27 @@
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of customerList; let i = index">
                                     <td>{{ row.firstName }} {{row.lastName }}</td>
-                                    <td>{{ row.proposalNumber }}</td>
-                                    <td>{{ row.totalPremium }}</td>
+                                    <td>{{ row.customerID }}</td>
                                     <td>
                                         <div class="table-policyType">
                                             <div class="row-policyType">
-                                                <span class="lable">{{ row.policyType }}</span>
                                                 <span class="value">{{ row.policyNumber }}</span>
+                                                <span class="lable">{{ row.policyType }}</span>
                                             </div>
                                         </div>
                                     </td>
+                                    <td>{{ row.noOfInsured }}</td>
                                     <td>{{ row.productVariantName }}</td>
                                     <td>{{ row.policyStatus }}</td>
                                     <td>{{ row.policyStartDate }}</td>   
-                                    <td>{{ row.mobileNumber }}</td>
+                                    <td>
+                                        <div class="table-cintactDetails">
+                                            <div class="row-policyType">
+                                                <span class="value">{{ row.emailID }}</span>
+                                                <span class="lable">{{ row.mobileNumber }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td>
                                         <div class="btn_groupAction">
                                             <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
@@ -203,29 +205,26 @@
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Policy Type & No</div>
-                                <div class="item_value">{{ row.policyType }}</div>
+                                <div class="item_lable">Policy Number & Type</div>
                                 <div class="item_value">{{ row.policyNumber }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Proposal No.</div>
-                                <div class="item_value">{{ row.proposalNumber }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Status</div>
-                                <div class="item_value">{{ row.policyStatus }}</div>
-                            </div>
-                            <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Mobile No.</div>
-                                <div class="item_value">{{ row.mobileNumber }}</div>
+                                <div class="item_value">{{ row.policyType }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Created On</div>
                                 <div class="item_value">{{ row.policyStartDate }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Premium</div>
-                                <div class="item_value">{{ row.totalPremium}}</div>
+                                <div class="item_lable">Status</div>
+                                <div class="item_value">{{ row.policyStatus }}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">Customer ID</div>
+                                <div class="item_value">{{ row.customerID }}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">Contact Details</div>
+                                <div class="item_value">{{ row.emailID }}</div>
+                                <div class="item_value">{{ row.mobileNumber }}</div>
                             </div>
                         </div>
                     </div>

@@ -106,7 +106,7 @@ export class ProposalsListComponent {
     this.filterType = filterRange;
   }
   formatStartDate(datetime: string): string {
-    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
+    return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {

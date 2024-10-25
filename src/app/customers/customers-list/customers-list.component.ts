@@ -103,7 +103,7 @@ export class CustomersListComponent {
     }
   }
   formatPolicyStartDate(datetime: string): string {
-    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
+    return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
   getProducts() {
     const reqData={
@@ -205,15 +205,15 @@ export class CustomersListComponent {
     this.searchInputControl.setValue("");
   }
   getPlaceholder(): string {
-    if (this.selected === "mobileNumber") {
+    if (this.selected === "name") {
+      return "Enter Name";
+    } else if (this.selected === "mobileNumber") {
       return "Enter Mobile Number";
-    } else if (this.selected === "proposerName") {
-      return "Enter Proposer Name";
     } else if (this.selected === "policyNumber") {
       return "Enter Policy Number";
-    } else if (this.selected === "proposalNumber") {
-      return "Enter Proposal Number";
-    }
+    } else if (this.selected === "emailID") {
+      return "Enter Email ID";
+    } 
     else {
       return "Search...";
     }
@@ -223,7 +223,7 @@ export class CustomersListComponent {
     this.customerListRequestBody.mobileNumber = "";
     this.customerListRequestBody.name = "";
     this.customerListRequestBody.policyNumber = "";
-    this.customerListRequestBody.proposalNumber ="",
+    this.customerListRequestBody.emailID ="",
     this.searchInputControl.reset();
     this.getCustomerList();
   }
@@ -233,19 +233,19 @@ export class CustomersListComponent {
         this.customerListRequestBody.mobileNumber = this.searchInputControl.value!;
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.policyNumber = "";
-        this.customerListRequestBody.proposalNumber =""
-      } else if (this.selected === "proposerName") {
+        this.customerListRequestBody.emailID =""
+      } else if (this.selected === "name") {
         this.customerListRequestBody. name = this.searchInputControl.value!;
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.policyNumber = "";
-        this.customerListRequestBody.proposalNumber =""
+        this.customerListRequestBody.emailID =""
       } else if (this.selected === "policyNumber") {
         this.customerListRequestBody.policyNumber = this.searchInputControl.value!;
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.proposalNumber =""
-      }else if (this.selected === "proposalNumber") {
-        this.customerListRequestBody.proposalNumber = this.searchInputControl.value!;
+      }else if (this.selected === "emailID") {
+        this.customerListRequestBody.emailID = this.searchInputControl.value!;
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.policyNumber = "";

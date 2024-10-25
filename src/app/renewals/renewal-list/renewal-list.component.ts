@@ -101,7 +101,7 @@ export class RenewalListComponent {
     );
   }
   formatRenewedDate(datetime: string): string {
-    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
+    return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
   filterQuotes(filter: string,filterRange: string) {
     this.renewalLisRequestBody.filterType = filter;

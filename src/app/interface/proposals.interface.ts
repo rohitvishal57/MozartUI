@@ -8,7 +8,7 @@ export interface ProposalList {
     updatedDate: string;
     lastName: string;
     policyType: string;
-    policyStatus : string;
+    proposalStatus : string;
     productVarientName: string;
     mobileNo: number;
     totalPremiumInt: number;
