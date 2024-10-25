@@ -63,11 +63,11 @@
                                                 <div class="body_flex_row justify-content-between">
                                                     <h4>Campaign Performance</h4>
                                                     <div class="btn_groupAction btn_campaignPerformance">
-                                                        <button type="button" value="gridlist"
+                                                        <button type="button" id="monthly" name="monthly" value="monthly"
                                                             class="btn_grid mobile-hide jsBtnClickQuote"
                                                             [ngClass]="{'active': docType === 'Monthly'}"
                                                             aria-label="quotes-list" (click)="toggleView('Monthly')">Monthly</button>
-                                                        <button type="button" value="gridcard"
+                                                        <button type="button" id="quaterly" name="quaterly" value="quaterly"
                                                             class="btn_grid mobile-hide jsBtnClickQuote"
                                                             [ngClass]="{'active': docType === 'Quaterly'}"
                                                             aria-label="quotes-card" (click)="toggleView('Quaterly')">Quarterly</button>
