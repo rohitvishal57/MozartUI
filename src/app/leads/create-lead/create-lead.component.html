@@ -204,7 +204,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder=""
-                                    formControlName="firstname" type="text" maxlength="50" OnlyCharacter
+                                    formControlName="firstname" type="text" maxlength="20" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }">
                                 <label for="firstname">First Name *</label>
                                 <span class="invalid-feedback"
@@ -222,7 +222,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="MiddleName" placeholder=""
-                                    formControlName="MiddleName" type="text" maxlength="50" OnlyCharacter
+                                    formControlName="MiddleName" type="text" maxlength="20" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
                                 <label for="MiddleName">Middle Name</label>
                                 <span class="ui-error block-show"
@@ -233,7 +233,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="lastname" placeholder=""
-                                    formControlName="lastname" type="text" maxlength="50" OnlyCharacter
+                                    formControlName="lastname" type="text" maxlength="20" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }">
                                 <label for="lastname">Last Name *</label>
                                 <span class="invalid-feedback"
