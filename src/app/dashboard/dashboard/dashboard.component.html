@@ -1,4 +1,62 @@
-<div class="dashboard-main">
+<main class="siteBody">
+  <div class="contentBody bodyColumns-1 bodyColumns-dashboard">
+    <div class="bodyColumn body_flex_column">
+      <app-get-quote></app-get-quote>
+      <div class="contentBody dashboard_contentContainer">
+        <div class="performance-overview">
+          <header>
+            <h2>Performance Overview</h2>
+          </header>
+          <div class="subHeader">
+            <div class="notification">
+              <img src="assets/Img/icon_tips.svg">You've converted 10% more people this month compared to last month
+            </div>
+            <div class="badge badge-purple">
+              <img src="assets/Img/icon_badge.svg">Top Seller
+            </div>
+          </div>
+          <div class="cards-container">
+            <div class="card policies-sold">
+              <header><img src="assets/Img/icon_police_sold.svg">Policies sold</header>
+              <div class="value">1295</div>
+              <div class="card-tip"><img src="assets/Img/icon_price_tag.svg"> You seem to be setting a majority of Active
+                FD plans</div>
+            </div>
+            <div class="card premium">
+              <header><img src="assets/Img/icon_police_premium.svg">Premium</header>
+              <div class="value">₹ 369.96 L</div>
+              <div class="progress-barMain">
+                <p>78% of monthly goal achieved</p>
+                <div class="progress-bar">
+                  <div class="progress" style="width: 78%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="card commission-earned">
+              <header><img src="assets/Img/icon_commission_earned.svg">Commission Earned</header>
+              <div class="value">₹ 50,000</div>
+              <div class="card-tip"><img src="assets/Img/icon_rupee.svg"> You can potentially earn 10,000 more with your 2
+                more policies</div>
+            </div>
+            <div class="card my-goals">
+              <header><img src="assets/Img/icon_my_goals.svg">My Goals</header>
+              <div class="gauge">
+                <div class="gauge-body">
+                  <div class="gauge-fill"></div>
+                  <div class="sub-text">Policies</div>
+                  <div class="gauge-cover">25</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!--OLD CODE START-->
+<div class="dashboard-main" style="display: none;">
   <app-get-quote></app-get-quote>
   <div class="contentBody dashboard_contentContainer">
     <div class="performance-overview">
@@ -50,3 +108,4 @@
     </div>
   </div>
 </div>
+<!--OLD CODE END-->

@@ -1822,13 +1822,17 @@ input[type="search"]::-webkit-search-results-decoration {
   gap: 24px;
 }
 
+.bodyColumns-dashboard {
+  max-width: 1082px;
+}
+
 .bodyColumn {
   width: 100%;
 }
 
 .body_flex_column {
   width: 100%;
-  gap: 16px;
+  gap: 20px;
 }
 .body_flex_row {
   display: flex;
