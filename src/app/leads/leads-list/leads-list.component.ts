@@ -466,21 +466,6 @@ export class LeadsListComponent {
     });
   }
 
-  isNumber(event: KeyboardEvent) {
-    if (this.selected === 'mobileNumber') {
-      const pattern = /[0-9]/; // Only allow digits
-      const inputChar = String.fromCharCode(event.charCode);
-      if (!pattern.test(inputChar)) {
-        event.preventDefault(); // Block non-numeric input
-      }
-      const inputElement = event.target as HTMLInputElement;
-
-      // Check if the input length is less than 10
-      if (inputElement.value.length >= 10) {
-        event.preventDefault(); // Prevent input if length is 10
-        return;
-      }
-    }
-  }
+ 
 
 }
