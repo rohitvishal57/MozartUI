@@ -383,6 +383,7 @@ export class LeadsListComponent {
           }else{
             this.toast.success({ detail: 'Lead has been successfully assigned' });
           }
+          this.filterQuotes('all');
         }
       }, (error) => {
         console.error("Error: Unable to assign lead. Please try again later.", error);
