@@ -371,6 +371,5 @@ export class CreateLeadComponent implements OnInit {
       event.preventDefault(); // Block non-numeric input
     }
   }
-  
 
 }
