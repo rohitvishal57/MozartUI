@@ -140,7 +140,10 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: 0,
       status: [''],
       substatus: ['']
-    });
+    }
+  );
+  this.userValidations.get('age')?.disable();
+
 
 
 
