@@ -8,10 +8,39 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                         <div class="details_claimsInfo">
-                             <!-- <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5>  -->
+                            <div class="row_claimsInfo">
+                                <div class="claim_amount">
+                                    <label>Member Name</label>
+                                    <h6><b>{{ claims?.memberName }}</b></h6>
+                                </div>
+                                <span class="info-dot1"></span>
+                                <div class="claim_amount">
+                                    <label>Policy Number</label>
+                                    <h6>{{ claims?.policyNumber }}</h6>
+                                </div>
+                            </div>
+                            <div class="row_claimsInfo sub_claimsInfo">
+                                <div class="claim_amount">
+                                    <label>Product Name</label>
+                                    <h6>{{ claims?.productName }}</h6>
+                                </div>
+                                <span class="info-dot1"></span>
+                                <div class="claim_amount">
+                                    <label>Request Type</label>
+                                    <h6>{{ claims?.requestType }}</h6>
+                                </div>
+                                <span class="info-dot1"></span>
+                                <div class="claim_amount">
+                                    <label>Claim Status</label>
+                                    <h6><b>{{ status?.claimStatus }}</b></h6>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="details_claimsInfo">
+                             <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5>  
                             <h5>{{ claims?.memberName }}</h5>
                             <h6>{{ claims?.productName }}<span class="info-dot"></span>{{ claims?.requestType }}<span class="info-dot"></span><b>{{ claims?.claimStatus }}</b></h6>
-                        </div>
+                        </div>-->
                         <!-- <div class="details_claimsAmount">
                         <div class="claim_amount">
                             <h6>Policy Number</h6>
@@ -40,11 +69,11 @@
                         <!-- <div class="claim_amount">
                             <h6>Request Type</h6>
                             <p>{{ claims?.requestType }}</p>
-                        </div> -->
+                        </div> 
                         <div class="claim_amount">
                             <h6>Policy Number</h6>
                             <p>{{ claims?.policyNumber }}</p>
-                        </div>
+                        </div>-->
                         <div class="claim_amount">
                             <h6>Claim Amount</h6>
                             <p>₹{{ claims?.claimedAmount }}</p>
