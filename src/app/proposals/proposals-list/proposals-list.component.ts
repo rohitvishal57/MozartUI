@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { ProposalList } from 'src/app/interface/proposals.interface';
@@ -37,13 +37,12 @@ export class ProposalsListComponent {
   placeholder:string='';
   agentCode=localStorage.getItem('agentCode');
   StaticPolicyTypes = [
-    { name: 'Individual', selected: false },
+    { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   proposalListRequestBody={
     "proposer": "",
     "productVarientName": "",  
-    "policyNumber": "",  
     "proposalNumber": "", 
     "intermediaryID": this.agentCode, 
     "policyType": "",  
@@ -60,6 +59,7 @@ export class ProposalsListComponent {
   formSequence: any[] = [];
   allJsonFormData: any[] = []
   formData: any = {}
+  currentDate = new Date().toISOString().split('T')[0];
 
   constructor(
     private proposalService: ProposalsService,
@@ -106,7 +106,7 @@ export class ProposalsListComponent {
     this.filterType = filterRange;
   }
   formatStartDate(datetime: string): string {
-    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
+    return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
@@ -133,8 +133,17 @@ export class ProposalsListComponent {
       }
     })
   }
-  toggleFilterDropdown() {
+  toggleFilterDropdown(event: Event) {
+    event.stopPropagation();
     this.toggeledropdown = !this.toggeledropdown;    
+  }
+  @HostListener('document:click', ['$event'])
+  clickOutside(event: Event) {
+    const clickedInside = (event.target as HTMLElement).closest('.filterWraperForm');
+    const clickedButton = (event.target as HTMLElement).closest('.jsFilterBtnClick');
+    if (!clickedInside && !clickedButton && this.toggeledropdown) {
+      this.toggeledropdown = false;
+    }
   }
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(
@@ -169,6 +178,8 @@ export class ProposalsListComponent {
       console.log("selecteed policy types",selectedPolicyTypes);  
     this.proposalListRequestBody.policyType = selectedPolicyTypes.join(", ");
     console.log("policy types which are taking by request body",this.proposalListRequestBody.policyType); 
+    this.first = 0;
+    this.page = 1;
     this.getProposalList();
     this.toggeledropdown=false;
   }
@@ -209,6 +220,8 @@ export class ProposalsListComponent {
       return "Enter Policy Number";
     } else if (this.selected === "proposalNumber") {
       return "Enter Proposal Number";
+    } else if (this.selected === "leadId") {
+      return "Enter Lead ID";
     }
     else {
       return "Search...";
@@ -218,7 +231,7 @@ export class ProposalsListComponent {
     this.selected = "";
     this.proposalListRequestBody.mobileNumber = "";
     this.proposalListRequestBody.proposer = "";
-    this.proposalListRequestBody.policyNumber = "";
+    this.proposalListRequestBody.leadId = "";
     this.proposalListRequestBody.proposalNumber ="",
     this.searchInputControl.reset();
     this.getProposalList();
@@ -230,21 +243,17 @@ export class ProposalsListComponent {
       console.log("inside",this.selected);
       
       if (this.selected === "mobileNumber") {
-        console.log(this.selected,this.proposalListRequestBody);
-
         this.proposalListRequestBody.mobileNumber = this.searchInputControl.value!;
         this.proposalListRequestBody.proposer = "";
-        this.proposalListRequestBody.policyNumber = "";
+        this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
       } else if (this.selected === "proposerName") {
-        console.log("vgvdxgtf",this.selected,this.proposalListRequestBody);
-
         this.proposalListRequestBody.proposer = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
-        this.proposalListRequestBody.policyNumber = "";
+        this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
-      } else if (this.selected === "policyNumber") {
-        this.proposalListRequestBody.policyNumber = this.searchInputControl.value!;
+      } else if (this.selected === "leadId") {
+        this.proposalListRequestBody.leadId = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.proposalNumber =""
@@ -254,8 +263,10 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposalNumber = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
-        this.proposalListRequestBody.policyNumber = "";
+        this.proposalListRequestBody.leadId = "";
       }
+      this.first = 0;
+      this.page = 1;
       this.getProposalList();
     }
   }

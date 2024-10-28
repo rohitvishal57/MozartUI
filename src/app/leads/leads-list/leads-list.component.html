@@ -4,10 +4,10 @@
             <div class="body_flex_row justify-content-between">
                 <h2>All Leads</h2>
                 <div class="btn_groupAction">
-                    <button type="button" class="btn_white btn_newRequest" routerLink="/leads/createLead">
+                    <button type="button" id="createlead" name="createlead" class="btn_white btn_newRequest" routerLink="/leads/createLead">
                         <img src="assets/Img/icon_plus_red.svg">Create lead
                     </button>
-                    <button type="button" class="btn_white btn_newRequest" routerLink="/leads/uploadLead">
+                    <button type="button" id="uploadlead" name="uploadlead" class="btn_white btn_newRequest" routerLink="/leads/uploadLead">
                         Upload lead
                     </button>
                     <!-- <button type="button" class="btn_white btn_newRequest" routerLink="/leads/campaignmanagment">
@@ -20,14 +20,14 @@
                     <ul class="quickFilter">
                          <li class="quickFilterHeading">Quick filter</li> 
                         <li>
-                            <button type="button" value="allpolicies" class="btn_quickFilter"
+                            <button type="button" id="allleads" name="allleads" value="allpolicies" class="btn_quickFilter"
                                 [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Leads</button>
                         </li>
                         <li>
-                            <button type="button" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">Assigned Leads</button>
+                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">Assigned Leads</button>
                         </li>
                         <li>
-                            <button type="button" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'unAssignedLead'}"  (click)="getUnAssignedLeads()">Unassigned Leads</button>
+                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'unAssignedLead'}"  (click)="getUnAssignedLeads()">Unassigned Leads</button>
                         </li>
                     </ul>
                 </div>
@@ -39,18 +39,18 @@
                     <div class="body_flex_row leads_searchWraper">
                         <div class="field_searchMain">
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)">
-                                <option value="Select an option"  disabled selected >Select an option</option>
+                                <option value="Select an option">Select an option</option>
                                 <option value="leadId">Lead Id</option>
                                 <option value="mobileNumber">Mobile Number</option>
                                 <option value="name">Name</option>
                                 <option value="email">Email ID</option>
                             </select>
                             <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button  type="button" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <button  type="button" id="leadsearch" name="leadsearch" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" id="leadfilter" name="leadfilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
@@ -58,7 +58,7 @@
                                     <!--<button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
                                         <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
                                     </button>-->
-                                    <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+                                    <button type="button" id="leadfiltercancel" name="leadfiltercancel" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
@@ -66,7 +66,7 @@
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected"> 
                                                     <label for="product{{i}}">{{product.productName}}</label>
                                                 </div>
                                             </div>
@@ -87,14 +87,16 @@
                                         <h6>Date Range</h6>
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block input-block-dob">
-                                                    <input type="date" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" [max]="today" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                    <label for="startdate">Start Date</label>
                                                     <span class="ui-error">Please enter date of birth</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block input-block-dob">
-                                                    <input type="date" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" [min]="startDate" [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                    <label for="enddate">End Date</label>
                                                     <span class="ui-error">Please enter date of birth</span>
                                                 </div>
                                             </div>
@@ -102,18 +104,18 @@
                                     </div>
                                 </div>
                                 <footer>
-                                    <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                    <button type="button" id="leadfilterclear" name="leadfilterclear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                    <button type="button" id="leadfilterapply" name="leadfilterapply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
                                 </footer>
                             </div>
                         </div>
                     </div>
 
-                    <button type="button" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"
+                    <button type="button" id="leadgridlist" name="leadgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"
                         [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list"
                         (click)="renewalListView('list')"><img src="assets/Img/icon_grid_list_grey.svg"
                             alt="Grid List"></button>
-                    <button type="button" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"
+                    <button type="button" id="leadgridcard" name="leadgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"
                         [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card"
                         (click)="renewalListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg"
                             alt="Grid Card"></button>
@@ -136,7 +138,7 @@
                                                 </div>
                                             </div>
                                             <!--<input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">-->
-                                            <button type="button" *ngIf="this.checkBoxSelectedLeads.length != 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
+                                            <button type="button" id="assignto" name="assignto" *ngIf="this.checkBoxSelectedLeads.length != 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
                                                 src="assets/Img/icon_profile.svg"></button>
                                         </div>
                                     </th>
@@ -162,13 +164,13 @@
                                     <td>{{row.email}}</td>
                                     <td>
                                         <div class="btn_groupAction justify-content-center">
-                                            <button class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
+                                            <button type="button" id="assignto2" name="assignto2" class="btn_action btn_editAction" (click)="showAssigneLeadDialog(row)" title="Assign To"> <img
                                                     src="assets/Img/icon_profile.svg" /></button>
-                                            <button  class="btn_action btn_renewalAction" (click)="updateLeadStatus(row.leadNumber)"  title="Update Status"><img
+                                            <button type="button" id="updatestatus" name="updatestatus" class="btn_action btn_renewalAction" (click)="updateLeadStatus(row.leadNumber)"  title="Update Status"><img
                                                     src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button class="btn_action btn_renewalAction" (click)="addNotesLead(row.leadNumber)" title="Add Notes"><img
+                                            <button type="button" id="addnote" name="addnote" class="btn_action btn_renewalAction" (click)="addNotesLead(row.leadNumber)" title="Add Notes"><img
                                                      src="assets/Img/icon_add_notes.svg"></button>
-                                            <button class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote" ><img
+                                            <button type="button" id="quickquote" name="quickquote" class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote" ><img
                                                      src="assets/Img/icon_savenew_subquote.svg"></button>
 
                                             <!-- <button type="button" value="more" title="More"
@@ -242,17 +244,17 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" value="Assign to" title="Assign to" (click)="showAssigneLeadDialog(row)"
+                                    <button type="button" id="gridassignto" name="gridassignto" value="Assign to" title="Assign to" (click)="showAssigneLeadDialog(row)"
                                         class="btn_action btn_editAction"><img
                                             src="assets/Img/icon_profile.svg"></button>
-                                    <button type="button" value="Update Status" title="Update Status" (click)="updateLeadStatus(row.leadNumber)"
+                                    <button type="button" id="gridupdatestatus" name="gridupdatestatus" value="Update Status" title="Update Status" (click)="updateLeadStatus(row.leadNumber)"
                                         class="btn_action btn_renewalAction"><img
                                             src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" value="Add Notes" title="Add Notes" (click)="addNotesLead(row.leadNumber)"
+                                    <button type="button" id="gridaddnote" name="gridaddnote" value="Add Notes" title="Add Notes" (click)="addNotesLead(row.leadNumber)"
                                         class="btn_action btn_renewalAction"><img
                                             src="assets/Img/icon_add_notes.svg"></button>
                                     <!-- <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
-                                    <button class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote" ><img
+                                    <button type="button" id="gridquickquote" name="gridquickquote" class="btn_action btn_renewalAction btn_subQuote"  title="Quick Quote" ><img
                                         src="assets/Img/icon_savenew_subquote.svg"></button>
                                    
                                         <!-- <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
@@ -367,9 +369,9 @@
             </div>
 
             <div class="modal-footer modal_footerBtnGroup_column">
-                <button type="submit"  class="verify-btn btn_red btn_fullWidth">Save</button>
+                <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth">Save</button>
                 <div class="d-flex justify-content-center">
-                    <button type="button"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" >Cancel</button>
+                    <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" >Cancel</button>
                 </div>
             </div>
          </form>
@@ -400,8 +402,8 @@
     
                 <div class="row mt-4">
                     <div class="col-12 btn_container_leads">
-                        <button type="button" class="btn_red" (onClick)="markDuplicatePopup = false">Cancel</button>
-                        <button type="submit" class="btn_red">Mark Duplicate</button>
+                        <button type="button" id="leadcancel" name="leadcancel" class="btn_red" (onClick)="markDuplicatePopup = false">Cancel</button>
+                        <button type="submit" id="markduplicate" name="markduplicate" class="btn_red">Mark Duplicate</button>
                     </div>
                 </div>
             </form>

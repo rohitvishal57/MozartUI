@@ -6,10 +6,10 @@
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
                         <li class="quickFilterHeading block-hide">Quick filter</li>
-                        <li><button type="button" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">All Policies({{countsList.totalRecords}})</button></li>
-                        <li><button type="button" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')">< 30 Days ({{countsList.expiringInLessThan30DaysCount}})</button></li>
-                        <li><button type="button" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">30-60 Days ({{countsList.expiringIn30To60DaysCount}})</button></li>
-                        <li><button type="button" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days','expiringIn60To90DaysCount')">60-90 Days ({{countsList.expiringIn60To90DaysCount}})</button></li>
+                        <li><button type="button" id="af-allpolicies" name="af-allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">All Policies({{countsList.totalRecords}})</button></li>
+                        <li><button type="button" id="af-30days" name="af-30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')">< 30 Days ({{countsList.expiringInLessThan30DaysCount}})</button></li>
+                        <li><button type="button" id="af-60days" name="af-60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">30-60 Days ({{countsList.expiringIn30To60DaysCount}})</button></li>
+                        <li><button type="button" id="af-90days" name="af-90days" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days','expiringIn60To90DaysCount')">60-90 Days ({{countsList.expiringIn60To90DaysCount}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight">
@@ -19,23 +19,20 @@
                                 <option value="" (click)="cancelSearch()">Select an Option</option>
                                 <option value="mobileNumber">Mobile Number</option>
                                 <option value="proposerName">Proposer Name</option>
-                                <option value="policyNumber">Policy Number</option>
                                 <option value="proposalNumber">Proposal Number</option>
+                                <option value="leadId">LeadId</option>
                             </select>
                             <input  class="filterSearch" id="filterSearch"  type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
-                            <button  type="button" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <button  type="button" id="btnsearch" name="btnsearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" id="btnfilter" name="btnfilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader">
                                     <header>Filter</header>
-                                    <!--<button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
-                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                    </button>-->
-                                    <button type="button" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+                                    <button type="button" id="cancel" name="cancel" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
@@ -64,29 +61,29 @@
                                         <h6>Date Range</h6>
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block input-block-dob">
-                                                    <input type="date" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
-                                                    <span class="ui-error">Please enter date of birth</span>
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                    <label for="startdate">Start Date</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block input-block-dob">
-                                                    <input type="date" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
-                                                    <span class="ui-error">Please enter date of birth</span>
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" id="enddate"name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                    <label for="enddate">End Date</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <footer>
-                                    <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                    <button type="button" id="filterclear" name="filterclear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                    <button type="button" id="filterapply" name="filterapply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
                                 </footer>
                             </div>
                         </div>
                     </div>
-                    <button type="button" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list" (click)="customerListView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
-                    <button type="button" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="customerListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
+                    <button type="button" id="gridlist" name="gridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list" (click)="customerListView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
+                    <button type="button" id="gridcard" name="gridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="customerListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
             </section>
             <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
@@ -95,32 +92,33 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th scope="col">Proposal No</th>
-                                    <th scope="col">Proposer</th>
+                                    <th scope="col">Proposal Number</th>
+                                    <th scope="col">Lead Id</th>
+                                    <th scope="col">Proposer Name</th>
                                     <th scope="col">Product</th>
-                                    <th scope="col" nowrap>Policy Type & No</th>
+                                    <th scope="col" nowrap>Policy Type</th>
                                     <th scope="col" nowrap>Premium</th>
                                     <th scope="col">Status</th>
                                     <th scope="col" nowrap>Created On</th>
-                                    <th scope="col" >Contact Details</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col" nowrap>Mobile Number</th>
+                                    <th scope="col">Notice</th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
                                 <tr *ngFor="let row of proposalList; let i = index">
                                     <td>{{ row.proposalNumber }}</td>
+                                    <td>{{ row.leadId }}</td>
                                     <td>{{ row.firstName }} {{row.lastName }}</td>
                                     <td>{{ row.productVarientName }}</td>
                                     <td>
                                         <div class="table-policyType">
                                             <div class="row-policyType">
                                                 <span class="lable">{{ row.policyType }}</span>
-                                                <span class="value">{{ row.policyNumber }}</span>
                                             </div>
                                         </div>
                                     </td>
                                     <td>{{ row.totalPremiumInt }}</td>
-                                    <td>{{ row.policyStatus }}</td>
+                                    <td>{{ row.proposalStatus }}</td>
                                     <td>{{ row.policyStartDate }}</td>
                                     <td>
                                         <div class="table-policyType">
@@ -131,20 +129,7 @@
                                     </td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" value="edit" title="Edit" class="btn_action btn_editAction" (click)="redirect()"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <!-- <button type="button" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button> -->
-                                            <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
-                                                <div class="overlay_popupMenu_Sub moreActionItemsSub">
-                                                    <ul class="actionItemsMain">
-                                                        <li class="actionItem" (click)="handleAction(row, 'download')">
-                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                        </li>
-                                                        <li class="actionItem" (click)="handleAction(row, 'delete')">
-                                                            <a> <img src="assets/Img/icon_delete_grey.svg" alt="Delete"><span>Delete</span></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </mat-menu>
+                                            <button type="button" id="edit" name="edit" value="edit" title="Edit" class="btn_action btn_editAction" (click)="redirect()"><img src="assets/Img/icon_edit_grey.svg"></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -178,20 +163,7 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" value="clone" title="clone" class="btn_action btn_editAction" ><img src="assets/Img/clone-regular.svg"></button>
-                                    <button type="button" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                    <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
-                                        <div class="overlay_popupMenu_Sub moreActionItemsSub">
-                                            <ul class="actionItemsMain">
-                                                <li class="actionItem" (click)="handleAction(row, 'download')">
-                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                </li>
-                                                <li class="actionItem" (click)="handleAction(row, 'delete')">
-                                                    <a> <img src="assets/Img/icon_delete_grey.svg" alt="Delete"><span>Delete</span></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </mat-menu>
+                                    <button type="button" id="editgrid" name="editgrid" value="edit" title="Edit" class="btn_action btn_editAction" (click)="redirect()"><img src="assets/Img/icon_edit_grey.svg"></button>
                                 </div>
                             </div>
                         </header>
@@ -201,15 +173,15 @@
                                 <div class="item_value">{{ row.policyType }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Proposal No.</div>
+                                <div class="item_lable">Proposal Number</div>
                                 <div class="item_value">{{ row.proposalNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Status</div>
-                                <div class="item_value">{{ row.policyStatus}}</div>
+                                <div class="item_value">{{ row.proposalStatus}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Mobile No.</div>
+                                <div class="item_lable">Mobile Number</div>
                                 <div class="item_value">{{ row.mobileNo}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">

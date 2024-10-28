@@ -144,7 +144,7 @@ a:not(href) {
 a {
   text-decoration: none !important;
 }
-img, li{
+li{
   cursor: pointer;
 }
 .siteHeader, .siteSidenav .sidenavMenu, .body_flex_column, .tableSubMain .table .table-policyType, .tableSubMain .table .table-renewalPremium, .tableSubMain .table .row-policyType, .moreActionItems ul, .filterWraperForm .fw_form, .filterWraperForm .fw_form .fw_formBody, .filterWraperForm .fw_form .fw_formRow, .createNewQuoteWraper .createNewQuoteMain .cnqLeft, .cardViewMain .cardViewWraper .cardViewItem, .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo, .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems, .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems .item_value .table-renewalPremium, .userQuotes, .quoteComparisonWraper .qc_item header, .quoteComparisonWraper .qc_item header .heading, .quoteComparisonWraper .qc_item .qc_info ul, .bcl_main, .bcl_main .processBtnGroup, .bcc_main, .accordionMain, .accordionMain .accordionItem, .accordionMain .accordionItem .accordionBody .accordionBodyRow, .planDetails, .planDetails header, .planDetails header .planProductInfo .ppi_info, .planDetails header .planProductQuote, .planDetails .planProductBody, .planDetails .planProductBody .benefitCoverMain .bc_info, .planDetails footer, .detailsRow, .data-row .data-item, .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info, .bottomInfoMain .bottomInfoSubMain .planProductQuote, .searchConditionWraper, .tabsMain {
@@ -576,7 +576,7 @@ button {
   font-weight: 300;
   font-size: 16px;
   color: var(--text-grey-79);
-  padding: 9px 9px 9px 25px;
+  padding: 7px 9px 7px 25px;
   transition: 0.3s;
 }
 .siteSidenav .sidenavMenu a .img_link {
@@ -629,7 +629,7 @@ button {
 }
 .siteSidenav.expand .sidenavMenu a{  
   width: 100%;
-  padding: 9px 9px 9px 25px;
+  padding: 7px 9px 7px 25px;
 }
 .siteSidenav.expand .sidenavMenu a:hover {
     background: #fee0dd;
@@ -1631,6 +1631,20 @@ input[type="search"]::-webkit-search-results-decoration {
     width: auto;
     border-width: 0;
 }
+.filterWraperForm .form-floating.input-block-dob>.input-textBox~label {
+  opacity: 1;
+    transform: scale(.85) translateY(-0.5rem) translateX(1.85rem) !important;
+    color: var(--text-black-4c);
+    background: linear-gradient(180deg, rgba(242, 243, 246, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    width: auto;
+    border-width: 0;
+    font-size: 12px;
+    margin: 0;
+    padding: 0 5px;
+    height: auto;
+    line-height: normal;
+    font-weight: 500;
+}
 .form-floating>.form-control.input-selectBox.focus~label {
     font-size: 10px;
 }
@@ -2356,7 +2370,10 @@ input[type="search"]::-webkit-search-results-decoration {
 .bottomInfoMain .bottomInfoSubMain .planProductInfo {
   gap: 8px;
 }
-
+.bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_img img {
+  width: 40px;
+  height: 40px;
+}
 .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info {
   font-weight: 300;
   font-size: 12px;
@@ -2514,10 +2531,10 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .tableSubMain .table .row-renewalPremium {
-  font-size: 9px;
+  font-size: 11px;
   line-height: 9px;
   justify-content: space-between;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--text-black-2e);
 }
 
@@ -2811,7 +2828,7 @@ input[type="search"]::-webkit-search-results-decoration {
   padding: 12px 12px 14px;
   border-radius: 16px;
   background: var(--white-color);
-  gap: 24px;
+  gap: 14px;
 }
 
 .cardViewMain .cardViewWraper .cardViewItem header {
@@ -2824,6 +2841,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 12px;
   line-height: 12px;
   color:var(--text-black-4c);
+  width: 100%;
 }
 
 .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 {
@@ -2834,8 +2852,11 @@ input[type="search"]::-webkit-search-results-decoration {
   color: var(--text-black-2e);
   margin: 0;
   padding: 0;
+  min-height: 32px;
 }
-
+.cardViewMain .cardViewWraper .cardViewItem header .card_btnGroup {
+  max-width: 100px;
+}
 .cardViewMain .cardViewWraper .cardViewItem .cardViewBody {
   flex-wrap: wrap;
   gap: 16px;
@@ -2867,6 +2888,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems .item_value {
   font-weight: 600;
   font-size: 12px;
+  word-break: break-all;
 }
 
 .cardViewMain .cardViewWraper .cardViewItem .cardViewBody .cv_bodyItems .item_value .table-renewalPremium {
@@ -3664,7 +3686,7 @@ input[type="search"]::-webkit-search-results-decoration {
 /*Table th,td space start*/
 .tableSubMain .table th, 
 .tableSubMain .table td {
-  padding: 8px 12px;
+  padding: 8px 8px;
 }
 /*Table th,td space end*/
 /*Optional coverages checkbox start*/
@@ -4726,6 +4748,7 @@ input[type="search"]::-webkit-search-results-decoration {
   right: 10px;
   top: 6px;
   padding: 0 6px;
+  background: #f1f3f6;
 }
 .common_searchWraper .field_searchMain button img {
   position: initial;

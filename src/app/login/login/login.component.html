@@ -8,10 +8,10 @@
           <div class="bg-white-wrap">
               <div class="row pad-wrap-10">
                   <div class="col-6 pad-0">
-                      <button (click)="selectFormType('Login with User Code')" [ngClass]="{'activeBtn': activeBtn ==='Login with User Code'}" class="login-otp-btn-wrap borderlt">Login with User Code</button>
+                      <button id="loginwithusercode" name="loginwithusercode" (click)="selectFormType('Login with User Code')" [ngClass]="{'activeBtn': activeBtn ==='Login with User Code'}" class="login-otp-btn-wrap borderlt">Login with User Code</button>
                   </div>
                   <div class="col-6 pad-0">
-                      <button class="login-otp-btn-wrap bordertl" (click)="selectFormType('Login with OTP')" [ngClass]="{'activeBtn': activeBtn ==='Login with OTP'}">Login with OTP</button>
+                      <button id="loginwithotp" name="loginwithotp" class="login-otp-btn-wrap bordertl" (click)="selectFormType('Login with OTP')" [ngClass]="{'activeBtn': activeBtn ==='Login with OTP'}">Login with OTP</button>
                   </div>
               </div>
           </div>
@@ -24,7 +24,7 @@
                       <small *ngIf="loginForm.controls['userName'].touched && !loginForm.controls['userName'].hasError('maxlength') && loginForm.controls['userName'].hasError('required')" class="text-danger">AgentCode/Email/IRDA License Number is required</small>
                   </div>
                   <div class="submit-button">
-                      <button type="submit" class="login-button" (click)="onSubmit()">
+                      <button type="submit" id="continue" name="continue" class="login-button" (click)="onSubmit()">
                           <span>Continue</span>
                       </button>
                   </div>
@@ -43,7 +43,7 @@
                       </div>
                   </div>
                   <div class="submit-button">
-                      <button type="submit" class="login-button" (click)="onVerifySubmit()">
+                      <button type="submit" id="sendotp" name="sendotp" class="login-button" (click)="onVerifySubmit()">
                           <span>Send OTP </span>
                       </button>
                   </div>
@@ -61,7 +61,7 @@
                   <input type="password" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
               </div>
               <div class="submit-button margin-btn-wrap">
-                  <button type="submit" class="login-button" (click)="onVerifyOTP()">
+                  <button type="submit" id="verifylogin" name="verifylogin" class="login-button" (click)="onVerifyOTP()">
                       <span>Verify & Login</span>
                   </button>
               </div>
@@ -74,6 +74,6 @@
           <div>
           </div>
       </div>
-      <img src="assets/logo/Backgroundimage_ABHI.jpg" class="background-image">
+      <img src="assets/logo/Backgroundimage_ABHI.jpg" alt="ABHI" class="background-image">
       <!--<img src="assets/Img/background_img_abhi.png" class="background-image">-->
   </div>

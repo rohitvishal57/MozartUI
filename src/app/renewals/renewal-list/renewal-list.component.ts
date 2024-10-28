@@ -45,6 +45,7 @@ export class RenewalListComponent {
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
+  currentDate = new Date().toISOString().split('T')[0];
 
   constructor(
     private renewalService: RenewalsService,private router: Router,private datePipe: DatePipe,
@@ -87,8 +88,8 @@ export class RenewalListComponent {
           })); 
           console.log("Renewal List",this.renewalsList);
           this.countsList = response.data;
-          this.totalRecords = response.data[this.filterType];         } 
-        else {
+          this.totalRecords = response.data[this.filterType];  
+        }else {
           this.toast.error({ detail: "Error", summary: "Failed to generate Renewals List.", duration: 1500 });
           console.error("API request was not successful.");
         }
@@ -100,7 +101,7 @@ export class RenewalListComponent {
     );
   }
   formatRenewedDate(datetime: string): string {
-    return this.datePipe.transform(new Date(datetime), "yyyy-MM-dd") || "";
+    return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
   filterQuotes(filter: string,filterRange: string) {
     this.renewalLisRequestBody.filterType = filter;
@@ -169,6 +170,8 @@ export class RenewalListComponent {
     .map((policyType) => policyType.name);
     this.renewalLisRequestBody.policyType = selectedPolicyTypes.join(", ");
     console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType); 
+    this.first = 0;
+    this.page = 1;
     this.getRenewalsList();
     this.toggeledropdown=false;
   }
@@ -235,6 +238,8 @@ export class RenewalListComponent {
         this.renewalLisRequestBody.mobileNumber = "";
         this.renewalLisRequestBody.proposer = "";
       }
+      this.first = 0;
+      this.page = 1;
       this.getRenewalsList();
     }
   }
@@ -244,6 +249,39 @@ export class RenewalListComponent {
   handleAction(item: RenewalList, event?: string) {
     switch (event) {
       case 'download':
+        const downloadRequestBody={
+          EventName:"Search policy kit request from customers",
+          AgentCode:this.agentCode,
+          ReferenceId:this.agentCode,
+          SearchOperator:"AND",
+          SearchRequest: [
+            {
+              CategoryID: "",
+              DocumentID: "",
+              ReferenceID: "",
+              FileName: "",
+              Description: "",
+              DataClassParam: [
+                {
+                    DocSearchParamId: "2",
+                    Value: "21-24-0002917-00"
+                },
+                {
+                    DocSearchParamId: "15",
+                    Value: "PS_04"
+                }
+              ]
+            }
+          ],
+          Category: "N/A",
+          UserRole: "Guest",
+          SessionId: "0000",
+          UserLevel: "Basic",
+          BranchCode: "000",
+          Designation: "N/A",
+          IntCategory: "N/A",
+          SourceSystemName: "Portal"
+        }
         break;
       case 'payment':
         this.activeSection = event;
@@ -345,7 +383,7 @@ export class RenewalListComponent {
             if (response.isSuccess) {
               this.toast.success({ detail: "Success", summary: "WhatsApp message sent successfully.", duration: 1500});
             } else {
-              this.toast.error({ detail: "Error", summary: "Failed to send WhatsApp message.", duration: 1500 });
+              this.toast.error({ detail: "Error", summary: response.errorMessage, duration: 1500 });
             }
           },
           (error: any) => {

@@ -18,6 +18,7 @@ export class GetQuoteComponent {
   selectedPlan: string = "Family Floater";
   selectedRelationships: string[] = [];
   selectedRelation: string = "";
+  minimumMembersRequired = 2;
   activeDropdown: number | null = null;
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
@@ -182,17 +183,17 @@ export class GetQuoteComponent {
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     this.quoteFormGroup = this.fb.group({
-      proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$')]],
-      proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]],
-      mobileNumber: [null, [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
+      proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
+      mobileNumber: [null, [Validators.required, Validators.pattern('^[6-9][0-9]{9}$'), Validators.maxLength(10)]],
       typeOfBusiness: ["NB"],
       isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
       numberOfInsuredMembers: [null],
       familySize: [null],
       memberPolicyType: [this.selectedPlan],
-      memberDobProposer:[''],
-      memberAgeProposer:[''],
+      memberDobProposer: [''],
+      memberAgeProposer: [''],
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
@@ -210,9 +211,10 @@ export class GetQuoteComponent {
   }
 
   onRelationChange(event: any, relation: any) {
+    const isChecked = event.target.checked;
     const selectedValue = relation.value;
 
-    if (event.target.checked) {
+    if (isChecked) {
       if (!this.selectedRelationships.some(
         (existingRelation: any) => existingRelation.name === relation.name
       )) {
@@ -222,7 +224,6 @@ export class GetQuoteComponent {
       this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
     }
-
     // this.saveDataToStorage();
   }
 
@@ -351,8 +352,8 @@ export class GetQuoteComponent {
 
   continue() {
     console.log(this.quoteFormGroup);
-    this.quoteFormGroup.get('insuredMemberDetails')?.value.forEach((item:any)=>{
-      if(item.relation == 'Self'){
+    this.quoteFormGroup.get('insuredMemberDetails')?.value.forEach((item: any) => {
+      if (item.relation == 'Self') {
         this.quoteFormGroup.get('memberDobProposer')?.setValue(item.memberdob);
         this.quoteFormGroup.get('memberAgeProposer')?.setValue(item.memberAge);
         console.log(item);
@@ -563,10 +564,15 @@ export class GetQuoteComponent {
 
   // Add new member details
   addInsuredMemberDetails(): void {
-    // Mark required fields as touched
-    // this.quoteFormGroup.get('proposerName')?.markAsTouched();
-    // this.quoteFormGroup.get('proposerPincode')?.markAsTouched();
-    // this.quoteFormGroup.get('mobileNumber')?.markAsTouched();
+
+    if (this.selectedRelationships.length < 2 && this.selectedPlan === 'Family Floater') {
+      this.toast.error({
+        detail: "Error",
+        summary: "At least 2 members must be selected.",
+        duration: 3000
+      });
+      return; // Prevent proceeding if fewer than 2 members are selected
+    }
 
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid) {
@@ -625,6 +631,14 @@ export class GetQuoteComponent {
   get insuredMemberDetails(): FormArray {
     return this.quoteFormGroup.get('insuredMemberDetails') as FormArray;
   }
+
+  enforceMaxLength(event: any, maxLength: number) {
+    const input = event.target;
+    if (input.value.length > maxLength) {
+      input.value = input.value.slice(0, maxLength);  // Truncate the input to maxLength
+    }
+  }
+
 
 
   // getProposerPincode(event: any) {

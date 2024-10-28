@@ -176,10 +176,10 @@ export class EndorsementsRequestsComponent implements OnInit {
     }
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
-        if (response && response.statusCode == "200" && response.isSuccess) {
-          this.endorsementDetails = [...response.endorsementDetails];
-          this.countsList = response.endorsementDetails;
-          this.totalRecords = response.totalRecords;
+        if (response.data && response.data.statusCode == "200" && response.data.isSuccess) {
+          this.endorsementDetails = [...response.data.endorsementDetails];
+          this.countsList = response.data.endorsementDetails;
+          this.totalRecords = response.data.totalRecords;
         } else {
           console.error("API request was not successful.");
         }
@@ -235,7 +235,6 @@ export class EndorsementsRequestsComponent implements OnInit {
       count++;
     }
     this.appliedFiltersCount = count;
-    this.appliedFiltersCount;
   }
   clear(){
     this.productsList.forEach((product:any) => (product.selected = false));

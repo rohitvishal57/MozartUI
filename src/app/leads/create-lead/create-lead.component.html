@@ -2,7 +2,8 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"><!--<a class="btn_backPage"></a>-->Create/Update Lead</h2>
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()"></a> Create/Update Lead
+                </h2>
             </div>
             <div *ngIf="isAUuser && !this.dataToDisplay">
                 <!-- <h2 class="sub-title mb-30 font-weight-bold"> AU User Details</h2> -->
@@ -13,8 +14,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" [(value)]='AUSearchCategory'
-                                    >
+                                <select class="form-select input-selectBox" [(value)]='AUSearchCategory'>
                                     <!-- <option value="" disabled selected>Search Policy Number</option> -->
                                     <option *ngFor="let opt of AUSearchby" [value]="opt">
                                         {{ opt }}
@@ -26,21 +26,22 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="AUSearchValue" placeholder=""
-                                [(ngModel)]="AUSearchValue" type="text">
+                                    [(ngModel)]="AUSearchValue" type="text">
                                 <label for="AUSearchValue">Identification Number</label>
                             </div>
                         </div>
 
                         <div class="col-sm-4 col-lg-3 col-md-3 mb-30">
-                            <button class="au-search btn_red" type="button" (click)="SETAUDATA()">Search</button>
+                            <button id="leadsearch" name="leadsearch" class="au-search btn_red" type="button"
+                                (click)="SETAUDATA()">Search</button>
                         </div>
 
                     </div>
                 </section>
-            </div>  
-             <div *ngIf="isIDFCUser &&  !this.dataToDisplay">
+            </div>
+            <div *ngIf="isIDFCUser &&  !this.dataToDisplay">
                 <!-- <h2 class="sub-title mb-30 font-weight-bold" > IDFC User Details</h2> -->
-             
+
                 <section class="white_container mb-3">
                     <div class="row">
                         <div class="col-12 mb-4">
@@ -48,8 +49,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" [(ngModel)]="AUSearchCategory"
-                                    >
+                                <select class="form-select input-selectBox" [(ngModel)]="AUSearchCategory">
                                     <!-- <option value="" disabled selected>Search Policy Number</option> -->
                                     <option *ngFor="let opt of AUSearchby" [value]="opt">
                                         {{ opt }}
@@ -61,13 +61,14 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="IDFCSearchValue" placeholder=""
-                                [(ngModel)]="IDFCSearchValue" type="text">
+                                    [(ngModel)]="IDFCSearchValue" type="text">
                                 <label for="IDFCSearchValue">Identification Number</label>
                             </div>
                         </div>
 
                         <div class="col-sm-4 col-lg-3 col-md-3 mb-30">
-                            <button class="au-search btn_red" type="button" (click)="SETIDFCDATA()">Search</button>
+                            <button id="leadsearch2" name="leadsearch2" class="au-search btn_red" type="button"
+                                (click)="SETIDFCDATA()">Search</button>
                         </div>
 
                     </div>
@@ -82,8 +83,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" [(ngModel)]="YESSearchCategory"
-                                    >
+                                <select class="form-select input-selectBox" [(ngModel)]="YESSearchCategory">
                                     <!-- <option value="" disabled selected>Search Policy Number</option> -->
                                     <option *ngFor="let opt of YESSearchby" [value]="opt">
                                         {{ opt }}
@@ -95,26 +95,27 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="YESSearchValue" placeholder=""
-                                [(ngModel)]="YESSearchValue" type="text" (input)="checkEnableSendOTP()">
+                                    [(ngModel)]="YESSearchValue" type="text" (input)="checkEnableSendOTP()">
                                 <label for="YESSearchValue">Identification Number</label>
                             </div>
                         </div>
                         <div class="col-sm-4 col-lg-2 col-md-2 mb-30">
                             <label class="label label-height label-form-builder">&nbsp;</label>
-                            <button class="au-search yes-search btn_red" type="button" [disabled]="!sendOTPEnabled"
-                                (click)="sendOTP()">Send OTP
+                            <button id="sendotp" name="sendotp" class="au-search yes-search btn_red" type="button"
+                                [disabled]="!sendOTPEnabled" (click)="sendOTP()">Send OTP
                             </button>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="otpEntered">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="enteredOTP" placeholder=""
-                                [(ngModel)]="enteredOTP" type="text" (input)="checkEnableSendOTP()">
+                                    [(ngModel)]="enteredOTP" type="text" (input)="checkEnableSendOTP()">
                                 <label for="enteredOTP">Enter OTP</label>
                             </div>
                         </div>
                         <div class="col-sm-4 col-lg-1 col-md-1 mb-30" *ngIf="otpEntered">
                             <label class="label label-height label-form-builder">&nbsp;</label>
-                            <button class="au-search yes-search btn_red" type="button" (click)="validate()">Validate
+                            <button id="validateotp" name="validateotp" class="au-search yes-search btn_red"
+                                type="button" (click)="validate()">Validate
                             </button>
                         </div>
                     </div>
@@ -204,40 +205,46 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder=""
                                     formControlName="firstname" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }" >
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }">
                                 <label for="firstname">First Name *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('firstname')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('firstname')?.invalid && !userValidations.get('firstname')?.errors?.['pattern']">Field cannot
+                                        *ngIf="submitted && userValidations.get('firstname')?.invalid && !userValidations.get('firstname')?.errors?.['pattern']">Field
+                                        cannot
                                         be blank</span>
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">Field should only contain alphabets</span>
+                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">Field
+                                        should only contain alphabets</span>
                                 </span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="MiddleName" placeholder=""
-                                    formControlName="MiddleName" type="text" OnlyCharacter [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
+                                    formControlName="MiddleName" type="text" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
                                 <label for="MiddleName">Middle Name</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">Field should only contain alphabets</span>
+                                    *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">Field
+                                    should only contain alphabets</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="lastname" placeholder=""
                                     formControlName="lastname" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }" >
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }">
                                 <label for="lastname">Last Name *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('lastname')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('lastname')?.invalid && !userValidations.get('lastname')?.errors?.['pattern']">Field cannot
+                                        *ngIf="submitted && userValidations.get('lastname')?.invalid && !userValidations.get('lastname')?.errors?.['pattern']">Field
+                                        cannot
                                         be blank</span>
-                                        <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">Field should only contain alphabets</span>
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">Field
+                                        should only contain alphabets</span>
                                 </span>
                             </div>
                         </div>
@@ -245,15 +252,17 @@
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="nomineeName" placeholder=""
                                     formControlName="mobilenumber" type="text" OnlyCharacter
-                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }" >
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }">
                                 <label for="nomineeName">Mobile Number *</label>
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Field cannot
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Field
+                                        cannot
                                         be blank</span>
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.errors?.['pattern']">Enter a valid 10-digit Mobile
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.errors?.['pattern']">Enter
+                                        a valid 10-digit Mobile
                                         Number
                                     </span>
                                 </span>
@@ -268,10 +277,12 @@
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('email')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('email')?.invalid && !userValidations.get('email')?.errors?.['pattern']">Field cannot
+                                        *ngIf="submitted && userValidations.get('email')?.invalid && !userValidations.get('email')?.errors?.['pattern']">Field
+                                        cannot
                                         be blank</span>
-                                        <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('email')?.errors?.['pattern']">Please enter valid Email ID</span>
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('email')?.errors?.['pattern']">Please
+                                        enter valid Email ID</span>
                                 </span>
                             </div>
                         </div>
@@ -290,7 +301,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="dob" placeholder="" formControlName="dob"
-                                    type="date" (change)="changeDob($event)">
+                                    type="date" [max]="today" (change)="changeDob($event)">
                                 <label for="nomineeName">DOB</label>
                             </div>
                         </div>
@@ -300,7 +311,8 @@
                                     type="text">
                                 <label for="age">Age</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('age')?.errors?.['pattern']">Please enter proper age in Digits</span>
+                                    *ngIf="submitted && userValidations.get('age')?.errors?.['pattern']">Please enter
+                                    proper age in Digits</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -344,8 +356,8 @@
                                     formControlName="occupation" type="text">
                                 <label for="occupation">Occupation</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('occupation')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('occupation')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -354,8 +366,8 @@
                                     formControlName="education" type="text">
                                 <label for="education">Education</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('education')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('education')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                     </div>
@@ -371,8 +383,8 @@
                                     formControlName="address1" type="text" OnlyCharacter>
                                 <label for="address1">Address 1</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('address1')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('address1')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -381,8 +393,8 @@
                                     formControlName="address2" type="text" OnlyCharacter>
                                 <label for="address2">Address 2</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('address2')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('address2')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -391,8 +403,8 @@
                                     formControlName="address3" type="text" OnlyCharacter>
                                 <label for="address3">Address 3</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('address3')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('address3')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -401,8 +413,8 @@
                                     formControlName="city" type="text" OnlyCharacter>
                                 <label for="city">City</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('city')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('city')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -411,8 +423,8 @@
                                     formControlName="state" type="text" OnlyCharacter>
                                 <label for="state">State</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('state')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('state')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -421,13 +433,13 @@
                                     formControlName="pincode" type="text">
                                 <label for="pincode">Pincode</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                     </div>
                 </section>
-                
+
                 <section class="white_container mb-3" *ngIf="action!='addNotes'">
                     <div class="row">
                         <div class="col-12 mb-4">
@@ -460,21 +472,21 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="sumInsured" placeholder=""
-                                    formControlName="sumInsured" type="text">
+                                    formControlName="sumInsured" (keypress)="isNumber($event)">
                                 <label for="sumInsured">Interested Sum Insured</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('sumInsured')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('sumInsured')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="premium" placeholder=""
-                                    formControlName="premium" type="text" OnlyCharacter>
+                                    formControlName="premium" (keypress)="isNumber($event)">
                                 <label for="premium">Interested Premium</label>
                                 <span class="ui-error block-show"
-                                *ngIf="submitted && userValidations.get('premium')?.errors?.['pattern']">Please
-                                enter proper value</span>
+                                    *ngIf="submitted && userValidations.get('premium')?.errors?.['pattern']">Please
+                                    enter proper value</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -501,7 +513,7 @@
                                 <label for="policyType">Policy Type</label>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="policyNumber" placeholder=""
                                     formControlName="policyNumber" type="text">
@@ -510,148 +522,182 @@
                                 *ngIf="submitted && userValidations.get('policyNumber')?.errors?.['pattern']">Please
                                 enter proper value</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                 </section>
-                    <section class="white_container mb-3" *ngIf="action=='updateStatus'">
-                        <div class="row">
-                            <div class="col-12 mb-4">
-                                <h6 class="heading-16-red">Update Lead Status</h6>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                <div class="input-block form-floating input-block-renew">
-                                    <select class="form-select input-selectBox" formControlName="status"
+                <section class="white_container mb-3" *ngIf="action=='updateStatus'">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">Update Lead Status</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="status"
                                     (change)="changeReferStatus($event)">
-                                        <option value="" disabled selected>Choose Option</option>
-                                        <option *ngFor="let item of referenceStatus" [value]="item.name">
-                                            {{ item.name }}
-                                        </option>
-                                    </select>
-                                    <label for="interestedProductName">Enter Lead Status</label>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                <div class="input-block form-floating input-block-renew">
-                                    <select class="form-select input-selectBox" formControlName="substatus"
-                                        (selectionChange)="campnoSelected()">
-                                        <option value="" disabled selected>Choose Option</option>
-                                        <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
-                                            {{ item.name }}
-                                        </option>
-                                    </select>
-                                    <label for="familyConstruct">Enter Lead Sub-Status</label>
-                                </div>
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let item of referenceStatus" [value]="item.name">
+                                        {{ item.name }}
+                                    </option>
+                                </select>
+                                <label for="interestedProductName">Enter Lead Status</label>
                             </div>
                         </div>
-                        <div class="row mb-0">
-                            <h4 class="mrg-btm-0 impText font-weight-bold"><span class="heading-16-red">Important :</span>
-                                Kindly
-                                ensure that
-                                Proposer's full name, address, gender and date of birth is strictly as per his/her
-                                CKYC1
-                                registry, Aadhaar records or OVD2</h4>
-                        </div>
-                        <div class="row impTextList sub-title mb-0 font-weight-bold">
-                            <p>1. Central KYC Registry</p>
-                        </div>
-                        <div class="row impTextList sub-title mb-3 font-weight-bold">
-                            <p>2. Officially Valid Documents, namely one of Aadhaar/Passport/Driving License/Voter
-                                ID</p>
-                        </div>
-                    </section>
- 
-                    <div class="row mt-4" *ngIf="action!='addNotes'">
-                        <div class="col-12">
-                            <button type="submit" class="btn_red">Save</button>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="substatus"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
+                                        {{ item.name }}
+                                    </option>
+                                </select>
+                                <label for="familyConstruct">Enter Lead Sub-Status</label>
+                            </div>
                         </div>
                     </div>
+                    <div class="row mb-0">
+                        <h4 class="mrg-btm-0 impText font-weight-bold"><span class="heading-16-red">Important :</span>
+                            Kindly
+                            ensure that
+                            Proposer's full name, address, gender and date of birth is strictly as per his/her
+                            CKYC1
+                            registry, Aadhaar records or OVD2</h4>
+                    </div>
+                    <div class="row impTextList sub-title mb-0 font-weight-bold">
+                        <p>1. Central KYC Registry</p>
+                    </div>
+                    <div class="row impTextList sub-title mb-3 font-weight-bold">
+                        <p>2. Officially Valid Documents, namely one of Aadhaar/Passport/Driving License/Voter
+                            ID</p>
+                    </div>
+                </section>
+
+                <div class="row mt-4" *ngIf="action!='addNotes'">
+                    <div class="col-12">
+                        <button type="submit" id="addnotesave" name="addnotesave" class="btn_red">Save</button>
+                    </div>
+                </div>
 
             </form>
-            <form (ngSubmit)="addNotesSubmit()" [formGroup] = "addNoteForm" >
-            <section class="white_container mb-3" *ngIf="action=='addNotes'">
-                
-                <div class="row">
-                    <div class="col-12 mb-4">
-                        <h6 class="heading-16-red">Add Notes</h6>
-                    </div>
-					
-					
-					 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <form (ngSubmit)="addNotesSubmit()" [formGroup]="addNoteForm">
+                <section class="white_container mb-3" *ngIf="action=='addNotes'">
+
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">Add Notes</h6>
+                        </div>
+
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityTitle" placeholder=""
-                                    formControlName="activityTitle" type="text" >
+                                    formControlName="activityTitle" type="text"
+                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
                                 <label for="activityTitle">Activity Title*</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
+                                        Field cannot be blank</span>
+                                </span>
 
                             </div>
                         </div>
-						
-						 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityStartDate" placeholder=""
-                                    formControlName="activityStartDate" type="date" >
+                                    formControlName="activityStartDate" type="date"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
                                 <label for="activityStartDate">Activity Start Date*</label>
-
+                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
+                                <span class="ui-error block-show"
+                                    *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
+                                    Enter valid date</span>
+                            </span>
                             </div>
                         </div>
-						
-						 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityStartTime" placeholder=""
-                                    formControlName="activityStartTime" type="time" >
+                                    formControlName="activityStartTime" type="time" [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityStartTime')?.errors }">
                                 <label for="activityStartTime">Activity Start Time*</label>
+                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.invalid">
+                                        Enter valid Time</span>
+                                </span>
 
                             </div>
                         </div>
-						
-						 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityEndDate" placeholder=""
-                                    formControlName="activityEndDate" type="date" >
+                                    formControlName="activityEndDate" type="date" [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
                                 <label for="activityEndDate">Activity End Date*</label>
-
+                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.invalid">
+                                        Enter valid Date</span>
+                                </span>
                             </div>
                         </div>
-						
-						 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityEndTime" placeholder=""
-                                    formControlName="activityEndTime" type="time" >
+                                    formControlName="activityEndTime" type="time" [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }">
                                 <label for="activityEndTime">Activity End Time*</label>
-
+                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
+                                        Enter valid Time</span>
+                                </span>
                             </div>
                         </div>
-					
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                        <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" formControlName="activityType">
-                                <option value="" disabled selected>Choose Option</option>
-                                <option *ngFor="let item of activityTypes" [value]="item">
-                                    {{ item }}
-                                </option>
-                            </select>
-                            <label for="interestedProductName">Select Activity Type*</label>
-                        </div>
-                    </div>
-					 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                 <textarea class="form-control input-textBox" id="notes" placeholder="Type your note..."
-                                    formControlName="notes" ></textarea>
+                                <select class="form-select input-selectBox" formControlName="activityType"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityType')?.errors }">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let item of activityTypes" [value]="item">
+                                        {{ item }}
+                                    </option>
+                                </select>
+                                <label for="interestedProductName">Select Activity Type*</label>
+                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityType')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="notesSubmitted && addNoteForm.get('activityType')?.invalid">
+                                        Select Activity Type</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="input-block form-floating input-block-renew">
+                                <textarea class="form-control input-textBox" id="notes" placeholder="Type your note..."
+                                    formControlName="notes"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }"></textarea>
                                 <label for="notes">Note*:</label>
+                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
+                                        Enter valid Time</span>
+                                </span>
 
                             </div>
                         </div>
-                
-                </div>
-            </section>
-            
-            <div class="row mt-4" *ngIf="action=='addNotes'">
-                <div class="col-12">
-                    <button type="submit" class="btn_red">Add Notes</button>
-                </div>
-            </div>
 
-        </form>
+                    </div>
+                </section>
+
+                <div class="row mt-4" *ngIf="action=='addNotes'">
+                    <div class="col-12">
+                        <button type="submit" id="addnotes" name="addnotes" class="btn_red">Add Notes</button>
+                    </div>
+                </div>
+
+            </form>
         </div>
     </div>
 </main>

@@ -33,11 +33,13 @@ export class CreateLeadComponent implements OnInit {
   AUSearchValue: string = "";
   agentCode: any = '';
   submittedUser: any = {};
+  notesSubmitted : boolean = false;
   action: String = '';
   leadNumber: String = '';
   referenceStatus: any;
   referenceSubStatus: any;
   activityTypes: any = [];
+  today:string='';
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -92,7 +94,8 @@ export class CreateLeadComponent implements OnInit {
     //   }
     // );
 
-  
+    const date = new Date();
+    this.today = date.toISOString().split('T')[0];
   }
 
   inItForm() {
@@ -142,13 +145,13 @@ export class CreateLeadComponent implements OnInit {
 
 
     this.addNoteForm = this.formBuilder.group({
-      title: [''],
-      activityStartDate: [''],
-      activityStartTime: [''],
-      activityEndDate: [''],
-      activityEndTime: [''],
-      activityType: [''],
-      notes: [''],
+      activityTitle: ['', Validators.required], // activityTitle is required
+      activityStartDate: ['', Validators.required], // Start date is required
+      activityStartTime: ['', Validators.required], // Start time is required
+      activityEndDate: ['', Validators.required], // End date is required
+      activityEndTime: ['', Validators.required], // End time is required
+      activityType: ['', Validators.required], // Activity type is required
+      notes: ['', Validators.required] // Notes can be optional
     });
   }
 
@@ -322,9 +325,12 @@ export class CreateLeadComponent implements OnInit {
 
   addNotesSubmit() {
     let addNotesRequestBody: any = {};
-    addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
+    console.log('activityType',this.addNoteForm.errors);
+    this.notesSubmitted =true;
+    if(this.addNoteForm.valid){
+      addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
       addNotesRequestBody.activityenddate = this.addNoteForm.value.activityEndDate,
-      addNotesRequestBody.activityName = this.addNoteForm.value.title,
+      addNotesRequestBody.activityName = this.addNoteForm.value.activityTitle,
       addNotesRequestBody.note = this.addNoteForm.value.notes,
       addNotesRequestBody.name = this.addNoteForm.value.notes,
       addNotesRequestBody.activitytype = this.addNoteForm.value.activityType,
@@ -333,6 +339,8 @@ export class CreateLeadComponent implements OnInit {
       addNotesRequestBody.mobilenumber = this.submittedUser.phoneNumber,
       addNotesRequestBody.leadnumber = this.leadNumber,
       addNotesRequestBody.isupdate = 0
+
+      console.log('addNoteForm',this.addNoteForm.errors);
 
     this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
       (response) => {
@@ -344,7 +352,22 @@ export class CreateLeadComponent implements OnInit {
         console.error("Error from addLeadNotes API:", error);
       }
     );
+        
+  }
   }
 
+  backToleads(){
+    this.router.navigate(['/leads/leadsList'], {
+  });
+  }
+
+  isNumber(event: KeyboardEvent) {
+    const pattern = /[0-9]/; // Only allow digits
+    const inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault(); // Block non-numeric input
+    }
+  }
+  
 
 }

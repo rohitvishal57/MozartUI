@@ -15,7 +15,7 @@
           <div class="row mb-3">
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
-                <input class="form-control input-textBox" (keydown)="onKeyDown($event)" [matAutocomplete]="auto"  id="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
+                <input class="form-control input-textBox" value="" (keydown)="onKeyDown($event)" [matAutocomplete]="auto" id="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
                 <label for="policyNumber">Search Policy Number </label>
                 <div *ngIf="caseCreationForm.get('policyNumber')?.invalid && (caseCreationForm.get('policyNumber')?.touched || caseCreationForm.get('policyNumber')?.dirty)">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('policyNumber')?.errors?.required">Policy Number is required.</small>
@@ -333,7 +333,7 @@
                     <!--OPT Button start-->
                     <div class="col-xs-12 col-sm-4 col-lg-3 col-md-3 mb-30" *ngIf="showOtpSection">
                       <!--<label class="label label-height label-form-builder"></label>-->
-                      <button class="btn_red btn_sm" type="button" (click)="sendOTP()" [disabled]="sendOtptDisabled">Send OTP</button>
+                      <button class="btn_red btn_sm" type="button" id="sendotp" name="sendotp" (click)="sendOTP()" [disabled]="sendOtptDisabled">Send OTP</button>
                     </div>
                     <!--OPT Button end-->
                   </div>
@@ -356,7 +356,7 @@
                       <p>JPG/JPEG/PNG/PDF Files (up to 10MB)</p>
                     </div>
                     <div class="ud_area_right">
-                      <button type="button" class="btn_uploadDocument">
+                      <button type="button" id="upload" name="upload" class="btn_uploadDocument">
                         <span class="upload_icon">
                           <img src="assets/Img/icon_upload_white.svg">
                         </span> Upload </button>
@@ -371,7 +371,7 @@
                       <p>{{documentType}}</p>
                     </div>
                     <div class="ud_area_right">
-                      <button class="delete-button" (click)="deleteFile()">
+                      <button type="button" id="deletefile" name="deletefile" class="delete-button" (click)="deleteFile()">
                         <img src="assets/Img/icon_delete_red2.svg">
                       </button>
                       <p>{{documentSize}}</p>
@@ -392,7 +392,7 @@
         </section>
         <div class="row mt-4">
           <div class="col-12">
-            <button type="submit" class="btn_red" [disabled]="isDisabled">Submit Request</button>
+            <button type="submit" id="submitrequest" name="submitrequest" class="btn_red" [disabled]="isDisabled">Submit Request</button>
           </div>
         </div>
       </form>
@@ -405,7 +405,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="roomModalLabel">Verify your account</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeOtpPopup()"></button>
+        <button type="button" id="closeotp" name="closeotp" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeOtpPopup()"></button>
       </div>
       <div class="modal-body">
         <!--<button type="button" class="close" (click)="closeOtpPopup()">&times;</button><h4>Verify your account</h4>-->
@@ -424,11 +424,11 @@
         <!--<div class="text-center"><button type="button" (click)="validateOTP()" class="verify-btn">Verify</button></div>-->
       </div>
       <div class="modal-footer modal_footerBtnGroup_column">
-        <button type="button" (click)="validateOTP()" class="verify-btn btn_red btn_fullWidth">Verify</button>
+        <button type="button" id="verify" name="verify" (click)="validateOTP()" class="verify-btn btn_red btn_fullWidth">Verify</button>
         <small class="ui-error block-show" *ngIf="otpErrorMsge">{{errorMessage}}</small>
         <div class="d-flex justify-content-center">
           <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds </label>
-          <button type="button" *ngIf="timeLeft === 0" class="btn_linkText btn_fullWidth" (click)="resendOTP()">Resend OTP</button>
+          <button type="button" id="resendotp" name="resendotp" *ngIf="timeLeft === 0" class="btn_linkText btn_fullWidth" (click)="resendOTP()">Resend OTP</button>
         </div>
       </div>
     </div>

@@ -4,16 +4,16 @@
           <div class="bcl_main">
               <h3>Select from any customisation below</h3>
               <div class="processBtnGroup">
-                <button type="button" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('primary')">
+                <button type="button" id="customisation-primary" name="customisation-primary" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('primary')">
                     <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">Primary
                 </button>
-                <button type="button" value="primary" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
+                <button type="button" id="customisation-additional" name="customisation-additional" value="additional" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
                     <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['payment', 'policySummary', 'kyc','additional'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'additional', 'block-hide': activeSection !== 'additional'}">
                     <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Additional
                 </button>            
-                <button type="button" value="primary" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
+                <button type="button" id="customisation-payment" name="customisation-payment" value="payment" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
                     <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': !['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Payment
                 </button>
@@ -69,7 +69,7 @@
                                           </div>
                                       </div>
                                       <div class="data-item data-itemEdit" (click)="selectButton(5005)">
-                                          <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                          <button type="button" id="dataedit" name="dataedit" value="dataedit" class="btn_editGrey"></button>
                                       </div>
                                   </div>
                               </div>
@@ -78,7 +78,7 @@
                   </div>
                   <div class="accordionItem" *ngIf="formId == 5001">
                       <header>Member Details
-                          <button type="button" value="another" class="btn_iconText" (click)="selectButton(5002,'addMember')"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
+                          <button type="button" id="addMember" name="addMember" value="another" class="btn_iconText" (click)="selectButton(5002,'addMember')"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -103,7 +103,7 @@
                                               <h6>₹ {{ member.SumInsured | number:'1.0-0' }}</h6>
                                           </div>
                                           <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5002,'editMember',i)">
-                                              <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                              <button type="button" id="editMember" name="editMember" value="dataedit" class="btn_editGrey"></button>
                                           </div>
                                       </div>
                                   </div>
@@ -136,7 +136,7 @@
                                           <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code || 'N/A' }}</h6>
                                       </div>
                                       <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5004,'editNominee')">
-                                          <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                          <button type="button" id="editNominee" name="editNominee" value="dataedit" class="btn_editGrey"></button>
                                       </div>
                                   </div>
                               </div>
@@ -168,7 +168,7 @@
                                         <h6></h6>
                                     </div>
                                     <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5006,'editBankDetails')">
-                                        <button type="button" value="dataedit" class="btn_editGrey"></button>
+                                        <button type="button" id="editBankDetails" name="editBankDetails" value="dataedit" class="btn_editGrey"></button>
                                     </div>
                                 </div>
                             </div>
@@ -218,7 +218,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="MiddleName" formControlName="MiddleName" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="MiddleName" name="MiddleName" formControlName="MiddleName" placeholder="" class="form-control input-textBox">
                                               <label for="MiddleName">Middle Name</label>
                                               <span class="ui-error" *ngIf="form?.get('MiddleName')?.invalid && form?.get('MiddleName')?.touched">
                                               Please enter Middle Name
@@ -236,7 +236,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="height" formControlName="height" placeholder="" class="form-control input-textBox">
+                                            <input type="text" id="height" name="height" formControlName="height" placeholder="" class="form-control input-textBox">
                                             <label for="height">Height</label>
                                             <span class="ui-error" *ngIf="form.get('height')?.invalid && (form.get('height')?.touched || memberDetails)">Please enter height</span>
                                             <span class="ui-prefix">cms</span>
@@ -244,7 +244,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="weight" formControlName="weight" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="weight" name="weight" formControlName="weight" placeholder="" class="form-control input-textBox">
                                               <label for="weight">Weight</label>
                                               <span class="ui-error" *ngIf="form.get('weight')?.invalid && (form.get('weight')?.touched   || memberDetails)">Please enter weight</span>
                                               <span class="ui-prefix">kg</span>
@@ -264,7 +264,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="date" id="dob" formControlName="DoB" placeholder="" class="form-control input-textBox">
+                                              <input type="date" id="dob" name="dob" formControlName="DoB" placeholder="" class="form-control input-textBox">
                                               <label for="dob">Date of birth</label>
                                               <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">Please enter date of birth</span>
                                           </div>
@@ -350,23 +350,23 @@
                                           <div class="input-checkbox-condition">
                                               <div class="input-checkbox-block input-checkbox-withIcon">
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-alcohol" class="input-check" />
+                                                      <input type="checkbox" id="condition-alcohol" name="condition-alcohol" class="input-check" />
                                                       <label for="condition-alcohol"><img src="assets/Img/icon_alcohol.svg">Alcohol</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-tobacco" class="input-check" />
+                                                      <input type="checkbox" id="condition-tobacco" name="condition-tobacco" class="input-check" />
                                                       <label for="condition-tobacco"><img src="assets/Img/icon_tabacco.svg">Tobacco</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-panmasala" class="input-check" />
+                                                      <input type="checkbox" id="condition-panmasala" name="condition-panmasala" class="input-check" />
                                                       <label for="condition-panmasala"><img src="assets/Img/icon_alcohol.svg">Pan Masala/Guthka</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-smoking" class="input-check" />
+                                                      <input type="checkbox" id="condition-smoking" name="condition-smoking" class="input-check" />
                                                       <label for="condition-smoking"><img src="assets/Img/icon_smoking.svg">Smoking</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
-                                                      <input type="checkbox" id="condition-other" class="input-check" />
+                                                      <input type="checkbox" id="condition-other" name="condition-other" class="input-check" />
                                                       <label for="condition-other"><img src="assets/Img/icon_other.svg">Other</label>
                                                   </div>
                                               </div>
@@ -377,8 +377,8 @@
                                       <h6>Do you have any health conditions?</h6>
                                       <p>We require to know this data to provide you with the best solution possible.</p>
                                       <div class="searchConditionMain">
-                                          <input type="search" placeholder="Search conditions">
-                                          <button type="button" name="search" class="btn_text">Search now</button>
+                                          <input type="search" id="search" name="search" placeholder="Search conditions">
+                                          <button type="button" id="searchnow" name="search" class="btn_text">Search now</button>
                                       </div>
                                   </div>
                                   <div class="tabsMain">
@@ -394,15 +394,15 @@
                                               <div class="input-checkbox-condition">
                                                   <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                       <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-highblood" class="input-check" />
+                                                          <input type="checkbox" id="condition-highblood" name="condition-highblood" class="input-check" />
                                                           <label for="condition-highblood"><img src="assets/Img/icon_alcohol.svg">High Blood Pressure (Hypertension)</label>
                                                       </div>
                                                       <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-asthma" class="input-check" />
+                                                          <input type="checkbox" id="condition-asthma" name="condition-asthma" class="input-check" />
                                                           <label for="condition-asthma"><img src="assets/Img/icon_tabacco.svg">Asthma/Chronic Pulmonary Obstructive Disease</label>
                                                       </div>
                                                       <div class="input-checkbox-feild">
-                                                          <input type="checkbox" id="condition-diabetes" class="input-check" />
+                                                          <input type="checkbox" id="condition-diabetes" name="condition-diabetes" class="input-check" />
                                                           <label for="condition-diabetes"><img src="assets/Img/icon_alcohol.svg">Diabetes</label>
                                                       </div>
                                                   </div>
@@ -412,23 +412,23 @@
                                             <div class="input-checkbox-condition">
                                                 <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Heart" class="input-check" />
+                                                        <input type="checkbox" id="condition-Heart" name="condition-Heart" class="input-check" />
                                                         <label for="condition-Heart"><img src="assets/Img/icon_alcohol.svg">Heart related</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-lung" class="input-check" />
+                                                        <input type="checkbox" id="condition-lung" name="condition-lung" class="input-check" />
                                                         <label for="condition-lung"><img src="assets/Img/icon_alcohol.svg">Lung/respiratory</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-ENT" class="input-check" />
+                                                        <input type="checkbox" id="condition-ENT" name="condition-ENT" class="input-check" />
                                                         <label for="condition-ENT"><img src="assets/Img/icon_alcohol.svg">ENT Disease/optical</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Kidney" class="input-check" />
+                                                        <input type="checkbox" id="condition-Kidney" name="condition-Kidney" class="input-check" />
                                                         <label for="condition-Kidney"><img src="assets/Img/icon_alcohol.svg">Kidney/urinary</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Brain" class="input-check" />
+                                                        <input type="checkbox" id="condition-Brain" name="condition-Brain" class="input-check" />
                                                         <label for="condition-Brain"><img src="assets/Img/icon_alcohol.svg">Brain/nervous</label>
                                                     </div>
                                                 </div>
@@ -438,19 +438,19 @@
                                             <div class="input-checkbox-condition">
                                                 <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Cancer" class="input-check" />
+                                                        <input type="checkbox" id="condition-Cancer" name="condition-Cancer" class="input-check" />
                                                         <label for="condition-Cancer"><img src="assets/Img/icon_alcohol.svg">Cancer/turnour</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Sexually" class="input-check" />
+                                                        <input type="checkbox" id="condition-Sexually" name="condition-Sexually" class="input-check" />
                                                         <label for="condition-Sexually"><img src="assets/Img/icon_alcohol.svg">Sexually Transmitted Disease</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Anemia" class="input-check" />
+                                                        <input type="checkbox" id="condition-Anemia" name="condition-Anemia" class="input-check" />
                                                         <label for="condition-Anemia"><img src="assets/Img/icon_alcohol.svg">Anemia</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
-                                                        <input type="checkbox" id="condition-Accidental" class="input-check" />
+                                                        <input type="checkbox" id="condition-Accidental" name="condition-Accidental" class="input-check" />
                                                         <label for="condition-Accidental"><img src="assets/Img/icon_alcohol.svg">Accidental injury</label>
                                                     </div>
                                                 </div>
@@ -462,8 +462,8 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" value="next" class="btn_pink btn_pinkNext" (click)="selectButton(5003)">Next</button>
+                        <button type="button" id="cancel" name="cancel" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                        <button type="button" id="next" name="next" value="next" class="btn_pink btn_pinkNext" (click)="selectButton(5003)">Next</button>
                       </footer>
                   </div>
               </div>
@@ -471,7 +471,7 @@
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5003">
                       <header>
                           {{memberRole}} Details of your {{ form.get('Relation')?.value || '' }}
-                          <button type="button" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
+                          <button type="button" id="another" name="another" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -487,11 +487,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="priorpolicies" value="yes">
+                                                  <input type="radio" id="priorpolicies" name="priorpolicies" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="priorpolicies" value="no" checked>
+                                                  <input type="radio" id="priorpolicies" name="priorpolicies" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -546,11 +546,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="citizenship" value="yes">
+                                                  <input type="radio" id="citizenship" name="citizenship" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="citizenship" value="no" checked>
+                                                  <input type="radio" id="citizenship" name="citizenship" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -605,11 +605,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="extraneousconditions" value="yes">
+                                                  <input type="radio" id="extraneousconditions" name="extraneousconditions" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="extraneousconditions" value="no" checked>
+                                                  <input type="radio" id="extraneousconditions" name="extraneousconditions" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -653,11 +653,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="preexistingconditions" value="Y" (change)="preexistingCondition('yes')" >
+                                                  <input type="radio" id="preexistingconditions" name="preexistingconditions" value="Y" (change)="preexistingCondition('yes')" >
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" name="preexistingconditions" value="No" (change)="preexistingCondition('no')" checked>
+                                                  <input type="radio" id="preexistingconditions" name="preexistingconditions" value="No" (change)="preexistingCondition('no')" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -688,8 +688,8 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('Member')">{{memberRole}} Member</button>
+                        <button type="button" id="cancel2" name="cancel2" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                        <button type="button" id="next2" name="next2" value="next" class="btn_red btn_redRenew" (click)="handleAction('Member')">{{memberRole}} Member</button>
                       </footer>
                   </div>
               </div>
@@ -747,10 +747,10 @@
                     </div>
                   </div>
                   <footer>
-                    <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">
+                    <button type="button" id="cancel3" name="cancel3" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">
                       Cancel
                     </button>
-                    <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">
+                    <button type="button" id="saveupdate" name="saveupdate" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">
                       Save Updates
                     </button>
                   </footer>
@@ -766,7 +766,7 @@
                                       <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                           <div class="input-checkbox-block">
                                               <div class="input-checkbox-feild no-radius-checkbox">
-                                                  <input type="checkbox" id="nominee-spouse" value="" class="input-check">
+                                                  <input type="checkbox" id="nominee-spouse" name="nominee-spouse" value="" class="input-check">
                                                   <label for="nominee-spouse">Make your spouse a nominee</label>
                                               </div>
                                           </div>
@@ -785,13 +785,13 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="nomine-lname" name="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-lname">Last Name</label>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="date" id="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
+                                              <input type="date" id="nomine-dob" name="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-dob">DOB</label>
                                               <span class="ui-error" *ngIf="form?.get('nominee_dob')?.invalid && form?.get('nominee_dob')?.touched">
                                           Please enter DOB
@@ -817,7 +817,7 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <input type="text" id="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
+                                              <input type="text" id="nomine-contactno" name="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-contactno">Nominee Contact No.</label>
                                               <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">
                                               Please enter Nominee contact no.
@@ -829,8 +829,8 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editNominee')">Save Updates</button>
+                        <button type="button" id="cancel4" name="cancel4" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                        <button type="button" id="saveupdate2" name="saveupdate2" value="next" class="btn_red btn_redRenew" (click)="handleAction('editNominee')">Save Updates</button>
                       </footer>
                   </div>
               </div>
@@ -915,8 +915,8 @@
                         </div>
                     </div>
                     <footer>
-                      <button type="button" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                      <button type="button" value="next" class="btn_red btn_redRenew" (click)="handleAction('editBankDetails')">Save Updates</button>
+                      <button type="button" id="cancel4" name="cancel4" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                      <button type="button" id="saveupdate3" name="saveupdate3" value="next" class="btn_red btn_redRenew" (click)="handleAction('editBankDetails')">Save Updates</button>
                     </footer>
                 </div>
             </div>
@@ -934,20 +934,20 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-radio-block raido_policyTenure ">
                                             <label class="input-radiolabel ">
-                                                <input type="radio" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" >
                                                 <span><em class="tenure-year">1 Year</em>
                                                     <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[2]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
-                                                <input type="radio" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" >
                                                 <span><em class="tenure-year">2 Years</em>
                                                     <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 7.5 off</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
-                                                <input type="radio" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" >
                                                 <span><em class="tenure-year">3 Years</em>
                                                 <em class="tenure-amount">₹ {{renewalInfo?.response?.policyData[0]?.Members[0]?.upsellPropensityDetails[1]?.upsellNetPremium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 10 off</em>
@@ -974,7 +974,7 @@
                                         <div class="input-checkbox-block checkbox_optionalCoverages">
                                            <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers?.productFeatures">
                                               <div *ngIf="cover.categoryName == 'Optional Covers'">
-                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check">
+                                                <input type="checkbox" [id]="cover.featureName" name="" [value]="cover.featureName" class="input-check">
                                                 <label [for]="cover.featureName">
                                                     <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
                                                     <em class="head">{{cover.featureName}}</em>
@@ -999,7 +999,7 @@
                                         <div class="input-checkbox-block checkbox_optionalCoverages checkbox_healthAddOns">
                                             <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers?.productFeatures">
                                               <div *ngIf="cover.categoryName == 'Health Add On'"> 
-                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" >
+                                                <input type="checkbox" [id]="cover.featureName" name="" [value]="cover.featureName" class="input-check" >
                                                 <label [for]="cover.featureName">
                                                     <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
                                                     <!-- <img src="assets/Img/icon_cancer_booster.svg" class="inactive"> -->
@@ -1018,7 +1018,7 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'payment'">
+      <div class="bodyColumns bodyColumnsCenter m-auto" *ngIf="activeSection === 'payment'">
         <div class="bcc_main">
             <div class="accordionMain">
                 <div class="accordionItem">
@@ -1051,7 +1051,7 @@
                                     </div>
                                     
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <button type="button" class="btn_red btn_redRenew" (click)="sendLink()">Send Link</button>
+                                        <button type="button" id="sendlink" name="sendlink" class="btn_red btn_redRenew" (click)="sendLink()">Send Link</button>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="link != ''">
                                         <div class="input-block form-floating input-block-renew">
@@ -1059,7 +1059,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2" *ngIf="link != ''">
-                                        <button  type="button" class="btn_red btn_redRenew"  [cdkCopyToClipboard]="link"><i class="fa-regular fa-copy"></i></button>                        
+                                        <button  type="button" id="copy" name="copy" class="btn_red btn_redRenew"  [cdkCopyToClipboard]="link"><i class="fa-regular fa-copy"></i></button>                        
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
                                         <div class="block_or_line"><span>OR</span></div>
@@ -1069,19 +1069,19 @@
                                         <div class="row">
                                             <div class="raido_policyTenure raido_paymentType radio_format">
                                              <div class="input-radiolabel  col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Nach')" [ngClass]="{'active': selectedPaymentType == 'E-Nach'}">
-                                                 <input type="radio" name="paymentType" value="E - Nach">
+                                                 <input type="radio" id="paymentType" name="paymentType" value="E - Nach">
                                                  <span><em class="label">E - Nach</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Mandate')" [ngClass]="{'active': selectedPaymentType == 'E-Mandate'}">
-                                                 <input type="radio" name="paymentType" value="E - Mandate" >
+                                                 <input type="radio" id="paymentType" name="paymentType" value="E - Mandate" >
                                                  <span><em class="label">E - Mandate</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('Auto_Debit')" [ngClass]="{'active': selectedPaymentType == 'Auto_Debit'}">
-                                                 <input type="radio" name="paymentType" value="Auto Debit" >
+                                                 <input type="radio" id="paymentType" name="paymentType" value="Auto Debit" >
                                                  <span><em class="label">Auto Debit</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('offline')" [ngClass]="{'active': selectedPaymentType == 'offline'}">
-                                                <input type="radio" name="paymentType" value="Auto Debit" >
+                                                <input type="radio" id="paymentType" name="paymentType" value="Auto Debit" >
                                                 <span><em class="label">offline</em></span>
                                             </div>
                                             </div>
@@ -1144,7 +1144,7 @@
                                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                         <div class="ovd_uploadMain">
                                                             <h6>Upload CHQ/DD/NEFT Copy</h6>
-                                                            <div class="ovdUpload">Click here to upload<input type="file" class="input-upload" (change)="onFileSelected($event)"/></div>
+                                                            <div class="ovdUpload">Click here to upload<input type="file" id="file" name="file" class="input-upload" (change)="onFileSelected($event)"/></div>
                                                             <div class="upload-required-info">File size: max 2mb. In case of bank statement, it must be of last 3 months</div>
                                                             <div *ngIf="fileName" class="mt-2"><strong>Uploaded File:</strong> {{ fileName }}</div>
                                                         </div>
@@ -1161,13 +1161,13 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsCenter bcc_memberDetails" *ngIf="activeSection === 'policySummary'">
+      <div class="bodyColumns bodyColumnsCenter bcc_memberDetails m-auto" *ngIf="activeSection === 'policySummary'">
         <div class="bcc_main">
             <div class="accordionMain">
                 <div class="accordionItem">
                     <header>Policy Summary
                         <div class="btn_groupAction">
-                            <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
+                            <button type="button" id="sectionedit" name="sectionedit" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                         </div>
                     </header>
                     <div class="accordionBody">
@@ -1272,7 +1272,7 @@
                 </div>
                 <div class="accordionItem">
                     <header>Member Details
-                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
+                        <button type="button" id="sectionedit2" name="sectionedit2" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow" >
@@ -1310,7 +1310,7 @@
                 </div>                       
                 <div class="accordionItem">
                     <header>Contact Details
-                        <button type="button" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
+                        <button type="button" id="sectionedit3" name="sectionedit2" value="sectionedit" class="btn_editRed" (click)="handleAction('summary')" *ngIf="hideSection"></button>
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
@@ -1340,7 +1340,7 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'kyc' ">
+      <div class="bodyColumns bodyColumnsCenter m-auto" *ngIf="activeSection === 'kyc' ">
         <div class="bcc_main">
             <div class="accordionMain">  
                 <div class="accordionItem">
@@ -1373,7 +1373,7 @@
                                         </div>  
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="actionKyc != 3003">
                                             <div class="input-block form-floating input-block-renew">
-                                                <button type="submit" class="btn_red btn_redRenew">Verify KYC</button>
+                                                <button type="submit" id="verifykyc" name="verifykyc" class="btn_red btn_redRenew">Verify KYC</button>
                                             </div>
                                         </div> 
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="actionKyc == 3003">
@@ -1432,7 +1432,7 @@
                       <span class="label">
                       <div class="input-checkbox-block">
                           <div class="input-checkbox-feild">
-                              <input type="checkbox" id="health-return" value="healthreturn" class="input-check" checked>
+                              <input type="checkbox" id="health-return" name="health-return" value="healthreturn" class="input-check" checked>
                               <label for="health-return"></label>
                           </div>
                       </div>
@@ -1446,8 +1446,8 @@
                       <span>Working Quote/ incl tax</span>
                       <label>₹{{(renewalInfo?.response?.policyData[0]?.NetPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn ) | number:'1.0-0'}}</label>
                   </div>
-                  <button type="button" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
-                  <button type="button" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
+                  <button type="button" id="savenew" name="savenew" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
+                  <button type="button" id="viewall" name="viewall" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
               </footer>
           </div>
       </div>
@@ -1472,11 +1472,11 @@
               </div>
           </div>
           <div class="bi_right">
-              <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Proceed</button>
-              <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="renewNow()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Renew Now</button>
-              <button type="button" value="proceed" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()" *ngIf="activeSection == 'payment' || activeSection == 'policySummary' || activeSection == 'kyc' ">Back</button>
-              <button type="button" value="renewnow" class="btn_red btn_darkGrey btn_w_120" (click)="next1()" *ngIf="activeSection == 'policySummary' || activeSection == 'kyc' ||activeSection == 'payment' && (selectedPaymentType =='offline' || selectedPaymentType =='' )">Next</button>
-              <button type="button" value="paynow" class="btn_red btn_redRenew" 
+              <button type="button" id="proceed" name="proceed" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Proceed</button>
+              <button type="button" id="renewnow" name="renewnow" value="renewnow" class="btn_red btn_redRenew" (click)="renewNow()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Renew Now</button>
+              <button type="button" id="proceedback" name="proceedback" value="proceed" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()" *ngIf="activeSection == 'payment' || activeSection == 'policySummary' || activeSection == 'kyc' ">Back</button>
+              <button type="button" id="renewnownext" name="renewnownext" value="renewnow" class="btn_red btn_darkGrey btn_w_120" (click)="next1()" *ngIf="activeSection == 'policySummary' || activeSection == 'kyc' ||activeSection == 'payment' && (selectedPaymentType =='offline' || selectedPaymentType =='' )">Next</button>
+              <button type="button" id="paynow" name="paynow" value="paynow" class="btn_red btn_redRenew" 
               (click)="payNow()" 
               *ngIf="activeSection == 'payment' && 
                       (selectedPaymentType == 'E-Nach' || 
@@ -1516,7 +1516,7 @@
                     <div class="col-12 mt-3">
                         <div class="download_policyKit">
                             <h6>Download Your Insurance Policy Kit</h6>
-                            <button type="button" class="btn_downloadKit">Download Kit <img src="assets/Img/icon_download_kit_blue.svg"></button>
+                            <button type="button" id="downloadkit" name="downloadkit" class="btn_downloadKit">Download Kit <img src="assets/Img/icon_download_kit_blue.svg"></button>
                         </div>
                     </div>
                 </div>
@@ -1561,7 +1561,7 @@
                         <img src="assets/Img/icon_time_saving.svg"><span>Time Saving</span>
                     </div>
                 </div>
-                <button type="button" class="btn_red btn_autoDebit">Update to Auto-debit</button>
+                <button type="button" id="updateautodebit" name="updateautodebit" class="btn_red btn_autoDebit">Update to Auto-debit</button>
             </section>
             <section class="white_container customer_abhaID">
                 <div class="row">
@@ -1570,7 +1570,7 @@
                         <h5>Creating your customersABHA ID with ABHI.</h5>
                         <h6>Simple, Fast & Easy</h6>
                         <p>Do you have a few minutes? Because that is all it takes to create your ABHA ID on the Aditya Birla Health Insurance website.</p>
-                        <a href="https://mtpre.adityabirlahealth.com/healthinsurance/abha"><button type="button" class="btn_red btn_autoDebit">Create ABHA ID</button></a>
+                        <a href="https://mtpre.adityabirlahealth.com/healthinsurance/abha"><button type="button" id="createabhaid" name="createabhaid" class="btn_red btn_autoDebit">Create ABHA ID</button></a>
                     </div>
                     <div class="col-12 col-sm-12 col-md-7 col-lg-7 col-xl-7">
                         <img src="assets/Img/img_abha_id.png" class="img_fullWidth_mobile">

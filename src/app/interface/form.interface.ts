@@ -196,8 +196,8 @@ export interface IDynamicControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   bigFont?: boolean;
   subControls?: ISubControl[][];
-  image:IImage;
-  tabs:ITab[];
+  image?:IImage;
+  tabs?:ITab[];
   getAllOption?: string;
 }
 export interface IValidator {

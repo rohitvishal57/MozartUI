@@ -59,6 +59,7 @@ export class LeadsListComponent {
   startDate: any;
   endDate: any;
   filterLeads = false;
+  today : String = '';
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
@@ -105,6 +106,8 @@ export class LeadsListComponent {
     this.markDuplicateForm = this.fb.group({
       leadId: ['']
     });
+
+    this.today = new Date().toISOString().split('T')[0];
 
   }
   fetchActivityType(event: any) {
@@ -292,8 +295,10 @@ export class LeadsListComponent {
         Validators.required
       ]);
     }
-     else if (this.selected = '') {
-      this.placeholder = 'Select an option';
+     else if (this.selected = 'Select an option') {
+      this.placeholder = 'Search...';
+      this.leadsInfoListRequestBody.searchby='';
+      this.getLeadsList();
     }
     this.searchInputControl.updateValueAndValidity();
     this.getPlaceholder();
@@ -318,7 +323,7 @@ export class LeadsListComponent {
   }
   applySearch() {
     if (this.searchInputControl.valid) {
-      this.leadsInfoListRequestBody.searchby = this.searchInputControl.value!;
+      this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
     } else {
       this.leadsInfoListRequestBody.searchby = "";
     }
@@ -368,15 +373,22 @@ export class LeadsListComponent {
     assigneLeadRequestBody.leadnumber = selectedLeadIDs,
       assigneLeadRequestBody.leadassigne = this.assignLeadForm.value.selectedAgentCode,
       assigneLeadRequestBody.agentCode = this.agentCode
+      
     this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
       (response) => {
         if (response.message  == "Success") {
-          this.toast.success({ detail: 'Lead has been successfully assigned' });
+
+          if(selectedLeadIDs.length>1){
+            this.toast.success({ detail: 'Leads has been successfully assigned' });
+          }else{
+            this.toast.success({ detail: 'Lead has been successfully assigned' });
+          }
         }
       }, (error) => {
         console.error("Error: Unable to assign lead. Please try again later.", error);
       }
     );
+    this.checkBoxSelectedLeads ='';
     this.assigneLeadModal.hide();
   }
   toggleAll(event: Event) {

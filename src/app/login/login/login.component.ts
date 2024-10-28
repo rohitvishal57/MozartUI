@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit{
   loginWithUsername:boolean = true;
   loginWithUserOTP:boolean = true;
   errorMessage: string = '';
-  timeLeft: number = 60; 
+  timeLeft: number = 30; 
   isTimerRunning: boolean = false; 
   contactInfoData: string[] = [];
   timerOn: boolean = true;
@@ -79,8 +79,8 @@ export class LoginComponent implements OnInit{
       this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
         .subscribe({  
           next: (res:any)=>{
-            this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
-            this.openModal(this.contactInfoData);
+              this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
+              this.openModal(this.contactInfoData);
           },
           error: (err => {
             console.log(err);
@@ -132,9 +132,11 @@ export class LoginComponent implements OnInit{
     this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
           next: (res:any)=>{
-            localStorage.setItem("requestId", res?.data.requestId);
-            this.toast.warning({ detail: "SUCCESS", summary: "Sent OTP again to "+this.maskedUserCode, duration: 3000 });
-            this.startTimer();
+            if(res.data && res.data.isSuccess && res.data.statusCode == '200' && res.data.requestId !== null) {
+              localStorage.setItem("requestId", res?.data.requestId);
+              this.toast.warning({ detail: "SUCCESS", summary: "Sent OTP again to "+this.maskedUserCode, duration: 3000 });
+              this.startTimer();
+            }
           },
           error: (err => {
             console.log(err);
@@ -144,7 +146,7 @@ export class LoginComponent implements OnInit{
   }
 
   startTimer() {
-    this.timeLeft = 60;
+    this.timeLeft = 30;
     this.isTimerRunning = false;
     if (this.isTimerRunning) return; // Prevent multiple timers from starting
     this.isTimerRunning = true;
@@ -241,13 +243,13 @@ export class LoginComponent implements OnInit{
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody)
         .subscribe({  
           next: (res:any)=> {
-            if(res.data.isSuccess && res.token !== null) {
+            if(res.data && res.data.statusCode == '200' && res.data.isSuccess && res.token !== null) {
               this.loginService.storeToken(res.token);
               localStorage.setItem('agentCode', res.data.agentCode);
               this.router.navigate(['dashboard']);
             } else {
-              this.errorMessage = res.data.errorMessage;
-              res.data.errorMessage.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;
+              this.errorMessage = res.message;
+              res.message.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;
             }
           },
           error: (err => {
