@@ -1,7 +1,6 @@
 import { Component, HostListener} from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
-import { MatMenuTrigger } from '@angular/material/menu';
 import { CustomerList } from 'src/app/interface/customers.interface';
 import { CustomersService } from '../customers.service';
 import { CommonService } from 'src/app/services/common.service';
@@ -29,8 +28,7 @@ export class CustomersListComponent {
   selected: string = "";
   searchInputControl = new FormControl("");
   isDesktopView:boolean=false
-  filterType: string = "totalRecords";
-  placeholder:string='';
+  // filterType: string = "totalRecords";
   agentCode :any =localStorage.getItem('agentCode'); 
   StaticPolicyTypes = [
     { name: 'Multi Individual', selected: false },
@@ -52,8 +50,8 @@ export class CustomersListComponent {
     "productName": "",
     "startDate": null, 
     "endDate": null, 
-    "pageNumber": 1,
-    "pageSize": 10,
+    "pageNumber": this.page,
+    "pageSize": this.rows,
     "receiptNo": "",
     "name": "",
     "emailID": "",
@@ -75,23 +73,21 @@ export class CustomersListComponent {
   getCustomerList() {
     this.customerListRequestBody.pageNumber = this.page;
     this.customerListRequestBody.pageSize = this.rows;
-    console.log(this.customerListRequestBody);
     this.customerService.getCustomerDetailsListApi(this.customerListRequestBody).subscribe(
       (response) => { 
-        console.log(response.data);
         if (response.success) {
           this.customerList = response.data.customerList.map((item: any) => ({
             ...item,policyStartDate:this.formatPolicyStartDate(item.policyStartDate)
           })); 
-          console.log("proposal List",this.customerList);
-          this.totalRecords = response.data.totalRecords
-          console.log(this.totalRecords);
-          
+          console.log("customers List",this.customerList);
+          this.totalRecords = response.data.totalRecords          
         } 
-        else {console.error("API request was not successful.");}
+        else {
+          console.error("API request was not successful.");
+        }
       },
       (error) => {
-        console.error("Error from getcustomerList API:", error);
+        this.toast.error({ detail: "Error", summary: "Failed to get customers list", duration: 2000 });
       }
     );
   }
@@ -106,28 +102,21 @@ export class CustomersListComponent {
     return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
   getProducts() {
-    const reqData={
+    const productsRequestBody={
       "agentCode": this.agentCode
     }
-    this.commonService.Getproductlist(reqData).subscribe({
+    this.commonService.Getproductlist(productsRequestBody).subscribe({
       next: (res) => {
         this.productsList = res.data;
         console.log("product list",this.productsList)
-        const uniquePolicyTypes = Array.from(new Set(this.productsList
-         .map((product) => product.familyPlan)))
-         .map((policyType) => ({ name: policyType, selected: false }));
-         this.policyTypes = uniquePolicyTypes;
       },
       error: (err) => {
-         console.log("error coming form getproduct list API");
+        this.toast.error({ detail: "Error", summary: "Failed to get products list", duration: 2000 });
       }
     })
   }
   toggleFilterDropdown(event: Event) {
     event.stopPropagation();
-    if(this.toggeleSearchdropdown==true){
-       this.toggeleSearchdropdown=false;
-    }
     this.toggeledropdown = !this.toggeledropdown;    
   }
   @HostListener('document:click', ['$event'])
@@ -148,13 +137,11 @@ export class CustomersListComponent {
       count++;
     }
     this.appliedFiltersCount = count;
-     this.appliedFiltersCount;
   }
   applyFilter() {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
-    console.log("startDate",this.startDate,"endDate",this.endDate);  
     this.customerListRequestBody.startDate=this.startDate;
     console.log("start date taken by request body",this.customerListRequestBody.startDate);
     this.customerListRequestBody.endDate=this.endDate;
@@ -258,10 +245,10 @@ export class CustomersListComponent {
   customerListView(view: string) {
     this.selectedView = view;
   }
-  sendCustomerDetails(data:any,event:number){
+  sendCustomerDetails(data:any,type:number){
     const RequestBody = {
       agentcode:this.agentCode,
-      requestType: event,
+      requestType: type,
       policyNumber: data.policyNumber,
       proposalNumber: data.proposalNumber,
       memberId: "",
@@ -271,13 +258,13 @@ export class CustomersListComponent {
     this.customerService.sendCustomerDetails(RequestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.toast.success({ detail: "Success", summary: "customer data shared successfully.", duration: 1500 });
+          this.toast.success({ detail: "Success", summary: "customer data shared successfully.", duration: 2000 });
         } else {
-          this.toast.error({ detail: "Error", summary: "Failed to send customer data.", duration: 1500 });
+          this.toast.error({ detail: "Error", summary: "Failed to send customer data.", duration: 2000 });
         }
       },
       (error: any) => {
-        this.toast.error({ detail: "Error", summary: "Error while sending customer data.", duration: 1500 });
+        this.toast.error({ detail: "Error", summary: "Error while sending customer data.", duration: 2000 });
       }
     );
   }
@@ -318,16 +305,15 @@ export class CustomersListComponent {
     this.customerService.downloadCustomerData(downloadRequestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.toast.success({ detail: "Success", summary: "customer data downloaded successfully.", duration: 1500 });
+          this.toast.success({ detail: "Success", summary: "customer data downloaded successfully.", duration: 2000 });
         } else {
-          this.toast.error({ detail: "Error", summary: "Failed to downloaded customer data.", duration: 1500 });
+          this.toast.error({ detail: "Error", summary: "Failed to downloaded customer data.", duration: 2000 });
         }
       },
       (error: any) => {
-        this.toast.error({ detail: "Error", summary: "Error while downloaded customer data.", duration: 1500 });
+        this.toast.error({ detail: "Error", summary: "Error while downloaded customer data.", duration: 2000 });
       }
     )
   }
-
-
+  
 }
