@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit{
           },
           error: (err => {
             console.log(err);
-            this.toast.error({ detail: "ERROR", summary:err, sticky: true });
+            this.toast.error({ detail: "ERROR", summary:err, duration: 3000 });
           })
         })
     }else{
@@ -239,6 +239,7 @@ export class LoginComponent implements OnInit{
       this.validateOtpReqBody.agentCode = localStorage.getItem("agentCode");
       this.validateOtpReqBody.requestId = localStorage.getItem("requestId");
       this.validateOtpReqBody.otpNumber = otpCode;
+      this.otp = ['', '', '', '', '', ''];
 
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody)
         .subscribe({  

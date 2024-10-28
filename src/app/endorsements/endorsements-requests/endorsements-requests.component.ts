@@ -120,7 +120,6 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res:any) => {
         this.productsList = res.data;
-        console.log("product list",this.productsList)
         const uniqueRequestTypes = Array.from(new Set(this.productsList
          .map((product:any) => product.familyPlan)))
          .map((requestType) => ({ name: requestType, selected: false }));
@@ -131,6 +130,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       }
     })
   }
+
   downloadRequest(data: any) {
     alert(data.status);
   }
@@ -174,10 +174,17 @@ export class EndorsementsRequestsComponent implements OnInit {
     } else {
       this.requestsListRequestBody.start = 0;
     }
+    this.endorsementDetails = [];
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
         if (response.data && response.data.statusCode == "200" && response.data.isSuccess) {
-          this.endorsementDetails = [...response.data.endorsementDetails];
+          this.endorsementDetails = response.data.endorsementDetails.map((obj: any) => {
+            const date = new Date(obj.raisedOn);
+            const formattedDate = this.datePipe.transform(date, 'dd/MM/yyyy');
+            return {
+              ...obj, raisedOn:formattedDate
+            }
+          });
           this.countsList = response.data.endorsementDetails;
           this.totalRecords = response.data.totalRecords;
         } else {
@@ -205,9 +212,6 @@ export class EndorsementsRequestsComponent implements OnInit {
       this.fromDate = this.datePipe.transform(this.fromDate, "yyyy-MM-dd");
     } else if (dateType === "toDate" && this.toDate) {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
-    }
-    if(this.toDate < this.fromDate) {
-      this.toDate = "";
     }
   }
 
@@ -269,7 +273,8 @@ export class EndorsementsRequestsComponent implements OnInit {
 
     this.getRequestList();
     this.toggeledropdown=false;
-}
+  }
+
   onSelectChanges(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.selected = inputElement.value;
