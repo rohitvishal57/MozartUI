@@ -97,6 +97,7 @@ export class ClaimsDetailsComponent {
   }[] = [];
   customeStepperStatuses: any[] = [];
   statusMessage: string | undefined;
+  uploadedFilesData: any;
 
   constructor(
     private fb: FormBuilder,
@@ -202,6 +203,7 @@ export class ClaimsDetailsComponent {
     claimInfoId: string
   ) {    
     let claimsFilesReqBody = {
+      "documentId" : "",
       "policyNumber": policyNumber,
       "claimNumber": claimInfoId
     };
@@ -283,10 +285,15 @@ export class ClaimsDetailsComponent {
     section: string
   ): void {
     const totalFilesCount = uploadedFilesData.length;
-
+  
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if (this.allowedFileTypes.includes(file.type)) {
+      
+      const fileExists = this.uploadedFilesData.some(
+        (uploadedFile:any) => uploadedFile.name === file.name && uploadedFile.size === file.size
+      );
+  
+      if (!fileExists && this.allowedFileTypes.includes(file.type)) {
         uploadedFilesData.push({
           name: file.name,
           type: file.type,
@@ -297,11 +304,16 @@ export class ClaimsDetailsComponent {
           formattedUploadDateTime: new Date().toLocaleString(),
           status: "Pending",
         });
+        
+        // Reset uploadValidFormat since the file is valid
+   //     this.uploadValidFormat = false; 
       } else {
-        this.uploadValidFormat = true;
+        // If the file already exists or is invalid, set the valid format flag
+        this.uploadValidFormat = true; 
       }
     }
   }
+  
 
   // submitClaim(): void {
   //   const formData: FormData = new FormData();
@@ -407,20 +419,90 @@ export class ClaimsDetailsComponent {
     });
   }
 
+  // onFileSelected(event: any): void {
+  //   const files = event.target.files;
+  //   this.totalFilesCount += files.length;
+  //   // this.totalFilesDocCount += files.length;
+  //   let uploadedFilesData =
+  //     event.target.name == "underDeficiency"
+  //       ? this.uploadedUnderDeficiencyFiles
+  //       : this.uploadedFiles;
+
+  //   //this.uploadedFilesCount =  this.totalFilesCount; // Reset count for new batch
+  //   //this.failedFilesCount = this.totalFilesCount   // Reset failed files count for new batch
+  //   for (let i = 0; i < files.length; i++) {
+  //     const file = files[i];
+  //     const fileExists = this.uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size);
+  
+  //     if (!fileExists && this.allowedFileTypes.includes(file.type)) {
+  //       uploadedFilesData.push({
+  //         name: file.name,
+  //         type: file.type,
+  //         size: file.size,
+  //         label: "Label this document",
+  //         isEditing: false,
+  //         editableControl: new FormControl("Label this document"),
+  //         uploadDateTime: new Date(),
+  //         formattedUploadDateTime: this.formatDate(new Date()),
+  //         status: "pending",
+  //         file: file,
+  //         policyNumber: this.saveForm?.value.policyNumber,
+  //         documentName: this.saveForm?.value.documentName,
+  //         documentType: this.saveForm?.value.documentType,
+  //         createdBy: this.saveForm?.value.createdBy,
+  //       });
+  //       event.target.name == "underDeficiency"
+  //         ? (this.uploadValidFormat = false)
+  //         : (this.uploadValidFormt = false);
+  //     } else {
+  //       event.target.name == "underDeficiency"
+  //         ? (this.uploadValidFormat = true)
+  //         : (this.uploadValidFormt = true);
+  //       event.target.value = "";
+  //     }
+  //   }
+  //   if (
+  //     this.uploadedUnderDeficiencyFiles.length > 0 &&
+  //     event.target.name === "underDeficiency"
+  //   ) {
+  //     // Update the saveForm with the latest file info
+  //     this.saveForm?.patchValue({
+  //       file: this.uploadedUnderDeficiencyFiles[0].file, // Assuming you want to take the first file
+  //     });
+  //   } else if (
+  //     this.uploadedFiles.length > 0 &&
+  //     event.target.name === "docUpload"
+  //   ) {
+  //     this.saveForm?.patchValue({
+  //       file: this.uploadedFiles[0].file, // Assuming you want to take the first file
+  //     });
+  //   }
+  //   this.updateStatusLabel(event.target.name);
+  //   this.uploadFiles(Array.from(files), event.target.name);
+  // }
   onFileSelected(event: any): void {
-    const files = event.target.files;
+    const inputElement = event.target;
+    const files = inputElement.files;
     this.totalFilesCount += files.length;
-    // this.totalFilesDocCount += files.length;
+  
+    // Determine which file array to use based on the input's name attribute
     let uploadedFilesData =
-      event.target.name == "underDeficiency"
+      inputElement.name === "underDeficiency"
         ? this.uploadedUnderDeficiencyFiles
         : this.uploadedFiles;
-
-    //this.uploadedFilesCount =  this.totalFilesCount; // Reset count for new batch
-    //this.failedFilesCount = this.totalFilesCount   // Reset failed files count for new batch
+  
+    // Iterate over selected files
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if (this.allowedFileTypes.includes(file.type)) {
+  
+      // Check if the file already exists in the respective upload list
+      const fileExists = uploadedFilesData.some(
+        (uploadedFile) =>
+          uploadedFile.name === file.name && uploadedFile.size === file.size
+      );
+  
+      if (!fileExists && this.allowedFileTypes.includes(file.type)) {
+        // Add the new file to the respective list
         uploadedFilesData.push({
           name: file.name,
           type: file.type,
@@ -437,36 +519,47 @@ export class ClaimsDetailsComponent {
           documentType: this.saveForm?.value.documentType,
           createdBy: this.saveForm?.value.createdBy,
         });
-        event.target.name == "underDeficiency"
+  
+        // Indicate that the format is valid
+        inputElement.name === "underDeficiency"
           ? (this.uploadValidFormat = false)
           : (this.uploadValidFormt = false);
       } else {
-        event.target.name == "underDeficiency"
+        // If the file already exists or is of an invalid type, show an error
+        inputElement.name === "underDeficiency"
           ? (this.uploadValidFormat = true)
           : (this.uploadValidFormt = true);
-        event.target.value = "";
       }
     }
+  
+    // Reset the file input element to allow re-upload of the same file
+    inputElement.value = '';
+  
+    // If files were uploaded to the "underDeficiency" list, update the form
     if (
       this.uploadedUnderDeficiencyFiles.length > 0 &&
-      event.target.name === "underDeficiency"
+      inputElement.name === "underDeficiency"
     ) {
-      // Update the saveForm with the latest file info
       this.saveForm?.patchValue({
-        file: this.uploadedUnderDeficiencyFiles[0].file, // Assuming you want to take the first file
+        file: this.uploadedUnderDeficiencyFiles[0].file, // Taking the first file
       });
     } else if (
       this.uploadedFiles.length > 0 &&
-      event.target.name === "docUpload"
+      inputElement.name === "docUpload"
     ) {
       this.saveForm?.patchValue({
-        file: this.uploadedFiles[0].file, // Assuming you want to take the first file
+        file: this.uploadedFiles[0].file, // Taking the first file
       });
     }
-    this.updateStatusLabel(event.target.name);
-    this.uploadFiles(Array.from(files), event.target.name);
+  
+    // Update the status label based on the input's name attribute
+    this.updateStatusLabel(inputElement.name);
+  
+    // Upload files after processing
+    this.uploadFiles(Array.from(files), inputElement.name);
   }
-
+  
+  
   convertBytesToKB(bytes: number): string {
     const kb = bytes / 1024;
     return `${kb.toFixed(2)} KB`;

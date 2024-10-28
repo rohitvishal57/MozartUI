@@ -106,7 +106,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" />
+                                  <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" [max]="maxDate" />
                                   <label for="admissionDate">Date of Admission</label>
                                   <small class="ui-error block-show" *ngIf="form.get('admissionDate')?.hasError('required') && form.get('admissionDate')?.touched" >
                                     Date of Admission is required
@@ -123,7 +123,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" />
+                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" [max]="maxDate" />
                                   <label for="dischargeDate">Date of Discharge</label>
                               </div>
                           </div>
@@ -208,7 +208,7 @@
                              
                               <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
-                                      <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" />
+                                      <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" [max]="maxDate"/>
                                       <label for="admissionDate">Date of Admission</label>
                                   </div>
                               </div>
@@ -230,7 +230,7 @@
                               </div>
                               <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
                                   <div class="input-block form-floating input-block-renew">
-                                      <input type="date" class="form-control input-textBox" formControlName="billDate" />
+                                      <input type="date" class="form-control input-textBox" formControlName="billDate" [max]="maxDate" />
                                       <label for="addnotes">Date</label>
                                   </div>
                               </div>
@@ -281,7 +281,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" />
+                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" [max]="maxDate" />
                                   <label for="dischargeDate">Date of Discharge</label>
                               </div>
                           </div>
@@ -419,8 +419,15 @@
                                                               </button>
                                                           </ng-container>
                                                           <ng-container *ngIf="file.isEditing">
-                                                              <input type="text" [formControl]="editableControl" (blur)="stopEditing(file)" autofocus />
-                                                          </ng-container>
+                                                            <input
+                                                                type="text"
+                                                                [formControl]="editableControl"
+                                                                (blur)="stopEditing(file)"
+                                                                (keydown)="onLabelKeyDown($event, file)"
+                                                                autofocus
+                                                            />
+                                                            </ng-container>
+
                                                       </div>
                                                   </div>
                                                   <div class="headInfo_item">

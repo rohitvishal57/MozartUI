@@ -50,6 +50,7 @@
     "getClaimStatus":"claims/api/getclaimstatus",
     "getClaimTracker":"claims/api/getclaimtracker",
     "getUploadedFiles":"claims/api/getclaimsdocument",
+    "deleteFile":"claims/api/deleteclaimdocument",
 
 
     "getPerformanceDetails":"yatra/api/getPerformanceDetails",

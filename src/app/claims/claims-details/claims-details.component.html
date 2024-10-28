@@ -76,22 +76,22 @@
                         </div>-->
                         <div class="claim_amount">
                             <h6>Claim Amount</h6>
-                            <p>₹{{ claims?.claimedAmount }}</p>
+                            <p>₹  {{ claims?.claimedAmount }}</p>
                         </div>
                         <div class="claim_amount">
                             <h6>Approved Amount</h6>
-                            <p>₹{{ claims?.approvedAmount }}</p>
+                            <p>₹  {{ claims?.approvedAmount }}</p>
                             <!-- <p>--</p> -->
                         </div>
                     </div>
                 </div>
            </div>
-                <div class="row" *ngIf="underDef">
+                <!-- <div class="row" *ngIf="underDef">
                     <div class="col-12" >
                         <div class="white_container claim_underDeficiency">
                             <div class="info_underDeficiency">
                                 <h5>Under Deficiency</h5>
-                                <!-- <h6>Kindly provide Aadhaar card and doctor’s prescription</h6> -->
+                                <h6>Kindly provide Aadhaar card and doctor’s prescription</h6>
                             </div>
                             <div class="button_underDeficiency">
                                 <button type="button" name="uploaddocument" id="uploaddocument" (click)="underDeficiencyFileInput.click()" class="btn_red">Upload Documents</button>
@@ -160,7 +160,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div class="col-12 ">
                         <div class="claims_matTabs_container">
@@ -213,15 +213,15 @@
                                                     </li>
                                                     <li>
                                                         <span class="label">Date of Recommendation:</span>
-                                                        <span class="value"></span>
+                                                        <span class="value">{{claims?.admissionDate}}</span>
                                                     </li>
                                                     <li>
                                                         <span class="label">Date of Admission:</span>
-                                                        <span class="value"></span>
+                                                        <span class="value">{{claims?.admissionDate}}</span>
                                                     </li>
                                                     <li>
                                                         <span class="label">Date of Discharge:</span>
-                                                        <span class="value"></span>
+                                                        <span class="value">{{claims?.dischargeDate}}</span>
                                                     </li>
                                                     <li>
                                                         <span class="label">Opted Room:</span>
