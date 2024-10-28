@@ -66,4 +66,10 @@ export class ClaimsViewService {
     const getClaimTracker = this.configService.config.baseUrl + this.configService.config.getClaimTracker
     return this.httpService.post(getClaimTracker, claimsReqBody)
   }
+
+  getUploadedFiles(claimsFilesReqBody:any){
+    const getUploadedFiles = this.configService.config.baseUrl + this.configService.config.getUploadedFiles
+    return this.httpService.post(getUploadedFiles, claimsFilesReqBody)
+   // return this.httpService.post('https://localhost:7026/api/getclaimsdocument', claimsFilesReqBody);
+  }
 }
