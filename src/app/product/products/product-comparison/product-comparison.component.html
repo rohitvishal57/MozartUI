@@ -24,7 +24,7 @@
                         <header>
                             <div class="body_flex_row">
                                 <img src="assets/logo/activeOne.svg">
-                                <h6 *ngIf="comparisonItem.productName!=null">{{comparisonItem.productName}}</h6>
+                                <h2>{{comparisonItem.productName}}</h2>
                             </div>
                         </header>
                         <div class="cardViewBody">
@@ -43,8 +43,8 @@
                             <h4>Optional Covers</h4>
                             <ul>
                                 <div  class="tick_round"  *ngFor="let feature of comparisonItem.productFeatures">
-                                    <li 
-                                    *ngIf="feature.categoryName === 'Optional Covers'"> <img src="assets/Img/icon_tick_green_bg.svg">
+                                    <li *ngIf="feature.categoryName === 'Optional Covers'">
+                                    <img src="assets/Img/icon_tick_green_bg.svg">
                                     {{ feature.featureName }}
                                 </li>
                                 </div>
@@ -55,8 +55,8 @@
                             <h4>Health Add On's</h4>
                             <ul>
                                 <div class="tick_round" *ngFor="let feature of comparisonItem.productFeatures">
-                                    <li 
-                                    *ngIf="feature.categoryName === 'Health Add On'" ><img src="assets/Img/icon_tick_green_bg.svg">
+                                    <li *ngIf="feature.categoryName === 'Health Add On'" >
+                                    <img src="assets/Img/icon_tick_green_bg.svg">
                                     {{ feature.featureName }}
                                 </li>
                                 </div>

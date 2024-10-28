@@ -380,7 +380,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="address1" placeholder=""
-                                    formControlName="address1" type="text" OnlyCharacter>
+                                    formControlName="address1" type="text" maxlength="50" OnlyCharacter>
                                 <label for="address1">Address 1</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('address1')?.errors?.['pattern']">Please
@@ -390,7 +390,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="address2" placeholder=""
-                                    formControlName="address2" type="text" OnlyCharacter>
+                                    formControlName="address2" type="text" maxlength="50" OnlyCharacter>
                                 <label for="address2">Address 2</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('address2')?.errors?.['pattern']">Please
@@ -400,7 +400,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="address3" placeholder=""
-                                    formControlName="address3" type="text" OnlyCharacter>
+                                    formControlName="address3" type="text" maxlength="50" OnlyCharacter>
                                 <label for="address3">Address 3</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('address3')?.errors?.['pattern']">Please
@@ -430,7 +430,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="pincode" placeholder=""
-                                    formControlName="pincode" type="text">
+                                    formControlName="pincode" type="text" (keypress)="isNumber($event)">
                                 <label for="pincode">Pincode</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">Please
@@ -599,7 +599,7 @@
                                     *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
-                                        Field cannot be blank</span>
+                                        ActivityTitle cannot be blank</span>
                                 </span>
 
                             </div>
@@ -613,7 +613,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
                                 <span class="ui-error block-show"
                                     *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
-                                    Enter valid date</span>
+                                    Enter valid ActivityStartdate</span>
                             </span>
                             </div>
                         </div>
@@ -626,7 +626,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.invalid">
-                                        Enter valid Time</span>
+                                        Enter valid ActivityStartTime</span>
                                 </span>
 
                             </div>
@@ -640,7 +640,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.invalid">
-                                        Enter valid Date</span>
+                                        Enter valid ActivityEndDate</span>
                                 </span>
                             </div>
                         </div>
@@ -653,7 +653,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
-                                        Enter valid Time</span>
+                                        Enter valid ActivityEndTime</span>
                                 </span>
                             </div>
                         </div>
@@ -682,7 +682,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
-                                        Enter valid Time</span>
+                                        Enter valid Note</span>
                                 </span>
 
                             </div>
