@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { ProductsService } from './products.service';
+import { QuoteService } from 'src/app/quote/quote.service';
 
 @Component({
   selector: 'app-products',
@@ -29,26 +30,27 @@ export class ProductsComponent implements OnInit {
   products: any[] = []
   ProductList: any[] = [];
   cartProductList: any[] = [];
-  agentCode=localStorage.getItem('agentCode');
-  partnerId:any
-  productId:any
+  agentCode = localStorage.getItem('agentCode');
+  partnerId: any
+  productId: any
   compareItems: any[] = [];
   private dynamicStyle!: HTMLLinkElement;
-
   displayNoProductsMessage: boolean = false;
-
   showSpecialForm: boolean = false;
+  state: any;
+  groupedFeatures: any[] = [];
 
 
-  constructor( private router: Router, private toast: NgToastService,
-       private encryptionService: EncryptionService,public common:CommonService,private productService:ProductsService) { 
-      
-    }
+  constructor(private router: Router, private toast: NgToastService,
+    private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
+   private quoteservices: QuoteService) {
+
+  }
 
   ngOnInit(): void {
     console.log(this.agentCode);
     // sessionStorage.clear()
-    if(sessionStorage.getItem("cardListProducts"))
+    if (sessionStorage.getItem("cardListProducts"))
       this.cartProductList = this.encryptionService.decrypt(sessionStorage.getItem("cardListProducts") as string);
     else
       this.cartProductList = [];
@@ -58,11 +60,11 @@ export class ProductsComponent implements OnInit {
 
   getPoductList() {
     // this.selectedToggle = item.insuranceType
-    const reqData={
+    const reqData = {
       "agentCode": this.agentCode
     }
     this.productService.Getproductlist(reqData).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         this.ProductList = res.data;
         console.log(this.ProductList)
       },
@@ -131,14 +133,14 @@ export class ProductsComponent implements OnInit {
     }
   }
 
-  addToCart(item: any){
+  addToCart(item: any) {
     this.cartProductList.push(item);
-    sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
+    sessionStorage.setItem("cardListProducts", this.encryptionService.encrypt(this.cartProductList));
   }
 
-  removeFromCart(item: any){
+  removeFromCart(item: any) {
     this.cartProductList = this.cartProductList.filter((element: any) => element.productname !== item.productname);
-    sessionStorage.setItem("cardListProducts",this.encryptionService.encrypt(this.cartProductList));
+    sessionStorage.setItem("cardListProducts", this.encryptionService.encrypt(this.cartProductList));
   }
 
   async buyNow(item: any) {
@@ -149,8 +151,8 @@ export class ProductsComponent implements OnInit {
       await this.getFormSequence(item);
       console.log(item)
       const productData = {
-        partnerId : item.partnerId,
-        productId : item.productId,
+        partnerId: item.partnerId,
+        productId: item.productId,
         proposalNum: this.proposalNum
 
       }
@@ -200,28 +202,48 @@ export class ProductsComponent implements OnInit {
 
 
   addToCompare(item: any) {
-    if(this.compareItems.length>2){
-    this.toast.error({ detail: 'Only three products can be added to compare!'});
-    return; 
-  }
+
+    const MAX_COMPARE_ITEMS = 3; // Define a constant for the max compare limit
+    // Check if the limit has been reached
+    if (this.compareItems.length >= MAX_COMPARE_ITEMS) {
+      this.toast.error({ detail: 'Only three products can be added to compare!' });
+      return;
+    }
     // Check if the item already exists in the array
     const isAlreadyPresent = this.compareItems.some(existingItem => existingItem === item);
     if (isAlreadyPresent) {
-      console.log('Item already exists, ignoring.');
       return; // Skip adding the item
     }
-    // Add the item if it's not already in the array
-    this.compareItems.push(item);
-    console.log('Item added to comparison.');
-  }
+    this.getProductInformation(item.productId);
+}
 
-  removeCompareItem(item:any){
-    this.compareItems = this.compareItems.filter(existingItem => existingItem !== item);
-    console.log('Item removed from comparison.');
+
+getProductInformation(productId: String ){
+  let features: any
+  const reqData = {
+    "productId": productId,
+    "agentCode": localStorage.getItem('agentCode')
   }
-  navigateToProductComparison(){
-    sessionStorage.setItem('compareItems', JSON.stringify(this.compareItems));
-    this.router.navigate(['/products/comparison'], {
-    });
-  }
+  console.log(reqData);
+  this.quoteservices.Getproductdetailsandfeatures(reqData).subscribe({
+    next: (res: any) => {
+      console.log(res.data);
+      this.compareItems.push(res.data);
+    },
+    error: (err) => {
+      this.toast.error({ detail: 'Failed to Add Product for Comparison ' });
+      console.error(err);
+    }
+  })
+}
+
+removeCompareItem(item: any){
+  this.compareItems = this.compareItems.filter(existingItem => existingItem !== item);
+  console.log('Item removed from comparison.');
+}
+navigateToProductComparison(){
+  sessionStorage.setItem('compareItems', JSON.stringify(this.compareItems));
+  this.router.navigate(['/products/comparison'], {
+  });
+}
 }

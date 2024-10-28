@@ -208,7 +208,7 @@
                                   </div>
                                 </div>
                                 <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
-                                <button type="button" class="btn_white btn_addChildren" (click)="incrementMember(relation)">
+                                <button type="button" id="addchildrens" name="addchildrens" class="btn_white btn_addChildren" (click)="incrementMember(relation)">
                                   <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
                                   <img src="assets/Img/icon_round_plus_red.svg">
                                 </button>
@@ -359,7 +359,7 @@
             </div>
 
             <div class="continue-btn-container">
-              <button type="button" id="mainContinue" name="mainContinue" class="continue-btn btn_grey" (click)="continue()">Continue</button>
+              <button type="button" id="mainContinue" name="mainContinue" class="continue-btn-0 btn_grey" (click)="continue()">Continue</button>
             </div>
           </div>
         </div>

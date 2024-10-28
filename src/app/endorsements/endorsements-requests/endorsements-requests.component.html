@@ -20,13 +20,13 @@
                 </div>
                 <div class="quickFilterRight" >
                     <!--Search section start-->
-                    <div class="body_flex_row claims_searchWraper">
+                    <div class="body_flex_row endorsements_searchWraper">
                         <div class="field_searchMain">
                             <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)">
                                 <option value="">Select an option</option>
                                 <option value="caseId">Request ID</option>
-                                <option value="memberName">Member Name</option>
                                 <option value="policyNumber">Policy Number</option>
+                                <option value="memberName">Member Name</option>
                             </select>
                             <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                             <button type="button" id="search" name="search" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
@@ -63,25 +63,28 @@
                                             </div>                                              
                                         </div>
                                     </div> -->
-                                    <div class="row">
-                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                            <div class="input-block form-floating input-block-dob">
-                                                <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (change)="formatDate('fromDate')" [max]="maxDate">
-                                                <label for="fromDate">From Date</label>
-                                                <span class="ui-error">Please enter start date</span>
+                                    <div class="fw_formRow">
+                                        <h6>Date Range</h6>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
+                                                    <label for="fromDate">From Date</label>
+                                                    <span class="ui-error">Please enter start date</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                            <div class="input-block form-floating input-block-dob">
-                                                <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (change)="formatDate('toDate')" [max]="maxDate">
-                                                <label for="toDate">To Date</label>
-                                                <span class="ui-error">Please enter end date</span>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
+                                                    <label for="toDate">To Date</label>
+                                                    <span class="ui-error">Please enter end date</span>
+                                                </div>
                                             </div>
+                                            <footer>
+                                                <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                                <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                            </footer>
                                         </div>
-                                        <footer>
-                                            <button type="button" id="filterclear" name="filterclear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                            <button type="button" id="filterapply" name="filterapply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
-                                        </footer>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +122,7 @@
                                 <td><span class="text-break-w100">{{ row?.memberName }}</span></td>
                                 <!--<td align="center">{{ row?.memberRelation }}</td>-->
                                 <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
-                                <td align="center">{{ row?.status }}</td>
+                                <td>{{ row?.status }}</td>
                                 <td>{{ row?.raisedOn }}</td>
                                 <td>
                                     <button type="button" id="viewdetails" name="viewdetails" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>

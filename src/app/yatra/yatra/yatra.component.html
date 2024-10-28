@@ -772,7 +772,7 @@
                   <div class="radio-card-container">
                     <ng-container *ngFor="let option of control.radioOptions">
                       <input type="radio" [id]="option.name" [formControlName]="control.name" [name]="control.name"
-                      [id]="control.name" [value]="option.value" class="radio-card" />
+                      [value]="option.value" class="radio-card" />
                       <label [for]="option.name" class="radio-card-label">
                         <div class="year">{{ option.year }}</div>
                         <div class="price">₹{{ option.value }}.00</div>
