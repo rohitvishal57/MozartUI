@@ -1,0 +1,11 @@
+.tick_round {
+    flex-direction: row;
+    flex-wrap: wrap;
+    li {
+      width: 49%;
+      cursor: auto;
+      .feature-text{
+        line-height: 16px;
+      }
+    }
+  }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-comparison',
@@ -8,6 +9,9 @@ import { Component } from '@angular/core';
 export class ProductComparisonComponent {
 
   comparisonItems: any ;
+constructor(    private router: Router){
+
+}
 
   ngOnInit(): void {
     const savedItems = sessionStorage.getItem('compareItems');
@@ -18,12 +22,16 @@ export class ProductComparisonComponent {
     console.log('comparisonItems',this.comparisonItems);
 
     this.comparisonItems = this.comparisonItems.map((product:any) =>{
-      product.keyFeatures = JSON.parse(product.keyFeatures); // Convert string to array
+      product.keyFeatures = JSON.parse(product.keyFeatures.split(",")); // Convert string to array
       return product;
     });
     console.log('comparisonItems',this.comparisonItems);
   }
 
-
+  
+  backToleads(){
+    this.router.navigate(['/leads/leadsList'], {
+  });
+  }
 
 }
