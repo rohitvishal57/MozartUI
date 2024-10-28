@@ -2,7 +2,6 @@ import { Component, HostListener } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { ProposalList } from 'src/app/interface/proposals.interface';
-import { MatMenuTrigger } from '@angular/material/menu';
 import { ProposalsService } from '../proposals.service';
 import { CommonService } from 'src/app/services/common.service';
 import { Router } from '@angular/router';
@@ -23,7 +22,6 @@ export class ProposalsListComponent {
   rows: number = 10;
   totalRecords: number = 0;
   selectedView: string = "list";
-  showEllipsisDropdown: number | null = null;
   productsList: any[] = [];
   policyTypes: any[] = [];
   startDate: any;
@@ -34,12 +32,16 @@ export class ProposalsListComponent {
   searchInputControl = new FormControl("");
   isDesktopView:boolean=false
   filterType: string = "totalRecords";
-  placeholder:string='';
   agentCode=localStorage.getItem('agentCode');
   StaticPolicyTypes = [
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
+  proposalNum: any;
+  formSequence: any[] = [];
+  allJsonFormData: any[] = []
+  formData: any = {}
+  currentDate = new Date().toISOString().split('T')[0];
   proposalListRequestBody={
     "proposer": "",
     "productVarientName": "",  
@@ -55,19 +57,15 @@ export class ProposalsListComponent {
     "email": "",  
     "leadId": ""
  } 
-  proposalNum: any;
-  formSequence: any[] = [];
-  allJsonFormData: any[] = []
-  formData: any = {}
-  currentDate = new Date().toISOString().split('T')[0];
-
+ 
   constructor(
     private proposalService: ProposalsService,
     private datePipe: DatePipe,
     private commonService:CommonService, private router: Router,
     private toast: NgToastService,
-       private encryptionService: EncryptionService
+    private encryptionService: EncryptionService
   ) {}
+  
   ngOnInit(): void {
     this.getProposalList();
     this.getProducts();
@@ -83,7 +81,6 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.pageSize = this.rows;
     this.proposalService.getProposalListApi(this.proposalListRequestBody).subscribe(
       (response) => { 
-        console.log(response.data);
         if (response.success) {
           this.proposalList = response.data.proposalList.map((item: any) => ({
             ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
@@ -92,10 +89,12 @@ export class ProposalsListComponent {
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType]; 
         } 
-        else {console.error("API request was not successful.");}
+        else {
+          console.error("API request was not successful.");
+        }
       },
       (error) => {
-        console.error("Error from getProposalList API:", error);
+        this.toast.error({ detail: "Error", summary: "Failed to get proposals list", duration: 2000 });
       }
     );
   }
@@ -116,20 +115,16 @@ export class ProposalsListComponent {
     }
   }
   getProducts() {
-    const reqData={
+    const productsReqBody={
       "agentCode": this.agentCode
     }
-    this.commonService.Getproductlist(reqData).subscribe({
+    this.commonService.Getproductlist(productsReqBody).subscribe({
       next: (res) => {
-        this.productsList = res.data;
         console.log("product list",this.productsList)
-        const uniquePolicyTypes = Array.from(new Set(this.productsList
-         .map((product) => product.familyPlan)))
-         .map((policyType) => ({ name: policyType, selected: false }));
-         this.policyTypes = uniquePolicyTypes;
+        this.productsList=res.data
       },
       error: (err) => {
-         console.log("error coming form getproduct list API");
+        this.toast.error({ detail: "WARNING", summary: "Failed to get Product Names", duration: 2000 });
       }
     })
   }
@@ -155,13 +150,11 @@ export class ProposalsListComponent {
       count++;
     }
     this.appliedFiltersCount = count;
-     this.appliedFiltersCount;
   }
   applyFilter() {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
-    console.log("startDate",this.startDate,"endDate",this.endDate);  
     this.proposalListRequestBody.startDate=this.startDate;
     console.log("start date taken by request body",this.proposalListRequestBody.startDate);
     this.proposalListRequestBody.endDate=this.endDate;
@@ -175,7 +168,7 @@ export class ProposalsListComponent {
     const selectedPolicyTypes = this.StaticPolicyTypes
       .filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
-      console.log("selecteed policy types",selectedPolicyTypes);  
+      console.log("selected policy types",selectedPolicyTypes);  
     this.proposalListRequestBody.policyType = selectedPolicyTypes.join(", ");
     console.log("policy types which are taking by request body",this.proposalListRequestBody.policyType); 
     this.first = 0;
@@ -236,12 +229,8 @@ export class ProposalsListComponent {
     this.searchInputControl.reset();
     this.getProposalList();
   }
-  applySearch() {
-    console.log("outside");
-    
-    if (this.searchInputControl.valid) {
-      console.log("inside",this.selected);
-      
+  applySearch() {    
+    if (this.searchInputControl.valid) {      
       if (this.selected === "mobileNumber") {
         this.proposalListRequestBody.mobileNumber = this.searchInputControl.value!;
         this.proposalListRequestBody.proposer = "";
@@ -257,9 +246,7 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.proposalNumber =""
-      }else if (this.selected === "proposalNumber") {
-        console.log("dbfyed",this.selected,this.proposalListRequestBody);
-                
+      }else if (this.selected === "proposalNumber") {                
         this.proposalListRequestBody.proposalNumber = this.searchInputControl.value!;
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
@@ -283,7 +270,6 @@ export class ProposalsListComponent {
         console.warn('Unknown action:', event);
     }
   }
-
   async redirect(){
     try {
       await this.getProposalNum();
@@ -294,7 +280,6 @@ export class ProposalsListComponent {
 
       }
       await this.getFormSequence(productData);
-      console.log(productData)
       if (this.formSequence != null && this.formSequence.length > 0) {
         this.router.navigate(['yatra'], {
           state: { productData: productData, formSequence: this.formSequence }
@@ -315,24 +300,18 @@ export class ProposalsListComponent {
   }
 
   async getFormSequence(item: any) {
-    console.log(item);
     try {
       sessionStorage.clear();
       const reqData = {
         "partnerId": item.partnerId,
         "productId": item.productId
       }
-      console.log(reqData);
       const res = await firstValueFrom(this.commonService.Getformsequence(reqData));
-      console.log(res);
       this.formSequence = JSON.parse(res.data.formSequence);
-      console.log(this.formSequence);
-
       if (this.formSequence != null && this.formSequence.length > 0) {
         this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
         sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
       }
-      console.log(this.allJsonFormData);
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
       localStorage.setItem("formIndex", "0");
     } catch (err) {

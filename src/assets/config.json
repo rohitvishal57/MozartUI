@@ -14,7 +14,7 @@
     "getproductdetailsandfeatures":"renewal/api/getproductdetailsandfeatures",
     "getSubquotes":"renewal/api/getsubquotes",
     "updateMemberDetails":"renewal/api/UpdateMemberDetails",
-    "kycUpdate":"/renewal/api/kycUpdate",
+    "kycUpdate":"renewal/api/kycUpdate",
     "getkycURL":"quote/api/getkycURL",
 
     "getLeadsListApi":"yatra/api/getleaddetailslist",
