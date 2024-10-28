@@ -88,6 +88,76 @@
                     <button type="button" id="customergridcard" name="customergridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="customerListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
             </section>
+            <section class="tableMain quoteView block-show ">
+                <div class="tableSubMain">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col" nowrap>Customer Id</th>
+                                    <th scope="col">No.Of.Policies</th>
+                                    <th scope="col" nowrap>Email ID</th>
+                                    <th scope="col" nowrap>Phone No</th>
+                                    <th scope="col" ></th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr *ngFor="let row of customerList; let i = index">
+                                    <td>{{ row.firstName }} {{row.lastName }}</td>
+                                    <td>{{ row.customerID }}</td>
+                                    <td>{{ row.noOfInsured }}</td>
+                                    <td>{{ row.emailID }}</td>
+                                    <td>{{ row.mobileNumber }}</td>
+                                    <td><button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info" class="btn_action btn_moreAction btn_arrowCustomer" ><img src="assets/Img/icon_table_arrow_right_red.svg" ></button></td>
+                                </tr>
+                                <tr id="customerDetatils_1" class="info_customerDetails_tr">
+                                    <td colspan="6" class="info_customerDetails">
+                                        <table class="table table-borderless table-search">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" nowrap>Product Name</th>
+                                                    <th scope="col" nowrap>Policy Number</th>
+                                                    <th scope="col">No.Of.Members</th>
+                                                    <th scope="col" nowrap>Created On</th>
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col" >Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-group-divider">
+                                                <tr>
+                                                    <td>Activ Fit</td>
+                                                    <td>40-23-0003404-00</td>
+                                                    <td>1</td>
+                                                    <td>16-05-2023</td>
+                                                    <td><span class="info_status info_status_green">Renewed</span></td>
+                                                    <td>
+                                                        <div class="btn_groupAction">
+                                                            <button type="button" id="customermore1" name="customermore" value="more" title="More" class="btn_action btn_moreAction" ><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Activ Fit</td>
+                                                    <td>40-23-0003404-00</td>
+                                                    <td>2</td>
+                                                    <td>16-05-2023</td>
+                                                    <td><span class="info_status info_status_red">Expired</span></td>
+                                                    <td>
+                                                        <div class="btn_groupAction">
+                                                            <button type="button" id="customermore1" name="customermore" value="more" title="More" class="btn_action btn_moreAction" ><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
             <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
                 <div class="tableSubMain">
                     <div class="table-responsive">
