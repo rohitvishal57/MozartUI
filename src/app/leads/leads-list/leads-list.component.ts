@@ -461,5 +461,11 @@ export class LeadsListComponent {
     }
   }
 
+  redirectProducts(lead : any){
+
+    this.router.navigate(['/products'], {
+     
+    });
+  }
 
 }
