@@ -1193,6 +1193,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-floating>.form-select{ 
     height:auto !important; 
     min-height:auto !important;
+    text-overflow: ellipsis;
 }
 .form-floating>.form-control-plaintext~label::after, .form-floating>.form-control:focus~label::after, .form-floating>.form-control:not(:placeholder-shown)~label::after, .form-floating>.form-select~label::after {
     display: none;

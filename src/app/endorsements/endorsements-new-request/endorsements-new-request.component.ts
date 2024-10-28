@@ -105,111 +105,26 @@ export class EndorsementsNewRequestComponent implements OnInit {
       name: "Change in International Address",
       value: "ChangeinInternationalAddress"
     },
-    /* {
-      name: "Change in Bank details",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Change in Communication Address",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Change in Educational Qualification",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Change in height and weight",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Change in Marital Status",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Change in Occupation details",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Change in relationship",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Change my name",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Addition of member/child- Premium calculation",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Addition of member/child- Premium recieved",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Addition of new born",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Addition of spouse",
-      value: "memberAlternateContactNumber"
-    }, 
-    {
-      name: "Correction in DOB",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Correction in Gender",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Correction in nominee contact number",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Deletion of Member from Policy",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Details correction in E-health card",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Disclosure of portability details",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "DRM endorsement",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Incorrect Address got updated",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Salutation change",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Updation in GST Number",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Updation in Portability details",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Updation of EIA Number",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Updation of Intermediary Code",
-      value: "memberAlternateContactNumber"
-    },
-    {
-      name: "Updation of Loan account number",
-      value: "memberAlternateContactNumber"
-    } */
   ];
+  relationships = [
+    "Brother",
+    "Brother in-law",
+    "Daughter in-law",
+    "Dependent Daughter",
+    "Dependent Son",
+    "Father",
+    "Father-In-Law",
+    "Granddaughter",
+    "Grandfather",
+    "Grandmother",
+    "Grandson",
+    "Mother",
+    "Mother-In-Law",
+    "Nephew",
+    "Sister",
+    "Sister in-law",
+    "Son in-law"
+  ];  
   filteredActivity: Observable<any[]> | any;
   MemberfilteredActivity: Observable<any[]> | undefined;
   selectedPolicyNumber: any;
@@ -343,6 +258,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.caseCreationForm.get('pincode')?.setValue(input.value);  // Update form control value
   }
+  
   removeDuplicates(myArray:any, Prop:any) {
     return myArray.filter((obj:any, pos:any, arr:any) => {
       return arr.map((mapObj:any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
@@ -375,10 +291,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
   _filter(value: string) {
     console.log(value);
     const filterValue = this._normalizeValue(this._removealphabets(value));
-    const filteredValue = this.activityList.filter((x:any) => this._normalizeValue(x.policynumber) === filterValue);
+    const filteredValue = this.activityList.filter((x:any) => this._normalizeValue(x.policynumber).includes(filterValue));
     this.selectedPolicyNumber = filteredValue;
     if(this.selectedPolicyNumber.length > 0){
       this.getMemberIdList(this.selectedPolicyNumber);
+    } else {
+      this.MemberIdList = [];
     }
     return filteredValue;
   }
@@ -418,9 +336,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.aadharCradNo);
     }
     if (value == 'ChangeinInternationalAddress') {
-      this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$'), Validators.maxLength(250)]);
+      this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$'), Validators.maxLength(250)]);
       this.caseCreationForm.get('address1').updateValueAndValidity();
-      this.caseCreationForm.get('address2').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$'), Validators.maxLength(250)]);
+      this.caseCreationForm.get('address2').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$'), Validators.maxLength(250)]);
       this.caseCreationForm.get('address2').updateValueAndValidity();
       this.caseCreationForm.get('pincode').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]);
       this.caseCreationForm.get('pincode').updateValueAndValidity();
@@ -442,7 +360,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'nomineeContact') {
       this.caseCreationForm.get("endorsementDetails").get('nomineeContact').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeContact').updateValueAndValidity();
-      this.caseCreationForm.get("endorsementDetails").get('nomineeName').setValidators([Validators.required]);
+      this.caseCreationForm.get("endorsementDetails").get('nomineeName').setValidators([Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.maxLength(50)]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').updateValueAndValidity();
@@ -508,6 +426,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
     if (value === 'nomineeContact') {
       this.showOtpSection = false;
+      this.isDisabled = false;
     }
 
     if ((value === 'panNumber' || value === 'aadharNumber') && this.submitted) {

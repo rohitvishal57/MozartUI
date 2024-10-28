@@ -17,8 +17,8 @@
               <div class="input-block form-floating input-block-renew">
                 <input class="form-control input-textBox" value="" (keydown)="onKeyDown($event)" [matAutocomplete]="auto" id="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
                 <label for="policyNumber">Search Policy Number </label>
-                <div *ngIf="caseCreationForm.get('policyNumber')?.invalid && (caseCreationForm.get('policyNumber')?.touched || caseCreationForm.get('policyNumber')?.dirty)">
-                  <small class="ui-error block-show" *ngIf="caseCreationForm.get('policyNumber')?.errors?.required">Policy Number is required.</small>
+                <div *ngIf="caseCreationForm.get('policyNumber')?.invalid && (caseCreationForm.get('policyNumber')?.touched || caseCreationForm.get('policyNumber')?.dirty) || submitted">
+                  <small class="ui-error block-show" *ngIf="caseCreationForm.get('policyNumber')?.errors?.required">Policy number is required.</small>
                 </div>     
               </div>
               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onChange($event.option.value)">
@@ -38,8 +38,8 @@
                 <label for="member">Member</label>
                 <!-- <span *ngIf="submitted && caseCreationForm.get('member').invalid" class="ui-error block-show">Please
                   select member</span> -->
-                <div *ngIf="caseCreationForm.get('member')?.invalid && (caseCreationForm.get('member')?.touched || caseCreationForm.get('member')?.dirty)">
-                  <small class="ui-error block-show" *ngIf="caseCreationForm.get('member')?.errors?.required">Member Name is required.</small>
+                <div *ngIf="caseCreationForm.get('member')?.invalid && (caseCreationForm.get('member')?.touched || caseCreationForm.get('member')?.dirty) || submitted">
+                  <small class="ui-error block-show" *ngIf="caseCreationForm.get('member')?.errors?.required">Member name is required.</small>
                 </div>
               </div>
             </div>
@@ -52,8 +52,7 @@
                   </option>
                 </select>
                 <label for="endorsementtype">Endorsement Type</label>
-                <!-- <span *ngIf="submitted && caseCreationForm.get('endorsementType').invalid" class="ui-error block-show">Please select Endorsement Type</span> -->
-                <div *ngIf="caseCreationForm.get('endorsementType')?.invalid && (caseCreationForm.get('endorsementType')?.touched || caseCreationForm.get('endorsementType')?.dirty)">
+                <div *ngIf="caseCreationForm.get('endorsementType')?.invalid && (caseCreationForm.get('endorsementType')?.touched || caseCreationForm.get('endorsementType')?.dirty || submitted)">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementType')?.errors?.required">Endorsement Type is required.</small>
                 </div>
               </div>
@@ -77,19 +76,21 @@
                     <div class="input-block form-floating input-block-renew">
                       <input class="form-control input-textBox" id="address1" placeholder="" formControlName="address1" type="text" [max]="250">
                       <label for="address1">Address 1</label>
-                      <div *ngIf="caseCreationForm.get('address1')?.invalid && (caseCreationForm.get('address1')?.touched || caseCreationForm.get('address1')?.dirty)">
+                      <div *ngIf="caseCreationForm.get('address1')?.invalid && (caseCreationForm.get('address1')?.touched || caseCreationForm.get('address1')?.dirty) || submitted">
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('address1')?.errors?.required">Address1 is required.</small>
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('address1')?.errors?.maxlength">Max length is 250 characters.</small>
+                        <small class="ui-error block-show" *ngIf="caseCreationForm.get('address1')?.errors?.pattern">Enter Valid Address.</small>
                       </div>
                     </div>
                   </div>
                   <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
                     <div class="input-block form-floating input-block-renew">
                       <input class="form-control input-textBox" id="address2" placeholder="" formControlName="address2" type="text">
-                      <label for="address1">Address 2</label>
-                      <div *ngIf="caseCreationForm.get('address2')?.invalid && (caseCreationForm.get('address2')?.touched || caseCreationForm.get('address2')?.dirty)">
+                      <label for="address2">Address 2</label>
+                      <div *ngIf="caseCreationForm.get('address2')?.invalid && (caseCreationForm.get('address2')?.touched || caseCreationForm.get('address2')?.dirty || submitted)">
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('address2')?.errors?.required">Address2 is required.</small>
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('address2')?.errors?.maxlength">Max length is 250 characters.</small>
+                        <small class="ui-error block-show" *ngIf="caseCreationForm.get('address1')?.errors?.pattern">Enter valid address.</small>
                       </div>
                     </div>
                   </div>
@@ -97,7 +98,8 @@
                     <div class="input-block form-floating input-block-renew">
                       <input class="form-control input-textBox" id="pincode" maxlength="6" (input)="validateNumberInput($event)" placeholder="" formControlName="pincode" type="text">
                       <label for="pincode">Pin Code</label>
-                      <div *ngIf="caseCreationForm.get('pincode').invalid && caseCreationForm.get('pincode').touched">
+                      <div *ngIf="caseCreationForm.get('pincode').invalid && caseCreationForm.get('pincode').touched || submitted">
+                        <small class="ui-error block-show" *ngIf="caseCreationForm.get('pincode')?.errors?.required">Pincode is required.</small>
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('pincode').errors?.pattern">Only numbers are allowed!</small>
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('pincode').errors?.maxlength">Maximum 6 digits allowed!</small>
                       </div>
@@ -117,10 +119,9 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="aadharNumber" placeholder="" formControlName="aadharNumber" type="tel" maxlength="12" minlength="12" (keydown)="onKeydown($event)" [ngClass]="{ 'is-invalid': submitted && f['aadharNumber'].errors }">
                         <label for="aadharNumber">Aadhar card Number</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['aadharNumber'].errors"><span class="ui-error block-show" *ngIf="f['aadharNumber'].errors['required']">Field cannot be blank</span><span class="ui-error block-show" *ngIf="f['aadharNumber'].errors['pattern']">Enter valid number</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.aadharNumber')?.invalid && (caseCreationForm.get('endorsementDetails.aadharNumber')?.touched || caseCreationForm.get('endorsementDetails.aadharNumber')?.dirty)">
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.aadharNumber')?.invalid && (caseCreationForm.get('endorsementDetails.aadharNumber')?.touched || caseCreationForm.get('endorsementDetails.aadharNumber')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.aadharNumber')?.errors?.required">Aadhaar number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.aadharNumber')?.errors?.email">Enter a valid Aadhaar number (12 digits).</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.aadharNumber')?.errors?.pattern">Enter a valid Aadhaar number (12 digits).</small>
                         </div>
                       </div>
                     </div>
@@ -137,19 +138,33 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="nomineeName" placeholder="" formControlName="nomineeName" type="text" OnlyCharacter [ngClass]="{ 'is-invalid': submitted && f['nomineeName'].errors }">
                         <label for="nomineeName">Nominee Name</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['nomineeName'].errors"><span class="ui-error block-show" *ngIf="f['nomineeName'].errors['required']">Field cannot be blank</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeName')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeName')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.dirty)">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeName')?.errors?.required">Nominee Name is required.</small>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeName')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeName')?.touched || caseCreationForm.get('endorsementDetails.nomineeName')?.dirty || submitted)">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeName')?.errors?.required">Nominee name is required.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeName')?.errors?.pattern">Enter valid name.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeName')?.errors?.maxlength">Name cannot be longer than 50 characters.</small>
                         </div>
                       </div>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="nomineeRelationship" placeholder="" formControlName="nomineeRelationship" type="text" OnlyCharacter [ngClass]="{ 'is-invalid': submitted && f['nomineeRelationship'].errors }">
                         <label for="nomineeRelationship">Nominee Relationship</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['nomineeRelationship'].errors"><span class="ui-error block-show" *ngIf="f['nomineeRelationship'].errors['required']">Field cannot be blank</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeRelationship')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeRelationship')?.touched || caseCreationForm.get('endorsementDetails.nomineeRelationship')?.dirty)">
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeRelationship')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeRelationship')?.touched || caseCreationForm.get('endorsementDetails.nomineeRelationship')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeRelationship')?.errors?.required">Nominee Relationship is required.</small>
+                        </div>
+                      </div>
+                    </div> -->
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                      <div class="input-block form-floating input-block-renew">
+                        <select class="form-select input-selectBox" formControlName="nomineeRelationship">
+                          <option value="" disabled selected>Select Nominee</option>
+                          <option *ngFor="let opt of relationships" [value]="opt">
+                            {{ opt }}
+                          </option>
+                        </select>
+                        <label for="nomineeRelationship">Nominee Relationship</label>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeRelationship')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeRelationship')?.touched || caseCreationForm.get('endorsementDetails.nomineeRelationship')?.dirty || submitted)">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeRelationship')?.errors?.required">Nominee relationship is required.</small>
                         </div>
                       </div>
                     </div>
@@ -157,11 +172,9 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="nomineeContact" placeholder="" maxlength="10" minlength="10" formControlName="nomineeContact" type="tel" (keydown)="onKeydown($event)" [ngClass]="{ 'is-invalid': submitted && f['nomineeContact'].errors }">
                         <label for="nomineeContact">Nominee Contact</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['nomineeContact'].errors"><span class="ui-error block-show" *ngIf="f['nomineeContact'].errors['required']">Field cannot
-                            be blank</span><span class="ui-error block-show" *ngIf="f['nomineeContact'].errors['pattern']">Enter valid
-                            number</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeContact')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeContact')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.dirty)">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeContact')?.errors?.required">Nominee Contact is required.</small>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeContact')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeContact')?.touched || caseCreationForm.get('endorsementDetails.nomineeContact')?.dirty || submitted)">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeContact')?.errors?.required">Nominee contact is required.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeContact')?.errors?.pattern">Enter valid contact number.</small>
                         </div>
                       </div>
                     </div>
@@ -178,11 +191,9 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="panNumber" placeholder="" maxlength="10" (input)="validatePanInput($event)" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" formControlName="panNumber" type="text" (keypress)="omit_special_char($event)" oninput="this.value = this.value.toUpperCase()" maxlength="10" minlength="10" [ngClass]="{ 'is-invalid': submitted && f['panNumber'].errors }">
                         <label for="panNumber">Pancard Number</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['panNumber'].errors"><span class="ui-error block-show" *ngIf="f['panNumber'].errors['required']">Field cannot be
-                            blank</span><span class="ui-error block-show" *ngIf="f['panNumber'].errors['pattern']">Enter valid PAN
-                            number</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.panNumber').invalid && caseCreationForm.get('endorsementDetails.panNumber').touched">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.panNumber').errors?.pattern">Please Specify PAN No in the format having first 3 character from(A-Z),next 1 character(P),next 1 character(A-Z),next four digits(0-9),and 1 character(A-z)</small>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.panNumber').invalid && caseCreationForm.get('endorsementDetails.panNumber').touched || caseCreationForm.get('endorsementDetails.panNumber')?.dirty || submitted">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.panNumber').errors?.pattern">Please specify 'PAN No' in the format having first 3 character from(A-Z),next 1 character(P),next 1 character(A-Z),next four digits(0-9),and 1 character(A-z)</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.panNumber').errors?.required">Pan number is required.</small>
                         </div>
                       </div>
                     </div>
@@ -203,9 +214,9 @@
                         <!-- <span class="invalid-feedback" *ngIf="f['primaryContactNumber'].errors"><span class="ui-error block-show" *ngIf="f['primaryContactNumber'].errors['required']">Field
                             cannot be blank</span><span class="ui-error block-show" *ngIf="f['primaryContactNumber'].errors['pattern']">Enter
                             valid number</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.primaryContactNumber')?.touched || caseCreationForm.get('endorsementDetails.primaryContactNumber')?.dirty)">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.required">Mobile Number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.primaryContactNumber')?.touched || caseCreationForm.get('endorsementDetails.primaryContactNumber')?.dirty || submitted)">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.required">Mobile number is required.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.pattern">Enter valid mobile number.</small>
                         </div>
                       </div>
                     </div>
@@ -218,9 +229,9 @@
                         <!-- <span class="invalid-feedback" *ngIf="f['memberPrimaryContactNumber'].errors"><span class="ui-error block-show"
                             *ngIf="f['memberPrimaryContactNumber'].errors['required']">Field cannot be blank</span><span class="ui-error block-show"
                             *ngIf="f['memberPrimaryContactNumber'].errors['pattern']">Enter valid number</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.touched || caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.dirty)">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.required">Mobile Number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.touched || caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.dirty|| submitted)">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.required">Mobile number is required.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.pattern">Enter valid mobile number.</small>
                         </div>
                       </div>
                     </div>
@@ -233,9 +244,9 @@
                         <!-- <span class="invalid-feedback" *ngIf="f['memberAlternateContactNumber'].errors"><span class="ui-error block-show"
                             *ngIf="f['memberAlternateContactNumber'].errors['required']">Field cannot be blank</span><span class="ui-error block-show"
                             *ngIf="f['memberAlternateContactNumber'].errors['pattern']">Enter valid number</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.dirty)">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.required">Mobile Number is required.</small>
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.dirty || submitted)">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.required">Mobile number is required.</small>
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.pattern">Enter valid mobile number.</small>
                         </div>
                       </div>
                     </div>
@@ -245,11 +256,8 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="internationalContactNumber" placeholder="" formControlName="internationalContactNumber" type="tel" (keydown)="onKeydownInternationalContactNumber($event)" (ngModelChange)="mobAndEmailValueChange($event, 'internationalContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['internationalContactNumber'].errors }">
                         <label for="internationalContactNumber">International No</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['internationalContactNumber'].errors"><span class="ui-error block-show"
-                            *ngIf="f['internationalContactNumber'].errors['required']">Field cannot be blank</span><span class="ui-error block-show"
-                            *ngIf="f['internationalContactNumber'].errors['pattern']">Enter valid number</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.internationalContactNumber')?.touched || caseCreationForm.get('endorsementDetails.internationalContactNumber')?.dirty)">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.errors?.required">Mobile Number is required.</small>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.internationalContactNumber')?.touched || caseCreationForm.get('endorsementDetails.internationalContactNumber')?.dirty || submitted)">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.errors?.required">Mobile number is required.</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
                         </div>
                       </div>
@@ -260,11 +268,8 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="alternateContactNumber" placeholder="" formControlName="alternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'alternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['alternateContactNumber'].errors }">
                         <label for="alternateContactNumber">Alternate No</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['alternateContactNumber'].errors"><span class="ui-error block-show" *ngIf="f['alternateContactNumber'].errors['required']">Field
-                            cannot be blank</span><span class="ui-error block-show" *ngIf="f['alternateContactNumber'].errors['pattern']">Enter
-                            valid number</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.alternateContactNumber')?.touched || caseCreationForm.get('endorsementDetails.alternateContactNumber')?.dirty)">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.errors?.required">Mobile Number is required.</small>
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.alternateContactNumber')?.touched || caseCreationForm.get('endorsementDetails.alternateContactNumber')?.dirty || submitted)">
+                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.errors?.required">Mobile number is required.</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.errors?.pattern">Enter Valid Mobile Number.</small>
                         </div>
                       </div>
@@ -275,10 +280,7 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="email" placeholder="" formControlName="email" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'email')" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
                         <label for="email">Email</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['email'].errors"><span class="ui-error block-show" *ngIf="f['email'].errors['required']">Field cannot be
-                            blank</span><span class="ui-error block-show" *ngIf="f['email'].errors['pattern']">Email must be a valid
-                            email address</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.email')?.invalid && (caseCreationForm.get('endorsementDetails.email')?.touched || caseCreationForm.get('endorsementDetails.email')?.dirty)">
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.email')?.invalid && (caseCreationForm.get('endorsementDetails.email')?.touched || caseCreationForm.get('endorsementDetails.email')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.email')?.errors?.required">Email is required.</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.email')?.errors?.email">Invalid email format.</small>
                         </div>
@@ -290,10 +292,7 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="alternateEmail" placeholder="" formControlName="alternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'alternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['alternateEmail'].errors }">
                         <label for="alternateEmail">Alternate Email ID</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['alternateEmail'].errors"><span class="ui-error block-show" *ngIf="f['alternateEmail'].errors['required']">Field cannot
-                            be blank</span><span class="ui-error block-show" *ngIf="f['alternateEmail'].errors['pattern']">Email must be
-                            a valid email address</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.alternateEmail')?.invalid && (caseCreationForm.get('endorsementDetails.alternateEmail')?.touched || caseCreationForm.get('endorsementDetails.alternateEmail')?.dirty)">
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.alternateEmail')?.invalid && (caseCreationForm.get('endorsementDetails.alternateEmail')?.touched || caseCreationForm.get('endorsementDetails.alternateEmail')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateEmail')?.errors?.required">Email is required.</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateEmail')?.errors?.email">Invalid email format.</small>
                         </div>
@@ -305,10 +304,7 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="memberEmail" placeholder="" formControlName="memberEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberEmail'].errors }">
                         <label for="memberEmail">Email ID-member</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['memberEmail'].errors"><span class="ui-error block-show" *ngIf="f['memberEmail'].errors['required']">Field cannot be
-                            blank</span><span class="ui-error block-show" *ngIf="f['memberEmail'].errors['pattern']">Email must be a
-                            valid email address</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.memberEmail')?.invalid && (caseCreationForm.get('endorsementDetails.memberEmail')?.touched || caseCreationForm.get('endorsementDetails.memberEmail')?.dirty)">
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.memberEmail')?.invalid && (caseCreationForm.get('endorsementDetails.memberEmail')?.touched || caseCreationForm.get('endorsementDetails.memberEmail')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberEmail')?.errors?.required">Email is required.</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberEmail')?.errors?.email">Invalid email format.</small>
                         </div>
@@ -320,10 +316,7 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="memberAlternateEmail" placeholder="" formControlName="memberAlternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateEmail'].errors }">
                         <label for="memberAlternateEmail">Alternate Email ID - member</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['memberAlternateEmail'].errors"><span class="ui-error block-show" *ngIf="f['memberAlternateEmail'].errors['required']">Field
-                            cannot be blank</span><span class="ui-error block-show" *ngIf="f['memberAlternateEmail'].errors['pattern']">Email
-                            must be a valid email address</span></span> -->
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.invalid && (caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.dirty)">
+                        <div *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.invalid && (caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.errors?.required">Email is required.</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.errors?.email">Invalid email format.</small>
                         </div>
