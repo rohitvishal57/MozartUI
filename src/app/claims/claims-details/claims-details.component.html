@@ -6,42 +6,13 @@
             </div>
             <section class="white_container white_container_shadow">
                 <div class="row">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xl-7">
-                        <!-- <div class="details_claimsInfo">
-                             <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5> 
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                        <div class="details_claimsInfo">
+                             <!-- <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5>  -->
                             <h5>{{ claims?.memberName }}</h5>
                             <h6>{{ claims?.productName }}<span class="info-dot"></span>{{ claims?.requestType }}<span class="info-dot"></span><b>{{ claims?.claimStatus }}</b></h6>
-                        </div> -->
-                         <div class="details_claimsInfo">
-                            <div class="row_claimsInfo">
-                                <div class="claim_amount">
-                                    <label>Member Name</label>
-                                    <h6><b>{{ claims?.memberName }}</b></h6>
-                                </div>
-                                <span class="info-dot1"></span>
-                                <div class="claim_amount">
-                                    <label>Policy Number</label>
-                                    <h6>{{ claims?.policyNumber }}</h6>
-                                </div>
-                            </div>
-                            <div class="row_claimsInfo sub_claimsInfo">
-                                <div class="claim_amount">
-                                    <label>Product Name</label>
-                                    <h6>{{ claims?.productName }}</h6>
-                                </div>
-                                <span class="info-dot1"></span>
-                                <div class="claim_amount">
-                                    <label>Request Type</label>
-                                    <h6>{{ claims?.requestType }}</h6>
-                                </div>
-                                <span class="info-dot1"></span>
-                                <div class="claim_amount">
-                                    <label>Claim Status</label>
-                                    <h6><b>{{ status?.claimStatus }}</b></h6>
-                                </div>
-                            </div>
                         </div>
-                        <!--<div class="details_claimsAmount">
+                        <!-- <div class="details_claimsAmount">
                         <div class="claim_amount">
                             <h6>Policy Number</h6>
                             <p>{{ claims?.policyNumber }}</p>
@@ -50,10 +21,9 @@
                             <h6>Member Name</h6>
                             <p>{{ claims?.memberName }}</p>
                         </div>
-                        
-                    </div>
-                    <br/>
-                    <div class="details_claimsAmount col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    </div> -->
+                    <!-- <br/> -->
+                    <!-- <div class="details_claimsAmount col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <div class="claim_amount col-5">
                             <h6>Product Name</h6>
                             <p>{{ claims?.productName }}</p>
@@ -62,27 +32,31 @@
                             <h6>Claim Status</h6>
                             <p>{{ status?.claimStatus }}</p>
                         </div>
-                    </div> -->
+                    </div>  -->
                 </div>
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5">
-                        <div class="details_claimsAmount">
-                           
-                            <!--<div class="claim_amount">
-                                <h6>Request Type</h6>
-                                <p>{{ claims?.requestType }}</p>
-                            </div>-->
-                            <div class="claim_amount">
-                                <h6>Claim Amount</h6>
-                                <p>₹{{ claims?.claimedAmount }}</p>
-                            </div>
-                            <div class="claim_amount">
-                                <h6>Approved Amount</h6>
-                                <p>₹{{ claims?.approvedAmount }}</p>
-                                <!-- <p>--</p> -->
-                            </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
+                    <div class="details_claimsAmount">
+                       
+                        <!-- <div class="claim_amount">
+                            <h6>Request Type</h6>
+                            <p>{{ claims?.requestType }}</p>
+                        </div> -->
+                        <div class="claim_amount">
+                            <h6>Policy Number</h6>
+                            <p>{{ claims?.policyNumber }}</p>
+                        </div>
+                        <div class="claim_amount">
+                            <h6>Claim Amount</h6>
+                            <p>₹{{ claims?.claimedAmount }}</p>
+                        </div>
+                        <div class="claim_amount">
+                            <h6>Approved Amount</h6>
+                            <p>₹{{ claims?.approvedAmount }}</p>
+                            <!-- <p>--</p> -->
                         </div>
                     </div>
                 </div>
+           </div>
                 <div class="row" *ngIf="underDef">
                     <div class="col-12" >
                         <div class="white_container claim_underDeficiency">
@@ -302,13 +276,51 @@
                                                     </li>
                                                 </ul>
                                             </div>
-
+                                            <div class="viewDocument_listMain" *ngIf="fileUploads.length > 0">
+                                                <table class="table table-striped">
+                                                  <thead>
+                                                    <tr>
+                                                      <th>S.No</th>
+                                                      <th>Document Name</th>
+                                                      <th>Type</th>
+                                                      <th>Status</th>
+                                                      <th>Date of Upload</th>
+                                                      <th>Download</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    <tr *ngFor="let file of fileUploads; let i = index">
+                                                      <td>{{ i + 1 }}</td>
+                                                      <td>{{ file.name }}</td>
+                                                      <td>{{ file.type }}</td>
+                                                      <td></td>
+                                                      <td></td>
+                                                      <td>
+                                                        <button class="btn btn-primary" (click)="downloadFile(file)">Download</button>
+                                                      </td>
+                                                    </tr>
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                              
+                                            <!-- <div class="filesList_body">
+                                                <ul class="uploadedFiles_main">
+                                            <li class="uploadedFiles_item" *ngFor="let file of fileUploads">
+                                                <h6>{{ file.name }}</h6>
+                                                <p>{{ file.type }}</p>
+                                                <td>
+                                                  <button class="delete-button" (click)="downloadFile(file)">View/Download</button>
+                                                </td>
+                                              </li>
+                                              </ul>
+                                              </div> -->
                                             <div class="uploadDocument_listMain" *ngIf="uploadedFiles.length > 0">
                                                 <div class="uploadDocument_filesList">
                                                     <div class="filesList_head">
                                                         <div class="filesList_headLeft">Uploads:</div>
                                                         <!-- <div class="filesList_headRight">{{ documentsUploadStatus }}</div> -->
                                                     </div>
+                                              
                                                     <div class="filesList_body">
                                                         <ul class="uploadedFiles_main">
                                                             <li *ngFor="let file of uploadedFiles; let i = index" class="uploadedFiles_item">
@@ -354,6 +366,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                       
                                             <div class="row">
                                                 <div class="col-12 text-center">
                                                     <button name="submit" id="submit" class="button_red" type="button" (click)="submitClaim()">Submit</button>

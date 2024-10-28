@@ -261,28 +261,44 @@ export class ClaimsViewComponent {
       this.form.get("memberName")?.setValue("");
       this.cdr.markForCheck();
   }
-  
 
   filterList(event: KeyboardEvent): void {
-
     const input = (event.target as HTMLInputElement).value.toLowerCase();
     this.form.patchValue({
       "memberName":"",
      
     })
+    
     this.filteredPolicyList = this.policyNumbers.filter((item : any) =>
       item.toLowerCase().includes(input)
     );
+    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+    const regex = /^[0-9-]$/; 
+
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+    // Prevent default if the key is not allowed
+    if (!regex.test(event.key)) {
+      event.preventDefault();
+    }
+    
+   
   }
 
-  onInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let sanitizedValue = input.value.replace(/[^0-9]/g, ''); 
-      if (sanitizedValue.length > 0 && sanitizedValue.charAt(0) === '0') {
-      sanitizedValue = sanitizedValue.substring(1);
-      this.form.get('claimedAmount')?.setValue(sanitizedValue);
+  onInput(event: KeyboardEvent): void {
+    // const input = event.target as HTMLInputElement;
+    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+    const regex = /^[1-9][0-9]*$/;
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
+    // Prevent default if the key is not allowed
+    if (!regex.test(event.key)) {
+      event.preventDefault();
+    }
   }
-  }
+  
   toggleDropdown(open: boolean): void {    
     this.isDropdownOpen = open;
   }

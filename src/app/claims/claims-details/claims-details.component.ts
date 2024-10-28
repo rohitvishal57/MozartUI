@@ -89,6 +89,12 @@ export class ClaimsDetailsComponent {
     createdBy?: string;
   }[] = [];
 
+  fileUploads: { 
+    name: string,
+    type: string,
+    base64: string,
+    fileBlob?: Blob
+  }[] = [];
   customeStepperStatuses: any[] = [];
   statusMessage: string | undefined;
 
@@ -109,6 +115,7 @@ export class ClaimsDetailsComponent {
   }
 
   ngOnInit() {
+    this.fetchfileUploads(this.claimInfoId, this.policyNumber)
     if (this.claimId && this.policyNumber && this.claimInfoId) {
       this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimInfoId);
       this.updateStatusLabel("fileUpload");
@@ -188,6 +195,57 @@ export class ClaimsDetailsComponent {
   }
 
   //  -------------- Method to handle file upload------------------//
+  
+
+  fetchfileUploads(
+    policyNumber: string,
+    claimInfoId: string
+  ) {    
+    let claimsFilesReqBody = {
+      "policyNumber": policyNumber,
+      "claimNumber": claimInfoId
+    };
+  
+    this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe((response: any) => {
+      this.fileUploads = response.map((file: any) => ({
+        name: file.documentName, 
+        type: file.documentType, 
+        base64: file.base64Document, 
+        fileBlob: this.convertBase64ToBlob(file.base64Document, file.documentType)
+      }));
+    }, error => {
+      console.error('Error fetching uploaded files', error);
+    });
+  }
+  
+  convertBase64ToBlob(base64: string, fileType: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: fileType });
+  }
+  
+  downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
+    if (!file.fileBlob) {
+      console.error("File blob is not available for download.");
+      return;
+    }
+  
+    const blob = file.fileBlob;
+    const url = window.URL.createObjectURL(blob);
+  
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = file.name;
+    anchor.click();
+  
+    window.URL.revokeObjectURL(url);
+  }
+
+
   //  fetchUploadedFiles() {
   //   const policyNumber = this.policyNumber; // This should come from the logged-in user or claim data
   //   this.claimsService.getUploadedFiles(policyNumber).subscribe((response: any[]) => {

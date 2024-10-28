@@ -28,19 +28,18 @@
                          </mat-autocomplete>
                     </div>        
 
-                              <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="form-floating input-block-renew">
-                                    <select class="form-select" 
+                                    <select class=" memberLabel" 
                                             formControlName="memberName" 
-                                            [ngClass]="{'has-value': hasAnyValue() || isFocused}"
-                                            (focus)="onFocus()"
-                                            (blur)="onBlur()">
+                                            [ngClass]="{'form-select': hasAnyValue()}"
+                                           >
                                         <option value="" selected disabled></option>
                                         <ng-container *ngFor="let member of memberNames">
                                             <option [value]="member">{{ member }}</option>
                                         </ng-container>
                                     </select>
-                                    <label class="form-label">Select Member</label>
+                                    <label >Select Member</label>
                                     
                                     <small class="ui-error text-danger" 
                                            *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
@@ -56,7 +55,7 @@
                                   <option class="dropdown-options" value="" disabled selected>Select Member</option>
                                   <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
                               </select>
-                              <label for="member" [ngClass]="{'move-up': hasAnyValue()}">Select Member</label>
+                              <label for="member">Select Member</label>
                               <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
                                 Member name is required.
                               </small>
@@ -95,7 +94,7 @@
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount"
-                                (input)="onInput($event)">
+                                (keydown)="onInput($event)">
                                 <label for="claimamount">Claim Amount</label>
                                 <!-- <span class="ui-error">Please enter claim amount</span> -->
                                 <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
@@ -198,7 +197,7 @@
 
                             <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (input)="onInput($event)">
+                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
                                     <label for="claimamount">Claim Amount</label>
                                     <!-- <span class="ui-error">Please enter claim amount</span> -->
                                     <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
@@ -243,7 +242,7 @@
                               </div> -->
                               <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (input)="onInput($event)">
+                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
                                     <label for="claimamount">Claim Amount</label>
                                     <!-- <span class="ui-error">Please enter claim amount</span> -->
                                 </div>

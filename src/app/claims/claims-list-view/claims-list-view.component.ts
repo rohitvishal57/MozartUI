@@ -152,19 +152,6 @@ fetchData(): void {
  
   }
 
-  calculateAppliedFiltersCount(){
-    const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
-      (requestType) => requestType.selected).length;
-      const selectedProductsCount = this.productsList.filter(
-        (product:any) => product.selected).length;
-        let count = selectedPolicyTypesCount + selectedProductsCount;
-        if (this.fromDate && this.toDate) {
-          count++;
-        }
-        this.appliedFiltersCount = count;
-         this.appliedFiltersCount;
-  }
-
   getProducts() {
     this.agentCode =  localStorage.getItem("agentCode");
     const reqData={
@@ -185,31 +172,41 @@ fetchData(): void {
     })
   }
 
-
-  
-  applyFilter() {
-    this.selected = "";
-    this.searchInputControl.reset();
-  this.calculateAppliedFiltersCount();
-  this.formatDate("fromDate");
-  this.formatDate("toDate");
-  this.claimsReqBody.fromDate=this.fromDate;
-  this.claimsReqBody.toDate=this.toDate;
-  const selectedPolicyTypes = this.StaticRequestTypes
-  .filter((requestType:any) => requestType.selected)
-  .map((requestType:any) => requestType.name);
-  this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
-
-  const selectedProducts = this.productsList.filter((searchType: any) => searchType.selected)
-  .map((searchType: any) => searchType.productName);
-if(selectedProducts.length > 0) {
-  this.claimsReqBody.searchType = "productName";
-  this.claimsReqBody.searchString = selectedProducts;
-}
-this.getProducts();
-this.fetchData();
-this.toggeledropdown=false;
+  calculateAppliedFiltersCount(){
+    const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
+      (requestType) => requestType.selected).length;
+      const selectedProductsCount = this.productsList.filter(
+        (product:any) => product.selected).length;
+        let count = selectedPolicyTypesCount + selectedProductsCount;
+        if (this.fromDate && this.toDate) {
+          count++;
+        }
+        this.appliedFiltersCount = count;
+         this.appliedFiltersCount;
   }
+
+      applyFilter() {
+        this.selected = "";
+        this.searchInputControl.reset();
+        this.calculateAppliedFiltersCount();
+        this.formatDate("fromDate");
+        this.formatDate("toDate");
+        this.claimsReqBody.fromDate=this.fromDate;
+        this.claimsReqBody.toDate=this.toDate;
+        const selectedPolicyTypes = this.StaticRequestTypes
+        .filter((requestType:any) => requestType.selected)
+        .map((requestType:any) => requestType.name);
+        this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
+
+        const selectedProducts = this.productsList.filter((searchType: any) => searchType.selected)
+        .map((searchType: any) => searchType.productName);
+      if(selectedProducts.length > 0) {
+        this.claimsReqBody.searchType = "productName";
+        this.claimsReqBody.searchString = selectedProducts;
+      }
+      this.fetchData();
+      this.toggeledropdown=false;
+      }
 
 cancel() {
   this.fromDate = null;
@@ -257,7 +254,7 @@ clear(){
 
 onSelectChanges(event: any): void {
   //event.stopPropagation(); 
-  this.selected !== "none";
+  // this.selected !== "";
   this.searchInputControl.setValue('');
   this.searchInputControl.clearValidators();
 
@@ -273,7 +270,10 @@ onSelectChanges(event: any): void {
       Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
     ]);
   }
-  else if(this.selected === 'refreshData'){
+  else {
+    this.claimsReqBody.searchString = ['']
+    this.claimsReqBody.searchType = ''
+
     this.fetchData();
   }
     this.searchInputControl.updateValueAndValidity();
