@@ -45,7 +45,7 @@
                                 <option value="name">Name</option>
                                 <option value="email">EmailID</option>
                             </select>
-                            <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()" (keypress)="isNumber($event)">
                             <button  type="button" id="leadsearch" name="leadsearch" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
