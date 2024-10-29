@@ -83,173 +83,104 @@
                     <button type="button" id="customergridcard" name="customergridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote" [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card" (click)="customerListView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
             </section>
-            <!-- <section class="tableMain quoteView block-show ">
+            <section class="tableMain quoteView block-show" *ngIf="selectedView == 'list'">
                 <div class="tableSubMain">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-search">
-                            <thead>
+                  <div class="table-responsive">
+                    <table class="table table-borderless table-search">
+                      <thead>
+                        <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col" nowrap>Customer Id</th>
+                          <th scope="col">No.Of.Policies</th>
+                          <th scope="col" nowrap>Email ID</th>
+                          <th scope="col" nowrap>Phone No</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody class="table-group-divider" *ngFor="let row of customerList; let i = index">
+                        <tr >
+                          <td>{{ row.firstName }} {{ row.lastName }}</td>
+                          <td>{{ row.customerID }}</td>
+                          <td>{{ row.noOfInsured }}</td>
+                          <td>{{ row.emailID }}</td>
+                          <td>{{ row.mobileNumber }}</td>
+                          <td>
+                            <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info" class="btn_action btn_moreAction btn_arrowCustomer" (click)="toggleMoreInfo(i)">
+                              <img src="assets/Img/icon_table_arrow_right_red.svg" />
+                            </button>
+                          </td>
+                        </tr>              
+                        <tr *ngIf="moreInfoIndex == i" class="info_customerDetails_tr">
+                          <td colspan="6" class="info_customerDetails">
+                            <table class="table table-borderless table-search">
+                              <thead>
                                 <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col" nowrap>Customer Id</th>
-                                    <th scope="col">No.Of.Policies</th>
-                                    <th scope="col" nowrap>Email ID</th>
-                                    <th scope="col" nowrap>Phone No</th>
-                                    <th scope="col" ></th>
+                                  <th scope="col" nowrap>Product Name</th>
+                                  <th scope="col" nowrap>Policy Number</th>
+                                  <th scope="col">No.Of.Members</th>
+                                  <th scope="col" nowrap>Created On</th>
+                                  <th scope="col">Status</th>
+                                  <th scope="col">Action</th>
                                 </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                <tr *ngFor="let row of customerList; let i = index">
-                                    <td>{{ row.firstName }} {{row.lastName }}</td>
-                                    <td>{{ row.customerID }}</td>
-                                    <td>{{ row.noOfInsured }}</td>
-                                    <td>{{ row.emailID }}</td>
-                                    <td>{{ row.mobileNumber }}</td>
-                                    <td><button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info" class="btn_action btn_moreAction btn_arrowCustomer" ><img src="assets/Img/icon_table_arrow_right_red.svg" ></button></td>
-                                </tr>
-                                <tr id="customerDetatils_1" class="info_customerDetails_tr">
-                                    <td colspan="6" class="info_customerDetails">
-                                        <table class="table table-borderless table-search">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" nowrap>Product Name</th>
-                                                    <th scope="col" nowrap>Policy Number</th>
-                                                    <th scope="col">No.Of.Members</th>
-                                                    <th scope="col" nowrap>Created On</th>
-                                                    <th scope="col">Status</th>
-                                                    <th scope="col" >Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-group-divider">
-                                                <tr>
-                                                    <td>Activ Fit</td>
-                                                    <td>40-23-0003404-00</td>
-                                                    <td>1</td>
-                                                    <td>16-05-2023</td>
-                                                    <td><span class="info_status info_status_green">Renewed</span></td>
-                                                    <td>
-                                                        <div class="btn_groupAction">
-                                                            <button type="button" id="customermore1" name="customermore" value="more" title="More" class="btn_action btn_moreAction" ><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Activ Fit</td>
-                                                    <td>40-23-0003404-00</td>
-                                                    <td>2</td>
-                                                    <td>16-05-2023</td>
-                                                    <td><span class="info_status info_status_red">Expired</span></td>
-                                                    <td>
-                                                        <div class="btn_groupAction">
-                                                            <button type="button" id="customermore1" name="customermore" value="more" title="More" class="btn_action btn_moreAction" ><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="tableNav" *ngIf="totalRecords > 0">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                                </p-paginator>
-                            </li>
-                            <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> of <span class="pageCountTotal">{{totalRecords}} entries</span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section> -->
-            <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">
-                <div class="tableSubMain">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-search">
-                            <thead>
-                                <tr nowrap>
-                                    <th scope="col">Name</th>
-                                    <th scope="col" nowrap>Customer Id</th>
-                                    <th scope="col" nowrap>Policy Number & type</th>
-                                    <th scope="col" >No.Of.Policies</th>
-                                    <th scope="col" nowrap>Product Name</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col" nowrap>Created On</th>
-                                    <th scope="col">Contact Details</th>
-                                    <th scope="col">Notice</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                <tr *ngFor="let row of customerList; let i = index">
-                                    <td>{{ row.firstName }} {{row.lastName }}</td>
-                                    <td>{{ row.customerID }}</td>
-                                    <td>
-                                        <div class="table-policyType">
-                                            <div class="row-policyType">
-                                                <span class="value">{{ row.policyNumber }}</span>
-                                                <span class="lable">{{ row.policyType }}</span>
+                              </thead>
+                              <tbody class="table-group-divider">
+                                <tr>
+                                  <td>{{ row.productVariantName }}</td>
+                                  <td>{{ row.policyNumber }}</td>
+                                  <td></td>
+                                  <td>{{ row.policyStartDate }}</td>
+                                  <td><span class="info_status info_status_green">{{ row.policyStatus }}</span></td>
+                                  <!-- <td><span class="info_status info_status_red">Expired</span></td> -->
+                                  <td>
+                                    <div class="btn_groupAction">
+                                        <button type="button" id="customermore" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+
+                                        <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
+                                            <div class="overlay_popupMenu_Sub moreActionItemsSub">
+                                                <ul class="actionItemsMain">
+                                                     <!-- <li class="actionItem" (click)="download(row, 'download')">
+                                                        <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
+                                                    </li> -->
+                                                    <li class="actionItem" (click)="sendCustomerDetails(row,1)">
+                                                        <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email </span></a>
+                                                    </li>
+                                                    <li class="actionItem" (click)="sendCustomerDetails(row,2)">
+                                                        <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
+                                                    </li>
+                                                    <li class="actionItem" (click)="sendCustomerDetails(row,3)">
+                                                        <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
+                                                    </li>
+                                                </ul>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ row.noOfInsured }}</td>
-                                    <td>{{ row.productVariantName }}</td>
-                                    <td>{{ row.policyStatus }}</td>
-                                    <td>{{ row.policyStartDate }}</td>   
-                                    <td>
-                                        <div class="table-cintactDetails">
-                                            <div class="row-policyType">
-                                                <span class="value">{{ row.emailID }}</span>
-                                                <span class="lable">{{ row.mobileNumber }}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn_groupAction">
-                                            <button type="button" id="customermore" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                            <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
-                                                <div class="overlay_popupMenu_Sub moreActionItemsSub">
-                                                    <ul class="actionItemsMain">
-                                                        <li class="actionItem" (click)="download(row, 'download')">
-                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
-                                                        </li> 
-                                                        <li class="actionItem" (click)="sendCustomerDetails(row,1)">
-                                                            <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email </span></a>
-                                                        </li>
-                                                        <li class="actionItem" (click)="sendCustomerDetails(row,2)">
-                                                            <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
-                                                        </li>
-                                                        <li class="actionItem" (click)="sendCustomerDetails(row,3)">
-                                                            <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </mat-menu>
-                                        </div>
-                                    </td>
+                                        </mat-menu>
+                                    </div>
+                                </td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>        
                 <div class="tableNav" *ngIf="totalRecords > 0">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
-                                </p-paginator>
-                            </li>
-                            <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> of <span class="pageCountTotal">{{totalRecords}} entries</span>
-                            </li>
-                        </ul>
-                    </nav>
+                  <nav>
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <p-paginator [first]="first" [rows]="rows" [totalRecords]="totalRecords" [rowsPerPageOptions]="[10,15,25,50,100]" 
+                        (onPageChange)="onPageChange($event)" class="custom-paginator my-paginator">
+                        </p-paginator>
+                      </li>
+                      <li class="pageCountMain">
+                        <span class="pageCount">Showing {{ first + 1 }} - {{ first + rows > totalRecords ? totalRecords : first + rows }}</span>
+                        of <span class="pageCountTotal">{{ totalRecords }} entries</span>
+                      </li>
+                    </ul>
+                  </nav>
                 </div>
-            </section>
-            <section id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
+              </section>
+            <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView == 'grid'">
                 <div class="cardViewWraper">
                     <div class="cardViewItem" *ngFor="let row of customerList; let i = index">
                         <header>

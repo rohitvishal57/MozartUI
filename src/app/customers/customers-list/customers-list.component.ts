@@ -35,6 +35,7 @@ export class CustomersListComponent {
     { name: 'Family Floater', selected: false },
   ];
   currentDate = new Date().toISOString().split('T')[0];
+  moreInfoIndex: number | null = null;
   
   constructor(
     private customerService: CustomersService ,
@@ -245,10 +246,14 @@ export class CustomersListComponent {
   customerListView(view: string) {
     this.selectedView = view;
   }
-  sendCustomerDetails(data:any,type:number){
+  toggleMoreInfo(index: number): void {
+    this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
+  }
+
+  sendCustomerDetails(data:any,event:number){
     const RequestBody = {
       agentcode:this.agentCode,
-      requestType: type,
+      requestType: event,
       policyNumber: data.policyNumber,
       proposalNumber: data.proposalNumber,
       memberId: "",

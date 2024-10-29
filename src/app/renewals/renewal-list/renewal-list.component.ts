@@ -76,7 +76,7 @@ export class RenewalListComponent {
     this.renewalLisRequestBody.pageSize = this.rows;    
     this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
       (response:any) => { 
-        if (response.success) {
+        if (response.isSuccess) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
           })); 

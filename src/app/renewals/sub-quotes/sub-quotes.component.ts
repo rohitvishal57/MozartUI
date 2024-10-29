@@ -69,9 +69,12 @@ export class SubQuotesComponent {
     this.selectedView = view;
   }
   getSubquotes(){
-    this.renewalService.getSubquotesApi("21-24-0002334-00",{}).subscribe(
+    const requestBody = {
+      policy_Number: "21-24-0002334-00"
+    };
+    this.renewalService.getSubquotesApi(requestBody).subscribe(
       (res:any)=>{
-        if(res.success){
+        if(res.isSuccess){
           this.subQuotesList=res.data;
         }
         else{
