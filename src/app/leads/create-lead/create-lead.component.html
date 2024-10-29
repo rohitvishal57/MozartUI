@@ -633,13 +633,15 @@
 
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="activityEndDate" placeholder=""
-                                    formControlName="activityEndDate" type="date" [min]="today"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
+                                <input class="form-control input-textBox" id="activityEndDate" placeholder="" formControlName="activityEndDate"
+                                    type="date" (blur)="onEndDateBlur()" [min]="addNoteForm.get('activityStartDate')?.value"
+                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
                                 <label for="activityEndDate">Activity End Date*</label>
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.invalid">
+                                    <span class="ui-error block-show" *ngIf="addNoteForm.get('activityEndDate')?.invalid">
                                         Enter valid Activity EndDate</span>
+                                        <span class="ui-error block-show" *ngIf="addNoteForm.get('endDate')?.errors?.['invalidEndDate']">
+                                            Activity Enddate must be after Activity startdate</span>
                                 </span>
                             </div>
                         </div>

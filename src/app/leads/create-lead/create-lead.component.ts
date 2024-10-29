@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { LeadsService } from '../leads.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-create-lead',
@@ -142,22 +143,35 @@ export class CreateLeadComponent implements OnInit {
       substatus: ['']
     }
   );
-  this.userValidations.get('age')?.disable();
+     this.userValidations.get('age')?.disable();
 
-
-
+     const endDateControl = this.addNoteForm.get('activityEndDate');
 
     this.addNoteForm = this.formBuilder.group({
       activityTitle: ['', Validators.required], // activityTitle is required
       activityStartDate: ['', Validators.required], // Start date is required
       activityStartTime: ['', Validators.required], // Start time is required
-      activityEndDate: ['', Validators.required], // End date is required
-      activityEndTime: ['', Validators.required], // End time is required
-      activityType: ['', Validators.required], // Activity type is required
+      activityEndDate: ['',Validators.required, endDateControl], // Use null if control is not available      activityType: ['', Validators.required], // Activity type is required
       notes: ['', Validators.required] // Notes can be optional
     });
   }
+  
+  onEndDateBlur() {
+    this.validateEndDate();
+  }
+  
+  validateEndDate() {
+    const startDate = this.addNoteForm.get('activityStartDate')?.value;
+    const endDate = this.addNoteForm.get('activityEndDate')?.value;
 
+    if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+      this.addNoteForm.get('activityEndDate')?.setErrors({ invalidEndDate: true });
+    } else {
+      this.addNoteForm.get('activityEndDate')?.setErrors(null);
+    }
+  }
+
+  
   changeDob(event: any) {
     let age: any = ''
     age = this.calculateAge(event.target.value);
