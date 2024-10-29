@@ -2478,7 +2478,7 @@ export class YatraComponent {
           "formData": JSON.stringify(this.dynamicFormGroup.value),
           "formName": this.formSequence[this.getFormIndexValue()].formName,
           "formConfig": JSON.stringify(this.formSequence),
-          "productId": this.productId,
+          "productId": this.productId.toString(),
           "formId": this.formSequence[this.getFormIndexValue()].formId,
           "jsonForm": JSON.stringify(this.form),
           "formSequence": this.getFormIndexValue(),
