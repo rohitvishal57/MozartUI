@@ -213,12 +213,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   getPolicyNumbers() {
     let data={
-      UserId: this.agentCode
+      AgentCode: this.agentCode
     }
     this.endorsement_service.getactivepolicynumbersApi(data).subscribe(
       (resp:any) => {
-        if (resp.data && resp.data.statusCode == "200" && resp.data.isSuccess) {
-          this.policies = resp.data.getPolicydetails;
+        if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
+          this.policies = resp.data.getPolicyDetails;
+          console.log(this.policies);
           this.policiesListData = this.removeDuplicates(this.policies, "policynumber");
           this.getActivityType();
           // this.getMemberActivityType();
@@ -260,7 +261,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   
   removeDuplicates(myArray:any, Prop:any) {
-    return myArray.filter((obj:any, pos:any, arr:any) => {
+    return myArray?.filter((obj:any, pos:any, arr:any) => {
       return arr.map((mapObj:any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
     });
   }
@@ -286,7 +287,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.activityList = this.policiesListData;
     this.filteredActivity = this.caseCreationForm.controls['policyNumber'].valueChanges.pipe(
       startWith(''),
-      map((value:any) => value ? this._filter(value) : this.activityList.slice()));
+      map((value:any) => value ? this._filter(value) : this.activityList?.slice()));
+    console.log(this.filteredActivity);
   }
   _filter(value: string) {
     console.log(value);
@@ -573,7 +575,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
       (resp) => {
-        if (resp.data && resp.data.statusCode == "201" && resp.data.isSuccess) {
+        if (resp.data && resp.statusCode == "201" && resp.isSuccess) {
           if (resp.data.response.caseId != null) {
             if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
               if (!this.selectedFile) {
@@ -595,25 +597,40 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   .pipe()
                   .subscribe((Respevent:any) => {
                     let event: any = Respevent;
-                    if (Respevent.data && Respevent.data.statusCode == "200" && Respevent.data.isSuccess) {
-                      this.toast.success({ detail: `Your request ${resp.data.response.caseId} has been registered`});
-                    } 
-                    else {
-                      this.toast.error({ detail: `${resp.data.response.statusMessage}`});
+                    if (Respevent.data && Respevent.statusCode == "200" && Respevent.isSuccess) {
+                      this.toast.success({
+                        detail: 'SUCCESS',
+                        summary: `Your request ${resp.data.response.caseId} has been registered`,
+                        duration: 5000,
+                      });                    } 
+                    else if(Respevent.message){
+                      this.toast.error({
+                        detail: 'ERROR',
+                        summary: Respevent.message,
+                        duration: 5000,
+                      });
                     }
                     this.backToEndorsment();
                   }, (error:any) => {
                     console.log(error);
-                  });
+                });
               }
             }
             else {
-              this.toast.success({ detail: `Your request ${resp.data.response.caseId} has been registered`});
+              this.toast.success({
+                detail: 'SUCCESS',
+                summary: `Your request ${resp.data.response.caseId} has been registered`,
+                duration: 5000,
+              });
               this.backToEndorsment();
             }
           }
           else {
-            this.toast.error({ detail: `${resp.data.response.statusMessage}`});
+            this.toast.error({
+              detail: 'ERROR',
+              summary: resp.message,
+              duration: 5000,
+            });
             this.backToEndorsment();
           }
         }
@@ -689,7 +706,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementSendOtpApi(this.otpObj).subscribe(
       (resp : any) => {
-        if (resp && resp.data.statusCode == "200" && resp.data.isSuccess && resp.data.requestId !== null) {
+        if (resp && resp.statusCode == "200" && resp.isSuccess && resp.data.requestId !== null) {
           this.otpInfoObject = {
             requestId: resp.data.requestId,
             otp: "",
@@ -704,6 +721,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.toast.error({
             detail: 'ERROR',
             summary: resp.message,
+            duration: 5000
           });
         }
       },
@@ -713,6 +731,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         this.toast.error({
           detail: 'ERROR',
           summary: "Something went wrong! Please try again later.",
+          duration: 5000
         });
       });
   }
@@ -728,12 +747,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       };
       this.loginservice.validateOtpRequestApi(modal).subscribe(
         (resp:any) => {
-          if (resp.data && resp.data.statusCode == "200" && resp.data.isSuccess) {
+          if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
             if (resp.message) {
               this.toast.success({
                 detail: 'SUCCESS',
                 summary: resp.message,
-                duration: 3000,
+                duration: 5000
               });
                this.closeOtpPopup();
                this.isDisabled = false;
@@ -786,17 +805,25 @@ export class EndorsementsNewRequestComponent implements OnInit {
       }
       this.endorsement_service.getEndorsementPolicyInfoApi(policyObj).subscribe(
         (resp:any) => {
-          if (resp && resp.data.statusCode == "200" && resp.data.isSuccess) {
+          if (resp && resp.statusCode == "200" && resp.isSuccess) {
             this.policyInfoDetails = resp.data;
             this.externalPolicyData = this.policyInfoDetails.externalPolicyData.response;
           }
           else {
-            this.toast.error({ detail: `${resp.message}`});
+            this.toast.error({
+              detail: 'ERROR',
+              summary: resp.message,
+              duration: 5000
+            });
           }
         },
         (err) => {
           console.log(err);
-          this.toast.error({ detail: "Something went wrong! Please try again later."});
+          this.toast.error({
+            detail: 'ERROR',
+            summary: "Something went wrong! Please try again later.",
+            duration: 5000
+          });
         });
     }
   }

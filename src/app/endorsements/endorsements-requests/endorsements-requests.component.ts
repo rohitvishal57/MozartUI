@@ -177,7 +177,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.endorsementDetails = [];
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
-        if (response.data && response.data.statusCode == "200" && response.data.isSuccess) {
+        if (response.data && response.statusCode == "200" && response.isSuccess) {
           this.endorsementDetails = response.data.endorsementDetails.map((obj: any) => {
             const date = new Date(obj.raisedOn);
             const formattedDate = this.datePipe.transform(date, 'dd/MM/yyyy');

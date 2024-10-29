@@ -19,7 +19,7 @@
               <div class="login-form-section">
                   <div class="input-item">
                       <div class="input-with-icon">
-                          <input type="text" placeholder="AgentCode/Email/IRDA License Number" formControlName="userName">
+                          <input type="text" id="userName" name="userName" placeholder="AgentCode/Email/IRDA License Number" formControlName="userName">
                       </div>
                       <small *ngIf="loginForm.controls['userName'].touched && !loginForm.controls['userName'].hasError('maxlength') && loginForm.controls['userName'].hasError('required')" class="text-danger">AgentCode/Email/IRDA License Number is required</small>
                   </div>
@@ -34,7 +34,7 @@
               <div class="login-form-section">
                   <div class="input-item">
                       <div class="input-with-icon">
-                          <input type="text" placeholder="Enter your User Code" formControlName="verify">
+                          <input type="text" id="userCode" name="userCode" placeholder="Enter your User Code" formControlName="verify">
                       </div>
                       <div class="row">
                           <div class="col-6">

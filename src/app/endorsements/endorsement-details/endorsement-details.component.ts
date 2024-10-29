@@ -33,7 +33,7 @@ export class EndorsementDetailsComponent {
       .endorsementCaseDetailsApi(endorsementCaseDetailsReqBody)
       .subscribe(
         (resp:any) => {
-          if (resp.data && resp.data.statusCode == "200" && resp.data.isSuccess) {
+          if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
             this.policyData = resp.data;
           }
         },
