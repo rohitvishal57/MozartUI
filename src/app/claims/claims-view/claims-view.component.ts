@@ -400,6 +400,7 @@ export class ClaimsViewComponent {
     const selectedCover = event.target.value;
     console.log("selectedCover");
     this.selectedCoverName = selectedCover;
+    this.billsArray.clear();
 
     if (
       [
