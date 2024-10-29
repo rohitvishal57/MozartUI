@@ -111,7 +111,7 @@ export class RenewalDynamicFormComponent implements OnInit {
         this.activeSection = 'payment';
       }
     });
-   this.initializeForm();
+  //  this.initializeForm();
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
  }
   initializeForm() {
@@ -558,14 +558,14 @@ getRenewalInfo() {
     getkycURL(){
       const requestBody = {
         policyNumber: this.policyNumber,fullName: '',  
-        panNumber: '', dob: '', pepCheck: ''
-        ,businessType: "ren"
+        panNumber: '', dob: '', pepCheck: '', businessType: "ren"
       };
       this.renewalService.getkycURL(requestBody, { responseType: 'text' }).subscribe(
         (response) => {
           this.kycLink = response;
         },
         error => {
+          this.kycLink=" "
           console.error('Error:kyc', error);
         }
       );

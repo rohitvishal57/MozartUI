@@ -4891,6 +4891,17 @@ input[type="search"]::-webkit-search-results-decoration {
   border-width: 0;
 }
 /*---Compare Polices end---*/
+.info_status {
+  padding: 1px 5px 3px;
+  border-radius: 10px;
+  color: #fff;
+}
+.info_status_green {
+ background: #1f874c;
+}
+.info_status_red {
+  background:#C7222A ;
+}
 /*.lead_btnList button {
   position: relative;
 }

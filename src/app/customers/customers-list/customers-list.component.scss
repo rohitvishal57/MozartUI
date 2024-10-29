@@ -244,3 +244,33 @@ h6 {
 .common_searchWraper .field_searchMain button{
 	right:5px
 }
+.btn_arrowCustomer img {
+	width: 10px;
+	height: 10px;
+	transform: rotate(90deg);
+}
+.btn_arrowCustomer.active {
+	img {
+		transform: rotate(-90deg);
+	}
+}
+.info_customerDetails_tr:hover {
+	background: transparent !important;
+}
+.info_customerDetails {
+	padding: 5px !important;
+	border-radius: 10px !important;
+	box-shadow: 0px 2px 4px 0px #D5D7DE33, 0px 1px 10px 0px #D5D7DE1F, 0px 4px 5px 0px #D5D7DE24;
+	.table thead {
+		background: #f3e7e7;
+	}
+	.table thead th:first-child{
+		border-radius: 10px 0 0 0 !important;
+	}
+	.table thead th:last-child{
+		border-radius: 0 10px 0 0 !important;
+	}
+	.table thead tr:hover {
+		background: transparent !important;
+	}
+}

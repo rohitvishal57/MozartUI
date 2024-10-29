@@ -1317,9 +1317,12 @@
                             <div class="data-row">
                                 <div class="data-item data-item-100">
                                     <label>Address</label>
-                                    <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_1 }},
-                                        {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City }},
-                                        {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_State }}-
+                                    <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_1 }}
+                                        <span *ngIf="renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_1 && renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City">, </span>
+                                        {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City }}
+                                        <span *ngIf="renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City && renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_State">, </span>
+                                        {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_State }}
+                                        <span *ngIf="renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_State && renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Pincode"> - </span>
                                         {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Pincode }}
                                     </h6>
                                 </div>
@@ -1383,15 +1386,16 @@
                                     </form>
                                 </div>
                                 <div class="row" *ngIf="kycLink">
-                                    <!-- <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
-                                      <div class="block_or_line"><span>OR</span></div>
-                                    </div> -->
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 15px;">
                                       <div class="input-block form-floating input-block-renew">
                                         <a [href]="kycLink" target="_blank" class="form-control input-textBox" style="text-decoration: none;" >{{ kycLink }}</a>
                                       </div>
                                     </div>
-                                  </div>                                  
+                                    <footer>
+                                      <button type="button" id="sendUrl" name="sendUrl" value="sendUrl" class="btn_red btn_redRenew btn_cancel">Send URL</button>
+                                      <button type="button" id="shareUrl" name="shareUrl" value="shareUrl" class="btn_red btn_redRenew btn_cancel">Share URL</button>
+                                   </footer>
+                                </div>                                  
                             </div>                   
                         </div>
                     </div>

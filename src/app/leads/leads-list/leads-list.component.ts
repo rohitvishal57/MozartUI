@@ -441,7 +441,7 @@ export class LeadsListComponent {
   }
   getPlaceholder(): string {
     if (this.selected === 'leadId') {
-      return 'Enter Lead Number';
+      return 'Enter LeadId';
     } else if (this.selected === 'mobileNumber') {
       return 'Enter mobileNumber';
     } else if (this.selected === 'name') {
@@ -462,10 +462,10 @@ export class LeadsListComponent {
   }
 
   redirectProducts(lead : any){
-
     this.router.navigate(['/products'], {
-     
     });
   }
+
+ 
 
 }

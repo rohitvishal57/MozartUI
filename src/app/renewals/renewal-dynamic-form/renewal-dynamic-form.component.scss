@@ -26,6 +26,7 @@
   
   ::ng-deep .ngx-slider .ngx-slider-pointer {
 	background-color: #c7222a !important;
+	z-index: 1;
   }
   
   ::ng-deep .ngx-slider .ngx-slider-pointer:after {
@@ -220,4 +221,7 @@
 }
 .pl-0 {
 	padding-left: 0;
+}
+.bottomInfoMain{
+	z-index: 10;
 }

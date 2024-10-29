@@ -7,7 +7,7 @@ import { catchError, map, startWith } from 'rxjs/operators';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { ClaimsViewService } from './claims-view.service';
-
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: "app-claims-view",
@@ -18,6 +18,7 @@ import { ClaimsViewService } from './claims-view.service';
 })
 export class ClaimsViewComponent {
   @Input() uploadedFiles: {
+    id:string;
     name: string;
     type: string;
     size: number;
@@ -82,6 +83,7 @@ export class ClaimsViewComponent {
   activityList : any[] = []
   selectedPolicyNumber:any;
   isFocused: boolean = false;
+  maxDate = new Date().toISOString().split('T')[0];
 
   coverNames = [
     "AYUSH Treatment",
@@ -176,7 +178,7 @@ export class ClaimsViewComponent {
       raisedDate: [""],
       hospitalName: [""],
       isFileUploadRequired: [true],
-      claimedAmount: ["",Validators.required],
+      claimedAmount: ["",],
       approvedAmount: [""],
       deductedAmount: [""],
       deductionReason: [""],
@@ -190,11 +192,14 @@ export class ClaimsViewComponent {
       state: [""],
       city: [""],
       hospitalAddress: "",
-      admissionDate: ["2023-10-15",],
-      dischargeDate: ["2024-10-15"],
+      admissionDate: [""],
+      dischargeDate: [""],
       admissionTime: [""],
       dischargeTime: [""],
       ailmentDescription: [""],
+      documentName: [""],
+      status: [""],
+      labelName: [""],
       billsArray: this.fb.array([
         this.fb.group({
           billNo: [""],
@@ -287,14 +292,21 @@ export class ClaimsViewComponent {
   }
 
   onInput(event: KeyboardEvent): void {
-    // const input = event.target as HTMLInputElement;
+    const input = event.target as HTMLInputElement;
     const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    const regex = /^[1-9][0-9]*$/;
+  
     if (allowedKeys.includes(event.key)) {
       return;
     }
-    // Prevent default if the key is not allowed
-    if (!regex.test(event.key)) {
+  
+    const isDigit = /^[0-9]$/.test(event.key);
+    if (!isDigit) {
+      event.preventDefault();
+      return;
+    }
+  
+    const currentValue = input.value;
+    if (currentValue === '' && event.key === '0') {
       event.preventDefault();
     }
   }
@@ -308,39 +320,46 @@ export class ClaimsViewComponent {
     const query = this.searchText.toLowerCase();
   }
 
-  // Handle selection from the dropdown
-  selectPolicyNumber(policy: string): void {
-    console.log('selectPolicyNumber');
-    this.form.get('policyNumber')?.setValue(policy);
-    this.searchText = policy; 
-    this.isDropdownOpen = false; 
-  }
+  // selectPolicyNumber(policy: string): void {
+  //   console.log('selectPolicyNumber');
+  //   this.form.get('policyNumber')?.setValue(policy);
+  //   this.searchText = policy; 
+  //   this.isDropdownOpen = false; 
+  // }
 
-  // Close dropdown when clicked outside
-  handleClickOutside(event: Event): void {
-    console.log('handleClickOutside');
-    const target = event.target as HTMLElement;
-    if (!target.closest('.custom-dropdown')) {
-      this.isDropdownOpen = false;
+  // handleClickOutside(event: Event): void {
+  //   console.log('handleClickOutside');
+  //   const target = event.target as HTMLElement;
+  //   if (!target.closest('.custom-dropdown')) {
+  //     this.isDropdownOpen = false;
+  //   }
+  // }
+
+  // ngAfterViewInit() {
+  //   document.addEventListener('click', this.handleClickOutside.bind(this));
+  // }
+
+  // ngOnDestroy() {
+  //   document.removeEventListener('click', this.handleClickOutside.bind(this));
+  // }
+  onTimeChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input) {
+      input.blur(); // This will programmatically remove the focus from the input field
     }
   }
-
-  ngAfterViewInit() {
-    document.addEventListener('click', this.handleClickOutside.bind(this));
-  }
-
-  ngOnDestroy() {
-    document.removeEventListener('click', this.handleClickOutside.bind(this));
-  }
-
+  
   onClaimTypeChange(event: any): void {
     this.form.patchValue({
       "state":"",
       "hospitalName":"",
       "hospitalAddress":"",
       "city":"",
-      "claimedAmount":""
+      "claimedAmount":"",
+      "notes":"",
+      "ailmentDescription":""
     })
+
     const selectedType = event.target.value;
     if (selectedType === "Cashless") {
       this.showReimbursementFields = false;
@@ -547,49 +566,49 @@ export class ClaimsViewComponent {
   }
 
   onFileSelected(event: any): void {
-    const files = event.target.files as File[];
+    const inputElement = event.target;
+    const files = inputElement.files as File[];
     this.totalFilesCount += files.length;
-    //this.uploadedFilesCount =  this.totalFilesCount;
-    //this.failedFilesCount = this.totalFilesCount   // Reset failed files count for new batch
-
+  
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      if (this.allowedFileTypes.includes(file.type)) {
-      this.uploadedFiles.push({
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        label: "Label this document",
-        isEditing: false,
-        editableControl: new FormControl("Label this document"),
-        uploadDateTime: new Date(),
-        formattedUploadDateTime: this.formatDate(new Date()),
-        status: "pending",
-        file: file,
-        policyNumber: this.saveForm.value.policyNumber,
-        documentName: this.saveForm.value.documentName,
-        documentType: this.saveForm.value.documentType,
-        createdBy: this.saveForm.value.createdBy,
-      });
-      this.uploadValidFormat = false;
-
-    } 
-    else {
-      this.uploadValidFormat = true;
-      event.target.value = ''; 
-        }
-    
-  }
-    // Update the saveForm with the latest file info
-    if (this.uploadedFiles.length > 0) {
-      this.saveForm.patchValue({
-        file: this.uploadedFiles[0].file, // Assuming you want to take the first file
-      });
+      
+      // Check if the file was previously deleted and re-uploaded
+      const fileExists = this.uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size);
+  
+      if (!fileExists && this.allowedFileTypes.includes(file.type)) {
+        // Initialize label with an empty value for new files
+        this.uploadedFiles.push({
+          id: uuidv4(),
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          label: "Label this document",
+          isEditing: false,
+          isEdited: false,
+          uploadDateTime: new Date(),
+          editableControl: new FormControl(""),
+          formattedUploadDateTime: this.formatDate(new Date()),
+          status: "pending",
+          file: file,
+          policyNumber: this.saveForm.value.policyNumber,
+          documentName: this.saveForm.value.documentName,
+          documentType: this.saveForm.value.documentType,
+          createdBy: this.saveForm.value.createdBy,
+        });
+        this.uploadValidFormat = false;
+      } else if (fileExists) {
+        // Show some warning or handle duplicate file logic here
+        console.warn('File already uploaded.');
+      } else {
+        this.uploadValidFormat = true;
+      }
     }
-
+  
     this.updateStatusLabel();
-    this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type)))); 
+    this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
   }
+  
   convertBytesToKB(bytes: number): string {
     const kb = bytes / 1024;
     return `${kb.toFixed(2)} KB`;
@@ -612,10 +631,11 @@ export class ClaimsViewComponent {
        // claimInfoId: this.claimInfoId || "",
         // memberId: this.form.get("memberId")?.value || "",
         memberId: 'PT85650665',
-        documentId: "test2"
+        documentId: "test2",
+        id: file.id
         // documentId: this.documentId || "",
       };
-
+      formData.append(`fileDetails[${index}].id`, metadata.id);
       formData.append(`fileDetails[${index}].AgentCode`, metadata.createdBy);
       formData.append(`fileDetails[${index}].policyNumber`,metadata.policyNumber);
       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
@@ -650,19 +670,49 @@ export class ClaimsViewComponent {
     );
   }
 
+  onLabelKeyDown(event: KeyboardEvent, file: any): void {
+    if (event.key === 'Enter') {
+      this.stopEditing(file);
+    }
+  }
   updateStatusLabel(): void {
     // this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
     this.uploadStatus = `${this.totalFilesCount} of ${this.totalFilesCount} files uploaded`;
   }
-  deleteFile(fileToDelete: any) {
-    this.uploadedFiles = this.uploadedFiles.filter(
-      (file) => file !== fileToDelete
+  // deleteFile(fileToDelete: any) {
+  //   this.uploadedFiles = this.uploadedFiles.filter(
+  //     (file) => file !== fileToDelete
+  //   );
+  //   this.totalFilesCount = this.uploadedFiles.length;
+  //   // Ensure the status label is updated accordingly
+  //   this.updateStatusLabel();
+  // }
+  deleteFile(fileToDelete: any): void {
+    const payload = {
+      policyNumber:  this.form.get("policyNumber")?.value, 
+      documentId: fileToDelete.id,
+      claimNumber: ""
+    };
+  
+    this.claimsService.deleteFile(payload).subscribe(
+      (response:any) => {
+        if (response.isSuccess) {
+          console.log('File deleted successfully:', response);
+            this.uploadedFiles = this.uploadedFiles.filter(
+            (file) => file.id !== fileToDelete.id 
+          );
+          this.totalFilesCount = this.uploadedFiles.length;
+            this.updateStatusLabel();
+        } else {
+          console.error('Failed to delete file:', response.message);
+        }
+      },
+      (error) => {
+        console.error('Error deleting file:', error);
+      }
     );
-    this.totalFilesCount = this.uploadedFiles.length;
-    // Ensure the status label is updated accordingly
-    this.updateStatusLabel();
   }
-
+  
   ////////////////////file upload input label //////////////////
 
   // Method to start editing a file
@@ -671,12 +721,13 @@ export class ClaimsViewComponent {
     if (!file.editableControl) {
       file.editableControl = new FormControl(file.label);
     }
+    this.editableControl.setValue("");
   }
 
   // Method to Stop editing changes
   stopEditing(file: any) {
     if (this.editableControl.value !== this.label) {
-      file.label = this.editableControl.value; // Update the label with the edited value
+      file.label = this.editableControl.value; 
     }
     file.isEditing = false;
     file.isEdited = true;
@@ -698,7 +749,12 @@ export class ClaimsViewComponent {
       }
     //  const documentIds = this.uploadedFiles.map((file) => file.documentId);
        // saveClaimData.documentIds = documentIds;
-  
+       const documentDetails = this.uploadedFiles.map((file) => ({
+        documentName: file.name,
+        status: file.status,
+        labelName: file.label
+    }));
+    saveClaimData.documentDetails = documentDetails;
       this.claimsService.saveClaims(saveClaimData).subscribe(
         (response) => {
           if (response) {

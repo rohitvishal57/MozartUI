@@ -4,12 +4,10 @@ import { Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { RenewalList } from "src/app/interface/renewal-list.interface";
 import { Subject } from "rxjs";
-import { MatMenuTrigger } from '@angular/material/menu';
 import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
-
 
 @Component({
   selector: 'app-renewal-list',
@@ -32,14 +30,11 @@ export class RenewalListComponent {
   endDate: any;
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
-  toggeleSearchdropdown: boolean = false;
   selected: string = "";
   searchInputControl = new FormControl("");
   isDesktopView:boolean=false
-  private onDestroy$: Subject<boolean> = new Subject<boolean>();
   agentCode=localStorage.getItem('agentCode');
   filterType: string = "totalRecords";
-  placeholder:string='';
   activeSection:string= "primary"
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
@@ -81,7 +76,6 @@ export class RenewalListComponent {
     this.renewalLisRequestBody.pageSize = this.rows;    
     this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
       (response:any) => { 
-        console.log(response.data);
         if (response.success) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
@@ -90,13 +84,11 @@ export class RenewalListComponent {
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType];  
         }else {
-          this.toast.error({ detail: "Error", summary: "Failed to generate Renewals List.", duration: 1500 });
-          console.error("API request was not successful.");
+          this.toast.error({ detail: "Error", summary: "Failed to get Renewals List.", duration: 2000 });
         }
       },
       (error) => {
-        this.toast.error({ detail: "Error", summary: "Error while generating Renewal List.", duration: 1500 });
-        console.error("Error from getRenewalsList API:", error);
+        this.toast.error({ detail: "Error", summary: "Error while generating Renewal List.", duration: 2000 });
       }
     );
   }
@@ -117,20 +109,16 @@ export class RenewalListComponent {
     }
   }
   getProducts() {
-    const reqData={
+    const productsRequestBody={
       "agentCode": this.agentCode
     }
-    this.commonService.Getproductlist(reqData).subscribe({
+    this.commonService.Getproductlist(productsRequestBody).subscribe({
       next: (res) => {
         this.productsList = res.data;
         console.log("product list",this.productsList)
-        const uniquePolicyTypes = Array.from(new Set(this.productsList
-         .map((product) => product.familyPlan)))
-         .map((policyType) => ({ name: policyType, selected: false }));
-         this.policyTypes = uniquePolicyTypes;
       },
       error: (err) => {
-         console.log("error coming form getproduct list API");
+        this.toast.error({ detail: "Error", summary: "Failed to get products list", duration: 2000 });
       }
     })
   }
@@ -148,13 +136,11 @@ export class RenewalListComponent {
       count++;
     }
     this.appliedFiltersCount = count;
-     this.appliedFiltersCount;
   }
   applyFilter() {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
-    console.log("startDate",this.startDate,"endDate",this.endDate);  
     this.renewalLisRequestBody.startDate=this.startDate;
     console.log("start date taken by request body",this.renewalLisRequestBody.startDate);
     this.renewalLisRequestBody.endDate=this.endDate;
@@ -401,30 +387,6 @@ export class RenewalListComponent {
     sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(this.activeSection));
     this.router.navigate([`renewal/payment`]);
   }
-  getStarClasses(index: number, rating: number): string[] {
-    const starClasses = ['star'];
-    const fullStars = Math.floor(rating);
-    const fractionalPart = rating % 1;
-    const colorClass = this.getColorClass(rating);
-    starClasses.push(colorClass); 
-    if (index < fullStars) {
-      starClasses.push('full');
-    } else if (index === fullStars && fractionalPart > 0) {
-      starClasses.push('half');
-    } else {
-      starClasses.push('empty');
-    }
-    return starClasses;
-  }
-  getColorClass(rating: number): string {
-    if (rating <= 1.5) {
-      return 'red-color';
-    } else if (rating > 1.5 && rating <= 3) {
-      return 'gold-color';
-    } else {
-      return 'green-color';
-    }
-  }
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     const clickedInside = (event.target as HTMLElement).closest('.filterWraperForm');
@@ -432,10 +394,6 @@ export class RenewalListComponent {
     if (!clickedInside && !clickedButton && this.toggeledropdown) {
       this.toggeledropdown = false;
     }
-  }
-  ngOnDestroy(): void {
-    this.onDestroy$.next(true);
-    this.onDestroy$.complete();
   }
 
 }

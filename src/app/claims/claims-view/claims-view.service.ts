@@ -72,4 +72,10 @@ export class ClaimsViewService {
     return this.httpService.post(getUploadedFiles, claimsFilesReqBody)
    // return this.httpService.post('https://localhost:7026/api/getclaimsdocument', claimsFilesReqBody);
   }
+
+  deleteFile(ClaimsDelBody:any){
+    const deleteFile = this.configService.config.baseUrl + this.configService.config.deleteFile
+    return this.httpService.post(deleteFile, ClaimsDelBody)
+
+  }
 }
