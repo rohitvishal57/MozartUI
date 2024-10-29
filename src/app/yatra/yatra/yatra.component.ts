@@ -2264,13 +2264,14 @@ export class YatraComponent {
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
-        agentcode: this.agentCode, // Fill these fields dynamically as needed
+        agentcode: this.agentCode,
         proposalNumber: this.proposalNum,
-        paymentMethod: this.selectedButton, // Payment method based on selected button
+        paymentMethod: this.selectedButton,
         source: 'Retail',
         policyType: 'New Business',
         policyNumber: '',
-        quoteNumber: ''
+        quoteNumber: '',
+        OrderID:''
       };
 
       this.yatraService.justPayRedirection(reqData).subscribe({
@@ -4119,7 +4120,7 @@ export class YatraComponent {
     });
   }
 
-  getPolicyDetails() {
+  getPolicyDetails(control:any) {
     const policyNumberDetails = this.dynamicFormGroup.get('getPolicyNumber')?.value;
     const reqData = {
       policyNumber: policyNumberDetails
@@ -4133,6 +4134,7 @@ export class YatraComponent {
         console.log('Policy details:', response);
         this.toast.success({ detail: "SUCCESS", summary: "Policy Details Fetched Successfully", duration: 3000 });
         this.spinner.hide();
+        control.disabled=true;
 
         this.isPolicyDetailsFetch = true;
         console.log(this.dynamicFormGroup.value, this.form);
