@@ -497,7 +497,7 @@
     }
    
     .login-formMain {
-        padding: 11% 0% 14%;
+        padding: 11% 0% 5%;
         .cursor{
             cursor: pointer !important;
         }
@@ -507,7 +507,7 @@
             height: auto;
             border: 5px solid;
             border-radius: 16px;
-            border-width: 5px;
+            border-width: 0px;
             padding: 40px;
             background: rgba(255, 255, 255, 80%);
             border-image-source: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.1) 100%);
@@ -576,9 +576,9 @@
                             border-radius: 0px 12px 12px 0px !important;
                         }
                         .activeBtn{
-                            background-color: lightpink;
+                            background-color: #FFE7E5;
                             color:#C7222A; 
-                            border-radius: 12px !important;
+                            border-radius: 8px !important;
                         }
                       
                     } 
@@ -689,13 +689,19 @@
                 font-size: medium;
                 margin: 15px 0px;
                 background-color: #C7222A;
-                padding: 10px 16px;
+                padding: 10px 12px;
             }
         
             button>span {
                 color: #FFF;
             }
         
+        }
+        @media(max-width:912px) {
+            padding: 14% 0% 5%;
+        }
+        @media(max-width:767px) {
+            padding: 30% 0% 5%;
         }
     }
     .background-image {
@@ -714,6 +720,54 @@
             top:auto;
             bottom: 0;
         }
+    }
+    .background-image2 {
+        width: 100%;
+        height: 100%;
+        position:absolute ;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        text-align: center;
+        &:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 58px;
+            background: #ffdcc5;
+            z-index: -1;
+        }
+        img{
+            height: 100%;
+            float: left;
+            margin-left: 12%;
+            @media (max-width:1280px) {
+                margin: 0;
+            }
+            @media (max-width:1024px) {
+                width: 100%;
+                height: auto;
+            }
+            @media (max-width:767px) {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
+        }
+        @media (max-width:1024px) {
+            height: auto;
+        }
+        @media (max-width:767px) {
+            height: 100%;
+        }
+        /*max-width: 1026px;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 14%;
+        z-index: -1;*/
     }
 }
 /*====New Styles August 18-2024===*/
