@@ -690,6 +690,10 @@
                 margin: 15px 0px;
                 background-color: #C7222A;
                 padding: 10px 12px;
+                @media (max-width:390px) {
+                    font-size: 13px;
+                    font-weight: 600;
+                }
             }
         
             button>span {
