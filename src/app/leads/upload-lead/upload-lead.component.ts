@@ -21,6 +21,8 @@ export class UploadLeadComponent implements OnInit{
   selectedFile: any;
   AgentCode: string = '';
   uploadedFiles : boolean = false;
+  UploadedFilesInformation: any[] = [];
+
   constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService,    private router: Router  ){
 
   }
@@ -80,6 +82,10 @@ export class UploadLeadComponent implements OnInit{
     } else {
       this.showNote = true;
     }
+
+    this.UploadedFilesInformation.push({ fileName: this.selectedFile.name, fileExt: this.selectedFile.name.replace(/^.*\./, ''), fileSize: file.size });
+
+    console.log('this.UploadedFilesInformation',this.UploadedFilesInformation);
   }
   deleteFile() {
     // this.namesVariable = "";
@@ -205,8 +211,12 @@ export class UploadLeadComponent implements OnInit{
   }
   
 
-  removeFile(){
-    this.selctedFileName='';
-    this.uploadedFiles=false;
+  removeFile(fileInfo: any) {
+    this.UploadedFilesInformation = this.UploadedFilesInformation.filter((uploadFile: any) => {
+      return uploadFile.fileName !== fileInfo.fileName
+    });
+    if(this.selctedFileName == fileInfo.fileName){
+      this.selctedFileName='';
+    }
   }
 }
