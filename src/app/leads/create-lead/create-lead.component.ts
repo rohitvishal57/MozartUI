@@ -49,7 +49,8 @@ export class CreateLeadComponent implements OnInit {
     private datePipe: DatePipe,
     public CreateLead: CreateLead,
     public CreateLeadList: LeadFormListValue,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private  datepipe : DatePipe) {
 
   }
 
@@ -157,6 +158,7 @@ export class CreateLeadComponent implements OnInit {
 
   
   changeDob(event: any) {
+    console.log("date",event.target.value);
     let age: any = ''
     age = this.calculateAge(event.target.value);
     this.userValidations.get('age')?.setValue(age);
@@ -258,7 +260,7 @@ export class CreateLeadComponent implements OnInit {
       lastname: this.submittedUser.lastName,
       email: this.submittedUser.email,
       mobilenumber: this.submittedUser.phoneNumber,
-      dob:  this.convertToDate(this.submittedUser.dob),
+      dob: this.datepipe.transform (this.submittedUser.dob,'yyyy-MM-dd'),
       age: this.submittedUser.age,
       gender: this.submittedUser.gender == "M" ? "Male" : this.submittedUser.gender == "F" ? "Female" : "Other",
       maritalStatus: this.submittedUser.maritalStatus,
@@ -287,16 +289,14 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
     });
 
+    console.log("user validation", this.userValidations.get('dob')?.value);
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
   }
 
-  convertToDate(dateString: string): Date {
-    const parts = dateString.split('/');
-    return new Date(+parts[2], +parts[0] - 1, +parts[1]);
-}
+
 
   fetchActivityTypeInfo() {
     let fetchActivityTypeRequest: any = {};
