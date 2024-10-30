@@ -93,7 +93,7 @@
                           <th scope="col" nowrap>Customer Id</th>
                           <th scope="col">No.Of.Policies</th>
                           <th scope="col" nowrap>Email ID</th>
-                          <th scope="col" nowrap>Phone No</th>
+                          <th scope="col" nowrap>Mobile Number</th>
                           <th scope="col"></th>
                         </tr>
                       </thead>
@@ -101,11 +101,11 @@
                         <tr >
                           <td>{{ row.firstName }} {{ row.lastName }}</td>
                           <td>{{ row.customerID }}</td>
-                          <td>{{ row.noOfInsured }}</td>
+                          <td>{{ row.noOfPolicy }}</td>
                           <td>{{ row.emailID }}</td>
                           <td>{{ row.mobileNumber }}</td>
                           <td>
-                            <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info" class="btn_action btn_moreAction btn_arrowCustomer" (click)="toggleMoreInfo(i)">
+                            <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info" class="btn_action btn_moreAction btn_arrowCustomer" (click)="toggleMoreInfo(i,row.customerID)">
                               <img src="assets/Img/icon_table_arrow_right_red.svg" />
                             </button>
                           </td>
