@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 @Injectable()
 export class EncryptionInterceptor implements HttpInterceptor {
 
-  isEncrypt: boolean = false
+  isEncrypt: boolean = true;
 
   constructor(private aesEncryptService: AesEncryptionService, private router: Router) { }
 
@@ -27,7 +27,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
       // Pass the cloned request instead of the original request to the next handler
       return next.handle(clonedRequest).pipe(
         tap((res: any) => {
-          if (res?.body?.isSuccess) {
+          if (res?.body && res?.body?.isSuccess) {
             const url = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
             if (url?.redirectUrl) {
               const modifiedUrl = url?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
@@ -36,13 +36,13 @@ export class EncryptionInterceptor implements HttpInterceptor {
               res.body.data = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
             }
           }
-          localStorage.setItem('token', res?.body?.token);
+          res?.body && localStorage.setItem('token', res?.body?.token);
 
         }),
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
           if (error.status === 401) {
-            localStorage.clear()
+            // localStorage.clear()
             this.router.navigate(['/login']);
           }
           return throwError(error);
