@@ -409,7 +409,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="city" placeholder=""
-                                    formControlName="city" type="text" OnlyCharacter>
+                                    formControlName="city" type="text" maxlength="20" OnlyCharacter>
                                 <label for="city">City</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('city')?.errors?.['pattern']">Please
@@ -419,7 +419,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="state" placeholder=""
-                                    formControlName="state" type="text" OnlyCharacter>
+                                    formControlName="state" type="text" maxlength="20" OnlyCharacter>
                                 <label for="state">State</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('state')?.errors?.['pattern']">Please
@@ -429,7 +429,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="pincode" placeholder=""
-                                    formControlName="pincode" type="text" (keypress)="isNumber($event)">
+                                    formControlName="pincode" type="text" maxlength="6" (keypress)="isNumber($event)">
                                 <label for="pincode">Pincode</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">Please

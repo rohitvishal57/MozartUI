@@ -43,7 +43,7 @@
                                 <option value="leadId">Lead Id</option>
                                 <option value="mobileNumber">Mobile Number</option>
                                 <option value="name">Name</option>
-                                <option value="email">EmailID</option>
+                                <option value="email">Email ID</option>
                             </select>
                             <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                             <button  type="button" id="leadsearch" name="leadsearch" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
@@ -145,7 +145,7 @@
                                     <th>Lead ID</th>
                                     <th>Name</th>
                                     <th>Mobile Number</th>
-                                    <th>EmailID</th>
+                                    <th>Email ID</th>
                                     <th class="text-center">Notice</th>
                                 </tr>
                             </thead>
@@ -292,7 +292,7 @@
                                 <div class="item_value">{{ row.phoneNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">EmailID</div>
+                                <div class="item_lable">Email ID</div>
                                 <div class="item_value">{{ row.email }}</div>
                             </div>
                             <!-- <div class="cv_bodyItems cv_bodyItems_45">
