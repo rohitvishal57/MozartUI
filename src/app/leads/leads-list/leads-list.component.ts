@@ -246,7 +246,6 @@ export class LeadsListComponent {
     this.startDate = "";
     this.endDate = "";
     this.leadsInfoListRequestBody.searchby = "";
-    debugger
     this.getLeadsList();
   }
   clear() {
@@ -327,7 +326,6 @@ export class LeadsListComponent {
     } else {
       this.leadsInfoListRequestBody.searchby = "";
     }
-    debugger;
     if(this.selected!='Select an option'){
       this.getLeadsList();
     }

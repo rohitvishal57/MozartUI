@@ -193,8 +193,6 @@ export class ProductsComponent implements OnInit {
     }
   }
   productsDetail(item: any) {
-    debugger;
-    console.log(item);
     this.router.navigate(['quote/productDetails'], {
       state: { item: item }
     });

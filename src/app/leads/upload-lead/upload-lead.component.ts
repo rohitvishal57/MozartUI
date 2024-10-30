@@ -206,7 +206,6 @@ export class UploadLeadComponent implements OnInit{
   
 
   removeFile(){
-    debugger;
     this.selctedFileName='';
     this.uploadedFiles=false;
   }
