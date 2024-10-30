@@ -321,4 +321,10 @@ export class CustomersListComponent {
     )
   }
   
+  expandedRowIndex: any | null = false;
+
+  toggleDetails(index: any): void {
+      // Toggle row details visibility
+      this.expandedRowIndex = !this.expandedRowIndex
+  }
 }
