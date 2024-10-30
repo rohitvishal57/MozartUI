@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/services/common.service';
@@ -39,15 +39,25 @@ export class ProductsComponent implements OnInit {
   showSpecialForm: boolean = false;
   state: any;
   groupedFeatures: any[] = [];
+  interestedProductName: string = '';
+  quickQuoteRedirect : boolean = false;
 
+   
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
-   private quoteservices: QuoteService) {
+   private quoteservices: QuoteService,
+   private route: ActivatedRoute
+  ) {
 
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+     this.interestedProductName = params['productName'];
+     this.quickQuoteRedirect=  true;
+    });
+
     console.log(this.agentCode);
     // sessionStorage.clear()
     if (sessionStorage.getItem("cardListProducts"))
@@ -67,6 +77,9 @@ export class ProductsComponent implements OnInit {
       next: (res: any) => {
         this.ProductList = res.data;
         console.log(this.ProductList)
+        if(this.quickQuoteRedirect == true){
+          this.filterProductList(this.ProductList);
+        }
       },
       error: (err) => {
         console.error(err);
@@ -75,6 +88,7 @@ export class ProductsComponent implements OnInit {
         }
       }
     })
+    
   }
   // async insurenow(item: any) {
   //   this.removeFromCart(item);
@@ -244,4 +258,12 @@ navigateToProductComparison(){
   this.router.navigate(['/products/comparison'], {
   });
 }
+
+
+filterProductList (productList : any){
+  let interestedProduct : any = '';
+  interestedProduct = productList.find((product: any) => product.productName == this.interestedProductName); 
+  this.buyNow(interestedProduct);
+}
+
 }

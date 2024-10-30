@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
+import { ProductsService } from 'src/app/product/products/products.service';
 declare var bootstrap: any;
 
 @Component({
@@ -59,7 +60,7 @@ export class LeadsListComponent {
   startDate: any;
   endDate: any;
   filterLeads = false;
-  today : String = '';
+  today: String = '';
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
@@ -70,7 +71,8 @@ export class LeadsListComponent {
     private fb: FormBuilder,
     private router: Router,
     private datePipe: DatePipe,
-    private toast: NgToastService
+    private toast: NgToastService,
+    private productService: ProductsService,
 
   ) { }
 
@@ -130,13 +132,13 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.start = this.page;
     this.leadsInfoListRequestBody.length = this.rows;
     this.leadsService.getLeadsListApi(this.leadsInfoListRequestBody).subscribe(
-      (response) => { 
+      (response) => {
         if (response) {
           this.leadsList = response.data.leadList;
           console.log("Renewal List", this.leadsList);
           this.countsList = response.data;
           this.totalRecords = this.countsList.totalCount;
-          this.appliedFiltersCount =0;
+          this.appliedFiltersCount = 0;
           if (this.filterLeads == true) {
             this.appliedFiltersCount = response.data.totalCount;
           }
@@ -190,7 +192,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.unassignedleads = true;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-	  this.startDate = "";
+    this.startDate = "";
     this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
@@ -295,9 +297,9 @@ export class LeadsListComponent {
         Validators.required
       ]);
     }
-     else if (this.selected = 'Select an option') {
+    else if (this.selected = 'Select an option') {
       this.placeholder = 'Search...';
-      this.leadsInfoListRequestBody.searchby='';
+      this.leadsInfoListRequestBody.searchby = '';
       this.getLeadsList();
     }
     this.searchInputControl.updateValueAndValidity();
@@ -327,7 +329,7 @@ export class LeadsListComponent {
     } else {
       this.leadsInfoListRequestBody.searchby = "";
     }
-    if(this.selected!='Select an option'){
+    if (this.selected != 'Select an option') {
       this.getLeadsList();
     }
   }
@@ -373,14 +375,14 @@ export class LeadsListComponent {
     assigneLeadRequestBody.leadnumber = selectedLeadIDs,
       assigneLeadRequestBody.leadassigne = this.assignLeadForm.value.selectedAgentCode,
       assigneLeadRequestBody.agentCode = this.agentCode
-      
+
     this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
       (response) => {
-        if (response.message  == "Success") {
+        if (response.message == "Success") {
 
-          if(selectedLeadIDs.length>1){
+          if (selectedLeadIDs.length > 1) {
             this.toast.success({ detail: 'Leads has been successfully assigned' });
-          }else{
+          } else {
             this.toast.success({ detail: 'Lead has been successfully assigned' });
           }
           this.filterQuotes('all');
@@ -389,7 +391,7 @@ export class LeadsListComponent {
         console.error("Error: Unable to assign lead. Please try again later.", error);
       }
     );
-    this.checkBoxSelectedLeads =[];
+    this.checkBoxSelectedLeads = [];
     this.assigneLeadModal.hide();
   }
   toggleAll(event: Event) {
@@ -418,7 +420,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.unassignedleads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-	    this.startDate = "";
+    this.startDate = "";
     this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
@@ -434,7 +436,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.unassignedleads = true;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-	    this.startDate = "";
+    this.startDate = "";
     this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
@@ -462,11 +464,12 @@ export class LeadsListComponent {
     }
   }
 
-  redirectProducts(lead : any){
+  redirectProducts(lead: any) { 
     this.router.navigate(['/products'], {
+      queryParams: { productName: lead.interestedProductName }
     });
   }
 
- 
+
 
 }
