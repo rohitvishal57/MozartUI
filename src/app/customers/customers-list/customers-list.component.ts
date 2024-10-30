@@ -12,6 +12,7 @@ import { NgToastService } from 'ng-angular-popup';
 })
 export class CustomersListComponent {
   customerList: CustomerList[] = [];
+  customerPoliciesList:[]=[];
   page: number = 1;
   first: number = 0;
   rows: number = 10;
@@ -28,8 +29,8 @@ export class CustomersListComponent {
   selected: string = "";
   searchInputControl = new FormControl("");
   isDesktopView:boolean=false
-  // filterType: string = "totalRecords";
-  agentCode :any =localStorage.getItem('agentCode'); 
+  customerId:any;
+    agentCode :any =localStorage.getItem('agentCode'); 
   StaticPolicyTypes = [
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
@@ -74,14 +75,19 @@ export class CustomersListComponent {
   getCustomerList() {
     this.customerListRequestBody.pageNumber = this.page;
     this.customerListRequestBody.pageSize = this.rows;
-    this.customerService.getCustomerDetailsListApi(this.customerListRequestBody).subscribe(
+    this.customerService.getCustomerListApi(this.customerListRequestBody).subscribe(
       (response) => { 
-        if (response.success) {
+        if (response.isSuccess) {
           this.customerList = response.data.customerList.map((item: any) => ({
             ...item,policyStartDate:this.formatPolicyStartDate(item.policyStartDate)
           })); 
           console.log("customers List",this.customerList);
-          this.totalRecords = response.data.totalRecords          
+          this.totalRecords = response.data.totalRecords 
+          if (this.customerList.length > 0) {
+            this.customerId = this.customerList[0].customerID;
+          } else {
+            this.customerId = null; 
+          }         
         } 
         else {
           console.error("API request was not successful.");
@@ -92,6 +98,7 @@ export class CustomersListComponent {
       }
     );
   }
+
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
       this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
@@ -246,7 +253,7 @@ export class CustomersListComponent {
   customerListView(view: string) {
     this.selectedView = view;
   }
-  toggleMoreInfo(index: number): void {
+  toggleMoreInfo(index: number,customerId: string): void {
     this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
   }
 

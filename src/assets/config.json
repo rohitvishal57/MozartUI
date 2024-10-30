@@ -29,7 +29,7 @@
     "getMyReportingUsers": "api/yatra/getmyreportingusers",
     "fetchActivityType": "api/yatra/fetchactivitytype",
     "getProposalListApi": "api/yatra/getproposallist",
-    "getCustomerDetailsList": "api/yatra/getCustomerDetailsList",
+    "getCustomerList": "api/yatra/getCustomerList",
     "sendCustomerDetails": "api/yatra/Communication/api/updateCustomerDetails",
     "download": "api/yatra/downloadcustomer",
     "addLeadNotes": "api/yatra/addnotes",

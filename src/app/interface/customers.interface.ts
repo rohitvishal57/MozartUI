@@ -35,5 +35,6 @@ export interface CustomerList {
     proposalNumber: string;
     agentCode: string;
     agentName: string;
+    noOfPolicy:number;
   }
   
