@@ -634,7 +634,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityEndDate" placeholder="" formControlName="activityEndDate"
-                                    type="date" (blur)="onEndDateBlur()" [min]="addNoteForm.get('activityStartDate')?.value"
+                                    type="date" [min]="addNoteForm.get('activityStartDate')?.value"
                                     [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
                                 <label for="activityEndDate">Activity End Date*</label>
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
@@ -678,11 +678,11 @@
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <div class="input-block form-floating input-block-renew">
                                 <textarea class="form-control input-textBox" id="notes" placeholder="Type your note..."
-                                    formControlName="notes"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }"></textarea>
+                                    formControlName="notes"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('notes')?.errors }"></textarea>
                                 <label for="notes">Note*:</label>
-                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
+                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('notes')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
+                                        *ngIf="notesSubmitted && addNoteForm.get('notes')?.invalid">
                                         Enter valid Note</span>
                                 </span>
 

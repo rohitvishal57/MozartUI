@@ -145,30 +145,14 @@ export class CreateLeadComponent implements OnInit {
   );
      this.userValidations.get('age')?.disable();
 
-    const endDateControl = this.addNoteForm.get('activityEndDate');
 
     this.addNoteForm = this.formBuilder.group({
       activityTitle: ['', Validators.required], // activityTitle is required
       activityStartDate: ['', Validators.required], // Start date is required
       activityStartTime: ['', Validators.required], // Start time is required
-      activityEndDate: ['',Validators.required, endDateControl], // Use null if control is not available      activityType: ['', Validators.required], // Activity type is required
+      activityEndDate: ['',Validators.required], // Use null if control is not available      activityType: ['', Validators.required], // Activity type is required
       notes: ['', Validators.required] // Notes can be optional
     });
-  }
-  
-  onEndDateBlur() {
-    this.validateEndDate();
-  }
-  
-  validateEndDate() {
-    const startDate = this.addNoteForm.get('activityStartDate')?.value;
-    const endDate = this.addNoteForm.get('activityEndDate')?.value;
-
-    if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
-      this.addNoteForm.get('activityEndDate')?.setErrors({ invalidEndDate: true });
-    } else {
-      this.addNoteForm.get('activityEndDate')?.setErrors(null);
-    }
   }
 
   
@@ -257,7 +241,7 @@ export class CreateLeadComponent implements OnInit {
     requestBody.isSellerPortal = true;
 
     this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
-      this.submittedUser = response.leadList[0];
+      this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
     },
       (error) => {
@@ -274,7 +258,7 @@ export class CreateLeadComponent implements OnInit {
       lastname: this.submittedUser.lastName,
       email: this.submittedUser.email,
       mobilenumber: this.submittedUser.phoneNumber,
-      dob: this.submittedUser.dob,
+      dob:  this.convertToDate(this.submittedUser.dob),
       age: this.submittedUser.age,
       gender: this.submittedUser.gender == "M" ? "Male" : this.submittedUser.gender == "F" ? "Female" : "Other",
       maritalStatus: this.submittedUser.maritalStatus,
@@ -307,9 +291,12 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
-
-
   }
+
+  convertToDate(dateString: string): Date {
+    const parts = dateString.split('/');
+    return new Date(+parts[2], +parts[0] - 1, +parts[1]);
+}
 
   fetchActivityTypeInfo() {
     let fetchActivityTypeRequest: any = {};
@@ -324,9 +311,9 @@ export class CreateLeadComponent implements OnInit {
 
   getReferenceStatus() {
     this.leadsService.getReferenceStatus().subscribe(
-      (response) => {
+      (response:any) => {
         console.log(response);
-        this.referenceStatus = response;
+        this.referenceStatus = response?.data;
       },
       (error) => {
         console.error("Error from getMyReportingUsers API:", error);

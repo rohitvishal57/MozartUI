@@ -132,13 +132,13 @@ export class LeadsListComponent {
     this.leadsService.getLeadsListApi(this.leadsInfoListRequestBody).subscribe(
       (response) => {
         if (response.statusCode == 200) {
-          this.leadsList = response.leadList;
+          this.leadsList = response.data.leadList;
           console.log("Renewal List", this.leadsList);
-          this.countsList = response;
+          this.countsList = response.data;
           this.totalRecords = this.countsList.totalCount;
           this.appliedFiltersCount =0;
           if (this.filterLeads == true) {
-            this.appliedFiltersCount = response.totalCount;
+            this.appliedFiltersCount = response.data.totalCount;
           }
         }
         else { console.error("API request was not successful."); }
@@ -231,8 +231,9 @@ export class LeadsListComponent {
       .map((policyType) => policyType.name);
     this.leadsInfoListRequestBody.searchlist = selectedProducts.join(", ");
     this.leadsInfoListRequestBody.policyList = selectedPolicyTypes.join(", ");
-    this.leadsInfoListRequestBody.fromdate = this.startDate;
-    this.leadsInfoListRequestBody.todate = this.endDate;
+
+    this.leadsInfoListRequestBody.fromdate = this.startDate || null;
+    this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
 
@@ -334,6 +335,7 @@ export class LeadsListComponent {
     this.selectedView = view;
   }
   showAssigneLeadDialog(leadInformation: any) {
+    debugger;
     if (!this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInformation.leadNumber)) {
       this.checkBoxSelectedLeads.push(leadInformation);
     }
@@ -387,7 +389,7 @@ export class LeadsListComponent {
         console.error("Error: Unable to assign lead. Please try again later.", error);
       }
     );
-    this.checkBoxSelectedLeads ='';
+    this.checkBoxSelectedLeads =[];
     this.assigneLeadModal.hide();
   }
   toggleAll(event: Event) {
@@ -403,6 +405,7 @@ export class LeadsListComponent {
     }
   }
   selectAllAssigneLeadDialog() {
+    debugger;
     this.showAssigneLeadDialog(this.selectedleadInformation);
   }
   getAssignedLeads() {
