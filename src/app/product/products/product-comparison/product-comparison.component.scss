@@ -31,6 +31,11 @@
 .planComparisonWraper .qc_item1.head_qc_item .sub_qc_item {
   border-radius: 16px 16px 0 0;
 }
+.planComparisonWraper .qc_item.qc_item1.body_qc_item {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 .planComparisonWraper .qc_item1.footer_qc_item .sub_qc_item {
   border-radius: 0 0 16px 16px;
   height: 20px;
