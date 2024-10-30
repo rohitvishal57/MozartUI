@@ -97,6 +97,8 @@ export class RenewalListComponent {
   }
   filterQuotes(filter: string,filterRange: string) {
     this.renewalLisRequestBody.filterType = filter;
+    this.first = 0;
+    this.page = 1;
     this.getRenewalsList();
     this.activeFilter = filter;
     this.filterType = filterRange;
@@ -369,7 +371,7 @@ export class RenewalListComponent {
             if (response.isSuccess) {
               this.toast.success({ detail: "Success", summary: "WhatsApp message sent successfully.", duration: 1500});
             } else {
-              this.toast.error({ detail: "Error", summary: response.errorMessage, duration: 1500 });
+              this.toast.error({ detail: "Error", summary: response.message, duration: 1500 });
             }
           },
           (error: any) => {

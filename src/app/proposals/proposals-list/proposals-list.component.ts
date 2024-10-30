@@ -101,7 +101,7 @@ export class ProposalsListComponent {
   }
   filterQuotes(filter: string,filterRange: string) {
     this.proposalListRequestBody.filterType = filter;
-    console.log(this.proposalListRequestBody.filterType);
+    this.first = 0;this.page = 1;
     this.getProposalList();
     this.activeFilter = filter;
     this.filterType = filterRange;
