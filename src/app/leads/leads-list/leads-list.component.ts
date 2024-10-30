@@ -130,13 +130,8 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.start = this.page;
     this.leadsInfoListRequestBody.length = this.rows;
     this.leadsService.getLeadsListApi(this.leadsInfoListRequestBody).subscribe(
-<<<<<<< Updated upstream
-      (response) => {
-        if (response.statusCode == 200) {
-=======
       (response) => { 
         if (response) {
->>>>>>> Stashed changes
           this.leadsList = response.data.leadList;
           console.log("Renewal List", this.leadsList);
           this.countsList = response.data;
