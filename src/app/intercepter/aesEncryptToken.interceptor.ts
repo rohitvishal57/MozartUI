@@ -47,6 +47,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
           if (error.status === 401) {
+            localStorage.clear()
             this.router.navigate(['/login']);
           }
           return throwError(error);
