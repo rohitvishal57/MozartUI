@@ -151,7 +151,9 @@ export class CreateLeadComponent implements OnInit {
       activityTitle: ['', Validators.required], // activityTitle is required
       activityStartDate: ['', Validators.required], // Start date is required
       activityStartTime: ['', Validators.required], // Start time is required
-      activityEndDate: ['',Validators.required], // Use null if control is not available      activityType: ['', Validators.required], // Activity type is required
+      activityEndDate: ['',Validators.required], // Use null if control is not available  
+      activityEndTime :  ['', Validators.required],    
+      activityType: ['', Validators.required], // Activity type is required
       notes: ['', Validators.required] // Notes can be optional
     });
   }
@@ -371,6 +373,22 @@ export class CreateLeadComponent implements OnInit {
     if (!pattern.test(inputChar)) {
       event.preventDefault(); // Block non-numeric input
     }
+  }
+
+  onEndDateChange() {
+    this.validateEndDate();
+  }
+  
+
+  validateEndDate() {
+    const startDate = new Date(this.addNoteForm.get('activityStartDate')?.value);
+    const endDate = new Date(this.addNoteForm.get('activityEndDate')?.value);
+
+    if (startDate && endDate && endDate < startDate) {
+      this.addNoteForm.get('activityEndDate')?.setErrors({ incorrect: true }); 
+    } else {
+      this.addNoteForm.get('activityEndDate')?.setErrors(null); 
+     }
   }
 
 }
