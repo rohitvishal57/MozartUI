@@ -2,10 +2,47 @@
     flex-direction: row;
     flex-wrap: wrap;
     li {
-      width: 49%;
       cursor: auto;
       .feature-text{
         line-height: 16px;
       }
     }
   }
+/*---Plan Comparison Css Start---*/
+.planComparisonWraper {
+  flex-direction: column;
+  gap: 0;
+}
+.planComparisonWraper header {
+  position: relative;
+}
+.planComparisonWraper header .compare_delete {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  cursor: pointer;
+}
+.planComparisonWraper .qc_item1 {
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  gap:12px;
+}
+.planComparisonWraper .qc_item1.head_qc_item .sub_qc_item {
+  border-radius: 16px 16px 0 0;
+}
+.planComparisonWraper .qc_item1.footer_qc_item .sub_qc_item {
+  border-radius: 0 0 16px 16px;
+  height: 20px;
+}
+.planComparisonWraper .qc_item1 .sub_qc_item {
+  background: #fff;
+  width: 255px;
+}
+.planComparisonWraper .qc_item1 .sub_qc_item:first-child {
+  max-width: 153px;
+}
+.planComparisonWraper .qc_item1 .sub_qc_item.qc_info_grey {
+  background: #f9fafb;
+}
+/*---Plan Comparison Css End---*/

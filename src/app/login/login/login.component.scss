@@ -535,12 +535,12 @@
   }
   
   .otp-input {
-    width: 45px !important;
-    margin-right: 14px !important;
+    width: 50px !important;
+    margin-right: 10px !important;
     padding: 10px !important;
     text-align: center;
     font-size: 18px;
-    border: 1px solid #b5b1b1;
+    border: 1px solid #F1F3F6;
   }
   .otp-text-wrap{
     color: #000000;
@@ -768,9 +768,10 @@
         }
         @media (max-width:1024px) {
             height: auto;
+            top: 40px;
         }
         @media (max-width:768px) {
-            top: 20px;
+            top: 60px;
         }
         @media (max-width:767px) {
             height: 100%;

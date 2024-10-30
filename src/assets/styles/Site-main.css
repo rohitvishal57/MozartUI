@@ -1976,6 +1976,18 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 13px;
   line-height: 24px;
 }
+.quoteComparisonWraper .qc_item header .btn_addToCart {
+  border-radius: 4px;
+  padding: 4px 15px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 24px;
+  display: flex;
+}
+.compare_btnGroup {
+  display: flex;
+  gap:18px;
+}
 
 
 .quoteComparisonWraper .qc_item .upgradeInfo {
