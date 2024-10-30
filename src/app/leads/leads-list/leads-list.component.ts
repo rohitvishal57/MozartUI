@@ -337,7 +337,6 @@ export class LeadsListComponent {
     this.selectedView = view;
   }
   showAssigneLeadDialog(leadInformation: any) {
-    debugger;
     if (!this.checkBoxSelectedLeads.some((lead: any) => lead.leadNumber === leadInformation.leadNumber)) {
       this.checkBoxSelectedLeads.push(leadInformation);
     }
@@ -407,7 +406,6 @@ export class LeadsListComponent {
     }
   }
   selectAllAssigneLeadDialog() {
-    debugger;
     this.showAssigneLeadDialog(this.selectedleadInformation);
   }
   getAssignedLeads() {

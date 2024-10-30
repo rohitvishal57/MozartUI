@@ -55,7 +55,9 @@ export class ProductsComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
      this.interestedProductName = params['productName'];
-     this.quickQuoteRedirect=  true;
+     if (this.interestedProductName) {
+      this.quickQuoteRedirect=  true;
+     }
     });
 
     console.log(this.agentCode);
@@ -258,7 +260,6 @@ navigateToProductComparison(){
   this.router.navigate(['/products/comparison'], {
   });
 }
-
 
 filterProductList (productList : any){
   let interestedProduct : any = '';
