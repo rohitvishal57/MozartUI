@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class ClaimsViewComponent {
   @Input() uploadedFiles: {
-    id:string;
+    documentId:string;
     name: string;
     type: string;
     size: number;
@@ -231,9 +231,13 @@ export class ClaimsViewComponent {
     this.agentCode = localStorage.getItem("agentCode");
     this.claimsService.getProposalDetails(this.agentCode).subscribe(
       (response: any) => {
-        if (response.success) {
+        if (response.isSuccess) {
           this.response = response;
+          console.log('resp', this.response);
+          
           const allData: ClaimData[] = response.data;
+          console.log('resp', allData);
+
           this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');          
           this.policyNumbers = this.extractUniqueValues(
             allData,
@@ -596,7 +600,7 @@ export class ClaimsViewComponent {
       if (!fileExists && this.allowedFileTypes.includes(file.type)) {
         // Initialize label with an empty value for new files
         this.uploadedFiles.push({
-          id: uuidv4(),
+          documentId: uuidv4(),
           name: file.name,
           type: file.type,
           size: file.size,
@@ -626,11 +630,6 @@ export class ClaimsViewComponent {
     this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
   }
   
-  convertBytesToKB(bytes: number): string {
-    const kb = bytes / 1024;
-    return `${kb.toFixed(2)} KB`;
-  }
-
   uploadFiles(files: File[]): void {
     const fileNames: string[] = files.map((file) => file.name);
     const fileTypes: string[] = files.map((file) => file.type);
@@ -644,15 +643,15 @@ export class ClaimsViewComponent {
         documentName: this.namesVariable || "",
         documentType: this.documentType || "",
         createdBy: file.createdBy || "",
-        claimInfoId: "21727183717381",
-       // claimInfoId: this.claimInfoId || "",
+        //claimInfoId: "21727183717381",
+       claimInfoId: "",
         // memberId: this.form.get("memberId")?.value || "",
-        memberId: 'PT85650665',
-        documentId: "test2",
-        id: file.id
+        memberId: '',
+       // documentId: "test2",
+        documentId: file.documentId
         // documentId: this.documentId || "",
       };
-      formData.append(`fileDetails[${index}].id`, metadata.id);
+      formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
       formData.append(`fileDetails[${index}].AgentCode`, metadata.createdBy);
       formData.append(`fileDetails[${index}].policyNumber`,metadata.policyNumber);
       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
@@ -665,28 +664,32 @@ export class ClaimsViewComponent {
 
     this.claimsService.uploadFiles(formData).subscribe(
       (response: any) => {
-        //  const uploadedFile = this.uploadedFiles.find(f => f.file.name === file.name);
-        if (response.success) {
-          this.uploadedFiles.map((file) => (file.status = "success"));
+        if (response.isSuccess) {
+          this.uploadedFiles.forEach((file) => (file.status = "success"));
           this.uploadSuccess = true;
-          this.uploadedFilesCount++;
+          this.uploadedFilesCount = files.length;
+        } else {
+          this.uploadedFiles.forEach((file) => (file.status = "failed"));
+          this.uploadSuccess = false;
         }
         this.updateStatusLabel();
-        this.cdr.markForCheck(); 
+        this.cdr.markForCheck();
       },
       (_error) => {
-        this.uploadedFile = this.uploadedFiles.find(
-          (f) => f.file.name === f.file.name
-        );
-        this.uploadedFiles.map((file) => (file.status = "failed"));
+        this.uploadedFiles.forEach((file) => (file.status = "failed"));
         this.uploadSuccess = false;
-        this.failedFilesCount++;
+        this.failedFilesCount = files.length;
         this.updateStatusLabel();
         this.cdr.markForCheck();
       }
     );
   }
 
+  convertBytesToKB(bytes: number): string {
+    const kb = bytes / 1024;
+    return `${kb.toFixed(2)} KB`;
+  }
+  
   onLabelKeyDown(event: KeyboardEvent, file: any): void {
     if (event.key === 'Enter') {
       this.stopEditing(file);
@@ -707,7 +710,7 @@ export class ClaimsViewComponent {
   deleteFile(fileToDelete: any): void {
     const payload = {
       policyNumber:  this.form.get("policyNumber")?.value, 
-      documentId: fileToDelete.id,
+      documentId: fileToDelete.documentId,
       claimNumber: ""
     };
   
@@ -716,7 +719,7 @@ export class ClaimsViewComponent {
         if (response.isSuccess) {
           console.log('File deleted successfully:', response);
             this.uploadedFiles = this.uploadedFiles.filter(
-            (file) => file.id !== fileToDelete.id 
+            (file) => file.documentId !== fileToDelete.documentId 
           );
           this.totalFilesCount = this.uploadedFiles.length;
             this.updateStatusLabel();
