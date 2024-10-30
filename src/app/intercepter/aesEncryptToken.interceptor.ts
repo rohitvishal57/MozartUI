@@ -33,16 +33,11 @@ export class EncryptionInterceptor implements HttpInterceptor {
               const modifiedUrl = url?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
               window.open(modifiedUrl, "_blank");
             } else {
-              localStorage.setItem('token', res?.body?.token);
-
-              clonedRequest.clone({
-                setHeaders: { Authorization: `Bearer ${res?.body?.token}` },
-
-              });
               res.body.data = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
-
             }
           }
+          localStorage.setItem('token', res?.body?.token);
+
         }),
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
