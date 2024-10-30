@@ -145,7 +145,7 @@ export class CreateLeadComponent implements OnInit {
   );
      this.userValidations.get('age')?.disable();
 
-     const endDateControl = this.addNoteForm.get('activityEndDate');
+    const endDateControl = this.addNoteForm.get('activityEndDate');
 
     this.addNoteForm = this.formBuilder.group({
       activityTitle: ['', Validators.required], // activityTitle is required
