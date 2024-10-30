@@ -972,16 +972,14 @@
                                 <div class="row mb-2">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages">
-                                           <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers?.productFeatures">
-                                              <div *ngIf="cover.categoryName == 'Optional Covers'">
-                                                <input type="checkbox" [id]="cover.featureName" name="" [value]="cover.featureName" class="input-check">
+                                            <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers">
+                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check">
                                                 <label [for]="cover.featureName">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
-                                                    <em class="head">{{cover.featureName}}</em>
-                                                    <em class="headInfo">{{cover.featureDescription}}</em>
+                                                  <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
+                                                  <em class="head">{{cover.featureName}}</em>
+                                                  <em class="headInfo">{{cover.featureDescription}}</em>
                                                 </label>
-                                             </div>  
-                                            </div>        
+                                            </div>       
                                         </div>
                                     </div>
                                 </div>                                
@@ -997,17 +995,14 @@
                                 <div class="row mb-2">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages checkbox_healthAddOns">
-                                            <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers?.productFeatures">
-                                              <div *ngIf="cover.categoryName == 'Health Add On'"> 
-                                                <input type="checkbox" [id]="cover.featureName" name="" [value]="cover.featureName" class="input-check" >
+                                            <div class="input-checkbox-feild" *ngFor="let cover of healthAddOns">
+                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check">
                                                 <label [for]="cover.featureName">
-                                                    <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
-                                                    <!-- <img src="assets/Img/icon_cancer_booster.svg" class="inactive"> -->
-                                                    <em class="head">{{cover.featureName}}</em>
-                                                    <em class="headInfo">{{cover.featureDescription}}</em>
+                                                  <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
+                                                  <em class="head">{{cover.featureName}}</em>
+                                                  <em class="headInfo">{{cover.featureDescription}}</em>
                                                 </label>
-                                              </div>
-                                            </div>                                          
+                                              </div>                                          
                                         </div>
                                     </div>
                                 </div>                               
@@ -1018,7 +1013,7 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsCenter m-auto" *ngIf="activeSection === 'payment'">
+      <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'payment'" [ngClass]="{'m-auto': !hideSection}">
         <div class="bcc_main">
             <div class="accordionMain">
                 <div class="accordionItem">
