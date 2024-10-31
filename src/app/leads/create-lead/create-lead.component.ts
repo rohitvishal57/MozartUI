@@ -265,6 +265,7 @@ export class CreateLeadComponent implements OnInit {
       dob: this.datepipe.transform (this.submittedUser.dob,'yyyy-MM-dd'),
       age: this.submittedUser.age,
       gender: this.submittedUser.gender == "M" ? "Male" : this.submittedUser.gender == "F" ? "Female" : "Other",
+      isWhatsapp: this.submittedUser.isWhatsapp,
       maritalStatus: this.submittedUser.maritalStatus,
       numberOfKids: this.submittedUser.numberOfKids,
       occupation: this.submittedUser.occupation,
