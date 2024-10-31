@@ -11,6 +11,7 @@ import { tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
+import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 declare var bootstrap: any;
 
 @Component({
@@ -108,7 +109,7 @@ export class YatraComponent {
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
-    private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
+    private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,private aesEncryptService: AesEncryptionService,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard) { }
 
   ngOnInit() {
@@ -495,10 +496,10 @@ export class YatraComponent {
             // }
             if (control.type === 'multiSelectCheckbox' && control.selectCheckboxOptions) {
               // Only call resolveMethod if selectCheckboxOptions is empty
-              if (control.selectCheckboxOptions.length === 0) {
-                await this.resolveMethod(control.methodName, control);
+              // if (control.selectCheckboxOptions.length === 0) {
+              //   await this.resolveMethod(control.methodName, control);
 
-              }
+              // }
               // After resolving, add the control to the dynamic form group
               const controlGroup = this.fb.group({});
               control.selectCheckboxOptions.forEach(option => {
@@ -1020,7 +1021,7 @@ export class YatraComponent {
     this.yatraService.getInsuredOccupation().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = res.data;
+        control.options = this.aesEncryptService.decrypt(res?.data);
       },
       error: (err: any) => {
         console.error(err);
@@ -1032,7 +1033,7 @@ export class YatraComponent {
     this.yatraService.getProposerOccupation().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = res.data;
+        control.options = this.aesEncryptService.decrypt(res?.data);
       },
       error: (err: any) => {
         console.error(err);
@@ -1044,7 +1045,7 @@ export class YatraComponent {
     this.yatraService.getNatureOfDuty().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = res.data;
+        control.options = this.aesEncryptService.decrypt(res?.data);
       },
       error: (err: any) => {
         console.error(err);
@@ -1131,7 +1132,7 @@ export class YatraComponent {
     this.yatraService.getNomineeRelationship().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = res.data;
+        control.options = this.aesEncryptService.decrypt(res?.data);
       },
       error: (err) => {
         console.error(err);
@@ -1147,7 +1148,7 @@ export class YatraComponent {
 
       this.yatraService.getAllBankDetails().subscribe({
         next: (res: any) => {
-          control.options = res.data;
+          control.options = this.aesEncryptService.decrypt(res?.data);
         },
         error: (err) => {
           console.error(err);
@@ -3179,7 +3180,7 @@ export class YatraComponent {
 
         var reqData: any = {
           agentCode: this.agentCode,
-          productId: this.productId,
+          productId: this.productId.toString(),
           productType: 'AO',
           fullQuoteRequestJson: JSON.stringify(data)
         }
