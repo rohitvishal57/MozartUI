@@ -357,9 +357,9 @@ export class LeadsListComponent {
     let requestBody: any = {}
     requestBody.agentCode = this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
-      (response) => {
+      (response : any) => {
         this.agentCodes = response;
-        if (this.agentCodes.length > 0) {
+        if (this.agentCodes && this.agentCodes.length > 0) {
           this.assignLeadForm.patchValue({ selectedAgentCode: this.agentCodes[0] });
         }
       },
