@@ -11,8 +11,7 @@ import { NgToastService } from 'ng-angular-popup';
   styleUrls: ['./customers-list.component.scss']
 })
 export class CustomersListComponent {
-  customerList: CustomerList[] = [];
-  customerPoliciesList:[]=[];
+  customerList: any[] = [];
   page: number = 1;
   first: number = 0;
   rows: number = 10;
@@ -78,13 +77,10 @@ export class CustomersListComponent {
     this.customerService.getCustomerListApi(this.customerListRequestBody).subscribe(
       (response) => { 
         if (response.isSuccess) {
-          this.customerList = response.data.customerList.map((item: any) => ({
-            ...item,policyStartDate:this.formatPolicyStartDate(item.policyStartDate)
-          })); 
+          this.customerList = response.data.customerData
           console.log("customers List",this.customerList);
-          this.totalRecords = response.data.totalRecords 
+          this.totalRecords = response.data.filterRecords 
           if (this.customerList.length > 0) {
-            this.customerId = this.customerList[0].customerID;
           } else {
             this.customerId = null; 
           }         
@@ -98,6 +94,8 @@ export class CustomersListComponent {
       }
     );
   }
+
+  
 
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
@@ -253,7 +251,7 @@ export class CustomersListComponent {
   customerListView(view: string) {
     this.selectedView = view;
   }
-  toggleMoreInfo(index: number,customerId: string): void {
+  toggleMoreInfo(index: number): void {
     this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
   }
 

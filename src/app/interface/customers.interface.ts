@@ -3,7 +3,7 @@ export interface CustomerList {
     policyNumber: string;
     policyStartDate: string;  
     policyEndDate: string;   
-    noOfInsured: number;
+    noOfPolicies: number;
     policyTerm: string;
     policyStatus: string;
     sumInsured: number;
@@ -11,12 +11,10 @@ export interface CustomerList {
     policyType: string;
     nstp: string;
     zone: string | null;
-    customerID: string;
-    firstName: string;
-    middleName: string | null;
-    lastName: string;
+    memberID: string;
+    name: string;
     dateOfBirth: string;      
-    mobileNumber: string;
+    mobileNo: string;
     emailID: string;
     city: string;
     addressLine1: string | null;

@@ -99,13 +99,13 @@
                       </thead>
                       <tbody class="table-group-divider" *ngFor="let row of customerList; let i = index">
                         <tr >
-                          <td>{{ row.firstName }} {{ row.lastName }}</td>
-                          <td>{{ row.customerID }}</td>
-                          <td>{{ row.noOfPolicy }}</td>
+                          <td>{{ row.name }}</td>
+                          <td>{{ row.memberID }}</td>
+                          <td>{{ row.noOfPolicies }}</td>
                           <td>{{ row.emailID }}</td>
-                          <td>{{ row.mobileNumber }}</td>
+                          <td>{{ row.mobileNo }}</td>
                           <td>
-                            <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info" class="btn_action btn_moreAction btn_arrowCustomer" (click)="toggleMoreInfo(i,row.customerID)">
+                            <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info"  class="btn_action btn_moreAction btn_arrowCustomer" (click)="toggleMoreInfo(i)">
                               <img src="assets/Img/icon_table_arrow_right_red.svg" />
                             </button>
                           </td>
@@ -124,17 +124,22 @@
                                 </tr>
                               </thead>
                               <tbody class="table-group-divider">
-                                <tr>
-                                  <td>{{ row.productVariantName }}</td>
-                                  <td>{{ row.policyNumber }}</td>
-                                  <td></td>
-                                  <td>{{ row.policyStartDate }}</td>
-                                  <td><span class="info_status info_status_green">{{ row.policyStatus }}</span></td>
-                                  <!-- <td><span class="info_status info_status_red">Expired</span></td> -->
+                                <tr *ngFor="let policy of row.policies">
+                                  <td>{{ policy.product }}</td>
+                                  <td>{{ policy.policyNo }}</td>
+                                  <td>{{policy.noOfInsured}}</td>
+                                  <td>{{ formatPolicyStartDate(policy.policyStartDate) }}</td>
+                                  <td>
+                                    <span class="info_status" [ngClass]="{
+                                        'info_status_green': policy.policyStatus === 'Inforced' || policy.policyStatus === 'Renewed',
+                                        'info_status_red': policy.policyStatus !== 'Inforced' && policy.policyStatus !== 'Renewed'
+                                      }">
+                                      {{ policy.policyStatus }}
+                                    </span>
+                                  </td>
                                   <td>
                                     <div class="btn_groupAction">
                                         <button type="button" id="customermore" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-
                                         <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                             <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                 <ul class="actionItemsMain">
@@ -186,10 +191,8 @@
                         <header>
                             <div class="card_insureInfo">
                                 <h6>
-                                    <div class="insureName">{{ row.firstName }} {{ row.lastName }}</div>
-                                    
+                                    <div class="insureName">{{ row.name}}</div>    
                                 </h6>
-                                <div class="item_productName">{{ row.productVariantName}}</div>
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
