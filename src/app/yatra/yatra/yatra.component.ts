@@ -3190,10 +3190,13 @@ export class YatraComponent {
         this.yatraService.getFullQuote(reqData).subscribe({
           next: (response: any) => {
             console.log(response);
-            if (response?.data && response.data['ns0:ActiveHealthRes']) {
-              const healthRes = response.data['ns0:ActiveHealthRes'];
-              const polCreationResponse = healthRes.PolCreationRespons;
-              const receiptResponse = healthRes.ReceiptCreationResponse;
+            if (response?.data && response.data['ns0ActiveHealthRes']) {
+              const healthRes = response.data['ns0ActiveHealthRes'];
+              const polCreationResponse = healthRes.polCreationRespons;
+              const receiptResponse = healthRes.receiptCreationResponse;
+
+              console.log(healthRes);
+              
 
               this.quoteNo = polCreationResponse.quoteNumber;
               this.customerId = polCreationResponse.customerId;
@@ -3221,8 +3224,8 @@ export class YatraComponent {
                 this.formData.policyStatus = polCreationResponse.policyStatus;
               }
 
-              if (receiptResponse.ReceiptNumber) {
-                this.formData.ReceiptNumber = receiptResponse.ReceiptNumber;
+              if (receiptResponse.receiptNumber) {
+                this.formData.ReceiptNumber = receiptResponse.receiptNumber;
               }
               console.log(this.dynamicFormGroup.value);
             } else {
