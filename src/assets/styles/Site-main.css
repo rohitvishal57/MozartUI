@@ -340,6 +340,12 @@ button {
     word-wrap: break-word !important;
     word-break: break-word !important;
 }
+.text-break-w200 {
+  max-width: 200px;
+  display: inline-block;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
 .td-text-bold {
   font-size: 14px !important;
   font-weight: 600 !important;
@@ -4913,6 +4919,12 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .info_status_red {
   background:#C7222A ;
+}
+.cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 .insureName {
+	max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /*.lead_btnList button {
   position: relative;
