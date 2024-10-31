@@ -448,7 +448,7 @@ export class LeadsListComponent {
     } else if (this.selected === 'name') {
       return 'Enter Name';
     } else if (this.selected == 'email') {
-      return 'Enter EmailId';
+      return 'Enter Email Id';
     }
     else {
       return 'Search...';
