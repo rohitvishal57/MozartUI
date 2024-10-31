@@ -7,6 +7,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { ProductsService } from './products.service';
 import { QuoteService } from 'src/app/quote/quote.service';
+import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 
 @Component({
   selector: 'app-products',
@@ -46,7 +47,7 @@ export class ProductsComponent implements OnInit {
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
-   private quoteservices: QuoteService,
+   private quoteservices: QuoteService,private aesEncryptService: AesEncryptionService,
    private route: ActivatedRoute
   ) {
 
@@ -143,6 +144,7 @@ export class ProductsComponent implements OnInit {
   async getProposalNum() {
     try {
       const res = await firstValueFrom(this.common.getProposalNumber());
+      res.data = this.aesEncryptService.decrypt(res.data);
       this.proposalNum = res.data.proposalNumber;
     } catch (error) {
       console.error(error);
