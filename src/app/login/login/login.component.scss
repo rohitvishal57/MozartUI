@@ -542,6 +542,9 @@
     font-size: 18px;
     border: 1px solid #F1F3F6;
     border: 1px solid #e7e8e9;
+    @media (max-width:390px) {
+        width: 41px !important;
+    }
   }
   .otp-text-wrap{
     color: #000000;
