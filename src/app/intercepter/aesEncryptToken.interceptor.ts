@@ -14,7 +14,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.body && !(req.body instanceof FormData)) {
       // Encrypt the request body
-      const encryptedBody = { encryptedData: this.aesEncryptService.encrypt(req.body) };
+      const encryptedBody = this.aesEncryptService.encrypt(req.body);
 
       // Clone the request and replace the body with the encrypted body
       const clonedRequest = req.clone({
