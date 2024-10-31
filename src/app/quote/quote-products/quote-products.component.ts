@@ -7,6 +7,7 @@ import { EncryptionService } from "src/app/services/encryption.service";
 import { QuoteService } from "../quote.service";
 import { firstValueFrom } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
+import { AesEncryptionService } from "src/app/services/AESEncrypt.service";
 
 
 @Component({
@@ -55,11 +56,11 @@ export class QuoteProductsComponent implements OnInit {
 
   constructor(private quoteService: QuoteService, private router: Router, private toast: NgToastService,
     private service: CommonService, private encryptionService: EncryptionService, private spinner: NgxSpinnerService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,private aesEncryptService: AesEncryptionService
   ) { }
   ngOnInit(): void {
     // sessionStorage.clear()
-    this.formData = history.state.formData;
+    this.formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
     localStorage.setItem("formIndex", "0")
     console.log(this.formData, this.agentCode, this.cartProductList);
     this.getPoductList();
@@ -144,6 +145,8 @@ export class QuoteProductsComponent implements OnInit {
   async getProposalNum() {
     try {
       const res = await firstValueFrom(this.service.getProposalNumber());
+      console.log(res);
+      res.data = this.aesEncryptService.decrypt(res.data);
       this.proposalNum = res.data.proposalNumber;
       console.log(this.proposalNum)
     } catch (error) {
@@ -278,7 +281,7 @@ export class QuoteProductsComponent implements OnInit {
     }
   }
   async  insertorupdateagentcartdetails(item: any) {
-    console.log(item);
+    console.log(item,this.formData);
     let reqdata = {
       "id": "",
       "proposalNum": this.proposalNum,

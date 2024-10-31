@@ -1,9 +1,9 @@
 <div class="contentBody dashboard_contentContainer">
   <div style="width: 100%;">
-  <form>
+  <!-- <form>
     <div class="card-outer">
-      <div class="card">
-        <div class="header">
+      <div class="card"> -->
+        <!-- <div class="header">
           <div class="headerSearch">
             <div class="field_searchMain">
               <input type="text" class="search-bar filterSearch"
@@ -22,10 +22,10 @@
             </button>
             
           </div>
-        </div>
+        </div> -->
 
-          <div class="insurance_optionHUB" *ngIf="showCard" [formGroup]="quoteFormGroup">
-            <div class="dropdown-container " *ngIf="showDropdownsFlag">
+          <div class="insurance_optionHUB"  [formGroup]="quoteFormGroup">
+            <div class="dropdown-container " >
               <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
                 <!-- Label -->
                 <label class="field_label">{{ dropdown.label }}</label>
@@ -195,7 +195,8 @@
                                 <input type="checkbox" id="{{relation.value}}"
                                   [checked]="selectedRelation.includes(relation.value)"
                                   (change)="onRelationChange($event, relation)" value="{{relation.id}}"
-                                  class="input-check" [disabled]="selectedPlan !== 'Family Floater' && selectedRelation.length >= 1">
+                                  class="input-check">
+                                  <!-- [disabled]="selectedPlan !== 'Family Floater' && selectedRelation.length >= 1"> -->
                                 <label for="{{relation.value}}"><img
                                     src="{{relation.imagePath}}">{{relation.name}}</label>
                                 <div class="member_extraInfo">
@@ -362,9 +363,9 @@
               <button type="button" id="mainContinue" name="mainContinue" class="continue-btn-0 btn_grey" (click)="continue()">Continue</button>
             </div>
           </div>
-        </div>
+        <!-- </div>
       </div>
-    </form>
+    </form> -->
   </div>
 </div>
 

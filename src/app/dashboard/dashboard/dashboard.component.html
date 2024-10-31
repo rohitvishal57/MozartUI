@@ -1,7 +1,38 @@
 <main class="siteBody">
   <div class="contentBody bodyColumns-1 bodyColumns-dashboard">
     <div class="bodyColumn body_flex_column">
-      <app-get-quote></app-get-quote>
+      <div class="contentBody dashboard_contentContainer">
+        <div style="width: 100%;">
+          <div class="card-outer">
+            <div class="card">
+              <div class="header">
+                <div class="headerSearch">
+                  <div class="field_searchMain">
+                    <input type="text" class="filterSearch"
+                      placeholder="Search Your Customer, Leads, Claims No and more" />
+                    <img src="assets/Img/icon_magnify_grey.svg">
+                  </div>
+                </div>
+                <div class="headerButtons">
+                  <button class="get-quote-btn" type="button" id="getquote" name="getquote" (click)="getQuote()">
+                    <i class="fas fa-plus"></i> Get Quote
+                  </button>
+                </div>
+                <div class="headerButtons">
+                  <button class="get-quote-btn" type="button" id="createlead" name="createlead" (click)="createLead()">
+                    <i class="fas fa-plus"></i> Create Lead
+                  </button>
+                  
+                </div>
+              </div>
+              <div >
+                <app-get-quote *ngIf="showCard"></app-get-quote>
+              </div>
+              </div>
+            </div>
+        </div>
+      </div>
+      <!-- <app-get-quote></app-get-quote> -->
       <div class="contentBody dashboard_contentContainer">
         <div class="performance-overview">
           <header>

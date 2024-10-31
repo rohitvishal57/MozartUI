@@ -2486,7 +2486,7 @@ export class YatraComponent {
           "leadNumber": this.leadnumber,
           "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
         };
-
+        console.log(reqData);
         this.yatraService.Insertorupdateformdata(reqData).subscribe({
           next: (res: any) => {
             // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });

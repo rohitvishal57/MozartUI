@@ -7,18 +7,23 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { PrimeNgModule } from 'src/app/prime-ng.module';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
+import { GetQuoteComponent } from './get-quote/get-quote.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 @NgModule({
   declarations: [
     QuoteProductsComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    GetQuoteComponent
   ],
   imports: [
     CommonModule,
     PrimeNgModule,
     NgxSpinnerModule,
     ReactiveFormsModule,
+    NgxSliderModule,
     QuoteRoutingModule
-  ]
+  ],
+  exports: [GetQuoteComponent] 
 })
 export class QuoteModule { }

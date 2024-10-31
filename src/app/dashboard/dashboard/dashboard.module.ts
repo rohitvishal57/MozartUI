@@ -9,9 +9,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MyMaterialModule } from 'src/app/material.module';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { QuoteModule } from 'src/app/quote/quote.module';
 
 @NgModule({
-  declarations: [DashboardComponent,GetQuoteComponent],
+  declarations: [DashboardComponent],
   imports: [
     CommonModule,
     PrimeNgModule,
@@ -19,7 +20,8 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     ReactiveFormsModule,
     MyMaterialModule,
     NgxSliderModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    QuoteModule
   ]
 })
 export class DashboardModule { }
