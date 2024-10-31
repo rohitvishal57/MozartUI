@@ -274,3 +274,18 @@ h6 {
 		background: transparent !important;
 	}
 }
+.userGridView .card_btnGroup .btn_action {
+    background: #ffe2df; 
+}
+.userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo.userPolicyInfo {
+	flex-wrap: wrap;
+	gap: 6px;
+}
+.userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo.userPolicyInfo .userInfoItem {
+	width: 45%;
+}
+.modifiedBadge.userPolicyBadge {
+	font-size: 13px;
+	font-weight: 600;
+	color:#4d72bb;
+}
