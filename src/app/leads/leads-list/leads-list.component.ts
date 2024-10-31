@@ -393,6 +393,11 @@ export class LeadsListComponent {
     this.checkBoxSelectedLeads = [];
     this.assigneLeadModal.hide();
   }
+
+  cancelAssignModal(){
+    this.checkBoxSelectedLeads=[];
+  }
+
   toggleAll(event: Event) {
     const input = event.target as HTMLInputElement;
     this.leadsList.forEach(lead => lead.isSelected = input.checked)

@@ -138,7 +138,7 @@
                                                 </div>
                                             </div>
                                             <!--<input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">-->
-                                            <button type="button" id="assignto" name="assignto" *ngIf="this.checkBoxSelectedLeads.length > 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
+                                            <button type="button" id="assignto" name="assignto" *ngIf="this.checkBoxSelectedLeads.length > 1" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
                                                 src="assets/Img/icon_profile.svg"></button>
                                         </div>
                                     </th>
@@ -371,7 +371,7 @@
             <div class="modal-footer modal_footerBtnGroup_column">
                 <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth">Save</button>
                 <div class="d-flex justify-content-center">
-                    <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" >Cancel</button>
+                    <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >Cancel</button>
                 </div>
             </div>
          </form>
