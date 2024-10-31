@@ -210,6 +210,7 @@ else{
         this.claimsReqBody.searchType = "productName";
         this.claimsReqBody.searchString = selectedProducts;
       }
+      this.first = 0
       this.fetchData();
       this.toggeledropdown=false;
       }
