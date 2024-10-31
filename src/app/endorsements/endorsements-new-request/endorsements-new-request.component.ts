@@ -32,7 +32,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   userData: any;
   modalRef?: BsModalRef; // Reference to modal instance
   otp: string[] = ['', '', '', '', '', ''];  // Initialize OTP array
-  timeLeft: number = 60;
+  timeLeft: number = 30;
   isTimerRunning: boolean = false;
   endorseMentList: [
     {
@@ -575,7 +575,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
       (resp) => {
-        if (resp.data && resp.statusCode == "201" && resp.isSuccess) {
+        if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
           if (resp.data.response.caseId != null) {
             if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
               if (!this.selectedFile) {
@@ -712,7 +712,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
             otp: "",
           };
           this.openOtpPopup();
-          this.timeLeft = 60;
+          this.timeLeft = 30;
           this.startTimer();
           this.sendOtptDisabled = false;
         }
@@ -791,6 +791,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.otpErrorMsge = true;
       this.errorMessage = "Please Enter Valid OTP"
     }
+    this.otp = ['', '', '', '', '', ''];
   }
 
   memberIdChange(event:any) {

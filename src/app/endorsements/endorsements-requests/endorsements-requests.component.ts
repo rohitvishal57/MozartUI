@@ -271,6 +271,8 @@ export class EndorsementsRequestsComponent implements OnInit {
     .map((requestType:any) => requestType.name);
     this.requestsListRequestBody.requestType = selectedPolicyTypes.join(", "); */
 
+    this.isSearch = true;
+    this.first = 0;
     this.getRequestList();
     this.toggeledropdown=false;
   }
@@ -338,6 +340,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   applySearch() {
     const searchValue = this.searchInputControl?.value?.trim();
+    this.endorsementDetails = [];
     if (this.searchInputControl.valid) {
       if (this.selected === "caseId") {
         this.requestsListRequestBody.searchColumn = "CaseId";

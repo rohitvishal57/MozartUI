@@ -62,20 +62,19 @@ export class SendOtpViaComponent implements OnInit{
     this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
           next: (res:any) => {
-            if(res.data && res.isSuccess && res.statusCode == '200') {
+            if(res.data && res.isSuccess && res.statusCode == '200' && res?.data.requestId !== null) {
               localStorage.setItem("requestId", res?.data?.requestId);
-              if(res?.data.requestId == null) {
-                this.dialogRef.close({data: res.data.errorMessage, status:'Failure'});
-              }
+              this.dialogRef.close({data:data, status:'Success'});
+            } else {
+              this.dialogRef.close({data: res.message, status:'Failure'});
             }
           },
           error: (err => {
             console.log(err);
+            this.dialogRef.close({data: err, status:'Failure'});
             this.toast.error({ detail: "ERROR", summary:err, duration:5000 });
           })
         })
-
-    this.dialogRef.close({data:data, status:'Success'})
   }
   close(){
     this.dialogRef.close();

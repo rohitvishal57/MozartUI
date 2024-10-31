@@ -79,9 +79,8 @@ export class LoginComponent implements OnInit{
       this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
         .subscribe({  
           next: (res:any)=>{
-            this.loginService.storeToken(res.token);
             this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
-              this.openModal(this.contactInfoData);
+            this.openModal(this.contactInfoData);
           },
           error: (err => {
             console.log(err);
@@ -129,19 +128,24 @@ export class LoginComponent implements OnInit{
     const data = localStorage.getItem('sendOTP');
     this.sendOtpReqBody.agentCode = localStorage.getItem("agentCode");
     this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
+    this.errorMessage = "";
+    this.otp = ['', '', '', '', '', ''];
 
     this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
           next: (res:any)=>{
-            if(res.data && res.data.isSuccess && res.data.statusCode == '200' && res.data.requestId !== null) {
+            if(res.data && res.isSuccess && res.statusCode == '200' && res.data.requestId !== null) {
               localStorage.setItem("requestId", res?.data.requestId);
-              this.toast.warning({ detail: "SUCCESS", summary: "Sent OTP again to "+this.maskedUserCode, duration: 5000 });
+              this.toast.success({ detail: "SUCCESS", summary: "Sent OTP again to "+this.maskedUserCode, duration: 5000 });
               this.startTimer();
+            } else {
+              this.errorMessage = res.message;
             }
           },
           error: (err => {
             console.log(err);
-            this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
+            this.errorMessage = err;
+            // this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
           })
         })
   }
@@ -173,8 +177,10 @@ export class LoginComponent implements OnInit{
       this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
         .subscribe({  
           next: (res:any)=>{
-            localStorage.setItem('userCode', this.loginForm.value.userName);
-            window.open(res.data.redirectUrl, "_blank");
+            if(res.data && res.isSuccess && res.statusCode == '200') {
+              localStorage.setItem('agentCode', this.loginForm.value.userName);
+              window.open(res.data.redirectUrl, "_blank");
+            }
           },
           error: ((err:any) => {
             console.log(err);
@@ -235,6 +241,7 @@ export class LoginComponent implements OnInit{
  
   onVerifyOTP(){
     const otpCode = this.otp.join('');
+    this.errorMessage = "";
     if (otpCode.length === 6 && /^[0-9]+$/.test(otpCode)) {
 
       this.validateOtpReqBody.agentCode = localStorage.getItem("agentCode");
