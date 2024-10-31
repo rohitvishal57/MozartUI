@@ -329,7 +329,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="numberOfKids" placeholder=""
-                                    formControlName="numberOfKids" type="text" (keypress)="isNumber($event)">
+                                    formControlName="numberOfKids" type="text" (keypress)="isNumber($event)" maxlength="2">
                                 <label for="numberOfKids">No Of Kids</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('numberOfKids')?.errors?.['pattern']">Please
@@ -471,7 +471,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="sumInsured" placeholder=""
-                                    formControlName="sumInsured" (keypress)="isNumber($event)">
+                                    formControlName="sumInsured" (keypress)="isNumber($event)" maxlength="7" >
                                 <label for="sumInsured">Interested Sum Insured</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('sumInsured')?.errors?.['pattern']">Please
@@ -481,7 +481,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="premium" placeholder=""
-                                    formControlName="premium" (keypress)="isNumber($event)">
+                                    formControlName="premium" (keypress)="isNumber($event)" maxlength="7" >
                                 <label for="premium">Interested Premium</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('premium')?.errors?.['pattern']">Please
