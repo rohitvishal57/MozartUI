@@ -210,8 +210,8 @@ export class CreateLeadComponent implements OnInit {
 
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
-        console.log(response.data);
-        if (response.success) {
+        console.log(response);
+        if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
             this.toast.success({ detail: 'Lead is updated successfully' });
           } else {
@@ -291,7 +291,9 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
     });
 
-    console.log("user validation", this.userValidations.get('dob')?.value);
+    console.log("user validation", this.userValidations.get('interestedProductName')?.value);
+
+
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
