@@ -598,7 +598,7 @@
                                     *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
-                                        ActivityTitle cannot be blank</span>
+                                        Activity Title cannot be blank</span>
                                 </span>
 
                             </div>
@@ -612,7 +612,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
                                 <span class="ui-error block-show"
                                     *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
-                                     Activity Startdate cannot be blank</span>
+                                     Activity Start date cannot be blank</span>
                             </span>
                             </div>
                         </div>
@@ -625,7 +625,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.invalid">
-                                         Activity StartTime cannot be blank</span>
+                                         Activity Start Time cannot be blank</span>
                                 </span>
 
                             </div>
@@ -639,10 +639,10 @@
                                 <label for="activityEndDate">Activity End Date*</label>
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
                                     <span class="ui-error block-show" *ngIf="addNoteForm.get('activityEndDate')?.invalid">
-                                     Activity EndDate cannot be blank</span>
+                                     Activity End Date cannot be blank</span>
                                 </span>
                                 <span class="ui-error block-show" *ngIf="addNoteForm.get('activityEndDate')?.errors?.['incorrect']">
-                                    Activity Enddate must be after Activity startdate</span>
+                                    Activity End date must be after Activity startdate</span>
                             </div>
                         </div>
 
@@ -654,7 +654,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
-                                        Activity EndTime cannot be blank</span>
+                                        Activity End Time cannot be blank</span>
                                 </span>
                             </div>
                         </div>
