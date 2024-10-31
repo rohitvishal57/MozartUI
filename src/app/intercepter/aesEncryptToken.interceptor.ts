@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 @Injectable()
 export class EncryptionInterceptor implements HttpInterceptor {
 
-  isEncrypt: boolean = false;
+  isEncrypt: boolean = true;
 
   constructor(private aesEncryptService: AesEncryptionService, private router: Router) { }
 
