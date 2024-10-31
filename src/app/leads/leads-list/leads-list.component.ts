@@ -442,9 +442,9 @@ export class LeadsListComponent {
   }
   getPlaceholder(): string {
     if (this.selected === 'leadId') {
-      return 'Enter LeadId';
+      return 'Enter Lead Id';
     } else if (this.selected === 'mobileNumber') {
-      return 'Enter mobileNumber';
+      return 'Enter mobile Number';
     } else if (this.selected === 'name') {
       return 'Enter Name';
     } else if (this.selected == 'email') {

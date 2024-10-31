@@ -210,11 +210,10 @@
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('firstname')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('firstname')?.invalid && !userValidations.get('firstname')?.errors?.['pattern']">Firstname
-                                        cannot
-                                        be blank</span>
+                                        *ngIf="submitted && userValidations.get('firstname')?.invalid && !userValidations.get('firstname')?.errors?.['pattern']">First Name
+                                        cannot be blank</span>
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">Firstname
+                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">First Name
                                         should only contain alphabets</span>
                                 </span>
                             </div>
@@ -226,7 +225,7 @@
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
                                 <label for="MiddleName">Middle Name</label>
                                 <span class="ui-error block-show"
-                                    *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">MiddleName
+                                    *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">Middle Name
                                     should only contain alphabets</span>
                             </div>
                         </div>
@@ -239,11 +238,10 @@
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('lastname')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('lastname')?.invalid && !userValidations.get('lastname')?.errors?.['pattern']">Lastname
-                                        cannot
-                                        be blank</span>
+                                        *ngIf="submitted && userValidations.get('lastname')?.invalid && !userValidations.get('lastname')?.errors?.['pattern']">Last Name
+                                        cannot be blank</span>
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">Lastname
+                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">Last Name
                                         should only contain alphabets</span>
                                 </span>
                             </div>
@@ -257,7 +255,7 @@
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobilenumber
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobile Number
                                         cannot
                                         be blank</span>
                                     <span class="ui-error block-show"
