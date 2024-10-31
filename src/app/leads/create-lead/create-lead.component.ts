@@ -289,7 +289,9 @@ export class CreateLeadComponent implements OnInit {
       campaignnumber: this.submittedUser.campaignnumber,
       leadnumber: this.submittedUser.leadNumber,
       leadAssignee: this.submittedUser.leadAssignee,
-      isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
+      isUpdate: this.submittedUser.isUpdate || 1 ,// Default to 0 if undefined
+      status: this.submittedUser.leadStatus,
+      substatus: this.submittedUser.leadSubStatus
     });
 
     console.log("user validation", this.userValidations.get('interestedProductName')?.value);
