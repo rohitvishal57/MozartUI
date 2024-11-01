@@ -259,10 +259,10 @@ export class CustomersListComponent {
     const RequestBody = {
       agentcode:this.agentCode,
       requestType: event,
-      policyNumber: data.policyNumber,
+      policyNumber: data.policyNo,
       proposalNumber: data.proposalNumber,
-      memberId: "",
-      mobileNo: data.mobileNumber,
+      memberId: data.memberID,
+      mobileNo: data.mobileNo,
       emailId: data.emailID
     };
     this.customerService.sendCustomerDetails(RequestBody).subscribe(

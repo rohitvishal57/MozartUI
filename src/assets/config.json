@@ -30,7 +30,7 @@
     "fetchActivityType": "api/yatra/fetchactivitytype",
     "getProposalListApi": "api/yatra/getproposallist",
     "getCustomerList": "api/yatra/getCustomerList",
-    "sendCustomerDetails": "api/yatra/Communication/api/updateCustomerDetails",
+    "sendCustomerDetails": "/api/yatra/sendcustomerdetails",
     "download": "api/yatra/downloadcustomer",
     "addLeadNotes": "api/yatra/addnotes",
     "addfeedback": "api/yatra/feedback",

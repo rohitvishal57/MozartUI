@@ -221,15 +221,11 @@
                         <div class="cardViewBody">
                             <div class="cv_bodyItems ">
                                 <div class="item_lable">Customer ID</div>
-                                <div class="item_value">Customer ID</div>
+                                <div class="item_value">{{ row.memberID }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">No.Of.Policies</div>
-                                <div class="item_value">No.Of.Policies</div>
-                            </div>
-                            <div class="cv_bodyItems">
-                                <div class="item_lable">No.Of.Members</div>
-                                <div class="item_value">No.Of.Members</div>
+                                <div class="item_value">{{ row.noOfPolicies }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Email ID</div>
@@ -237,27 +233,34 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Mobile Number</div>
-                                <div class="item_value">{{ row.mobileNumber }}</div>
+                                <div class="item_value">{{ row.mobileNo }}</div>
                             </div>
                             <span class="modifiedBadge userPolicyBadge">Policy Info</span>
-                            <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo">
+                            <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo" *ngFor="let policy of row.policies">
                                 <div class="userInfoItem">
                                     <div class="item_lable">Product Name</div>
-                                    <div class="item_value">Product Name</div>
+                                    <div class="item_value">{{ policy.product }}</div>
                                 </div>
                                 <div class="userInfoItem">
                                     <div class="item_lable">Policy Number</div>
-                                    <div class="item_value">{{ row.policyNumber }}</div>
+                                    <div class="item_value">{{ policy.policyNo }}</div>
+                                </div>
+                                <div class="cv_bodyItems">
+                                    <div class="item_lable">No.Of.Members</div>
+                                    <div class="item_value">{{policy.noOfInsured}}</div>
                                 </div>
                                 <div class="userInfoItem">
                                     <div class="item_lable">Created On</div>
-                                    <div class="item_value">28-03-2024</div>
+                                    <div class="item_value">{{ formatPolicyStartDate(policy.policyStartDate) }}</div>
                                 </div>
                                 <div class="userInfoItem">
                                     <div class="item_lable">Status</div>
-                                    <div class="item_value"><span class="info_status info_status_green">
-                                      Inforced
-                                    </span></div>
+                                    <span class="info_status" [ngClass]="{
+                                        'info_status_green': policy.policyStatus === 'Inforced' || policy.policyStatus === 'Renewed',
+                                        'info_status_red': policy.policyStatus !== 'Inforced' && policy.policyStatus !== 'Renewed'
+                                      }">
+                                      {{ policy.policyStatus }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
