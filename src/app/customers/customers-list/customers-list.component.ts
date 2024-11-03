@@ -255,12 +255,12 @@ export class CustomersListComponent {
     this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
   }
 
-  sendCustomerDetails(data:any,event:number){
+  sendCustomerDetails(data:any,event:number){    
     const RequestBody = {
-      agentcode:this.agentCode,
-      requestType: event,
-      policyNumber: data.policyNo,
-      proposalNumber: data.proposalNumber,
+      agentcode: this.agentCode, 
+      requestType: event,  
+      policyNumber: data.policies[0]?.policyNo || "",  
+      proposalNumber: data.policies[0]?.proposalNumber || "",
       memberId: data.memberID,
       mobileNo: data.mobileNo,
       emailId: data.emailID
