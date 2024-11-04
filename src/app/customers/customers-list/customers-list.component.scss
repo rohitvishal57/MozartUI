@@ -289,3 +289,12 @@ h6 {
 	font-weight: 600;
 	color:#4d72bb;
 }
+.quoteView .table .tbody-quoteView tr{
+	background: transparent !important;
+}
+.quoteView .table .tbody-quoteView:nth-child(odd) tr:first-child {
+	background: #f9fafb !important;
+}
+.quoteView .table .tbody-quoteView .info_customerDetails .table thead tr {
+	background: #f3e7e7 !important;
+}
