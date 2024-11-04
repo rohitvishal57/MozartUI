@@ -252,6 +252,10 @@ export class LeadsListComponent {
     this.getLeadsList();
   }
   clear() {
+    this.leadsInfoListRequestBody.searchlist = "";
+    this.leadsInfoListRequestBody.searchby = "";
+	  this.leadsInfoListRequestBody.fromdate = null;
+    this.leadsInfoListRequestBody.todate = null;
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
