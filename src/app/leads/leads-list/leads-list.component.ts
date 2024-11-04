@@ -199,6 +199,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
+    this.searchInputControl.reset();
   }
   getProducts() {
     const reqData = {
@@ -435,6 +436,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
+    this.searchInputControl.reset();
   }
   getUnAssignedLeads() {
     this.leadsInfoListRequestBody.searchby = "";
@@ -451,6 +453,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
+    this.searchInputControl.reset();
   }
   getPlaceholder(): string {
     this.filterFeildType = "text";
