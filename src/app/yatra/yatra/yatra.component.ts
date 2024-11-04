@@ -111,7 +111,7 @@ export class YatraComponent {
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
-    private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,private aesEncryptService: AesEncryptionService,
+    private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route : ActivatedRoute) { }
 
@@ -1032,7 +1032,7 @@ export class YatraComponent {
     this.yatraService.getInsuredOccupation().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = this.aesEncryptService.decrypt(res?.data);
+        control.options =res.data;
       },
       error: (err: any) => {
         console.error(err);
@@ -1044,7 +1044,7 @@ export class YatraComponent {
     this.yatraService.getProposerOccupation().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = this.aesEncryptService.decrypt(res?.data);
+        control.options = res.data;
       },
       error: (err: any) => {
         console.error(err);
@@ -1056,7 +1056,7 @@ export class YatraComponent {
     this.yatraService.getNatureOfDuty().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = this.aesEncryptService.decrypt(res?.data);
+        control.options = res.data;
       },
       error: (err: any) => {
         console.error(err);
@@ -1143,7 +1143,7 @@ export class YatraComponent {
     this.yatraService.getNomineeRelationship().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = this.aesEncryptService.decrypt(res?.data);
+        control.options = res.data;
       },
       error: (err) => {
         console.error(err);
@@ -1159,7 +1159,7 @@ export class YatraComponent {
 
       this.yatraService.getAllBankDetails().subscribe({
         next: (res: any) => {
-          control.options = this.aesEncryptService.decrypt(res?.data);
+          control.options = res.data;
         },
         error: (err) => {
           console.error(err);
@@ -1266,7 +1266,11 @@ export class YatraComponent {
       if (chequeNumber.length > 6) {
         event.target.value = chequeNumber.slice(0, 6);
         this.dynamicFormGroup.get(control.name)?.setValue(chequeNumber.slice(0, 6));
+        this.toast.error({ detail: "ERROR", summary: "Cheque number cannot exceed 6 digits", duration: 3000 });
         return;
+      }
+      if (chequeNumber.length < 6) {
+        this.toast.error({ detail: "ERROR", summary: "Cheque number must be exactly 6 digits", duration: 3000 });
       }
     }
 
@@ -3207,7 +3211,7 @@ export class YatraComponent {
               const receiptResponse = healthRes.receiptCreationResponse;
 
               console.log(healthRes);
-              
+
 
               this.quoteNo = polCreationResponse.quoteNumber;
               this.customerId = polCreationResponse.customerId;
@@ -4094,7 +4098,7 @@ export class YatraComponent {
             });
           }
         }
-        else{
+        else {
           this.toast.warning({ detail: "WARNING", summary: "No Record Found", duration: 3000 });
         }
         // else {
