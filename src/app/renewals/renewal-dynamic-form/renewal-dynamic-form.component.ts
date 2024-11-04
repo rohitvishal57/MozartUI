@@ -414,7 +414,8 @@ payNow(){
     "source": "Retail",
     "policyType": "Renewal",
     "policyNumber": "",
-    "quoteNumber": ""
+    "quoteNumber": "",
+    "orderId": ""
    }
    if (paymentRequestBody.paymentMethod == "E-Nach" ||
     paymentRequestBody.paymentMethod == "E-Mandate" ||
@@ -559,7 +560,10 @@ getRenewalInfo(): Promise<void> {
                 this.actionKyc = action;
                 console.log("responsec body(if)",response.isSuccess);
                 this.toast.success({detail: 'SUCCESS',summary: 'KYC Details Fetched Successfully', duration: 1000}); 
-             } else if(response.isSuccess === false){console.log("kyc failed");
+             } else if(response.isSuccess === false){
+              console.log("kyc failed");
+              this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
+              this.getkycURL();
              }
              console.log("responsec body",response.isSuccess);
             },
@@ -577,9 +581,11 @@ getRenewalInfo(): Promise<void> {
         policyNumber: this.policyNumber,fullName: '',  
         panNumber: '', dob: '', pepCheck: '', businessType: "ren"
       };
-      this.renewalService.getkycURL(requestBody, { responseType: 'text' }).subscribe(
-        (response) => {
-          this.kycLink = response;
+      this.renewalService.getkycURL(requestBody, { responseType: 'json' }).subscribe(
+        (response:any) => {
+          console.log(response);
+          
+          this.kycLink = `${response.message}`;
         },
         error => {
           this.kycLink=" "
