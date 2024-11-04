@@ -123,9 +123,7 @@ fetchData(): void {
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
     if (res.data && res.statusCode == "200" && res.isSuccess) {
     this.claims = res.data.claimDetails;      
-   // this.productsList = res.claimDetails 
-    console.log(this.productsList);
-    
+   // this.productsList = res.claimDetails     
     this.gridClaimsData = res.data.claimDetails; 
     this.totalRecords = res.data.totalRecords;    
 }
@@ -178,66 +176,102 @@ else{
     })
   }
 
-  calculateAppliedFiltersCount(){
-    const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
-      (requestType) => requestType.selected).length;
-      const selectedProductsCount = this.productsList.filter(
-        (product:any) => product.selected).length;
-        let count = selectedPolicyTypesCount + selectedProductsCount;
-        if (this.fromDate && this.toDate) {
-          count++;
-        }
-        this.appliedFiltersCount = count;
-         this.appliedFiltersCount;
+  calculateAppliedFiltersCount() {
+    const selectedPolicyTypesCount = this.StaticRequestTypes 
+      ? this.StaticRequestTypes.filter((requestType) => requestType.selected).length
+      : 0;
+  
+    const selectedProductsCount = this.productsList 
+      ? this.productsList.filter((product: any) => product.selected).length
+      : 0;
+  
+    let count = selectedPolicyTypesCount + selectedProductsCount;
+  
+    if (this.fromDate && this.toDate) {
+      count++;
+    }
+  
+    this.appliedFiltersCount = count || 0;
   }
+  
 
-      applyFilter() {
-        this.selected = "";
-        this.searchInputControl.reset();
-        this.calculateAppliedFiltersCount();
-        this.formatDate("fromDate");
-        this.formatDate("toDate");
-        this.claimsReqBody.fromDate=this.fromDate;
-        this.claimsReqBody.toDate=this.toDate;
-        const selectedPolicyTypes = this.StaticRequestTypes
-        .filter((requestType:any) => requestType.selected)
-        .map((requestType:any) => requestType.name);
-        this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
-
-        const selectedProducts = this.productsList.filter((searchType: any) => searchType.selected)
-        .map((searchType: any) => searchType.productName);
-      if(selectedProducts.length > 0) {
-        this.claimsReqBody.searchType = "productName";
-        this.claimsReqBody.searchString = selectedProducts;
-      }
-      this.first = 0
-      this.fetchData();
-      this.toggeledropdown=false;
-      }
+  
 
 cancel() {
-  this.fromDate = null;
-  this.toDate = null;
-  this.claimsReqBody.fromDate = null;
-  this.claimsReqBody.toDate = null;
+  // this.fromDate = null;
+  // this.toDate = null;
+  // this.claimsReqBody.fromDate = null;
+  // this.claimsReqBody.toDate = null;
   this.toggeledropdown = false;
-  this.fetchData();
+ // this.fetchData();
 }
 
-clear(){
-  this.productsList.forEach((product:any) => (product.selected = false));
-  this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
+applyFilter() {
+  this.selected = "";
+  this.searchInputControl.reset();
+  this.calculateAppliedFiltersCount();
+  this.formatDate("fromDate");
+  this.formatDate("toDate");
+
+  // Set date filters
+  this.claimsReqBody.fromDate = this.fromDate;
+  this.claimsReqBody.toDate = this.toDate;
+
+  // Process selected policy types
+  const selectedPolicyTypes = this.StaticRequestTypes 
+    ? this.StaticRequestTypes.filter((requestType: any) => requestType.selected).map((requestType: any) => requestType.name)
+    : [];
+
+  // Check if all request types are selected
+  if (selectedPolicyTypes.length === this.StaticRequestTypes.length || selectedPolicyTypes.length === 0) {
+    this.claimsReqBody.requestType = ""; // No filtering by request type
+  } else {
+    this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
+  }
+
+  // Process selected products
+  const selectedProducts = this.productsList 
+    ? this.productsList.filter((product: any) => product.selected).map((product: any) => product.productName)
+    : [];
+
+  if (selectedProducts.length === this.productsList?.length || selectedProducts.length === 0) {
+    this.claimsReqBody.searchType = "";
+    this.claimsReqBody.searchString = [""];
+  } else {
+    this.claimsReqBody.searchType = "productName";
+    this.claimsReqBody.searchString = selectedProducts.join(", ");
+  }
+
+  this.first = 0;
+  this.fetchData();
+  this.toggeledropdown = false; // Close the filter dropdown
+}
+
+
+clear() {
+  if (this.productsList) {
+    this.productsList.forEach((product: any) => (product.selected = false));
+  }
+
+  if (this.StaticRequestTypes) {
+    this.StaticRequestTypes.forEach((requestType: any) => (requestType.selected = false));
+  }
+
   this.fromDate = null;
   this.toDate = null;
   this.appliedFiltersCount = 0;
- // this.claimsReqBody.productName = "";
+
+  // Clear request body filters
   this.claimsReqBody.requestType = "";
   this.claimsReqBody.searchType = "";
   this.claimsReqBody.searchString = [];
   this.claimsReqBody.fromDate = null;
   this.claimsReqBody.toDate = null;
+
   this.fetchData();
+  this.toggeledropdown = false; // Close the filter dropdown
 }
+
   //-----------search dropdown----------//
   // toggleSearchDropdown(event: any){
   //   if(this.toggledropdown==true)
@@ -254,8 +288,8 @@ clear(){
       this.claimsReqBody.searchString = [searchValue];    
     }
     this.isSearch = true;
-    this.first = 0;
     this.fetchData();
+    this.first = 0;
     
   }
 

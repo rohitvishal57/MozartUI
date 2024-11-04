@@ -232,11 +232,11 @@ export class ClaimsViewComponent {
     this.claimsService.getProposalDetails(this.agentCode).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.response = response;
-          console.log('resp', this.response);
+          this.response = response.data;
+          console.log('getprop', this.response);
           
           const allData: ClaimData[] = response.data;
-          console.log('resp', allData);
+          console.log('resp all', allData);
 
           this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');          
           this.policyNumbers = this.extractUniqueValues(
@@ -255,10 +255,11 @@ export class ClaimsViewComponent {
   }
 
   extractUniqueValues(data: any[], key: string): any[] {
-    return [...new Set(data.map((item) => item[key]).filter((val) => val))];
+    return [...new Set(data?.map((item) => item[key]).filter((val) => val))];
   }
 
   handleDropdownChange(value: string): void {
+    debugger
     const selectedPolicyNumber = value;
       this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
       if (!policyValue) {
@@ -266,7 +267,7 @@ export class ClaimsViewComponent {
         this.memberNames = []; 
       }
     });
-    const filteredMembers = this.response.data.filter(
+    const filteredMembers = this.response.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
       this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
@@ -458,8 +459,10 @@ export class ClaimsViewComponent {
     this.claimsService.getStates(statesReqBody).subscribe(
       (info: any) => {
         console.log("resp", info);
-        if (info) {
-          this.states = info.response;
+        if (info.isSuccess) {
+          this.states = info.data.response;
+          console.log('states',this.states);
+          
         } else {
           console.error("Failed to fetch states", info.message);
         }
@@ -500,8 +503,8 @@ export class ClaimsViewComponent {
 
     this.claimsService.getCitiesByState(citiesReqBody).subscribe(
       (info: any) => {
-        if (info && info.cityList) {
-          this.cities = info.cityList;
+        if (info.isSuccess) {
+          this.cities = info.data.cityList;
           //this.cdr.markForCheck();
         } else {
           console.error("Failed to fetch cities", info.message);
@@ -763,31 +766,30 @@ export class ClaimsViewComponent {
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = this.form.value;
       let formData = this.form.value;
-
+  
       if (Array.isArray(formData.hospitalAddress)) {
         formData.hospitalAddress = formData.hospitalAddress.join(', '); 
       }
-    //  const documentIds = this.uploadedFiles.map((file) => file.documentId);
-       // saveClaimData.documentIds = documentIds;
-       const documentsArray = this.uploadedFiles.map((file) => ({
+  
+      const documentsArray = this.uploadedFiles.map((file) => ({
         documentName: file.name,
         status: file.status,
         labelName: file.label
-    }));
-    saveClaimData.documentsArray = documentsArray;
+      }));
+      saveClaimData.documentsArray = documentsArray;
+  
       this.claimsService.saveClaims(saveClaimData).subscribe(
-        (response) => {
-          if (response) {
+        (response:any) => {
+          if (response?.isSuccess) {  // Check if isSuccess is true
             this.uploadSuccess = true;
             this.toast.success({ detail: "Claims submitted successfully" });
             this.router.navigate(["claims/claimsList"]);
           } else {
             this.toast.error({ detail: "Failed to submit claims" });
           }
-  
           this.updateStatusLabel();
         },
-        (_error:any) => {
+        (_error: any) => {
           this.toast.error({
             detail: "Error occurred during claims submission",
             duration: 3000,

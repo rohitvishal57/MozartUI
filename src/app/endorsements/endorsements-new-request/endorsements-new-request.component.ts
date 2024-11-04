@@ -416,7 +416,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.panNo);
     }
 
-    if (value === 'panNumber' || value === 'aadharNumber'|| value=='ChangeinInternationalAddress') {
+    if (value === 'panNumber' || value === 'aadharNumber') {
       this.uploadDoc = true;
       this.showOtpSection = false;
       this.isDisabled = false;
@@ -426,7 +426,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.isDisabled = true;
     }
 
-    if (value === 'nomineeContact') {
+    if (value === 'nomineeContact' || value=='ChangeinInternationalAddress') {
       this.showOtpSection = false;
       this.isDisabled = false;
     }
@@ -613,6 +613,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
                     this.backToEndorsment();
                   }, (error:any) => {
                     console.log(error);
+                    this.toast.error({
+                      detail: 'ERROR',
+                      summary: "Some Other Error Happened!",
+                      duration: 5000,
+                    });
                 });
               }
             }
