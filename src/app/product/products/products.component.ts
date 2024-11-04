@@ -41,9 +41,7 @@ export class ProductsComponent implements OnInit {
   state: any;
   groupedFeatures: any[] = [];
   interestedProductName: string = '';
-  leadNumber : string = '';
   quickQuoteRedirect : boolean = false;
-
 
    
 
@@ -58,7 +56,6 @@ export class ProductsComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
      this.interestedProductName = params['productName'];
-     this.leadNumber = params['leadId'];
      if (this.interestedProductName) {
       this.quickQuoteRedirect=  true;
      }
@@ -147,8 +144,10 @@ export class ProductsComponent implements OnInit {
   async getProposalNum() {
     try {
       const res = await firstValueFrom(this.common.getProposalNumber());
-      res.data = this.aesEncryptService.decrypt(res.data);
+      // res.data = this.aesEncryptService.decrypt(res.data);
       this.proposalNum = res.data.proposalNumber;
+      console.log(this.proposalNum);
+      
     } catch (error) {
       console.error(error);
     }
@@ -178,21 +177,11 @@ export class ProductsComponent implements OnInit {
 
       }
       console.log(productData)
-      if(this.quickQuoteRedirect == true){
-        if (this.formSequence != null && this.formSequence.length > 0) {
-          this.router.navigate(['yatra'], {
-            state: { productData: productData, formSequence: this.formSequence },
-            queryParams:{leadId :this.leadNumber}
-          });
-        }
-      }else{
-        if (this.formSequence != null && this.formSequence.length > 0) {
-          this.router.navigate(['yatra'], {
-            state: { productData: productData, formSequence: this.formSequence }
-          });
-        }
+      if (this.formSequence != null && this.formSequence.length > 0) {
+        this.router.navigate(['yatra'], {
+          state: { productData: productData, formSequence: this.formSequence }
+        });
       }
- 
     } catch (error) {
       console.error(error);
     }
@@ -274,6 +263,10 @@ navigateToProductComparison(){
   sessionStorage.setItem('compareItems', JSON.stringify(this.compareItems));
   this.router.navigate(['/products/comparison'], {
   });
+}
+
+closeComparison(){
+  this.compareItems = [];
 }
 
 filterProductList (productList : any){
