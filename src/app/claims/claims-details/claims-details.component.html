@@ -80,9 +80,8 @@
                         </div>
                         <div class="claim_amount">
                             <h6>Approved Amount</h6>
-                            <p>₹  {{ claims?.approvedAmount }}</p>
-                            <!-- <p>--</p> -->
-                        </div>
+                            <p>₹ {{ claims?.approvedAmount !== null ? claims.approvedAmount :   '--' }}</p>
+                          </div>
                     </div>
                 </div>
            </div>
@@ -262,6 +261,38 @@
                                                 </ul>
                                             </div>
                                         </div>
+                                        <div>
+                                            <strong>View Uploads:</strong>
+                                        <div *ngIf="noFilesFound" class="no-files-message">
+                                            No documents have been uploaded yet.
+                                          </div>
+                                        <div class="viewDocument_listMain" *ngIf="!noFilesFound && fileUploads.length > 0">
+                                            <table class="table table-striped">
+                                              <thead>
+                                                <tr>
+                                                  <th>S.No</th>
+                                                  <th>Document Name</th>
+                                                  <th>Type</th>
+                                                  <th>Status</th>
+                                                  <th>Date of Upload</th>
+                                                  <th>Download</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                <tr *ngFor="let file of fileUploads; let i = index">
+                                                  <td>{{ i + 1 }}</td>
+                                                  <td>{{ file.name }}</td>
+                                                  <td>{{ file.type }}</td>
+                                                  <td></td>
+                                                  <td></td>
+                                                  <td>
+                                                    <button class="btn btn-primary" (click)="downloadFile(file)">Download</button>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
                                         <div class="uploadDocument_main">
                                             <div class="uploadDocument_area" (click)="docUploadFileInput.click()">
                                                 <div class="ud_area_left">
@@ -305,33 +336,7 @@
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <div class="viewDocument_listMain" *ngIf="fileUploads.length > 0">
-                                                <table class="table table-striped">
-                                                  <thead>
-                                                    <tr>
-                                                      <th>S.No</th>
-                                                      <th>Document Name</th>
-                                                      <th>Type</th>
-                                                      <th>Status</th>
-                                                      <th>Date of Upload</th>
-                                                      <th>Download</th>
-                                                    </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                    <tr *ngFor="let file of fileUploads; let i = index">
-                                                      <td>{{ i + 1 }}</td>
-                                                      <td>{{ file.name }}</td>
-                                                      <td>{{ file.type }}</td>
-                                                      <td></td>
-                                                      <td></td>
-                                                      <td>
-                                                        <button class="btn btn-primary" (click)="downloadFile(file)">Download</button>
-                                                      </td>
-                                                    </tr>
-                                                  </tbody>
-                                                </table>
-                                              </div>
-                                              
+                                          
                                             <!-- <div class="filesList_body">
                                                 <ul class="uploadedFiles_main">
                                             <li class="uploadedFiles_item" *ngFor="let file of fileUploads">
