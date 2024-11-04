@@ -2540,6 +2540,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .tableSubMain .table th {
   font-weight: 600;
+  line-height: normal;
 }
 
 .tableSubMain .table td {
