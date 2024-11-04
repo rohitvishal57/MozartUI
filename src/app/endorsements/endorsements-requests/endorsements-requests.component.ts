@@ -180,7 +180,7 @@ export class EndorsementsRequestsComponent implements OnInit {
         if (response.data && response.statusCode == "200" && response.isSuccess) {
           this.endorsementDetails = response.data.endorsementDetails.map((obj: any) => {
             const date = new Date(obj.raisedOn);
-            const formattedDate = this.datePipe.transform(date, 'dd/MM/yyyy');
+            const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
             return {
               ...obj, raisedOn:formattedDate
             }
@@ -224,12 +224,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.maxDate = new Date().toISOString().split('T')[0];  
   }
   cancel() {
-    this.fromDate = null;
-    this.toDate = null;
-    this.requestsListRequestBody.fromDate = '';
-    this.requestsListRequestBody.toDate = '';
     this.toggeledropdown = false;
-    this.getRequestList();
   }
   calculateAppliedFiltersCount(){
     // const selectedPolicyTypesCount = this.StaticRequestTypes.filter((requestType:any) => requestType.selected).length;
@@ -249,6 +244,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.requestsListRequestBody.searchString = [];
     this.requestsListRequestBody.fromDate = "";
     this.requestsListRequestBody.toDate = "";
+    this.toggeledropdown = false;
     this.getRequestList();
   }
   applyFilter() {

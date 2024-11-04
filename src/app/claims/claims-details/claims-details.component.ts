@@ -155,7 +155,7 @@ export class ClaimsDetailsComponent {
 
     this.claimsService.getClaimTracker(claimsReqBody).subscribe(
       (response: any) => {
-        this.customeStepperStatuses = response.data.data;        
+        this.customeStepperStatuses = response.data;        
         this.customeStepperStatuses.forEach((item:any, index: number) => {
           item.count = index + 1;
         });
