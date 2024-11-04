@@ -200,6 +200,8 @@ export class LeadsListComponent {
     this.getLeadsList();
     this.activeFilter = filter;
     this.searchInputControl.reset();
+    this.selected = "Select an option";
+    this.getPlaceholder();
   }
   getProducts() {
     const reqData = {
@@ -436,6 +438,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
+    this.selected = "Select an option";
     this.searchInputControl.reset();
   }
   getUnAssignedLeads() {
@@ -453,6 +456,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
+    this.selected = "Select an option";
     this.searchInputControl.reset();
   }
   getPlaceholder(): string {
