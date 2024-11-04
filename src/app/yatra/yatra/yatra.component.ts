@@ -6,7 +6,7 @@ import { DOCUMENT } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -105,18 +105,29 @@ export class YatraComponent {
   feedbackSubmit: boolean = false;
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
+  quickQuoteRedirect : boolean =false;
+  leadNumber : string = "";
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,private aesEncryptService: AesEncryptionService,
-    private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard) { }
+    private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
+    private route : ActivatedRoute) { }
 
   ngOnInit() {
     this.spinner.show();
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
     console.log(this.formSequence);
+
+    this.route.queryParams.subscribe(params => {
+      this.leadNumber = params['leadId'];
+      if (this.leadNumber) {
+       this.quickQuoteRedirect=  true;
+      }
+     });
+
     if (localStorage.getItem('code'))
       this.Code = localStorage.getItem('code');
     // this.verticalCode = localStorage.getItem('verticalCode');
@@ -4525,6 +4536,11 @@ export class YatraComponent {
       this.flattenObjectInsert(this.formData);
     })
     console.log(this.formData, this.dynamicFormGroup.value, this.form);
+  }
+
+  backToleads(){
+    this.router.navigate(['/leads/leadsList'], {
+  });
   }
 
 }

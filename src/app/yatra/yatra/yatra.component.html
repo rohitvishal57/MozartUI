@@ -51,7 +51,7 @@
       </div>
     </div>
     <div class="right-panel">
-      <h2 class="icon_withHeading" aria-hidden="true" ><a class="btn_backPage"></a>back to Leads</h2>
+      <h2 class="icon_withHeading" aria-hidden="true" *ngIf="quickQuoteRedirect" ><a class="btn_backPage"  (click)="backToleads()" ></a>back to Leads</h2>
       <form [formGroup]="dynamicFormGroup" style="margin-bottom: 20%;">
         <!-- <h2 *ngIf="form.formTitle!=''">{{form.formTitle}}</h2> -->
         <!-- <div class="card-body"> -->
