@@ -13,7 +13,7 @@
                 </div>
             </div>
 
-            <!--Product-2 Comparison Start-->
+            <!--FUTURE: Product-2 Comparison Start-->
             <section class="quoteComparisonWraper planComparisonWraper block-hide">
                 <!--Header start-->
                 <div class="qc_item qc_item1 head_qc_item">
@@ -189,18 +189,18 @@
                     <!--Footer end-->
                 </div>
             </section>
-            <!--Product-2 Comparison End-->
-            <br><br>
-            <!--Product Comparison Start-->
-            <section class="quoteComparisonWraper  block-hide">
-                <div class="qc_item qc_item1">
+            <!--FUTURE: Product-2 Comparison End-->
+            
+            <!--PRESENT: Product Comparison Start-->
+            <section class="quoteComparisonWraper planComparisonWraper">
+                <!--<div class="qc_item qc_item1">
                     <header>Plan <br>Comparison</header>
                     <div class="upgradeInfo">Upgrade Recommendations</div>
                     <div class="qc_info">keyFeatures</div>
                     <div class="qc_info qc_info_grey">Optional Covers</div>
                     <div class="qc_info">Health Add On's</div>
                     <div class="qc_empty"></div>
-                </div>
+                </div>-->
                 <div class="qc_item qc_item2">
                     <div class="qc_itemSubMain">
                         <div class="qc_item" *ngFor="let comparisonItem of comparisonItems">
@@ -210,16 +210,20 @@
                                     <!--<h6>₹6,863*<span>/year</span></h6>-->
                                 </div>
                                 <div class="compare_btnGroup">
+                                    <button type="button" value="buyplan" class="btn_pink btn_addToCart"><img src="assets/Img/icon_addtocart.svg"></button>
                                     <button type="button" value="buyplan" class="btn_red btn_buyPlan">Buy Plan</button>
                                 </div>
+                                <span class="compare_delete"><img src="assets/Img/icon_plans_comparison_delete_grey.svg"></span>
                             </header>
-                            <div class="upgradeInfo">10% Off on 2 years tenure</div>
+                            <div class="upgradeInfo block-hide">10% Off on 2 years tenure</div>
                             <div class="qc_info">
+                                <h6>key Features</h6>
                                 <ul class="tick_round">
                                     <li *ngFor="let keyFeatures of comparisonItem.keyFeatures"><img src="assets/Img/icon_tick_org.svg">{{ keyFeatures }}</li>
                                 </ul>
                             </div>
                             <div class="qc_info qc_info_grey">
+                                <h6>Optional Covers</h6>
                                 <ul class="tick_round">
                                     <li *ngFor="let feature of comparisonItem.productFeatures">
                                         <div class="tick_round_div" *ngIf="feature.categoryName === 'Optional Covers'"><img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}</div>
@@ -227,6 +231,7 @@
                                 </ul>
                             </div>
                             <div class="qc_info qc_infoCover">
+                                <h6>Health Add On</h6>
                                 <ul class="tick_round">
                                     <li *ngFor="let feature of comparisonItem.productFeatures">
                                         <div class="tick_round_div" *ngIf="feature.categoryName === 'Health Add On'"><img src="assets/Img/icon_tick_org.svg">{{ feature.featureName }}</div>
@@ -238,12 +243,12 @@
                     </div>
                 </div>
             </section>
-            <!--Product Comparison end-->
+            <!--PRESENT: Product Comparison end-->
         </div>
     </div>
 
-
-    <div class="row">
+    <!--OLD CODE: Product Comparison start-->
+    <div class="row block-hide">
         <div class="col-12">
             <div class="cardViewMain" >
                 <div class="cardViewWraper">
@@ -297,4 +302,5 @@
             </div>
         </div>
     </div>
+    <!--OLD CODE: Product Comparison end-->
 </main>

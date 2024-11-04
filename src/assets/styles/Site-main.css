@@ -2017,6 +2017,13 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 16px;
   color: #5a5a5a;
 }
+.quoteComparisonWraper .qc_item .qc_info h6 {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #5a5a5a;
+  margin-bottom: 15px;
+}
 
 .quoteComparisonWraper .qc_item .qc_info.qc_info_grey {
   background: var(--bg-grey-tr);
@@ -2033,7 +2040,9 @@ input[type="search"]::-webkit-search-results-decoration {
 .quoteComparisonWraper .qc_item .qc_infoCover {
   height: 66px;
 }
-
+.planComparisonWraper .qc_item .qc_infoCover {
+  height: auto;
+}
 /*Quote Comparison end*/
 
 /*Renew Journey- Members start*/
@@ -3884,7 +3893,7 @@ input[type="search"]::-webkit-search-results-decoration {
   flex-direction: column;
   gap:8px;
 }
-.tick_round li {
+.tick_round li, .tick_round li .tick_round_div {
   display: flex;
   flex-direction: row;
   align-items: center;

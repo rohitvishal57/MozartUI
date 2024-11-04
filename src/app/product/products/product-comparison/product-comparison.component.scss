@@ -15,6 +15,10 @@
 }
 .planComparisonWraper header {
   position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.planComparisonWraper .qc_item .upgradeInfo {
+  border-top: 0px solid rgba(0, 0, 0, 0.1);
 }
 .planComparisonWraper header .compare_delete {
   position: absolute;
