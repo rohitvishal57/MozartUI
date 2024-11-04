@@ -30,19 +30,18 @@ export class StatusValidationComponent implements OnInit {
         console.log( url,'fragment')
         if(url.includes('adfs')){
             data.Idtoken = idToken;
-            data.username = localStorage.getItem('userCode');
+            data.username = localStorage.getItem('agentCode');
             this.loginService.checkADFSLogin(data,data.Idtoken, data.username).subscribe({
               next: (res:any) => {
-                this.loginService.storeToken(res.data.token);
-                localStorage.setItem('agentCode', res.data.agentcode);
-                localStorage.setItem('code', '2001');
-                this.toast.success({
-                  detail: 'SUCCESS',
-                  summary: 'Login Successfull',
-                  duration: 2000,
-                });
-                localStorage.removeItem('userCode');
-                this.router.navigate(['dashboard']);
+                if(res.data && res.isSuccess && res.statusCode == '200') {
+                  localStorage.setItem('agentCode', res.data.agentcode);
+                  this.toast.success({
+                    detail: 'SUCCESS',
+                    summary: 'Login Successfull',
+                    duration: 5000,
+                  });
+                  this.router.navigate(['dashboard']);
+                }
               },
               error: (err) => {
                this.router.navigate(['']);
@@ -55,26 +54,25 @@ export class StatusValidationComponent implements OnInit {
             });
         }else{
           data.Idtoken = idToken;
-          data.username = localStorage.getItem('userCode');
+          data.username = localStorage.getItem('agentCode');
           this.loginService.checkCyberArkLogin(data,data.Idtoken,data.username).subscribe({
             next: (res:any) => {
-              this.loginService.storeToken(res.data.token);
-              localStorage.setItem('agentCode', res.data.agentcode);
-              localStorage.setItem('code', '2001');
-              this.toast.success({
-                detail: 'SUCCESS',
-                summary: 'Login Successfull',
-                duration: 2000,
-              });
-              localStorage.removeItem('userCode');
-              this.router.navigate(['dashboard']);
+              if(res.data && res.isSuccess && res.statusCode == '200') {
+                localStorage.setItem('agentCode', res.data.agentcode);
+                this.toast.success({
+                  detail: 'SUCCESS',
+                  summary: 'Login Successfull',
+                  duration: 5000,
+                });
+                this.router.navigate(['dashboard']);
+              }
             },
             error: (err) => {
              this.router.navigate(['']);
               this.toast.error({
                 detail: 'ERROR',
                 summary: 'Some Error Occured! Please Try Again.',
-                sticky: true,
+                duration: 5000,
               });
             },
           });
@@ -84,7 +82,7 @@ export class StatusValidationComponent implements OnInit {
              this.toast.error({
               detail: 'ERROR',
               summary: 'Some Error Occured! Please Try Again.',
-              sticky: true,
+              duration: 5000,
             });
         }
       });

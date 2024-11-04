@@ -46,8 +46,9 @@ export class ProposalsListComponent {
     "proposer": "",
     "productVarientName": "",  
     "proposalNumber": "", 
-    "intermediaryID": this.agentCode, 
-    "policyType": "",  
+    "agentCode": this.agentCode, 
+    "policyType": "", 
+    "policyStatus": "", 
     "startDate": null as string | null,
     "endDate": null as string | null, 
     "pageNumber": this.page,
@@ -81,7 +82,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.pageSize = this.rows;
     this.proposalService.getProposalListApi(this.proposalListRequestBody).subscribe(
       (response) => { 
-        if (response.success) {
+        if (response.isSuccess) {
           this.proposalList = response.data.proposalList.map((item: any) => ({
             ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
           })); 
@@ -100,6 +101,7 @@ export class ProposalsListComponent {
   }
   filterQuotes(filter: string,filterRange: string) {
     this.proposalListRequestBody.filterType = filter;
+    this.first = 0;this.page = 1;
     this.getProposalList();
     this.activeFilter = filter;
     this.filterType = filterRange;

@@ -28,12 +28,12 @@
                                 <option value="policyNumber">Policy Number</option>
                                 <option value="memberName">Member Name</option>
                             </select>
-                            <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button type="button" id="search" name="search" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <input class="filterSearch" id="endorsementSearchInput" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <button type="button" id="endorsementSearchBtn" name="endorsementSearchBtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="filter" name="filter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter ({{appliedFiltersCount}})</button>
+                        <button type="button" id="endorsementFilter" name="endorsementFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter ({{appliedFiltersCount}})</button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
@@ -81,8 +81,8 @@
                                                 </div>
                                             </div>
                                             <footer>
-                                                <button type="button" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                                <button type="button" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                                <button type="button" value="cancel" id="endorsementClear" name="endorsementClear" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                                <button type="button" value="apply" id="filterApply" name="filterApply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
                                             </footer>
                                         </div>
                                     </div>
@@ -154,7 +154,7 @@
                         <header>
                             <div class="card_insureInfo">
                                 <h6>
-                                    <div class="insureName">{{ row?.memberName }} </div>
+                                    <div class="insureName" title="{{ row?.memberName }}">{{ row?.memberName }} </div>
                                 </h6>
                                 <div class="item_productName">{{ row?.caseId }}</div>
                             </div>

@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { LeadsService } from '../leads.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-create-lead',
@@ -48,7 +49,8 @@ export class CreateLeadComponent implements OnInit {
     private datePipe: DatePipe,
     public CreateLead: CreateLead,
     public CreateLeadList: LeadFormListValue,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private  datepipe : DatePipe) {
 
   }
 
@@ -142,23 +144,23 @@ export class CreateLeadComponent implements OnInit {
       substatus: ['']
     }
   );
-  this.userValidations.get('age')?.disable();
-
-
+     this.userValidations.get('age')?.disable();
 
 
     this.addNoteForm = this.formBuilder.group({
       activityTitle: ['', Validators.required], // activityTitle is required
       activityStartDate: ['', Validators.required], // Start date is required
       activityStartTime: ['', Validators.required], // Start time is required
-      activityEndDate: ['', Validators.required], // End date is required
-      activityEndTime: ['', Validators.required], // End time is required
+      activityEndDate: ['',Validators.required], // Use null if control is not available  
+      activityEndTime :  ['', Validators.required],    
       activityType: ['', Validators.required], // Activity type is required
       notes: ['', Validators.required] // Notes can be optional
     });
   }
 
+  
   changeDob(event: any) {
+    console.log("date",event.target.value);
     let age: any = ''
     age = this.calculateAge(event.target.value);
     this.userValidations.get('age')?.setValue(age);
@@ -208,8 +210,8 @@ export class CreateLeadComponent implements OnInit {
 
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
-        console.log(response.data);
-        if (response.success) {
+        console.log(response);
+        if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
             this.toast.success({ detail: 'Lead is updated successfully' });
           } else {
@@ -243,7 +245,7 @@ export class CreateLeadComponent implements OnInit {
     requestBody.isSellerPortal = true;
 
     this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
-      this.submittedUser = response.leadList[0];
+      this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
     },
       (error) => {
@@ -260,9 +262,10 @@ export class CreateLeadComponent implements OnInit {
       lastname: this.submittedUser.lastName,
       email: this.submittedUser.email,
       mobilenumber: this.submittedUser.phoneNumber,
-      dob: this.submittedUser.dob,
+      dob: this.datepipe.transform (this.submittedUser.dob,'yyyy-MM-dd'),
       age: this.submittedUser.age,
       gender: this.submittedUser.gender == "M" ? "Male" : this.submittedUser.gender == "F" ? "Female" : "Other",
+      isWhatsapp: this.submittedUser.isWhatsapp,
       maritalStatus: this.submittedUser.maritalStatus,
       numberOfKids: this.submittedUser.numberOfKids,
       occupation: this.submittedUser.occupation,
@@ -286,22 +289,29 @@ export class CreateLeadComponent implements OnInit {
       campaignnumber: this.submittedUser.campaignnumber,
       leadnumber: this.submittedUser.leadNumber,
       leadAssignee: this.submittedUser.leadAssignee,
-      isUpdate: this.submittedUser.isUpdate || 1 // Default to 0 if undefined
+      isUpdate: this.submittedUser.isUpdate || 1 ,// Default to 0 if undefined
+      status: this.submittedUser.leadStatus,
+      substatus: this.submittedUser.leadSubStatus
     });
+
+    console.log("user validation", this.userValidations.get('interestedProductName')?.value);
+
 
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
-
-
   }
+
+
 
   fetchActivityTypeInfo() {
     let fetchActivityTypeRequest: any = {};
     this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
       (response) => {
-        this.activityTypes = response.activityName;
+        if(response?.data?.activityName.length){
+          this.activityTypes = response?.data?.activityName;
+        }
       },
       (error) => {
         console.log("Failed to fetch ActivityType information : " ,error);
@@ -310,9 +320,9 @@ export class CreateLeadComponent implements OnInit {
 
   getReferenceStatus() {
     this.leadsService.getReferenceStatus().subscribe(
-      (response) => {
+      (response:any) => {
         console.log(response);
-        this.referenceStatus = response;
+        this.referenceStatus = response?.data;
       },
       (error) => {
         console.error("Error from getMyReportingUsers API:", error);
@@ -372,4 +382,27 @@ export class CreateLeadComponent implements OnInit {
     }
   }
 
+  onEndDateChange() {
+    this.validateEndDate();
+  }
+  
+
+  validateEndDate() {
+    const startDate = new Date(this.addNoteForm.get('activityStartDate')?.value);
+    const endDate = new Date(this.addNoteForm.get('activityEndDate')?.value);
+
+    if (startDate && endDate && endDate < startDate) {
+      this.addNoteForm.get('activityEndDate')?.setErrors({ incorrect: true }); 
+    } else {
+      this.addNoteForm.get('activityEndDate')?.setErrors(null); 
+     }
+  }
+
+  isCharacter(event: KeyboardEvent) {
+    const char = String.fromCharCode(event.which);
+    if (!/[a-zA-Z]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+  
 }

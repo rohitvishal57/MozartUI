@@ -5,6 +5,8 @@ import { Options } from '@angular-slider/ngx-slider';
 import { CommonService } from 'src/app/services/common.service';
 import { NgToastService } from 'ng-angular-popup';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { QuoteService } from '../quote.service';
+import { EncryptionService } from 'src/app/services/encryption.service';
 
 @Component({
   selector: 'app-get-quote',
@@ -176,12 +178,17 @@ export class GetQuoteComponent {
     }
   ]
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: FormBuilder,private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService) { }
 
   ngOnInit() {
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
+    let formData:any;
+    if(sessionStorage.getItem('formData')){
+      formData= this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
+    }
+    console.log(formData);
     this.quoteFormGroup = this.fb.group({
       proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
       proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
@@ -197,6 +204,66 @@ export class GetQuoteComponent {
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
+    if (formData) {
+      this.quoteFormGroup.patchValue(formData);
+      console.log(formData);
+      if(formData.memberPolicyType){
+        this.onPlanTypeChange(formData.memberPolicyType);
+      }
+      if(formData.sumInsured){
+        this.selectedSumInsured = formData.sumInsured;
+      }
+      if(formData.insuredMembers){
+        Object.entries(formData.insuredMembers).forEach(([memberName, isIncluded],index) => {
+          console.log(`${memberName}: ${isIncluded}`);
+          const mockEvent = { target: { checked: isIncluded } };
+          const member = this.relations.find(relation => relation.name === memberName);
+          member.dob = formData.insuredMemberDetails[index].memberdob;
+          member.age  = formData.insuredMemberDetails[index].memberAge;
+          console.log(member);
+          this.onRelationChange(mockEvent, member);
+        });
+        // this.addInsuredMemberDetails();
+        const insuredMembersGroup = this.fb.group({});
+      this.quoteFormGroup.setControl('insuredMembers', insuredMembersGroup);
+
+      // Reset the insuredMemberDetails array
+      const insuredMemberDetailsArray = this.fb.array([]) as FormArray;
+      this.quoteFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
+
+      // Add controls for the currently selected relationships
+      this.selectedRelationships.forEach((relation: any) => {
+        insuredMembersGroup.addControl(relation.value, this.fb.control(true));
+
+        const memberGroup = this.fb.group({
+          relation: [relation.value],
+          roomCategory: [""],
+          memberAge: [relation.age, [Validators.required]],
+          sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
+          isChronic: ["No"],
+          chronicDiseases: [this.diseaseNames],
+          zone: [this.proposerZone],
+          memberGender: [relation.gender, [Validators.required]],
+          memberdob: [relation.dob, [Validators.required]],
+          memberRelationCode: [24, [Validators.required]],
+          pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
+          city: [this.proposerCity],
+          zoneValue: [this.proposerZone],
+          state: [this.proposerState]
+        });
+
+        insuredMemberDetailsArray.push(memberGroup);
+      });
+
+      // Update selectedRelation string for display
+      this.selectedRelation = this.selectedRelationships.length > 0
+        ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
+        : 'Please select members';
+
+      console.log(this.selectedRelation);
+      }
+    }
+  console.log(this.quoteFormGroup.value);
     // Object.keys(this.multiIndiReqData).forEach((key: string)=>{
     //   if(Array.isArray(this.multiIndiReqData[key])){
 
@@ -211,6 +278,7 @@ export class GetQuoteComponent {
   }
 
   onRelationChange(event: any, relation: any) {
+    console.log(relation);
     const isChecked = event.target.checked;
     const selectedValue = relation.value;
 
@@ -224,6 +292,7 @@ export class GetQuoteComponent {
       this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
     }
+    console.log(this.selectedRelationships,selectedValue,isChecked);
     // this.saveDataToStorage();
   }
 
@@ -296,6 +365,7 @@ export class GetQuoteComponent {
       this.selectedDropdown = label;
       this.activeDropdown = index;
     }
+    console.log(this.selectedRelation,this.selectedPlan);
   }
 
   showDropdowns() {
@@ -351,7 +421,7 @@ export class GetQuoteComponent {
 
 
   continue() {
-    console.log(this.quoteFormGroup);
+    console.log(this.quoteFormGroup.value);
     this.quoteFormGroup.get('insuredMemberDetails')?.value.forEach((item: any) => {
       if (item.relation == 'Self') {
         this.quoteFormGroup.get('memberDobProposer')?.setValue(item.memberdob);
@@ -362,12 +432,17 @@ export class GetQuoteComponent {
     this.quoteFormGroup.get('numberOfInsuredMembers')?.setValue(this.selectedRelationships.length);
     this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length + "A");
     console.log(this.quoteFormGroup.value);
+    sessionStorage.setItem("formData", this.encryptionService.encrypt(this.quoteFormGroup.value));
+
     if (this.quoteFormGroup.valid) {
       console.log(this.quoteFormGroup.value);
       // this.saveDataToStorage();
-      this.route.navigate(['quote/quoteProducts'], {
-        state: { formData: this.quoteFormGroup.value }
-      });
+      if(this.route.url.includes('quoteProducts')){
+        location.reload();
+      }
+      else{
+        this.route.navigate(['quote/quoteProducts']);
+      }
     } else {
       this.quoteFormGroup.markAllAsTouched();
       console.log('Form is invalid. Please correct the errors.', this.quoteFormGroup);
@@ -564,7 +639,7 @@ export class GetQuoteComponent {
 
   // Add new member details
   addInsuredMemberDetails(): void {
-
+    console.log(this.selectedRelationships);
     if (this.selectedRelationships.length < 2 && this.selectedPlan === 'Family Floater') {
       this.toast.error({
         detail: "Error",

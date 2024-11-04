@@ -535,12 +535,16 @@
   }
   
   .otp-input {
-    width: 45px !important;
-    margin-right: 14px !important;
+    width: 50px !important;
+    margin-right: 10px !important;
     padding: 10px !important;
     text-align: center;
     font-size: 18px;
-    border: 1px solid #b5b1b1;
+    border: 1px solid #F1F3F6;
+    border: 1px solid #e7e8e9;
+    @media (max-width:390px) {
+        width: 41px !important;
+    }
   }
   .otp-text-wrap{
     color: #000000;
@@ -690,6 +694,10 @@
                 margin: 15px 0px;
                 background-color: #C7222A;
                 padding: 10px 12px;
+                @media (max-width:390px) {
+                    font-size: 13px;
+                    font-weight: 600;
+                }
             }
         
             button>span {
@@ -738,11 +746,17 @@
             height: 58px;
             background: #ffdcc5;
             z-index: -1;
+            @media (min-width:1920px) {
+                height: 100px;
+            }
         }
         img{
             height: 100%;
             float: left;
             margin-left: 12%;
+            @media (min-width:1440px) {
+                margin-left: 15%;
+            }
             @media (max-width:1280px) {
                 margin: 0;
             }
@@ -758,9 +772,14 @@
         }
         @media (max-width:1024px) {
             height: auto;
+            top: 40px;
+        }
+        @media (max-width:768px) {
+            top: 60px;
         }
         @media (max-width:767px) {
             height: 100%;
+            top: 0px;
         }
         /*max-width: 1026px;
         height: 100%;

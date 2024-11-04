@@ -8,6 +8,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
+import { ProductsService } from 'src/app/product/products/products.service';
 declare var bootstrap: any;
 
 @Component({
@@ -59,7 +60,7 @@ export class LeadsListComponent {
   startDate: any;
   endDate: any;
   filterLeads = false;
-  today : String = '';
+  today: String = '';
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
@@ -70,7 +71,8 @@ export class LeadsListComponent {
     private fb: FormBuilder,
     private router: Router,
     private datePipe: DatePipe,
-    private toast: NgToastService
+    private toast: NgToastService,
+    private productService: ProductsService,
 
   ) { }
 
@@ -131,14 +133,14 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.length = this.rows;
     this.leadsService.getLeadsListApi(this.leadsInfoListRequestBody).subscribe(
       (response) => {
-        if (response.statusCode == 200) {
-          this.leadsList = response.leadList;
+        if (response) {
+          this.leadsList = response.data.leadList;
           console.log("Renewal List", this.leadsList);
-          this.countsList = response;
+          this.countsList = response.data;
           this.totalRecords = this.countsList.totalCount;
-          this.appliedFiltersCount =0;
+          this.appliedFiltersCount = 0;
           if (this.filterLeads == true) {
-            this.appliedFiltersCount = response.totalCount;
+            this.appliedFiltersCount = response.data.totalCount;
           }
         }
         else { console.error("API request was not successful."); }
@@ -190,7 +192,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.unassignedleads = true;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-	  this.startDate = "";
+    this.startDate = "";
     this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
@@ -231,8 +233,9 @@ export class LeadsListComponent {
       .map((policyType) => policyType.name);
     this.leadsInfoListRequestBody.searchlist = selectedProducts.join(", ");
     this.leadsInfoListRequestBody.policyList = selectedPolicyTypes.join(", ");
-    this.leadsInfoListRequestBody.fromdate = this.startDate;
-    this.leadsInfoListRequestBody.todate = this.endDate;
+
+    this.leadsInfoListRequestBody.fromdate = this.startDate || null;
+    this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
 
@@ -246,10 +249,13 @@ export class LeadsListComponent {
     this.startDate = "";
     this.endDate = "";
     this.leadsInfoListRequestBody.searchby = "";
-    debugger
     this.getLeadsList();
   }
   clear() {
+    this.leadsInfoListRequestBody.searchlist = "";
+    this.leadsInfoListRequestBody.searchby = "";
+	  this.leadsInfoListRequestBody.fromdate = null;
+    this.leadsInfoListRequestBody.todate = null;
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
@@ -295,9 +301,9 @@ export class LeadsListComponent {
         Validators.required
       ]);
     }
-     else if (this.selected = 'Select an option') {
+    else if (this.selected = 'Select an option') {
       this.placeholder = 'Search...';
-      this.leadsInfoListRequestBody.searchby='';
+      this.leadsInfoListRequestBody.searchby = '';
       this.getLeadsList();
     }
     this.searchInputControl.updateValueAndValidity();
@@ -327,9 +333,9 @@ export class LeadsListComponent {
     } else {
       this.leadsInfoListRequestBody.searchby = "";
     }
-    debugger;
-    if(this.selected!='Select an option'){
+    if (this.selected != 'Select an option') {
       this.getLeadsList();
+      this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign? 'assignedLead': 'unAssignedLead';     
     }
   }
   renewalListView(view: string) {
@@ -356,9 +362,9 @@ export class LeadsListComponent {
     let requestBody: any = {}
     requestBody.agentCode = this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
-      (response) => {
+      (response : any) => {
         this.agentCodes = response;
-        if (this.agentCodes.length > 0) {
+        if (this.agentCodes && this.agentCodes.length > 0) {
           this.assignLeadForm.patchValue({ selectedAgentCode: this.agentCodes[0] });
         }
       },
@@ -373,14 +379,14 @@ export class LeadsListComponent {
     assigneLeadRequestBody.leadnumber = selectedLeadIDs,
       assigneLeadRequestBody.leadassigne = this.assignLeadForm.value.selectedAgentCode,
       assigneLeadRequestBody.agentCode = this.agentCode
-      
+
     this.leadsService.assineLead(assigneLeadRequestBody).subscribe(
       (response) => {
-        if (response.message  == "Success") {
+        if (response.message == "Success") {
 
-          if(selectedLeadIDs.length>1){
+          if (selectedLeadIDs.length > 1) {
             this.toast.success({ detail: 'Leads has been successfully assigned' });
-          }else{
+          } else {
             this.toast.success({ detail: 'Lead has been successfully assigned' });
           }
           this.filterQuotes('all');
@@ -389,9 +395,14 @@ export class LeadsListComponent {
         console.error("Error: Unable to assign lead. Please try again later.", error);
       }
     );
-    this.checkBoxSelectedLeads ='';
+    this.checkBoxSelectedLeads = [];
     this.assigneLeadModal.hide();
   }
+
+  cancelAssignModal(){
+    this.checkBoxSelectedLeads=[];
+  }
+
   toggleAll(event: Event) {
     const input = event.target as HTMLInputElement;
     this.leadsList.forEach(lead => lead.isSelected = input.checked)
@@ -417,7 +428,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.unassignedleads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-	    this.startDate = "";
+    this.startDate = "";
     this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
@@ -433,7 +444,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.unassignedleads = true;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-	    this.startDate = "";
+    this.startDate = "";
     this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
@@ -441,13 +452,13 @@ export class LeadsListComponent {
   }
   getPlaceholder(): string {
     if (this.selected === 'leadId') {
-      return 'Enter LeadId';
+      return 'Enter Lead Id';
     } else if (this.selected === 'mobileNumber') {
-      return 'Enter mobileNumber';
+      return 'Enter mobile Number';
     } else if (this.selected === 'name') {
       return 'Enter Name';
     } else if (this.selected == 'email') {
-      return 'Enter EmailId';
+      return 'Enter Email Id';
     }
     else {
       return 'Search...';
@@ -461,11 +472,19 @@ export class LeadsListComponent {
     }
   }
 
-  redirectProducts(lead : any){
+  redirectProducts(lead: any) { 
+
+    if(lead.interestedProductName && lead.planType){
+    this.router.navigate(['/products'], {
+      queryParams: { productName: lead.interestedProductName + " "+ lead.planType , leadId :lead.leadNumber}
+
+    });
+  }else{
     this.router.navigate(['/products'], {
     });
   }
+  }
 
- 
+
 
 }

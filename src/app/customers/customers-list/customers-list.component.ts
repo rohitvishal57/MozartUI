@@ -11,7 +11,7 @@ import { NgToastService } from 'ng-angular-popup';
   styleUrls: ['./customers-list.component.scss']
 })
 export class CustomersListComponent {
-  customerList: CustomerList[] = [];
+  customerList: any[] = [];
   page: number = 1;
   first: number = 0;
   rows: number = 10;
@@ -28,13 +28,14 @@ export class CustomersListComponent {
   selected: string = "";
   searchInputControl = new FormControl("");
   isDesktopView:boolean=false
-  // filterType: string = "totalRecords";
-  agentCode :any =localStorage.getItem('agentCode'); 
+  customerId:any;
+    agentCode :any =localStorage.getItem('agentCode'); 
   StaticPolicyTypes = [
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   currentDate = new Date().toISOString().split('T')[0];
+  moreInfoIndex: number | null = null;
   
   constructor(
     private customerService: CustomersService ,
@@ -73,14 +74,16 @@ export class CustomersListComponent {
   getCustomerList() {
     this.customerListRequestBody.pageNumber = this.page;
     this.customerListRequestBody.pageSize = this.rows;
-    this.customerService.getCustomerDetailsListApi(this.customerListRequestBody).subscribe(
+    this.customerService.getCustomerListApi(this.customerListRequestBody).subscribe(
       (response) => { 
-        if (response.success) {
-          this.customerList = response.data.customerList.map((item: any) => ({
-            ...item,policyStartDate:this.formatPolicyStartDate(item.policyStartDate)
-          })); 
+        if (response.isSuccess) {
+          this.customerList = response.data.customerData
           console.log("customers List",this.customerList);
-          this.totalRecords = response.data.totalRecords          
+          this.totalRecords = response.data.filterRecords 
+          if (this.customerList.length > 0) {
+          } else {
+            this.customerId = null; 
+          }         
         } 
         else {
           console.error("API request was not successful.");
@@ -91,6 +94,9 @@ export class CustomersListComponent {
       }
     );
   }
+
+  
+
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
       this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
@@ -245,14 +251,18 @@ export class CustomersListComponent {
   customerListView(view: string) {
     this.selectedView = view;
   }
-  sendCustomerDetails(data:any,type:number){
+  toggleMoreInfo(index: number): void {
+    this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
+  }
+
+  sendCustomerDetails(data:any,event:number){    
     const RequestBody = {
-      agentcode:this.agentCode,
-      requestType: type,
-      policyNumber: data.policyNumber,
-      proposalNumber: data.proposalNumber,
-      memberId: "",
-      mobileNo: data.mobileNumber,
+      agentcode: this.agentCode, 
+      requestType: event,  
+      policyNumber: data.policies[0]?.policyNo || "",  
+      proposalNumber: data.policies[0]?.proposalNumber || "",
+      memberId: data.memberID,
+      mobileNo: data.mobileNo,
       emailId: data.emailID
     };
     this.customerService.sendCustomerDetails(RequestBody).subscribe(
@@ -316,4 +326,10 @@ export class CustomersListComponent {
     )
   }
   
+  expandedRowIndex: any | null = false;
+
+  toggleDetails(index: any): void {
+      // Toggle row details visibility
+      this.expandedRowIndex = !this.expandedRowIndex
+  }
 }

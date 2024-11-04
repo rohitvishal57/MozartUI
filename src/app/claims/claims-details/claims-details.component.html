@@ -243,22 +243,22 @@
                                         <div class="uploadDocument_optionsInfo row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <ul class="unorderList ul_withIcon">
-                                                    <li><img src="../../../../../assets/Img/icon_ud_kycid.svg">Any govt/KYC ID</li>
-                                                    <li><img src="../../../../../assets/Img/icon_ud_doctor_prescription.svg">Doctor’s Prescription</li>
-                                                    <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Consultation form</li>
+                                                    <li><img src="assets/Img/icon_ud_kycid.svg">Any govt/KYC ID</li>
+                                                    <li><img src="assets/Img/icon_ud_doctor_prescription.svg">Doctor’s Prescription</li>
+                                                    <li><img src="assets/Img/icon_ud_consultation_form.svg">Consultation form</li>
                                                 </ul>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <ul class="unorderList ul_withIcon">
-                                                    <li><img src="../../../../../assets/Img/icon_ud_hospital_bill.svg">Hospital bill invoice</li>
-                                                    <li><img src="../../../../../assets/Img/icon_ud_neft.svg">NEFT/ Cancelled cheque/ Passbook</li>
-                                                    <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Claim form</li>
+                                                    <li><img src="assets/Img/icon_ud_hospital_bill.svg">Hospital bill invoice</li>
+                                                    <li><img src="assets/Img/icon_ud_neft.svg">NEFT/ Cancelled cheque/ Passbook</li>
+                                                    <li><img src="assets/Img/icon_ud_consultation_form.svg">Claim form</li>
                                                 </ul>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <ul class="unorderList ul_withIcon">
-                                                    <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Investigation report</li>
-                                                    <li><img src="../../../../../assets/Img/icon_ud_consultation_form.svg">Hospital discharge form</li>
+                                                    <li><img src="assets/Img/icon_ud_consultation_form.svg">Investigation report</li>
+                                                    <li><img src="assets/Img/icon_ud_consultation_form.svg">Hospital discharge form</li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -273,26 +273,26 @@
                                                         <span class="upload_icon"><img src="../../../../../assets/Img/icon_upload_white.svg"></span> Upload
                                                     </button>
                                                 </div>
-                                                <input type="file" #docUploadFileInput name="docUpload" (change)="onDocUploadFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
+                                                <input type="file" #docUploadFileInput name="docUpload" (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                                             </div>
                                             <span class="ui-error block-show" *ngIf="uploadValidFormt">
                                       File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files.
                                     </span>
 
-                                            <div class="uploadedFiles_main" *ngIf="viewFileUploads.length > 0">
+                                            <div class="uploadedFiles_main" *ngIf="uploadedFiles.length > 0">
                                                 <h3 class="heading-20-black">Uploaded Documents</h3>
                                                 <ul class="uploadedFiles_list">
-                                                    <li class="uploadedFiles_item" *ngFor="let file of viewFileUploads">
-                                                        <div class="uploadedFiles_info">
-                                                            <div class="file-label">
+                                                    <li class="uploadedFiles_item" *ngFor="let file of uploadedFiles">
+                                                        <!-- <div class="uploadedFiles_info"> -->
+                                                            <!-- <div class="file-label">
                                                                 <span>{{ file.label }}</span>
-                                                            </div>
-                                                            <div class="file-details">
+                                                            </div> -->
+                                                            <!-- <div class="file-details"> -->
                                                                 <!-- <h6>{{ file.fileName }}</h6> -->
-                                                                <p>{{ file.type }}</p>
+                                                                <!-- <p>{{ file.type }}</p> -->
                                                                 <!-- <p>{{ convertBytesToKB(file.size) }} | Uploaded on {{ file.uploadDate | date:'short' }}</p> -->
-                                                            </div>
-                                                            <div class="file-actions">
+                                                            <!-- </div> -->
+                                                            <!-- <div class="file-actions"> -->
                                                                 <!-- <a [href]="file.fileUrl" download class="btn-download">
                                                   <img src="assets/Img/icon_download.svg" alt="Download" /> Download
                                                 </a> -->
@@ -300,8 +300,8 @@
                                                                 <!-- <button (click)="deleteFile(file.fileId)" class="btn-delete">
                                                   <img src="assets/Img/icon_delete_red2.svg" alt="Delete" /> Delete
                                                 </button> -->
-                                                            </div>
-                                                        </div>
+                                                            <!-- </div> -->
+                                                        <!-- </div> -->
                                                     </li>
                                                 </ul>
                                             </div>
@@ -478,3 +478,5 @@
         </div>
     </div>
 </main>
+
+

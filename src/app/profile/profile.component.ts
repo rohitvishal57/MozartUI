@@ -17,7 +17,8 @@ export class ProfileComponent implements OnInit {
       "agentCode": localStorage.getItem('agentCode')
     }
     this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
-      if (res.success) {
+      if (res.isSuccess) {
+        // this.profileDetails = res.data;
         const output = Object.keys(res.data).map(key => ({
           heading: key.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
           icon: this.getIcons(key),

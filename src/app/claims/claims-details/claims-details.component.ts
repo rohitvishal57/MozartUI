@@ -1,3 +1,4 @@
+
 import { ChangeDetectorRef, Component, Input } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -130,12 +131,6 @@ export class ClaimsDetailsComponent {
     // this.fetchClaimDetails(this.claimId);
     // this.updateStatusLabel();
   }
-  // console.log( 'updatestayus', this.updateStatusLabel());
-  // const storedFiles = localStorage.getItem('uploadedFiles');
-  // if (storedFiles) {
-  //   this.uploadedFiles = JSON.parse(storedFiles);
-  // }
-  // }
   fetchClaimStatus(claimInfoId: string): void {
     const claimsReqBody = {
       claimNumber: claimInfoId,
@@ -204,8 +199,8 @@ export class ClaimsDetailsComponent {
   ) {    
     let claimsFilesReqBody = {
       "documentId" : "",
-      "policyNumber": policyNumber,
-      "claimNumber": claimInfoId
+      "policyNumber":"40-23-0003508-00",
+      "claimNumber": "510000340-23-0003508-00"
     };
   
     this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe((response: any) => {
@@ -247,23 +242,6 @@ export class ClaimsDetailsComponent {
     window.URL.revokeObjectURL(url);
   }
 
-
-  //  fetchUploadedFiles() {
-  //   const policyNumber = this.policyNumber; // This should come from the logged-in user or claim data
-  //   this.claimsService.getUploadedFiles(policyNumber).subscribe((response: any[]) => {
-  //     this.viewFileUploads: any[] = [];  = response.map(file => ({
-  //       name: file.name,
-  //       type: file.type,
-  //       size: file.size,
-  //       label: file.label,
-  //       uploadDateTime: new Date(file.uploadDateTime),
-  //       formattedUploadDateTime: new Date(file.uploadDateTime).toLocaleString(),
-  //       status: "Uploaded"
-  //     }));
-  //   }, error => {
-  //     console.error('Error fetching uploaded files', error);
-  //   });
-  // }
 
   onUnderDeficiencyFileSelected(event: any): void {
     const files = event.target.files;
@@ -314,31 +292,6 @@ export class ClaimsDetailsComponent {
     }
   }
   
-
-  // submitClaim(): void {
-  //   const formData: FormData = new FormData();
-  //   const createdBy = localStorage.getItem('agentCode') || "defaultAgentCode";
-
-  //   this.uploadedFiles.forEach((fileData, index) => {
-  //     formData.append(`fileDetails[${index}].AgentCode`, createdBy);
-  //     formData.append(`fileDetails[${index}].policyNumber`, this.policyNumber);
-  //     formData.append(`fileDetails[${index}].Notes`, "Prescription");
-  //     formData.append(`fileDetails[${index}].documentName`, fileData.name);
-  //     formData.append(`fileDetails[${index}].documentType`, fileData.type.split('/')[1]);
-  //     formData.append(`fileDetails[${index}].createdBy`, createdBy);
-  //     formData.append(`fileDetails[${index}].file`, fileData.file, fileData.name);
-  //     formData.append(`fileDetails[${index}].memberid`, this.saveForm?.value.memberId || "PT85650665");
-  //   });
-
-  //   this.claimsService.uploadFiles(formData).subscribe({
-  //     next: (response) => {
-  //       this.handleSuccessResponse(response);
-  //     },
-  //     error: (error) => {
-  //       this.handleErrorResponse(error);
-  //     }
-  //   });
-  // }
   // Submit claim method
   submitClaim(): void {
     if (
@@ -485,24 +438,20 @@ export class ClaimsDetailsComponent {
     const files = inputElement.files;
     this.totalFilesCount += files.length;
   
-    // Determine which file array to use based on the input's name attribute
     let uploadedFilesData =
       inputElement.name === "underDeficiency"
         ? this.uploadedUnderDeficiencyFiles
         : this.uploadedFiles;
   
-    // Iterate over selected files
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
   
-      // Check if the file already exists in the respective upload list
       const fileExists = uploadedFilesData.some(
         (uploadedFile) =>
           uploadedFile.name === file.name && uploadedFile.size === file.size
       );
   
       if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-        // Add the new file to the respective list
         uploadedFilesData.push({
           name: file.name,
           type: file.type,
@@ -520,42 +469,36 @@ export class ClaimsDetailsComponent {
           createdBy: this.saveForm?.value.createdBy,
         });
   
-        // Indicate that the format is valid
         inputElement.name === "underDeficiency"
           ? (this.uploadValidFormat = false)
           : (this.uploadValidFormt = false);
       } else {
-        // If the file already exists or is of an invalid type, show an error
         inputElement.name === "underDeficiency"
           ? (this.uploadValidFormat = true)
           : (this.uploadValidFormt = true);
       }
     }
   
-    // Reset the file input element to allow re-upload of the same file
     inputElement.value = '';
   
-    // If files were uploaded to the "underDeficiency" list, update the form
     if (
       this.uploadedUnderDeficiencyFiles.length > 0 &&
       inputElement.name === "underDeficiency"
     ) {
       this.saveForm?.patchValue({
-        file: this.uploadedUnderDeficiencyFiles[0].file, // Taking the first file
+        file: this.uploadedUnderDeficiencyFiles[0].file, 
       });
     } else if (
       this.uploadedFiles.length > 0 &&
       inputElement.name === "docUpload"
     ) {
       this.saveForm?.patchValue({
-        file: this.uploadedFiles[0].file, // Taking the first file
+        file: this.uploadedFiles[0].file, 
       });
     }
   
-    // Update the status label based on the input's name attribute
     this.updateStatusLabel(inputElement.name);
   
-    // Upload files after processing
     this.uploadFiles(Array.from(files), inputElement.name);
   }
   
@@ -617,7 +560,6 @@ export class ClaimsDetailsComponent {
   //   }
 
   uploadFiles(files: File[], section: string): void {
-    // Extract file names and types
     const fileNames: string[] = files.map((file) => file.name);
     const fileTypes: string[] = files.map((file) => file.type);
     this.documentType = fileTypes;
@@ -675,11 +617,9 @@ export class ClaimsDetailsComponent {
       }
     });
 
-    // Call the service to upload the files
     this.claimsService.uploadFiles(formData).subscribe(
       (response: any) => {
         if (response.success) {
-          // Update status for each file as success
           this.uploadedUnderDeficiencyFiles.forEach(
             (file) => (file.status = "success")
           );
@@ -690,7 +630,6 @@ export class ClaimsDetailsComponent {
         this.cdr.markForCheck(); // Ensure the change detection runs
       },
       (error: any) => {
-        // Handle failure, mark all files as failed
         this.uploadedUnderDeficiencyFiles.forEach(
           (file) => (file.status = "failed")
         );
@@ -747,128 +686,6 @@ export class ClaimsDetailsComponent {
     file.isEdited = true;
   }
 
-  // submitClaim(files: File[], section: string) {
-
-  //   this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
-  //     const matchingFile = files.find(file => file.name === deficiencyFile.file.name);
-  //     const formData = new FormData();
-  //     if (matchingFile) {
-  //       // Create metadata for each file
-  //       const metadata = {
-  //         policyNumber: this.policyNumber || '',
-  //         labelName: section || '', // Use section value for label
-  //         documentName: matchingFile.name || '',
-  //         documentType: matchingFile.type || '',
-  //         createdBy: deficiencyFile.createdBy || '',  // Source from deficiencyFile
-  //         claimInfoId: "21727183717381",             // Static claimInfoId, replace dynamically if needed
-  //         memberId: 'PT85650665',                    // Static memberId, replace dynamically if needed
-  //         documentId: "test2",                       // Static documentId
-  //       };
-
-  //       // Append metadata and file to FormData
-  //       formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
-  //       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-  //       formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
-  //       formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
-  //       formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-  //       formData.append(`fileDetails[${index}].file`, matchingFile, matchingFile.name);
-  //       formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
-  //       formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
-  //       formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
-  //     }
-  //   });
-  //   // Prepare form data with uploaded files
-  //   const formData = this.uploadFiles(files, section);
-
-  //   // Call the service to upload the files
-  //   this.claimsService.uploadFiles(formData).subscribe(
-  //     (response: any) => {
-  //       if (response.success) {
-  //         // Update status for each file as success
-  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'success');
-  //         this.uploadSuccess = true;
-  //         this.uploadedFilesCount++;
-  //       } else {
-  //         // Handle any errors returned in the response
-  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
-  //         this.uploadSuccess = false;
-  //         this.failedFilesCount++;
-  //       }
-  //       this.updateStatusLabel(section); // Update the status label on UI
-  //       this.cdr.markForCheck();  // Ensure the change detection runs
-  //     },
-  //     (error: any) => {
-  //       // Handle failure, mark all files as failed
-  //       this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
-  //       this.uploadSuccess = false;
-  //       this.failedFilesCount++;
-  //       this.updateStatusLabel(section); // Update status on UI for failed files
-  //       this.cdr.markForCheck();
-  //     }
-  //   );
-  // }
-
-  // submitClaim(files: File[], section: string) {
-
-  //   this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
-  //     const matchingFile = files.find(file => file.name === deficiencyFile.file.name);
-  //     const formData = new FormData();
-  //     if (matchingFile) {
-  //       // Create metadata for each file
-  //       const metadata = {
-  //         policyNumber: this.policyNumber || '',
-  //         labelName: section || '', // Use section value for label
-  //         documentName: matchingFile.name || '',
-  //         documentType: matchingFile.type || '',
-  //         createdBy: deficiencyFile.createdBy || '',  // Source from deficiencyFile
-  //         claimInfoId: "21727183717381",             // Static claimInfoId, replace dynamically if needed
-  //         memberId: 'PT85650665',                    // Static memberId, replace dynamically if needed
-  //         documentId: "test2",                       // Static documentId
-  //       };
-
-  //       // Append metadata and file to FormData
-  //       formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
-  //       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-  //       formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
-  //       formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
-  //       formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-  //       formData.append(`fileDetails[${index}].file`, matchingFile, matchingFile.name);
-  //       formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
-  //       formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
-  //       formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
-  //     }
-  //   });
-  //   // Prepare form data with uploaded files
-  //   const formData = this.uploadFiles(files, section);
-
-  //   // Call the service to upload the files
-  //   this.claimsService.uploadFiles(formData).subscribe(
-  //     (response: any) => {
-  //       if (response.success) {
-  //         // Update status for each file as success
-  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'success');
-  //         this.uploadSuccess = true;
-  //         this.uploadedFilesCount++;
-  //       } else {
-  //         // Handle any errors returned in the response
-  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
-  //         this.uploadSuccess = false;
-  //         this.failedFilesCount++;
-  //       }
-  //       this.updateStatusLabel(section); // Update the status label on UI
-  //       this.cdr.markForCheck();  // Ensure the change detection runs
-  //     },
-  //     (error: any) => {
-  //       // Handle failure, mark all files as failed
-  //       this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
-  //       this.uploadSuccess = false;
-  //       this.failedFilesCount++;
-  //       this.updateStatusLabel(section); // Update status on UI for failed files
-  //       this.cdr.markForCheck();
-  //     }
-  //   );
-  // }
-
   fetchClaimHistory(policyNumber: string) {
     console.log(this.claimInfoId);
     const policyNo = policyNumber;
@@ -893,15 +710,65 @@ export class ClaimsDetailsComponent {
   moveToDocsSection(data: any) {
     this.selectedTabIndex = data;
   }
+  // submitClaim(files: File[], section: string) {
 
-  // this.claimsService.submitClaim(claimDetailsReqBody).subscribe(
-  //   (response: any) => {
-  //     if (response.success) {
-  //       console.log('Claim submitted successfully:', response);
+  //   this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
+  //     const matchingFile = files.find(file => file.name === deficiencyFile.file.name);
+  //     const formData = new FormData();
+  //     if (matchingFile) {
+  //       // Create metadata for each file
+  //       const metadata = {
+  //         policyNumber: this.policyNumber || '',
+  //         labelName: section || '', // Use section value for label
+  //         documentName: matchingFile.name || '',
+  //         documentType: matchingFile.type || '',
+  //         createdBy: deficiencyFile.createdBy || '',  // Source from deficiencyFile
+  //         claimInfoId: "21727183717381",             // Static claimInfoId, replace dynamically if needed
+  //         memberId: 'PT85650665',                    // Static memberId, replace dynamically if needed
+  //         documentId: "test2",                       // Static documentId
+  //       };
+
+  //       // Append metadata and file to FormData
+  //       formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
+  //       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
+  //       formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
+  //       formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
+  //       formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
+  //       formData.append(`fileDetails[${index}].file`, matchingFile, matchingFile.name);
+  //       formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
+  //       formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
+  //       formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
   //     }
-  //   },
-  //   (error: any) => {
-  //     console.error('Error submitting claim:', error);
-  //   }
-  // );
+  //   });
+  //   // Prepare form data with uploaded files
+  //   const formData = this.uploadFiles(files, section);
+
+  //   // Call the service to upload the files
+  //   this.claimsService.uploadFiles(formData).subscribe(
+  //     (response: any) => {
+  //       if (response.success) {
+  //         // Update status for each file as success
+  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'success');
+  //         this.uploadSuccess = true;
+  //         this.uploadedFilesCount++;
+  //       } else {
+  //         // Handle any errors returned in the response
+  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
+  //         this.uploadSuccess = false;
+  //         this.failedFilesCount++;
+  //       }
+  //       this.updateStatusLabel(section); // Update the status label on UI
+  //       this.cdr.markForCheck();  // Ensure the change detection runs
+  //     },
+  //     (error: any) => {
+  //       // Handle failure, mark all files as failed
+  //       this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
+  //       this.uploadSuccess = false;
+  //       this.failedFilesCount++;
+  //       this.updateStatusLabel(section); // Update status on UI for failed files
+  //       this.cdr.markForCheck();
+  //     }
+  //   );
+  // }
+
 }

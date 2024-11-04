@@ -71,8 +71,8 @@ export class RenewalsService {
     const gettenuredetails = this.configService.config.baseUrl + this.configService.config.getTenureDetails;
     return this.httpService.post(gettenuredetails,reuestBody)
   }
-  getSubquotesApi(policyNumber: string, requestBody: any){
-    const getsubquotes = `${this.configService.config.baseUrl + this.configService.config.getSubquotes}?policyNumber=${policyNumber}`;
+  getSubquotesApi(requestBody: any){
+    const getsubquotes = this.configService.config.baseUrl + this.configService.config.getSubquotes;
     return this.httpService.post(getsubquotes,requestBody);
   }
   updatenomineeApi(reqBody: any){

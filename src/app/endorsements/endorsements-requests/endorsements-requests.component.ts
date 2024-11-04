@@ -177,7 +177,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.endorsementDetails = [];
     this.endorsementService.getEndorsementDetailsApi(this.requestsListRequestBody).subscribe(
       (response: any) => {
-        if (response.data && response.data.statusCode == "200" && response.data.isSuccess) {
+        if (response.data && response.statusCode == "200" && response.isSuccess) {
           this.endorsementDetails = response.data.endorsementDetails.map((obj: any) => {
             const date = new Date(obj.raisedOn);
             const formattedDate = this.datePipe.transform(date, 'dd/MM/yyyy');
@@ -271,6 +271,8 @@ export class EndorsementsRequestsComponent implements OnInit {
     .map((requestType:any) => requestType.name);
     this.requestsListRequestBody.requestType = selectedPolicyTypes.join(", "); */
 
+    this.isSearch = true;
+    this.first = 0;
     this.getRequestList();
     this.toggeledropdown=false;
   }
@@ -338,6 +340,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   applySearch() {
     const searchValue = this.searchInputControl?.value?.trim();
+    this.endorsementDetails = [];
     if (this.searchInputControl.valid) {
       if (this.selected === "caseId") {
         this.requestsListRequestBody.searchColumn = "CaseId";

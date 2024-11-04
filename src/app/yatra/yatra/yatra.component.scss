@@ -60,7 +60,10 @@
     width: 100%;
   }
 
-
+  .main-container .main-subContainer .left-nav .left-navInner {
+    width: 220px;
+    position: fixed;
+  }
   /*Modal CSS start*/
   .modal-customerFeedback {
     .modal-dialog {

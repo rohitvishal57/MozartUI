@@ -340,6 +340,12 @@ button {
     word-wrap: break-word !important;
     word-break: break-word !important;
 }
+.text-break-w200 {
+  max-width: 200px;
+  display: inline-block;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
 .td-text-bold {
   font-size: 14px !important;
   font-weight: 600 !important;
@@ -1976,6 +1982,18 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 13px;
   line-height: 24px;
 }
+.quoteComparisonWraper .qc_item header .btn_addToCart {
+  border-radius: 4px;
+  padding: 4px 15px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 24px;
+  display: flex;
+}
+.compare_btnGroup {
+  display: flex;
+  gap:18px;
+}
 
 
 .quoteComparisonWraper .qc_item .upgradeInfo {
@@ -1999,6 +2017,13 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 16px;
   color: #5a5a5a;
 }
+.quoteComparisonWraper .qc_item .qc_info h6 {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #5a5a5a;
+  margin-bottom: 15px;
+}
 
 .quoteComparisonWraper .qc_item .qc_info.qc_info_grey {
   background: var(--bg-grey-tr);
@@ -2015,7 +2040,9 @@ input[type="search"]::-webkit-search-results-decoration {
 .quoteComparisonWraper .qc_item .qc_infoCover {
   height: 66px;
 }
-
+.planComparisonWraper .qc_item .qc_infoCover {
+  height: auto;
+}
 /*Quote Comparison end*/
 
 /*Renew Journey- Members start*/
@@ -3640,6 +3667,16 @@ input[type="search"]::-webkit-search-results-decoration {
 .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem {
   position: relative;
 }
+.uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem.uploadedFiles_infoSize {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 5px;
+}
+.uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem.uploadedFiles_infoSize .size-align {
+  position: initial;
+  width: auto;
+}
 .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem .file-index{
   background-color: rgba(245, 205, 7, 0.6509803922);
   border-radius: 50%;
@@ -3681,7 +3718,8 @@ input[type="search"]::-webkit-search-results-decoration {
 .uploadedFiles_main li .uploadedFiles_info .delete-button {
   background-color: transparent;
   border: none;
-  padding: 0
+  padding: 0;
+  display: flex;
 }
 .uploadedFiles_main li .uploadedFiles_info .delete-button img {
   width: 14px;
@@ -3855,7 +3893,7 @@ input[type="search"]::-webkit-search-results-decoration {
   flex-direction: column;
   gap:8px;
 }
-.tick_round li {
+.tick_round li, .tick_round li .tick_round_div {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -4901,6 +4939,12 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .info_status_red {
   background:#C7222A ;
+}
+.cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 .insureName {
+	max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /*.lead_btnList button {
   position: relative;

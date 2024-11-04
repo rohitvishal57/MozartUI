@@ -9,10 +9,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MyMaterialModule } from 'src/app/material.module';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { QuoteModule } from 'src/app/quote/quote.module';
 import { DragAndDropComponent } from './drag-and-drop/drag-and-drop.component';
 
 @NgModule({
-  declarations: [DashboardComponent,GetQuoteComponent, DragAndDropComponent],
+  declarations: [DashboardComponent, DragAndDropComponent],
   imports: [
     CommonModule,
     PrimeNgModule,
@@ -20,7 +21,8 @@ import { DragAndDropComponent } from './drag-and-drop/drag-and-drop.component';
     ReactiveFormsModule,
     MyMaterialModule,
     NgxSliderModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    QuoteModule
   ]
 })
 export class DashboardModule { }

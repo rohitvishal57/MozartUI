@@ -79,17 +79,17 @@ export class LoginComponent implements OnInit{
       this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
         .subscribe({  
           next: (res:any)=>{
-              this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
-              this.openModal(this.contactInfoData);
+            this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
+            this.openModal(this.contactInfoData);
           },
           error: (err => {
             console.log(err);
-            this.toast.error({ detail: "ERROR", summary:err, duration: 3000 });
+            this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
           })
         })
     }else{
       this.verifyOtpEnable = false;
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 5000 })
     }
   }
 
@@ -128,19 +128,24 @@ export class LoginComponent implements OnInit{
     const data = localStorage.getItem('sendOTP');
     this.sendOtpReqBody.agentCode = localStorage.getItem("agentCode");
     this.isMobile(data) ? this.sendOtpReqBody.mobileNumber =  data : this.sendOtpReqBody.eMailId = data;
+    this.errorMessage = "";
+    this.otp = ['', '', '', '', '', ''];
 
     this.loginService.sendOtpRequestApi(this.sendOtpReqBody)
         .subscribe({  
           next: (res:any)=>{
-            if(res.data && res.data.isSuccess && res.data.statusCode == '200' && res.data.requestId !== null) {
+            if(res.data && res.isSuccess && res.statusCode == '200' && res.data.requestId !== null) {
               localStorage.setItem("requestId", res?.data.requestId);
-              this.toast.warning({ detail: "SUCCESS", summary: "Sent OTP again to "+this.maskedUserCode, duration: 3000 });
+              this.toast.success({ detail: "SUCCESS", summary: "Sent OTP again to "+this.maskedUserCode, duration: 5000 });
               this.startTimer();
+            } else {
+              this.errorMessage = res.message;
             }
           },
           error: (err => {
             console.log(err);
-            this.toast.error({ detail: "ERROR", summary:err, sticky: true });
+            this.errorMessage = err;
+            // this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
           })
         })
   }
@@ -172,12 +177,14 @@ export class LoginComponent implements OnInit{
       this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
         .subscribe({  
           next: (res:any)=>{
-            localStorage.setItem('userCode', this.loginForm.value.userName);
-            window.open(res.data.redirectUrl, "_blank");
+            if(res.data && res.isSuccess && res.statusCode == '200') {
+              localStorage.setItem('agentCode', this.loginForm.value.userName);
+              window.open(res.data.redirectUrl, "_blank");
+            }
           },
           error: ((err:any) => {
             console.log(err);
-            this.toast.error({ detail: "ERROR", summary:err, sticky: true });
+            this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
           })
         })
     }
@@ -193,9 +200,9 @@ export class LoginComponent implements OnInit{
         }
       });
       if (this.loginForm.invalid)
-        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 5000 })
       else if (this.loginForm.get('nationality') && this.loginForm.get('nationality')?.value !== 'Indian')
-        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
+        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 5000 })
     }
   }
 
@@ -234,6 +241,7 @@ export class LoginComponent implements OnInit{
  
   onVerifyOTP(){
     const otpCode = this.otp.join('');
+    this.errorMessage = "";
     if (otpCode.length === 6 && /^[0-9]+$/.test(otpCode)) {
 
       this.validateOtpReqBody.agentCode = localStorage.getItem("agentCode");
@@ -244,9 +252,9 @@ export class LoginComponent implements OnInit{
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody)
         .subscribe({  
           next: (res:any)=> {
-            if(res.data && res.data.statusCode == '200' && res.data.isSuccess && res.token !== null) {
+            if(res.data && res.statusCode == '200' && res.isSuccess && res.token !== null) {
               this.loginService.storeToken(res.token);
-              localStorage.setItem('agentCode', res.data.agentCode);
+              // localStorage.setItem('agentCode', res.data.agentCode);
               this.router.navigate(['dashboard']);
             } else {
               this.errorMessage = res.message;

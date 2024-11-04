@@ -43,7 +43,7 @@
                                 <option value="leadId">Lead Id</option>
                                 <option value="mobileNumber">Mobile Number</option>
                                 <option value="name">Name</option>
-                                <option value="email">EmailID</option>
+                                <option value="email">Email ID</option>
                             </select>
                             <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                             <button  type="button" id="leadsearch" name="leadsearch" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
@@ -138,14 +138,14 @@
                                                 </div>
                                             </div>
                                             <!--<input type="checkbox" id="Select All" title="SelectAll" (change)="toggleAll($event)">-->
-                                            <button type="button" id="assignto" name="assignto" *ngIf="this.checkBoxSelectedLeads.length != 0" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
+                                            <button type="button" id="assignto" name="assignto" *ngIf="this.checkBoxSelectedLeads.length > 1" value="Assign To" title="Assign To" class="btn_action btn_renewalAction btn_assignTo" (click)="selectAllAssigneLeadDialog()"><img
                                                 src="assets/Img/icon_profile.svg"></button>
                                         </div>
                                     </th>
                                     <th>Lead ID</th>
                                     <th>Name</th>
                                     <th>Mobile Number</th>
-                                    <th>EmailID</th>
+                                    <th>Email ID</th>
                                     <th class="text-center">Notice</th>
                                 </tr>
                             </thead>
@@ -159,7 +159,7 @@
                                         <!--<input type="checkbox" [(ngModel)]="row.isSelected" (click)="updateSelectedLeads(row)" >-->
                                     </td>
                                     <td>{{row.leadNumber}}</td>
-                                    <td>{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</td>
+                                    <td><span class="text-break-w200">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</span></td>
                                     <td>{{ row.phoneNumber }}</td>
                                     <td>{{row.email}}</td>
                                     <td>
@@ -237,7 +237,7 @@
                         <header>
                             <div class="card_insureInfo">
                                 <h6>
-                                    <div class="insureName">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}
+                                    <div class="insureName" title="{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}
                                     </div>
                                 </h6>
                                 <div class="item_productName">{{ row.interestedInPlan }}</div>
@@ -292,7 +292,7 @@
                                 <div class="item_value">{{ row.phoneNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">EmailID</div>
+                                <div class="item_lable">Email ID</div>
                                 <div class="item_value">{{ row.email }}</div>
                             </div>
                             <!-- <div class="cv_bodyItems cv_bodyItems_45">
@@ -371,7 +371,7 @@
             <div class="modal-footer modal_footerBtnGroup_column">
                 <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth">Save</button>
                 <div class="d-flex justify-content-center">
-                    <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" >Cancel</button>
+                    <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >Cancel</button>
                 </div>
             </div>
          </form>

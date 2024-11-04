@@ -210,11 +210,10 @@
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('firstname')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('firstname')?.invalid && !userValidations.get('firstname')?.errors?.['pattern']">Firstname
-                                        cannot
-                                        be blank</span>
+                                        *ngIf="submitted && userValidations.get('firstname')?.invalid && !userValidations.get('firstname')?.errors?.['pattern']">First Name
+                                        cannot be blank</span>
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">Firstname
+                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">First Name
                                         should only contain alphabets</span>
                                 </span>
                             </div>
@@ -226,7 +225,7 @@
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
                                 <label for="MiddleName">Middle Name</label>
                                 <span class="ui-error block-show"
-                                    *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">MiddleName
+                                    *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">Middle Name
                                     should only contain alphabets</span>
                             </div>
                         </div>
@@ -239,11 +238,10 @@
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('lastname')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('lastname')?.invalid && !userValidations.get('lastname')?.errors?.['pattern']">Lastname
-                                        cannot
-                                        be blank</span>
+                                        *ngIf="submitted && userValidations.get('lastname')?.invalid && !userValidations.get('lastname')?.errors?.['pattern']">Last Name
+                                        cannot be blank</span>
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">Lastname
+                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">Last Name
                                         should only contain alphabets</span>
                                 </span>
                             </div>
@@ -257,7 +255,7 @@
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobilenumber
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobile Number
                                         cannot
                                         be blank</span>
                                     <span class="ui-error block-show"
@@ -329,7 +327,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="numberOfKids" placeholder=""
-                                    formControlName="numberOfKids" type="text" (keypress)="isNumber($event)">
+                                    formControlName="numberOfKids" type="text" (keypress)="isNumber($event)" maxlength="2">
                                 <label for="numberOfKids">No Of Kids</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('numberOfKids')?.errors?.['pattern']">Please
@@ -342,7 +340,7 @@
                                 <select class="form-select input-selectBox" formControlName="isWhatsapp"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
-                                    <option *ngFor="let opt of CreateLeadList.IsWhatsApp" [value]="opt">
+                                    <option *ngFor="let opt of CreateLeadList.IsWhatsApp" [ngValue]="opt">
                                         {{ opt }}
                                     </option>
                                 </select>
@@ -352,7 +350,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="occupation" placeholder=""
-                                    formControlName="occupation" type="text">
+                                    formControlName="occupation" type="text" maxlength="20">
                                 <label for="occupation">Occupation</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('occupation')?.errors?.['pattern']">Please
@@ -362,7 +360,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="education" placeholder=""
-                                    formControlName="education" type="text">
+                                    formControlName="education" type="text" maxlength="20">
                                 <label for="education">Education</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('education')?.errors?.['pattern']">Please
@@ -409,7 +407,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="city" placeholder=""
-                                    formControlName="city" type="text" OnlyCharacter>
+                                    formControlName="city" type="text" maxlength="20"  (keypress)="isCharacter($event)" OnlyCharacter>
                                 <label for="city">City</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('city')?.errors?.['pattern']">Please
@@ -419,7 +417,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="state" placeholder=""
-                                    formControlName="state" type="text" OnlyCharacter>
+                                    formControlName="state" type="text" maxlength="20" (keypress)="isCharacter($event)" OnlyCharacter>
                                 <label for="state">State</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('state')?.errors?.['pattern']">Please
@@ -429,7 +427,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="pincode" placeholder=""
-                                    formControlName="pincode" type="text" (keypress)="isNumber($event)">
+                                    formControlName="pincode" type="text" maxlength="6" (keypress)="isNumber($event)">
                                 <label for="pincode">Pincode</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">Please
@@ -471,7 +469,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="sumInsured" placeholder=""
-                                    formControlName="sumInsured" (keypress)="isNumber($event)">
+                                    formControlName="sumInsured" (keypress)="isNumber($event)" maxlength="7" >
                                 <label for="sumInsured">Interested Sum Insured</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('sumInsured')?.errors?.['pattern']">Please
@@ -481,7 +479,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="premium" placeholder=""
-                                    formControlName="premium" (keypress)="isNumber($event)">
+                                    formControlName="premium" (keypress)="isNumber($event)" maxlength="7" >
                                 <label for="premium">Interested Premium</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('premium')?.errors?.['pattern']">Please
@@ -598,7 +596,7 @@
                                     *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
-                                        ActivityTitle cannot be blank</span>
+                                        Activity Title cannot be blank</span>
                                 </span>
 
                             </div>
@@ -612,7 +610,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
                                 <span class="ui-error block-show"
                                     *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
-                                    Enter valid Activity Startdate</span>
+                                     Activity Start date cannot be blank</span>
                             </span>
                             </div>
                         </div>
@@ -625,7 +623,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.invalid">
-                                        Enter valid Activity StartTime</span>
+                                         Activity Start Time cannot be blank</span>
                                 </span>
 
                             </div>
@@ -633,14 +631,16 @@
 
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="activityEndDate" placeholder=""
-                                    formControlName="activityEndDate" type="date" [min]="today"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
+                                <input class="form-control input-textBox" id="activityEndDate" placeholder="" formControlName="activityEndDate"
+                                    type="date" [min]="addNoteForm.get('activityStartDate')?.value" (change)="onEndDateChange()"
+                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
                                 <label for="activityEndDate">Activity End Date*</label>
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.invalid">
-                                        Enter valid Activity EndDate</span>
+                                    <span class="ui-error block-show" *ngIf="addNoteForm.get('activityEndDate')?.invalid">
+                                     Activity End Date cannot be blank</span>
                                 </span>
+                                <span class="ui-error block-show" *ngIf="addNoteForm.get('activityEndDate')?.errors?.['incorrect']">
+                                    Activity End date must be after Activity startdate</span>
                             </div>
                         </div>
 
@@ -652,7 +652,7 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
-                                        Enter valid Activity EndTime</span>
+                                        Activity End Time cannot be blank</span>
                                 </span>
                             </div>
                         </div>
@@ -669,19 +669,19 @@
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityType')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="notesSubmitted && addNoteForm.get('activityType')?.invalid">
-                                        Select Activity Type</span>
+                                        Activity Type cannot be blank</span>
                                 </span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <div class="input-block form-floating input-block-renew">
                                 <textarea class="form-control input-textBox" id="notes" placeholder="Type your note..."
-                                    formControlName="notes"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }"></textarea>
+                                    formControlName="notes"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('notes')?.errors }"></textarea>
                                 <label for="notes">Note*:</label>
-                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
+                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('notes')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
-                                        Enter valid Note</span>
+                                        *ngIf="notesSubmitted && addNoteForm.get('notes')?.invalid">
+                                        Note cannot be blank</span>
                                 </span>
 
                             </div>

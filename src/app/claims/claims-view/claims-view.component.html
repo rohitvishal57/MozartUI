@@ -106,7 +106,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" [max]="maxDate" />
+                                  <input type="date" class="form-control input-textBox" formControlName="admissionDate" [(ngModel)]="fromDate"  (change)="dateFormat('fromDate')" placeholder="Date of Admission" [max]="maxDate" />
                                   <label for="admissionDate">Date of Admission</label>
                                   <small class="ui-error block-show" *ngIf="form.get('admissionDate')?.hasError('required') && form.get('admissionDate')?.touched" >
                                     Date of Admission is required
@@ -116,14 +116,14 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="time" class="form-control input-textBox" formControlName="admissionTime" placeholder="Time of Admission (Tentative)" />
+                                  <input type="time" class="form-control input-textBox" formControlName="admissionTime"  placeholder="Time of Admission (Tentative)" />
                                   <label for="admissionTime">Time of Admission (Tentative)</label>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" [max]="maxDate" />
+                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" [(ngModel)]="toDate"  (change)="dateFormat('toDate')" [max]="maxDate" />
                                   <label for="dischargeDate">Date of Discharge</label>
                               </div>
                           </div>
@@ -208,7 +208,7 @@
                              
                               <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
-                                      <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission" [max]="maxDate"/>
+                                      <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission"  [(ngModel)]="fromDate"  (change)="dateFormat('fromDate')" [max]="maxDate"/>
                                       <label for="admissionDate">Date of Admission</label>
                                   </div>
                               </div>
@@ -281,7 +281,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" [max]="maxDate" />
+                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge"  [(ngModel)]="toDate"  (change)="dateFormat('toDate')" [max]="maxDate" />
                                   <label for="dischargeDate">Date of Discharge</label>
                               </div>
                           </div>

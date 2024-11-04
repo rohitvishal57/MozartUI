@@ -100,7 +100,7 @@ getToDate(event:any){
 
 //---------API Call-------//
 claimsReqBody =  {
-    "sellerId": this.agentCode,
+    "agentCode": this.agentCode,
     "sortColumn": "ReportedDateTime",
     "sortdirection": "DESC",
     "status": "",
@@ -121,13 +121,19 @@ fetchData(): void {
     this.claimsReqBody.start = 0;
   }
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
-    this.claims = res.claimDetails;      
+    if (res.data && res.statusCode == "200" && res.isSuccess) {
+    this.claims = res.data.claimDetails;      
    // this.productsList = res.claimDetails 
     console.log(this.productsList);
     
-    this.gridClaimsData = res.claimDetails; 
-    this.totalRecords = res.totalRecords;    
-  });
+    this.gridClaimsData = res.data.claimDetails; 
+    this.totalRecords = res.data.totalRecords;    
+}
+else{
+  console.error("API request was not successful.");
+}
+});
+
   }
 
   formatDate(dateType: "fromDate" | "toDate") {
@@ -204,6 +210,7 @@ fetchData(): void {
         this.claimsReqBody.searchType = "productName";
         this.claimsReqBody.searchString = selectedProducts;
       }
+      this.first = 0
       this.fetchData();
       this.toggeledropdown=false;
       }

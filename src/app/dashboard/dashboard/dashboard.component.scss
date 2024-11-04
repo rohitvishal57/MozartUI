@@ -1,16 +1,81 @@
 .dashboard-main{
     padding-top: 11rem;
 }
-.main-content {
-    display: flex;
-    justify-content: center;
+// .dashboard_contentContainer {
+//     max-width: 1082px;
+//     margin: auto;
+//   }
+  
+  .card {
     width: 100%;
-    min-height: 100vh;
-    background-color: #f5f5f5;
-    padding: 39px;
-}
+    border-radius: 12px;
+    border: groove;
+    font-family: "Anek Latin", sans-serif;
+    border-color: #fff;
+    border-style: solid;
+    position: relative;
+    padding: 14px 16px;
+    margin: 0 auto;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    .headerSearch {
+      width: 100%;
+  
+      .field_searchMain {
+        max-width: 400px;
+  
+        
+        img {
+          top: 10px;
+        }
+  
+        .filterSearch {
+          background: #fafafa;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 400;
+  
+          &:focus {
+            outline: 0;
+            border: 0px solid #f1f3f6 !important;
+          }
+        }
+      }
+    }
+  
+    .headerButtons {
+      width: 230px;
+      text-align: right;
+      .get-quote-btn {
+        font-family: "Anek Latin", sans-serif;
+        background-color: #C7222A;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      
+      .get-quote-btn:hover {
+        background-color: #a61d24;
+      }
+    }
+  }
+  .search-bar {
+    width: 34%;
+    padding: 7px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    font-family: "Anek Latin", sans-serif;
+  }
 .dashboard_contentContainer {
-    /*max-width: 1082px;*/
+    max-width: 1082px;
     width: 100%;
     margin: auto;
   }

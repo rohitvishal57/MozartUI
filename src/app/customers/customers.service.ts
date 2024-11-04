@@ -9,9 +9,9 @@ export class CustomersService {
   constructor( private http: HttpClient,
     private configService: ConfigService) { }
 
-    getCustomerDetailsListApi(reqBody: any) { 
-    const getCustomerDetailsList = this.configService.config.baseUrl + this.configService.config.getCustomerDetailsList;
-    return this.http.post<any>(getCustomerDetailsList, reqBody);
+    getCustomerListApi(reqBody: any) { 
+    const getCustomerList = this.configService.config.baseUrl + this.configService.config.getCustomerList;
+    return this.http.post<any>(getCustomerList, reqBody);
     }
     sendCustomerDetails(reqBody:any){
       const sendCustomerDetails=this.configService.config.baseUrl +this.configService.config.sendCustomerDetails;
