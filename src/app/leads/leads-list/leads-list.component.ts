@@ -331,6 +331,7 @@ export class LeadsListComponent {
     }
     if (this.selected != 'Select an option') {
       this.getLeadsList();
+      this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign? 'assignedLead': 'unAssignedLead';     
     }
   }
   renewalListView(view: string) {
