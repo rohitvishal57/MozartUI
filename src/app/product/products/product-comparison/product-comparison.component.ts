@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class ProductComparisonComponent {
 
-  comparisonItems: any ;
+  comparisonItems: any = [];
 constructor(    private router: Router){
 
 }
@@ -29,9 +29,6 @@ constructor(    private router: Router){
   }
 
   
-  backToleads(){
-    this.router.navigate(['/leads/leadsList'], {
-  });
-  }
+
 
 }

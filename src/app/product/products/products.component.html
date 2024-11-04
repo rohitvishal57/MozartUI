@@ -45,25 +45,54 @@
 <!--Bottom: ADD TO CAMPARE PRODUCTS START-->
 <div class="bottomInfoMain bottomInfoMain_comparePolices" *ngIf="compareItems.length > 0">
     <div class="bottomInfoSubMain">
-        <div class="bi_left" *ngFor="let item of compareItems; let i = index">
+        <div class="bi_left">
             <div class="policePlans">
                 <!--Police Info start-->
-                <div class="planProductInfo"> 
+                <div class="planProductInfo" *ngIf="compareItems[0]"> 
                     <div class="ppi_img">
                         <img src="assets/Img/icon_activeone.svg">
                     </div>
                     <div class="ppi_info">
-                        <h4>{{item.productName}}</h4>
+                        <h4>{{compareItems[0].productName}}</h4>
                     </div>
-                    <span class="removePlan"><button type="button" class="btn-close" (click)="removeCompareItem(item)"></button></span>
+                    <span class="removePlan"><button type="button" class="btn-close" (click)="removeCompareItem(compareItems[0])"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
-            <div class="planSeparator" *ngIf="i < compareItems.length - 1">vs</div>
+            
+            <div class="planSeparator">vs</div>
+            <div class="policePlans">
+                <!--Police Info start-->
+                <div class="planProductInfo" *ngIf="compareItems[1]"> 
+                    <div class="ppi_img">
+                        <img src="assets/Img/icon_activeone.svg">
+                    </div>
+                    <div class="ppi_info">
+                        <h4>{{compareItems[1].productName}}</h4>
+                    </div>
+                    <span class="removePlan"><button type="button" class="btn-close" (click)="removeCompareItem(compareItems[1])"></button></span>
+                </div>
+                <!--Police Info end-->
+            </div>
+            <div class="planSeparator">vs</div>
+            <div class="policePlans" >
+                <!--Police Info start-->
+                <div class="planProductInfo" *ngIf="compareItems[2]"> 
+                    <div class="ppi_img">
+                        <img src="assets/Img/icon_activeone.svg">
+                    </div>
+                    <div class="ppi_info">
+                        <h4>{{compareItems[2].productName}}</h4>
+                    </div>
+                    <span class="removePlan"><button type="button" class="btn-close" (click)="removeCompareItem(compareItems[2])"></button></span>
+                </div>
+                <!--Police Info end-->
+            </div>
+
         </div>
         <div class="bi_right">
-            <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()">Compare now</button>
-            <button type="button" value="proceed" class="btn_pink btn_pinkNext">Close</button>
+            <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Compare now</button>
+            <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="closeComparison()">Close</button>
         </div>
     </div>
   </div>
