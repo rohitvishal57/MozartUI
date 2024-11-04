@@ -3060,7 +3060,13 @@ input[type="search"]::-webkit-search-results-decoration {
 .userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo .userInfoItem {
   width: 40%;
 }
-
+.userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo .userInfoItem-30 {
+  width: 30%;
+}
+.menu_morePolicy {
+  position: absolute;
+  right: 10px;
+}
 .userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo .modifiedBadge {
   border-radius: 19px;
   padding: 0 12px;
@@ -4930,9 +4936,11 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 /*---Compare Polices end---*/
 .info_status {
-  padding: 1px 5px 3px;
+  padding: 2px 5px 3px;
   border-radius: 10px;
   color: #fff;
+  font-size: 10px;
+  font-weight: 500;
 }
 .info_status_green {
  background: #1f874c;
