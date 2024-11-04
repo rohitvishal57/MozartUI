@@ -473,9 +473,16 @@ export class LeadsListComponent {
   }
 
   redirectProducts(lead: any) { 
+
+    if(lead.interestedProductName && lead.planType){
     this.router.navigate(['/products'], {
-      queryParams: { productName: lead.interestedProductName + " "+ lead.planType }
+      queryParams: { productName: lead.interestedProductName + " "+ lead.planType , leadId :lead.leadNumber}
+
     });
+  }else{
+    this.router.navigate(['/products'], {
+    });
+  }
   }
 
 
