@@ -28,7 +28,7 @@ constructor(    private router: Router){
     console.log('comparisonItems',this.comparisonItems);
   }
 
-  
+
 
 
 }

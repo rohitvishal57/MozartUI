@@ -24,9 +24,10 @@ export interface LeadsList {
     zipCode?: string | null;
     isConverted?: boolean | null;
     notes?: string | null;
-    createdOn?: string | null;
+    createdon?: string | null;
     isAssign?: boolean | null;
     campaignNumber?:string;
     isSelected?:boolean;
+    interestedProductName?:string|null;
   }
   

@@ -41,6 +41,11 @@ export class CreateLeadComponent implements OnInit {
   referenceSubStatus: any;
   activityTypes: any = [];
   today:string='';
+  maxDate = '9999-12-31';
+  whatsappOptions = [
+    { value: true, display: 'Yes' },
+    { value: false, display: 'No' }
+  ];
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -95,9 +100,7 @@ export class CreateLeadComponent implements OnInit {
     //     console.error("Error from getRenewalsList API:", error);
     //   }
     // );
-
-    const date = new Date();
-    this.today = date.toISOString().split('T')[0];
+    this.today = new Date().toISOString().split('T')[0];
   }
 
   inItForm() {
@@ -107,7 +110,7 @@ export class CreateLeadComponent implements OnInit {
       leadVintage: [''],
       source: [''],
       subSource: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
-      mobilenumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
+      mobilenumber: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
       firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       MiddleName: ['', [Validators.pattern('[a-zA-Z ]*')]],
       lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
@@ -140,8 +143,8 @@ export class CreateLeadComponent implements OnInit {
       leadnumber: [''],
       leadAssignee: [''],
       isUpdate: 0,
-      status: [''],
-      substatus: ['']
+      leadStatus: [''],
+      leadSubStatus: ['']
     }
   );
      this.userValidations.get('age')?.disable();
