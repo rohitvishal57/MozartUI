@@ -24,7 +24,6 @@ export class CustomersListComponent {
   endDate: any;
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
-  toggeleSearchdropdown: boolean = false;
   selected: string = "";
   searchInputControl = new FormControl("");
   isDesktopView:boolean=false
@@ -77,9 +76,9 @@ export class CustomersListComponent {
     this.customerService.getCustomerListApi(this.customerListRequestBody).subscribe(
       (response) => { 
         if (response.isSuccess) {
-          this.customerList = response.data.customerData
+          this.customerList = response.data.customerList
           console.log("customers List",this.customerList);
-          this.totalRecords = response.data.filterRecords 
+          this.totalRecords = response.data.totalRecords 
           if (this.customerList.length > 0) {
           } else {
             this.customerId = null; 
@@ -222,23 +221,24 @@ export class CustomersListComponent {
   }
   applySearch() {    
     if (this.searchInputControl.valid) {
+      const trimmedValue = this.searchInputControl.value?.trim(); 
       if (this.selected === "mobileNumber") {
-        this.customerListRequestBody.mobileNumber = this.searchInputControl.value!;
+        this.customerListRequestBody.mobileNumber = trimmedValue || "";
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.policyNumber = "";
         this.customerListRequestBody.emailID =""
       } else if (this.selected === "name") {
-        this.customerListRequestBody. name = this.searchInputControl.value!;
+        this.customerListRequestBody. name = trimmedValue || "";
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.policyNumber = "";
         this.customerListRequestBody.emailID =""
       } else if (this.selected === "policyNumber") {
-        this.customerListRequestBody.policyNumber = this.searchInputControl.value!;
+        this.customerListRequestBody.policyNumber = trimmedValue || "";
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.proposalNumber =""
       }else if (this.selected === "emailID") {
-        this.customerListRequestBody.emailID = this.searchInputControl.value!;
+        this.customerListRequestBody.emailID = trimmedValue || "";
         this.customerListRequestBody.mobileNumber = "";
         this.customerListRequestBody.name = "";
         this.customerListRequestBody.policyNumber = "";
@@ -255,14 +255,14 @@ export class CustomersListComponent {
     this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
   }
 
-  sendCustomerDetails(data:any,event:number){    
+  sendCustomerDetails(data:any,policy: any,event:number){        
     const RequestBody = {
       agentcode: this.agentCode, 
       requestType: event,  
-      policyNumber: data.policies[0]?.policyNo || "",  
-      proposalNumber: data.policies[0]?.proposalNumber || "",
-      memberId: data.memberID,
-      mobileNo: data.mobileNo,
+      policyNumber: policy.policyNumber || "",  
+      proposalNumber: policy.proposalNumber || "",
+      memberId: data.customerID,
+      mobileNo: data.mobileNumber,
       emailId: data.emailID
     };
     this.customerService.sendCustomerDetails(RequestBody).subscribe(
