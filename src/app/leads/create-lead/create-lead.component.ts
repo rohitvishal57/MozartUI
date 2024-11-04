@@ -309,7 +309,9 @@ export class CreateLeadComponent implements OnInit {
     let fetchActivityTypeRequest: any = {};
     this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
       (response) => {
-        this.activityTypes = response.activityName;
+        if(response?.data?.activityName.length){
+          this.activityTypes = response?.data?.activityName;
+        }
       },
       (error) => {
         console.log("Failed to fetch ActivityType information : " ,error);
