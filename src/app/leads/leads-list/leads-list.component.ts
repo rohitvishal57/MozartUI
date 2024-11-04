@@ -470,7 +470,7 @@ export class LeadsListComponent {
 
   redirectProducts(lead: any) { 
     this.router.navigate(['/products'], {
-      queryParams: { productName: lead.interestedProductName }
+      queryParams: { productName: lead.interestedProductName + " "+ lead.planType }
     });
   }
 
