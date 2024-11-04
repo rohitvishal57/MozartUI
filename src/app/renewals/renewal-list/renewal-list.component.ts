@@ -213,16 +213,17 @@ export class RenewalListComponent {
   }
   applySearch() {
     if (this.searchInputControl.valid) {
+      const trimmedValue = this.searchInputControl.value?.trim(); 
       if (this.selected === "mobileNumber") {
-        this.renewalLisRequestBody.mobileNumber = this.searchInputControl.value!;
+        this.renewalLisRequestBody.mobileNumber = trimmedValue || "";
         this.renewalLisRequestBody.proposer = "";
         this.renewalLisRequestBody.policyNumber = "";
       } else if (this.selected === "proposerName") {
-        this.renewalLisRequestBody.proposer = this.searchInputControl.value!;
+        this.renewalLisRequestBody.proposer = trimmedValue || "";
         this.renewalLisRequestBody.mobileNumber = "";
         this.renewalLisRequestBody.policyNumber = "";
       } else if (this.selected === "policyNumber") {
-        this.renewalLisRequestBody.policyNumber = this.searchInputControl.value!;
+        this.renewalLisRequestBody.policyNumber = trimmedValue || "";
         this.renewalLisRequestBody.mobileNumber = "";
         this.renewalLisRequestBody.proposer = "";
       }

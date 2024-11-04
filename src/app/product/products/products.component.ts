@@ -265,6 +265,10 @@ navigateToProductComparison(){
   });
 }
 
+closeComparison(){
+  this.compareItems = [];
+}
+
 filterProductList (productList : any){
   let interestedProduct : any = '';
   interestedProduct = productList.find((product: any) => product.productName == this.interestedProductName); 

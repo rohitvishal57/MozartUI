@@ -41,6 +41,7 @@ export class ClaimsDetailsComponent {
   selectMemberData: any = {};
   isViewVisible: boolean = false;
   underDef: boolean = false;
+  noFilesFound: boolean = false;
   allowedFileTypes: string[] = [
     "application/pdf",
     "image/jpeg",
@@ -139,7 +140,9 @@ export class ClaimsDetailsComponent {
     this.claimsService.getClaimStatus(claimsReqBody).subscribe(
       (response: any) => {
         this.status = response.data;
-        this.statusMessage = response.data.notes;
+      //  this.statusMessage = response.data.notes;
+        console.log('ststu', this.status, response, this.statusMessage);
+        
         (response.data.claimStatus === "Under Deficiency") ? this.underDef = true : this.underDef = false;
       },
       (error: any) => {
@@ -155,7 +158,7 @@ export class ClaimsDetailsComponent {
 
     this.claimsService.getClaimTracker(claimsReqBody).subscribe(
       (response: any) => {
-        this.customeStepperStatuses = response.data.data;        
+        this.customeStepperStatuses = response.data;        
         this.customeStepperStatuses.forEach((item:any, index: number) => {
           item.count = index + 1;
         });
@@ -193,27 +196,91 @@ export class ClaimsDetailsComponent {
   //  -------------- Method to handle file upload------------------//
   
 
-  fetchfileUploads(
-    policyNumber: string,
-    claimInfoId: string
-  ) {    
-    let claimsFilesReqBody = {
-      "documentId" : "",
-      "policyNumber":"40-23-0003508-00",
-      "claimNumber": "510000340-23-0003508-00"
-    };
+  // fetchfileUploads(
+  //   policyNumber: string,
+  //   claimInfoId: string
+  // ) {    
+  //   let claimsFilesReqBody = {
+  //     "documentId" : "",
+  //     "policyNumber":"40-23-0003508-00",
+  //     "claimNumber": "510000340-23-0003508-00"
+  //   };
   
-    this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe((response: any) => {
-      this.fileUploads = response.map((file: any) => ({
-        name: file.documentName, 
-        type: file.documentType, 
-        base64: file.base64Document, 
-        fileBlob: this.convertBase64ToBlob(file.base64Document, file.documentType)
-      }));
-    }, error => {
+  //   this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe((response: any) => {
+  //     this.fileUploads = response.data.map((file: any) => ({
+  //       name: file.documentName, 
+  //       type: file.documentType, 
+  //       base64: file.base64Document, 
+  //       fileBlob: this.convertBase64ToBlob(file.base64Document, file.documentType)
+  //     }));
+  //   }, error => {
+  //     console.error('Error fetching uploaded files', error);
+  //   });
+  // }
+  
+  // convertBase64ToBlob(base64: string, fileType: string): Blob {
+  //   const byteCharacters = atob(base64);
+  //   const byteNumbers = new Array(byteCharacters.length);
+  //   for (let i = 0; i < byteCharacters.length; i++) {
+  //     byteNumbers[i] = byteCharacters.charCodeAt(i);
+  //   }
+  //   const byteArray = new Uint8Array(byteNumbers);
+  //   return new Blob([byteArray], { type: fileType });
+  // }
+  
+  // downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
+  //   if (!file.fileBlob) {
+  //     console.error("File blob is not available for download.");
+  //     return;
+  //   }
+  
+  //   const blob = file.fileBlob;
+  //   const url = window.URL.createObjectURL(blob);
+  
+  //   const anchor = document.createElement('a');
+  //   anchor.href = url;
+  //   anchor.download = file.name;
+  //   anchor.click();
+  
+  //   window.URL.revokeObjectURL(url);
+  // }
+ 
+fetchfileUploads(policyNumber: string, claimInfoId: string) {
+  let claimsFilesReqBody = {
+    "documentId": "",
+    "policyNumber": "40-23-0003508-00",
+    "claimNumber": "510000340-23-0003508-00"
+  };
+
+  this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe(
+    (response: any) => {
+      if (response.isSuccess && response.data.isSuccess) {
+        // Parse the stringified data array
+        const fileDataArray = JSON.parse(response.data.data);
+
+        if (fileDataArray.length > 0) {
+          this.noFilesFound = false;
+          this.fileUploads = fileDataArray.map((file: any) => ({
+            name: file.title, 
+            type: file.colour, 
+            base64: file.base64Document, 
+            fileBlob: this.convertBase64ToBlob(file.base64Document, file.documentType)
+          }));
+        } else {
+          this.noFilesFound = true;
+          this.fileUploads = [];
+        }
+      } else {
+        this.noFilesFound = true;
+        this.fileUploads = [];
+      }
+    },
+    (error) => {
       console.error('Error fetching uploaded files', error);
-    });
-  }
+      this.noFilesFound = true;
+    }
+  );
+}
   
   convertBase64ToBlob(base64: string, fileType: string): Blob {
     const byteCharacters = atob(base64);
@@ -230,18 +297,16 @@ export class ClaimsDetailsComponent {
       console.error("File blob is not available for download.");
       return;
     }
-  
-    const blob = file.fileBlob;
-    const url = window.URL.createObjectURL(blob);
-  
+    const url = window.URL.createObjectURL(file.fileBlob);
     const anchor = document.createElement('a');
     anchor.href = url;
     anchor.download = file.name;
+    document.body.appendChild(anchor);
     anchor.click();
-  
+    document.body.removeChild(anchor);
     window.URL.revokeObjectURL(url);
   }
-
+  
 
   onUnderDeficiencyFileSelected(event: any): void {
     const files = event.target.files;
