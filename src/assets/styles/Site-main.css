@@ -3658,6 +3658,16 @@ input[type="search"]::-webkit-search-results-decoration {
 .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem {
   position: relative;
 }
+.uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem.uploadedFiles_infoSize {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 5px;
+}
+.uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem.uploadedFiles_infoSize .size-align {
+  position: initial;
+  width: auto;
+}
 .uploadedFiles_main li .uploadedFiles_info .uploadedFiles_infoItem .file-index{
   background-color: rgba(245, 205, 7, 0.6509803922);
   border-radius: 50%;
@@ -3699,7 +3709,8 @@ input[type="search"]::-webkit-search-results-decoration {
 .uploadedFiles_main li .uploadedFiles_info .delete-button {
   background-color: transparent;
   border: none;
-  padding: 0
+  padding: 0;
+  display: flex;
 }
 .uploadedFiles_main li .uploadedFiles_info .delete-button img {
   width: 14px;

@@ -105,7 +105,7 @@
                           <td>{{ row.emailID }}</td>
                           <td>{{ row.mobileNo }}</td>
                           <td>
-                            <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info"  class="btn_action btn_moreAction btn_arrowCustomer" (click)="toggleMoreInfo(i)">
+                            <button type="button" id="moreinfo" name="moreinfo" value="moreinfo" title="More Info"  class="btn_action btn_moreAction btn_arrowCustomer" [ngClass]="{'active': moreInfoIndex === i}" (click)="toggleMoreInfo(i)">
                               <img src="assets/Img/icon_table_arrow_right_red.svg" />
                             </button>
                           </td>
@@ -139,7 +139,8 @@
                                   </td>
                                   <td>
                                     <div class="btn_groupAction">
-                                        <button type="button" id="customermore" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
+                                        <button type="button" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                         <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                             <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                 <ul class="actionItemsMain">
