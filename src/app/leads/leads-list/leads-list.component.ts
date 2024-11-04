@@ -243,6 +243,8 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
+    this.selected = "Select an option";
+    this.searchInputControl.reset();
 
   }
   cancel() {
