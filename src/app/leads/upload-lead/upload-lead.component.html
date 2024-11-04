@@ -66,10 +66,10 @@
                                         <div class="uploadedFiles_info">
                                             <div class="uploadedFiles_infoItem">
                                                 <!-- <span class="file-index">1</span> -->
-                                                <h6>File Name: {{UploadedFiles.fileName}}</h6>
-                                                <p>File Type: {{UploadedFiles.fileExt}}</p>
+                                                <h6>{{UploadedFiles.fileName}}</h6>
+                                                <p>{{UploadedFiles.fileExt}}</p>
                                             </div>
-                                            <div class="uploadedFiles_infoItem">
+                                            <div class="uploadedFiles_infoItem uploadedFiles_infoSize">
                                                 <button type="button" id="deletefile" name="deletefile" class="delete-button" (click)="removeFile(UploadedFiles)" >
                                                     <img src="assets/Img/icon_delete_red2.svg">
                                                 </button>
