@@ -350,7 +350,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="occupation" placeholder=""
-                                    formControlName="occupation" type="text">
+                                    formControlName="occupation" type="text" maxlength="20">
                                 <label for="occupation">Occupation</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('occupation')?.errors?.['pattern']">Please
@@ -360,7 +360,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="education" placeholder=""
-                                    formControlName="education" type="text">
+                                    formControlName="education" type="text" maxlength="20">
                                 <label for="education">Education</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('education')?.errors?.['pattern']">Please
@@ -407,7 +407,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="city" placeholder=""
-                                    formControlName="city" type="text" maxlength="20" OnlyCharacter>
+                                    formControlName="city" type="text" maxlength="20"  (keypress)="isCharacter($event)" OnlyCharacter>
                                 <label for="city">City</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('city')?.errors?.['pattern']">Please
@@ -417,7 +417,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="state" placeholder=""
-                                    formControlName="state" type="text" maxlength="20" OnlyCharacter>
+                                    formControlName="state" type="text" maxlength="20" (keypress)="isCharacter($event)" OnlyCharacter>
                                 <label for="state">State</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('state')?.errors?.['pattern']">Please

@@ -396,4 +396,11 @@ export class CreateLeadComponent implements OnInit {
      }
   }
 
+  isCharacter(event: KeyboardEvent) {
+    const char = String.fromCharCode(event.which);
+    if (!/[a-zA-Z]/.test(char)) {
+      event.preventDefault();
+    }
+  }
+  
 }
