@@ -21,16 +21,14 @@ export class EncryptionInterceptor implements HttpInterceptor {
   constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.loadingService.show();
     const isExcluded = this.excludedUrls.some(url => req.url.includes(url));
     
     if (isExcluded) {
-      this.loadingService.hide();
       return next.handle(req);
     }
 
     if (req.body && !(req.body instanceof FormData) && req?.method == 'POST') {
-
+      this.loadingService.show();
       const encryptedBody = this.aesEncryptService.encrypt(req.body);
       const clonedRequest = req.clone({
         body: this.isEncrypt ? encryptedBody : req.body,
@@ -54,11 +52,11 @@ export class EncryptionInterceptor implements HttpInterceptor {
             }
           }
           res.body && localStorage.setItem('token', res?.body?.token);
-          finalize(() => this.loadingService.hide())
-
+          this.loadingService.hide()
         }),
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
+          this.loadingService.hide()
           if (error.status === 401) {
             localStorage.clear()
             this.router.navigate(['/login']);

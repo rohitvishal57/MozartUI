@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingService } from './services/loading.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +11,10 @@ import { LoadingService } from './services/loading.service';
 export class AppComponent {
 
   showNavbar: boolean = true;
-  isLoading$ = this.loadingService.isLoading;
+  isLoading$: Observable<boolean>;
 
   constructor(private router:Router, private loadingService: LoadingService){
-
+    this.isLoading$ = this.loadingService.isLoading;
   }
   ngOnInit(){
     this.router.events.subscribe(() => {
