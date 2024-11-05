@@ -217,9 +217,9 @@ export class CreateLeadComponent implements OnInit {
         console.log(response);
         if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
-            this.toast.success({ detail: 'Lead is updated successfully' });
+            this.toast.success({ detail: 'Lead is updated successfully.' });
           } else {
-            this.toast.success({ detail: 'Lead is created successfully' });
+            this.toast.success({ detail: 'Lead is created successfully.' });
           }
           console.log(response);
           this.router.navigate(['leads/leadsList'])
@@ -364,7 +364,7 @@ export class CreateLeadComponent implements OnInit {
     this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
       (response) => {
         if (response.statusMessage == "Success") {
-          this.toast.success({ detail: 'Note Added successfully' });
+          this.toast.success({ detail: 'Note Added successfully.' });
           this.router.navigate(['leads/leadsList'])
         }
       }, (error) => {

@@ -31,7 +31,7 @@ export class LeadsListComponent {
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
   selected: string = "Select an option";
-  searchInputControl = new FormControl("", Validators.required);
+  searchInputControl = new FormControl("", [Validators.required, Validators.pattern(this.getValidationPattern())]);
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
   placeholder: string = '';
@@ -60,6 +60,7 @@ export class LeadsListComponent {
   startDate: any;
   endDate: any;
   filterLeads = false;
+  searchInputSubmitted =false;
   today: String = '';
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
@@ -335,6 +336,7 @@ export class LeadsListComponent {
     return "";
   }
   applySearch() {
+    this.searchInputSubmitted = true;
     if (this.searchInputControl.valid) {
       this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
     } else {
@@ -344,6 +346,8 @@ export class LeadsListComponent {
       this.getLeadsList();
       this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign? 'assignedLead': 'unAssignedLead';     
     }
+
+    this.searchInputControl.reset();
   }
   renewalListView(view: string) {
     this.selectedView = view;
@@ -392,9 +396,9 @@ export class LeadsListComponent {
         if (response.message == "Success") {
 
           if (selectedLeadIDs.length > 1) {
-            this.toast.success({ detail: 'Leads has been successfully assigned' });
+            this.toast.success({ detail: 'Leads has been successfully assigned.' });
           } else {
-            this.toast.success({ detail: 'Lead has been successfully assigned' });
+            this.toast.success({ detail: 'Lead has been successfully assigned.' });
           }
           this.filterQuotes('all');
         }
@@ -480,6 +484,37 @@ export class LeadsListComponent {
       return 'Search...';
     }
   }
+
+  // This method will dynamically return the appropriate validation pattern
+  getValidationPattern(): string {
+    if (this.selected === 'leadId') {
+      return '^[A-Z]{3}\d{12}$'; // For Lead ID (alphanumeric)
+    } else if (this.selected === 'mobileNumber') {
+      return '^[0-9]{10}$'; // For Mobile Number (exactly 10 digits)
+    } else if (this.selected === 'name') {
+      return '^[A-Za-z ]+$'; // For Name (only alphabets and spaces)
+    } else if (this.selected === 'email') {
+      return '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'; // For Email
+    } else {
+      return '.*'; // For generic search (allows anything)
+    }
+  }
+
+  getSearchInputControlPatternMessage() {
+    if (this.searchInputControl.hasError('required')) {
+      return this.toast.error({ detail: 'This field is required.' });
+    }
+    if (this.selected === 'leadId') {
+      return this.toast.error({ detail: 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).'});
+    } else if (this.selected === 'mobileNumber') {
+     return this.toast.error({ detail: 'Mobile Number should be exactly 10 digits.' });
+    } else if (this.selected === 'name') {
+      return this.toast.error({ detail: 'Name should contain only letters and spaces.' });
+    } else if (this.selected === 'email') {
+      return this.toast.error({ detail: 'Please enter a valid email address (e.g., user@example.com).' });
+    } 
+  }  
+
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
       this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
