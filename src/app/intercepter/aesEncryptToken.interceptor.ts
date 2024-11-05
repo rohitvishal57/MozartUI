@@ -25,6 +25,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
     const isExcluded = this.excludedUrls.some(url => req.url.includes(url));
     
     if (isExcluded) {
+      this.loadingService.hide();
       return next.handle(req);
     }
 
