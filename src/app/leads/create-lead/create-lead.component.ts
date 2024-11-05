@@ -59,16 +59,17 @@ export class CreateLeadComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.inItForm();
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadNumber'];
       this.action = params['action'];
     });
     if (this.leadNumber && this.action) {
-      this.getLeadInformationByLeadNumber(this.leadNumber);
-      this.getReferenceStatus();
-      this.fetchActivityTypeInfo();
+    await  this.getReferenceStatus();
+    await  this.fetchActivityTypeInfo();
+    await  this.getLeadInformationByLeadNumber(this.leadNumber);
+
     }
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
@@ -250,6 +251,7 @@ export class CreateLeadComponent implements OnInit {
     this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
       this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
+      this.changeReferStatus(this.submittedUser.leadStatus);
     },
       (error) => {
         console.log("Failed to fetch lead Information!")
@@ -292,14 +294,9 @@ export class CreateLeadComponent implements OnInit {
       campaignnumber: this.submittedUser.campaignnumber,
       leadnumber: this.submittedUser.leadNumber,
       leadAssignee: this.submittedUser.leadAssignee,
-      isUpdate: this.submittedUser.isUpdate || 1 ,// Default to 0 if undefined
-      status: this.submittedUser.leadStatus,
-      substatus: this.submittedUser.leadSubStatus
+      isUpdate: this.submittedUser.isUpdate || 1 ,
+      leadStatus: this.submittedUser.leadStatus
     });
-
-    console.log("user validation", this.userValidations.get('interestedProductName')?.value);
-
-
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
@@ -334,9 +331,15 @@ export class CreateLeadComponent implements OnInit {
   }
 
   changeReferStatus(event: any) {
-    console.log(event.target.value);
-    let selectedStatus = event.target.value
+    if(event){
+    let selectedStatus = typeof(event)=='string'?event :event.target.value;
+    console.log('selectedStatus',selectedStatus);
     this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
+    this.userValidations.patchValue({
+      leadSubStatus: this.submittedUser.leadSubStatus
+    });
+          
+  }
   }
 
   addNotesSubmit() {
