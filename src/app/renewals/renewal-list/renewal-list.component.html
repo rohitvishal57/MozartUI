@@ -35,6 +35,7 @@
                             </select>
                             <input class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                             <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <span *ngIf="searchInputControl.invalid && searchInputControl.touched" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
                         </div>
                     </div>
                     <div class="filterWraper">
