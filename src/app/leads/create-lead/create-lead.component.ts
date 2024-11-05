@@ -410,5 +410,9 @@ export class CreateLeadComponent implements OnInit {
       event.preventDefault();
     }
   }
+
+  goBack(){
+    window.history.back();
+  }
   
 }

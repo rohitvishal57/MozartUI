@@ -374,7 +374,7 @@
             </div>
 
             <div class="modal-footer modal_footerBtnGroup_column">
-                <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth"  [attr.disabled]="agentCodes.length">Save</button>
+                <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth"  [disabled]="agentCodes.length===0">Save</button>
                 <div class="d-flex justify-content-center">
                     <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >Cancel</button>
                 </div>
