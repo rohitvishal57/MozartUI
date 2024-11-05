@@ -4955,6 +4955,14 @@ input[type="search"]::-webkit-search-results-decoration {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.btn_addtocompare {
+  background: #F9FAFB;
+  border-color: #F9FAFB;
+  color: #4c4c4c;
+}
+.btn_addtocompare img{
+  filter:brightness(0) invert(0) !important;
+}
 /*.lead_btnList button {
   position: relative;
 }
