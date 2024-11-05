@@ -93,8 +93,8 @@ export class GetQuoteComponent {
 
 
   value: number = 5;
-
-
+  currentDate = new Date().toISOString().split('T')[0];
+  DateCheck:boolean = false;
   relations: any[] = [
     {
       "id": "R001",
@@ -182,6 +182,7 @@ export class GetQuoteComponent {
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService) { }
 
   ngOnInit() {
+    console.log(this.currentDate);
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     let formData:any;
@@ -312,6 +313,18 @@ export class GetQuoteComponent {
           console.log(selectedRelation);
         }
       })
+    }
+    console.log(dob,dob.length,new Date(dob).getFullYear(),new Date(this.currentDate).getFullYear());
+    if(dob.length == 10 && dobArray[0].length == 4 && new Date(dob).getFullYear() > new Date(this.currentDate).getFullYear()){
+      this.toast.error({
+        detail: "Error",
+        summary: "Please fill valid Date.",
+        duration: 1000
+      });
+      this.DateCheck = false;
+    }
+    else{
+      this.DateCheck = true;
     }
     // this.saveDataToStorage(); // Save after updating the age
   }
@@ -649,6 +662,14 @@ export class GetQuoteComponent {
       return; // Prevent proceeding if fewer than 2 members are selected
     }
 
+    if(this.DateCheck == false){
+      this.toast.error({
+        detail: "Error",
+        summary: "Please fill valid Date.",
+        duration: 1000
+      });
+      return;
+    }
     // Check if the form is valid before proceeding
     if (this.quoteFormGroup.valid) {
       this.quoteFormGroup.markAllAsTouched();
