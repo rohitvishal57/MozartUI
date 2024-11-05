@@ -4,7 +4,6 @@ import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubCont
 import { CommonService } from 'src/app/services/common.service';
 import { DOCUMENT } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
@@ -12,6 +11,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { LoadingService } from 'src/app/services/loading.service';
 declare var bootstrap: any;
 
 @Component({
@@ -115,7 +115,7 @@ export class RugDynamicFormComponent {
   familyConstructsData: any;
 
   constructor(private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
-    public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: NgxSpinnerService,
+    public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef, private aesEncryptService: AesEncryptionService,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route: ActivatedRoute) { }

@@ -8,7 +8,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { NgxSpinnerModule } from "ngx-spinner";
 import { RugRoutingModule } from "./rug-routing.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -20,7 +19,6 @@ export function HttpLoaderFactory(http: HttpClient) {
         CommonModule,
         PrimeNgModule,
         ClipboardModule,
-        NgxSpinnerModule,
         ReactiveFormsModule,
         RugRoutingModule,
         TranslateModule.forRoot({
