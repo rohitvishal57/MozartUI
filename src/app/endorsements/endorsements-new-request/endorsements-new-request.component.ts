@@ -561,8 +561,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
       (resp) => {
-        if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
-          if (resp.data.response.caseId != null) {
+          if (resp.data && resp.statusCode == "200" && resp.isSuccess && resp.data.response.caseId != null) {
             if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
               if (!this.selectedFile) {
                 this.isFilenotSelected = true;
@@ -625,7 +624,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
             });
             this.backToEndorsment();
           }
-        }
       },
       (err) => {
         console.log(err);
