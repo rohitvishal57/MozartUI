@@ -146,7 +146,7 @@ export class QuoteProductsComponent implements OnInit {
     try {
       const res = await firstValueFrom(this.service.getProposalNumber());
       console.log(res);
-      res.data = this.aesEncryptService.decrypt(res.data);
+      // res.data = this.aesEncryptService.decrypt(res.data);
       this.proposalNum = res.data.proposalNumber;
       console.log(this.proposalNum)
     } catch (error) {
@@ -194,7 +194,8 @@ export class QuoteProductsComponent implements OnInit {
     item.tenureAmounts = [];
     this.formData = {
       ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount,
-      firstName: this.formData.proposerName, quoteId:item.quoteNumber, tenure : this.selectedPlanIndex + ' years'
+      firstName: this.formData.proposerName, quoteId:item.quoteNumber, tenure : this.selectedPlanIndex + ' years',
+      proposalNumber: this.proposalNum
     }
     console.log(this.formData);
     try {
@@ -310,7 +311,6 @@ export class QuoteProductsComponent implements OnInit {
     console.log(reqdata);
     await this.quoteService.Insertorupdateagentcartdetails(reqdata).subscribe({
       next: (res) => {
-        this.spinner.show();
         this.Getagentcartdetails()
         console.log(res);
       },
