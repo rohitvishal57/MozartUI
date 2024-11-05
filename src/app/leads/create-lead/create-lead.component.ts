@@ -42,6 +42,7 @@ export class CreateLeadComponent implements OnInit {
   activityTypes: any = [];
   today:string='';
   maxDate = '9999-12-31';
+  notes : any = [];
   whatsappOptions = [
     { value: true, display: 'Yes' },
     { value: false, display: 'No' }
@@ -69,6 +70,10 @@ export class CreateLeadComponent implements OnInit {
     await  this.getReferenceStatus();
     await  this.fetchActivityTypeInfo();
     await  this.getLeadInformationByLeadNumber(this.leadNumber);
+
+      if (this.action === 'addNotes') {
+        this.getLeadNotes(this.leadNumber);
+      }
 
     }
     this.CreateLead = new CreateLead;
@@ -363,7 +368,7 @@ export class CreateLeadComponent implements OnInit {
 
     this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
       (response) => {
-        if (response.statusMessage == "Success") {
+        if (response.message == "Success") {
           this.toast.success({ detail: 'Note Added successfully.' });
           this.router.navigate(['leads/leadsList'])
         }
@@ -415,4 +420,23 @@ export class CreateLeadComponent implements OnInit {
     window.history.back();
   }
   
+  getLeadNotes(leadNumber: any) {
+    this.leadsService.getLeadNotes(leadNumber).subscribe((response) => {
+      this.notes = response.data;
+    },
+      (error) => {
+        console.log("Failed to fetch lead Information!")
+      }
+    );
+  }
+
+  formatCreatedOn(dateString: string | null | undefined) {
+    if (!dateString) {
+      return 'N/A'; // Handle null or undefined values
+    }
+    const date = new Date(dateString);
+    const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
+    return formattedDate || 'Invalid Date'; // Handle invalid date
+  }
+
 }

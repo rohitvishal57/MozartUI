@@ -34,6 +34,7 @@
     "sendCustomerDetails": "/api/yatra/sendcustomerdetails",
     "download": "api/yatra/downloadcustomer",
     "addLeadNotes": "api/yatra/addnotes",
+    "getLeadNotes":"api/yatra/notelist?leadNumber=",
     "addfeedback": "api/yatra/feedback",
     "getClaimsList": "api/claims/getclaimlist",
     "getProposalDetails": "api/claims/getproposaldetails?AgentCode",

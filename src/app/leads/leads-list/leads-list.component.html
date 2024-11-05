@@ -46,10 +46,6 @@
                                 <option value="email">Email ID</option>
                             </select>
                             <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" [type]="filterFeildType" [maxlength]="filterFeildmaxlength" [placeholder]="getPlaceholder()">
-                            <!-- <div *ngIf="searchInputSubmitted && searchInputControl.invalid && searchInputControl.touched" class="error-message">
-                                <div *ngIf="searchInputSubmitted && searchInputControl.hasError('required')">{{getSearchInputControlPatternMessage()}}</div>
-                                <div *ngIf="searchInputControl.hasError('pattern')">{{getSearchInputControlPatternMessage()}}</div>
-                              </div> -->
                             <button  type="button" id="leadsearch" name="leadsearch" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
@@ -151,7 +147,7 @@
                                     <th>Product Name</th>
                                     <th>Mobile Number</th>
                                     <th>Email ID</th>
-                                    <th>Create Date<div><small>(dd-mm-yyyy)</small></div></th>
+                                    <th>Created Date<div><small>(dd-mm-yyyy)</small></div></th>
 
                                     <th class="text-center">Notice</th>
                                 </tr>
