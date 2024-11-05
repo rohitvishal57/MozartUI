@@ -13,6 +13,30 @@ import { CommonService } from 'src/app/services/common.service';
 })
 
 export class EndorsementsRequestsComponent implements OnInit {
+
+  tableData = {
+    title: 'All requests',
+    actionbtnList: [
+      {
+        name: 'New Requests', class: 'btn_newRequest', icon: 'assets/Img/icon_plus_red.svg'
+      }
+    ],
+    filterList : [
+      {
+        name : 'All' , description : 'All', class : 'All', icon : ''
+      },
+      {
+        name : 'Active' , description : 'All', class : 'Active', icon : ''
+      },
+      {
+        name : 'Resolved' , description : 'All', class : 'Resolved', icon : ''
+      },
+      {
+        name : 'Cancelled' , description : 'All', class : 'Cancelled', icon : ''
+      }
+    ]
+  };
+
   endorsementDetails: endorsementDetails[] = [];
   countsList: any = [];
   activeFilter: string = "All";
@@ -100,8 +124,8 @@ export class EndorsementsRequestsComponent implements OnInit {
   ]; */
   agentCode: any;
   productsList: any = [];
-  requestTypes:any =[];
-  constructor(private router:Router,
+  requestTypes: any = [];
+  constructor(private router: Router,
     private endorsementService: EndorsementsRequestsService,
     private _router: Router,
     private datePipe: DatePipe,
@@ -113,20 +137,20 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.getProducts();
   }
   getProducts() {
-    this.agentCode =  localStorage.getItem("agentCode");
-    const reqData={
+    this.agentCode = localStorage.getItem("agentCode");
+    const reqData = {
       "agentCode": this.agentCode
     }
     this.commonService.Getproductlist(reqData).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         this.productsList = res.data;
         const uniqueRequestTypes = Array.from(new Set(this.productsList
-         .map((product:any) => product.familyPlan)))
-         .map((requestType) => ({ name: requestType, selected: false }));
-         this.requestTypes = uniqueRequestTypes;
+          .map((product: any) => product.familyPlan)))
+          .map((requestType) => ({ name: requestType, selected: false }));
+        this.requestTypes = uniqueRequestTypes;
       },
-      error: (err:any) => {
-         console.log("error coming form getproduct list API");
+      error: (err: any) => {
+        console.log("error coming form getproduct list API");
       }
     })
   }
@@ -150,23 +174,23 @@ export class EndorsementsRequestsComponent implements OnInit {
     }
   }
 
-  getEndorsementCaseDetails (data:any) {
-    this._router.navigate(['endorsements/endorsemet-details/'+data?.caseId]);
+  getEndorsementCaseDetails(data: any) {
+    this._router.navigate(['endorsements/endorsemet-details/' + data?.caseId]);
   }
 
-  requestsListRequestBody:any = {
-      "agentCode": localStorage.getItem('agentCode'),
-      "fromDate": "",
-      "toDate": "",
-      "start": 0,
-      "length": this.rows,
-      "sortColumn": "RaisedOn",
-      "searchColumn": "",
-      "sortDirection": "DESC",
-      "searchString": [],
-      "uiStatus": ""
+  requestsListRequestBody: any = {
+    "agentCode": localStorage.getItem('agentCode'),
+    "fromDate": "",
+    "toDate": "",
+    "start": 0,
+    "length": this.rows,
+    "sortColumn": "RaisedOn",
+    "searchColumn": "",
+    "sortDirection": "DESC",
+    "searchString": [],
+    "uiStatus": ""
   }
-   
+
   getRequestList() {
     if (!this.isSearch) {
       this.requestsListRequestBody.start = (this.page - 1) * this.rows;
@@ -182,7 +206,7 @@ export class EndorsementsRequestsComponent implements OnInit {
             const date = new Date(obj.raisedOn);
             const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
             return {
-              ...obj, raisedOn:formattedDate
+              ...obj, raisedOn: formattedDate
             }
           });
           this.countsList = response.data.endorsementDetails;
@@ -201,7 +225,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     if (filter === "All") {
       this.requestsListRequestBody.uiStatus = "";
     } else {
-    this.requestsListRequestBody.uiStatus = filter;
+      this.requestsListRequestBody.uiStatus = filter;
     }
     this.getRequestList();
     this.activeFilter = filter;
@@ -216,27 +240,26 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   toggleFilterDropdown() {
-    if(this.toggeleSearchdropdown==true)
-    {
-      this.toggeleSearchdropdown=false;
+    if (this.toggeleSearchdropdown == true) {
+      this.toggeleSearchdropdown = false;
     }
     this.toggeledropdown = !this.toggeledropdown;
-    this.maxDate = new Date().toISOString().split('T')[0];  
+    this.maxDate = new Date().toISOString().split('T')[0];
   }
   cancel() {
     this.toggeledropdown = false;
   }
-  calculateAppliedFiltersCount(){
+  calculateAppliedFiltersCount() {
     // const selectedPolicyTypesCount = this.StaticRequestTypes.filter((requestType:any) => requestType.selected).length;
-    const selectedProductsCount = this.productsList.filter((product:any) => product.selected).length;
+    const selectedProductsCount = this.productsList.filter((product: any) => product.selected).length;
     let count = selectedProductsCount;
     if (this.fromDate && this.toDate) {
       count++;
     }
     this.appliedFiltersCount = count;
   }
-  clear(){
-    this.productsList.forEach((product:any) => (product.selected = false));
+  clear() {
+    this.productsList.forEach((product: any) => (product.selected = false));
     // this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
     this.fromDate = null;
     this.toDate = null;
@@ -253,11 +276,11 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.calculateAppliedFiltersCount();
     this.formatDate("fromDate");
     this.formatDate("toDate");
-    this.requestsListRequestBody.fromDate=this.fromDate;
-    this.requestsListRequestBody.toDate=this.toDate;
+    this.requestsListRequestBody.fromDate = this.fromDate;
+    this.requestsListRequestBody.toDate = this.toDate;
     const selectedProducts = this.productsList.filter((product: any) => product.selected)
       .map((product: any) => product.productName);
-    if(selectedProducts.length > 0) {
+    if (selectedProducts.length > 0) {
       this.requestsListRequestBody.searchColumn = "ProductName"
       this.requestsListRequestBody.searchString = selectedProducts;
     }
@@ -270,7 +293,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.isSearch = true;
     this.first = 0;
     this.getRequestList();
-    this.toggeledropdown=false;
+    this.toggeledropdown = false;
   }
 
   onSelectChanges(event: Event): void {
@@ -314,7 +337,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       return "Enter Member Name";
     } else if (this.selected === "policyNumber") {
       return "Enter Policy Number";
-    } 
+    }
     else {
       return "Search...";
     }
@@ -350,9 +373,9 @@ export class EndorsementsRequestsComponent implements OnInit {
         this.requestsListRequestBody.searchColumn = "PolicyNumber";
         this.requestsListRequestBody.searchString = [searchValue];
       }
-    this.isSearch = true;
-    this.first = 0;
-    this.getRequestList();
+      this.isSearch = true;
+      this.first = 0;
+      this.getRequestList();
     }
   }
 
@@ -360,7 +383,9 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.selectedView = view;
   }
 
-  redirect(value:any){
+  redirect(value: any) {
     this.router.navigate([value]);
   }
+
+  onEmitBtn(ev : any){}
 }

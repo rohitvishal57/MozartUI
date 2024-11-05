@@ -1,0 +1,26 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>{{tableData.title}}</h2>
+                <div *ngFor="let btn of tableData?.actionbtnList">
+                    <button type="button" [id]="btn.name" [name]="btn.name" [class]="btn.class"
+                        (click)="redirectActionBtn($event)">
+                        <img [src]="btn.icon">{{btn?.name}}
+                    </button>
+                </div>
+            </div>
+            <section class="quickFilterMain">
+                <div class="quickFilterLeft" #filterSection>
+                    <ul class="quickFilter">
+                        <li *ngFor="let filterItems of tableData?.filterList"><button type="button"
+                                [id]="filterItems.name" [name]="filterItems.name" [value]="filterItems.name"
+                                [ngClass]="getClass(filterItems?.name)" (click)="statusFilter(filterItems.name)"
+                                class="btn_quickFilter btn_quickFilterClaim">{{filterItems.name}}
+                            </button></li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
