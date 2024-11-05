@@ -95,7 +95,7 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
-                                                    <input type="date"  [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
+                                                    <input type="date" [min]="startDate" [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
                                                     <label for="enddate">End Date</label>
                                                     <span class="ui-error">Please enter date of birth</span>
                                                 </div>
