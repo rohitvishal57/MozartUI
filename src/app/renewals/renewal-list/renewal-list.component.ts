@@ -423,7 +423,23 @@ export class RenewalListComponent {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
     sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
     sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(this.activeSection));
-    this.router.navigate([`renewal/payment`]);
+    const renewalInfoRequestBody = {
+      policy_Number: proposerDetail.policyNumber,
+    };
+    this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+      (res: any) => {
+        if (res.isSuccess) {
+          sessionStorage.setItem("renewalData", this.encryptionService.encrypt(res));
+          this.router.navigate(['renewal/payment']);
+        } else {
+          this.toast.error({ detail: "Error", summary: res.message, duration: 2000 });
+        }
+      },
+      (err) => {
+        console.error("Error from getRenewalInfo API:", err);
+        this.toast.error({ detail: "Error", summary: "Failed to fetch renewal information", duration: 1500 });
+      }
+    );
   }
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {

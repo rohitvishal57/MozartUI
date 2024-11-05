@@ -41,14 +41,21 @@ export class StatusValidationComponent implements OnInit {
                     duration: 5000,
                   });
                   this.router.navigate(['dashboard']);
+                } else {
+                  this.router.navigate(['']);
+                  this.toast.error({
+                    detail: 'ERROR',
+                    summary: 'Some Error Occured! Please Try Again.',
+                    duration: 5000,
+                  });
                 }
               },
               error: (err) => {
-               this.router.navigate(['']);
+                this.router.navigate(['']);
                 this.toast.error({
                   detail: 'ERROR',
                   summary: 'Some Error Occured! Please Try Again.',
-                  sticky: true,
+                  duration: 5000,
                 });
               },
             });
@@ -65,6 +72,13 @@ export class StatusValidationComponent implements OnInit {
                   duration: 5000,
                 });
                 this.router.navigate(['dashboard']);
+              } else {
+                this.router.navigate(['']);
+                this.toast.error({
+                  detail: 'ERROR',
+                  summary: 'Some Error Occured! Please Try Again.',
+                  duration: 5000,
+                });
               }
             },
             error: (err) => {

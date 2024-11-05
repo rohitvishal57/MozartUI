@@ -124,7 +124,7 @@ export class RenewalDynamicFormComponent implements OnInit {
       Object.keys(this.formObject).forEach((key: string) => {
         const controlValue = this.formObject[key];
         const validators = validationConfig[key] || [];        
-        group[key] = [controlValue || '', validators];
+        group[key] = [controlValue || "", validators];
       });
     } else {console.warn('formObject is empty or undefined.');}
     this.form = this.fb.group(group);
@@ -149,7 +149,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   handleAction(event: string,item?: any) {
      switch (event) {
        case 'Member':
-         if (this.memberRole === 'Add' && this.form.valid) {
+         if (this.memberRole === 'Add' && this.form.valid) {  
             this.form.value.SumInsured=this.selectedSumInsured;
             this.requestObject.member=JSON.stringify(this.form.value);
             this.requestObject.policyNumber='21-24-0002334-00';
@@ -157,6 +157,7 @@ export class RenewalDynamicFormComponent implements OnInit {
             this.requestObject.agentCode="4620973";
             this.requestObject.productId=2;
             this.requestObject.quoteData="";
+            console.log("update or add",this.requestObject);
             this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
@@ -458,27 +459,11 @@ payNow(){
   })
 }
 
-getRenewalInfo(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const renewalInfoRequestBody = {
-      policy_Number: this.policyNumber,
-    };
-    this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
-      (res: any) => {
-        try {
-          this.renewalInfo = JSON.parse(res.data.baseResponse);
-          this.kycFlag = res.data.isKYCComplete;
-          this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;          
-          resolve(); 
-        } catch (error) {
-          console.error("Error parsing renewal info:", error);reject(error);
-        }
-      },
-      (err) => {
-        console.error("Error coming from getRenewalInfo API", err);reject(err); 
-      }
-    );
-  });
+getRenewalInfo() {
+  const base = this.encryptionService.decrypt(sessionStorage.getItem('renewalData') as string);
+  this.renewalInfo = JSON.parse(base.data.baseResponse);          
+  this.kycFlag = base.data.isKYCComplete;
+  this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;          
 }
   getTenureDetails() {
     const productName = this.renewalInfo?.response?.policyData[0]?.Name_of_product;    

@@ -101,14 +101,14 @@
                         <table class="table table-borderless table-search">
                           <thead>
                             <tr>
-                                <th scope="col" >Request</th>
+                                <th scope="col">Request</th>
                                 <th scope="col">Policy No.</th>
                                 <th scope="col">Product Name</th>
                                 <th scope="col">Member Name</th>
                                 <!--<th scope="col">Member Relation</th>-->
                                 <th scope="col">Request Type</th>
                                 <th scope="col">Status</th>
-                                <th scope="col">Raised Date <div><small>(dd-mm-yyyy)</small></div></th>
+                                <th scope="col">Raised Date <div><small class="text-secondary">(dd-mm-yyyy)</small></div></th>
                                 <th scope="col">Action</th>
                                 <!--<th scope="col">Download</th>-->
                             </tr>
@@ -132,16 +132,6 @@
                                         <img src="assets/Img/icon_download_grey.svg" width="9" height="9">
                                     </button> 
                                 </td>-->
-                            </tr>
-                          </tbody>
-                          <tbody class="table-group-divider tbody-no-data" *ngIf="endorsementDetails.length === 0">
-                            <tr>
-                                <td colspan="10">
-                                    <div class="no_dataFound" >
-                                        <img src="assets/Img/img_no_data_found.svg" alt="No Data Found" />
-                                        <p>No data found</p>
-                                    </div>
-                                </td>
                             </tr>
                           </tbody>
                         </table>
@@ -193,15 +183,18 @@
                                 <div class="item_value">{{ row?.requestType }}</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="no_dataFound" *ngIf="endorsementDetails.length === 0">
-                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
-                        <p>No data found</p>
                     </div> 
                 </div>
             </section>
             <div class="tableNav" >
-                <div class="no-data-bottom-section-cnt" *ngIf="endorsementDetails.length === 0 ; else pagination"></div>
+                <div class="no-data-bottom-section-cnt" *ngIf="endorsementDetails.length === 0 ; else pagination">
+                    <div class="cardViewWraper">
+                        <div class="no_dataFound">
+                            <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                            <p>No data found</p>
+                        </div>
+                    </div>
+                </div>
                 <ng-template #pagination>
                     <nav>
                         <ul class="pagination">

@@ -326,6 +326,7 @@ export class RugDynamicFormComponent {
           console.log(res);
           this.form = JSON.parse(res.data.jsonFormData);
           // this.form = totalpremium;
+          console.log(this.form);
           this.initializeForm();
         },
         error: (err) => {
@@ -2708,9 +2709,28 @@ export class RugDynamicFormComponent {
       }
       console.log('member Relationship Type:', memberRelation);
       console.log('member dob:', memberDob);
-
+      if (!sortedArray.includes(memberRelation)) {
+        sortedArray.push(memberRelation);
+      } else {
+        console.log(`${memberRelation} is already in the array.`);
+      }
     });
-
+    console.log(this.familyConstructsData);
+    console.log(sortedArray);
+    console.log(sortedArray.length);
+    if(sortedArray.length == 1 && sortedArray.includes('Self')){
+      familyConstruct = 1
+    }else if(sortedArray.length == 2 && sortedArray.includes('Self') && sortedArray.includes('Spouse')){
+      familyConstruct = 2
+    }else if(sortedArray.length == 2 && sortedArray.includes('Self') && !sortedArray.includes('Spouse')){
+      familyConstruct = 5
+    }else if(sortedArray.length == 3 && sortedArray.includes('Self') && !sortedArray.includes('Spouse')){
+      familyConstruct = 6
+    }else if(sortedArray.length == 3 && sortedArray.includes('Self') && sortedArray.includes('Spouse')){
+      familyConstruct = 3
+    }else{
+      familyConstruct = 4
+    }
     let ageRange = this.returnAgeRange(familyConstruct, selfDob, selfDob)
     console.log(ageRange);
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);

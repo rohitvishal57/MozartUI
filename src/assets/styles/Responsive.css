@@ -369,6 +369,12 @@
    .details_claimsAmount .claim_amount{
     padding: 8px 0px !important;
    }
+   .common_searchWraper_proposals {
+        padding-bottom: 20px;
+    }
+    .common_searchWraper_proposals .filterFieldGroup {
+        width: 100%;
+   }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
