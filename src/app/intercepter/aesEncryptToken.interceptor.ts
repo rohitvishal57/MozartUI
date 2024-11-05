@@ -21,7 +21,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
   constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
+    this.loadingService.show();
     const isExcluded = this.excludedUrls.some(url => req.url.includes(url));
     
     if (isExcluded) {
@@ -53,6 +53,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
             }
           }
           res.body && localStorage.setItem('token', res?.body?.token);
+          finalize(() => this.loadingService.hide())
 
         }),
         catchError((error: HttpErrorResponse) => {
