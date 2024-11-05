@@ -26,6 +26,9 @@ const routes: Routes = [
    { path: 'yatra', 
     loadChildren:() => import('./yatra/yatra/yatra.module').then((m)=>m.YatraModule)
    },
+   { path: 'rug', 
+    loadChildren:() => import('./rug/rug-module').then((m)=>m.RugModule)
+   },
    { path: 'renewal', 
     loadChildren:() => import('./renewals/renewals.module').then((m)=>m.RenewalsModule)
    },

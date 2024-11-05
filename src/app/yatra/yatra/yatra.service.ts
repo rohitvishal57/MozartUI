@@ -128,4 +128,28 @@ export class YatraService {
     const feedbackServiceURL = this.configService.config.baseUrl+this.configService.config.addfeedback;
     return this.httpService.post(feedbackServiceURL,reqData);
   }
+  getRelations(){
+    const  getRelationship = this.configService.config.axisBaseUrl + this.configService.config.getRelations;
+    return this.httpService.get(getRelationship);
+  }
+  getProductCombinations(){
+    const  getProductCombinations = this.configService.config.axisBaseUrl + this.configService.config.getProductCombination;
+    return this.httpService.get(getProductCombinations);
+  }
+  getProposalDetails(reqData:any){
+    const proposalDetails = this.configService.config.axisBaseUrl + this.configService.config.getBBProposalDetails;
+    return this.httpService.post(proposalDetails,reqData);
+  }
+  getSumInsuredDetails(reqData:any){
+    const suminsuredDetails = this.configService.config.axisBaseUrl + this.configService.config.getSumInsuredDetails;
+    return this.httpService.post(suminsuredDetails,reqData);
+  }
+  getPremiumData(reqData:any){
+    const premiumData = this.configService.config.axisBaseUrl + this.configService.config.getPremiumDetaiks;
+    return this.httpService.post(premiumData,reqData);
+  }
+  getFamilyConstructData(reqData:any){
+    const familyConstructData = this.configService.config.axisBaseUrl + this.configService.config.getFamilyConstruct;
+    return this.httpService.post(familyConstructData,reqData);
+  }
 }
