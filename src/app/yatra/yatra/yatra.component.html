@@ -747,15 +747,13 @@
                     <input *ngIf="!control.disabled" class="boldtext_input colorbold" 
                            formControlName="{{ control.name }}" 
                            [name]="control.name"  [id]="control.name"
-                           [type]="control.type" 
-                           [placeholder]="control.label"
+                           [type]="control.type"
                            (change)="onInputChange($event, control)">
                     
                     <input *ngIf="control.disabled" class="boldtext_input colorbold no-border" 
                            formControlName="{{ control.name }}" 
                            [name]="control.name" [id]="control.name"
                            [type]="control.type" 
-                           [placeholder]="control.label" 
                            (change)="onInputChange($event, control)" 
                            readonly>
                   </div>
