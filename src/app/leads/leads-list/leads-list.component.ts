@@ -360,7 +360,7 @@ export class LeadsListComponent {
     requestBody.agentCode = this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
       (response: any) => {
-        this.agentCodes = response != null ? response : [];
+        this.agentCodes = response != null ? response?.data : [];
         if (this.agentCodes && this.agentCodes.length > 0) {
           this.assignLeadForm.patchValue({ selectedAgentCode: this.agentCodes[0] });
         }
