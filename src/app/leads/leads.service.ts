@@ -50,6 +50,11 @@ export class LeadsService {
     const addLeadNotesRequest = this.configService.config.baseUrl + this.configService.config.addLeadNotes;
     return this.http.post<any>(addLeadNotesRequest, requestBody);
   }
+
+  getLeadNotes(leadnumber: string):Observable<any>{
+    const url = `${this.configService.config.baseUrl}${this.configService.config.getLeadNotes}${leadnumber}`;
+    return this.http.post<any>(url,leadnumber);
+  }
   
   getLeadInfoByLeadID(requestBody:any):Observable<any>{
     const addLeadNotesRequest = this.configService.config.baseUrl + this.configService.config.getLeadsListApi;
@@ -78,4 +83,5 @@ export class LeadsService {
     return this.http.post<any>(getDuplicateLeadRequest, requestBody);
   }
 
+  
 }

@@ -1,38 +1,36 @@
 export interface CustomerList {
-    id: number;
-    policyNumber: string;
-    policyStartDate: string;  
-    policyEndDate: string;   
-    noOfPolicies: number;
-    policyTerm: string;
-    policyStatus: string;
-    sumInsured: number;
-    totalPremium: number;
-    policyType: string;
-    nstp: string;
-    zone: string | null;
-    memberID: string;
-    name: string;
-    dateOfBirth: string;      
-    mobileNo: string;
-    emailID: string;
-    city: string;
-    addressLine1: string | null;
-    addressLine2: string | null;
-    state: string;
-    pincode: string;
-    source: string;
-    businessType: string;
-    receiptNo: string;
-    issuanceDate: string;     
-    oldPolicyNo: string | null;
-    planName: string;
-    productVariantName: string;
-    leadId: string;
-    quotationNumber: string;
-    proposalNumber: string;
-    agentCode: string;
-    agentName: string;
-    noOfPolicy:number;
-  }
-  
+  policyNumber: string | null;
+  policyStartDate: string | null;
+  policyEndDate: string | null;
+  noOfInsured: number | null;
+  policyStatus: string | null;
+  policyType: string | null;
+  customerID: string;
+  firstName: string;
+  middleName: string | null;
+  lastName: string;
+  mobileNumber: string;
+  emailID: string;
+  pincode: string | null;
+  receiptNo: string | null;
+  planName: string | null;
+  productVariantName: string | null;
+  proposalNumber: string | null;
+  noOfPolicy: number;
+  policyDetails: PolicyDetail[];
+}
+
+export interface PolicyDetail {
+  productVariantName: string;
+  planName: string;
+  policyNumber: string;
+  proposalNumber: string;
+  noOfInsured: number;
+  policyStartDate: string;
+  policyEndDate: string;
+  policyStatus: string;
+  policyType: string;
+  id: number;
+  isEnable: boolean;
+  isVisible: boolean;
+}

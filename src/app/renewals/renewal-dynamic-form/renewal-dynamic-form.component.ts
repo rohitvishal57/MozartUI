@@ -386,7 +386,7 @@ private formatDate(dateString: string): string {
    this.formId = 5001;
    this.setSection('policySummary')
  }
- next1(){
+ nextMethod(){
   if(this.activeSection== 'policySummary'){
     if(this.kycFlag == true){
       this.setSection('payment')
@@ -402,7 +402,8 @@ private formatDate(dateString: string): string {
     else{
       this.toast.error({ detail: 'ERROR',summary: 'Please complete the KYC',duration: 1000});
     }
-  } else if(this.activeSection== 'payment' && this.selectedPaymentType == 'offline'){
+  } 
+  else if(this.activeSection== 'payment' && this.selectedPaymentType == 'offline'){
     this.submit=false
   }
 }
@@ -424,8 +425,10 @@ payNow(){
     console.log("KYC completed",this.kycData);
     this.renewalService.paymentGatewayApi(paymentRequestBody).subscribe({
       next: (response: any) => {
-        if (response.isSuccess==true && response.paymentURL) {
-          window.open(response.paymentURL, '_blank');
+        console.log("payment response",response);
+        const paymenturl=response.data.paymentURL
+        if (response.isSuccess==true && paymenturl) {
+          window.open(paymenturl, '_blank');
         }
         else {
           console.log('Payment initiation failed:', response.message || 'Unknown error');
@@ -547,14 +550,19 @@ getRenewalInfo(): Promise<void> {
           console.log("KYC request body", reqData);    
           this.yatraService.GetKycDetails(reqData).subscribe(
             (response: any) => {
-              console.log("responsec body",response.isSuccess);
+              console.log("Kyc value",this.kycData);
               if (response.isSuccess === true) {
                 this.kycData = response.data;
+                console.log("Kyc data",this.kycData);
                 const kycRequestBody={
                   policy_Number:this.policyNumber
                 }
                 this.renewalService.kycUpdate(kycRequestBody).subscribe(
-                  (res)=>{this.kycFlag=res},
+                  (res)=>{
+                    console.log("Kyc value after kycUpdate call",this.kycData);
+                    
+                    this.kycFlag=res
+                  },
                   (err)=>{console.log(err);}
                 )
                 this.actionKyc = action;

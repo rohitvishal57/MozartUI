@@ -1,6 +1,7 @@
 {
     "baseUrl": "https://usp.monocept.ai/",
     "baseUrl1": "https://upuat.adityabirlahealth.com/",
+    "axisBaseUrl":"https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api",
     "getRenewalList": "api/renewal/getrenewallist",
     "getRenewalInfo": "api/renewal/renewalinfo",
     "getTenureDetails": "api/renewal/getquoteforsingleproduct",
@@ -33,6 +34,7 @@
     "sendCustomerDetails": "/api/yatra/sendcustomerdetails",
     "download": "api/yatra/downloadcustomer",
     "addLeadNotes": "api/yatra/addnotes",
+    "getLeadNotes":"api/yatra/notelist?leadNumber=",
     "addfeedback": "api/yatra/feedback",
     "getClaimsList": "api/claims/getclaimlist",
     "getProposalDetails": "api/claims/getproposaldetails?AgentCode",
@@ -93,5 +95,11 @@
     "profileDetails": "api/auth/GetAgentProfileDetails",
     "fetchPolicyDetailsFromFile": "api/yatra/getcustomerpolicydetailsfrompolicydocument",
     "justPayRedirection": "api/yatra/Payment/JuspayOrder",
-    "paymentGateway": "api/yatra/Payment/JuspayOrder"
+    "paymentGateway": "api/yatra/Payment/JuspayOrder",
+    "getRelations":"/Product/GetProposerRelations",
+    "getProductCombination":"/Product/GetProductCombination",
+    "getBBProposalDetails":"/BranchBanking/GetBBProposalDetailsV2",
+    "getSumInsuredDetails":"/Product/GetSumInsuredList",
+    "getPremiumDetaiks": "/Product/GetPremium",
+    "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode"
 }

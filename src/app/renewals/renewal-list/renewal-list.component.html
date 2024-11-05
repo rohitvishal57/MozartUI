@@ -75,14 +75,12 @@
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
                                                     <label for="startdate">Select Start Date</label>
-                                                    <span class="ui-error">Please enter date of birth</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
                                                     <label for="enddate">Select End Date</label>
-                                                    <span class="ui-error">Please enter date of birth</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -111,7 +109,7 @@
                                     <th scope="col" nowrap>Policy Number</th>
                                     <th scope="col" nowrap>Renewal Premium</th>
                                     <th scope="col" nowrap>Mobile Number</th>
-                                    <th scope="col" nowrap>Date of Renewal</th>
+                                    <th scope="col" nowrap>Date of Renewal <div><small>(dd-mm-yyyy)</small></div></th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Notice</th>
                                 </tr>

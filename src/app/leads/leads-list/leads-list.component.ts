@@ -60,7 +60,7 @@ export class LeadsListComponent {
   startDate: any;
   endDate: any;
   filterLeads = false;
-  today: String = '';
+  today: string = '';
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
@@ -261,7 +261,7 @@ export class LeadsListComponent {
   clear() {
     this.leadsInfoListRequestBody.searchlist = "";
     this.leadsInfoListRequestBody.searchby = "";
-	  this.leadsInfoListRequestBody.fromdate = null;
+    this.leadsInfoListRequestBody.fromdate = null;
     this.leadsInfoListRequestBody.todate = null;
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
@@ -292,7 +292,7 @@ export class LeadsListComponent {
       this.placeholder = 'Proposer Name';
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$")
+        Validators.pattern("^[A-Za-zÀ-ÿ ]+$")
       ]);
     }
     else if (this.selected === "email") {
@@ -305,7 +305,8 @@ export class LeadsListComponent {
     else if (this.selected === "leadId") {
       this.placeholder = 'Lead Id';
       this.searchInputControl.setValidators([
-        Validators.required
+        Validators.required,
+        Validators.pattern("^[A-Za-z]{3}\\d{12}$")
       ]);
     }
     else if (this.selected = 'Select an option') {
@@ -317,24 +318,12 @@ export class LeadsListComponent {
     this.getPlaceholder();
   }
 
-  getErrorMessage(): string {
-    if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
-    }
-    else if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "mobileNumber") {
-        return "Invalid Mobile Number";
-      }
-      else if (this.selected === "name") {
-        return "Invalid Name";
-      }
-      else if (this.selected === "email") {
-        return "Invalid Email";
-      }
-    }
-    return "";
-  }
+
   applySearch() {
+    console.log('this.searchInputControl', this.searchInputControl.errors)
+    if (this.searchInputControl.errors) {
+      this.getSearchInputControlPatternMessage();
+    }
     if (this.searchInputControl.valid) {
       this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
     } else {
@@ -342,8 +331,9 @@ export class LeadsListComponent {
     }
     if (this.selected != 'Select an option') {
       this.getLeadsList();
-      this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign? 'assignedLead': 'unAssignedLead';     
+      this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign ? 'assignedLead' : 'unAssignedLead';
     }
+    this.searchInputControl.reset();
   }
   renewalListView(view: string) {
     this.selectedView = view;
@@ -369,8 +359,8 @@ export class LeadsListComponent {
     let requestBody: any = {}
     requestBody.agentCode = this.agentCode
     this.leadsService.getMyReportingUsers(requestBody).subscribe(
-      (response : any) => {
-        this.agentCodes = response;
+      (response: any) => {
+        this.agentCodes = response != null ? response : [];
         if (this.agentCodes && this.agentCodes.length > 0) {
           this.assignLeadForm.patchValue({ selectedAgentCode: this.agentCodes[0] });
         }
@@ -392,9 +382,9 @@ export class LeadsListComponent {
         if (response.message == "Success") {
 
           if (selectedLeadIDs.length > 1) {
-            this.toast.success({ detail: 'Leads has been successfully assigned' });
+            this.toast.success({ detail: 'Leads has been successfully assigned.' });
           } else {
-            this.toast.success({ detail: 'Lead has been successfully assigned' });
+            this.toast.success({ detail: 'Lead has been successfully assigned.' });
           }
           this.filterQuotes('all');
         }
@@ -406,8 +396,8 @@ export class LeadsListComponent {
     this.assigneLeadModal.hide();
   }
 
-  cancelAssignModal(){
-    this.checkBoxSelectedLeads=[];
+  cancelAssignModal() {
+    this.checkBoxSelectedLeads = [];
   }
 
   toggleAll(event: Event) {
@@ -463,13 +453,13 @@ export class LeadsListComponent {
   }
   getPlaceholder(): string {
     this.filterFeildType = "text";
-    this.filterFeildmaxlength =50;
+    this.filterFeildmaxlength = 50;
     if (this.selected === 'leadId') {
-      this.filterFeildmaxlength =20;
+      this.filterFeildmaxlength = 20;
       return 'Enter Lead Id';
     } else if (this.selected === 'mobileNumber') {
       this.filterFeildType = "number";
-      this.filterFeildmaxlength =10;
+      this.filterFeildmaxlength = 10;
       return 'Enter mobile Number';
     } else if (this.selected === 'name') {
       return 'Enter Name';
@@ -480,6 +470,23 @@ export class LeadsListComponent {
       return 'Search...';
     }
   }
+
+ 
+  getSearchInputControlPatternMessage() {
+    if (this.searchInputControl.hasError('required')) {
+      return this.toast.error({ detail: 'This field is required.' });
+    }
+    if (this.selected === 'leadId') {
+      return this.toast.error({ detail: 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).' });
+    } else if (this.selected === 'mobileNumber') {
+      return this.toast.error({ detail: 'Mobile Number should be exactly 10 digits.' });
+    } else if (this.selected === 'name') {
+      return this.toast.error({ detail: 'Name should contain only letters and spaces.' });
+    } else if (this.selected === 'email') {
+      return this.toast.error({ detail: 'Please enter a valid email address (e.g., user@example.com).' });
+    }
+  }
+
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
       this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
@@ -499,7 +506,7 @@ export class LeadsListComponent {
     }
   }
 
-  formatCreatedOn(dateString: string | null | undefined){
+  formatCreatedOn(dateString: string | null | undefined) {
     if (!dateString) {
       return 'N/A'; // Handle null or undefined values
     }

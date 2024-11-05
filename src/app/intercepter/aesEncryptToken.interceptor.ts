@@ -10,13 +10,25 @@ export class EncryptionInterceptor implements HttpInterceptor {
 
   isEncrypt: boolean = true;
 
-  constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService) { }
+  private excludedUrls: string[] = [
+    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetSumInsuredList',
+    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/BranchBanking/GetBBProposalDetailsV2',
+    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Common/GetFamilyConstructByProductCode',
+    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProductCombination',
+    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetPremium'
+  ];
+
+  constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.loadingService.show();
+    const isExcluded = this.excludedUrls.some(url => req.url.includes(url));
+    
+    if (isExcluded) {
+      return next.handle(req);
+    }
 
     if (req.body && !(req.body instanceof FormData) && req?.method == 'POST') {
-
+      this.loadingService.show();
       const encryptedBody = this.aesEncryptService.encrypt(req.body);
       const clonedRequest = req.clone({
         body: this.isEncrypt ? encryptedBody : req.body,
@@ -40,10 +52,11 @@ export class EncryptionInterceptor implements HttpInterceptor {
             }
           }
           res.body && localStorage.setItem('token', res?.body?.token);
-
+          this.loadingService.hide()
         }),
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
+          this.loadingService.hide()
           if (error.status === 401) {
             localStorage.clear()
             this.router.navigate(['/login']);

@@ -194,6 +194,9 @@ h6 {
 
 .filterWraperForm {
 	padding: 15px 24px;
+	@media(max-width:767px) {
+		padding: 0px;
+	}
 }
 
 .filterWraperForm .fw_form header {
@@ -254,4 +257,17 @@ h6 {
 }
 .common_searchWraper .field_searchMain button{
 	right:5px
+}
+.common_searchWraper_proposals {
+	position: relative;
+	@media(max-width:767px) {
+		padding-bottom: 20px;
+	}
+	.filterFieldGroup{
+		width: 168px;
+		position: relative;
+		@media(max-width:767px) {
+			width: 100%;
+		}
+	}
 }

@@ -14,8 +14,8 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-// html, body { height: 100%; }
-// body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* html, body { height: 100%; }
+// body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }*/
 
 :root {
   --primary-red-color: #C7222A;
@@ -1949,6 +1949,7 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 16px;
   color: var(--text-black-25);
   gap: 24px;
+  justify-content: space-between;
 }
 
 .quoteComparisonWraper .qc_item header .heading {
@@ -1984,7 +1985,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .quoteComparisonWraper .qc_item header .btn_addToCart {
   border-radius: 4px;
-  padding: 4px 15px;
+  padding: 4px 11px 4px 10px;
   font-weight: 400;
   font-size: 13px;
   line-height: 24px;
@@ -2423,8 +2424,8 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .bottomInfoMain .bottomInfoSubMain .planProductInfo .ppi_info h4 {
   font-weight: 500;
-  font-size: 16px;
-  line-height: 16px;
+  font-size: 18px;
+  line-height: 19px;
   color: var(--black-color);
   margin: 0;
 }
@@ -4853,24 +4854,30 @@ input[type="search"]::-webkit-search-results-decoration {
 /*---Profile styles End--*/
 /*---Compare Polices start---*/
 .bottomInfoMain.bottomInfoMain_comparePolices {
-  width: 90%;
-  left: 6%;
+  width: 77%;
+  left: 11%;
   border: 1px solid #ededed;
   border-bottom-width: 0;
+  padding: 19px 26px;
 }
 .bottomInfoMain_comparePolices .bottomInfoSubMain .bi_left {
   align-items: center;
+  gap:24px;
+}
+.bi_left_fullWidth {
+  width: 100%;
 }
 .bottomInfoMain_comparePolices .policePlans {
-  width: 235px;
+  /*width: 235px;*/
+  width: 32%;
   height: 64px;
   background: #fff;
-  border: 1px solid #dfe1e6;
+  border: 0px solid #dfe1e6;
   flex-direction: row;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 12px;
   position: relative;
-  box-shadow: 0px 4px 6px 0px #0000000D;
+  box-shadow: 2px 2px 10px 0px #5680B31F;
 }
 .bottomInfoMain_comparePolices .policePlans .planProductInfo {
   align-items: center;
@@ -4962,6 +4969,38 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .btn_addtocompare img{
   filter:brightness(0) invert(0) !important;
+}
+.bottomInfoMain .bottomInfoSubMain h5 {
+  font-weight: 500;
+  font-size: 16px;
+  color: #000000;
+  margin: 0;
+}
+.btn-closeCompare {
+  padding: 2px 7px;
+  border-radius: 24px;
+  background: #F9FAFB;
+  border-width: 0;
+  box-shadow: 0px 2px 4px 0px #D5D7DE33, 0px 1px 10px 0px #D5D7DE1F, 0px 4px 5px 0px #D5D7DE24;
+}
+.bottomInfoMain_comparePolices .btn_checkComparison_close {
+  padding: 4px 12px;
+  font-size: 14px;
+  line-height: normal;
+  margin: 0;
+}
+.tableSubMain .table th small {
+  font-weight: normal !important;
+}
+.tableSubMain .table .table-renewalPremium {
+  width: 150px;
+}
+.ui-error-proposal{
+  position: absolute;
+  background: #fff;
+    padding: 2px 5px;
+    border-radius: 5px;
+    line-height: normal;
 }
 /*.lead_btnList button {
   position: relative;

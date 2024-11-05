@@ -44,8 +44,17 @@
 </main>
 <!--Bottom: ADD TO CAMPARE PRODUCTS START-->
 <div class="bottomInfoMain bottomInfoMain_comparePolices" *ngIf="compareItems.length > 0">
-    <div class="bottomInfoSubMain">
+    <div class="bottomInfoSubMain mb-4">
         <div class="bi_left">
+            <h5>Compare Plans</h5>
+        </div>
+        <div class="bi_right">
+            <button type="button" value="savenew" class="btn_pink btn_checkComparison" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Check Comparison</button>
+            <!--<button type="button" value="proceed" class="btn_pink btn_pinkNext btn_checkComparison_close" (click)="closeComparison()">Close</button>-->
+        </div>
+    </div>
+    <div class="bottomInfoSubMain">
+        <div class="bi_left bi_left_fullWidth">
             <div class="policePlans">
                 <!--Police Info start-->
                 <div class="planProductInfo" *ngIf="compareItems[0]"> 
@@ -54,13 +63,14 @@
                     </div>
                     <div class="ppi_info">
                         <h4>{{compareItems[0].productName}}</h4>
+                        <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button" class="btn-close" (click)="removeCompareItem(compareItems[0])"></button></span>
+                    <span class="removePlan"><button type="button" id="compareproduct-1" name="compareproduct-1" class="btn-closeCompare" (click)="removeCompareItem(compareItems[0])"><img src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
             
-            <div class="planSeparator">vs</div>
+            <div class="planSeparator block-hide">vs</div>
             <div class="policePlans">
                 <!--Police Info start-->
                 <div class="planProductInfo" *ngIf="compareItems[1]"> 
@@ -69,12 +79,13 @@
                     </div>
                     <div class="ppi_info">
                         <h4>{{compareItems[1].productName}}</h4>
+                        <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button" class="btn-close" (click)="removeCompareItem(compareItems[1])"></button></span>
+                    <span class="removePlan"><button type="button"  id="compareproduct-2" name="compareproduct-2" class="btn-closeCompare" (click)="removeCompareItem(compareItems[1])"><img src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
-            <div class="planSeparator">vs</div>
+            <div class="planSeparator block-hide">vs</div>
             <div class="policePlans" >
                 <!--Police Info start-->
                 <div class="planProductInfo" *ngIf="compareItems[2]"> 
@@ -83,14 +94,15 @@
                     </div>
                     <div class="ppi_info">
                         <h4>{{compareItems[2].productName}}</h4>
+                        <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button" class="btn-close" (click)="removeCompareItem(compareItems[2])"></button></span>
+                    <span class="removePlan"><button type="button" id="compareproduct-3" name="compareproduct-3" class="btn-closeCompare" (click)="removeCompareItem(compareItems[2])"><img src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
 
         </div>
-        <div class="bi_right">
+        <div class="bi_right block-hide">
             <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Compare now</button>
             <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="closeComparison()">Close</button>
         </div>

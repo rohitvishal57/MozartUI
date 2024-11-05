@@ -203,8 +203,39 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.endDate = null;
     this.getProposalList();
   }
+
   onSelectChanges(event: any): void {
     this.searchInputControl.setValue("");
+    this.searchInputControl.clearValidators();
+
+    if (this.selected === "mobileNumber") {
+      this.searchInputControl.setValidators([
+        Validators.required,
+        Validators.pattern("^[6-9][0-9]{9}$")
+      ]);
+    } else if (this.selected === "leadId") {
+      this.searchInputControl.setValidators([
+        Validators.required,
+        Validators.pattern("^[A-Za-z0-9]+$")
+      ]);
+    } else if (this.selected === "proposerName" || this.selected === "proposalNumber") {
+      this.searchInputControl.setValidators([Validators.required]);
+    }
+    this.searchInputControl.updateValueAndValidity();
+  }
+  getErrorMessage(): string {
+    if (this.searchInputControl.hasError("required")) {
+      return "This field is required";
+    }
+    if (this.searchInputControl.hasError("pattern")) {
+      if (this.selected === "mobileNumber") {
+        return "Enter a valid 10-digit mobile number starting with 6,7,8,or9";
+      }
+      if (this.selected === "leadId") {
+        return "Enter a valid Lead ID";
+      }
+    }
+    return "";
   }
   getPlaceholder(): string {
     if (this.selected === "mobileNumber") {

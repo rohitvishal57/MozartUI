@@ -41,6 +41,7 @@ export class ProductsComponent implements OnInit {
   state: any;
   groupedFeatures: any[] = [];
   interestedProductName: string = '';
+  leadNumber : string = '';
   quickQuoteRedirect : boolean = false;
 
    
@@ -56,6 +57,7 @@ export class ProductsComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
      this.interestedProductName = params['productName'];
+     this.leadNumber = params['leadId'];
      if (this.interestedProductName) {
       this.quickQuoteRedirect=  true;
      }
@@ -177,10 +179,28 @@ export class ProductsComponent implements OnInit {
 
       }
       console.log(productData)
-      if (this.formSequence != null && this.formSequence.length > 0) {
-        this.router.navigate(['yatra'], {
-          state: { productData: productData, formSequence: this.formSequence }
-        });
+      // if (this.formSequence != null && this.formSequence.length > 0) {
+      //   this.router.navigate(['yatra'], {
+      //     state: { productData: productData, formSequence: this.formSequence }
+      //   });
+      // }
+      if(this.quickQuoteRedirect == true){
+        if (this.formSequence != null && this.formSequence.length > 0) {
+          this.router.navigate(['yatra'], {
+            state: { productData: productData, formSequence: this.formSequence },
+            queryParams:{leadId :this.leadNumber}
+          });
+        }
+      }else{
+        if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898")) {
+          this.router.navigate(['rug'], {
+             state: { productData: productData, formSequence: this.formSequence }
+          });
+        }else{
+          this.router.navigate(['yatra'], {
+            state: { productData: productData, formSequence: this.formSequence }
+         });
+        }
       }
     } catch (error) {
       console.error(error);
