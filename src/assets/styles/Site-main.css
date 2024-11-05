@@ -4988,6 +4988,12 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: normal;
   margin: 0;
 }
+.tableSubMain .table th small {
+  font-weight: normal !important;
+}
+.tableSubMain .table .table-renewalPremium {
+  width: 150px;
+}
 /*.lead_btnList button {
   position: relative;
 }
