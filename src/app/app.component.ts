@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoadingService } from './services/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -7,11 +8,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'angular-dev';
 
   showNavbar: boolean = true;
+  isLoading$ = this.loadingService.isLoading;
 
-  constructor(private router:Router){
+  constructor(private router:Router, private loadingService: LoadingService){
 
   }
   ngOnInit(){

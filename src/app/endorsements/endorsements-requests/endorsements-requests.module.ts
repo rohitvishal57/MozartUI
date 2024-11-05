@@ -5,7 +5,6 @@ import { EndorsementsRoutingModule } from './endorsements-requests-routing.modul
 import { EndorsementsNewRequestComponent } from '../endorsements-new-request/endorsements-new-request.component';
 import { EndorsementsRequestsComponent } from './endorsements-requests.component';
 import { PrimeNgModule } from 'src/app/prime-ng.module';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { EndorsementDetailsComponent } from '../endorsement-details/endorsement-details.component';
@@ -16,7 +15,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
   imports: [
     CommonModule,
     PrimeNgModule,
-    NgxSpinnerModule,
     ReactiveFormsModule,
     NgxPaginationModule,
     FormsModule,

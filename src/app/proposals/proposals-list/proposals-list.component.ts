@@ -232,24 +232,25 @@ export class ProposalsListComponent {
     this.getProposalList();
   }
   applySearch() {    
-    if (this.searchInputControl.valid) {      
+    if (this.searchInputControl.valid) {  
+      const trimmedValue = this.searchInputControl.value?.trim();     
       if (this.selected === "mobileNumber") {
-        this.proposalListRequestBody.mobileNumber = this.searchInputControl.value!;
+        this.proposalListRequestBody.mobileNumber = trimmedValue || "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
       } else if (this.selected === "proposerName") {
-        this.proposalListRequestBody.proposer = this.searchInputControl.value!;
+        this.proposalListRequestBody.proposer = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
       } else if (this.selected === "leadId") {
-        this.proposalListRequestBody.leadId = this.searchInputControl.value!;
+        this.proposalListRequestBody.leadId = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.proposalNumber =""
       }else if (this.selected === "proposalNumber") {                
-        this.proposalListRequestBody.proposalNumber = this.searchInputControl.value!;
+        this.proposalListRequestBody.proposalNumber = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";

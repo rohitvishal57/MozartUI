@@ -65,6 +65,8 @@ export class LeadsListComponent {
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
+  filterFeildType = 'text';
+  filterFeildmaxlength = 10;
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -197,6 +199,9 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
+    this.searchInputControl.reset();
+    this.selected = "Select an option";
+    this.getPlaceholder();
   }
   getProducts() {
     const reqData = {
@@ -238,6 +243,8 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
+    this.selected = "Select an option";
+    this.searchInputControl.reset();
 
   }
   cancel() {
@@ -433,6 +440,8 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
+    this.selected = "Select an option";
+    this.searchInputControl.reset();
   }
   getUnAssignedLeads() {
     this.leadsInfoListRequestBody.searchby = "";
@@ -449,11 +458,18 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
+    this.selected = "Select an option";
+    this.searchInputControl.reset();
   }
   getPlaceholder(): string {
+    this.filterFeildType = "text";
+    this.filterFeildmaxlength =50;
     if (this.selected === 'leadId') {
+      this.filterFeildmaxlength =20;
       return 'Enter Lead Id';
     } else if (this.selected === 'mobileNumber') {
+      this.filterFeildType = "number";
+      this.filterFeildmaxlength =10;
       return 'Enter mobile Number';
     } else if (this.selected === 'name') {
       return 'Enter Name';
@@ -472,19 +488,25 @@ export class LeadsListComponent {
     }
   }
 
-  redirectProducts(lead: any) { 
-
-    if(lead.interestedProductName && lead.planType){
-    this.router.navigate(['/products'], {
-      queryParams: { productName: lead.interestedProductName + " "+ lead.planType , leadId :lead.leadNumber}
-
-    });
-  }else{
-    this.router.navigate(['/products'], {
-    });
-  }
+  redirectProducts(lead: any) {
+    if (lead.interestedProductName && lead.planType) {
+      this.router.navigate(['/products'], {
+        queryParams: { productName: lead.interestedProductName + " " + lead.planType, leadId: lead.leadNumber }
+      });
+    } else {
+      this.router.navigate(['/products'], {
+      });
+    }
   }
 
+  formatCreatedOn(dateString: string | null | undefined){
+    if (!dateString) {
+      return 'N/A'; // Handle null or undefined values
+    }
+    const date = new Date(dateString);
+    const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
+    return formattedDate || 'Invalid Date'; // Handle invalid date
+  }
 
 
 }

@@ -1,4 +1,7 @@
 <ng-toast></ng-toast>
+<div *ngIf="isLoading$ | async" class="spinner-overlay">
+    <div class="spinner"></div>
+  </div>
 <div>
     <app-header [isLoggedIn]="showNavbar"></app-header>
     <app-side-navbar *ngIf="showNavbar"></app-side-navbar>
@@ -6,6 +9,3 @@
 <div>
     <router-outlet></router-outlet>
 </div>
-<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#fff" type = "ball-scale-multiple" [fullScreen] = "true">
-    <p style="color: white;font-size: 14px;"> Loading... </p>
-</ngx-spinner>

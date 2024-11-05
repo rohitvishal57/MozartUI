@@ -1,13 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { NgToastService } from "ng-angular-popup";
-import { NgxSpinnerService } from "ngx-spinner";
 import { CommonService } from "src/app/services/common.service";
 import { EncryptionService } from "src/app/services/encryption.service";
 import { QuoteService } from "../quote.service";
 import { firstValueFrom } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { AesEncryptionService } from "src/app/services/AESEncrypt.service";
+import { LoadingService } from "src/app/services/loading.service";
 
 
 @Component({
@@ -55,7 +55,7 @@ export class QuoteProductsComponent implements OnInit {
   selectedPlanIndex: any;
 
   constructor(private quoteService: QuoteService, private router: Router, private toast: NgToastService,
-    private service: CommonService, private encryptionService: EncryptionService, private spinner: NgxSpinnerService,
+    private service: CommonService, private encryptionService: EncryptionService, private spinner: LoadingService,
     private confirmationService: ConfirmationService,private aesEncryptService: AesEncryptionService
   ) { }
   ngOnInit(): void {

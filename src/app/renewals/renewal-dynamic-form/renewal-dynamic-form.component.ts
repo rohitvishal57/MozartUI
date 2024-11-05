@@ -288,9 +288,7 @@ export class RenewalDynamicFormComponent implements OnInit {
     else if (value == 5004) {
       if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
         this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Nominee_Details};
-        // if (this.formObject.nominee_dob) {
-        //   this.formObject.nominee_dob = new Date(this.formObject.nominee_dob).toISOString().split('T')[0];
-        // }
+        this.formObject.nominee_dob=this.formatDate(this.formObject.nominee_dob);
       } 
       this.initializeForm();
       this.formId = value;
@@ -316,9 +314,7 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0]}; 
       console.log(this.formObject);
       console.log(this.renewalInfo);
-      // if(this.formObject.DoB != null){
-      //   this.formObject.DoB = new Date(this.formObject.DoB).toISOString().split('T')[0];
-      // }
+      this.formObject.DoB =this.formatDate(this.formObject.DoB);
       if (!isNaN(this.formObject?.SumInsured)) {
         const sumInsuredValue = Number(this.formObject.SumInsured);
         const closestValue = this.sliderOptions?.stepsArray?.reduce((prev, curr) => {
@@ -346,6 +342,11 @@ export class RenewalDynamicFormComponent implements OnInit {
     }
   }
 }
+private formatDate(dateString: string): string {
+  if (!dateString) return '';
+  return dateString.split('T')[0]; // Extracts just the date part (YYYY-MM-DD)
+}
+
  selectPaymentType(option: any) {
   if(option == 'offline'){
     this.selectedPaymentType = option;
@@ -413,7 +414,8 @@ payNow(){
     "source": "Retail",
     "policyType": "Renewal",
     "policyNumber": "",
-    "quoteNumber": ""
+    "quoteNumber": "",
+    "orderId": ""
    }
    if (paymentRequestBody.paymentMethod == "E-Nach" ||
     paymentRequestBody.paymentMethod == "E-Mandate" ||
@@ -463,7 +465,7 @@ getRenewalInfo(): Promise<void> {
         try {
           this.renewalInfo = JSON.parse(res.data.baseResponse);
           this.kycFlag = res.data.isKYCComplete;
-          this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
+          this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;          
           resolve(); 
         } catch (error) {
           console.error("Error parsing renewal info:", error);reject(error);
@@ -558,7 +560,10 @@ getRenewalInfo(): Promise<void> {
                 this.actionKyc = action;
                 console.log("responsec body(if)",response.isSuccess);
                 this.toast.success({detail: 'SUCCESS',summary: 'KYC Details Fetched Successfully', duration: 1000}); 
-             } else if(response.isSuccess === false){console.log("kyc failed");
+             } else if(response.isSuccess === false){
+              console.log("kyc failed");
+              this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
+              this.getkycURL();
              }
              console.log("responsec body",response.isSuccess);
             },
@@ -576,9 +581,11 @@ getRenewalInfo(): Promise<void> {
         policyNumber: this.policyNumber,fullName: '',  
         panNumber: '', dob: '', pepCheck: '', businessType: "ren"
       };
-      this.renewalService.getkycURL(requestBody, { responseType: 'text' }).subscribe(
-        (response) => {
-          this.kycLink = response;
+      this.renewalService.getkycURL(requestBody, { responseType: 'json' }).subscribe(
+        (response:any) => {
+          console.log(response);
+          
+          this.kycLink = `${response.message}`;
         },
         error => {
           this.kycLink=" "

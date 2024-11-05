@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class DatepipePipe implements PipeTransform {
 
-  transform(value: string | Date, _format: string = 'yyyy-MM-dd'): string {
+  transform(value: string | Date, _format: string = 'dd-mm-yyyy'): string {
     if (!value) return '';
 
     const date = new Date(value);
@@ -19,7 +19,7 @@ export class DatepipePipe implements PipeTransform {
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
 
-    return `${year}-${month}-${day}`;
+    return `${day}-${month}-${year}`;
 
   }
 

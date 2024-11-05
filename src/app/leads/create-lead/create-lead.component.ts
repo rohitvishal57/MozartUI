@@ -41,6 +41,11 @@ export class CreateLeadComponent implements OnInit {
   referenceSubStatus: any;
   activityTypes: any = [];
   today:string='';
+  maxDate = '9999-12-31';
+  whatsappOptions = [
+    { value: true, display: 'Yes' },
+    { value: false, display: 'No' }
+  ];
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -54,16 +59,17 @@ export class CreateLeadComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.inItForm();
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadNumber'];
       this.action = params['action'];
     });
     if (this.leadNumber && this.action) {
-      this.getLeadInformationByLeadNumber(this.leadNumber);
-      this.getReferenceStatus();
-      this.fetchActivityTypeInfo();
+    await  this.getReferenceStatus();
+    await  this.fetchActivityTypeInfo();
+    await  this.getLeadInformationByLeadNumber(this.leadNumber);
+
     }
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
@@ -95,9 +101,7 @@ export class CreateLeadComponent implements OnInit {
     //     console.error("Error from getRenewalsList API:", error);
     //   }
     // );
-
-    const date = new Date();
-    this.today = date.toISOString().split('T')[0];
+    this.today = new Date().toISOString().split('T')[0];
   }
 
   inItForm() {
@@ -107,7 +111,7 @@ export class CreateLeadComponent implements OnInit {
       leadVintage: [''],
       source: [''],
       subSource: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
-      mobilenumber: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
+      mobilenumber: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
       firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       MiddleName: ['', [Validators.pattern('[a-zA-Z ]*')]],
       lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
@@ -140,8 +144,8 @@ export class CreateLeadComponent implements OnInit {
       leadnumber: [''],
       leadAssignee: [''],
       isUpdate: 0,
-      status: [''],
-      substatus: ['']
+      leadStatus: [''],
+      leadSubStatus: ['']
     }
   );
      this.userValidations.get('age')?.disable();
@@ -247,6 +251,7 @@ export class CreateLeadComponent implements OnInit {
     this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
       this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
+      this.changeReferStatus(this.submittedUser.leadStatus);
     },
       (error) => {
         console.log("Failed to fetch lead Information!")
@@ -289,14 +294,9 @@ export class CreateLeadComponent implements OnInit {
       campaignnumber: this.submittedUser.campaignnumber,
       leadnumber: this.submittedUser.leadNumber,
       leadAssignee: this.submittedUser.leadAssignee,
-      isUpdate: this.submittedUser.isUpdate || 1 ,// Default to 0 if undefined
-      status: this.submittedUser.leadStatus,
-      substatus: this.submittedUser.leadSubStatus
+      isUpdate: this.submittedUser.isUpdate || 1 ,
+      leadStatus: this.submittedUser.leadStatus
     });
-
-    console.log("user validation", this.userValidations.get('interestedProductName')?.value);
-
-
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
@@ -331,9 +331,15 @@ export class CreateLeadComponent implements OnInit {
   }
 
   changeReferStatus(event: any) {
-    console.log(event.target.value);
-    let selectedStatus = event.target.value
+    if(event){
+    let selectedStatus = typeof(event)=='string'?event :event.target.value;
+    console.log('selectedStatus',selectedStatus);
     this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
+    this.userValidations.patchValue({
+      leadSubStatus: this.submittedUser.leadSubStatus
+    });
+          
+  }
   }
 
   addNotesSubmit() {

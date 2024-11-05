@@ -204,7 +204,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" placeholder=""
-                                    formControlName="firstname" type="text" maxlength="15" OnlyCharacter
+                                    formControlName="firstname" type="text" maxlength="15"  (keypress)="isCharacter($event)" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }">
                                 <label for="firstname">First Name *</label>
                                 <span class="invalid-feedback"
@@ -221,7 +221,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="MiddleName" placeholder=""
-                                    formControlName="MiddleName" type="text" maxlength="15" OnlyCharacter
+                                    formControlName="MiddleName" type="text" maxlength="15" (keypress)="isCharacter($event)" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
                                 <label for="MiddleName">Middle Name</label>
                                 <span class="ui-error block-show"
@@ -232,7 +232,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="lastname" placeholder=""
-                                    formControlName="lastname" type="text" maxlength="15" OnlyCharacter
+                                    formControlName="lastname" type="text" maxlength="15" (keypress)="isCharacter($event)" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }">
                                 <label for="lastname">Last Name *</label>
                                 <span class="invalid-feedback"
@@ -264,6 +264,18 @@
                                         Number
                                     </span>
                                 </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="isWhatsapp"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of whatsappOptions" [ngValue]="opt.value">
+                                        {{ opt.display }}
+                                    </option>
+                                </select>
+                                <label for="isWhatsapp">Is WhatsApp available for mobile number?</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -335,18 +347,7 @@
                                     Digits</span>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="isWhatsapp"
-                                    (selectionChange)="campnoSelected()">
-                                    <option value="" disabled selected>Choose Option</option>
-                                    <option *ngFor="let opt of CreateLeadList.IsWhatsApp" [ngValue]="opt">
-                                        {{ opt }}
-                                    </option>
-                                </select>
-                                <label for="isWhatsapp">Is Whatsapp</label>
-                            </div>
-                        </div>
+                    
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="occupation" placeholder=""
@@ -476,7 +477,7 @@
                                     enter proper value</span>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="premium" placeholder=""
                                     formControlName="premium" (keypress)="isNumber($event)" maxlength="7" >
@@ -485,8 +486,8 @@
                                     *ngIf="submitted && userValidations.get('premium')?.errors?.['pattern']">Please
                                     enter proper value</span>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        </div> -->
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" formControlName="familyConstruct"
                                     (selectionChange)="campnoSelected()">
@@ -497,7 +498,7 @@
                                 </select>
                                 <label for="familyConstruct">Family Construct</label>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" formControlName="policyType"
@@ -530,7 +531,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="status"
+                                <select class="form-select input-selectBox" formControlName="leadStatus"
                                     (change)="changeReferStatus($event)">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let item of referenceStatus" [value]="item.name">
@@ -542,7 +543,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="substatus"
+                                <select class="form-select input-selectBox" formControlName="leadSubStatus"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
@@ -605,7 +606,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityStartDate" placeholder=""
-                                    formControlName="activityStartDate" type="date"  [min]="today"   [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
+                                    formControlName="activityStartDate" type="date"  [min]="today"  [max]="maxDate"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
                                 <label for="activityStartDate">Activity Start Date*</label>
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
                                 <span class="ui-error block-show"
@@ -632,7 +633,7 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="activityEndDate" placeholder="" formControlName="activityEndDate"
-                                    type="date" [min]="addNoteForm.get('activityStartDate')?.value" (change)="onEndDateChange()"
+                                    type="date" [min]="addNoteForm.get('activityStartDate')?.value"  [max]="maxDate" (change)="onEndDateChange()"
                                     [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
                                 <label for="activityEndDate">Activity End Date*</label>
                                 <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
