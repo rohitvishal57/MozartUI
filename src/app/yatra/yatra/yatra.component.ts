@@ -4496,7 +4496,7 @@ export class YatraComponent {
                     // Iterate through the array related to the matched subItem
                     innerValue[subItem].forEach((innerArray: any) => {
                       console.log(typeof (Number(innerArray.subQuestionCode)), typeof (innerArray.subQuestionCode));
-                      innerArray.parentQuestionCode = questionId;
+                      // innerArray.parentQuestionCode = questionId;
                       if (!innerArray.hasOwnProperty('subQuestionCode')) {
                         innerArray.subQuestionCode = "";
                       }
@@ -4524,7 +4524,15 @@ export class YatraComponent {
                       //     // If no dName, push the innerArray as is
                       //     productQuestionnaire.push(innerArray);
                       // }
-                      productQuestionnaire.push(innerArray);
+                      const filteredInnerArray = Object.fromEntries(
+                        Object.entries(innerArray).filter(([key, value]) => value !== "")
+                      );
+                      console.log(innerArray,filteredInnerArray);
+                      if (filteredInnerArray['diseaseName'] !== "" && Object.keys(filteredInnerArray).length > 0) {
+                        innerArray.parentQuestionCode = questionId;
+                        productQuestionnaire.push(filteredInnerArray);
+                      }
+                      // productQuestionnaire.push(filteredInnerArray);
                       console.log(productQuestionnaire);
                     });
                   }
