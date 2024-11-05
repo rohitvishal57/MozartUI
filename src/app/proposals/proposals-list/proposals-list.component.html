@@ -13,19 +13,25 @@
                     </ul>
                 </div>
                 <div class="quickFilterRight">
-                    <div class="body_flex_row common_searchWraper">
+                    <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
-                            <select id="proposalsFilterSearch" name="proposalsFilterSearch" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
-                                <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">Select an Option</option>
-                                <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">Mobile Number</option>
-                                <option id="proposerNameOption" name="proposerNameOption" value="proposerName">Proposer Name</option>
-                                <option id="proposalNumberOption" name="proposalNumberOption" value="proposalNumber">Proposal Number</option>
-                                <option id="leadIdOption" name="leadIdOption" value="leadId">Lead ID</option>
-                            </select>
-                            <input  class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
-                            <div *ngIf="searchInputControl.invalid && searchInputControl.touched" class="text-danger"><small>{{ getErrorMessage() }}</small></div>
-                            <button  type="button" id="btnsearch" name="btnsearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <div>
+                                <select id="proposalsFilterSearch" name="proposalsFilterSearch" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
+                                    <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">Select an Option</option>
+                                    <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">Mobile Number</option>
+                                    <option id="proposerNameOption" name="proposerNameOption" value="proposerName">Proposer Name</option>
+                                    <option id="proposalNumberOption" name="proposalNumberOption" value="proposalNumber">Proposal Number</option>
+                                    <option id="leadIdOption" name="leadIdOption" value="leadId">Lead ID</option>
+                                </select>
+                            </div>
+                            <div class="filterFieldGroup">
+                                <input  class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
+                                
+                                <button  type="button" id="btnsearch" name="btnsearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                            </div>
                         </div>
+                        
                     </div>
                     <div class="filterWraper">
                         <button type="button" id="proposalsBtnfilter" name="proposalsBtnfilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>

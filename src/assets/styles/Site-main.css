@@ -4994,6 +4994,13 @@ input[type="search"]::-webkit-search-results-decoration {
 .tableSubMain .table .table-renewalPremium {
   width: 150px;
 }
+.ui-error-proposal{
+  position: absolute;
+  background: #fff;
+    padding: 2px 5px;
+    border-radius: 5px;
+    line-height: normal;
+}
 /*.lead_btnList button {
   position: relative;
 }

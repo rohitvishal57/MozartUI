@@ -255,3 +255,16 @@ h6 {
 .common_searchWraper .field_searchMain button{
 	right:5px
 }
+.common_searchWraper_proposals {
+	position: relative;
+	@media(max-width:767px) {
+		padding-bottom: 20px;
+	}
+	.filterFieldGroup{
+		width: 168px;
+		position: relative;
+		@media(max-width:767px) {
+			width: 100%;
+		}
+	}
+}
