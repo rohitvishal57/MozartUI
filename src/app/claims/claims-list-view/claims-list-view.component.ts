@@ -54,7 +54,6 @@ export class ClaimsListViewComponent implements OnInit {
   //   { name: 'Approved', selected: false},
   //   { name: 'Scanning Completed', selected: false},
   //   { name: 'Cancelled', selected: false}
-
   // ]
   
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
@@ -77,8 +76,9 @@ export class ClaimsListViewComponent implements OnInit {
   //-------------filters--------------//
   filterClaims(status: string) {
     this.claimsReqBody.status = status;
-    this.fetchData();
+    this.first = 0;
     this.selectedStatus = status;
+    this.fetchData();
   }
 
 //---------pagination------------//
@@ -213,23 +213,20 @@ applyFilter() {
   this.formatDate("fromDate");
   this.formatDate("toDate");
 
-  // Set date filters
   this.claimsReqBody.fromDate = this.fromDate;
   this.claimsReqBody.toDate = this.toDate;
 
-  // Process selected policy types
   const selectedPolicyTypes = this.StaticRequestTypes 
     ? this.StaticRequestTypes.filter((requestType: any) => requestType.selected).map((requestType: any) => requestType.name)
     : [];
 
-  // Check if all request types are selected
   if (selectedPolicyTypes.length === this.StaticRequestTypes.length || selectedPolicyTypes.length === 0) {
-    this.claimsReqBody.requestType = ""; // No filtering by request type
+    this.claimsReqBody.requestType = "";
   } else {
     this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
   }
 
-  // Process selected products
+  // selected products
   const selectedProducts = this.productsList 
     ? this.productsList.filter((product: any) => product.selected).map((product: any) => product.productName)
     : [];
@@ -244,7 +241,7 @@ applyFilter() {
 
   this.first = 0;
   this.fetchData();
-  this.toggeledropdown = false; // Close the filter dropdown
+  this.toggeledropdown = false; 
 }
 
 
@@ -269,7 +266,7 @@ clear() {
   this.claimsReqBody.toDate = null;
 
   this.fetchData();
-  this.toggeledropdown = false; // Close the filter dropdown
+  this.toggeledropdown = false;
 }
 
   //-----------search dropdown----------//
