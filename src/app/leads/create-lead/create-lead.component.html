@@ -578,129 +578,161 @@
                 </div>
 
             </form>
-            <form (ngSubmit)="addNotesSubmit()" [formGroup]="addNoteForm">
-                <section class="white_container mb-3" *ngIf="action=='addNotes'">
 
-                    <div class="row">
-                        <div class="col-12 mb-4">
-                            <h6 class="heading-16-red">Add Notes</h6>
+
+            <div class="accordion" id="accordionExample" *ngIf="action=='addNotes'">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                        </button>
+                    </h2>
+            
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <form (ngSubmit)="addNotesSubmit()" [formGroup]="addNoteForm">
+                                <section class="white_container mb-3" *ngIf="action=='addNotes'">
+            
+                                    <div class="row">
+                                        <div class="col-12 mb-4">
+                                            <h6 class="heading-16-red">Add Notes</h6>
+                                        </div>
+            
+            
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input class="form-control input-textBox" id="activityTitle" placeholder=""
+                                                    formControlName="activityTitle" type="text"
+                                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
+                                                <label for="activityTitle">Activity Title*</label>
+                                                <span class="invalid-feedback"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
+                                                    <span class="ui-error block-show"
+                                                        *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
+                                                        Activity Title cannot be blank</span>
+                                                </span>
+            
+                                            </div>
+                                        </div>
+            
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input class="form-control input-textBox" id="activityStartDate" placeholder=""
+                                                    formControlName="activityStartDate" type="date" [min]="today" [max]="maxDate"
+                                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
+                                                <label for="activityStartDate">Activity Start Date*</label>
+                                                <span class="invalid-feedback"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
+                                                    <span class="ui-error block-show"
+                                                        *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
+                                                        Activity Start date cannot be blank</span>
+                                                </span>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input class="form-control input-textBox" id="activityStartTime" placeholder=""
+                                                    formControlName="activityStartTime" type="time"
+                                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityStartTime')?.errors }">
+                                                <label for="activityStartTime">Activity Start Time*</label>
+                                                <span class="invalid-feedback"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.errors">
+                                                    <span class="ui-error block-show"
+                                                        *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.invalid">
+                                                        Activity Start Time cannot be blank</span>
+                                                </span>
+            
+                                            </div>
+                                        </div>
+            
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input class="form-control input-textBox" id="activityEndDate" placeholder=""
+                                                    formControlName="activityEndDate" type="date"
+                                                    [min]="addNoteForm.get('activityStartDate')?.value" [max]="maxDate"
+                                                    (change)="onEndDateChange()"
+                                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
+                                                <label for="activityEndDate">Activity End Date*</label>
+                                                <span class="invalid-feedback"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
+                                                    <span class="ui-error block-show"
+                                                        *ngIf="addNoteForm.get('activityEndDate')?.invalid">
+                                                        Activity End Date cannot be blank</span>
+                                                </span>
+                                                <span class="ui-error block-show"
+                                                    *ngIf="addNoteForm.get('activityEndDate')?.errors?.['incorrect']">
+                                                    Activity End date must be after Activity startdate</span>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <input class="form-control input-textBox" id="activityEndTime" placeholder=""
+                                                    formControlName="activityEndTime" type="time"
+                                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }">
+                                                <label for="activityEndTime">Activity End Time*</label>
+                                                <span class="invalid-feedback"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
+                                                    <span class="ui-error block-show"
+                                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
+                                                        Activity End Time cannot be blank</span>
+                                                </span>
+                                            </div>
+                                        </div>
+            
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <select class="form-select input-selectBox" formControlName="activityType"
+                                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityType')?.errors }">
+                                                    <option value="" disabled selected>Choose Option</option>
+                                                    <option *ngFor="let item of activityTypes" [value]="item">
+                                                        {{ item }}
+                                                    </option>
+                                                </select>
+                                                <label for="interestedProductName">Select Activity Type*</label>
+                                                <span class="invalid-feedback"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityType')?.errors">
+                                                    <span class="ui-error block-show"
+                                                        *ngIf="notesSubmitted && addNoteForm.get('activityType')?.invalid">
+                                                        Activity Type cannot be blank</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                            <div class="input-block form-floating input-block-renew">
+                                                <textarea class="form-control input-textBox" id="notes"
+                                                    placeholder="Type your note..." formControlName="notes"
+                                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('notes')?.errors }"></textarea>
+                                                <label for="notes">Note*:</label>
+                                                <span class="invalid-feedback"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('notes')?.errors">
+                                                    <span class="ui-error block-show"
+                                                        *ngIf="notesSubmitted && addNoteForm.get('notes')?.invalid">
+                                                        Note cannot be blank</span>
+                                                </span>
+            
+                                            </div>
+                                        </div>
+            
+                                    </div>
+                                </section>
+            
+                                <div class="row mt-4" *ngIf="action=='addNotes'">
+                                    <div class="col-12">
+                                        <button type="submit" id="addnotes" name="addnotes" class="btn_red">Add Notes</button>
+                                    </div>
+                                </div>
+            
+                            </form>
+            
                         </div>
-
-
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="activityTitle" placeholder=""
-                                    formControlName="activityTitle" type="text"
-                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
-                                <label for="activityTitle">Activity Title*</label>
-                                <span class="invalid-feedback"
-                                    *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
-                                        Activity Title cannot be blank</span>
-                                </span>
-
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="activityStartDate" placeholder=""
-                                    formControlName="activityStartDate" type="date"  [min]="today"  [max]="maxDate"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
-                                <label for="activityStartDate">Activity Start Date*</label>
-                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
-                                <span class="ui-error block-show"
-                                    *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
-                                     Activity Start date cannot be blank</span>
-                            </span>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="activityStartTime" placeholder=""
-                                    formControlName="activityStartTime" type="time" [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityStartTime')?.errors }">
-                                <label for="activityStartTime">Activity Start Time*</label>
-                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.invalid">
-                                         Activity Start Time cannot be blank</span>
-                                </span>
-
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="activityEndDate" placeholder="" formControlName="activityEndDate"
-                                    type="date" [min]="addNoteForm.get('activityStartDate')?.value"  [max]="maxDate" (change)="onEndDateChange()"
-                                    [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
-                                <label for="activityEndDate">Activity End Date*</label>
-                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
-                                    <span class="ui-error block-show" *ngIf="addNoteForm.get('activityEndDate')?.invalid">
-                                     Activity End Date cannot be blank</span>
-                                </span>
-                                <span class="ui-error block-show" *ngIf="addNoteForm.get('activityEndDate')?.errors?.['incorrect']">
-                                    Activity End date must be after Activity startdate</span>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="activityEndTime" placeholder=""
-                                    formControlName="activityEndTime" type="time" [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }">
-                                <label for="activityEndTime">Activity End Time*</label>
-                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
-                                        Activity End Time cannot be blank</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="activityType"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityType')?.errors }">
-                                    <option value="" disabled selected>Choose Option</option>
-                                    <option *ngFor="let item of activityTypes" [value]="item">
-                                        {{ item }}
-                                    </option>
-                                </select>
-                                <label for="interestedProductName">Select Activity Type*</label>
-                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('activityType')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('activityType')?.invalid">
-                                        Activity Type cannot be blank</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <div class="input-block form-floating input-block-renew">
-                                <textarea class="form-control input-textBox" id="notes" placeholder="Type your note..."
-                                    formControlName="notes"  [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('notes')?.errors }"></textarea>
-                                <label for="notes">Note*:</label>
-                                <span class="invalid-feedback" *ngIf="notesSubmitted && addNoteForm.get('notes')?.errors">
-                                    <span class="ui-error block-show"
-                                        *ngIf="notesSubmitted && addNoteForm.get('notes')?.invalid">
-                                        Note cannot be blank</span>
-                                </span>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </section>
-
-                <div class="row mt-4" *ngIf="action=='addNotes'">
-                    <div class="col-12">
-                        <button type="submit" id="addnotes" name="addnotes" class="btn_red">Add Notes</button>
                     </div>
                 </div>
+            </div>
 
-            </form>
-
-
-            <section id="quotes-list" class="tableMain quoteView block-show " > 
+            <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="action=='addNotes' && notes.length>0"> 
                 <div class="tableSubMain">
                     <div class="table-responsive">
                         <table class="table table-borderless table-search">
@@ -708,11 +740,11 @@
                                 <tr>
                 
                                     <th>Note ID</th>
-                                    <th>Activity Title</th>
-                                    <th>Activity Type</th>
-                                    <th>Activity StartDate<div><small>(dd-mm-yyyy)</small></div></th>
+                                    <th>Note Title</th>
+                                    <th>Note Type</th>
+                                    <th>Note StartDate<div><small>(dd-mm-yyyy)</small></div></th>
                                     <!-- <th>Activity StartTime</th> -->
-                                    <th>Activity EndDate<div><small>(dd-mm-yyyy)</small></div></th>
+                                    <th>Note EndDate<div><small>(dd-mm-yyyy)</small></div></th>
                                     <!-- <th>Activity EndTime</th> -->
                                     <th>Notes</th>
                                 </tr>
@@ -727,7 +759,7 @@
                                     <!-- <td>{{row.startDate}}</td> -->
                                     <td>{{formatCreatedOn(row.endDate)}}</td>
                                     <!-- <td>{{row.startDate}}</td> -->
-                                    <td>{{row.startDate}}</td>
+                                    <td>{{row.remarks}}</td>
 
                                     
                                 </tr>
