@@ -129,7 +129,7 @@ export class CreateLeadComponent implements OnInit {
       numberOfKids: ['', [Validators.pattern('[0-9]*')]],
       occupation: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       address1: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
-      education: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
+      education: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       address2: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       address3: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       city: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
