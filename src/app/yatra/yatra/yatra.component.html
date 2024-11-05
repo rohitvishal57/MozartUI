@@ -747,15 +747,13 @@
                     <input *ngIf="!control.disabled" class="boldtext_input colorbold" 
                            formControlName="{{ control.name }}" 
                            [name]="control.name"  [id]="control.name"
-                           [type]="control.type" 
-                           [placeholder]="control.label"
+                           [type]="control.type"
                            (change)="onInputChange($event, control)">
                     
                     <input *ngIf="control.disabled" class="boldtext_input colorbold no-border" 
                            formControlName="{{ control.name }}" 
                            [name]="control.name" [id]="control.name"
                            [type]="control.type" 
-                           [placeholder]="control.label" 
                            (change)="onInputChange($event, control)" 
                            readonly>
                   </div>
@@ -773,7 +771,7 @@
                   <div class="radio-card-container">
                     <ng-container *ngFor="let option of control.radioOptions">
                       <input type="radio" [id]="option.name" [formControlName]="control.name" [name]="control.name"
-                      [value]="option.value" class="radio-card" />
+                      [value]="option.value" class="radio-card" [checked]="option.value === dynamicFormGroup.get('totalPremium')?.value"/>
                       <label [for]="option.name" class="radio-card-label">
                         <div class="year">{{ option.year }}</div>
                         <div class="price">₹{{ option.value }}.00</div>

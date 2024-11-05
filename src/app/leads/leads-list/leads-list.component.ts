@@ -498,7 +498,7 @@ export class LeadsListComponent {
   redirectProducts(lead: any) {
     if (lead.interestedProductName && lead.planType) {
       this.router.navigate(['/products'], {
-        queryParams: { productName: lead.interestedProductName + " " + lead.planType, leadId: lead.leadNumber }
+        queryParams: { productName: lead.interestedProductName , leadId: lead.leadNumber }
       });
     } else {
       this.router.navigate(['/products'], {

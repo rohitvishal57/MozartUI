@@ -115,7 +115,6 @@ export class YatraComponent {
     private route : ActivatedRoute) { }
 
   ngOnInit() {
-    this.spinner.show();
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
     console.log(this.formSequence);
@@ -1881,8 +1880,6 @@ export class YatraComponent {
   // }
 
   getProposerRelationship(control: IFormControl): Promise<any> {
-    // Showing the spinner before making the API call
-    this.spinner.show();
 
     // Wrapping the asynchronous operation in a promise
     return new Promise((resolve, reject) => {
@@ -2694,7 +2691,6 @@ export class YatraComponent {
   }
 
   async getPremiumAmount() {
-    this.spinner.show();
     console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
 
     if (this.changesMade) {
@@ -2702,7 +2698,6 @@ export class YatraComponent {
     }
 
     if (this.isQuote == false) {
-      this.spinner.show();
       if (Object.keys(this.formData).length > 0) {
         // const modifiedInsuredMemberDetails = JSON.parse(JSON.stringify(this.formData));
         this.formData.insuredMemberDetails.forEach((member: any) => {
@@ -3195,7 +3190,7 @@ export class YatraComponent {
         var reqData: any = {
           agentCode: this.agentCode,
           productId: this.productId.toString(),
-          productType: 'AO',
+          productType: this.formData.productType,
           fullQuoteRequestJson: JSON.stringify(data)
         }
         console.log(reqData);
@@ -3772,12 +3767,14 @@ export class YatraComponent {
   }
 
   setPremiumAmount(control?: any) {
-    console.log(this.displayTaxList, this.selectedIndex, this.formData);
+    console.log(this.dynamicFormGroup.value,this.form,this.displayTaxList, this.selectedIndex, this.formData,this.QuoteNumber);
     this.tenureAmount.forEach(member => {
       console.log(member);
 
     })
-
+    if(this.selectedIndex == -1){
+      this.selectedIndex = 2;
+    }
     this.form.formSections.forEach((section: any) => {
       section.formControls.forEach((formControl: any) => {
         if (formControl.name == 'totalPremium') {
@@ -3790,11 +3787,11 @@ export class YatraComponent {
                 option.year = "1 year"
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
-                if (this.selectedIndex == index) {
-                  this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
-                  this.selectedIndex = index;
-                  this.formData.tenure = this.selectedIndex + 1;
-                }
+                // if (this.selectedIndex == index) {
+                //   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
+                //   this.selectedIndex = index;
+                //   this.formData.tenure = this.selectedIndex + 1;
+                // }
                 console.log(this.selectedIndex);
               } else if (index === 1) {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
@@ -3802,28 +3799,45 @@ export class YatraComponent {
                 option.value = this.tenureAmount[index];
                 option.year = "2 years"
                 option.discount = "7.5% off"
-                if (this.selectedIndex == index) {
-                  this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
-                  this.selectedIndex = index;
-                  this.formData.tenure = this.selectedIndex + 1;
-                }
+                // if (this.selectedIndex == index) {
+                //   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
+                //   this.selectedIndex = index;
+                //   this.formData.tenure = this.selectedIndex + 1;
+                // }
               } else if (index === 2) {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
                 option.year = "3 years"
                 option.discount = "10% off"
-                if (this.selectedIndex == index) {
-                  this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
-                  this.selectedIndex = index;
-                  this.formData.tenure = this.selectedIndex + 1;
+                // if (this.selectedIndex == index) {
+                //   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
+                //   this.selectedIndex = index;
+                //   this.formData.tenure = this.selectedIndex + 1;
+                // }
+              }
+              if (this.selectedIndex === index) {
+                let radioOptionsControl = this.dynamicFormGroup.get('totalPremium');
+                if (!radioOptionsControl) {
+                  // Add control if it doesn't exist
+                  this.dynamicFormGroup.addControl(formControl.name, new FormControl(this.tenureAmount[index]));
+                  radioOptionsControl = this.dynamicFormGroup.get('totalPremium');
                 }
+    
+                if (radioOptionsControl) {
+                  radioOptionsControl.setValue(this.tenureAmount[index], { emitEvent: true });
+                }
+    
+                // Update additional data
+                this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                this.formData.tenure = this.selectedIndex + 1;
               }
             });
           }
         }
       });
     });
+    console.log(this.dynamicFormGroup.value,this.formData);
   }
 
   mergeMember(control: any) {
@@ -4071,7 +4085,7 @@ export class YatraComponent {
         console.log('KYC details:', response);
         if (response.isSuccess == true) {
           this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
-          this.spinner.hide();
+          // this.spinner.hide();
           control.disabled = true;
           if (typeof response.data === 'object' && response.data !== null) {
             Object.keys(response.data).forEach((key: any) => {
@@ -4120,7 +4134,7 @@ export class YatraComponent {
     };
     console.log(reqData);
 
-    this.spinner.show();
+    // this.spinner.show();
 
     this.yatraService.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
       next: (response: any) => {

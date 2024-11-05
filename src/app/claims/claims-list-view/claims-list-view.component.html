@@ -92,28 +92,30 @@
                                           </div>                                              
                                     </div>
                                 </div> -->
-                                <div class="row">
-                             
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="input-block input-block-dob">
-                                        <label>From Date</label>
-                                        <input type="date" name="fromDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate"  (change)="formatDate('fromDate')"  [max]="maxDate">
-                                        <span class="ui-error">Please enter start date</span>
+                                <div class="fw_formRow">
+                                    <h6>Date Range</h6>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="input-block form-floating input-block-dob">
+                                                <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
+                                                <label for="fromDate">From Date</label>
+                                                <span class="ui-error">Please enter start date</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="input-block form-floating input-block-dob">
+                                                <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
+                                                <label for="toDate">To Date</label>
+                                                <span class="ui-error">Please enter end date</span>
+                                            </div>
+                                        </div>
+                                        <footer>
+                                            <button type="button" id="claimfilterclear" name="claimfilterclear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                            <button type="button" id="claimfilterapply" name="claimfilterapply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                        </footer>
                                     </div>
                                 </div>
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="input-block input-block-dob">
-                                        <label>To Date</label>
-                                        <input type="date" name="toDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate"  (change)="formatDate('toDate')"  [max]="maxDate">
-                                        <span class="ui-error">Please enter to date</span>
-                                    </div>
-                                </div>
-                                <!-- </div> -->
-                                </div>
-                                <footer>
-                                    <button type="button" id="claimfilterclear" name="claimfilterclear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" id="claimfilterapply" name="claimfilterapply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
-                                </footer>
+                              
                                 </div>
                             </div>
                             </div>
@@ -137,7 +139,7 @@
                              <!--  <th scope="col" nowrap>Mobile Number</th> -->
                                 <th scope="col" nowrap>Request Type</th>
                                 <th scope="col">Status</th>
-                                <th scope="col" nowrap>Raised Date</th>
+                                <th scope="col">Raised Date <div><small class="text-secondary">(dd-mm-yyyy)</small></div></th>
                                 <th scope="col">Action</th>
                             </tr>
                           </thead>

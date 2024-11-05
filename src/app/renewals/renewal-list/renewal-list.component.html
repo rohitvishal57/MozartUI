@@ -25,17 +25,21 @@
                     </ul>
                 </div>
                 <div class="quickFilterRight">
-                    <div class="body_flex_row common_searchWraper">
+                    <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
-                            <select id="selectSearchFilter" name="selectSearchFilter" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
-                                <option value="" (click)="cancelSearch()">Select an Option</option>
-                                <option value="mobileNumber">Mobile Number</option>
-                                <option value="proposerName">Proposer Name</option>
-                                <option value="policyNumber">Policy Number</option>
-                            </select>
-                            <input class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                            <span *ngIf="searchInputControl.invalid && searchInputControl.touched" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                            <div>
+                                <select id="selectSearchFilter" name="selectSearchFilter" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
+                                    <option value="" (click)="cancelSearch()">Select an Option</option>
+                                    <option value="mobileNumber">Mobile Number</option>
+                                    <option value="proposerName">Proposer Name</option>
+                                    <option value="policyNumber">Policy Number</option>
+                                </select>
+                            </div>
+                            <div class="filterFieldGroup">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                                <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                            </div>
                         </div>
                     </div>
                     <div class="filterWraper">

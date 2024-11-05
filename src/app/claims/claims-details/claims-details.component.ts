@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ClaimsViewService } from "../claims-view/claims-view.service";
 import { formatDate } from "@angular/common";
 import { NgToastService } from "ng-angular-popup";
+import { v4 as uuidv4 } from 'uuid';
+
 
 @Component({
   selector: "app-claims-details",
@@ -71,6 +73,7 @@ export class ClaimsDetailsComponent {
     documentName?: string;
     documentType?: string;
     createdBy?: string;
+    documentID?: string;
   }[] = [];
 
   @Input() uploadedFiles: {
@@ -89,17 +92,20 @@ export class ClaimsDetailsComponent {
     documentName?: string;
     documentType?: string;
     createdBy?: string;
+    documentId: string;
   }[] = [];
 
   fileUploads: { 
     name: string,
     type: string,
     base64: string,
-    fileBlob?: Blob
+    fileBlob?: Blob,
+    documentId: string;
   }[] = [];
   customeStepperStatuses: any[] = [];
   statusMessage: string | undefined;
   uploadedFilesData: any;
+  documentId: any;
 
   constructor(
     private fb: FormBuilder,
@@ -248,8 +254,8 @@ export class ClaimsDetailsComponent {
 fetchfileUploads(policyNumber: string, claimInfoId: string) {
   let claimsFilesReqBody = {
     "documentId": "",
-    "policyNumber": "40-23-0003508-00",
-    "claimNumber": "510000340-23-0003508-00"
+    "policyNumber":policyNumber,
+    "claimNumber":claimInfoId
   };
 
   this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe(
@@ -433,7 +439,7 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
       // claimInfoId: this.claimInfoId || "",
       // memberId: this.form.get("memberId")?.value || "",
       memberId: "PT85650665",
-      documentId: "test2",
+      documentId: "",
     });
   }
 
@@ -518,6 +524,7 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
   
       if (!fileExists && this.allowedFileTypes.includes(file.type)) {
         uploadedFilesData.push({
+          documentId: uuidv4(),
           name: file.name,
           type: file.type,
           size: file.size,
@@ -647,7 +654,7 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
           createdBy: deficiencyFile.createdBy || "",
           claimInfoId: "21727183717381",
           memberId: "PT85650665",
-          documentId: "test2",
+          documentId: "",
         };
 
         // Append metadata and file to FormData
@@ -714,27 +721,51 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
     }
   }
 
-  deleteFile(fileToDelete: any, isUploaded: boolean) {
-    if (isUploaded)
-      this.uploadedFiles = this.uploadedFiles.filter(
-        (file) => file !== fileToDelete
-      );
-    else
-      this.uploadedUnderDeficiencyFiles =
-        this.uploadedUnderDeficiencyFiles.filter(
-          (file) => file !== fileToDelete
-        );
-
-    this.totalFilesCount = isUploaded
-      ? this.uploadedFiles.length
-      : this.uploadedUnderDeficiencyFiles.length;
-
-    const section = isUploaded
-      ? "uploadedFiles"
-      : "uploadedUnderDeficiencyFiles";
-
-    this.updateStatusLabel(section);
+  deleteFile(fileToDelete: any): void {
+    const payload = {
+      policyNumber: this.policyNumber,
+      documentId: fileToDelete.documentId,
+      claimNumber: ""
+    };
+  
+    this.claimsService.deleteFile(payload).subscribe(
+      (response:any) => {
+        if (response.isSuccess) {
+          console.log('File deleted successfully:', response);
+          //  this.uploadedFiles = this.uploadedFiles.filter(
+          //  (file) => file.documentId !== fileToDelete.documentId 
+         // );
+          this.totalFilesCount = this.uploadedFiles.length;
+        } else {
+          console.error('Failed to delete file:', response.message);
+        }
+      },
+      (error) => {
+        console.error('Error deleting file:', error);
+      }
+    );
   }
+  // deleteFile(fileToDelete: any, isUploaded: boolean) {
+  //   if (isUploaded)
+  //     this.uploadedFiles = this.uploadedFiles.filter(
+  //       (file) => file !== fileToDelete
+  //     );
+  //   else
+  //     this.uploadedUnderDeficiencyFiles =
+  //       this.uploadedUnderDeficiencyFiles.filter(
+  //         (file) => file !== fileToDelete
+  //       );
+
+  //   this.totalFilesCount = isUploaded
+  //     ? this.uploadedFiles.length
+  //     : this.uploadedUnderDeficiencyFiles.length;
+
+  //   const section = isUploaded
+  //     ? "uploadedFiles"
+  //     : "uploadedUnderDeficiencyFiles";
+
+  //   this.updateStatusLabel(section);
+  // }
   //******* file upload input label *********//
   startEditing(file: any) {
     file.isEditing = true;
