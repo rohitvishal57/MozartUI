@@ -5,7 +5,6 @@ import { LeadsRoutingModule } from './leads-routing.module';
 import { LeadsListComponent } from './leads-list/leads-list.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { PrimeNgModule } from '../prime-ng.module';
 import { MyMaterialModule } from '../material.module';
 import { CreateLeadComponent } from './create-lead/create-lead.component';
@@ -29,7 +28,6 @@ import { NewCampaignRuleComponent } from './new-campaign-rule/new-campaign-rule.
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgxSpinnerModule,
     NgxPaginationModule,
     LeadsRoutingModule,
     PrimeNgModule,

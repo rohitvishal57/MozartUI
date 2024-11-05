@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { YatraRoutingModule } from './yatra-routing.module';
 import { YatraComponent } from './yatra.component';
 import { PrimeNgModule } from 'src/app/prime-ng.module';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +18,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     CommonModule,
     PrimeNgModule,
-    NgxSpinnerModule,
     ReactiveFormsModule,
     ClipboardModule,
     YatraRoutingModule,

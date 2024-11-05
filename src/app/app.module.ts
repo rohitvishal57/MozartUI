@@ -10,7 +10,6 @@ import { PrimeNgModule } from './prime-ng.module';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgToastModule } from 'ng-angular-popup';
-import {NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { DatePipe } from '@angular/common';
 import { TokenInterceptor } from './intercepter/token.interceptor';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -23,10 +22,10 @@ import { LoginModule } from './login/login/login.module';
 import { DashboardModule } from './dashboard/dashboard/dashboard.module';
 import { ClaimsViewModule } from './claims/claims-view/claims-view.module';
 import { ProductsModule } from './product/products/products.module';
-import { SpinnerInterceptor } from './intercepter/spinner.interceptor';
 import { LeadsModule } from './leads/leads.module';
 import { ProfileModule } from './profile/profile.module';
 import { EncryptionInterceptor } from './intercepter/aesEncryptToken.interceptor';
+import { LoadingService } from './services/loading.service';
 
 export function loadConfig(configService: ConfigService) {
   return () => configService.loadConfig().toPromise();
@@ -52,7 +51,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ReactiveFormsModule,
     FormsModule,
     NgToastModule,
-    NgxSpinnerModule,
     LoginModule,
     DashboardModule,
     ClaimsViewModule,
@@ -71,7 +69,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     ConfigService,
-    NgxSpinnerService,
+    LoadingService,
     {
       provide: APP_INITIALIZER,
       useFactory: loadConfig,
@@ -87,11 +85,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     {
       provide:HTTP_INTERCEPTORS,
       useClass:TokenInterceptor,
-      multi:true
-    },
-    {
-      provide:HTTP_INTERCEPTORS,
-      useClass: SpinnerInterceptor,
       multi:true
     },
     BsModalService,

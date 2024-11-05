@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ProposalsListComponent } from './proposals-list/proposals-list.component';
 import { ProposalsRoutingModule } from './proposals-routing.module';
 import { PrimeNgModule } from 'src/app/prime-ng.module';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MyMaterialModule } from 'src/app/material.module';
 
@@ -15,7 +14,6 @@ import { MyMaterialModule } from 'src/app/material.module';
     CommonModule,
     ProposalsRoutingModule,
     PrimeNgModule,
-    NgxSpinnerModule,
     ReactiveFormsModule,
     MyMaterialModule
   ]

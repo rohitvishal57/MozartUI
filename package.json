@@ -31,7 +31,6 @@
     "ng-toast": "^1.5.6",
     "ngx-bootstrap": "^11.0.2",
     "ngx-pagination": "^6.0.3",
-    "ngx-spinner": "^16.0.2",
     "primeng": "^16.1.0",
     "rxjs": "~7.8.0",
     "sccc": "^1.0.0",
