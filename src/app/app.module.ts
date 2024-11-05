@@ -15,7 +15,6 @@ import { TokenInterceptor } from './intercepter/token.interceptor';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { HeaderComponent } from './layout/header/header.component';
 import { SideNavbarComponent } from './layout/side-navbar/side-navbar.component';
 import { LoginModule } from './login/login/login.module';
@@ -86,8 +85,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       provide:HTTP_INTERCEPTORS,
       useClass:TokenInterceptor,
       multi:true
-    },
-    BsModalService,
+    }
   ],
   bootstrap: [AppComponent]
 })

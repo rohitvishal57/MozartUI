@@ -1,21 +1,9 @@
-import {
-  Component,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
-import {
-  FormGroup,
-  FormControl,
-  FormBuilder,
-  Validators,
-  AbstractControl,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { interval, map, Observable, startWith, take } from 'rxjs';
 import { Helper } from 'src/app/utilities/helper/helper';
 import { MatDialog } from '@angular/material/dialog';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { EndorsementsRequestsService } from '../endorsements-requests/endorsements-requests.service';
 import { NgToastService } from 'ng-angular-popup';
 import { LoginService } from 'src/app/login/login/login.service';
@@ -30,7 +18,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
   otpModal: any;
   caseCreationForm: FormGroup | any;
   userData: any;
-  modalRef?: BsModalRef; // Reference to modal instance
   otp: string[] = ['', '', '', '', '', ''];  // Initialize OTP array
   timeLeft: number = 30;
   isTimerRunning: boolean = false;
@@ -100,7 +87,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     {
       name: "Change in International Contact Number",
       value: "internationalContactNumber"
-    },  
+    },
     {
       name: "Change in International Address",
       value: "ChangeinInternationalAddress"
@@ -124,13 +111,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
     "Sister",
     "Sister in-law",
     "Son in-law"
-  ];  
+  ];
   filteredActivity: Observable<any[]> | any;
   MemberfilteredActivity: Observable<any[]> | undefined;
   selectedPolicyNumber: any;
   MemberIdList: any;
-  activityList:any = [];
-  memberActivityList:any = [];
+  activityList: any = [];
+  memberActivityList: any = [];
   submitted = false;
   validatedMobileNumber: any;
   CaseSubSubTypeValue: any;
@@ -154,13 +141,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
   isDesktop: boolean = false;
   documentSize: any;
   uploadDoc: boolean = true;
-  otpErrorMsge:boolean = false;
+  otpErrorMsge: boolean = false;
   errorMessage: string | undefined;
 
   constructor(private formBuilder: FormBuilder,
-    private modalService: BsModalService,
     private endorsement_service: EndorsementsRequestsService,
-    private loginservice : LoginService,
+    private loginservice: LoginService,
     private toast: NgToastService,
     private _router: Router,
     private dialog: MatDialog) {
@@ -212,11 +198,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
     return this.caseCreationForm.get('endorsementDetails')['controls'];
   }
   getPolicyNumbers() {
-    let data={
+    let data = {
       AgentCode: this.agentCode
     }
     this.endorsement_service.getactivepolicynumbersApi(data).subscribe(
-      (resp:any) => {
+      (resp: any) => {
         if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
           this.policies = resp.data.getPolicyDetails;
           console.log(this.policies);
@@ -229,7 +215,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         console.log(err);
       });
   }
-  
+
   onKeyDown(event: KeyboardEvent) {
     const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
     const regex = /^[0-9-]$/; // Allow only numbers and hyphens
@@ -259,10 +245,10 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.caseCreationForm.get('pincode')?.setValue(input.value);  // Update form control value
   }
-  
-  removeDuplicates(myArray:any, Prop:any) {
-    return myArray?.filter((obj:any, pos:any, arr:any) => {
-      return arr.map((mapObj:any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
+
+  removeDuplicates(myArray: any, Prop: any) {
+    return myArray?.filter((obj: any, pos: any, arr: any) => {
+      return arr.map((mapObj: any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
     });
   }
 
@@ -278,7 +264,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.caseCreationForm.get('addNotes').reset();
     this.selctedFileName = "";
     this.showOtpSection = false;
-    if(value == ""){
+    if (value == "") {
       this.caseCreationForm.get('policyNumber').reset();
     }
   }
@@ -287,22 +273,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.activityList = this.policiesListData;
     this.filteredActivity = this.caseCreationForm.controls['policyNumber'].valueChanges.pipe(
       startWith(''),
-      map((value:any) => value ? this._filter(value) : this.activityList?.slice()));
+      map((value: any) => value ? this._filter(value) : this.activityList?.slice()));
     console.log(this.filteredActivity);
   }
   _filter(value: string) {
     console.log(value);
     const filterValue = this._normalizeValue(this._removealphabets(value));
-    const filteredValue = this.activityList.filter((x:any) => this._normalizeValue(x.policynumber).includes(filterValue));
+    const filteredValue = this.activityList.filter((x: any) => this._normalizeValue(x.policynumber).includes(filterValue));
     this.selectedPolicyNumber = filteredValue;
-    if(this.selectedPolicyNumber.length > 0){
+    if (this.selectedPolicyNumber.length > 0) {
       this.getMemberIdList(this.selectedPolicyNumber);
     } else {
       this.MemberIdList = [];
     }
     return filteredValue;
   }
-  getMemberIdList(policyNumber:any) {
+  getMemberIdList(policyNumber: any) {
     let selectedValue = policyNumber[0].policynumber;
     const result = this.policies.filter((x: any) => selectedValue === x.policynumber);
     this.MemberIdList = result;
@@ -311,11 +297,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.memberActivityList = this.policiesListData.filter(value => value.memberid != null);
     this.MemberfilteredActivity = this.caseCreationForm.controls['member'].valueChanges.pipe(
       startWith(''),
-      map((value:any) => value ? this._memberfilter(value) : this.memberActivityList.slice()));
+      map((value: any) => value ? this._memberfilter(value) : this.memberActivityList.slice()));
   }
   _memberfilter(value: string) {
     const filterValue = this._normalizeValue(value);
-    const filteredValue = this.memberActivityList.filter((x:any) => this._normalizeValue(x.memberid).includes(filterValue));
+    const filteredValue = this.memberActivityList.filter((x: any) => this._normalizeValue(x.memberid).includes(filterValue));
     return filteredValue;
   }
   _normalizeValue(value: string): string {
@@ -324,7 +310,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   _removealphabets(value: any) {
     return value.replace(/[^\d.-]/g, '');
   }
-  endorsementChange(event:any) {
+  endorsementChange(event: any) {
     const value = event.target.value;
     // this.caseCreationForm.get('endorsementDetails').setValue("");
     this.caseCreationForm.get('endorsementDetails').reset();
@@ -349,7 +335,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Mobile_Number);
-      
+
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
       // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
     }
@@ -366,7 +352,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('nomineeName').updateValueAndValidity();
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').setValidators([Validators.required]);
       this.caseCreationForm.get("endorsementDetails").get('nomineeRelationship').updateValueAndValidity();
-      if(this.externalPolicyData?.policyData?.length > 0){
+      if (this.externalPolicyData?.policyData?.length > 0) {
         this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_first_name + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.relationship + ", " + this.externalPolicyData?.policyData[0]?.nominee_Details[0]?.nominee_Contact_No);
       }
     }
@@ -426,7 +412,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.isDisabled = true;
     }
 
-    if (value === 'nomineeContact' || value=='ChangeinInternationalAddress') {
+    if (value === 'nomineeContact' || value == 'ChangeinInternationalAddress') {
       this.showOtpSection = false;
       this.isDisabled = false;
     }
@@ -434,29 +420,29 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if ((value === 'panNumber' || value === 'aadharNumber') && this.submitted) {
       // this.isFilenotSelected = true;
     }
-    else{
+    else {
       this.isFilenotSelected = false;
       this.showNote = false;
     }
   }
-  onKeydown(e:any) {
+  onKeydown(e: any) {
     return Helper.isNumberValidation(e);
   }
-  onKeydownInternationalContactNumber(event:any){
+  onKeydownInternationalContactNumber(event: any) {
     const allowedKeys = [
       'Backspace',
       'Tab',
       'ArrowLeft',
       'ArrowRight',
       'Delete'
-  ];
+    ];
 
-  // Allow number keys and hyphen
-  const isNumberOrHyphen = /^[0-9-]$/.test(event.key);
+    // Allow number keys and hyphen
+    const isNumberOrHyphen = /^[0-9-]$/.test(event.key);
 
-  if (!allowedKeys.includes(event.key) && !isNumberOrHyphen) {
+    if (!allowedKeys.includes(event.key) && !isNumberOrHyphen) {
       event.preventDefault();
-  }
+    }
   }
   setDefault() {
     this.caseCreationForm.get("endorsementDetails").get('aadharNumber').clearValidators();
@@ -498,7 +484,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     let selectedType = this.caseCreationForm.get('endorsementType').value;
     if (selectedType == 'alternateContactNumber' || selectedType == 'internationalContactNumber' || selectedType == 'primaryContactNumber' || selectedType == 'memberPrimaryContactNumber' || selectedType == 'memberAlternateContactNumber') {
       this.validatedMobileNumber = this.caseCreationForm.get("endorsementDetails").get(selectedType).value;
-      if(this.validatedMobileNumber != this.otpObj.MobileNumber){
+      if (this.validatedMobileNumber != this.otpObj.MobileNumber) {
         //this.confirmationDialogService.confirm("Confirm Text", "Mobile number is not validated please do otp validation");
         return;
       }
@@ -517,9 +503,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.CaseSubSubTypeValue = this.endorsementTypes.find((obj) => {
         return obj.value === this.caseCreationForm.get("endorsementType").value;
       });
-      console.log("Case Sub sub type:",this.CaseSubSubTypeValue)
+      console.log("Case Sub sub type:", this.CaseSubSubTypeValue)
     }
-    let payloadObj:any = {
+    let payloadObj: any = {
       AgentCode: this.agentCode,
       MemberName: this.selectedMember.membername,
       MobileNumber: this.policyInfoDetails.policyDetails.primaryMobile,
@@ -592,18 +578,19 @@ export class EndorsementsNewRequestComponent implements OnInit {
                 data.append('CaseId', ccID)
                 data.append('ReferenceId', this.policyInfoDetails?.policyDetails?.qouteId)
                 data.append('agentCode', this.agentCode)
-                
+
                 this.endorsement_service.endorsementUploadFilesApi(data)
                   .pipe()
-                  .subscribe((Respevent:any) => {
+                  .subscribe((Respevent: any) => {
                     let event: any = Respevent;
                     if (Respevent.data && Respevent.statusCode == "200" && Respevent.isSuccess) {
                       this.toast.success({
                         detail: 'SUCCESS',
                         summary: `Your request ${resp.data.response.caseId} has been registered`,
                         duration: 5000,
-                      });                    } 
-                    else if(Respevent.message){
+                      });
+                    }
+                    else if (Respevent.message) {
                       this.toast.error({
                         detail: 'ERROR',
                         summary: Respevent.message,
@@ -611,14 +598,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
                       });
                     }
                     this.backToEndorsment();
-                  }, (error:any) => {
+                  }, (error: any) => {
                     console.log(error);
                     this.toast.error({
                       detail: 'ERROR',
                       summary: "Some Other Error Happened!",
                       duration: 5000,
                     });
-                });
+                  });
               }
             }
             else {
@@ -654,7 +641,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   shareKycLink() {
     console.log(this.caseCreationForm.value);
   }
-  newfile(e:any) {
+  newfile(e: any) {
     let files;
     let file;
     let fileExt;
@@ -686,7 +673,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     const kb = bytes / 1024;
     return `${kb.toFixed(2)} KB`;
   }
-  
+
   openOtpPopup() {
     this.otp = ['', '', '', '', '', ''];
     this.otpModal.show();
@@ -710,7 +697,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.otpObj.EmailId = this.caseCreationForm.get("endorsementDetails").get(selectedType).value;
     }
     this.endorsement_service.endorsementSendOtpApi(this.otpObj).subscribe(
-      (resp : any) => {
+      (resp: any) => {
         if (resp && resp.statusCode == "200" && resp.isSuccess && resp.data.requestId !== null) {
           this.otpInfoObject = {
             requestId: resp.data.requestId,
@@ -742,7 +729,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
   validateOTP() {
     const otpCode = this.otp.join('');
-    if(otpCode.length == 6){
+    if (otpCode.length == 6) {
       let modal = {
         agentCode: this.agentCode,
         RequestId: this.otpInfoObject.requestId,
@@ -751,7 +738,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         Mobile: this.otpObj.MobileNumber,
       };
       this.loginservice.validateOtpRequestApi(modal).subscribe(
-        (resp:any) => {
+        (resp: any) => {
           if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
             if (resp.message) {
               this.toast.success({
@@ -759,17 +746,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
                 summary: resp.message,
                 duration: 5000
               });
-               this.closeOtpPopup();
-               this.isDisabled = false;
-               this.sendOtptDisabled = true;
+              this.closeOtpPopup();
+              this.isDisabled = false;
+              this.sendOtptDisabled = true;
             } else {
               this.otpErrorMsge = true;
               this.errorMessage = "Something went wrong, please try again";
               this.isDisabled = false;
               this.sendOtptDisabled = false;
-             // this.toast.error({detail: "Something went wrong, please try again"})
+              // this.toast.error({detail: "Something went wrong, please try again"})
             }
-          } 
+          }
           else {
             if (resp && resp.message) {
               this.otpErrorMsge = true;
@@ -782,7 +769,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
             this.sendOtptDisabled = false;
           }
         },
-        (err:any) => {
+        (err: any) => {
           this.otpInfoObject = null;
           this.sendOtptDisabled = false;
           this.otpErrorMsge = true;
@@ -792,25 +779,25 @@ export class EndorsementsNewRequestComponent implements OnInit {
         }
       );
       this.otpErrorMsge = false;
-    }else{
+    } else {
       this.otpErrorMsge = true;
       this.errorMessage = "Please Enter Valid OTP"
     }
     this.otp = ['', '', '', '', '', ''];
   }
 
-  memberIdChange(event:any) {
+  memberIdChange(event: any) {
     const member = event.target.value;
-    this.selectedMember = this.policies.find((obj:any) => {
+    this.selectedMember = this.policies.find((obj: any) => {
       return obj.memberid === member;
     });
-    if(this.selectedMember != ""){
+    if (this.selectedMember != "") {
       let policyObj = {
-        policyNumber:this.selectedMember.policynumber,
-        MemberId:this.selectedMember.memberid
+        policyNumber: this.selectedMember.policynumber,
+        MemberId: this.selectedMember.memberid
       }
       this.endorsement_service.getEndorsementPolicyInfoApi(policyObj).subscribe(
-        (resp:any) => {
+        (resp: any) => {
           if (resp && resp.statusCode == "200" && resp.isSuccess) {
             this.policyInfoDetails = resp.data;
             this.externalPolicyData = this.policyInfoDetails.externalPolicyData.response;
@@ -834,51 +821,51 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
   }
 
-  mobAndEmailValueChange(enteredValue:any, formControlName:any){
+  mobAndEmailValueChange(enteredValue: any, formControlName: any) {
     if (enteredValue != "" && this.caseCreationForm.get("endorsementDetails").get(formControlName).valid) {
       this.sendOtptDisabled = false;
     } else {
       this.sendOtptDisabled = true;
     }
   }
-  
-  resendOTP(){
+
+  resendOTP() {
     this.otpErrorMsge = false;
     this.sendOTP();
   }
 
- // Start OTP timer
-startTimer() {
-  if (this.isTimerRunning) {
-    return; // Prevent multiple timers from starting
+  // Start OTP timer
+  startTimer() {
+    if (this.isTimerRunning) {
+      return; // Prevent multiple timers from starting
+    }
+
+    // Initialize the timer
+
+    this.isTimerRunning = true;
+
+    // RxJS interval emits every second (1000ms)
+    const timer$ = interval(1000).pipe(
+      take(this.timeLeft) // Complete the observable after 'timeLeft' seconds
+    );
+
+    // Subscribe to the interval only once
+    timer$.subscribe({
+      next: () => {
+        this.timeLeft--; // Decrease the time left by 1 every second
+      },
+      complete: () => {
+        this.isTimerRunning = false; // Reset the flag once the timer completes
+      }
+    });
   }
 
-  // Initialize the timer
- 
-  this.isTimerRunning = true;
-
-  // RxJS interval emits every second (1000ms)
-  const timer$ = interval(1000).pipe(
-    take(this.timeLeft) // Complete the observable after 'timeLeft' seconds
-  );
-
-  // Subscribe to the interval only once
-  timer$.subscribe({
-    next: () => {
-      this.timeLeft--; // Decrease the time left by 1 every second
-    },
-    complete: () => {
-      this.isTimerRunning = false; // Reset the flag once the timer completes
-    }
-  });
-}
-
-  omit_special_char(event:any) {
+  omit_special_char(event: any) {
     var k;
     k = event.charCode;  //         k = event.keyCode;  (Both can be used)
     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
   }
- 
+
   deleteFile() {
     this.namesVariable = "";
     this.documentType = "";
@@ -894,7 +881,7 @@ startTimer() {
     if (event.key >= '0' && event.key <= '9') {
       this.otp[index] = event.key;  // Store digit
       if (index < 5) {
-        const nextInput = document.getElementsByClassName('otp-input')[index+1] as HTMLInputElement;
+        const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
         nextInput.focus();
       }
     }
@@ -903,7 +890,7 @@ startTimer() {
     else if (event.key === 'Backspace') {
       this.otp[index] = '';  // Clear current box
       if (index > 0) {
-        const previousInput = document.getElementsByClassName('otp-input')[index-1] as HTMLInputElement;
+        const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
         previousInput.focus();
       }
     }
