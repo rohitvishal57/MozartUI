@@ -147,7 +147,7 @@
                                     <th>Product Name</th>
                                     <th>Mobile Number</th>
                                     <th>Email ID</th>
-                                    <th>Create Date<br><h6>(DD-MM-YYYY)</h6></th>
+                                    <th>Create Date<br><h6>(dd-mm-yyyy)</h6></th>
 
                                     <th class="text-center">Notice</th>
                                 </tr>
@@ -374,7 +374,7 @@
             </div>
 
             <div class="modal-footer modal_footerBtnGroup_column">
-                <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth">Save</button>
+                <button type="submit" id="save" name="save"  class="verify-btn btn_red btn_fullWidth"  [attr.disabled]="agentCodes.length">Save</button>
                 <div class="d-flex justify-content-center">
                     <button type="button" id="cancel" name="cancel"  class="btn_linkText_black btn_fullWidth" data-bs-dismiss="modal" aria-label="Close" (click)="cancelAssignModal()" >Cancel</button>
                 </div>
