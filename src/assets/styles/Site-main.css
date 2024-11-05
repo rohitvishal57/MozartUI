@@ -1949,6 +1949,7 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 16px;
   color: var(--text-black-25);
   gap: 24px;
+  justify-content: space-between;
 }
 
 .quoteComparisonWraper .qc_item header .heading {
@@ -1984,7 +1985,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .quoteComparisonWraper .qc_item header .btn_addToCart {
   border-radius: 4px;
-  padding: 4px 15px;
+  padding: 4px 11px 4px 10px;
   font-weight: 400;
   font-size: 13px;
   line-height: 24px;
