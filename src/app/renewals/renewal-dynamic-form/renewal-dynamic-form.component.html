@@ -1475,7 +1475,7 @@
               <button type="button" id="proceed" name="proceed" value="proceed" class="btn_pink btn_pinkNext" (click)="proceed()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Proceed</button>
               <button type="button" id="renewnow" name="renewnow" value="renewnow" class="btn_red btn_redRenew" (click)="renewNow()" *ngIf="activeSection == 'primary' || activeSection == 'additional' ">Renew Now</button>
               <button type="button" id="proceedback" name="proceedback" value="proceed" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()" *ngIf="activeSection == 'payment' || activeSection == 'policySummary' || activeSection == 'kyc' ">Back</button>
-              <button type="button" id="renewnownext" name="renewnownext" value="renewnow" class="btn_red btn_darkGrey btn_w_120" (click)="next1()" *ngIf="activeSection == 'policySummary' || activeSection == 'kyc' ||activeSection == 'payment' && (selectedPaymentType =='offline' || selectedPaymentType =='' )">Next</button>
+              <button type="button" id="renewnownext" name="renewnownext" value="renewnow" class="btn_red btn_darkGrey btn_w_120" (click)="nextMethod()" *ngIf="activeSection == 'policySummary' || activeSection == 'kyc' ||activeSection == 'payment' && (selectedPaymentType =='offline' || selectedPaymentType =='' )">Next</button>
               <button type="button" id="paynow" name="paynow" value="paynow" class="btn_red btn_redRenew" 
               (click)="payNow()" 
               *ngIf="activeSection == 'payment' && 

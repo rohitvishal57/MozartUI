@@ -20,9 +20,10 @@
                                 <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">Mobile Number</option>
                                 <option id="proposerNameOption" name="proposerNameOption" value="proposerName">Proposer Name</option>
                                 <option id="proposalNumberOption" name="proposalNumberOption" value="proposalNumber">Proposal Number</option>
-                                <option id="leadIdOption" name="leadIdOption" value="leadId">LeadId</option>
+                                <option id="leadIdOption" name="leadIdOption" value="leadId">Lead ID</option>
                             </select>
                             <input  class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
+                            <div *ngIf="searchInputControl.invalid && searchInputControl.touched" class="text-danger"><small>{{ getErrorMessage() }}</small></div>
                             <button  type="button" id="btnsearch" name="btnsearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
@@ -99,7 +100,7 @@
                                     <th scope="col" nowrap>Policy Type</th>
                                     <th scope="col" nowrap>Premium</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col" nowrap>Created On</th>
+                                    <th scope="col" nowrap>Created On <div><small>(dd-mm-yyyy)</small></div></th>
                                     <th scope="col" nowrap>Mobile Number</th>
                                     <th scope="col">Notice</th>
                                 </tr>

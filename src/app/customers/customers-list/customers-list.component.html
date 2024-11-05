@@ -17,7 +17,7 @@
                                <option id="nameOption" name="nameOption" value="name">Name</option>
                                <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">Mobile Number</option>
                                <option id="policyNumberOption" name="policyNumberOption" value="policyNumber">Policy Number</option>
-                               <option id="emailIDOption" name="emailIDOption" value="emailID">Email</option>
+                               <option id="emailIDOption" name="emailIDOption" value="emailID">Email ID</option>
                              </select>
                             <input  class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
                             <button  type="button" id="customerfilterSearch" name="customerfilterSearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
@@ -115,19 +115,25 @@
                             <table class="table table-borderless table-search">
                               <thead>
                                 <tr>
-                                  <th scope="col" nowrap>Product Name</th>
                                   <th scope="col" nowrap>Policy Number</th>
+                                  <th scope="col" nowrap>Product Name</th>
                                   <th scope="col">No.Of.Members</th>
-                                  <th scope="col" nowrap>Created On</th>
+                                  <th scope="col">Sum Insured</th>
+                                  <th scope="col">Premiun</th>
+                                  <th scope="col" nowrap>Start Date <div><small>(dd-mm-yyyy)</small></div></th>
+                                  <th scope="col" nowrap>End Date <div><small>(dd-mm-yyyy)</small></div></th>
                                   <th scope="col">Status</th>
                                   <th scope="col">Action</th>
                                 </tr>
                               </thead>
                               <tbody class="table-group-divider">
                                 <tr *ngFor="let policy of row.policyDetails">
-                                  <td>{{ policy.productVariantName }}</td>
                                   <td>{{ policy.policyNumber }}</td>
+                                  <td>{{ policy.productVariantName }}</td>
                                   <td>{{policy.noOfInsured}}</td>
+                                  <td>1,23,456</td>
+                                  <td>2000</td>
+                                  <td>{{ formatPolicyStartDate(policy.policyStartDate) }}</td>
                                   <td>{{ formatPolicyStartDate(policy.policyStartDate) }}</td>
                                   <td>
                                     <span class="info_status" [ngClass]="{
@@ -195,29 +201,6 @@
                                     <div class="insureName" title="{{ row.firstName }} {{row.lastName}}">{{ row.firstName }} {{row.lastName}}</div>    
                                 </h6>
                             </div>
-                            <div class="card_btnGroup block-hide">
-                                <div class="btn_groupAction">
-                                    <button type="button" id="customermoregrid" name="customermoregrid" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
-                                    <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
-                                        <div class="overlay_popupMenu_Sub moreActionItemsSub">
-                                            <ul class="actionItemsMain">
-                                                <!-- <li class="actionItem" (click)="download(row, 'download')">
-                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
-                                                </li> -->
-                                                <!-- <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
-                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email</span></a>
-                                                </li>
-                                                <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
-                                                    <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
-                                                </li>
-                                                <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
-                                                    <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
-                                                </li> -->
-                                            </ul>
-                                        </div>
-                                    </mat-menu>
-                                </div>
-                            </div>
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems ">
@@ -236,23 +219,22 @@
                                 <div class="item_lable">Email ID</div>
                                 <div class="item_value">{{ row.emailID }}</div>
                             </div>
-                            
                             <span class="modifiedBadge userPolicyBadge">Policy Info</span>
                             <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo" *ngFor="let policy of row.policyDetails">
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Product Name</div>
-                                    <div class="item_value">{{ policy.productVariantName }}</div>
-                                </div>
-                                <div class="userInfoItem">
                                     <div class="item_lable">Policy Number</div>
                                     <div class="item_value">{{ policy.policyNumber }}</div>
+                                </div>
+                                <div class="userInfoItem">
+                                    <div class="item_lable">Product Name</div>
+                                    <div class="item_value">{{ policy.productVariantName }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
                                     <div class="item_lable">No.Of.Members</div>
                                     <div class="item_value">{{policy.noOfInsured}}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Created On</div>
+                                    <div class="item_lable">Start Date</div>
                                     <div class="item_value">{{ formatPolicyStartDate(policy.policyStartDate) }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
@@ -260,12 +242,12 @@
                                     <div class="item_value">End Date</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Premium</div>
-                                    <div class="item_value">₹17,000.00</div>
-                                </div>
-                                <div class="userInfoItem userInfoItem-30">
                                     <div class="item_lable">Sum Insured</div>
                                     <div class="item_value">₹1,70,000.00</div>
+                                </div>
+                                <div class="userInfoItem userInfoItem-30">
+                                    <div class="item_lable">Premium</div>
+                                    <div class="item_value">₹17,000.00</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
                                     <div class="item_lable">Status</div>
@@ -276,8 +258,6 @@
                                       {{ policy.policyStatus }}
                                     </span>
                                 </div>
-
-                                <!--Menu: more policy start-->
                                 <div class="menu_morePolicy">
                                     <button type="button" id="customermoregrid" name="customermoregrid" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
@@ -286,7 +266,7 @@
                                                 <!-- <li class="actionItem" (click)="download(row, 'download')">
                                                     <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
                                                 </li> -->
-                                                <!-- <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
+                                                <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
                                                     <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
@@ -294,12 +274,11 @@
                                                 </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
                                                     <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
-                                                </li> -->
+                                                </li>
                                             </ul>
                                         </div>
                                     </mat-menu>
                                 </div>
-                                <!--Menu: more policy end-->
                             </div>
                         </div>
                     </div>

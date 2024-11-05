@@ -11,7 +11,7 @@ import { NgToastService } from 'ng-angular-popup';
   styleUrls: ['./customers-list.component.scss']
 })
 export class CustomersListComponent {
-  customerList: any[] = [];
+  customerList: CustomerList[] = [];
   page: number = 1;
   first: number = 0;
   rows: number = 10;
