@@ -17,7 +17,7 @@
                     <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
                             <div>
-                                <select id="selectSearchFilter" name="selectSearchFilter" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
+                                <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
                                     <option value="" (click)="cancelSearch()">Select an Option</option>
                                     <option value="mobileNumber">Mobile Number</option>
                                     <option value="proposerName">Proposer Name</option>

@@ -23,7 +23,7 @@
                     <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
                             <div>
-                                <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)">
+                                <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                     <option value="">Select an option</option>
                                     <option value="caseId">Request ID</option>
                                     <option value="policyNumber">Policy Number</option>
@@ -31,8 +31,8 @@
                                 </select>
                             </div>
                             <div>
-                                <input class="filterSearch" id="endorsementSearchInput" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                                <button [disabled]="selected === ''" type="button" id="endorsementSearchBtn" name="endorsementSearchBtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                                <button [disabled]="selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
                             </div>
                         </div>

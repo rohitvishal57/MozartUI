@@ -23,7 +23,7 @@
                     <!--Search section start-->
                     <div class="body_flex_row claims_searchWraper">
                         <div class="field_searchMain">
-                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)">
+                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                 <option value=""  selected>Select an option</option>
                                 <option value="claimInfoId">Request ID</option>
                                 <!-- <option value="productName">Product Name</option> -->
@@ -32,7 +32,7 @@
                                 <option value="memberId">Member Id</option> 
                             </select>
                             <input type="search" id="filterSearch" name="filterSearch" value="" class="filterSearch" [placeholder]="getPlaceholder()"  [formControl]="searchInputControl">
-                            <button type="button" id="claimfilterSearch" name="claimfilterSearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
 

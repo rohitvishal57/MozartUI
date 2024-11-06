@@ -38,7 +38,7 @@
 
                     <div class="body_flex_row leads_searchWraper">
                         <div class="field_searchMain">
-                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterOption" name="filterOption">
+                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                 <option value="Select an option">Select an option</option>
                                 <option value="leadId">Lead Id</option>
                                 <option value="mobileNumber">Mobile Number</option>
@@ -46,7 +46,7 @@
                                 <option value="email">Email ID</option>
                             </select>
                             <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" [type]="filterFeildType" [maxlength]="filterFeildmaxlength" [placeholder]="getPlaceholder()">
-                            <button  type="button" id="leadsearch" name="leadsearch" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <div class="filterWraper">
