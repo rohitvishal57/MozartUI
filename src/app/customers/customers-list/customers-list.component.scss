@@ -301,3 +301,9 @@ h6 {
 .quoteView .table .tbody-quoteView .info_customerDetails .table thead tr {
 	background: #f3e7e7 !important;
 }
+.btn_moreActionCard {
+	background: #ffe7e5;
+	&:hover {
+		background: #c7222a;
+	}
+}
