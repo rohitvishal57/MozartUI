@@ -201,7 +201,7 @@
                                                 <option value="Daughter">Daughter</option>
                                             </select>
                                             <label for="Relation">Relation *</label>
-                                            <span class="ui-error" *ngIf="form.get('Relation')?.invalid && (form?.get('Relation')?.touched || memberDetails)">Please Select Relation</span>
+                                            <span class="ui-error" *ngIf="form.get('Relation')?.invalid && (form?.get('Relation')?.touched || memberDetails)">Relation is required field</span>
                                         </div>
                                     </div>
                                   </div>
@@ -258,16 +258,14 @@
                                                   <option value="O">Other</option>
                                               </select>
                                               <label for="gender">Gender *</label>
-                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">Please select gender</span>
+                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">Gender is required field</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="date" id="dob" name="dob" formControlName="DoB" placeholder="" class="form-control input-textBox" [value]="form.get('DoB')?.value | date: 'yyyy-MM-dd'"/>
                                             <label for="dob">Date of birth *</label>
-                                            <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">
-                                              Enter a valid date of birth
-                                            </span>
+                                            <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">date of birth is required field</span>
                                         </div>
                                     </div>
                                     
@@ -312,7 +310,7 @@
                                                   <option value="2500000"> >20L</option>
                                               </select>
                                               <label for="air">Annual income range *</label>
-                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && (form.get('AnnualIncome')?.touched || memberDetails)">Please select annual income range</span>
+                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && (form.get('AnnualIncome')?.touched || memberDetails)">Annual income range is required field</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -326,7 +324,7 @@
                                                   <option value="Self Employed">Self Employed</option>
                                               </select>
                                               <label for="occupation">Occupation *</label>
-                                              <span class="ui-error" *ngIf="form.get('occupation')?.invalid && (form.get('occupation')?.touched || memberDetails)">Please select occupation</span>
+                                              <span class="ui-error" *ngIf="form.get('occupation')?.invalid && (form.get('occupation')?.touched || memberDetails)">occupation is required field</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -343,7 +341,7 @@
                                                   <option value="Other">Other</option>
                                               </select>
                                               <label for="education">Designation</label>
-                                              <span class="ui-error" *ngIf="form.get('Designation')?.invalid && form.get('Designation')?.touched">Please select Designation</span>
+                                              <span class="ui-error" *ngIf="form.get('Designation')?.invalid && form.get('Designation')?.touched">Designation is required field</span>
                                           </div>
                                       </div>
                                   </div>
@@ -817,7 +815,7 @@
                                               </select>
                                               <label for="nomine-relation">Relation with Proposer *</label>
                                               <span class="ui-error" *ngIf="form?.get('Relationship')?.invalid && form?.get('Relationship')?.touched">
-                                              Please select Relation with Proposer
+                                              Relation with Proposer is required field
                                           </span>
                                           </div>
                                       </div>
