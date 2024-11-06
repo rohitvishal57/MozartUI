@@ -54,11 +54,9 @@ export class EncryptionInterceptor implements HttpInterceptor {
             }
           }
           res.body && localStorage.setItem('token', res?.body?.token);
-          this.loadingService.hide()
         }),
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
-          this.loadingService.hide()
           if (error.status === 401) {
             localStorage.clear()
             this.router.navigate(['/login']);

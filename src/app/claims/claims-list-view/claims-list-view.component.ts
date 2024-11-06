@@ -213,8 +213,8 @@ applyFilter() {
   this.formatDate("fromDate");
   this.formatDate("toDate");
 
-  this.claimsReqBody.fromDate = this.fromDate;
-  this.claimsReqBody.toDate = this.toDate;
+  this.claimsReqBody.fromDate = this.fromDate || "";
+  this.claimsReqBody.toDate = this.toDate || "";
 
   const selectedPolicyTypes = this.StaticRequestTypes 
     ? this.StaticRequestTypes.filter((requestType: any) => requestType.selected).map((requestType: any) => requestType.name)
@@ -238,7 +238,7 @@ applyFilter() {
     this.claimsReqBody.searchType = "productName";
     this.claimsReqBody.searchString = selectedProducts.join(", ");
   }
-
+  this.isSearch = true;
   this.first = 0;
   this.fetchData();
   this.toggeledropdown = false; 
@@ -277,6 +277,27 @@ clear() {
   //     }
   //     this.toggleSearchdropdown = !this.toggleSearchdropdown;
   // }
+  getErrorMessage(): string {
+    if (this.searchInputControl.hasError("required")) {
+      return "This field is required";
+    }
+  
+    if (this.searchInputControl.dirty && this.selected === "") {
+      return "Select an option and Enter";
+    }
+  
+    if (this.searchInputControl.hasError("pattern")) {
+      if (this.selected === "caseId") {
+        return "Enter Valid Request Id";
+      } else if (this.selected === "policyNumber") {
+        return "Enter Valid Policy Number";
+      } else if (this.selected === "memberName") {
+        return "Enter Valid Member Name";
+      }
+    }
+  
+    return "";
+  }
 
   applySearch(): void {
     let searchValue = this.searchInputControl.value?.trim();

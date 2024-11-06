@@ -20,20 +20,25 @@
                 </div>
                 <div class="quickFilterRight" >
                     <!--Search section start-->
-                    <div class="body_flex_row endorsements_searchWraper">
+                    <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
-                            <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)">
-                                <option value="">Select an option</option>
-                                <option value="caseId">Request ID</option>
-                                <option value="policyNumber">Policy Number</option>
-                                <option value="memberName">Member Name</option>
-                            </select>
-                            <input class="filterSearch" id="endorsementSearchInput" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button type="button" id="endorsementSearchBtn" name="endorsementSearchBtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <div>
+                                <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
+                                    <option value="">Select an option</option>
+                                    <option value="caseId">Request ID</option>
+                                    <option value="policyNumber">Policy Number</option>
+                                    <option value="memberName">Member Name</option>
+                                </select>
+                            </div>
+                            <div>
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                                <button [disabled]="selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                            </div>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="endorsementFilter" name="endorsementFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter ({{appliedFiltersCount}})</button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter ({{appliedFiltersCount}})</button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
@@ -46,7 +51,7 @@
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
                                                     <label for="product{{i}}">{{product.productName}}</label>
                                                 </div>
                                             </div>
@@ -81,7 +86,7 @@
                                                 </div>
                                             </div>
                                             <footer>
-                                                <button type="button" value="cancel" id="endorsementClear" name="endorsementClear" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                                <button type="button" value="cancel" id="filterClear" name="filterClear" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
                                                 <button type="button" value="apply" id="filterApply" name="filterApply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
                                             </footer>
                                         </div>

@@ -97,7 +97,10 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.hideSection=false;
         }
         else{
-          this.loadDataSequentially(activeSection);
+          this.getRenewalInfo();
+          this.getProducts(); 
+          this.activeSection = activeSection;
+          // this.loadDataSequentially(activeSection);
         }
       }
       const paymentStatus = this.renewalService.getPaymentStatus();      
@@ -108,15 +111,15 @@ export class RenewalDynamicFormComponent implements OnInit {
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
  }
 
- async loadDataSequentially(activeSection:any) {
-  try {
-    await this.getRenewalInfo();
-    await this.getProducts(); 
-    this.activeSection = activeSection;
-  } catch (error) {
-    console.error("Error loading data:", error);
-  }
-}
+//  async loadDataSequentially(activeSection:any) {
+//   try {
+//     await this.getRenewalInfo();
+//     await this.getProducts(); 
+//     this.activeSection = activeSection;
+//   } catch (error) {
+//     console.error("Error loading data:", error);
+//   }
+// }
 
   initializeForm() {
     const group: { [key: string]: any } = {};
@@ -419,14 +422,10 @@ payNow(){
     "quoteNumber": "",
     "orderId": ""
    }
-   if (paymentRequestBody.paymentMethod == "E-Nach" ||
-    paymentRequestBody.paymentMethod == "E-Mandate" ||
+   if (paymentRequestBody.paymentMethod == "E-Nach" || paymentRequestBody.paymentMethod == "E-Mandate" ||
     paymentRequestBody.paymentMethod == "Auto_Debit") {
-    console.log("if calling",paymentRequestBody.paymentMethod);
-    console.log("KYC completed",this.kycData);
     this.renewalService.paymentGatewayApi(paymentRequestBody).subscribe({
       next: (response: any) => {
-        console.log("payment response",response);
         const paymenturl=response.data.paymentURL
         if (response.isSuccess==true && paymenturl) {
           window.open(paymenturl, '_blank');
@@ -444,14 +443,13 @@ payNow(){
  getProducts() {
   const reqData={
     "agentCode": this.agentCode
-  }
+  }  
   this.commonService.Getproductlist(reqData).subscribe({
     next: (res) => {
       this.productsList = res.data;
       this.getTenureDetails();
       if(res != null){
       this.getproductdetailsandfeatures();}
-      console.log("products list",this.productsList);
     },
     error: (err) => {
        console.log("error coming form getproduct list API");
@@ -459,14 +457,14 @@ payNow(){
   })
 }
 
-getRenewalInfo() {
+async getRenewalInfo() {
   const base = this.encryptionService.decrypt(sessionStorage.getItem('renewalData') as string);
-  this.renewalInfo = JSON.parse(base.data.baseResponse);          
+  this.renewalInfo = JSON.parse(base.data.baseResponse);
   this.kycFlag = base.data.isKYCComplete;
-  this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;          
+  this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
 }
   getTenureDetails() {
-    const productName = this.renewalInfo?.response?.policyData[0]?.Name_of_product;    
+    const productName = this.renewalInfo?.response?.policyData[0]?.Name_of_product;        
     if (productName) {
       const matchingProduct = this.productsList.find((product:any) => product.productName === productName);      
       if (matchingProduct) {
@@ -528,17 +526,13 @@ getRenewalInfo() {
   handleKyc(action: any) {
         this.kycDetailsSubmitted = true;
         if (this.kycFormGroup.invalid) {
-          console.log("Form is invalid");
           this.toast.error({ detail: 'ERROR',summary: 'Please enter valid KYC details',duration: 3000});
         } else {
           const reqData = this.kycFormGroup.value;
-          console.log("KYC request body", reqData);    
           this.yatraService.GetKycDetails(reqData).subscribe(
             (response: any) => {
-              console.log("Kyc value",this.kycData);
               if (response.isSuccess === true) {
                 this.kycData = response.data;
-                console.log("Kyc data",this.kycData);
                 const kycRequestBody={
                   policy_Number:this.policyNumber
                 }
@@ -551,10 +545,8 @@ getRenewalInfo() {
                   (err)=>{console.log(err);}
                 )
                 this.actionKyc = action;
-                console.log("responsec body(if)",response.isSuccess);
                 this.toast.success({detail: 'SUCCESS',summary: 'KYC Details Fetched Successfully', duration: 1000}); 
              } else if(response.isSuccess === false){
-              console.log("kyc failed");
               this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
               this.getkycURL();
              }
@@ -562,7 +554,6 @@ getRenewalInfo() {
             },
             (error: any) => {
               this.getkycURL();
-              console.log("error body",error);
               this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
             }
           );          
@@ -576,8 +567,6 @@ getRenewalInfo() {
       };
       this.renewalService.getkycURL(requestBody, { responseType: 'json' }).subscribe(
         (response:any) => {
-          console.log(response);
-          
           this.kycLink = `${response.message}`;
         },
         error => {

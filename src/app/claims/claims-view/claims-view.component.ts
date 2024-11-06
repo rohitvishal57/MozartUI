@@ -181,7 +181,7 @@ export class ClaimsViewComponent {
       raisedDate: [""],
       hospitalName: [""],
       isFileUploadRequired: [true],
-      claimedAmount: ["",],
+      claimedAmount: [""],
       approvedAmount: [""],
       deductedAmount: [""],
       deductionReason: [""],
@@ -195,8 +195,8 @@ export class ClaimsViewComponent {
       state: [""],
       city: [""],
       hospitalAddress: "",
-      admissionDate: [""],
-      dischargeDate: [""],
+      admissionDate: null,
+      dischargeDate: null,
       admissionTime: [""],
       dischargeTime: [""],
       ailmentDescription: [""],
@@ -207,7 +207,7 @@ export class ClaimsViewComponent {
         this.fb.group({
           billNo: [""],
           billDate: [""],
-          claimedAmount: [""]
+          billAmount: [""]
         }),
       ]),
     });
@@ -259,7 +259,6 @@ export class ClaimsViewComponent {
   }
 
   handleDropdownChange(value: string): void {
-    debugger
     const selectedPolicyNumber = value;
       this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
       if (!policyValue) {
@@ -636,6 +635,16 @@ export class ClaimsViewComponent {
   uploadFiles(files: File[]): void {
     const fileNames: string[] = files.map((file) => file.name);
     const fileTypes: string[] = files.map((file) => file.type);
+    const policyNumber = this.form.get("policyNumber")?.value
+    if (!policyNumber) {
+      // Set each file status to "failed" if policy number is not selected
+      this.uploadedFiles.forEach((file) => (file.status = "failed"));
+      this.uploadSuccess = false;
+      this.updateStatusLabel();
+      this.cdr.markForCheck();
+      console.warn("Policy number must be selected before uploading files.");
+      return;
+    }
     this.documentType = fileTypes;
     this.namesVariable = fileNames;
     const formData = new FormData();
@@ -747,8 +756,7 @@ export class ClaimsViewComponent {
     this.editableControl.setValue("");
   }
 
-  // Method to Stop editing changes
-  stopEditing(file: any) {
+ stopEditing(file: any) {
     if (this.editableControl.value !== this.label) {
       file.label = this.editableControl.value; 
     }
@@ -764,11 +772,23 @@ export class ClaimsViewComponent {
 
   submitRequest(): void {
     if (this.saveForm.valid || this.form.valid) {
-      const saveClaimData = this.form.value;
-      let formData = this.form.value;
+      const saveClaimData = { ...this.form.value };
   
-      if (Array.isArray(formData.hospitalAddress)) {
-        formData.hospitalAddress = formData.hospitalAddress.join(', '); 
+      
+      saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
+      saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : null;
+  
+      saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
+        ...bill,
+        billAmount: bill.billAmount ? bill.billAmount.toString() : ""
+      }));
+  
+      if (!saveClaimData.claimedAmount) {
+        saveClaimData.claimedAmount = 0;
+      }
+  
+      if (Array.isArray(saveClaimData.hospitalAddress)) {
+        saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
   
       const documentsArray = this.uploadedFiles.map((file) => ({
@@ -778,9 +798,11 @@ export class ClaimsViewComponent {
       }));
       saveClaimData.documentsArray = documentsArray;
   
+      console.log('saveck', saveClaimData);
+  
       this.claimsService.saveClaims(saveClaimData).subscribe(
-        (response:any) => {
-          if (response?.isSuccess) {  // Check if isSuccess is true
+        (response: any) => {
+          if (response?.isSuccess) {
             this.uploadSuccess = true;
             this.toast.success({ detail: "Claims submitted successfully" });
             this.router.navigate(["claims/claimsList"]);
@@ -800,6 +822,7 @@ export class ClaimsViewComponent {
       this.toast.error({ detail: "Please fill in the required form fields." });
     }
   }
+  
   
 }
 

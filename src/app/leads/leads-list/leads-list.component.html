@@ -38,19 +38,19 @@
 
                     <div class="body_flex_row leads_searchWraper">
                         <div class="field_searchMain">
-                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)">
+                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                 <option value="Select an option">Select an option</option>
                                 <option value="leadId">Lead Id</option>
                                 <option value="mobileNumber">Mobile Number</option>
                                 <option value="name">Name</option>
                                 <option value="email">Email ID</option>
                             </select>
-                            <input class="filterSearch" id="filterSearch" [formControl]="searchInputControl" [type]="filterFeildType" [maxlength]="filterFeildmaxlength" [placeholder]="getPlaceholder()">
-                            <button  type="button" id="leadsearch" name="leadsearch" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" [type]="filterFeildType" [maxlength]="filterFeildmaxlength" [placeholder]="getPlaceholder()">
+                            <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="leadfilter" name="leadfilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
@@ -58,7 +58,7 @@
                                     <!--<button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
                                         <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
                                     </button>-->
-                                    <button type="button" id="leadfiltercancel" name="leadfiltercancel" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+                                    <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
@@ -66,7 +66,7 @@
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected"> 
+                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected"> 
                                                     <label for="product{{i}}">{{product.productName}}</label>
                                                 </div>
                                             </div>
@@ -77,7 +77,7 @@
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                  <input type="checkbox" id="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
                                                   <label for="policytype{{i}}">{{policyType.name}}</label>
                                                 </div>
                                               </div>                                              
@@ -104,8 +104,8 @@
                                     </div>
                                 </div>
                                 <footer>
-                                    <button type="button" id="leadfilterclear" name="leadfilterclear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" id="leadfilterapply" name="leadfilterapply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
                                 </footer>
                             </div>
                         </div>
@@ -371,7 +371,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" formControlName="selectedAgentCode">
+                            <select class="form-select input-selectBox" formControlName="selectedAgentCode" id="selectedAgentCode" name="selectedAgentCode">
                                 <option *ngFor="let item of agentCodes " [value]="item">
                                     {{ item }}
                                 </option>

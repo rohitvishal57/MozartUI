@@ -15,7 +15,7 @@
           <div class="row mb-3">
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
-                <input class="form-control input-textBox" value="" (keydown)="onKeyDown($event)" [matAutocomplete]="auto" id="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
+                <input class="form-control input-textBox" value="" (keydown)="onKeyDown($event)" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
                 <label for="policyNumber">Search Policy Number </label>
                 <div *ngIf="caseCreationForm.get('policyNumber')?.invalid && (caseCreationForm.get('policyNumber')?.touched || caseCreationForm.get('policyNumber')?.dirty) || submitted">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('policyNumber')?.errors?.required">Policy number is required.</small>
@@ -29,7 +29,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
-                <select class="form-select input-selectBox" formControlName="member" (change)="memberIdChange($event)">
+                <select class="form-select input-selectBox" formControlName="member" id="selectmember" name="selectmember" (change)="memberIdChange($event)">
                   <option value="" disabled selected>Select Member</option>
                   <option *ngFor="let opt of MemberIdList" [value]="opt.memberid">
                     {{ opt.membername }} ({{ opt.relationwithproposer }})
@@ -45,7 +45,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
-                <select class="form-select input-selectBox" formControlName="endorsementType" (change)="endorsementChange($event)">
+                <select class="form-select input-selectBox" formControlName="endorsementType" id="endorsementType" name="endorsementType" (change)="endorsementChange($event)">
                   <option value="" disabled selected>Select Endorsement Type</option>
                   <option *ngFor="let opt of endorsementTypes" [value]="opt.value">
                     {{ opt.name }}
@@ -59,7 +59,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
-                <select tabindex="2" formControlName="asignedTeam" class="form-select input-selectBox">
+                <select tabindex="2" formControlName="asignedTeam" id="asignedTeam" name="asignedTeam" class="form-select input-selectBox">
                   <option value="" disabled selected>Choose Option</option>
                   <option value="Endorsement - Non financial">Endorsement - Non financial</option>
                 </select>
@@ -74,7 +74,7 @@
                 <div class="row">
                   <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
                     <div class="input-block form-floating input-block-renew">
-                      <input class="form-control input-textBox" id="address1" placeholder="" formControlName="address1" type="text" [max]="250">
+                      <input class="form-control input-textBox" id="address1" name="address1" placeholder="" formControlName="address1" type="text" [max]="250">
                       <label for="address1">Address 1</label>
                       <div *ngIf="caseCreationForm.get('address1')?.invalid && (caseCreationForm.get('address1')?.touched || caseCreationForm.get('address1')?.dirty) || submitted">
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('address1')?.errors?.required">Address1 is required.</small>
@@ -85,7 +85,7 @@
                   </div>
                   <div class="col-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
                     <div class="input-block form-floating input-block-renew">
-                      <input class="form-control input-textBox" id="address2" placeholder="" formControlName="address2" type="text">
+                      <input class="form-control input-textBox" id="address2" name="address2" placeholder="" formControlName="address2" type="text">
                       <label for="address2">Address 2</label>
                       <div *ngIf="caseCreationForm.get('address2')?.invalid && (caseCreationForm.get('address2')?.touched || caseCreationForm.get('address2')?.dirty || submitted)">
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('address2')?.errors?.required">Address2 is required.</small>
@@ -96,7 +96,7 @@
                   </div>
                   <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
                     <div class="input-block form-floating input-block-renew">
-                      <input class="form-control input-textBox" id="pincode" maxlength="6" (input)="validateNumberInput($event)" placeholder="" formControlName="pincode" type="text">
+                      <input class="form-control input-textBox" id="pincode" name="pincode" maxlength="6" (input)="validateNumberInput($event)" placeholder="" formControlName="pincode" type="text">
                       <label for="pincode">Pin Code</label>
                       <div *ngIf="caseCreationForm.get('pincode').invalid && caseCreationForm.get('pincode').touched || submitted">
                         <small class="ui-error block-show" *ngIf="caseCreationForm.get('pincode')?.errors?.required">Pincode is required.</small>
@@ -117,7 +117,7 @@
                   <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="aadharNumber" placeholder="" formControlName="aadharNumber" type="tel" maxlength="12" minlength="12" (keydown)="onKeydown($event)" [ngClass]="{ 'is-invalid': submitted && f['aadharNumber'].errors }">
+                        <input class="form-control input-textBox" id="aadharNumber" name="aadharNumber" placeholder="" formControlName="aadharNumber" type="tel" maxlength="12" minlength="12" (keydown)="onKeydown($event)" [ngClass]="{ 'is-invalid': submitted && f['aadharNumber'].errors }">
                         <label for="aadharNumber">Aadhar card Number</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.aadharNumber')?.invalid && (caseCreationForm.get('endorsementDetails.aadharNumber')?.touched || caseCreationForm.get('endorsementDetails.aadharNumber')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.aadharNumber')?.errors?.required">Aadhaar number is required.</small>
@@ -136,7 +136,7 @@
                   <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="nomineeName" placeholder="" formControlName="nomineeName" type="text" OnlyCharacter [ngClass]="{ 'is-invalid': submitted && f['nomineeName'].errors }">
+                        <input class="form-control input-textBox" id="nomineeName" name="nomineeName" placeholder="" formControlName="nomineeName" type="text" OnlyCharacter [ngClass]="{ 'is-invalid': submitted && f['nomineeName'].errors }">
                         <label for="nomineeName">Nominee Name</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeName')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeName')?.touched || caseCreationForm.get('endorsementDetails.nomineeName')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeName')?.errors?.required">Nominee name is required.</small>
@@ -156,7 +156,7 @@
                     </div> -->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                       <div class="input-block form-floating input-block-renew">
-                        <select class="form-select input-selectBox" formControlName="nomineeRelationship">
+                        <select class="form-select input-selectBox" id="nomineeRelationship" name="nomineeRelationship" formControlName="nomineeRelationship">
                           <option value="" disabled selected>Select Nominee</option>
                           <option *ngFor="let opt of relationships" [value]="opt">
                             {{ opt }}
@@ -170,7 +170,7 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="nomineeContact" placeholder="" maxlength="10" minlength="10" formControlName="nomineeContact" type="tel" (keydown)="onKeydown($event)" [ngClass]="{ 'is-invalid': submitted && f['nomineeContact'].errors }">
+                        <input class="form-control input-textBox" id="nomineeContact" name="nomineeContact" placeholder="" maxlength="10" minlength="10" formControlName="nomineeContact" type="tel" (keydown)="onKeydown($event)" [ngClass]="{ 'is-invalid': submitted && f['nomineeContact'].errors }">
                         <label for="nomineeContact">Nominee Contact</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeContact')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeContact')?.touched || caseCreationForm.get('endorsementDetails.nomineeContact')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeContact')?.errors?.required">Nominee contact is required.</small>
@@ -189,7 +189,7 @@
                   <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="panNumber" placeholder="" maxlength="10" (input)="validatePanInput($event)" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" formControlName="panNumber" type="text" (keypress)="omit_special_char($event)" oninput="this.value = this.value.toUpperCase()" maxlength="10" minlength="10" [ngClass]="{ 'is-invalid': submitted && f['panNumber'].errors }">
+                        <input class="form-control input-textBox" id="panNumber" name="panNumber" placeholder="" maxlength="10" (input)="validatePanInput($event)" pattern="^[A-Z]{5}[0-9]{4}[A-Z]{1}$" formControlName="panNumber" type="text" (keypress)="omit_special_char($event)" oninput="this.value = this.value.toUpperCase()" maxlength="10" minlength="10" [ngClass]="{ 'is-invalid': submitted && f['panNumber'].errors }">
                         <label for="panNumber">Pancard Number</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.panNumber').invalid && caseCreationForm.get('endorsementDetails.panNumber').touched || caseCreationForm.get('endorsementDetails.panNumber')?.dirty || submitted">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.panNumber').errors?.pattern">Please specify 'PAN No' in the format having first 3 character from(A-Z),next 1 character(P),next 1 character(A-Z),next four digits(0-9),and 1 character(A-z)</small>
@@ -209,7 +209,7 @@
                     <!--Primary Number start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'primaryContactNumber'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="primaryContactNumber" placeholder="" formControlName="primaryContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'primaryContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['primaryContactNumber'].errors }">
+                        <input class="form-control input-textBox" id="primaryContactNumber" name="primaryContactNumber" placeholder="" formControlName="primaryContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'primaryContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['primaryContactNumber'].errors }">
                         <label for="primaryContactNumber">Primary Number</label>
                         <!-- <span class="invalid-feedback" *ngIf="f['primaryContactNumber'].errors"><span class="ui-error block-show" *ngIf="f['primaryContactNumber'].errors['required']">Field
                             cannot be blank</span><span class="ui-error block-show" *ngIf="f['primaryContactNumber'].errors['pattern']">Enter
@@ -224,7 +224,7 @@
                     <!--Primary Registered Number- Member start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value === 'memberPrimaryContactNumber'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="memberPrimaryContactNumber" placeholder="" formControlName="memberPrimaryContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'memberPrimaryContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['memberPrimaryContactNumber'].errors }">
+                        <input class="form-control input-textBox" id="memberPrimaryContactNumber" name="memberPrimaryContactNumber" placeholder="" formControlName="memberPrimaryContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'memberPrimaryContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['memberPrimaryContactNumber'].errors }">
                         <label for="memberPrimaryContactNumber">Primary Registered Number- Member</label>
                         <!-- <span class="invalid-feedback" *ngIf="f['memberPrimaryContactNumber'].errors"><span class="ui-error block-show"
                             *ngIf="f['memberPrimaryContactNumber'].errors['required']">Field cannot be blank</span><span class="ui-error block-show"
@@ -239,7 +239,7 @@
                     <!--Alternate number- member start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value === 'memberAlternateContactNumber'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="memberAlternateContactNumber" placeholder="" formControlName="memberAlternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateContactNumber'].errors }">
+                        <input class="form-control input-textBox" id="memberAlternateContactNumber" name="memberAlternateContactNumber" placeholder="" formControlName="memberAlternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateContactNumber'].errors }">
                         <label for="memberAlternateContactNumber">Alternate number- member</label>
                         <!-- <span class="invalid-feedback" *ngIf="f['memberAlternateContactNumber'].errors"><span class="ui-error block-show"
                             *ngIf="f['memberAlternateContactNumber'].errors['required']">Field cannot be blank</span><span class="ui-error block-show"
@@ -254,7 +254,7 @@
                     <!--International No start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'internationalContactNumber'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="internationalContactNumber" placeholder="" formControlName="internationalContactNumber" type="tel" (keydown)="onKeydownInternationalContactNumber($event)" (ngModelChange)="mobAndEmailValueChange($event, 'internationalContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['internationalContactNumber'].errors }">
+                        <input class="form-control input-textBox" id="internationalContactNumber" name="internationalContactNumber" placeholder="" formControlName="internationalContactNumber" type="tel" (keydown)="onKeydownInternationalContactNumber($event)" (ngModelChange)="mobAndEmailValueChange($event, 'internationalContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['internationalContactNumber'].errors }">
                         <label for="internationalContactNumber">International No</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.internationalContactNumber')?.touched || caseCreationForm.get('endorsementDetails.internationalContactNumber')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.internationalContactNumber')?.errors?.required">Mobile number is required.</small>
@@ -266,7 +266,7 @@
                     <!--Alternate No start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'alternateContactNumber'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="alternateContactNumber" placeholder="" formControlName="alternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'alternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['alternateContactNumber'].errors }">
+                        <input class="form-control input-textBox" id="alternateContactNumber" name="alternateContactNumber" placeholder="" formControlName="alternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'alternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['alternateContactNumber'].errors }">
                         <label for="alternateContactNumber">Alternate No</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.alternateContactNumber')?.touched || caseCreationForm.get('endorsementDetails.alternateContactNumber')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateContactNumber')?.errors?.required">Mobile number is required.</small>
@@ -278,7 +278,7 @@
                     <!--Email start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'email'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="email" placeholder="" formControlName="email" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'email')" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
+                        <input class="form-control input-textBox" id="email" name="email" placeholder="" formControlName="email" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'email')" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
                         <label for="email">Email</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.email')?.invalid && (caseCreationForm.get('endorsementDetails.email')?.touched || caseCreationForm.get('endorsementDetails.email')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.email')?.errors?.required">Email is required.</small>
@@ -290,7 +290,7 @@
                     <!--Alternate Email ID start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'alternateEmail'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="alternateEmail" placeholder="" formControlName="alternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'alternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['alternateEmail'].errors }">
+                        <input class="form-control input-textBox" id="alternateEmail" name="alternateEmail" placeholder="" formControlName="alternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'alternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['alternateEmail'].errors }">
                         <label for="alternateEmail">Alternate Email ID</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.alternateEmail')?.invalid && (caseCreationForm.get('endorsementDetails.alternateEmail')?.touched || caseCreationForm.get('endorsementDetails.alternateEmail')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.alternateEmail')?.errors?.required">Email is required.</small>
@@ -302,7 +302,7 @@
                     <!--Email ID-member start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'memberEmail'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="memberEmail" placeholder="" formControlName="memberEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberEmail'].errors }">
+                        <input class="form-control input-textBox" id="memberEmail" name="memberEmail" placeholder="" formControlName="memberEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberEmail'].errors }">
                         <label for="memberEmail">Email ID-member</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.memberEmail')?.invalid && (caseCreationForm.get('endorsementDetails.memberEmail')?.touched || caseCreationForm.get('endorsementDetails.memberEmail')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberEmail')?.errors?.required">Email is required.</small>
@@ -314,7 +314,7 @@
                     <!--Alternate Email ID - member start-->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="this.caseCreationForm.get('endorsementType').value == 'memberAlternateEmail'">
                       <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="memberAlternateEmail" placeholder="" formControlName="memberAlternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateEmail'].errors }">
+                        <input class="form-control input-textBox" id="memberAlternateEmail" name="memberAlternateEmail" placeholder="" formControlName="memberAlternateEmail" type="email" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateEmail')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateEmail'].errors }">
                         <label for="memberAlternateEmail">Alternate Email ID - member</label>
                         <div *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.invalid && (caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateEmail')?.errors?.required">Email is required.</small>
@@ -336,7 +336,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
               <div class="input-block form-floating input-block-renew">
-                <textarea class="form-control input-textBox input-textarea" placeholder="Leave a comment here" id="currentdetails" rows="2" cols="30" formControlName="currentPolicyDetails" readonly></textarea>
+                <textarea class="form-control input-textBox input-textarea" placeholder="Leave a comment here" id="currentdetails" name="currentdetails" rows="2" cols="30" formControlName="currentPolicyDetails" readonly></textarea>
                 <label for="currentdetails">Current Details in Policy</label>
               </div>
             </div>
@@ -377,7 +377,7 @@
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
               <div class="input-block form-floating input-block-renew">
-                <textarea formControlName="addNotes" rows="2" cols="50" maxlength="1000" style="padding: 10px;" class="form-control input-textBox input-textarea" placeholder="Leave a note here" id="addNotes"></textarea>
+                <textarea formControlName="addNotes" rows="2" cols="50" maxlength="1000" style="padding: 10px;" class="form-control input-textBox input-textarea" placeholder="Leave a note here" id="addNotes" name="addNotes"></textarea>
                 <label for="addNotes">Add Note</label>
               </div>
             </div>
@@ -406,12 +406,12 @@
         <div class="detailsRow">
           <div class="detailsHeading">Enter OTP</div>
           <div class="OTPContainer">
-            <input type="password" #otp0 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
-            <input type="password" #otp1 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
-            <input type="password" #otp2 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
-            <input type="password" #otp3 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
-            <input type="password" #otp4 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
-            <input type="password" #otp5 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
+            <input type="password" name="otp0" #otp0 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
+            <input type="password" name="otp1" #otp1 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
+            <input type="password" name="otp2" #otp2 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
+            <input type="password" name="otp3" #otp3 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
+            <input type="password" name="otp4" #otp4 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
+            <input type="password" name="otp5" #otp5 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
           </div>
         </div>
         <!--<div class="text-center"><button type="button" (click)="validateOTP()" class="verify-btn">Verify</button></div>-->

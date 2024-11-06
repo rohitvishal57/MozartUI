@@ -1605,7 +1605,6 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 18px;
 }
 
-
 .btn_text {
   background: transparent;
   border-width: 0;
@@ -1615,6 +1614,13 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 12px;
   color: var(--primary-red-color);
 }
+
+.btn_text:disabled {
+  cursor: not-allowed;          
+  opacity: 0.4;                 
+  border-width: 0;
+}
+
 /*.form-floating>.form-control.input-selectBox~label,
 .form-floating>.form-control.input-selectBox:not(:placeholder-shown)~label{
     font-weight: 500;
@@ -2114,12 +2120,12 @@ input[type="search"]::-webkit-search-results-decoration {
   color: var(--black-color);
   border-radius: 16px 16px 0 0;
   padding: 16px 16px;
-  box-shadow: 0px -4px 36px 0px #0000000D;
+  box-shadow: 0px 4px 36px 0px #0000000D;
   justify-content: space-between;
 }
 
 .accordionMain .accordionItem .accordionBody {
-  padding: 0 16px;
+  padding: 0 16px 16px;
 }
 
 .accordionMain .accordionItem .accordionBody .accordionBodyRow {
@@ -5008,6 +5014,37 @@ input[type="search"]::-webkit-search-results-decoration {
 .common_searchWraper_proposals .filterFieldGroup {
   width: 168px;
   position: relative;
+}
+.accordionArrow.collapsed img {
+  transform: rotate(-90deg);
+}
+.accordionArrow:not(.collapsed) img {
+  transform: rotate(90deg);
+}
+.accordionMain.accordion-noborder {
+  border-width: 0 !important;
+  --bs-accordion-border-width: 0;
+}
+.accordionMain.accordion-noborder .accordionItem header {
+  box-shadow: 0px 2px 16px 0px #0000000D;
+  border-radius: 16px;
+}
+.accordionMain .tableSubMain {
+  border: 2px solid #f3f3f3;
+}
+.form-select.is-invalid:not([multiple]):not([size]) {
+  background-position: right .85rem center, center right 2.25rem;
+    background-size: 10px 6px;
+}
+.btn_buyPlanNow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+.btn_buyPlanNow:hover img {
+  filter:invert(21%) sepia(70%) saturate(7414%) hue-rotate(359deg) brightness(79%) contrast(117%);
 }
 /*.lead_btnList button {
   position: relative;

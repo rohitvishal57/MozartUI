@@ -205,8 +205,7 @@ export class LeadsListComponent {
   }
   getProducts() {
     const reqData = {
-      //"agentCode": this.agentCode
-      "agentCode": '4620973'
+      "agentCode": this.agentCode
     }
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res) => {
@@ -382,9 +381,9 @@ export class LeadsListComponent {
         if (response.message == "Success") {
 
           if (selectedLeadIDs.length > 1) {
-            this.toast.success({ detail: 'Leads has been successfully assigned.' });
+            this.toast.success({ detail: "SUCCESS", summary:'Leads has been successfully assigned.' , duration: 5000 });
           } else {
-            this.toast.success({ detail: 'Lead has been successfully assigned.' });
+            this.toast.success({ detail: "SUCCESS", summary:'Lead has been successfully assigned.' , duration: 5000 });
           }
           this.filterQuotes('all');
         }
@@ -473,18 +472,21 @@ export class LeadsListComponent {
 
  
   getSearchInputControlPatternMessage() {
+    let errorMessage : string = '';
     if (this.searchInputControl.hasError('required')) {
-      return this.toast.error({ detail: 'This field is required.' });
+      errorMessage ='This field is required.';
     }
     if (this.selected === 'leadId') {
-      return this.toast.error({ detail: 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).' });
+      errorMessage ='Lead ID should contain only alphanumeric characters (A-Z, 0-9)';
     } else if (this.selected === 'mobileNumber') {
-      return this.toast.error({ detail: 'Mobile Number should be exactly 10 digits.' });
+      errorMessage ='Mobile Number should be exactly 10 digits.';
     } else if (this.selected === 'name') {
-      return this.toast.error({ detail: 'Name should contain only letters and spaces.' });
+      errorMessage ='Name should contain only letters and spaces.';
     } else if (this.selected === 'email') {
-      return this.toast.error({ detail: 'Please enter a valid email address (e.g., user@example.com).' });
+      errorMessage ='Please enter a valid email address (e.g., user@example.com).';
     }
+   return  this.toast.warning({ detail: "WARNING", summary:errorMessage, duration: 5000 });
+
   }
 
   formatDate(dateType: "startDate" | "endDate") {

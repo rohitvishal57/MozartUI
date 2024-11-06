@@ -45,7 +45,6 @@ export class TokenInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       finalize(() => this.loadingService.hide()),
       catchError((err) => {
-        this.loadingService.hide();
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
             this.loginService.signOut();

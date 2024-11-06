@@ -2290,8 +2290,8 @@ export class YatraComponent {
         next: (response: any) => {
           console.log('Juspay API Response:', response);
 
-          if (response.paymentURL && response.paymentURL !== null && response.paymentURL !== '') {
-            window.location.href = response.paymentURL; // Redirect to Juspay Payment URL
+          if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
+            window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
           } else {
             this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
             console.error('Invalid payment link received:', response);
