@@ -101,5 +101,6 @@
     "getBBProposalDetails":"/BranchBanking/GetBBProposalDetailsV2",
     "getSumInsuredDetails":"/Product/GetSumInsuredList",
     "getPremiumDetaiks": "/Product/GetPremium",
-    "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode"
+    "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode",
+    "saveBBCommonDraft":"/BranchBanking/SaveBBCommonDraft",
 }
