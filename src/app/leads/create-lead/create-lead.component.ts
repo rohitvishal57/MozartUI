@@ -7,6 +7,7 @@ import { LeadsService } from '../leads.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-create-lead',
@@ -47,6 +48,8 @@ export class CreateLeadComponent implements OnInit {
     { value: true, display: 'Yes' },
     { value: false, display: 'No' }
   ];
+  productsList :any =[];
+  productSumInsured :any =[];
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -56,7 +59,8 @@ export class CreateLeadComponent implements OnInit {
     public CreateLead: CreateLead,
     public CreateLeadList: LeadFormListValue,
     private cdr: ChangeDetectorRef,
-    private  datepipe : DatePipe) {
+    private  datepipe : DatePipe,
+    private commonService: CommonService) {
 
   }
 
@@ -107,6 +111,8 @@ export class CreateLeadComponent implements OnInit {
     //   }
     // );
     this.today = new Date().toISOString().split('T')[0];
+    this.getProducts();
+
   }
 
   inItForm() {
@@ -138,7 +144,7 @@ export class CreateLeadComponent implements OnInit {
       interestedProductName: [''],
       planType: [''],
       policyEndDate: [''],
-      sumInsured: [null, [Validators.pattern('^[0-9a-zA-Z ,-./]*$')]],
+      sumInsured: [''],
       premium: [null, [Validators.pattern('^[0-9a-zA-Z ,.-]*$')]],
       duePremiun: [null, [Validators.pattern('^[0-9a-zA-Z ,.-]*$')]],
       familyConstruct: [''],
@@ -222,9 +228,9 @@ export class CreateLeadComponent implements OnInit {
         console.log(response);
         if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
-            this.toast.success({ detail: 'Lead is updated successfully.' });
+            this.toast.success({ detail: "SUCCESS", summary: 'Lead is updated successfully.' , duration: 5000 });
           } else {
-            this.toast.success({ detail: 'Lead is created successfully.' });
+            this.toast.success({ detail: "SUCCESS", summary: 'Lead is created successfully.' , duration: 5000 });
           }
           console.log(response);
           this.router.navigate(['leads/leadsList'])
@@ -257,6 +263,7 @@ export class CreateLeadComponent implements OnInit {
       this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
       this.changeReferStatus(this.submittedUser.leadStatus);
+      this.changeSumInsured(this.submittedUser.interestedProductName);
     },
       (error) => {
         console.log("Failed to fetch lead Information!")
@@ -347,6 +354,16 @@ export class CreateLeadComponent implements OnInit {
   }
   }
 
+  changeSumInsured(event: any) {
+    if(event){
+      let selectedValue = typeof(event)=='string'?event :event.target.value;
+      this.productSumInsured =  this.productsList.find((product: any)=> product.productName === selectedValue)?.sumInsured.split(",");
+      this.userValidations.patchValue({
+        sumInsured: this.submittedUser.sumInsured
+      });  
+    }
+}
+
   addNotesSubmit() {
     let addNotesRequestBody: any = {};
     console.log('activityType',this.addNoteForm.errors);
@@ -369,7 +386,7 @@ export class CreateLeadComponent implements OnInit {
     this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
       (response) => {
         if (response.message == "Success") {
-          this.toast.success({ detail: 'Note Added successfully.' });
+          this.toast.success({ detail: "SUCCESS", summary:'Note Added successfully.', duration: 5000 });
           this.router.navigate(['leads/leadsList'])
         }
       }, (error) => {
@@ -439,4 +456,18 @@ export class CreateLeadComponent implements OnInit {
     return formattedDate || 'Invalid Date'; // Handle invalid date
   }
 
+  getProducts() {
+    const reqData = {
+      "agentCode": this.agentCode
+    }
+    this.commonService.Getproductlist(reqData).subscribe({
+      next: (res) => {
+        this.productsList = res.data;
+        console.log("product list", this.productsList)
+      },
+      error: (err) => {
+        console.log("error coming form getproduct list API");
+      }
+    });
+  }
 }

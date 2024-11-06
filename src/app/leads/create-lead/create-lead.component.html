@@ -447,10 +447,10 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" formControlName="interestedProductName"
-                                    (selectionChange)="campnoSelected()">
+                                    (change)="changeSumInsured($event)">
                                     <option value="" disabled selected>Choose Option</option>
-                                    <option *ngFor="let opt of CreateLeadList.ProductName" [value]="opt">
-                                        {{ opt }}
+                                    <option *ngFor="let opt of productsList" [value]="opt.productName">
+                                        {{ opt.productName }}
                                     </option>
                                 </select>
                                 <label for="interestedProductName">Interested Product Name</label>
@@ -468,14 +468,17 @@
                                 <label for="planType">Interested Plan Name</label>
                             </div>
                         </div> -->
+                        
+                     
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="sumInsured" placeholder=""
-                                    formControlName="sumInsured" (keypress)="isNumber($event)" maxlength="7" >
-                                <label for="sumInsured">Interested Sum Insured</label>
-                                <span class="ui-error block-show"
-                                    *ngIf="submitted && userValidations.get('sumInsured')?.errors?.['pattern']">Please
-                                    enter proper value</span>
+                                <select class="form-select input-selectBox" formControlName="sumInsured">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of productSumInsured" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="interestedProductName">Interested Sum Insured</label>
                             </div>
                         </div>
                         <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
