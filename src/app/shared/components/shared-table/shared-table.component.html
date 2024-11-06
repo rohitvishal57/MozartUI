@@ -20,6 +20,23 @@
                             </button></li>
                     </ul>
                 </div>
+                <div class="quickFilterRight">
+                    <!--Search section start-->
+                    <div class="body_flex_row endorsements_searchWraper">
+                        <div class="field_searchMain">
+                            <select [(ngModel)]="selectedFilterOption" class="filterSearch"
+                                (change)="onSelectChanges($event)">
+                                <option value="">Select an option</option>
+                                <option value="caseId">Request ID</option>
+                                <option value="policyNumber">Policy Number</option>
+                                <option value="memberName">Member Name</option>
+                            </select>
+                            <input class="filterSearch" id="endorsementSearchInput" type="text">
+                            <button type="button" id="endorsementSearchBtn" name="endorsementSearchBtn"
+                                class="btn_text"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </div>

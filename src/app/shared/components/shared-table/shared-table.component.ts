@@ -8,11 +8,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class SharedTableComponent {
 
   @Input() tableData: any;
-
-
   @Output() actionBtnEmit = new EventEmitter();
   @Output() statusFilterEmit = new EventEmitter();
+  @Output() selectedFilterEmit = new EventEmitter();
 
+  selectedFilterOption : any;
 
   redirectActionBtn(btnType: any) {
     this.actionBtnEmit.emit(btnType);
@@ -20,6 +20,10 @@ export class SharedTableComponent {
 
   statusFilter(filterName: any) {
     this.statusFilterEmit.emit(filterName)
+  }
+
+  onSelectChanges(filterName: any) {
+    this.selectedFilterEmit.emit(filterName)
   }
 
   getClass(filterName: any) {

@@ -388,4 +388,6 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   onEmitBtn(ev : any){}
+  onSelectedFilter(ev : any){}
+
 }
