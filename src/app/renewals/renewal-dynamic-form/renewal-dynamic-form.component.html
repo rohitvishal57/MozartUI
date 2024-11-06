@@ -22,8 +22,8 @@
       </div>
       <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'primary'">
           <div class="bcc_main">
-              <div class="accordionMain">
-                  <div class="accordionItem" *ngIf="formId == 5001">
+              <div class="accordionMain" *ngIf="formId == 5001">
+                  <div class="accordionItem">
                       <header>Proposer</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -76,7 +76,7 @@
                           </div>
                       </div>
                   </div>
-                  <div class="accordionItem" *ngIf="formId == 5001">
+                  <div class="accordionItem">
                       <header>Member Details
                           <button type="button" id="addMember" name="addMember" value="another" class="btn_iconText" (click)="selectButton(5002,'addMember')"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
                       </header>
@@ -112,7 +112,7 @@
                           </div>
                       </div>
                   </div>
-                  <div class="accordionItem" *ngIf="formId == 5001">
+                  <div class="accordionItem">
                       <header>Nominee Details</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -144,7 +144,7 @@
                           </div>
                       </div>
                   </div>
-                  <div class="accordionItem" *ngIf="formId == 5001">
+                  <div class="accordionItem">
                     <header>Bank Account Details</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
@@ -179,8 +179,7 @@
               </div>
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5002">
-                      <header>{{memberRole}} Member
-                      </header>
+                      <header>{{memberRole}} Member</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="breadcrumbNav">
@@ -212,7 +211,7 @@
                                             <input type="text" id="FirstName" name="FirstName" formControlName="FirstName" placeholder="" class="form-control input-textBox">
                                             <label for="FirstName">First Name *</label>
                                             <span class="ui-error" *ngIf="form?.get('FirstName')?.invalid && (form?.get('FirstName')?.touched || memberDetails)">
-                                             First Name is required
+                                             First Name is required field
                                         </span>
                                         </div>
                                       </div>
@@ -221,7 +220,7 @@
                                               <input type="text" id="MiddleName" name="MiddleName" formControlName="MiddleName" placeholder="" class="form-control input-textBox">
                                               <label for="MiddleName">Middle Name</label>
                                               <span class="ui-error" *ngIf="form?.get('MiddleName')?.invalid && form?.get('MiddleName')?.touched">
-                                              Middle Name is required
+                                              Middle Name is required field
                                           </span>
                                           </div>
                                       </div>
@@ -230,7 +229,7 @@
                                             <input type="text" id="LastName" name="LastName" formControlName="LastName" placeholder="" class="form-control input-textBox">
                                             <label for="LastName">Last Name *</label>
                                             <span class="ui-error" *ngIf="form?.get('LastName')?.invalid && (form?.get('LastName')?.touched || memberDetails)">
-                                            Last Name is required
+                                            Last Name is required field
                                         </span>
                                         </div>
                                       </div>
@@ -238,7 +237,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="height" name="height" formControlName="height" placeholder="" class="form-control input-textBox">
                                             <label for="height">Height *</label>
-                                            <span class="ui-error" *ngIf="form.get('height')?.invalid && (form.get('height')?.touched || memberDetails)">height is required</span>
+                                            <span class="ui-error" *ngIf="form.get('height')?.invalid && (form.get('height')?.touched || memberDetails)">height is required field</span>
                                             <span class="ui-prefix">cms</span>
                                         </div>
                                       </div>
@@ -246,7 +245,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="weight" name="weight" formControlName="weight" placeholder="" class="form-control input-textBox">
                                               <label for="weight">Weight *</label>
-                                              <span class="ui-error" *ngIf="form.get('weight')?.invalid && (form.get('weight')?.touched   || memberDetails)">weight is required</span>
+                                              <span class="ui-error" *ngIf="form.get('weight')?.invalid && (form.get('weight')?.touched   || memberDetails)">weight is required field</span>
                                               <span class="ui-prefix">kg</span>
                                           </div>
                                       </div>
@@ -334,6 +333,7 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="education" name="education" formControlName="Designation" placeholder="" class="form-select input-selectBox">
                                                   <option value="">Select Designation</option>
+                                                  <option value="Below Metric">Below Metric</option>
                                                   <option value="Metric">Metric</option>
                                                   <option value="Under Graduate">Under Graduate</option>
                                                   <option value="Graduate">Graduate</option>
@@ -707,42 +707,42 @@
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="address1" name="address1" formControlName="Home_Address_1" placeholder="" class="form-control input-textBox" />
                               <label for="address1">Address Line 1 *</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_Address_1')?.invalid">Address Line 1 is required</span>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_1')?.invalid">Address Line 1 is required field</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="address2" name="address2" placeholder="" class="form-control input-textBox" formControlName="Home_Address_2" />
                               <label for="address2">Address Line 2</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_Address_2')?.invalid && form?.get('Home_Address_2')?.touched">Address Line 2 is required</span>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_2')?.invalid && form?.get('Home_Address_2')?.touched">Address Line 2 is required field</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="city" name="city" placeholder="" class="form-control input-textBox" formControlName="Home_City" />
                               <label for="city">City *</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_City')?.invalid && form?.get('Home_City')?.touched">City is required</span>
+                              <span class="ui-error" *ngIf="form?.get('Home_City')?.invalid && form?.get('Home_City')?.touched">City is required field</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="state" name="state" placeholder="" class="form-control input-textBox" formControlName="Home_State" />
                               <label for="state">State *</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_State')?.invalid && form?.get('Home_State')?.touched">State is required</span>
+                              <span class="ui-error" *ngIf="form?.get('Home_State')?.invalid && form?.get('Home_State')?.touched">State is required field</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="pincode" name="pincode" placeholder="" class="form-control input-textBox" formControlName="Home_Pincode" />
                               <label for="pincode">Pin Code *</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_Pincode')?.invalid && form?.get('Home_Pincode')?.touched">Pin Code is required</span>
+                              <span class="ui-error" *ngIf="form?.get('Home_Pincode')?.invalid && form?.get('Home_Pincode')?.touched">Pin Code is required field</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="address3" name="address3" placeholder="" class="form-control input-textBox" formControlName="Home_Address_3" />
                               <label for="address3">Landmark</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_Address_3')?.invalid && form?.get('Home_Address_3')?.touched">Landmark is required</span>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_3')?.invalid && form?.get('Home_Address_3')?.touched">Landmark is required field</span>
                             </div>
                           </div>
                         </div>
@@ -781,22 +781,27 @@
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-fname" name="nomine-fname" formControlName="nominee_first_name" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-fname">First Name *</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">
-                                              First Name is required
-                                          </span>
+                                              <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">First Name is required field</span>
                                           </div>
+                                      </div>
+                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-mName" name="nomine-mName" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-mName">Middle Name</label>
+                                        </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-lname" name="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
-                                              <label for="nomine-lname">Last Name</label>
+                                              <label for="nomine-lname">Last Name *</label>
+                                              <span class="ui-error" *ngIf="form?.get('nominee_last_name')?.invalid && form?.get('nominee_last_name')?.touched">Last Name is required field</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="date" id="nomine-dob" name="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-dob">DOB *</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_dob')?.invalid && form?.get('nominee_dob')?.touched">DOB is required</span>
+                                              <span class="ui-error" *ngIf="form?.get('nominee_dob')?.invalid && form?.get('nominee_dob')?.touched">DOB is required field</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -810,20 +815,42 @@
                                                   <option value="Daughter">Daughter</option>
                                                   <option value="Uncle">Uncle</option>
                                               </select>
-                                              <label for="nomine-relation">Relation with Nominee *</label>
+                                              <label for="nomine-relation">Relation with Proposer *</label>
                                               <span class="ui-error" *ngIf="form?.get('Relationship')?.invalid && form?.get('Relationship')?.touched">
-                                              Please select Relation with Nominee
+                                              Please select Relation with Proposer
                                           </span>
                                           </div>
+                                      </div>
+                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select id="gender" name="gender"  placeholder="" class="form-control input-selectBox">
+                                                <option value="">Select gender</option>
+                                                <option value="M">Male</option>
+                                                <option value="F">Female</option>
+                                                <option value="O">Other</option>
+                                            </select>
+                                            <label for="gender">Gender</label>
+                                            <!-- <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">Please select gender</span> -->
+                                        </div>
+                                      </div>
+                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="text" id="nomine-address" name="nomine-address" formControlName="Nominee_Address" placeholder="" class="form-control input-textBox">
+                                            <label for="nomine-address">Nominee Address</label>
+                                        </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-contactno" name="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
                                               <label for="nomine-contactno">Nominee Contact No *</label>
-                                              <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">
-                                              Nominee contact no is required
-                                          </span>
+                                              <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">Nominee contact no is required field</span>
                                           </div>
+                                      </div>
+                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input type="email" id="Email" name="Email" formControlName="" placeholder="" class="form-control input-textBox">
+                                            <label for="Email">Email Address</label>
+                                        </div>
                                       </div>
                                   </div>
                               </div>
@@ -1099,7 +1126,7 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="number" id="cheque_Amount" name="cheque_Amount" placeholder="" disabled class="form-control input-textBox">
+                                                    <input type="number" id="cheque_Amount" name="cheque_Amount" [attr.placeholder]="renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0'" disabled class="form-control input-textBox">
                                                     <label for="cheque_Amount">Cheque Amount</label>
                                                     <!-- <span class="ui-error">Please enter Mobile Number</span> -->
                                                 </div>
@@ -1355,7 +1382,7 @@
                                                 <input type="date" id="ckyc-dob" name="ckyc-dob" placeholder="" class="form-control input-textBox" formControlName="dateOfBirth">
                                                 <label for="ckyc-dob">Date Of Birth</label>
                                                 <div *ngIf="kycFormGroup.get('dateOfBirth')?.invalid && (kycFormGroup.get('dateOfBirth')?.touched || kycDetailsSubmitted)" class="error-message text-danger">
-                                                    <small *ngIf="kycFormGroup.get('dateOfBirth')?.errors?.['required']">Date of Birth is required.</small>
+                                                    <small *ngIf="kycFormGroup.get('dateOfBirth')?.errors?.['required']">Date of Birth is required field.</small>
                                                     <small *ngIf="kycFormGroup.controls['dateOfBirth'].errors?.['pattern']"> Please enter DOB in yyyy-mm-dd format</small>
                                                 </div>
                                             </div>
@@ -1365,7 +1392,7 @@
                                                 <input type="text" id="ckyc-panno" name="ckyc-panno" placeholder="" class="form-control input-textBox" formControlName="panNumber">
                                                 <label for="ckyc-panno">PAN Number</label>
                                                 <div *ngIf="kycFormGroup.get('panNumber')?.invalid && (kycFormGroup.get('panNumber')?.touched || kycDetailsSubmitted)" class="error-message text-danger">
-                                                    <small *ngIf="kycFormGroup.get('panNumber')?.errors?.['required']">PAN Number is required.</small>
+                                                    <small *ngIf="kycFormGroup.get('panNumber')?.errors?.['required']">PAN Number is required field.</small>
                                                     <small *ngIf="kycFormGroup.get('panNumber')?.errors?.['pattern']">Invalid PAN format. Example: ABCDE1234F</small>
                                                 </div>
                                             </div>
@@ -1467,8 +1494,7 @@
               </div>
               <div class="planProductQuote">
                   <div class="label">Total Premium/ incl tax</div>
-                  <div class="value">₹{{ renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0' }}
-                </div>
+                  <div class="value">₹{{ renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0' }}</div>
               </div>
           </div>
           <div class="bi_right">

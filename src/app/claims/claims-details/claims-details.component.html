@@ -222,10 +222,10 @@
                                                         <span class="label">Date of Discharge:</span>
                                                         <span class="value">{{claims?.dischargeDate}}</span>
                                                     </li>
-                                                    <li>
+                                                    <!-- <li>
                                                         <span class="label">Opted Room:</span>
                                                         <span class="value"></span>
-                                                    </li>
+                                                    </li> -->
                                                 </ul>
                                                 <div class="claims_member_info-gradient"></div>
                                             </div>
@@ -286,7 +286,8 @@
                                                   <td></td>
                                                   <td></td>
                                                   <td>
-                                                    <button class="btn btn-primary" (click)="downloadFile(file)">Download</button>
+                                                    <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadFile(file)"><img src="../../../../../assets/Img/icon_download_grey.svg"></button>
+                                                    <!-- <button class="btn btn-primary" (click)="downloadFile(file)">Download</button> -->
                                                   </td>
                                                 </tr>
                                               </tbody>
@@ -387,7 +388,7 @@
                                                                         <p>{{ file.type }}</p>
                                                                     </div>
                                                                     <div class="uploadedFiles_infoItem">
-                                                                        <button name="deletefile" id="deletefile" class="delete-button" (click)="deleteFile(file,true)">
+                                                                        <button name="deletefile" id="deletefile" class="delete-button" (click)="deleteFile(file)">
                                                                             <img src="assets/Img/icon_delete_red2.svg">
                                                                         </button>
                                                                         <div class="size-align">

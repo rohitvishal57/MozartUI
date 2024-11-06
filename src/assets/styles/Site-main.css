@@ -5002,6 +5002,13 @@ input[type="search"]::-webkit-search-results-decoration {
     border-radius: 5px;
     line-height: normal;
 }
+.common_searchWraper_proposals {
+  position: relative;
+}
+.common_searchWraper_proposals .filterFieldGroup {
+  width: 168px;
+  position: relative;
+}
 /*.lead_btnList button {
   position: relative;
 }

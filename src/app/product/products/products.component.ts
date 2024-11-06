@@ -166,12 +166,15 @@ export class ProductsComponent implements OnInit {
   }
 
   async buyNow(item: any) {
-    this.formData = { ...this.formData, productName: item.productName }
+    this.formData = { ...this.formData, productName: item.productName}
     try {
       await this.getProposalNum();
       console.log(item)
+      this.formData = { ...this.formData,proposalNumber:this.proposalNum}
       await this.getFormSequence(item);
       console.log(item)
+      console.log(this.formData);
+      
       const productData = {
         partnerId: item.partnerId,
         productId: item.productId,

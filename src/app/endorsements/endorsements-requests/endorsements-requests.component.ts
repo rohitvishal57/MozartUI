@@ -178,17 +178,18 @@ export class EndorsementsRequestsComponent implements OnInit {
     this._router.navigate(['endorsements/endorsemet-details/' + data?.caseId]);
   }
 
-  requestsListRequestBody: any = {
-    "agentCode": localStorage.getItem('agentCode'),
-    "fromDate": "",
-    "toDate": "",
-    "start": 0,
-    "length": this.rows,
-    "sortColumn": "RaisedOn",
-    "searchColumn": "",
-    "sortDirection": "DESC",
-    "searchString": [],
-    "uiStatus": ""
+  requestsListRequestBody:any = {
+      "agentCode": localStorage.getItem('agentCode'),
+      "fromDate": "",
+      "toDate": "",
+      "start": 0,
+      "length": this.rows,
+      "sortColumn": "RaisedOn",
+      "searchColumn": "",
+      "sortDirection": "DESC",
+      "searchString": "",
+      "products": [],
+      "uiStatus": ""
   }
 
   getRequestList() {
@@ -264,15 +265,13 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.fromDate = null;
     this.toDate = null;
     this.appliedFiltersCount = 0;
-    this.requestsListRequestBody.searchString = [];
+    this.requestsListRequestBody.searchString = "";
     this.requestsListRequestBody.fromDate = "";
     this.requestsListRequestBody.toDate = "";
     this.toggeledropdown = false;
     this.getRequestList();
   }
   applyFilter() {
-    this.selected = "";
-    this.searchInputControl.reset();
     this.calculateAppliedFiltersCount();
     this.formatDate("fromDate");
     this.formatDate("toDate");
@@ -280,9 +279,8 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.requestsListRequestBody.toDate = this.toDate;
     const selectedProducts = this.productsList.filter((product: any) => product.selected)
       .map((product: any) => product.productName);
-    if (selectedProducts.length > 0) {
-      this.requestsListRequestBody.searchColumn = "ProductName"
-      this.requestsListRequestBody.searchString = selectedProducts;
+    if(selectedProducts.length > 0) {
+      this.requestsListRequestBody.products = selectedProducts;
     }
 
     /* const selectedPolicyTypes = this.StaticRequestTypes
@@ -323,7 +321,7 @@ export class EndorsementsRequestsComponent implements OnInit {
       ]);
     } else if (this.selected === "") {
       this.requestsListRequestBody.searchColumn = "";
-      this.requestsListRequestBody.searchString = [];
+      this.requestsListRequestBody.searchString = "";
       this.getRequestList();
     }
     this.searchInputControl.updateValueAndValidity();
@@ -363,15 +361,15 @@ export class EndorsementsRequestsComponent implements OnInit {
     if (this.searchInputControl.valid) {
       if (this.selected === "caseId") {
         this.requestsListRequestBody.searchColumn = "CaseId";
-        this.requestsListRequestBody.searchString = [searchValue];
+        this.requestsListRequestBody.searchString = searchValue;
       }
       else if (this.selected === "memberName") {
         this.requestsListRequestBody.searchColumn = "MemberName";
-        this.requestsListRequestBody.searchString = [searchValue];
+        this.requestsListRequestBody.searchString = searchValue;
       }
       else if (this.selected === "policyNumber") {
         this.requestsListRequestBody.searchColumn = "PolicyNumber";
-        this.requestsListRequestBody.searchString = [searchValue];
+        this.requestsListRequestBody.searchString = searchValue;
       }
       this.isSearch = true;
       this.first = 0;

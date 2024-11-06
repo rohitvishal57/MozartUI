@@ -26,6 +26,8 @@ export interface PolicyDetail {
   policyNumber: string;
   proposalNumber: string;
   noOfInsured: number;
+  sumInsured:number;
+  totalPremium:number;
   policyStartDate: string;
   policyEndDate: string;
   policyStatus: string;

@@ -205,21 +205,28 @@ export class ProposalsListComponent {
   }
 
   onSelectChanges(event: any): void {
-    this.searchInputControl.setValue("");
+    this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
-
     if (this.selected === "mobileNumber") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[6-9][0-9]{9}$")
+        Validators.pattern(/^\s*[6-9][0-9]{9}\s*$/) // Allow spaces before and after
       ]);
     } else if (this.selected === "leadId") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[A-Za-z0-9]+$")
+        Validators.pattern(/^\s*UPL\d{12}\s*$/) 
       ]);
-    } else if (this.selected === "proposerName" || this.selected === "proposalNumber") {
-      this.searchInputControl.setValidators([Validators.required]);
+    } else if (this.selected === "proposerName") {
+      this.searchInputControl.setValidators([
+        Validators.required,
+        Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/) 
+      ]);
+    } else if (this.selected === "proposalNumber") {
+      this.searchInputControl.setValidators([
+        Validators.required,
+        Validators.pattern(/^\s*UPP\d{12}\s*$/) 
+      ]);
     }
     this.searchInputControl.updateValueAndValidity();
   }
@@ -229,10 +236,16 @@ export class ProposalsListComponent {
     }
     if (this.searchInputControl.hasError("pattern")) {
       if (this.selected === "mobileNumber") {
-        return "Enter a valid 10-digit mobile number starting with 6,7,8,or9";
+        return "Enter a valid 10-digit mobile number";
       }
-      if (this.selected === "leadId") {
+      else if (this.selected === "leadId") {
         return "Enter a valid Lead ID";
+      }
+      else if (this.selected === "proposerName") {
+        return "Enter a valid Proposer Name";
+      }
+      if (this.selected === "proposalNumber") {
+        return "Enter a valid Proposal Number";
       }
     }
     return "";
