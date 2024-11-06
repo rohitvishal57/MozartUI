@@ -27,7 +27,7 @@
                             <div class="filterFieldGroup">
                                 <input class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                                 <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                         <table class="table table-borderless table-search">
                             <thead>
                                 <tr>
-                                    <th scope="col">Proposer Name</th>
+                                    <th scope="col" nowrap>Proposer Name</th>
                                     <th scope="col" nowrap>Product</th>
                                     <th scope="col" nowrap>Policy Type</th>
                                     <th scope="col" nowrap>Policy Number</th>
@@ -113,7 +113,7 @@
                                     <td><span class="text-break-w100">{{ row.proposerFirstName }}</span></td>
                                     <td><span class="productName">{{ row.productName }}</span></td>
                                     <td>{{ row.policyType }}</td>
-                                    <td>{{ row.policyNumber }}</td>
+                                    <td nowrap>{{ row.policyNumber }}</td>
                                     <td>
                                         <div class="table-renewalPremium">
                                             <div class="row-renewalPremium">

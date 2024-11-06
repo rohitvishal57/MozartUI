@@ -26,8 +26,8 @@
                             </div>
                             <div class="filterFieldGroup">
                                 <input  class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
-                                <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                                <button  type="button" id="btnsearch" name="btnsearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
                             </div>
                         </div>
                         
@@ -105,7 +105,7 @@
                                     <th scope="col" nowrap>Policy Type</th>
                                     <th scope="col" nowrap>Premium</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col" nowrap>Created On <div><small>(dd-mm-yyyy)</small></div></th>
+                                    <th scope="col" nowrap>Created Date <div><small>(dd-mm-yyyy)</small></div></th>
                                     <th scope="col" nowrap>Mobile Number</th>
                                     <th scope="col">Notice</th>
                                 </tr>
@@ -191,7 +191,7 @@
                                 <div class="item_value">{{ row.mobileNo}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Created On</div>
+                                <div class="item_lable">Created Date</div>
                                 <div class="item_value">{{ row.policyStartDate }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">

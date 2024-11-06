@@ -210,18 +210,21 @@ export class RenewalListComponent {
     this.searchInputControl.updateValueAndValidity();
   }
   getErrorMessage(): string {
+    if (this.searchInputControl.dirty && this.selected === "") {
+      return "Select an option and enter.";
+    }
     if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
+      return "This field is required.";
     }
     if (this.searchInputControl.hasError("pattern")) {
       if (this.selected === "mobileNumber") {
-        return "Enter a valid 10-digit mobile number";
+        return "Enter a valid 10-digit mobile number.";
       }
       else if (this.selected === "policyNumber") {
-        return "Enter a valid Policy Number";
+        return "Enter a valid policy number.";
       }
       else if (this.selected === "proposerName") {
-        return "Enter a valid Proposer Name";
+        return "Enter a valid proposer name.";
       }
     }
     return "";
@@ -258,7 +261,7 @@ export class RenewalListComponent {
         this.renewalLisRequestBody.mobileNumber = "";
         this.renewalLisRequestBody.policyNumber = "";
       } else if (this.selected === "policyNumber") {
-        this.renewalLisRequestBody.policyNumber = this.searchInputControl.value!;
+        this.renewalLisRequestBody.policyNumber = trimmedValue || "";
         this.renewalLisRequestBody.mobileNumber = "";
         this.renewalLisRequestBody.proposer = "";
       }
@@ -432,7 +435,7 @@ export class RenewalListComponent {
           sessionStorage.setItem("renewalData", this.encryptionService.encrypt(res));
           this.router.navigate(['renewal/payment']);
         } else {
-          this.toast.error({ detail: "Error", summary: res.message, duration: 2000 });
+          this.toast.error({ detail: "Error", summary: res.message, duration: 1500 });
         }
       },
       (err) => {
