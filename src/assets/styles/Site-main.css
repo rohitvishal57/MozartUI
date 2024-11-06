@@ -1605,7 +1605,6 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 18px;
 }
 
-
 .btn_text {
   background: transparent;
   border-width: 0;
@@ -1615,6 +1614,13 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 12px;
   color: var(--primary-red-color);
 }
+
+.btn_text:disabled {
+  cursor: not-allowed;          
+  opacity: 0.4;                 
+  border-width: 0;
+}
+
 /*.form-floating>.form-control.input-selectBox~label,
 .form-floating>.form-control.input-selectBox:not(:placeholder-shown)~label{
     font-weight: 500;

@@ -242,7 +242,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.fromDate = null;
     this.toDate = null;
     this.appliedFiltersCount = 0;
-    this.requestsListRequestBody.searchString = "";
+    this.requestsListRequestBody.products = [];
     this.requestsListRequestBody.fromDate = "";
     this.requestsListRequestBody.toDate = "";
     this.toggeledropdown = false;
@@ -279,7 +279,7 @@ export class EndorsementsRequestsComponent implements OnInit {
     if (this.selected === "memberName") {
       this.searchInputControl.setValidators([
         Validators.required,
-        Validators.pattern("^[a-zA-Z0-9@#$%^&*! ]*$"),
+        Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/),
       ]);
     }
     else if (this.selected === "caseId") {
@@ -291,10 +291,6 @@ export class EndorsementsRequestsComponent implements OnInit {
       this.searchInputControl.setValidators([
         Validators.required,
         Validators.pattern("^\\s*[0-9-]+\\s*$"),
-      ]);
-    } else if (this.selected === "date") {
-      this.searchInputControl.setValidators([
-        Validators.required
       ]);
     } else if (this.selected === "") {
       this.requestsListRequestBody.searchColumn = "";
@@ -322,19 +318,27 @@ export class EndorsementsRequestsComponent implements OnInit {
     if (this.searchInputControl.hasError("required")) {
       return "This field is required";
     }
-    else if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "mobileNo") {
-        return "Invalid Mobile Number";
-      } else if (this.selected === "name") {
-        return "Invalid Proposer Name";
+  
+    if (this.searchInputControl.dirty && this.selected === "") {
+      return "Select an option and Enter";
+    }
+  
+    if (this.searchInputControl.hasError("pattern")) {
+      if (this.selected === "caseId") {
+        return "Enter Valid Request Id";
+      } else if (this.selected === "policyNumber") {
+        return "Enter Valid Policy Number";
+      } else if (this.selected === "memberName") {
+        return "Enter Valid Member Name";
       }
     }
+  
     return "";
   }
+  
 
   applySearch() {
     const searchValue = this.searchInputControl?.value?.trim();
-    this.endorsementDetails = [];
     if (this.searchInputControl.valid) {
       if (this.selected === "caseId") {
         this.requestsListRequestBody.searchColumn = "CaseId";

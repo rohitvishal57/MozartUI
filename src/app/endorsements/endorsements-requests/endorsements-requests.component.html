@@ -20,16 +20,21 @@
                 </div>
                 <div class="quickFilterRight" >
                     <!--Search section start-->
-                    <div class="body_flex_row endorsements_searchWraper">
+                    <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
-                            <select [(ngModel)]="selected" class="filterSearch" id="selectfilteroption" name="selectfilteroption" (change)="onSelectChanges($event)">
-                                <option value="">Select an option</option>
-                                <option value="caseId">Request ID</option>
-                                <option value="policyNumber">Policy Number</option>
-                                <option value="memberName">Member Name</option>
-                            </select>
-                            <input class="filterSearch" id="endorsementSearchInput" name="endorsementSearchInput" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
-                            <button type="button" id="endorsementSearchBtn" name="endorsementSearchBtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <div>
+                                <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)">
+                                    <option value="">Select an option</option>
+                                    <option value="caseId">Request ID</option>
+                                    <option value="policyNumber">Policy Number</option>
+                                    <option value="memberName">Member Name</option>
+                                </select>
+                            </div>
+                            <div>
+                                <input class="filterSearch" id="endorsementSearchInput" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                                <button [disabled]="selected === ''" type="button" id="endorsementSearchBtn" name="endorsementSearchBtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                            </div>
                         </div>
                     </div>
                     <div class="filterWraper">
