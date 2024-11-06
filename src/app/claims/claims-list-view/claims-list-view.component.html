@@ -21,20 +21,24 @@
                 
                 <div class="quickFilterRight" >
                     <!--Search section start-->
-                    <div class="body_flex_row claims_searchWraper">
+                    <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
+                            <div>
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                 <option value=""  selected>Select an option</option>
                                 <option value="claimInfoId">Request ID</option>
-                                <!-- <option value="productName">Product Name</option> -->
                                 <option value="policyNumber">Policy Number</option>
-                                <!-- <option type="number" value="mobileNumber">Mobile Number</option>-->
                                 <option value="memberId">Member Id</option> 
                             </select>
-                            <input type="search" id="filterSearch" name="filterSearch" value="" class="filterSearch" [placeholder]="getPlaceholder()"  [formControl]="searchInputControl">
-                            <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                        </div>
+                            </div>
+                       <div>
+                            <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
+                            <button [disabled]="selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
                     </div>
+                </div>
+                </div>
+             
 
                     <div class="filterWraper">
                         <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter ({{appliedFiltersCount}})</button>
