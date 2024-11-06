@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" [(value)]='AUSearchCategory'>
+                                <select class="form-select input-selectBox" [(value)]='AUSearchCategory' id="AUSearchCategory" name="AUSearchCategory">
                                     <!-- <option value="" disabled selected>Search Policy Number</option> -->
                                     <option *ngFor="let opt of AUSearchby" [value]="opt">
                                         {{ opt }}
@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="AUSearchValue" placeholder=""
+                                <input class="form-control input-textBox" id="AUSearchValue" name="AUSearchValue" placeholder=""
                                     [(ngModel)]="AUSearchValue" type="text">
                                 <label for="AUSearchValue">Identification Number</label>
                             </div>
@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" [(ngModel)]="AUSearchCategory">
+                                <select class="form-select input-selectBox" [(ngModel)]="AUSearchCategory" id="AUSearchCategory" name="AUSearchCategory">
                                     <!-- <option value="" disabled selected>Search Policy Number</option> -->
                                     <option *ngFor="let opt of AUSearchby" [value]="opt">
                                         {{ opt }}
@@ -60,7 +60,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="IDFCSearchValue" placeholder=""
+                                <input class="form-control input-textBox" id="IDFCSearchValue" name="IDFCSearchValue" placeholder=""
                                     [(ngModel)]="IDFCSearchValue" type="text">
                                 <label for="IDFCSearchValue">Identification Number</label>
                             </div>
@@ -83,7 +83,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" [(ngModel)]="YESSearchCategory">
+                                <select class="form-select input-selectBox" [(ngModel)]="YESSearchCategory" id="YESSearchCategory" name="YESSearchCategory">
                                     <!-- <option value="" disabled selected>Search Policy Number</option> -->
                                     <option *ngFor="let opt of YESSearchby" [value]="opt">
                                         {{ opt }}
@@ -94,7 +94,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="YESSearchValue" placeholder=""
+                                <input class="form-control input-textBox" id="YESSearchValue" name="YESSearchValue" placeholder=""
                                     [(ngModel)]="YESSearchValue" type="text" (input)="checkEnableSendOTP()">
                                 <label for="YESSearchValue">Identification Number</label>
                             </div>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="otpEntered">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="enteredOTP" placeholder=""
+                                <input class="form-control input-textBox" id="enteredOTP" name="enteredOTP" placeholder=""
                                     [(ngModel)]="enteredOTP" type="text" (input)="checkEnableSendOTP()">
                                 <label for="enteredOTP">Enter OTP</label>
                             </div>
@@ -203,7 +203,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="firstname" placeholder=""
+                                <input class="form-control input-textBox" id="firstname" name="firstname" placeholder=""
                                     formControlName="firstname" type="text" maxlength="15"  (keypress)="isCharacter($event)" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }">
                                 <label for="firstname">First Name *</label>
@@ -220,7 +220,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="MiddleName" placeholder=""
+                                <input class="form-control input-textBox" id="MiddleName" name="MiddleName" placeholder=""
                                     formControlName="MiddleName" type="text" maxlength="15" (keypress)="isCharacter($event)" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
                                 <label for="MiddleName">Middle Name</label>
@@ -231,7 +231,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="lastname" placeholder=""
+                                <input class="form-control input-textBox" id="lastname" name="lastname" placeholder=""
                                     formControlName="lastname" type="text" maxlength="15" (keypress)="isCharacter($event)" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }">
                                 <label for="lastname">Last Name *</label>
@@ -248,7 +248,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="nomineeName" placeholder=""
+                                <input class="form-control input-textBox" id="nomineeName" name="nomineeName" placeholder=""
                                     formControlName="mobilenumber" type="text" (keypress)="isNumber($event)" maxlength="10"
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }">
                                 <label for="nomineeName">Mobile Number *</label>
@@ -268,7 +268,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="isWhatsapp"
+                                <select class="form-select input-selectBox" id="isWhatsapp" name="isWhatsapp" formControlName="isWhatsapp"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let opt of whatsappOptions" [ngValue]="opt.value">
@@ -280,7 +280,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="email" placeholder=""
+                                <input class="form-control input-textBox" id="email" name="email" placeholder=""
                                     formControlName="email" type="text" OnlyCharacter
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }">
                                 <label for="email">Email *</label>
@@ -297,7 +297,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="gender"
+                                <select class="form-select input-selectBox" id="gender" name="gender" formControlName="gender"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let opt of CreateLeadList.Gender" [value]="opt">
@@ -309,14 +309,14 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="dob" placeholder="" formControlName="dob"
+                                <input class="form-control input-textBox" id="dob" name="dob" placeholder="" formControlName="dob"
                                     type="date" [max]="today" (change)="changeDob($event)">
                                 <label for="nomineeName">DOB</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="age" placeholder="" formControlName="age"
+                                <input class="form-control input-textBox" id="age" name="age" placeholder="" formControlName="age"
                                     type="text">
                                 <label for="age">Age</label>
                                 <span class="ui-error block-show"
@@ -326,7 +326,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="maritalStatus"
+                                <select class="form-select input-selectBox" id="maritalStatus" name="maritalStatus" formControlName="maritalStatus"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let opt of CreateLeadList.MaritalStatus" [value]="opt">
@@ -338,7 +338,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="numberOfKids" placeholder=""
+                                <input class="form-control input-textBox" id="numberOfKids" name="numberOfKids" placeholder=""
                                     formControlName="numberOfKids" type="text" (keypress)="isNumber($event)" maxlength="2">
                                 <label for="numberOfKids">No Of Kids</label>
                                 <span class="ui-error block-show"
@@ -350,7 +350,7 @@
                     
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="occupation" placeholder=""
+                                <input class="form-control input-textBox" id="occupation" name="occupation" placeholder=""
                                     formControlName="occupation" type="text" maxlength="20">
                                 <label for="occupation">Occupation</label>
                                 <span class="ui-error block-show"
@@ -360,7 +360,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="education" placeholder=""
+                                <input class="form-control input-textBox" id="education" name="education" placeholder=""
                                     formControlName="education" type="text" maxlength="20">
                                 <label for="education">Education</label>
                                 <span class="ui-error block-show"
@@ -378,7 +378,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="address1" placeholder=""
+                                <input class="form-control input-textBox" id="address1" name="address1" placeholder=""
                                     formControlName="address1" type="text" maxlength="50" OnlyCharacter>
                                 <label for="address1">Address 1</label>
                                 <span class="ui-error block-show"
@@ -388,7 +388,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="address2" placeholder=""
+                                <input class="form-control input-textBox" id="address2" name="address2" placeholder=""
                                     formControlName="address2" type="text" maxlength="50" OnlyCharacter>
                                 <label for="address2">Address 2</label>
                                 <span class="ui-error block-show"
@@ -398,7 +398,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="address3" placeholder=""
+                                <input class="form-control input-textBox" id="address3" name="address3" placeholder=""
                                     formControlName="address3" type="text" maxlength="50" OnlyCharacter>
                                 <label for="address3">Address 3</label>
                                 <span class="ui-error block-show"
@@ -408,7 +408,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="city" placeholder=""
+                                <input class="form-control input-textBox" id="city" name="city" placeholder=""
                                     formControlName="city" type="text" maxlength="20"  (keypress)="isCharacter($event)" OnlyCharacter>
                                 <label for="city">City</label>
                                 <span class="ui-error block-show"
@@ -418,7 +418,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="state" placeholder=""
+                                <input class="form-control input-textBox" id="state" name="state" placeholder=""
                                     formControlName="state" type="text" maxlength="20" (keypress)="isCharacter($event)" OnlyCharacter>
                                 <label for="state">State</label>
                                 <span class="ui-error block-show"
@@ -428,7 +428,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="pincode" placeholder=""
+                                <input class="form-control input-textBox" id="pincode" name="pincode" placeholder=""
                                     formControlName="pincode" type="text" maxlength="6" (keypress)="isNumber($event)">
                                 <label for="pincode">Pincode</label>
                                 <span class="ui-error block-show"
@@ -446,7 +446,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="interestedProductName"
+                                <select class="form-select input-selectBox" id="interestedProductName" name="interestedProductName" formControlName="interestedProductName"
                                     (change)="changeSumInsured($event)">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let opt of productsList" [value]="opt.productName">
@@ -472,7 +472,7 @@
                      
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="sumInsured" (selectionChange)="campnoSelected()">
+                                <select class="form-select input-selectBox" id="sumInsured" name="sumInsured" formControlName="sumInsured" (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let opt of productSumInsured" [value]="opt">
                                         {{ opt }}
@@ -505,7 +505,7 @@
                         </div> -->
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="policyType"
+                                <select class="form-select input-selectBox" id="policyType" name="policyType" formControlName="policyType"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let opt of CreateLeadList.PolicyType" [value]="opt">
@@ -535,7 +535,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="leadStatus"
+                                <select class="form-select input-selectBox" id="leadStatus" name="leadStatus" formControlName="leadStatus"
                                     (change)="changeReferStatus($event)">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let item of referenceStatus" [value]="item.name">
@@ -547,7 +547,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="leadSubStatus"
+                                <select class="form-select input-selectBox" id="leadSubStatus" name="leadSubStatus" formControlName="leadSubStatus"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
@@ -596,7 +596,7 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input class="form-control input-textBox" id="activityTitle" placeholder=""
+                                            <input class="form-control input-textBox" id="activityTitle" name="activityTitle" placeholder=""
                                                 formControlName="activityTitle" type="text"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
                                             <label for="activityTitle">Activity Title*</label>
@@ -612,7 +612,7 @@
         
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input class="form-control input-textBox" id="activityStartDate" placeholder=""
+                                            <input class="form-control input-textBox" id="activityStartDate" name="activityStartDate" placeholder=""
                                                 formControlName="activityStartDate" type="date" [min]="today" [max]="maxDate"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
                                             <label for="activityStartDate">Activity Start Date*</label>
@@ -627,7 +627,7 @@
         
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input class="form-control input-textBox" id="activityStartTime" placeholder=""
+                                            <input class="form-control input-textBox" id="activityStartTime" name="activityStartTime" placeholder=""
                                                 formControlName="activityStartTime" type="time"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityStartTime')?.errors }">
                                             <label for="activityStartTime">Activity Start Time*</label>
@@ -643,7 +643,7 @@
         
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input class="form-control input-textBox" id="activityEndDate" placeholder=""
+                                            <input class="form-control input-textBox" id="activityEndDate" name="activityEndDate" placeholder=""
                                                 formControlName="activityEndDate" type="date"
                                                 [min]="addNoteForm.get('activityStartDate')?.value" [max]="maxDate"
                                                 (change)="onEndDateChange()"
@@ -663,7 +663,7 @@
         
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input class="form-control input-textBox" id="activityEndTime" placeholder=""
+                                            <input class="form-control input-textBox" id="activityEndTime" name="activityEndTime" placeholder=""
                                                 formControlName="activityEndTime" type="time"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }">
                                             <label for="activityEndTime">Activity End Time*</label>
@@ -678,7 +678,7 @@
         
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select class="form-select input-selectBox" formControlName="activityType"
+                                            <select class="form-select input-selectBox" formControlName="activityType" id="activityType" name="activityType"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityType')?.errors }">
                                                 <option value="" disabled selected>Choose Option</option>
                                                 <option *ngFor="let item of activityTypes" [value]="item">
@@ -696,7 +696,7 @@
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-block form-floating input-block-renew">
-                                            <textarea class="form-control input-textBox" id="notes"
+                                            <textarea class="form-control input-textBox" id="notes" name="notes"
                                                 placeholder="Type your note..." formControlName="notes"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('notes')?.errors }"></textarea>
                                             <label for="notes">Note*:</label>

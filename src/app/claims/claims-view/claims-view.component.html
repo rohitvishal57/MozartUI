@@ -13,7 +13,7 @@
                   <div class="row mb-3">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                         <div class="input-block form-floating input-block-renew">
-                            <input class="form-control input-textBox"  [matAutocomplete]="auto"  id="policyNumber" formControlName="policyNumber" (keydown)="filterList($event)" placeholder="Search Policy Number"/>
+                            <input class="form-control input-textBox"  [matAutocomplete]="auto"  id="policyNumber" name="policyNumber" formControlName="policyNumber" (keydown)="filterList($event)" placeholder="Search Policy Number"/>
                             <label for="policyNumber">Search Policy Number</label>
                             <div *ngIf="form.get('policyNumber')?.invalid && (form.get('policyNumber')?.touched || form.get('policyNumber')?.dirty)">
                                 <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
@@ -51,7 +51,7 @@
 
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
-                              <select class="form-select input-selectBox" formControlName="memberName" [ngClass]="{'has-value': true}">
+                              <select class="form-select input-selectBox" id="memberName" name="memberName" formControlName="memberName" [ngClass]="{'has-value': true}">
                                   <option class="dropdown-options" value="" disabled selected>Select Member</option>
                                   <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
                               </select>
@@ -69,7 +69,7 @@
                       
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
-                              <select class="form-select input-selectBox" formControlName="claimType" (change)="onClaimTypeChange($event)">
+                              <select class="form-select input-selectBox" id="claimType" name="claimType" formControlName="claimType" (change)="onClaimTypeChange($event)">
                                   <option value="" disabled selected>Select Claim Type</option>
                                   <option value="Cashless">Cashless</option>
                                   <option value="Reimbursement">Reimbursement</option>
@@ -87,13 +87,13 @@
                         <div class="row">
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="text" class="form-control input-textBox" formControlName="coverName" [value]="'Hospitalisation'" readonly />
+                                  <input type="text" class="form-control input-textBox" id="coverName" name="coverName" formControlName="coverName" [value]="'Hospitalisation'" readonly />
                                   <label for="coverName">Cover Name</label>
                               </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount"
+                                <input class="form-control input-textBox" id="claimedAmount" name="claimedAmount" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount"
                                 (keydown)="onInput($event)">
                                 <label for="claimamount">Claim Amount</label>
                                 <!-- <span class="ui-error">Please enter claim amount</span> -->
@@ -106,7 +106,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="admissionDate" [(ngModel)]="fromDate"  (change)="dateFormat('fromDate')" placeholder="Date of Admission" [max]="maxDate" />
+                                  <input type="date" class="form-control input-textBox" id="admissionDate" name="admissionDate" formControlName="admissionDate" [(ngModel)]="fromDate"  (change)="dateFormat('fromDate')" placeholder="Date of Admission" [max]="maxDate" />
                                   <label for="admissionDate">Date of Admission</label>
                                   <small class="ui-error block-show" *ngIf="form.get('admissionDate')?.hasError('required') && form.get('admissionDate')?.touched" >
                                     Date of Admission is required
@@ -116,27 +116,27 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="time" class="form-control input-textBox" formControlName="admissionTime"  placeholder="Time of Admission (Tentative)" />
+                                  <input type="time" class="form-control input-textBox" id="admissionTime" name="admissionTime" formControlName="admissionTime"  placeholder="Time of Admission (Tentative)" />
                                   <label for="admissionTime">Time of Admission (Tentative)</label>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge" [(ngModel)]="toDate"  (change)="dateFormat('toDate')" [max]="maxDate" />
+                                  <input type="date" class="form-control input-textBox" id="dischargeDate" name="dischargeDate" formControlName="dischargeDate" placeholder="Date of Discharge" [(ngModel)]="toDate"  (change)="dateFormat('toDate')" [max]="maxDate" />
                                   <label for="dischargeDate">Date of Discharge</label>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="time" class="form-control input-textBox" formControlName="dischargeTime" placeholder="Time of Discharge (Tentative)" />
+                                  <input type="time" class="form-control input-textBox" id="dischargeTime" name="dischargeTime" formControlName="dischargeTime" placeholder="Time of Discharge (Tentative)" />
                                   <label for="dischargeTime">Time of Discharge (Tentative)</label>
                               </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <select class="form-select input-selectBox" formControlName="state" (change)="onStateChange($event)">
+                                  <select class="form-select input-selectBox" id="state" name="state" formControlName="state" (change)="onStateChange($event)">
                                       <option class="dropdown-options" value="" disabled selected>Select State</option>
                                       <option *ngFor="let state of states" [value]="state.stateID">{{ state.stateName }}</option>
                                   </select>
@@ -147,7 +147,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <select class="form-select input-selectBox" formControlName="city" (change)="onCityChange($event)" [disabled]="!selectedState">
+                                  <select class="form-select input-selectBox" id="city" name="city" formControlName="city" (change)="onCityChange($event)" [disabled]="!selectedState">
                                       <option class="dropdown-options" value="" disabled selected [selected]="!form.get('city')?.value || form.get('city')?.value === ''">Select City</option>
                                       <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName }}</option>
                                   </select>
@@ -158,7 +158,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                              <select class="form-select input-selectBox" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
+                              <select class="form-select input-selectBox" id="hospitalName" name="hospitalName" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
                                   <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
                                   <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName }}</option>
                               </select>
@@ -168,7 +168,7 @@
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" placeholder="Hospital Address" readonly/>
+                                <input type="text" class="form-control input-textBox" id="hospitalAddress" name="hospitalAddress" formControlName="hospitalAddress" placeholder="Hospital Address" readonly/>
                                 <label for="addnotes">Hospital Address</label>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
                           <div class="row mb-3">
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
-                                      <select class="form-select input-selectBox" formControlName="coverName" (change)="onCoverNameChange($event)">
+                                      <select class="form-select input-selectBox" id="coverName" name="coverName" formControlName="coverName" (change)="onCoverNameChange($event)">
                                           <option value="" disabled selected>Select Cover Name</option>
                                           <option *ngFor="let cover of coverNames" [value]="cover">{{ cover }}</option>
                                       </select>
@@ -197,7 +197,7 @@
 
                             <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
+                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" name="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
                                     <label for="claimamount">Claim Amount</label>
                                     <!-- <span class="ui-error">Please enter claim amount</span> -->
                                     <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
@@ -208,7 +208,7 @@
                              
                               <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
-                                      <input type="date" class="form-control input-textBox" formControlName="admissionDate" placeholder="Date of Admission"  [(ngModel)]="fromDate"  (change)="dateFormat('fromDate')" [max]="maxDate"/>
+                                      <input type="date" class="form-control input-textBox" formControlName="admissionDate" id="admissionDate" name="admissionDate" placeholder="Date of Admission"  [(ngModel)]="fromDate"  (change)="dateFormat('fromDate')" [max]="maxDate"/>
                                       <label for="admissionDate">Date of Admission</label>
                                   </div>
                               </div>
@@ -224,13 +224,13 @@
                           <div class="row" *ngFor="let bill of billsArray.controls; let i = index" [formGroupName]="i">
                               <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
-                                      <input type="text" class="form-control input-textBox" placeholder="Bill No" formControlName="billNo" />
+                                      <input type="text" class="form-control input-textBox" placeholder="Bill No" formControlName="billNo" id="billNo" name="billNo" />
                                       <label for="addnotes">Bill No.</label>
                                   </div>
                               </div>
                               <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
                                   <div class="input-block form-floating input-block-renew">
-                                      <input type="date" class="form-control input-textBox" formControlName="billDate" [max]="maxDate" />
+                                      <input type="date" class="form-control input-textBox" formControlName="billDate" id="billDate" name="billDate" [max]="maxDate" />
                                       <label for="addnotes">Date</label>
                                   </div>
                               </div>
@@ -242,7 +242,7 @@
                               </div> -->
                               <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                 <div class="input-block form-floating input-block-renew">
-                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
+                                    <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" name="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
                                     <label for="claimamount">Claim Amount</label>
                                     <!-- <span class="ui-error">Please enter claim amount</span> -->
                                 </div>
@@ -274,27 +274,27 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="time" class="form-control input-textBox" formControlName="admissionTime" placeholder="Time of Admission (Tentative)" />
+                                  <input type="time" class="form-control input-textBox" formControlName="admissionTime" id="admissionTime" name="admissionTime" placeholder="Time of Admission (Tentative)" />
                                   <label for="admissionTime">Time of Admission (Tentative)</label>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" placeholder="Date of Discharge"  [(ngModel)]="toDate"  (change)="dateFormat('toDate')" [max]="maxDate" />
+                                  <input type="date" class="form-control input-textBox" formControlName="dischargeDate" id="dischargeDate" name="dischargeDate" placeholder="Date of Discharge"  [(ngModel)]="toDate"  (change)="dateFormat('toDate')" [max]="maxDate" />
                                   <label for="dischargeDate">Date of Discharge</label>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="time" class="form-control input-textBox" formControlName="dischargeTime" placeholder="Time of Discharge (Tentative)" />
+                                  <input type="time" class="form-control input-textBox" formControlName="dischargeTime" id="dischargeTime" name="dischargeTime" placeholder="Time of Discharge (Tentative)" />
                                   <label for="dischargeTime">Time of Discharge (Tentative)</label>
                               </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <select class="form-select input-selectBox" formControlName="state" (change)="onStateChange($event)">
+                                  <select class="form-select input-selectBox" formControlName="state" id="state" name="state" (change)="onStateChange($event)">
                                       <option class="dropdown-options" value="" disabled selected>Select State</option>
                                       <option *ngFor="let state of states" [value]="state.stateID">{{ state.stateName }}</option>
                                   </select>
@@ -305,7 +305,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <select class="form-select input-selectBox" formControlName="city" (change)="onCityChange($event)" [disabled]="!selectedState">
+                                  <select class="form-select input-selectBox" formControlName="city" id="city" name="city" (change)="onCityChange($event)" [disabled]="!selectedState">
                                       <option class="dropdown-options" value="" disabled selected>Select City</option>
                                       <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName }}</option>
                                   </select>
@@ -315,7 +315,7 @@
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                              <select class="form-select input-selectBox" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
+                              <select class="form-select input-selectBox" formControlName="hospitalName" id="hospitalName" name="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
                                   <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
                                   <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName }}</option>
                               </select>
@@ -326,7 +326,7 @@
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" placeholder="Hospital Address" readonly/>
+                                <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" id="hospitalAddress" name="hospitalAddress" placeholder="Hospital Address" readonly/>
                                 <label for="addnotes">Hospital Address</label>
                             </div>
                         </div>
@@ -342,7 +342,7 @@
                      
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <div class="input-block form-floating input-block-renew">
-                              <textarea class="form-control input-textBox" formControlName="ailmentDescription" placeholder="Description of the Ailment"></textarea>
+                              <textarea class="form-control input-textBox" formControlName="ailmentDescription" id="ailmentDescription" name="ailmentDescription" placeholder="Description of the Ailment"></textarea>
                               <label for="ailmentDescription">Description of the Ailment</label>
                           </div>
                       </div>
@@ -350,7 +350,7 @@
      
                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="input-block form-floating input-block-renew" >
-                              <textarea class="form-control input-textBox" placeholder="Leave a comment here" id="addnotes" rows="2" cols="30" formControlName="notes" pInputTextarea></textarea>
+                              <textarea class="form-control input-textBox" placeholder="Leave a comment here" id="addnotes" name="addnotes" rows="2" cols="30" formControlName="notes" pInputTextarea></textarea>
                               <label for="addnotes">Add Notes</label>
                           </div>
                       </div>
