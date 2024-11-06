@@ -472,7 +472,7 @@
                      
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" formControlName="sumInsured">
+                                <select class="form-select input-selectBox" formControlName="sumInsured" (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>Choose Option</option>
                                     <option *ngFor="let opt of productSumInsured" [value]="opt">
                                         {{ opt }}
