@@ -140,10 +140,10 @@ export class LeadsListComponent {
           console.log("Renewal List", this.leadsList);
           this.countsList = response.data;
           this.totalRecords = this.countsList.totalCount;
-          this.appliedFiltersCount = 0;
-          if (this.filterLeads == true) {
-            this.appliedFiltersCount = response.data.totalCount;
-          }
+          // this.appliedFiltersCount = 0;
+          // if (this.filterLeads == true) {
+          //  this.appliedFiltersCount = response.data.totalCount;
+          //}
         }
         else { console.error("API request was not successful."); }
       },
@@ -223,11 +223,23 @@ export class LeadsListComponent {
     }
     this.toggeledropdown = !this.toggeledropdown;
   }
+
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(
       (product) => product.selected).length;
-    this.appliedFiltersCount = selectedProductsCount;
+
+    const selectedpolicyTypeCount = this.StaticPolicyTypes.filter(
+      (policyType) => policyType.selected).length;
+
+    let count = selectedProductsCount + selectedpolicyTypeCount;
+
+    if (this.startDate && this.endDate) {
+      count++;
+    }
+
+    this.appliedFiltersCount = count || 0;
   }
+
   applyFilter() {
     this.filterLeads = true;
     this.calculateAppliedFiltersCount();
@@ -260,7 +272,7 @@ export class LeadsListComponent {
   clear() {
     this.leadsInfoListRequestBody.searchlist = "";
     this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.policyList="";
+    this.leadsInfoListRequestBody.policyList = "";
     this.leadsInfoListRequestBody.fromdate = null;
     this.leadsInfoListRequestBody.todate = null;
     this.filterLeads = false;
@@ -382,9 +394,9 @@ export class LeadsListComponent {
         if (response.message == "Success") {
 
           if (selectedLeadIDs.length > 1) {
-            this.toast.success({ detail: "", summary:'Leads has been successfully assigned.' , duration: 5000 });
+            this.toast.success({ detail: "", summary: 'Leads has been successfully assigned.', duration: 5000 });
           } else {
-            this.toast.success({ detail: "", summary:'Lead has been successfully assigned.' , duration: 5000 });
+            this.toast.success({ detail: "", summary: 'Lead has been successfully assigned.', duration: 5000 });
           }
           this.filterQuotes('all');
         }
@@ -471,22 +483,22 @@ export class LeadsListComponent {
     }
   }
 
- 
+
   getSearchInputControlPatternMessage() {
-    let errorMessage : string = '';
+    let errorMessage: string = '';
     if (this.searchInputControl.hasError('required')) {
-      errorMessage ='This field is required.';
+      errorMessage = 'This field is required.';
     }
     if (this.selected === 'leadId') {
-      errorMessage ='Lead ID should contain only alphanumeric characters (A-Z, 0-9)';
+      errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9)';
     } else if (this.selected === 'mobileNumber') {
-      errorMessage ='Mobile Number should be exactly 10 digits.';
+      errorMessage = 'Mobile Number should be exactly 10 digits.';
     } else if (this.selected === 'name') {
-      errorMessage ='Name should contain only letters and spaces.';
+      errorMessage = 'Name should contain only letters and spaces.';
     } else if (this.selected === 'email') {
-      errorMessage ='Please enter a valid email address (e.g., user@example.com).';
+      errorMessage = 'Please enter a valid email address (e.g., user@example.com).';
     }
-   return  this.toast.warning({ detail: "", summary:errorMessage, duration: 5000 });
+    return this.toast.warning({ detail: "", summary: errorMessage, duration: 5000 });
 
   }
 
@@ -501,7 +513,7 @@ export class LeadsListComponent {
   redirectProducts(lead: any) {
     if (lead.interestedProductName && lead.planType) {
       this.router.navigate(['/products'], {
-        queryParams: { productName: lead.interestedProductName , leadId: lead.leadNumber }
+        queryParams: { productName: lead.interestedProductName, leadId: lead.leadNumber }
       });
     } else {
       this.router.navigate(['/products'], {

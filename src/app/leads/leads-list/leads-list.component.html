@@ -35,7 +35,6 @@
                 
              
                 <div class="quickFilterRight">
-
                     <div class="body_flex_row leads_searchWraper">
                         <div class="field_searchMain">
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
@@ -66,7 +65,7 @@
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                                 <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected"> 
+                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()"> 
                                                     <label for="product{{i}}">{{product.productName}}</label>
                                                 </div>
                                             </div>
