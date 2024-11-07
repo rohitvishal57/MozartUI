@@ -333,10 +333,7 @@ export class ClaimsViewComponent {
     } else if (dateType === "toDate" && this.toDate) {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
-    if(this.toDate < this.fromDate) {
-      this.toDate = "";
-    }
-  }
+}
   // selectPolicyNumber(policy: string): void {
   //   console.log('selectPolicyNumber');
   //   this.form.get('policyNumber')?.setValue(policy);
