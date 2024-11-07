@@ -26,7 +26,7 @@
                             </div>
                             <div class="filterFieldGroup">
                                 <input  class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
-                                <button  type="button" id="btnsearch" name="btnsearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
                             </div>
                         </div>
