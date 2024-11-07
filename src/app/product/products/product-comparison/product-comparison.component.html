@@ -203,13 +203,13 @@
             <!--PRESENT: Product Comparison Start-->
             <section class="quoteComparisonWraper planComparisonWraper">
                 <!--<div class="qc_item qc_item1">
-                    <header>Plan <br>Comparison</header>
-                    <div class="upgradeInfo">Upgrade Recommendations</div>
-                    <div class="qc_info">keyFeatures</div>
-                    <div class="qc_info qc_info_grey">Optional Covers</div>
-                    <div class="qc_info">Health Add On's</div>
-                    <div class="qc_empty"></div>
-                </div>-->
+                                <header>Plan <br>Comparison</header>
+                                <div class="upgradeInfo">Upgrade Recommendations</div>
+                                <div class="qc_info">keyFeatures</div>
+                                <div class="qc_info qc_info_grey">Optional Covers</div>
+                                <div class="qc_info">Health Add On's</div>
+                                <div class="qc_empty"></div>
+                            </div>-->
                 <div class="qc_item qc_item2">
                     <div class="qc_itemSubMain">
                         <!-- <div class="qc_item" *ngFor="let comparisonItem of comparisonItems"> -->
@@ -220,10 +220,8 @@
                                     <!--<h6>₹6,863*<span>/year</span></h6>-->
                                 </div>
                                 <div class="compare_btnGroup">
-                                    <button type="button" id="buynow2" name="buynow2"
-                                        class="btn_red btn_buyPlan btn_buyPlanNow"
-                                        (click)="redirectProducts(comparisonItem1)"><img src="assets/Img/trolley1.svg"
-                                            alt="">
+                                    <button type="button" id="buynow2" name="buynow2" class="btn_red btn_buyPlan btn_buyPlanNow"
+                                        (click)="redirectProducts(comparisonItem1)"><img src="assets/Img/trolley1.svg" alt="">
                                         Buy Now
                                     </button>
                                 </div>
@@ -243,7 +241,8 @@
                                 <ul class="tick_round">
                                     <li *ngFor="let feature of comparisonItem1.productFeatures">
                                         <div class="tick_round_div" *ngIf="feature.categoryName === 'Optional Covers'">
-                                            <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}</div>
+                                            <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -260,7 +259,24 @@
                                 </ul>
                             </div>
                         </div>
-                        
+                        <div class="qc_item" *ngIf="comparisonItems.length<1">
+                            <header>
+                                <div class="heading">
+                                    <h5>Select Product To Compare</h5>
+                                </div>
+                                <div class="compare_btnGroup">
+                                    <select class="form-select input-selectBox" (change)="addCompareItem($event)">
+                                        <option value="" disabled selected>Select Product</option>
+                                        <option *ngFor="let item of ProductList" [value]="item.productName">
+                                            {{ item.productName }}
+                                        </option>
+                                    </select>
+                                </div>
+            
+                            </header>
+                        </div>
+
+            
                         <div class="qc_item" *ngIf="comparisonItem2">
                             <header>
                                 <div class="heading">
@@ -268,10 +284,8 @@
                                     <!--<h6>₹6,863*<span>/year</span></h6>-->
                                 </div>
                                 <div class="compare_btnGroup">
-                                    <button type="button" id="buynow2" name="buynow2"
-                                        class="btn_red btn_buyPlan btn_buyPlanNow"
-                                        (click)="redirectProducts(comparisonItem2)"><img src="assets/Img/trolley1.svg"
-                                            alt="">
+                                    <button type="button" id="buynow2" name="buynow2" class="btn_red btn_buyPlan btn_buyPlanNow"
+                                        (click)="redirectProducts(comparisonItem2)"><img src="assets/Img/trolley1.svg" alt="">
                                         Buy Now
                                     </button>
                                 </div>
@@ -291,7 +305,8 @@
                                 <ul class="tick_round">
                                     <li *ngFor="let feature of comparisonItem2.productFeatures">
                                         <div class="tick_round_div" *ngIf="feature.categoryName === 'Optional Covers'">
-                                            <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}</div>
+                                            <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -308,6 +323,23 @@
                                 </ul>
                             </div>
                         </div>
+                        <div class="qc_item" *ngIf="comparisonItems.length<2">
+                            <header>
+                                <div class="heading">
+                                    <h5>Select Product To Compare</h5>
+                                </div>
+                                <div class="compare_btnGroup">
+                                    <select class="form-select input-selectBox" (change)="addCompareItem($event)">
+                                        <option value="" disabled selected>Select Product</option>
+                                        <option *ngFor="let item of ProductList" [value]="item.productName">
+                                            {{ item.productName }}
+                                        </option>
+                                    </select>
+                                </div>
+            
+                            </header>
+                        </div>
+
                         <div class="qc_item" *ngIf="comparisonItem3">
                             <header>
                                 <div class="heading">
@@ -315,10 +347,8 @@
                                     <!--<h6>₹6,863*<span>/year</span></h6>-->
                                 </div>
                                 <div class="compare_btnGroup">
-                                    <button type="button" id="buynow2" name="buynow2"
-                                        class="btn_red btn_buyPlan btn_buyPlanNow"
-                                        (click)="redirectProducts(comparisonItem3)"><img src="assets/Img/trolley1.svg"
-                                            alt="">
+                                    <button type="button" id="buynow2" name="buynow2" class="btn_red btn_buyPlan btn_buyPlanNow"
+                                        (click)="redirectProducts(comparisonItem3)"><img src="assets/Img/trolley1.svg" alt="">
                                         Buy Now
                                     </button>
                                 </div>
@@ -338,7 +368,8 @@
                                 <ul class="tick_round">
                                     <li *ngFor="let feature of comparisonItem3.productFeatures">
                                         <div class="tick_round_div" *ngIf="feature.categoryName === 'Optional Covers'">
-                                            <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}</div>
+                                            <img src="assets/Img/icon_tick_whitebg.svg">{{ feature.featureName }}
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -354,29 +385,27 @@
                                     </ng-container>
                                 </ul>
                             </div>
-
-
+            
+            
                             <div class="qc_empty block-hide"></div>
                         </div>
-
+            
                         <div class="qc_item" *ngIf="comparisonItems.length<3">
                             <header>
                                 <div class="heading">
                                     <h5>Select Product To Compare</h5>
                                 </div>
                                 <div class="compare_btnGroup">
-                                    <select class="form-select input-selectBox"    (change)="addCompareItem($event)">
+                                    <select class="form-select input-selectBox" (change)="addCompareItem($event)">
                                         <option value="" disabled selected>Select Product</option>
                                         <option *ngFor="let item of ProductList" [value]="item.productName">
                                             {{ item.productName }}
                                         </option>
                                     </select>
                                 </div>
-                            
+            
                             </header>
                         </div>
-
-                        
                     </div>
                 </div>
             </section>
