@@ -213,7 +213,7 @@
                                         *ngIf="submitted && userValidations.get('firstname')?.invalid && !userValidations.get('firstname')?.errors?.['pattern']">First Name
                                         cannot be blank.</span>
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">First Name
+                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">First name
                                         should only contain alphabets.</span>
                                 </span>
                             </div>
@@ -225,7 +225,7 @@
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
                                 <label for="MiddleName">Middle Name</label>
                                 <span class="ui-error block-show"
-                                    *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">Middle Name
+                                    *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">Middle name
                                     should only contain alphabets.</span>
                             </div>
                         </div>
@@ -241,7 +241,7 @@
                                         *ngIf="submitted && userValidations.get('lastname')?.invalid && !userValidations.get('lastname')?.errors?.['pattern']">Last Name
                                         cannot be blank.</span>
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">Last Name
+                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">Last name
                                         should only contain alphabets.</span>
                                 </span>
                             </div>
@@ -255,13 +255,13 @@
                                 <span class="invalid-feedback"
                                     *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobile Number
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobile number
                                         cannot
                                         be blank.</span>
                                     <span class="ui-error block-show"
                                         *ngIf="submitted && userValidations.get('mobilenumber')?.errors?.['pattern']">Enter
-                                        a valid 10-digit Mobile
-                                        Number.
+                                        a valid 10-digit mobile
+                                        number.
                                     </span>
                                 </span>
                             </div>
@@ -275,7 +275,7 @@
                                         {{ opt.display }}
                                     </option>
                                 </select>
-                                <label for="isWhatsapp">Is WhatsApp available for mobile number?</label>
+                                <label for="isWhatsapp">Is whatsapp available for mobile number?</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -291,7 +291,7 @@
                                         cannot be blank.</span>
                                     <span class="ui-error block-show"
                                         *ngIf="submitted && userValidations.get('email')?.errors?.['pattern']">Please
-                                        enter valid Email ID.</span>
+                                        enter valid email id.</span>
                                 </span>
                             </div>
                         </div>
@@ -321,7 +321,7 @@
                                 <label for="age">Age</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('age')?.errors?.['pattern']">Please enter
-                                    proper age in Digits.</span>
+                                    proper age in digits.</span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -344,7 +344,7 @@
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('numberOfKids')?.errors?.['pattern']">Please
                                     enter proper value in
-                                    Digits.</span>
+                                    digits.</span>
                             </div>
                         </div>
                     
@@ -604,7 +604,7 @@
                                                 *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
                                                 <span class="ui-error block-show"
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
-                                                    Activity Title cannot be blank.</span>
+                                                    Activity title cannot be blank.</span>
                                             </span>
         
                                         </div>
@@ -620,7 +620,7 @@
                                                 *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
                                                 <span class="ui-error block-show"
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
-                                                    Activity Start date cannot be blank.</span>
+                                                    Activity start date cannot be blank.</span>
                                             </span>
                                         </div>
                                     </div>
@@ -653,11 +653,11 @@
                                                 *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
                                                 <span class="ui-error block-show"
                                                     *ngIf="addNoteForm.get('activityEndDate')?.invalid">
-                                                    Activity End Date cannot be blank.</span>
+                                                    Activity end date cannot be blank.</span>
                                             </span>
                                             <span class="ui-error block-show"
                                                 *ngIf="addNoteForm.get('activityEndDate')?.errors?.['incorrect']">
-                                                Activity End date must be after Activity startdate.</span>
+                                                Activity end date must be after activity startdate.</span>
                                         </div>
                                     </div>
         
@@ -671,7 +671,7 @@
                                                 *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
                                                 <span class="ui-error block-show"
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
-                                                    Activity End Time cannot be blank.</span>
+                                                    Activity end time cannot be blank.</span>
                                             </span>
                                         </div>
                                     </div>
@@ -690,14 +690,14 @@
                                                 *ngIf="notesSubmitted && addNoteForm.get('activityType')?.errors">
                                                 <span class="ui-error block-show"
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityType')?.invalid">
-                                                    Activity Type cannot be blank.</span>
+                                                    Activity type cannot be blank.</span>
                                             </span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-block form-floating input-block-renew">
                                             <textarea class="form-control input-textBox" id="notes" name="notes"
-                                                placeholder="Type your note..." formControlName="notes"
+                                                placeholder="Type your note..." formControlName="notes" maxlength="250"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('notes')?.errors }"></textarea>
                                             <label for="notes">Note*:</label>
                                             <span class="invalid-feedback"
@@ -795,7 +795,7 @@
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
                                                     <span class="ui-error block-show"
                                                         *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
-                                                        Activity Title cannot be blank</span>
+                                                        Activity title cannot be blank</span>
                                                 </span>
             
                                             </div>
@@ -811,7 +811,7 @@
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
                                                     <span class="ui-error block-show"
                                                         *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
-                                                        Activity Start date cannot be blank</span>
+                                                        Activity start date cannot be blank</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -826,7 +826,7 @@
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.errors">
                                                     <span class="ui-error block-show"
                                                         *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.invalid">
-                                                        Activity Start Time cannot be blank</span>
+                                                        Activity start Time cannot be blank</span>
                                                 </span>
             
                                             </div>
@@ -844,11 +844,11 @@
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
                                                     <span class="ui-error block-show"
                                                         *ngIf="addNoteForm.get('activityEndDate')?.invalid">
-                                                        Activity End Date cannot be blank</span>
+                                                        Activity end date cannot be blank</span>
                                                 </span>
                                                 <span class="ui-error block-show"
                                                     *ngIf="addNoteForm.get('activityEndDate')?.errors?.['incorrect']">
-                                                    Activity End date must be after Activity startdate</span>
+                                                    Activity end date must be after activity startdate</span>
                                             </div>
                                         </div>
             
@@ -862,7 +862,7 @@
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
                                                     <span class="ui-error block-show"
                                                         *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
-                                                        Activity End Time cannot be blank</span>
+                                                        Activity end time cannot be blank</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -881,7 +881,7 @@
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityType')?.errors">
                                                     <span class="ui-error block-show"
                                                         *ngIf="notesSubmitted && addNoteForm.get('activityType')?.invalid">
-                                                        Activity Type cannot be blank</span>
+                                                        Activity type cannot be blank</span>
                                                 </span>
                                             </div>
                                         </div>

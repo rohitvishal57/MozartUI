@@ -479,15 +479,15 @@ export class LeadsListComponent {
     this.filterFeildmaxlength = 50;
     if (this.selected === 'leadId') {
       this.filterFeildmaxlength = 20;
-      return 'Enter Lead Id';
+      return 'Enter Lead ID';
     } else if (this.selected === 'mobileNumber') {
       this.filterFeildType = "number";
       this.filterFeildmaxlength = 10;
-      return 'Enter mobile Number';
+      return 'Enter Mobile Number';
     } else if (this.selected === 'name') {
       return 'Enter Name';
     } else if (this.selected == 'email') {
-      return 'Enter Email Id';
+      return 'Enter Email ID';
     }
     else {
       return 'Search...';
@@ -501,7 +501,7 @@ export class LeadsListComponent {
       errorMessage = 'This field is required.';
     }
     if (this.selected === 'leadId') {
-      errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9)';
+      errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).';
     } else if (this.selected === 'mobileNumber') {
       errorMessage = 'Mobile Number should be exactly 10 digits.';
     } else if (this.selected === 'name') {

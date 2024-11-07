@@ -132,6 +132,108 @@
                                         </div>
                                     </div>
                                 </mat-tab>
+
+                                <mat-tab label="Detailed View">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="claims_member_info">
+                                                <h4>Performance Detailed View</h4>
+                                                <ul class="list-detailsInfo">
+                                                    <li>
+                                                        <span class="label">Agent Code:</span>
+                                                        <span class="value membername">{{ agentPerformanceData?.annualClubPermormance?.agentCode || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Proposal ID:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.agentName || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Proposal Substatus:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubStatus1 || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Client ID:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubGWP || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Insured Name:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.nopPersistency || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Business Type:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubStatus2 || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Policy Start Date:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.nextClub || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Policy End Date:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.shortallForNextLevel || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Policy Number:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													   <li>
+                                                        <span class="label">Product Name:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>   <li>
+                                                        <span class="label">Policy Variant:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>   <li>
+                                                        <span class="label">Plan Type:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li> 
+													<li>
+                                                        <span class="label">Portability:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													  <li>
+                                                        <span class="label">Net Premium:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													  <li>
+                                                        <span class="label">Sum Insured:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													  <li>
+                                                        <span class="label">Inwarded Date:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													  <li>
+                                                        <span class="label">Issue Date:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>  <li>
+                                                        <span class="label">PR Date:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													 <li>
+                                                        <span class="label">Port%:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													 <li>
+                                                        <span class="label">Super%:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													<li>
+                                                        <span class="label">CI/CS/PA/ASP/Credit%:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+													<li>
+                                                        <span class="label">Weighted Net Premium of Annual Club Apr 16 2024 6:17PM:</span>
+                                                        <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
+                                                    </li>
+                                                </ul>
+                                                <div class="claims_member_info-gradient"></div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </mat-tab>
+
+
+
                                 <mat-tab label="Detailed View">
                                     <div class="body_flex_column gap-32">
                                         <section id="quotes-list" class="tableMain quoteView block-show "
@@ -183,7 +285,7 @@
                                                                 <td>{{row.policyVariant}}</td>
                                                                 <td>{{row.planType}}</td>
                                                                 <td>{{row.planVariant}}</td>
-                                                                <td>{{row.portability}}</td>
+                                                                <td>{{row.planVariant}}</td>
                                                                 <td>{{row.netPremium}}</td>
                                                                 <td>{{row.sumInsured}}</td>
                                                                 <td>{{row.inwardedDate}}</td>
