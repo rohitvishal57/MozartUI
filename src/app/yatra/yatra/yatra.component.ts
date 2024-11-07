@@ -104,9 +104,6 @@ export class YatraComponent {
   feedbackSubmit: boolean = false;
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
-  quickQuoteRedirect : boolean =false;
-  leadNumber : string = "";
-
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
@@ -118,13 +115,6 @@ export class YatraComponent {
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
     console.log(this.formSequence);
-
-    this.route.queryParams.subscribe(params => {
-      this.leadNumber = params['leadId'];
-      if (this.leadNumber) {
-       this.quickQuoteRedirect=  true;
-      }
-     });
 
     if (localStorage.getItem('code'))
       this.Code = localStorage.getItem('code');

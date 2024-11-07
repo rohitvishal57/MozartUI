@@ -39,10 +39,6 @@ export class ProductsComponent implements OnInit {
   displayNoProductsMessage: boolean = false;
   showSpecialForm: boolean = false;
   state: any;
-  groupedFeatures: any[] = [];
-  interestedProductName: string = '';
-  leadNumber : string = '';
-  quickQuoteRedirect : boolean = false;
 
    
 
@@ -55,14 +51,6 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-     this.interestedProductName = params['productName'];
-     this.leadNumber = params['leadId'];
-     if (this.interestedProductName) {
-      this.quickQuoteRedirect=  true;
-     }
-    });
-
     console.log(this.agentCode);
     // sessionStorage.clear()
     if (sessionStorage.getItem("cardListProducts"))
@@ -82,9 +70,6 @@ export class ProductsComponent implements OnInit {
       next: (res: any) => {
         this.ProductList = res.data;
         console.log(this.ProductList)
-        if(this.quickQuoteRedirect == true){
-          this.filterProductList(this.ProductList);
-        }
       },
       error: (err) => {
         console.error(err);
@@ -187,14 +172,7 @@ export class ProductsComponent implements OnInit {
       //     state: { productData: productData, formSequence: this.formSequence }
       //   });
       // }
-      if(this.quickQuoteRedirect == true){
-        if (this.formSequence != null && this.formSequence.length > 0) {
-          this.router.navigate(['yatra'], {
-            state: { productData: productData, formSequence: this.formSequence },
-            queryParams:{leadId :this.leadNumber}
-          });
-        }
-      }else{
+   
         if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898")) {
           this.router.navigate(['rug'], {
              state: { productData: productData, formSequence: this.formSequence }
@@ -204,7 +182,7 @@ export class ProductsComponent implements OnInit {
             state: { productData: productData, formSequence: this.formSequence }
          });
         }
-      }
+      
     } catch (error) {
       console.error(error);
     }
@@ -292,10 +270,5 @@ closeComparison(){
   this.compareItems = [];
 }
 
-filterProductList (productList : any){
-  let interestedProduct : any = '';
-  interestedProduct = productList.find((product: any) => product.productName == this.interestedProductName); 
-  this.buyNow(interestedProduct);
-}
 
 }

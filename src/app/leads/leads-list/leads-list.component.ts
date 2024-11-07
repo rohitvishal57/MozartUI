@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
 import { ProductsService } from 'src/app/product/products/products.service';
+import { firstValueFrom } from 'rxjs';
+import { EncryptionService } from 'src/app/services/encryption.service';
 declare var bootstrap: any;
 
 @Component({
@@ -17,6 +19,7 @@ declare var bootstrap: any;
   styleUrls: ['./leads-list.component.scss']
 })
 export class LeadsListComponent {
+  
 
   leadsList: LeadsList[] = [];
   countsList: any = [];
@@ -66,8 +69,14 @@ export class LeadsListComponent {
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
+  formSequence: any[] = [];
+  private allJsonFormData: any[] = [];
+  formData: any = {};
   filterFeildType = 'text';
   filterFeildmaxlength = 10;
+  interestedProductName : string ='';
+  interestedProductItem : any = '';
+  ProductList :any = [];
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -76,7 +85,8 @@ export class LeadsListComponent {
     private datePipe: DatePipe,
     private toast: NgToastService,
     private productService: ProductsService,
-
+    public common: CommonService,
+    private encryptionService: EncryptionService
   ) { }
 
 
@@ -518,17 +528,6 @@ export class LeadsListComponent {
 
   }
 
-  redirectProducts(lead: any) {
-    if (lead.interestedProductName && lead.planType) {
-      this.router.navigate(['/products'], {
-        queryParams: { productName: lead.interestedProductName, leadId: lead.leadNumber }
-      });
-    } else {
-      this.router.navigate(['/products'], {
-      });
-    }
-  }
-
   formatCreatedOn(dateString: string | null | undefined) {
     if (!dateString) {
       return 'N/A'; // Handle null or undefined values
@@ -537,6 +536,67 @@ export class LeadsListComponent {
     const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
     return formattedDate || 'Invalid Date'; // Handle invalid date
   }
+
+  redirectProducts(lead: any) {
+    if (lead.interestedProductName ) {
+   
+      const reqData = {
+        "agentCode": this.agentCode
+      }
+      this.productService.Getproductlist(reqData).subscribe({
+        next: async (res: any) => {
+           const ProductList = res.data;
+          console.log('this.ProductList',ProductList)
+       
+          const interestedProductItem  = ProductList.find((product: any) => product.productName == lead.interestedProductName); 
+       
+          try {
+            sessionStorage.clear();
+            const reqData = {
+              "partnerId": interestedProductItem.partnerId,
+              "productId": interestedProductItem.productId
+      
+            }
+            console.log(reqData);
+            const res = await firstValueFrom(this.common.Getformsequence(reqData));
+            console.log(res);
+            this.formSequence = JSON.parse(res.data.formSequence);
+            console.log(this.formSequence);
+      
+            if (this.formSequence != null && this.formSequence.length > 0) {
+              this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+              sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
+            }
+            console.log(this.allJsonFormData);
+            sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+            localStorage.setItem("formIndex", "0");
+          } catch (err) {
+            this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+          }
+          const productData = {
+            partnerId: interestedProductItem.partnerId,
+            productId: interestedProductItem.productId,
+            proposalNum: ""
+    
+          }
+
+            this.router.navigate(['yatra'], {
+              state: { productData: productData, formSequence: this.formSequence }
+           });
+          
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    } else {
+      this.router.navigate(['/products'], {
+      });
+    }
+  }
+
+
+
 
 
 }
