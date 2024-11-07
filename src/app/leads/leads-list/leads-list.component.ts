@@ -260,6 +260,7 @@ export class LeadsListComponent {
   clear() {
     this.leadsInfoListRequestBody.searchlist = "";
     this.leadsInfoListRequestBody.searchby = "";
+    this.leadsInfoListRequestBody.policyList="";
     this.leadsInfoListRequestBody.fromdate = null;
     this.leadsInfoListRequestBody.todate = null;
     this.filterLeads = false;
