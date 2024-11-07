@@ -1440,7 +1440,7 @@ export class YatraComponent {
 
     // }
 
-    if (control.type == 'date' && control.dependentControls != null) {
+    if (control.type == 'date') {
       const dob = event.target.value;
 
       console.log(dob, dob.length,this.dynamicFormGroup.get(control.name));
@@ -1510,11 +1510,6 @@ export class YatraComponent {
           }
         }
       }
-
-
-
-
-
     }
 
 
@@ -4466,7 +4461,7 @@ export class YatraComponent {
           memberOccupation: formData[`insuredMemberDetails.${index}.productMemberOccupation`] || '',
           covers: member?.covers || [],
           productQuestionnaire: formData[`insuredMemberDetails.${index}.productQuestionnaire`] || '',
-          memberRoomCategory: ''
+          memberRoomCategory:member?.memberRoomCategory || ''
         };
       }) || [],
       CKYCNo: formData?.ckycNo || '',

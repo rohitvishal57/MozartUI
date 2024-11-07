@@ -96,6 +96,7 @@ export interface InsuredMemberDetail {
     memberDesignation: string
     memberOccupation: string
     covers: Cover[]
+    memberRoomCategory:string
 }
 
 export interface Cover {
