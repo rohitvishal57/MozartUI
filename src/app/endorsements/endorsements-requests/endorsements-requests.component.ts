@@ -204,6 +204,8 @@ export class EndorsementsRequestsComponent implements OnInit {
     } else {
     this.requestsListRequestBody.uiStatus = filter;
     }
+    this.isSearch = true;
+    this.first = 0;
     this.getRequestList();
     this.activeFilter = filter;
   }

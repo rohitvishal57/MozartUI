@@ -76,8 +76,9 @@ export class ClaimsListViewComponent implements OnInit {
   //-------------filters--------------//
   filterClaims(status: string) {
     this.claimsReqBody.status = status;
-    this.first = 0;
     this.selectedStatus = status;
+    this.isSearch = true;
+    this.first = 0;
     this.fetchData();
   }
 
@@ -222,8 +223,9 @@ applyFilter() {
 
   if (selectedPolicyTypes.length === this.StaticRequestTypes.length || selectedPolicyTypes.length === 0) {
     this.claimsReqBody.requestType = "";
+  
   } else {
-    this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
+    this.claimsReqBody.requestType = selectedPolicyTypes[0];
   }
 
   // selected products
@@ -305,8 +307,9 @@ clear() {
       this.claimsReqBody.searchType = this.selected;
       this.claimsReqBody.searchString = [searchValue];    
       this.isSearch = true;
-      this.fetchData();
       this.first = 0;
+      this.fetchData();
+
     }
   }
 
