@@ -842,3 +842,24 @@
         padding-left: 0;
     }
 }
+
+/*Get Quote styles start*/
+.getQuoteMain {
+    padding: 0 0 16px;
+}
+.productListWraper{
+    margin-top: 32px;
+}
+.main_productList {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    .item_productList {
+        width: 100%;
+        flex: auto;
+    }
+    .right_productList {
+        max-width: 394px;
+    }
+}
+/*Get Quote styles end*/
