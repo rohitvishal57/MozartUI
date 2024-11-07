@@ -5053,6 +5053,10 @@ input[type="search"]::-webkit-search-results-decoration {
   text-overflow: ellipsis;
   max-width: 99%;
 }
+.common_searchWraper .field_searchMain .btn_text:disabled {
+  border-color:transparent !important;
+  background: transparent !important;
+}
 /*.lead_btnList button {
   position: relative;
 }

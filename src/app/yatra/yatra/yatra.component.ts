@@ -104,12 +104,14 @@ export class YatraComponent {
   feedbackSubmit: boolean = false;
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
+  kidCount = 0;
+
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
-    private route : ActivatedRoute) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.showHtmlContent = false;
@@ -199,6 +201,9 @@ export class YatraComponent {
     }
 
 
+    if (this.formData.noOfChildrens) {
+      this.kidCount = this.formData.noOfChildrens;
+    }
     if (sessionStorage.getItem('quoteNo') != null) {
       this.quoteNo = this.encryptionService.decrypt(sessionStorage.getItem('quoteNo') as string);
     }
@@ -480,6 +485,30 @@ export class YatraComponent {
             this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
           }
           else {
+            if (control.type === 'date') {
+              const lowerCaseName = control.name.toLowerCase();
+              if (lowerCaseName.includes('dob') || lowerCaseName.includes('dateofbirth')) {
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear();
+                const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const currentDay = String(currentDate.getDate()).padStart(2, '0');
+            
+                // Construct dobRegex pattern as a string
+                const dobPattern = 
+                  `^(18[0-9]{2}|19[0-9]{2}|20[0-${currentYear.toString().slice(2, 3)}][0-${currentYear.toString().slice(3, 4)}])` + // Years 1800-Current Year
+                  `-(0[1-9]|1[0-2])` + // All valid months for past years
+                  `-(0[1-9]|[12][0-9]|3[01])` + // All valid days for past years and months
+                  `|${currentYear}-(${currentMonth}|0[1-9]|1[0-9])` + // Current year, only months up to current month
+                  `-${currentDay}|(0[1-9]|[12][0-9]|3[01])$`; // Only days up to current day for the current month
+            
+                // Push the pattern as a validator to the control
+                control.validators?.push({
+                  validatorName: "pattern",
+                  pattern: dobPattern, // Use the constructed string pattern here
+                  message: "Date of Birth should not exceed the current date and must be in yyyy-MM-dd format."
+                });
+              }
+            }
             let controlValidators: any = [];
             if (control.validators && control.visible == true) {
               control.validators.forEach((val: IValidator) => {
@@ -556,8 +585,9 @@ export class YatraComponent {
             if (control.type == 'radio') {
 
               control.value = control.radioOptions?.find(option => option.selected)?.value || "";
-              if(control.methodName)
-              this.callMethod(control.methodName, control);
+
+              if (control.methodName)
+                this.callMethod(control.methodName, control);
             }
 
             if (control.type == 'custom-radio' && control.methodName) {
@@ -581,7 +611,36 @@ export class YatraComponent {
               })
             }
 
+            if (control.type === 'date') {
+              const lowerCaseName = control.name.toLowerCase();
+              if (lowerCaseName.includes('dob') || lowerCaseName.includes('dateofbirth')) {
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear();
+                const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const currentDay = String(currentDate.getDate()).padStart(2, '0');
+            
+                // Construct dobRegex pattern as a string
+                const dobPattern = 
+                  `^(18[0-9]{2}|19[0-9]{2}|20[0-${currentYear.toString().slice(2, 3)}][0-${currentYear.toString().slice(3, 4)}])` + // Years 1800-Current Year
+                  `-(0[1-9]|1[0-2])` + // All valid months for past years
+                  `-(0[1-9]|[12][0-9]|3[01])` + // All valid days for past years and months
+                  `|${currentYear}-(${currentMonth}|0[1-9]|1[0-9])` + // Current year, only months up to current month
+                  `-${currentDay}|(0[1-9]|[12][0-9]|3[01])$`; // Only days up to current day for the current month
+            
+                // Push the pattern as a validator to the control
+                control.validators?.push({
+                  validatorName: "pattern",
+                  pattern: dobPattern, // Use the constructed string pattern here
+                  message: "Date of Birth should not exceed the current date and must be in yyyy-MM-dd format."
+                });
+              }
+            }
+            
+
             this.dynamicFormGroup.addControl(control.name, new FormControl(control.value, controlValidators));
+            if(control.name == 'memberDobProposer'){
+              console.log(control,this.dynamicFormGroup.get(control.name));
+            }
             if (control.type == 'custom-radio' && this.formData[control.name]) {
               const radioControl = this.dynamicFormGroup.get(control.name);
               if (radioControl) {
@@ -1023,7 +1082,7 @@ export class YatraComponent {
     this.yatraService.getInsuredOccupation().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options =res.data;
+        control.options = res.data;
       },
       error: (err: any) => {
         console.error(err);
@@ -1250,6 +1309,8 @@ export class YatraComponent {
 
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null) {
+    console.log(control);
+
     this.changesMade = true;
     let eventValue = event.target.value;
     if (control.name === "chequeNumber") {
@@ -1345,26 +1406,99 @@ export class YatraComponent {
       this.changeOverLayDone(control, parentControl, false);
     }
 
+    // if (control.type == 'date' && control.dependentControls != null) {
+    //   const dob = event.target.value;
+    //   const dobArray = dob.split('-');
+
+    //   if (parentControl != null && index != null) {
+
+    //     if (dobArray[0] as number >= 1800) {
+    //       const ageControl = this.dynamicFormGroup.get(parentControl.name);
+    //       if (ageControl) {
+    //         ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
+    //         (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
+    //         this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
+
+    //       }
+    //     }
+    //   }
+    //   else {
+    //     if (dobArray[0] as number >= 1800) {
+    //       const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
+
+    //       if (dob && ageControl) {
+    //         ageControl.markAsTouched();
+    //         const age = this.calculateAge(dob);
+    //         ageControl.setValue(age);
+    //       }
+    //     }
+    //   }
+
+    // }
+
     if (control.type == 'date' && control.dependentControls != null) {
       const dob = event.target.value;
-      const dobArray = dob.split('-');
 
-      if (parentControl != null && index != null) {
+      console.log(dob, dob.length,this.dynamicFormGroup.get(control.name));
 
-        if (dobArray[0] as number >= 1800) {
+      // Split the input date assuming 'yyyy-MM-dd' format (browser behavior)
+      const dobArray = dob.split('-'); // [YYYY, MM, DD]
+      const formattedDOB = `${dobArray[2]}/${dobArray[1]}/${dobArray[0]}`; // Convert to dd/MM/yyyy
+
+      const year = parseInt(dobArray[0]);
+
+      console.log(year.toString().length);
+
+      const currentYear = new Date().getFullYear();
+
+      // // Validate the full date in dd/MM/yyyy format using regex
+      // const dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(18[0-9]{2}|19[0-9]{2}|20[0-9]{2})$/;
+      // if (!dobRegex.test(formattedDOB) && year.toString().length == 4) {
+      //   this.toast.error({
+      //     detail: 'Error',
+      //     summary: 'Invalid Date of Birth: Please enter a valid date in dd/MM/yyyy format',
+      //     duration: 5000
+      //   });
+      //   return;
+      // }
+
+      // Validate year after the full date is entered
+      if ((year < 1800 || year > currentYear) && year.toString().length === 4) {
+        // Invalid year: Show error and reset age control
+        this.toast.error({
+          detail: 'Error',
+          summary: 'Invalid Year: Please enter a valid year between 1800 and the current year',
+          duration: 3000
+        });
+
+        // Clear age control value if DOB is invalid
+        if (parentControl != null && index != null) {
+          const ageControl = this.dynamicFormGroup.get(parentControl.name);
+          if (ageControl) {
+            ageControl.value[index][control.dependentControls[0]] = "";
+            (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
+            this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
+          }
+        } else {
+          const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
+          if (ageControl) {
+            ageControl.setValue("");
+            ageControl.markAsTouched();
+          }
+        }
+        return; // Exit since the year is invalid
+      }
+      else if (year.toString().length === 4) {
+        // Valid year: Proceed with age calculation and form patching if DOB is valid
+        if (parentControl != null && index != null) {
           const ageControl = this.dynamicFormGroup.get(parentControl.name);
           if (ageControl) {
             ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
             (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
             this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
-
           }
-        }
-      }
-      else {
-        if (dobArray[0] as number >= 1800) {
+        } else {
           const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
-
           if (dob && ageControl) {
             ageControl.markAsTouched();
             const age = this.calculateAge(dob);
@@ -1372,6 +1506,10 @@ export class YatraComponent {
           }
         }
       }
+
+
+
+
 
     }
 
@@ -1755,31 +1893,33 @@ export class YatraComponent {
     const formGroup = this.dynamicFormGroup.get(control.name) as FormGroup;
     let index = parseInt(option.value.slice(-1), 10);
     index += 1;
-    const baseName = option.value.replace(/\d+$/, '');
-    const newControlName = baseName + index;
+    if ((index <= 4 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual' || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Individual') {
+      const baseName = option.value.replace(/\d+$/, '');
+      const newControlName = baseName + index;
 
-    // Add the new control with a unique name
-    formGroup.addControl(newControlName, new FormControl(false));
+      // Add the new control with a unique name
+      formGroup.addControl(newControlName, new FormControl(false));
 
-    this.form.formSections.forEach((section) => {
-      section.formControls.forEach((formControl: IFormControl) => {
-        if (formControl.name === control.name) {
-          formControl.selectCheckboxOptions?.push({
-            label: option.label,
-            value: newControlName,
-            isIncrement: option.isIncrement,
-            imagePath: option.imagePath
-          });
+      this.form.formSections.forEach((section) => {
+        section.formControls.forEach((formControl: IFormControl) => {
+          if (formControl.name === control.name) {
+            formControl.selectCheckboxOptions?.push({
+              label: option.label,
+              value: newControlName,
+              isIncrement: option.isIncrement,
+              imagePath: option.imagePath
+            });
 
-          // Disable the button for the current option
-          formControl.selectCheckboxOptions?.forEach((checkOption) => {
-            if (checkOption.value === option.value) {
-              checkOption.isIncrement = false;
-            }
-          });
-        }
+            // Disable the button for the current option
+            formControl.selectCheckboxOptions?.forEach((checkOption) => {
+              if (checkOption.value === option.value) {
+                checkOption.isIncrement = false;
+              }
+            });
+          }
+        });
       });
-    });
+    }
   }
 
   // getProposerRelationship(control: IFormControl): Promise<any> {
@@ -2004,147 +2144,167 @@ export class YatraComponent {
 
   logSelection(event: Event | null, option: any, controls: any) {
     // const checkbox = event.target as HTMLInputElement;
+    // console.log(this.kidCount,option);
     const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
-    this.form.formSections.forEach(formsection => {
-      formsection.formControls.forEach(formControl => {
-        if (checkbox.checked == true) {
-          // if(formControl.name == 'totalPremium' && this.isPolicyDetailsFetch){
-          //   formControl.value = "";
-          //   this.dynamicFormGroup.get("totalPremium")?.setValue("");
-          // }
-          if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-            formsection.visible = true;
-            if (this.isQuote == true && this.isPolicyDetailsFetch) {
-              formControl.dynamicControls = formControl.dynamicControls.slice(0, 1);
-              console.log(this.form, this.dynamicFormGroup.value);
-              this.isQuote = false;
-            }
-            let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-            tempControl[1].value = option.value;
-            tempControl[0].value = JSON.stringify(option);
-            formControl.dynamicControls?.push(tempControl);
-            console.log(this.formData);
+    console.log(checkbox);
 
-            let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
-            // let formArr;
+    if (this.kidCount >= 4 && checkbox.checked && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+      this.toast.warning({ detail: "WARNING", summary: "Cannot select more than 4 childrens", duration: 3000 });
+      checkbox.checked = false;
+      return;
+    }
+    else {
+      this.form.formSections.forEach(formsection => {
+        formsection.formControls.forEach(formControl => {
+          if (checkbox.checked == true) {
+            // if(formControl.name == 'totalPremium' && this.isPolicyDetailsFetch){
+            //   formControl.value = "";
+            //   this.dynamicFormGroup.get("totalPremium")?.setValue("");
+            // }
 
-            if (formArr != null) {
-              formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
-              formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
-            }
-            else {
-              formArr = this.fb.array([]);
-              formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
-              this.dynamicFormGroup.addControl(controls.idProperty, formArr);
-            }
+            if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
+              console.log(option);
+
+              if (option.value.includes('Son') || option.value.includes('Daughter')) {
+                this.kidCount++;
+              }
+              formsection.visible = true;
+              if (this.isQuote == true && this.isPolicyDetailsFetch) {
+                formControl.dynamicControls = formControl.dynamicControls.slice(0, 1);
+                console.log(this.form, this.dynamicFormGroup.value);
+                this.isQuote = false;
+              }
+              let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+              tempControl[1].value = option.value;
+              tempControl[0].value = JSON.stringify(option);
+              formControl.dynamicControls?.push(tempControl);
+              console.log(this.formData);
+
+              let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+              // let formArr;
+
+              if (formArr != null) {
+                formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+                formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
+              }
+              else {
+                formArr = this.fb.array([]);
+                formArr.push(this.initializeDynamicFormControls(tempControl, formControl.dynamicControls.length - 1));
+                this.dynamicFormGroup.addControl(controls.idProperty, formArr);
+              }
 
 
 
-            if (checkbox.checked == true && option.value == 'Self') {
-              // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
-              let index = -1;
-              if (formControl.dynamicControls) {
-                for (let i = 0; i < formControl.dynamicControls.length; i++) {
-                  let element = formControl.dynamicControls[i];
-                  try {
-                    console.log(element[0]);
+              if (checkbox.checked == true && option.value == 'Self') {
+                // let index = formControl.dynamicControls?.findIndex((element:any) => JSON.parse(element[0].value)?.value == option.value);
+                let index = -1;
+                if (formControl.dynamicControls) {
+                  for (let i = 0; i < formControl.dynamicControls.length; i++) {
+                    let element = formControl.dynamicControls[i];
+                    try {
+                      console.log(element[0]);
 
-                    let parsedValue = JSON.parse(element[0].value);
-                    if (parsedValue.value === option.value) {
-                      element.forEach((control: any) => {
-                        if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName' || control.name == 'sumInsured') {
-                          control.disabled = true
-                        }
-                      })
-                      index = i;
-                      break;
+                      let parsedValue = JSON.parse(element[0].value);
+                      if (parsedValue.value === option.value) {
+                        element.forEach((control: any) => {
+                          if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName' || control.name == 'sumInsured') {
+                            control.disabled = true
+                          }
+                        })
+                        index = i;
+                        break;
+                      }
+                    } catch (e) {
+                      console.error('Error parsing JSON:', e);
                     }
-                  } catch (e) {
-                    console.error('Error parsing JSON:', e);
                   }
                 }
+
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
+                // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+
               }
+              console.log(this.dynamicFormGroup.get('memberPolicyType')?.value);
 
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('height')?.setValue(this.dynamicFormGroup.get('height')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('weight')?.setValue(this.dynamicFormGroup.get('weight')?.value);
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('heightInches')?.setValue(this.dynamicFormGroup.get('heightInches')?.value);
-              // (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+              if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+                console.log((this.dynamicFormGroup.get(controls.idProperty) as FormArray));
 
-            }
-            console.log(this.dynamicFormGroup.get('memberPolicyType')?.value);
-
-            if (this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
-              console.log((this.dynamicFormGroup.get(controls.idProperty) as FormArray));
-
-              (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
-                control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
-              })
-            }
-            console.log(typeof this.dynamicFormGroup.get('numberOfInsuredMembers')?.value, this.dynamicFormGroup.get('numberOfInsuredMembers')?.value);
-
-            this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
-          }
-
-        }
-        else if (checkbox.checked == false) {
-          if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
-            let index = formControl.dynamicControls?.findIndex((element: any) =>
-              element[1].value == option.value);
-            if (index !== undefined && index !== -1) {
-              formControl.dynamicControls?.splice(index, 1);
-              let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
-              formArr.removeAt(index - 1);
-              if (formArr.length == 0) {
-                formsection.visible = false;
+                (this.dynamicFormGroup.get(controls.idProperty) as FormArray)?.controls.forEach((control: any) => {
+                  control.get('sumInsured')?.setValue(this.dynamicFormGroup.get('sumInsured')?.value);
+                })
               }
-              Object.keys(this.formData).forEach(key => {
-                if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
-                  delete this.formData[key];
-                }
-                if (key.includes(option.value)) {
-                  delete this.formData[key]
-                }
-              });
+              console.log(typeof this.dynamicFormGroup.get('numberOfInsuredMembers')?.value, this.dynamicFormGroup.get('numberOfInsuredMembers')?.value);
+
+              this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value + 1);
             }
-            console.log(this.formData);
-            this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value - 1);
+
           }
-          // else if(formControl){
-          //   Object.keys(this.formData).forEach(key => {
-          //     if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
-          //       delete this.formData[key];
-          //     }
-          //   });
-          // }
+          else if (checkbox.checked == false) {
 
-        }
-      });
-    })
-    // const numberOfInsuredMembersControl = this.dynamicFormGroup.get('numberOfInsuredMembers');
-    // if (numberOfInsuredMembersControl) {
-    //   const numberOfInsuredMembers = numberOfInsuredMembersControl.value;
+            if (formControl.name == controls.idProperty && formControl.dynamicControls && formControl.visible == true) {
+              if (option.value.includes('Son') || option.value.includes('Daughter')) {
+                this.kidCount--;
+              }
+              let index = formControl.dynamicControls?.findIndex((element: any) =>
+                element[1].value == option.value);
+              if (index !== undefined && index !== -1) {
+                formControl.dynamicControls?.splice(index, 1);
+                let formArr = this.dynamicFormGroup.get(controls.idProperty) as FormArray;
+                formArr.removeAt(index - 1);
+                if (formArr.length == 0) {
+                  formsection.visible = false;
+                }
+                Object.keys(this.formData).forEach(key => {
+                  if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
+                    delete this.formData[key];
+                  }
+                  if (key.includes(option.value)) {
+                    delete this.formData[key]
+                  }
+                });
+              }
+              console.log(this.formData);
+              this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('numberOfInsuredMembers')?.value - 1);
+            }
+            // else if(formControl){
+            //   Object.keys(this.formData).forEach(key => {
+            //     if (key.startsWith(`${controls.idProperty}.${index - 1}.`)) {
+            //       delete this.formData[key];
+            //     }
+            //   });
+            // }
 
-    const insuredMembersFormGroup = this.dynamicFormGroup.get('insuredMembers') as FormGroup;
-    if (insuredMembersFormGroup) {
-      insuredMembersFormGroup.setValidators(this.addCustomValidation());
-      // console.log(this.addCustomValidation());
+          }
+        });
+      })
+      // const numberOfInsuredMembersControl = this.dynamicFormGroup.get('numberOfInsuredMembers');
+      // if (numberOfInsuredMembersControl) {
+      //   const numberOfInsuredMembers = numberOfInsuredMembersControl.value;
 
-      insuredMembersFormGroup.updateValueAndValidity();
-      console.log(this.dynamicFormGroup.get('insuredMembers'));
+      const insuredMembersFormGroup = this.dynamicFormGroup.get('insuredMembers') as FormGroup;
+      if (insuredMembersFormGroup) {
+        insuredMembersFormGroup.setValidators(this.addCustomValidation());
+        // console.log(this.addCustomValidation());
 
+        insuredMembersFormGroup.updateValueAndValidity();
+        console.log(this.dynamicFormGroup.get('insuredMembers'));
+
+      }
+      // }
+
+      this.updateValueAndGroupError(this.dynamicFormGroup.get(controls.name) as FormGroup);
     }
-    // }
-
-    this.updateValueAndGroupError(this.dynamicFormGroup.get(controls.name) as FormGroup);
   }
 
   updateValueAndGroupError(controlGroup: FormGroup) {
@@ -2429,6 +2589,10 @@ export class YatraComponent {
         }
         if (this.form.formTitle.includes("Health & Lifestyle")) {
           this.mappingForQuestionnaire(this.form);
+        }
+
+        if (this.form.formTitle.includes("Leads")) {
+          this.formData.noOfChildrens = this.kidCount;
         }
         this.allJsonForm[this.getFormIndexValue()] = this.form;
 
@@ -3760,12 +3924,12 @@ export class YatraComponent {
   }
 
   setPremiumAmount(control?: any) {
-    console.log(this.dynamicFormGroup.value,this.form,this.displayTaxList, this.selectedIndex, this.formData,this.QuoteNumber);
+    console.log(this.dynamicFormGroup.value, this.form, this.displayTaxList, this.selectedIndex, this.formData, this.QuoteNumber);
     this.tenureAmount.forEach(member => {
       console.log(member);
 
     })
-    if(this.selectedIndex == -1){
+    if (this.selectedIndex == -1) {
       this.selectedIndex = 2;
     }
     this.form.formSections.forEach((section: any) => {
@@ -3816,11 +3980,11 @@ export class YatraComponent {
                   this.dynamicFormGroup.addControl(formControl.name, new FormControl(this.tenureAmount[index]));
                   radioOptionsControl = this.dynamicFormGroup.get('totalPremium');
                 }
-    
+
                 if (radioOptionsControl) {
                   radioOptionsControl.setValue(this.tenureAmount[index], { emitEvent: true });
                 }
-    
+
                 // Update additional data
                 this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
                 this.formData.tenure = this.selectedIndex + 1;
@@ -3830,7 +3994,7 @@ export class YatraComponent {
         }
       });
     });
-    console.log(this.dynamicFormGroup.value,this.formData);
+    console.log(this.dynamicFormGroup.value, this.formData);
   }
 
   mergeMember(control: any) {
@@ -4520,7 +4684,7 @@ export class YatraComponent {
                       const filteredInnerArray = Object.fromEntries(
                         Object.entries(innerArray).filter(([key, value]) => value !== "")
                       );
-                      console.log(innerArray,filteredInnerArray);
+                      console.log(innerArray, filteredInnerArray);
                       if (filteredInnerArray['diseaseName'] !== "" && Object.keys(filteredInnerArray).length > 0) {
                         innerArray.parentQuestionCode = questionId;
                         productQuestionnaire.push(filteredInnerArray);
@@ -4556,9 +4720,9 @@ export class YatraComponent {
     console.log(this.formData, this.dynamicFormGroup.value, this.form);
   }
 
-  backToleads(){
+  backToleads() {
     this.router.navigate(['/leads/leadsList'], {
-  });
+    });
   }
 
 }

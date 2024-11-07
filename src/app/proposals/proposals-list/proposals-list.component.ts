@@ -320,21 +320,28 @@ export class ProposalsListComponent {
         console.warn('Unknown action:', event);
     }
   }
-  async redirect(){
-    try {
-      await this.getProposalNum();
-      const productData = {
-        partnerId : 1,
-        productId : 1,
-        proposalNum: this.proposalNum
+  async redirect(proposalDetails: any){
 
+    console.log(proposalDetails);
+    
+    try {
+      const reqData = {
+        partnerId : 0,
+        agentCode : this.agentCode
       }
-      await this.getFormSequence(productData);
-      if (this.formSequence != null && this.formSequence.length > 0) {
-        this.router.navigate(['yatra'], {
-          state: { productData: productData, formSequence: this.formSequence }
-        });
-      }
+      // await this.getProposalNum();
+      // const productData = {
+      //   partnerId : 1,
+      //   productId : 1,
+      //   proposalNum: this.proposalNum
+
+      // }
+      // await this.getFormSequence(productData);
+      // if (this.formSequence != null && this.formSequence.length > 0) {
+      //   this.router.navigate(['yatra'], {
+      //     state: { productData: productData, formSequence: this.formSequence }
+      //   });
+      // }
     } catch (error) {
       console.error(error);
     }
