@@ -563,7 +563,10 @@ export class YatraComponent {
               }
             }
 
-            if (control.type == 'radio' && control.method) {
+            if (control.type == 'radio') {
+
+              control.value = control.radioOptions?.find(option => option.selected)?.value || "";
+              if(control.methodName)
               this.callMethod(control.methodName, control);
             }
 
