@@ -6,7 +6,7 @@
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
                         <li class="quickFilterHeading block-hide">Quick filter</li>
-                        <li><button type="button" id="af-allpolicies" name="af-allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">All Policies({{countsList.totalRecords}})</button></li>
+                        <li><button type="button" id="af-allpolicies" name="af-allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">All ({{countsList.totalRecords}})</button></li>
                         <li><button type="button" id="af-30days" name="af-30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysCreated'}" (click)="filterQuotes('<30DaysCreated','createdInLessThan30DaysCount')">< 30 Days ({{countsList.createdInLessThan30DaysCount}})</button></li>
                         <li><button type="button" id="af-60days" name="af-60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60DaysCreated'}" (click)="filterQuotes('30-60DaysCreated','createdIn30To60DaysCount')">30-60 Days ({{countsList.createdIn30To60DaysCount}})</button></li>
                         <li><button type="button" id="af-90days" name="af-90days" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90DaysCreated'}" (click)="filterQuotes('60-90DaysCreated','createdIn60To90DaysCount')">60-90 Days ({{countsList.createdIn60To90DaysCount}})</button></li>
