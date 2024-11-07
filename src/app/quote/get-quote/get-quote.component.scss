@@ -1404,5 +1404,14 @@ h4 {
     top: 15px;
   }
 }
-
+.dashboard_contentContainer .insurance_optionHUB {
+  padding: 0 20px;
+  .continue-btn-container {
+    margin: 0;
+    .btn_grey {
+      position: relative;
+      bottom: -30px;
+    }
+  }
+}
 /*Custom overlay dropdown end*/
