@@ -5046,6 +5046,13 @@ input[type="search"]::-webkit-search-results-decoration {
 .btn_buyPlanNow:hover img {
   filter:invert(21%) sepia(70%) saturate(7414%) hue-rotate(359deg) brightness(79%) contrast(117%);
 }
+.text-ellipsis {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 99%;
+}
 /*.lead_btnList button {
   position: relative;
 }
