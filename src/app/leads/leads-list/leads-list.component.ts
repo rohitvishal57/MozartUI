@@ -382,9 +382,9 @@ export class LeadsListComponent {
         if (response.message == "Success") {
 
           if (selectedLeadIDs.length > 1) {
-            this.toast.success({ detail: "SUCCESS", summary:'Leads has been successfully assigned.' , duration: 5000 });
+            this.toast.success({ detail: "", summary:'Leads has been successfully assigned.' , duration: 5000 });
           } else {
-            this.toast.success({ detail: "SUCCESS", summary:'Lead has been successfully assigned.' , duration: 5000 });
+            this.toast.success({ detail: "", summary:'Lead has been successfully assigned.' , duration: 5000 });
           }
           this.filterQuotes('all');
         }
@@ -486,7 +486,7 @@ export class LeadsListComponent {
     } else if (this.selected === 'email') {
       errorMessage ='Please enter a valid email address (e.g., user@example.com).';
     }
-   return  this.toast.warning({ detail: "WARNING", summary:errorMessage, duration: 5000 });
+   return  this.toast.warning({ detail: "", summary:errorMessage, duration: 5000 });
 
   }
 

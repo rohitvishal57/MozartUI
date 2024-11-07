@@ -232,9 +232,9 @@ export class CreateLeadComponent implements OnInit {
         console.log(response);
         if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
-            this.toast.success({ detail: "SUCCESS", summary: 'Lead is updated successfully.', duration: 5000 });
+            this.toast.success({ detail: "", summary: 'Lead is updated successfully.', duration: 5000 });
           } else {
-            this.toast.success({ detail: "SUCCESS", summary: 'Lead is created successfully.', duration: 5000 });
+            this.toast.success({ detail: "", summary: 'Lead is created successfully.', duration: 5000 });
           }
           console.log(response);
           this.router.navigate(['leads/leadsList'])
@@ -389,7 +389,7 @@ export class CreateLeadComponent implements OnInit {
       this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
         (response) => {
           if (response.message == "Success") {
-            this.toast.success({ detail: "SUCCESS", summary: 'Note Added successfully.', duration: 5000 });
+            this.toast.success({ detail: "", summary: 'Note Added successfully.', duration: 5000 });
             this.router.navigate(['leads/leadsList'])
           }
         }, (error) => {
