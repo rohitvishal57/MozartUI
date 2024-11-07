@@ -59,6 +59,7 @@ export class LeadsListComponent {
   statusUpdateLead: any;
   startDate: any;
   endDate: any;
+  todayDate : any = new Date().toISOString().split('T')[0];
   filterLeads = false;
   today: string = '';
   StaticPolicyTypes = [
@@ -508,6 +509,13 @@ export class LeadsListComponent {
     } else if (dateType === "endDate" && this.endDate) {
       this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
     }
+   
+
+    if (this.startDate > new Date().toISOString().split('T')[0]) {
+      this.startDate = ''; // Clear the invalid date
+      this.toast.warning({ detail: "", summary: 'StartDate should be greater than today date.', duration: 5000 });
+    }
+
   }
 
   redirectProducts(lead: any) {
