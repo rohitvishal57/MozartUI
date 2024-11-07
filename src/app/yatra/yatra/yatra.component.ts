@@ -105,6 +105,7 @@ export class YatraComponent {
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
   kidCount = 0;
+  quickQuoteRedirect :Boolean =false;
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -137,7 +138,10 @@ export class YatraComponent {
     if (history.state.productData.proposalNum)
       this.proposalNum = history.state.productData.proposalNum;
     if (history.state.productData.tenureAmounts) {
-      this.tenureAmount = history.state.productData.tenureAmounts
+      this.tenureAmount = history.state.productData.tenureAmounts;
+    }
+    if (history.state.productData.quickQuoteRedirect) {
+      this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
     }
     if (history.state.productData.tenure) {
       this.formData = { ...this.formData, tenure: history.state.productData.tenure }

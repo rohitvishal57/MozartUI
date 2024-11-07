@@ -551,7 +551,7 @@ export class LeadsListComponent {
           const interestedProductItem  = ProductList.find((product: any) => product.productName == lead.interestedProductName); 
        
           try {
-            sessionStorage.clear();
+           // sessionStorage.clear();
             const reqData = {
               "partnerId": interestedProductItem.partnerId,
               "productId": interestedProductItem.productId
@@ -576,7 +576,7 @@ export class LeadsListComponent {
           const productData = {
             partnerId: interestedProductItem.partnerId,
             productId: interestedProductItem.productId,
-            proposalNum: ""
+            quickQuoteRedirect : true
     
           }
 
