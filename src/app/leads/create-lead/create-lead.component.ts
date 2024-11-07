@@ -312,6 +312,10 @@ export class CreateLeadComponent implements OnInit {
     });
     this.changeReferStatus(this.submittedUser.leadStatus);
     this.changeSumInsured(this.submittedUser.interestedProductName);
+    this.userValidations.patchValue({
+      leadSubStatus: this.submittedUser?.leadSubStatus??'',
+      sumInsured: this.submittedUser?.sumInsured ?? ''
+    });
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
@@ -350,10 +354,10 @@ export class CreateLeadComponent implements OnInit {
       let selectedStatus = typeof (event) == 'string' ? event : event.target.value;
       console.log('selectedStatus', selectedStatus);
       this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
-        this.userValidations.patchValue({
-          leadSubStatus: this.submittedUser?.leadSubStatus??''
-        });
       }
+      this.userValidations.patchValue({
+        leadSubStatus:'',
+      });
 
   }
 
@@ -361,10 +365,10 @@ export class CreateLeadComponent implements OnInit {
     if (event) {
       let selectedValue = typeof (event) == 'string' ? event : event.target.value;
       this.productSumInsured = this.productsList.find((product: any) => product.productName === selectedValue)?.sumInsured.split(",");
-        this.userValidations.patchValue({
-          sumInsured: this.submittedUser?.sumInsured ?? ''
-        }); 
     }
+    this.userValidations.patchValue({
+      sumInsured:  ''
+    });
   }
 
   addNotesSubmit() {
