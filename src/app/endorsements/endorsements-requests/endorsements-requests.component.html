@@ -1,1 +1,2 @@
-<app-shared-table [tableData]="tableData" (actionBtnEmit)="onEmitBtn($event)" (selectedFilterEmit)="onSelectedFilter($event)"></app-shared-table>
+<app-shared-table [selectedView]="'list'" (viewEmit)="quotesViews($event)" [tableData]="tableData"
+    (actionBtnEmit)="onEmitBtn($event)" (selectedFilterEmit)="onSelectedFilter($event)"></app-shared-table>
