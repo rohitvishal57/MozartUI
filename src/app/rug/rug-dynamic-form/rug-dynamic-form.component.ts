@@ -33,7 +33,7 @@ export class RugDynamicFormComponent {
   proposalNum: any;
   familyConstruct: any;
   idProofType: string = '';
-
+  nomineeRelations: any;
   private allJsonForm: any[] = [];
   formData: any = {}
   selectedFile: any;
@@ -179,7 +179,7 @@ export class RugDynamicFormComponent {
     console.log(this.formSequence[0].formName);
     if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
       let reqObj = {
-        leadId: "932276762"
+        leadId: "93429121212"
       }
       this.yatraService.getProposalDetails(reqObj).subscribe({
         next: (res: any) => {
@@ -187,7 +187,10 @@ export class RugDynamicFormComponent {
           this.commonDraftData = res;
           this.bbdetails = res.commonDraftDetails.data;
           this.bbdetails = JSON.parse(this.bbdetails);
+          this.yatraService.policyDetails = this.bbdetails;
           console.log(this.bbdetails);
+          this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.proposerDetails.premium);
+          console.log(this.yatraService.policyDetails);
         },
         error: (err) => {
           console.error(err);
@@ -655,6 +658,7 @@ export class RugDynamicFormComponent {
         console.log(this.dynamicFormGroup.value);
         console.log(this.bbdetails);
         this.dynamicFormGroup.patchValue({
+          Salutation:this.bbdetails.proposerDetails.salutation,
           firstName: this.bbdetails.proposerDetails.customerFirstName,
           lastName: this.bbdetails.proposerDetails.customerLastName,
           proposerGender: this.bbdetails.proposerDetails.gender,
@@ -669,9 +673,20 @@ export class RugDynamicFormComponent {
           nri: this.bbdetails.proposerDetails.isNRI
 
         })
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.proposerDetails.premium);
       }
+      if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
 
-
+      }
+      if (this.formSequence[this.getFormIndexValue()].formId == 4 && this.formSequence[this.getFormIndexValue()].formName == "Bank/Payment Details") {
+        this.dynamicFormGroup.patchValue({
+          bankName:this.bbdetails.proposerDetails.branchName,
+          IFSCCode:this.bbdetails.proposerDetails.ifscCode,
+          accountNo:this.bbdetails.proposerDetails.accountNumber,
+          MICRCode:this.bbdetails.proposerDetails.micrCode,
+          branchName:this.bbdetails.proposerDetails.branchName,
+        })
+      }
       this.flattenObject(this.formData);
       this.spinner.hide();
     }
@@ -1290,6 +1305,7 @@ export class RugDynamicFormComponent {
       });
     }
   }
+
   getAllRelationship(control: any) {
     this.spinner.show();
     this.yatraService.getRelationship().subscribe({
@@ -2731,6 +2747,11 @@ export class RugDynamicFormComponent {
     }else{
       familyConstruct = 4
     }
+    console.log(familyConstruct);
+    this.yatraService.policyDetails.proposerDetails.familyConstructId = familyConstruct.toString();
+    let filteredFamilyConstruct = this.familyConstructsData.filter((item: any) => item.familyConstructID === familyConstruct.toString());
+    console.log(filteredFamilyConstruct);
+    this.yatraService.policyDetails.proposerDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
     let ageRange = this.returnAgeRange(familyConstruct, selfDob, selfDob)
     console.log(ageRange);
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
@@ -2752,30 +2773,118 @@ export class RugDynamicFormComponent {
     //   })
     // }
     console.log(premiumObj);
+    this.yatraService.policyDetails.proposerDetails.ghiPremium = premiumObj[0].premium.toString();
+    this.yatraService.policyDetails.proposerDetails.gpPremium = premiumObj[1].premium.toString();
     this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
     this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
   }
   onBbSubmit() {
-    this.yatraService.getRelations().subscribe({
-      next: (response) => {
-        console.log(response);
-      },
-      error: (error) => {
-        console.log(error);
-      }
-    })
     console.log(this.bbdetails);
     console.log(this.dynamicFormGroup.value);
     console.log(this.dynamicFormGroup.value.insuredMembers);
+    console.log(this.formSequence);
+    console.log(this.formIndexValue);
+    console.log(this.getFormIndexValue());
     // this.calculateBBPremium();
-
-
-    if (this.getFormIndexValue() < this.formSequence.length - 1) {
-      this.incrementIndex();
-      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+    if(this.getFormIndexValue() == 0){
+      this.yatraService.policyDetails.proposerDetails.sumInsured = this.dynamicFormGroup.value.sumInsured;
+      this.yatraService.policyDetails.proposerDetails.premium = this.dynamicFormGroup.value.totalPremium;
+      console.log(this.yatraService.policyDetails);
+      console.log(this.productCombinationData);
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+        if((ele.productCombination).replace(/\+/g, ",") == this.yatraService.policyDetails.proposerDetails.productPlanName && ele.productCode == "R03"){
+          return ele;
+        }
+      });
+      this.yatraService.policyDetails.proposerDetails.combiId = selectedCombiID[0]?.combiId.toString();
+      console.log(this.yatraService.policyDetails.insuredDetails)
+      this.mergeArrays(this.dynamicFormGroup.value.insuredMemberDetails, this.yatraService.policyDetails.insuredDetails);
+      console.log(this.yatraService.policyDetails.insuredDetails)
+      let commonDraftRequest = {
+        leadId: this.yatraService.policyDetails.proposerDetails.leadId,
+        requestData: JSON.stringify({      
+          proposerDetails: this.yatraService.policyDetails.proposerDetails,
+          insuredDetails:this.yatraService.policyDetails.insuredDetails,
+          nomineeDetails:this.yatraService.policyDetails.nomineeDetails
+        }),
+        isFinalSubmit: false,
+        leadStatus: "Draft"
+      }
+      this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          if (res.isSuccess == true && res.statusCode == 200) {
+            if (this.getFormIndexValue() < this.formSequence.length - 1) {
+              this.incrementIndex();
+              this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+              
+            }
+  
+          }
+  
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }else{
+      if (this.getFormIndexValue() < this.formSequence.length - 1) {
+        this.incrementIndex();
+        this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+        
+      }
     }
+ 
+
+  }
+  mergeArrays(firstArray: any[], insuredDetails: any[]): void {
+    console.log(firstArray);
+    console.log(insuredDetails);
+    firstArray.forEach((firstItem, index) => {
+      console.log(JSON.parse(firstItem.relationshipType));
+      console.log(index);
+      let firstItemRelation = JSON.parse(firstItem.relationshipType);
+      const existingItem = insuredDetails.find((item, index) => (firstItemRelation.id != undefined && item.relationCode === firstItemRelation.id));
+      if (existingItem) {
+        existingItem.firstName = firstItem.firstName;
+        existingItem.lastName = firstItem.lastName;
+        existingItem.gender = firstItem.memberGender;
+        existingItem.dob = firstItem.memberdob;
+        existingItem.age = firstItem.memberAge.toString();
+        existingItem.ageType = "years";
+        existingItem.relationWithProposer = firstItem.relation;
+        existingItem.weight = firstItem.weight;
+        existingItem.height = this.convertToCentimeters(firstItem.height, firstItem.heightInches).toFixed(2).toString();
+        existingItem.heightInch = null;
+      } else {
+        if (insuredDetails.length < 4) {
+          insuredDetails.push({
+            leadId: insuredDetails[0].leadId,  // Use a common `leadId` or generate it as needed
+            salutation: firstItemRelation.id == "R002" ? "Ms" : "Mr",           // Add appropriate salutation if needed
+            firstName: firstItem.firstName,
+            lastName: firstItem.lastName,
+            gender: firstItem.memberGender,
+            dob: firstItem.memberdob,
+            age: firstItem.memberAge.toString(),
+            ageType: "years",           // Customize this field as required
+            relationWithProposer: (firstItemRelation.id != undefined && firstItemRelation.id == "R003") ? firstItem.relation.replace(/\d+$/, '') : firstItem.relation.replace(/\d+$/, ''),
+            relationCode: firstItemRelation.id != undefined ? firstItemRelation.id : firstItemRelation.value.replace(/\d+$/, '') == "Son" ? "R003" : "R004" ,
+            tenure: null,
+            height: this.convertToCentimeters(firstItem.height, firstItem.heightInches).toFixed(2).toString(),
+            heightInch: null,
+            weight: firstItem.weight
+          });
+        }
+      }
+    });
+  }
+  convertToCentimeters(feet: number, inches: number): number {
+    const feetToCentimeters = feet * 30.48;
+    const inchesToCentimeters = inches * 2.54;
+    const totalCentimeters = feetToCentimeters + inchesToCentimeters;
+    return totalCentimeters;
   }
   returnAgeRange(familyConstructDetails: any, spouseDob: any, selfDob: any) {
     if (familyConstructDetails == '2' || familyConstructDetails == '4' || familyConstructDetails == '3') {
@@ -4849,6 +4958,22 @@ export class RugDynamicFormComponent {
     })
     console.log(this.formData, this.dynamicFormGroup.value, this.form);
   }
+  getBbRelations(control: any){
+    this.yatraService.getRelations().subscribe({
+      next: (response: any) => {
+        this.nomineeRelations = this.aesEncryptService.axisDecrypt(response.encrypted_Response);
+        console.log(this.nomineeRelations);
+        this.nomineeRelations = this.nomineeRelations.relationShipModels;
+        this.nomineeRelations.map((item: any) => {
+            item.name = item.relationName
+        })
+        control.options = this.nomineeRelations;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
+  }
   getBbSumInsured(control: any) {
     let sumInsuredObj = {
       ProductCode: "R03"
@@ -4900,6 +5025,9 @@ export class RugDynamicFormComponent {
     console.log(this.dynamicFormGroup.value.sumInsured);
     let filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
     console.log(filterArr);
+    this.yatraService.policyDetails.proposerDetails.groupCode = filterArr[0].groupCode;
+    this.yatraService.policyDetails.proposerDetails.productPlanName = "GHI,GP";
+    this.yatraService.policyDetails.proposerDetails.productPlanCode = filterArr[0].siPlanId.toString();
     if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
       let obj = {
         IsMinor: true,

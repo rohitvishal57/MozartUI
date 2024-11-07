@@ -13,7 +13,7 @@
                     <div class="common_searchWraper common_searchWraper_proposals">
                         <div class="field_searchMain">
                             <div>
-                                <select id="customerFilterSearch" name="customerFilterSearch" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
+                                <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
                                 <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">Select an Option</option>
                                 <option id="nameOption" name="nameOption" value="name">Name</option>
                                 <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">Mobile Number</option>
@@ -23,18 +23,18 @@
                             </div>
                             <div class="filterFieldGroup">
                                 <input  class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" [placeholder]="getPlaceholder()">
-                                <button  type="button" id="customerfilterSearch" name="customerfilterSearch" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                                <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
                             </div>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="customerFiltercount" name="customerFiltercount" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader">
                                     <header>Filter</header>
-                                    <button type="button" id="filtercancel" name="filtercancel" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+                                    <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
@@ -78,8 +78,8 @@
                                     </div>
                                 </div>
                                 <footer>
-                                    <button type="button" id="filterclear" name="filterclear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" id="filterapply" name="filterapply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
+                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
                                 </footer>
                             </div>
                         </div>

@@ -201,7 +201,7 @@
                                                 <option value="Daughter">Daughter</option>
                                             </select>
                                             <label for="Relation">Relation *</label>
-                                            <span class="ui-error" *ngIf="form.get('Relation')?.invalid && (form?.get('Relation')?.touched || memberDetails)">Please Select Relation</span>
+                                            <span class="ui-error" *ngIf="form.get('Relation')?.invalid && (form?.get('Relation')?.touched || memberDetails)">Relation is required field</span>
                                         </div>
                                     </div>
                                   </div>
@@ -258,29 +258,27 @@
                                                   <option value="O">Other</option>
                                               </select>
                                               <label for="gender">Gender *</label>
-                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">Please select gender</span>
+                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">Gender is required field</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="date" id="dob" name="dob" formControlName="DoB" placeholder="" class="form-control input-textBox" [value]="form.get('DoB')?.value | date: 'yyyy-MM-dd'"/>
                                             <label for="dob">Date of birth *</label>
-                                            <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">
-                                              Enter a valid date of birth
-                                            </span>
+                                            <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">date of birth is required field</span>
                                         </div>
                                     </div>
                                     
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="number" id="Mobile_Number" name="Mobile_Number" formControlName="Mobile_Number" placeholder="" class="form-control input-textBox">
-                                            <label for="Mobile_Number">Mobile Number</label>
+                                            <input type="number" id="mobilenumber" name="mobilenumber" formControlName="Mobile_Number" placeholder="" class="form-control input-textBox">
+                                            <label for="mobilenumber">Mobile Number</label>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="email" id="Email" name="Email" formControlName="Email" placeholder="" class="form-control input-textBox">
-                                            <label for="Email">Email Address</label>
+                                            <input type="email" id="email" name="email" formControlName="Email" placeholder="" class="form-control input-textBox">
+                                            <label for="email">Email Address</label>
                                         </div>
                                       </div>
                                   </div>
@@ -303,7 +301,7 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="air" name="air" formControlName="AnnualIncome" placeholder="" class="form-select input-selectBox">
+                                              <select id="annualincomerange" name="annualincomerange" formControlName="AnnualIncome" placeholder="" class="form-select input-selectBox">
                                                   <option value="">Select Annual income range</option>
                                                   <option value="500000">upto 5L</option>
                                                   <option value="1000000">5L to 10L</option>
@@ -312,7 +310,7 @@
                                                   <option value="2500000"> >20L</option>
                                               </select>
                                               <label for="air">Annual income range *</label>
-                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && (form.get('AnnualIncome')?.touched || memberDetails)">Please select annual income range</span>
+                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && (form.get('AnnualIncome')?.touched || memberDetails)">Annual income range is required field</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -326,7 +324,7 @@
                                                   <option value="Self Employed">Self Employed</option>
                                               </select>
                                               <label for="occupation">Occupation *</label>
-                                              <span class="ui-error" *ngIf="form.get('occupation')?.invalid && (form.get('occupation')?.touched || memberDetails)">Please select occupation</span>
+                                              <span class="ui-error" *ngIf="form.get('occupation')?.invalid && (form.get('occupation')?.touched || memberDetails)">occupation is required field</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -343,7 +341,7 @@
                                                   <option value="Other">Other</option>
                                               </select>
                                               <label for="education">Designation</label>
-                                              <span class="ui-error" *ngIf="form.get('Designation')?.invalid && form.get('Designation')?.touched">Please select Designation</span>
+                                              <span class="ui-error" *ngIf="form.get('Designation')?.invalid && form.get('Designation')?.touched">Designation is required field</span>
                                           </div>
                                       </div>
                                   </div>
@@ -381,7 +379,7 @@
                                       <p>We require to know this data to provide you with the best solution possible.</p>
                                       <div class="searchConditionMain">
                                           <input type="search" id="search" name="search" placeholder="Search conditions">
-                                          <button type="button" id="searchnow" name="search" class="btn_text">Search now</button>
+                                          <button type="button" id="searchnow" name="searchnow" class="btn_text">Search now</button>
                                       </div>
                                   </div>
                                   <div class="tabsMain">
@@ -474,7 +472,7 @@
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5003">
                       <header>
                           {{memberRole}} Details of your {{ form.get('Relation')?.value || '' }}
-                          <button type="button" id="another" name="another" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
+                          <button type="button" id="deletemember" name="deletemember" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
@@ -490,11 +488,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" id="priorpolicies" name="priorpolicies" value="yes">
+                                                  <input type="radio" id="priorpolicies-yes" name="priorpolicies" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" id="priorpolicies" name="priorpolicies" value="no" checked>
+                                                  <input type="radio" id="priorpolicies-no" name="priorpolicies" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -503,7 +501,7 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                              <select id="pp-son" name="pp-son"  placeholder="" class="form-control input-selectBox" >
+                                              <select id="pp-relation" name="pp-relation"  placeholder="" class="form-control input-selectBox" >
                                                   <option value=""> Select Relation</option>
                                                   <option value="Self">Self</option>
                                                   <option value="Spouse">Spouse</option>
@@ -549,11 +547,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" id="citizenship" name="citizenship" value="yes">
+                                                  <input type="radio" id="citizenship-yes" name="citizenship" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" id="citizenship" name="citizenship" value="no" checked>
+                                                  <input type="radio" id="citizenship-no" name="citizenship" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -562,7 +560,7 @@
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
-                                            <select id="pp-son" name="pp-son" placeholder="" class="form-control input-selectBox" >
+                                            <select id="pp-selectrelation" name="pp-selectrelation" placeholder="" class="form-control input-selectBox" >
                                                 <option value="">Select Relation</option>
                                                 <option value="Self">Self</option>
                                                 <option value="Spouse">Spouse</option>
@@ -608,11 +606,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" id="extraneousconditions" name="extraneousconditions" value="yes">
+                                                  <input type="radio" id="extraneousconditions-yes" name="extraneousconditions" value="yes">
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" id="extraneousconditions" name="extraneousconditions" value="no" checked>
+                                                  <input type="radio" id="extraneousconditions-no" name="extraneousconditions" value="no" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -656,11 +654,11 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-radio-block radio_additionalInfo">
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" id="preexistingconditions" name="preexistingconditions" value="Y" (change)="preexistingCondition('yes')" >
+                                                  <input type="radio" id="preexistingconditions-yes" name="preexistingconditions" value="Y" (change)="preexistingCondition('yes')" >
                                                   <span>Yes</span>
                                               </label>
                                               <label class="input-radiolabel ">
-                                                  <input type="radio" id="preexistingconditions" name="preexistingconditions" value="No" (change)="preexistingCondition('no')" checked>
+                                                  <input type="radio" id="preexistingconditions-no" name="preexistingconditions" value="No" (change)="preexistingCondition('no')" checked>
                                                   <span>No</span>
                                               </label>
                                           </div>
@@ -817,7 +815,7 @@
                                               </select>
                                               <label for="nomine-relation">Relation with Proposer *</label>
                                               <span class="ui-error" *ngIf="form?.get('Relationship')?.invalid && form?.get('Relationship')?.touched">
-                                              Please select Relation with Proposer
+                                              Relation with Proposer is required field
                                           </span>
                                           </div>
                                       </div>
@@ -926,15 +924,15 @@
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="IFSC_COde" name="IFSC_COde" placeholder="" class="form-control input-textBox">
-                                            <label for="IFSC_COde">IFSC Code</label>
+                                            <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox">
+                                            <label for="IFSC_Code">IFSC Code</label>
                                             <!-- <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span> -->
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="MICR_COde" name="MICR_COde" placeholder="" class="form-control input-textBox">
-                                            <label for="MICR_COde">MICR Code</label>
+                                            <input type="text" id="MICR_Code" name="MICR_Code" placeholder="" class="form-control input-textBox">
+                                            <label for="MICR_Code">MICR Code</label>
                                             <!-- <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span> -->
                                         </div>
                                     </div>
@@ -1024,7 +1022,7 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages checkbox_healthAddOns">
                                             <div class="input-checkbox-feild" *ngFor="let cover of healthAddOns">
-                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check">
+                                                <input type="checkbox" [id]="cover.featureName" [name]="cover.featureName" [value]="cover.featureName" class="input-check">
                                                 <label [for]="cover.featureName">
                                                   <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
                                                   <em class="head">{{cover.featureName}}</em>
@@ -1092,19 +1090,19 @@
                                         <div class="row">
                                             <div class="raido_policyTenure raido_paymentType radio_format">
                                              <div class="input-radiolabel  col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Nach')" [ngClass]="{'active': selectedPaymentType == 'E-Nach'}">
-                                                 <input type="radio" id="paymentType" name="paymentType" value="E - Nach">
+                                                 <input type="radio" id="paymentType-enach" name="paymentType" value="E - Nach">
                                                  <span><em class="label">E - Nach</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Mandate')" [ngClass]="{'active': selectedPaymentType == 'E-Mandate'}">
-                                                 <input type="radio" id="paymentType" name="paymentType" value="E - Mandate" >
+                                                 <input type="radio" id="paymentType-emandate" name="paymentType" value="E - Mandate" >
                                                  <span><em class="label">E - Mandate</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('Auto_Debit')" [ngClass]="{'active': selectedPaymentType == 'Auto_Debit'}">
-                                                 <input type="radio" id="paymentType" name="paymentType" value="Auto Debit" >
+                                                 <input type="radio" id="paymentType-autodebit" name="paymentType" value="Auto Debit" >
                                                  <span><em class="label">Auto Debit</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('offline')" [ngClass]="{'active': selectedPaymentType == 'offline'}">
-                                                <input type="radio" id="paymentType" name="paymentType" value="Auto Debit" >
+                                                <input type="radio" id="paymentType-offline" name="paymentType" value="Auto Debit" >
                                                 <span><em class="label">offline</em></span>
                                             </div>
                                             </div>
@@ -1114,7 +1112,7 @@
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <select id="Relation" name="Relation" placeholder="" class="form-control input-selectBox">
+                                                    <select id="paymentoption" name="paymentoption" placeholder="" class="form-control input-selectBox">
                                                         <option value="">Select Payment Option</option>
                                                         <option value="Cheque">Cheque</option>
                                                         <option value="Demand Draft">Demand Draft</option>
@@ -1147,7 +1145,7 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="text" id="IFSC_COde" name="IFSC_COde" placeholder="" class="form-control input-textBox">
+                                                    <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox">
                                                     <label for="IFSC_COde">IFSC Code</label>
                                                     <!-- <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span> -->
                                                 </div>

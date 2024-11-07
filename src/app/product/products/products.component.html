@@ -23,12 +23,12 @@
                                 </div>
                                 <footer>
                                     <div class="btn_groupAction">
-                                        <button type="button" id="buynow" name="buynow" class="btn_red btn_products btn_buy" (click)="buyNow(item)">
+                                        <button type="button" id="buynow" name="buynow" value="buynow" class="btn_red btn_products btn_buy" (click)="buyNow(item)">
                                             <img src="assets/Img/trolley1.svg" alt="">
                                             Buy Now
                                         </button>
-                                        <button class="btn_pink btn_products" (click)="productsDetail(item)">View details</button>
-                                        <button class="btn_grey btn_products btn_addtocompare"  (click)="addToCompare(item)">
+                                        <button type="button" id="viewdetails" name="viewdetails" value="viewdetails" class="btn_pink btn_products" (click)="productsDetail(item)">View details</button>
+                                        <button type="button" id="addtocompare" name="addtocompare" value="addtocompare" class="btn_grey btn_products btn_addtocompare"  (click)="addToCompare(item)">
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                             Add to Compare
                                         </button>
@@ -49,7 +49,7 @@
             <h5>Compare Plans</h5>
         </div>
         <div class="bi_right">
-            <button type="button" value="savenew" class="btn_pink btn_checkComparison" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Check Comparison</button>
+            <button type="button" id="checkcomparison" name="checkcomparison" value="savenew" class="btn_pink btn_checkComparison" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Check Comparison</button>
             <!--<button type="button" value="proceed" class="btn_pink btn_pinkNext btn_checkComparison_close" (click)="closeComparison()">Close</button>-->
         </div>
     </div>
@@ -103,8 +103,8 @@
 
         </div>
         <div class="bi_right block-hide">
-            <button type="button" value="renewnow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Compare now</button>
-            <button type="button" value="proceed" class="btn_pink btn_pinkNext" (click)="closeComparison()">Close</button>
+            <button type="button" id="comparenow" name="comparenow" value="comparenow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Compare now</button>
+            <button type="button" id="compareclose" name="compareclose" value="compareclose" class="btn_pink btn_pinkNext" (click)="closeComparison()">Close</button>
         </div>
     </div>
   </div>

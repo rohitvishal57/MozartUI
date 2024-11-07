@@ -7,7 +7,7 @@ import { HttpService } from 'src/app/services/http.service';
   providedIn: 'root'
 })
 export class YatraService {
-
+  policyDetails: any;
   constructor(private configService: ConfigService,
     private httpService: HttpService) { }
 
@@ -151,5 +151,9 @@ export class YatraService {
   getFamilyConstructData(reqData:any){
     const familyConstructData = this.configService.config.axisBaseUrl + this.configService.config.getFamilyConstruct;
     return this.httpService.post(familyConstructData,reqData);
+  }
+  saveBBCommonDraft(reqData:any){
+    const saveCommonDraftData = this.configService.config.axisBaseUrl + this.configService.config.saveBBCommonDraft;
+    return this.httpService.post(saveCommonDraftData,reqData);
   }
 }

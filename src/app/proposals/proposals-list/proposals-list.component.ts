@@ -227,25 +227,28 @@ export class ProposalsListComponent {
         Validators.required,
         Validators.pattern(/^\s*UPP\d{12}\s*$/) 
       ]);
-    }
+     } 
     this.searchInputControl.updateValueAndValidity();
   }
-  getErrorMessage(): string {
+  getErrorMessage(): string {    
     if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
+      return "This field is required.";
+    }
+    if (this.searchInputControl.dirty && this.selected === "") {
+      return "Select an option and enter.";
     }
     if (this.searchInputControl.hasError("pattern")) {
       if (this.selected === "mobileNumber") {
-        return "Enter a valid 10-digit mobile number";
+        return "Enter a valid 10-digit mobile number.";
       }
       else if (this.selected === "leadId") {
-        return "Enter a valid Lead ID";
+        return "Enter a valid lead id.";
       }
       else if (this.selected === "proposerName") {
-        return "Enter a valid Proposer Name";
+        return "Enter a valid proposer name.";
       }
       if (this.selected === "proposalNumber") {
-        return "Enter a valid Proposal Number";
+        return "Enter a valid proposal number.";
       }
     }
     return "";

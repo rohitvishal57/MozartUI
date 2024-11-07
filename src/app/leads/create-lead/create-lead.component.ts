@@ -7,6 +7,7 @@ import { LeadsService } from '../leads.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-create-lead',
@@ -34,19 +35,21 @@ export class CreateLeadComponent implements OnInit {
   AUSearchValue: string = "";
   agentCode: any = '';
   submittedUser: any = {};
-  notesSubmitted : boolean = false;
+  notesSubmitted: boolean = false;
   action: String = '';
   leadNumber: String = '';
   referenceStatus: any;
   referenceSubStatus: any;
   activityTypes: any = [];
-  today:string='';
+  today: string = '';
   maxDate = '9999-12-31';
-  notes : any = [];
+  notes: any = [];
   whatsappOptions = [
     { value: true, display: 'Yes' },
     { value: false, display: 'No' }
   ];
+  productsList: any = [];
+  productSumInsured: any = [];
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -56,7 +59,8 @@ export class CreateLeadComponent implements OnInit {
     public CreateLead: CreateLead,
     public CreateLeadList: LeadFormListValue,
     private cdr: ChangeDetectorRef,
-    private  datepipe : DatePipe) {
+    private datepipe: DatePipe,
+    private commonService: CommonService) {
 
   }
 
@@ -66,16 +70,6 @@ export class CreateLeadComponent implements OnInit {
       this.leadNumber = params['leadNumber'];
       this.action = params['action'];
     });
-    if (this.leadNumber && this.action) {
-    await  this.getReferenceStatus();
-    await  this.fetchActivityTypeInfo();
-    await  this.getLeadInformationByLeadNumber(this.leadNumber);
-
-      if (this.action === 'addNotes') {
-        this.getLeadNotes(this.leadNumber);
-      }
-
-    }
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
     this.agentCode = storedAgentCode;
@@ -92,8 +86,23 @@ export class CreateLeadComponent implements OnInit {
       "agent": storedAgentCode
     }
     this.agentCode = obj.agent;
-    console.log(obj);
-    console.log(storedAgentCode);
+
+
+
+
+    await this.getProducts();
+    if (this.leadNumber && this.action) {
+      await this.getReferenceStatus();
+      await this.fetchActivityTypeInfo();
+      await this.getLeadInformationByLeadNumber(this.leadNumber);
+
+      if (this.action === 'addNotes') {
+        this.getLeadNotes(this.leadNumber);
+      }
+
+    }
+
+
     // this.leadsService.getActiveCampaignDetails(obj).subscribe(
     //   (response) => { 
     //     console.log(response.data);
@@ -107,6 +116,7 @@ export class CreateLeadComponent implements OnInit {
     //   }
     // );
     this.today = new Date().toISOString().split('T')[0];
+
   }
 
   inItForm() {
@@ -138,7 +148,7 @@ export class CreateLeadComponent implements OnInit {
       interestedProductName: [''],
       planType: [''],
       policyEndDate: [''],
-      sumInsured: [null, [Validators.pattern('^[0-9a-zA-Z ,-./]*$')]],
+      sumInsured: [''],
       premium: [null, [Validators.pattern('^[0-9a-zA-Z ,.-]*$')]],
       duePremiun: [null, [Validators.pattern('^[0-9a-zA-Z ,.-]*$')]],
       familyConstruct: [''],
@@ -152,24 +162,24 @@ export class CreateLeadComponent implements OnInit {
       leadStatus: [''],
       leadSubStatus: ['']
     }
-  );
-     this.userValidations.get('age')?.disable();
+    );
+    this.userValidations.get('age')?.disable();
 
 
     this.addNoteForm = this.formBuilder.group({
       activityTitle: ['', Validators.required], // activityTitle is required
       activityStartDate: ['', Validators.required], // Start date is required
       activityStartTime: ['', Validators.required], // Start time is required
-      activityEndDate: ['',Validators.required], // Use null if control is not available  
-      activityEndTime :  ['', Validators.required],    
+      activityEndDate: ['', Validators.required], // Use null if control is not available  
+      activityEndTime: ['', Validators.required],
       activityType: ['', Validators.required], // Activity type is required
       notes: ['', Validators.required] // Notes can be optional
     });
   }
 
-  
+
   changeDob(event: any) {
-    console.log("date",event.target.value);
+    console.log("date", event.target.value);
     let age: any = ''
     age = this.calculateAge(event.target.value);
     this.userValidations.get('age')?.setValue(age);
@@ -222,9 +232,9 @@ export class CreateLeadComponent implements OnInit {
         console.log(response);
         if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
-            this.toast.success({ detail: 'Lead is updated successfully.' });
+            this.toast.success({ detail: "", summary: 'Lead is updated successfully.', duration: 5000 });
           } else {
-            this.toast.success({ detail: 'Lead is created successfully.' });
+            this.toast.success({ detail: "", summary: 'Lead is created successfully.', duration: 5000 });
           }
           console.log(response);
           this.router.navigate(['leads/leadsList'])
@@ -256,7 +266,6 @@ export class CreateLeadComponent implements OnInit {
     this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
       this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
-      this.changeReferStatus(this.submittedUser.leadStatus);
     },
       (error) => {
         console.log("Failed to fetch lead Information!")
@@ -272,7 +281,7 @@ export class CreateLeadComponent implements OnInit {
       lastname: this.submittedUser.lastName,
       email: this.submittedUser.email,
       mobilenumber: this.submittedUser.phoneNumber,
-      dob: this.datepipe.transform (this.submittedUser.dob,'yyyy-MM-dd'),
+      dob: this.datepipe.transform(this.submittedUser.dob, 'yyyy-MM-dd'),
       age: this.submittedUser.age,
       gender: this.submittedUser.gender == "M" ? "Male" : this.submittedUser.gender == "F" ? "Female" : "Other",
       isWhatsapp: this.submittedUser.isWhatsapp,
@@ -286,10 +295,8 @@ export class CreateLeadComponent implements OnInit {
       city: this.submittedUser.city,
       state: this.submittedUser.state,
       pincode: this.submittedUser.pincode,
-      interestedProductName: this.submittedUser.interestedProductName,
       planType: this.submittedUser.planType,
       policyEndDate: this.submittedUser.policyEndDate,
-      sumInsured: this.submittedUser.sumInsured,
       premium: this.submittedUser.premium,
       duePremiun: this.submittedUser.duePremiun,
       familyConstruct: this.submittedUser.familyConstruct,
@@ -299,8 +306,15 @@ export class CreateLeadComponent implements OnInit {
       campaignnumber: this.submittedUser.campaignnumber,
       leadnumber: this.submittedUser.leadNumber,
       leadAssignee: this.submittedUser.leadAssignee,
-      isUpdate: this.submittedUser.isUpdate || 1 ,
-      leadStatus: this.submittedUser.leadStatus
+      isUpdate: this.submittedUser.isUpdate || 1,
+      leadStatus : this.submittedUser.leadStatus,
+      interestedProductName: this.submittedUser.interestedProductName,
+    });
+    this.changeReferStatus(this.submittedUser.leadStatus);
+    this.changeSumInsured(this.submittedUser.interestedProductName);
+    this.userValidations.patchValue({
+      leadSubStatus: this.submittedUser?.leadSubStatus??'',
+      sumInsured: this.submittedUser?.sumInsured ?? ''
     });
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
@@ -314,18 +328,18 @@ export class CreateLeadComponent implements OnInit {
     let fetchActivityTypeRequest: any = {};
     this.leadsService.fetchActivityType(fetchActivityTypeRequest).subscribe(
       (response) => {
-        if(response?.data?.activityName.length){
+        if (response?.data?.activityName.length) {
           this.activityTypes = response?.data?.activityName;
         }
       },
       (error) => {
-        console.log("Failed to fetch ActivityType information : " ,error);
+        console.log("Failed to fetch ActivityType information : ", error);
       });
   }
 
   getReferenceStatus() {
     this.leadsService.getReferenceStatus().subscribe(
-      (response:any) => {
+      (response: any) => {
         console.log(response);
         this.referenceStatus = response?.data;
       },
@@ -336,53 +350,63 @@ export class CreateLeadComponent implements OnInit {
   }
 
   changeReferStatus(event: any) {
-    if(event){
-    let selectedStatus = typeof(event)=='string'?event :event.target.value;
-    console.log('selectedStatus',selectedStatus);
-    this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
-    this.userValidations.patchValue({
-      leadSubStatus: this.submittedUser.leadSubStatus
-    });
-          
+    if (event) {
+      let selectedStatus = typeof (event) == 'string' ? event : event.target.value;
+      console.log('selectedStatus', selectedStatus);
+      this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
+      }
+      this.userValidations.patchValue({
+        leadSubStatus:'',
+      });
+
   }
+
+  changeSumInsured(event: any) {
+    if (event) {
+      let selectedValue = typeof (event) == 'string' ? event : event.target.value;
+      this.productSumInsured = this.productsList.find((product: any) => product.productName === selectedValue)?.sumInsured.split(",");
+    }
+    this.userValidations.patchValue({
+      sumInsured:  ''
+    });
   }
 
   addNotesSubmit() {
     let addNotesRequestBody: any = {};
-    console.log('activityType',this.addNoteForm.errors);
-    this.notesSubmitted =true;
-    if(this.addNoteForm.valid){
+    console.log('activityType', this.addNoteForm.errors);
+    this.notesSubmitted = true;
+    if (this.addNoteForm.valid) {
       addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
-      addNotesRequestBody.activityenddate = this.addNoteForm.value.activityEndDate,
-      addNotesRequestBody.activityName = this.addNoteForm.value.activityTitle,
-      addNotesRequestBody.note = this.addNoteForm.value.notes,
-      addNotesRequestBody.name = this.addNoteForm.value.notes,
-      addNotesRequestBody.activitytype = this.addNoteForm.value.activityType,
-      addNotesRequestBody.agentcode = this.agentCode,
-      addNotesRequestBody.createdat = new Date(),
-      addNotesRequestBody.mobilenumber = this.submittedUser.phoneNumber,
-      addNotesRequestBody.leadnumber = this.leadNumber,
-      addNotesRequestBody.isupdate = 0
+        addNotesRequestBody.activityenddate = this.addNoteForm.value.activityEndDate,
+        addNotesRequestBody.activityName = this.addNoteForm.value.activityTitle,
+        addNotesRequestBody.note = this.addNoteForm.value.notes,
+        addNotesRequestBody.name = this.addNoteForm.value.notes,
+        addNotesRequestBody.activitytype = this.addNoteForm.value.activityType,
+        addNotesRequestBody.agentcode = this.agentCode,
+        addNotesRequestBody.createdat = new Date(),
+        addNotesRequestBody.mobilenumber = this.submittedUser.phoneNumber,
+        addNotesRequestBody.leadnumber = this.leadNumber,
+        addNotesRequestBody.isupdate = 0
 
-      console.log('addNoteForm',this.addNoteForm.errors);
+      console.log('addNoteForm', this.addNoteForm.errors);
 
-    this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
-      (response) => {
-        if (response.message == "Success") {
-          this.toast.success({ detail: 'Note Added successfully.' });
-          this.router.navigate(['leads/leadsList'])
+      this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
+        (response) => {
+          if (response.message == "Success") {
+            this.toast.success({ detail: "", summary: 'Note Added successfully.', duration: 5000 });
+            this.router.navigate(['leads/leadsList'])
+          }
+        }, (error) => {
+          console.error("Error from addLeadNotes API:", error);
         }
-      }, (error) => {
-        console.error("Error from addLeadNotes API:", error);
-      }
-    );
-        
-  }
+      );
+
+    }
   }
 
-  backToleads(){
+  backToleads() {
     this.router.navigate(['/leads/leadsList'], {
-  });
+    });
   }
 
   isNumber(event: KeyboardEvent) {
@@ -396,17 +420,17 @@ export class CreateLeadComponent implements OnInit {
   onEndDateChange() {
     this.validateEndDate();
   }
-  
+
 
   validateEndDate() {
     const startDate = new Date(this.addNoteForm.get('activityStartDate')?.value);
     const endDate = new Date(this.addNoteForm.get('activityEndDate')?.value);
 
     if (startDate && endDate && endDate < startDate) {
-      this.addNoteForm.get('activityEndDate')?.setErrors({ incorrect: true }); 
+      this.addNoteForm.get('activityEndDate')?.setErrors({ incorrect: true });
     } else {
-      this.addNoteForm.get('activityEndDate')?.setErrors(null); 
-     }
+      this.addNoteForm.get('activityEndDate')?.setErrors(null);
+    }
   }
 
   isCharacter(event: KeyboardEvent) {
@@ -416,10 +440,10 @@ export class CreateLeadComponent implements OnInit {
     }
   }
 
-  goBack(){
+  goBack() {
     window.history.back();
   }
-  
+
   getLeadNotes(leadNumber: any) {
     this.leadsService.getLeadNotes(leadNumber).subscribe((response) => {
       this.notes = response.data;
@@ -439,4 +463,18 @@ export class CreateLeadComponent implements OnInit {
     return formattedDate || 'Invalid Date'; // Handle invalid date
   }
 
+  getProducts() {
+    const reqData = {
+      "agentCode": this.agentCode
+    }
+    this.commonService.Getproductlist(reqData).subscribe({
+      next: (res) => {
+        this.productsList = res.data;
+        console.log("product list", this.productsList)
+      },
+      error: (err) => {
+        console.log("error coming form getproduct list API");
+      }
+    });
+  }
 }

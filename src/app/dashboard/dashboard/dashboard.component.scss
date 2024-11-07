@@ -6,7 +6,7 @@
 //     margin: auto;
 //   }
   
-  .card {
+  .cardItem {
     width: 100%;
     border-radius: 12px;
     border: groove;
@@ -18,13 +18,13 @@
     margin: 0 auto;
   }
   
-  .header {
+  .cardItem_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   
-    .headerSearch {
-      width: 100%;
+    .cardItem_headerSearch {
+      flex: auto;
   
       .field_searchMain {
         max-width: 400px;
@@ -48,8 +48,9 @@
       }
     }
   
-    .headerButtons {
-      width: 230px;
+    .cardItem_headerButtons {
+      display: flex;
+      gap:24px;
       text-align: right;
       .get-quote-btn {
         font-family: "Anek Latin", sans-serif;
@@ -119,13 +120,13 @@ h2 {
     }
 }
 
-.cards-container {
+.cardWraper-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
 }
 
-.card {
+.cardItem {
     border-radius: 16px;
     padding: 16px 22px;
     border: none;
@@ -135,7 +136,7 @@ h2 {
     box-shadow: 0px 2px 4px 0px #D5D7DE33;
     box-shadow: 0px 1px 10px 0px #D5D7DE1F;
     box-shadow: 0px 4px 5px 0px #D5D7DE24;
-
+    background: #fff;
     header {
         font-weight: 700;
         font-size: 18px;

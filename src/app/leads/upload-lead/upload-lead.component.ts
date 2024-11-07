@@ -142,7 +142,8 @@ export class UploadLeadComponent implements OnInit{
             if (response) {
               console.log(response);
               window.open(response.url, '_blank');
-              this.toast.success({ detail: response.status });
+                this.toast.success({ detail: "", summary:response.status, duration: 5000 });
+
             } 
             else {console.error("API request was not successful.");}
           },

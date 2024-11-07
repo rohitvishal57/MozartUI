@@ -220,21 +220,24 @@ export class CustomersListComponent {
     this.searchInputControl.updateValueAndValidity();
   }
   getErrorMessage(): string {
+    if (this.searchInputControl.dirty && this.selected === "") {
+      return "Select an option and enter.";
+    }
     if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
+      return "This field is required.";
     }
     if (this.searchInputControl.hasError("pattern")) {
       if (this.selected === "mobileNumber") {
-        return "Enter a valid 10-digit Mobile Number";
+        return "Enter a valid 10-digit mobile number.";
       }
       else if (this.selected === "policyNumber") {
-        return "Enter a valid Policy Number";
+        return "Enter a valid policy number.";
       }
       else if (this.selected === "name") {
-        return "Enter a valid Name";
+        return "Enter a valid name.";
       }
       if (this.selected === "emailID") {
-        return "Enter a valid Email ID";
+        return "Enter a valid email id.";
       }
     }
     return "";

@@ -91,7 +91,7 @@
     "getSingleProductQuote": "api/quote/getquoteforsingleproduct",
     "getKycDetails": "api/quote/getkycdetails",
     "getquotefortopsellingproducts": "api/quote/getquotefortopsellingproducts",
-    "getPolicyNumberDetails": "api/yatra/getcustomerpolicydetails",
+    "getPolicyNumberDetails": "api/yatra/getcustomerpolicydetailsviapolicynum",
     "profileDetails": "api/auth/GetAgentProfileDetails",
     "fetchPolicyDetailsFromFile": "api/yatra/getcustomerpolicydetailsfrompolicydocument",
     "justPayRedirection": "api/yatra/Payment/JuspayOrder",
@@ -101,5 +101,6 @@
     "getBBProposalDetails":"/BranchBanking/GetBBProposalDetailsV2",
     "getSumInsuredDetails":"/Product/GetSumInsuredList",
     "getPremiumDetaiks": "/Product/GetPremium",
-    "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode"
+    "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode",
+    "saveBBCommonDraft":"/BranchBanking/SaveBBCommonDraft"
 }

@@ -1605,7 +1605,6 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 18px;
 }
 
-
 .btn_text {
   background: transparent;
   border-width: 0;
@@ -1615,6 +1614,13 @@ input[type="search"]::-webkit-search-results-decoration {
   line-height: 12px;
   color: var(--primary-red-color);
 }
+
+.btn_text:disabled {
+  cursor: not-allowed;          
+  opacity: 0.4;                 
+  border-width: 0;
+}
+
 /*.form-floating>.form-control.input-selectBox~label,
 .form-floating>.form-control.input-selectBox:not(:placeholder-shown)~label{
     font-weight: 500;
@@ -5029,6 +5035,23 @@ input[type="search"]::-webkit-search-results-decoration {
 .form-select.is-invalid:not([multiple]):not([size]) {
   background-position: right .85rem center, center right 2.25rem;
     background-size: 10px 6px;
+}
+.btn_buyPlanNow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}
+.btn_buyPlanNow:hover img {
+  filter:invert(21%) sepia(70%) saturate(7414%) hue-rotate(359deg) brightness(79%) contrast(117%);
+}
+.text-ellipsis {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 99%;
 }
 /*.lead_btnList button {
   position: relative;

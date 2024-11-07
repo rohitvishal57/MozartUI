@@ -73,7 +73,7 @@
       </section>
       <div class="row mt-3">
         <div class="col-12">
-          <button class="btn_red btn_products btn_buy" (click)="buyNow(state)">
+          <button type="button" id="buynow-details" name="buynow-details" class="btn_red btn_products btn_buy" (click)="buyNow(state)">
             <img src="assets/Img/trolley1.svg" alt="">
             Buy Now
         </button>
@@ -82,104 +82,3 @@
     </div>
   </div>
 </main>
-<div class="main-container" style="display: none;">
-  <div class="detail">
-    Product Details
-  </div>
-    <div class="cardItem box">
-        <div class="product-item">
-            <img src="assets/logo/activeOne.svg">
-            {{state.productName}}
-        </div>
-        <div class="key">
-          <h2>Product Description</h2>
-          <div class="keypoint">{{state.productDescription}}</div>
-        </div>
-        <div class="key" >
-          <div *ngFor="let key of state.keyFeatures">
-              <div class="keypoint">
-                  <img src="assets/logo/keypoint.svg">
-                  {{ key }}
-              </div>
-          </div>
-        </div>
-        <div class="custom-tabview">
-            <div class="top-box">
-              <div class="top-container" #topContainer>
-                <p-tabView [(activeIndex)]="activeIndex" (onChange)="onTabChange($event)">
-                  <!-- <p-tabPanel header="Overview"></p-tabPanel>
-                  <p-tabPanel header="Cashless Hospitals"></p-tabPanel>
-                  <p-tabPanel header="FAQs"></p-tabPanel>
-                  <p-tabPanel header="Claims"></p-tabPanel>
-                  <p-tabPanel header="Activ Health"></p-tabPanel> -->
-                 <p-tabPanel header="Health Add-Ons"></p-tabPanel> 
-                 <p-tabPanel header="Optional Covers"></p-tabPanel> 
-
-                </p-tabView>
-              </div>
-            </div>
-      
-            <div class="bottom-box" [ngSwitch]="activeIndex">
-              <!-- <div *ngSwitchCase="0">
-                <h3>Features</h3>
-                <ul>
-                  <li>Dolor sit amet, consectetur adipiscing elit.</li>
-                  <li>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</li>
-                  <li>Nunc volutpat libero et velit interdum, ac aliquet odio mattis.</li>
-                </ul>
-                <h3>Policy Covers</h3>
-                <ul>
-                  <li>Dolor sit amet, consectetur adipiscing elit.</li>
-                  <li>Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</li>
-                  <li>Nunc volutpat libero et velit interdum, ac aliquet odio mattis.</li>
-                </ul>
-              </div>
-              <div *ngSwitchCase="1">
-                <p>Information about cashless hospitals would go here.</p>
-              </div>
-              <div *ngSwitchCase="2">
-                <p>Frequently asked questions would be listed here.</p>
-              </div>
-              <div *ngSwitchCase="3">
-                <p>Information about making claims would be provided here.</p>
-              </div>
-              <div *ngSwitchCase="4">
-                <p>Details about Activ Health services would be displayed here.</p>
-              </div> -->
-              <div class="row" *ngSwitchCase=activeIndex>
-                <div class="card" style="width: 100%;">
-                <div *ngFor="let section of groupedFeatures | keyvalue" >
-                  <!-- <div class="card"> -->
-                    <div *ngIf="section.key === displayInfo">
-                      <!-- <h3>{{ section.key }}</h3> -->
-                    <!-- <ul> -->
-                      <!-- <li *ngFor="let feature of section.value">
-                        {{ feature.featureName }}
-                      </li> -->
-                      <div class="key" >
-                        <div *ngFor="let feature of section.value" class="keypoint" >
-                          <img src="assets/logo/greenpoint.svg" alt="checkmark" class="icon">
-                          <div class="feature-text" style="width: 50%;">
-                            {{ feature.featureName }}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      </div>
-                    <!-- </ul> -->
-                  <!-- </div> -->
-                </div>
-              </div>
-              </div>
-            </div>
-          </div>
-        <!-- <div class="custom-tabview"> -->
-          <!-- <div> -->
-            <button class="btn_red btn_products btn_buy" (click)="buyNow(state)">
-              <img src="assets/Img/trolley1.svg" alt="">
-              Buy Now
-          </button>
-          <!-- </div> -->
-        <!-- </div> -->
-    </div>
-</div>
