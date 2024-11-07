@@ -3,30 +3,28 @@
     <div class="bodyColumn body_flex_column">
       <div class="contentBody dashboard_contentContainer">
         <div style="width: 100%;">
-          <div class="card-outer">
-            <div class="card">
-              <div class="header">
-                <div class="headerSearch">
+          <div class="cardWraper">
+            <div class="cardItem">
+              <div class="cardItem_header">
+                <div class="cardItem_headerSearch">
                   <div class="field_searchMain">
                     <input type="text" class="filterSearch"
                       placeholder="Search Your Customer, Leads, Claims No and more" />
                     <img src="assets/Img/icon_magnify_grey.svg">
                   </div>
                 </div>
-                <div class="headerButtons">
+                <div class="cardItem_headerButtons">
                   <button class="get-quote-btn" type="button" id="getquote" name="getquote" (click)="getQuote()">
                     <i class="fas fa-plus"></i> Get Quote
                   </button>
-                </div>
-                <div class="headerButtons">
                   <button class="get-quote-btn" type="button" id="createlead" name="createlead" (click)="createLead()">
                     <i class="fas fa-plus"></i> Create Lead
                   </button>
                   
                 </div>
               </div>
-              <div >
-                <app-get-quote *ngIf="showCard"></app-get-quote>
+              <div *ngIf="showCard">
+                <app-get-quote ></app-get-quote>
               </div>
               </div>
             </div>
@@ -46,14 +44,14 @@
               <img src="assets/Img/icon_badge.svg">Top Seller
             </div>
           </div>
-          <div class="cards-container">
-            <div class="card policies-sold">
+          <div class="cardWraper-container">
+            <div class="cardItem policies-sold">
               <header><img src="assets/Img/icon_police_sold.svg">Policies sold</header>
               <div class="value">1295</div>
               <div class="card-tip"><img src="assets/Img/icon_price_tag.svg"> You seem to be setting a majority of Active
                 FD plans</div>
             </div>
-            <div class="card premium">
+            <div class="cardItem premium">
               <header><img src="assets/Img/icon_police_premium.svg">Premium</header>
               <div class="value">₹ 369.96 L</div>
               <div class="progress-barMain">
@@ -63,13 +61,13 @@
                 </div>
               </div>
             </div>
-            <div class="card commission-earned">
+            <div class="cardItem commission-earned">
               <header><img src="assets/Img/icon_commission_earned.svg">Commission Earned</header>
               <div class="value">₹ 50,000</div>
               <div class="card-tip"><img src="assets/Img/icon_rupee.svg"> You can potentially earn 10,000 more with your 2
                 more policies</div>
             </div>
-            <div class="card my-goals">
+            <div class="cardItem my-goals">
               <header><img src="assets/Img/icon_my_goals.svg">My Goals</header>
               <div class="gauge">
                 <div class="gauge-body">
