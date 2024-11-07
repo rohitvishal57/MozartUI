@@ -253,7 +253,7 @@ getProductInformation(productId: String ){
       this.toast.error({ detail: 'Failed to Add Product for Comparison ' });
       console.error(err);
     }
-  })
+  });
 }
 
 removeCompareItem(item: any){

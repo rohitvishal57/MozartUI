@@ -3,7 +3,6 @@ import { LeadsList } from '../leads-list.interface';
 import { FormControl, Validators } from '@angular/forms';
 import { LeadsService } from '../leads.service';
 import { CommonService } from 'src/app/services/common.service';
-import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
@@ -85,7 +84,7 @@ export class LeadsListComponent {
     private datePipe: DatePipe,
     private toast: NgToastService,
     private productService: ProductsService,
-    public common: CommonService,
+    private common: CommonService,
     private encryptionService: EncryptionService
   ) { }
 
@@ -523,7 +522,7 @@ export class LeadsListComponent {
 
     if (this.startDate > new Date().toISOString().split('T')[0]) {
       this.startDate = ''; // Clear the invalid date
-      this.toast.warning({ detail: "", summary: 'StartDate should be greater than today date.', duration: 5000 });
+      this.toast.warning({ detail: "", summary: 'StartDate should not be greater than today date.', duration: 5000 });
     }
 
   }
@@ -594,9 +593,5 @@ export class LeadsListComponent {
       });
     }
   }
-
-
-
-
 
 }
