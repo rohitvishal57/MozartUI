@@ -85,9 +85,7 @@ export class HeaderComponent implements OnInit {
         read: true
       }
     ];
-
-    console.log('message',this.notifications);
-    this.showNotifications = true;
+    this.showNotifications = this.showNotifications == false? true :false;
   }
 
 }
