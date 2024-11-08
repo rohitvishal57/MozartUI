@@ -30,7 +30,7 @@
                 <!-- Label -->
                 <label class="field_label">{{ dropdown.label }}</label>
                 <!-- Button for each dropdown -->
-                <button class="dropdown-button" type="button" id="dropdownlabel-custom" name="dropdownlabel-custom" (click)="openCustomDiv(dropdown.label, i)">
+                <button class="dropdown-button" type="button" id="dropdownlabel-custom-{{i}}" name="dropdownlabel-custom-{{i}}" (click)="openCustomDiv(dropdown.label, i)">
                   <div class="selected-value">
                     <span>
                       <ng-container *ngIf="dropdown.label === 'Policy Type'">
