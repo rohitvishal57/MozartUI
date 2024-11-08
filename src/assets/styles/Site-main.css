@@ -340,6 +340,12 @@ button {
     word-wrap: break-word !important;
     word-break: break-word !important;
 }
+.text-break-w120 {
+  width: 120px;
+  display: inline-block;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
 .text-break-w200 {
   max-width: 200px;
   display: inline-block;
@@ -5056,6 +5062,28 @@ input[type="search"]::-webkit-search-results-decoration {
 .common_searchWraper .field_searchMain .btn_text:disabled {
   border-color:transparent !important;
   background: transparent !important;
+}
+.compare_inputblock {
+  width: 100%;
+  margin: 0;
+}
+.compare_inputblock .input-selectBox {
+  padding: 6px 16px !important;
+  height: auto;
+  border-radius: 4px !important;
+}
+.note_remarkText_width {
+  max-width: 320px;
+}
+.note_remarkText_scroll {
+  max-height: 45px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.note_remarkText {
+  width: 100%;
+  padding-right: 10px;
+  word-break: break-word;
 }
 /*.lead_btnList button {
   position: relative;
