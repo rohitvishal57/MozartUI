@@ -460,6 +460,12 @@
                     align-items: center;
                     justify-content: center;
                     width: 100%;
+                    &:hover {
+                        img {
+                            filter: invert(21%) sepia(70%) saturate(7414%) hue-rotate(359deg) brightness(79%) contrast(117%) !important;
+                            opacity: 1 !important;
+                        }
+                    }
                     @media (max-width:912px) {
                         justify-content: center;
                     }
