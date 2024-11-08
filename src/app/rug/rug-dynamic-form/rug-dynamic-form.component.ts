@@ -179,7 +179,7 @@ export class RugDynamicFormComponent {
     console.log(this.formSequence[0].formName);
     if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
       let reqObj = {
-        leadId: "93429121212"
+        leadId: "934345345342"
       }
       this.yatraService.getProposalDetails(reqObj).subscribe({
         next: (res: any) => {
@@ -676,7 +676,21 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.proposerDetails.premium);
       }
       if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
-
+        this.dynamicFormGroup.patchValue({
+          nomineeShare: this.bbdetails.nomineeDetails.defaultShare,
+          relationWithProposer: this.bbdetails.nomineeDetails.nomineeRelation,
+          firstName: this.bbdetails.nomineeDetails.nomineeFirstName,
+          lastName: this.bbdetails.nomineeDetails.nomineeLastName,
+          mobileNumber: this.bbdetails.nomineeDetails.nomineeContactNumber,
+          nomineeAddress: this.bbdetails.nomineeDetails.nomineeAddress,
+          dob: this.bbdetails.nomineeDetails.dateOfBirth,
+          nomineeGender: this.bbdetails.nomineeDetails.nomineeGender,
+          appointeeName: this.bbdetails.nomineeDetails.appointeeName,
+          appointeeMobileNumber: this.bbdetails.nomineeDetails.appointeeContactNo,
+          appointeeDob: this.bbdetails.nomineeDetails.appointeeDOB,
+          relationWithNominee: this.bbdetails.nomineeDetails.relationshipOfAppointeeWithNominee,
+        })
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.proposerDetails.premium);
       }
       if (this.formSequence[this.getFormIndexValue()].formId == 4 && this.formSequence[this.getFormIndexValue()].formName == "Bank/Payment Details") {
         this.dynamicFormGroup.patchValue({
@@ -686,6 +700,10 @@ export class RugDynamicFormComponent {
           MICRCode:this.bbdetails.proposerDetails.micrCode,
           branchName:this.bbdetails.proposerDetails.branchName,
         })
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.proposerDetails.premium);
+      }
+      if(this.formSequence[this.getFormIndexValue()].formId == 5 && this.formSequence[this.getFormIndexValue()].formName == "Health Declaration"){
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.proposerDetails.premium);
       }
       this.flattenObject(this.formData);
       this.spinner.hide();
@@ -2816,6 +2834,8 @@ export class RugDynamicFormComponent {
         next: (res: any) => {
           console.log(res);
           if (res.isSuccess == true && res.statusCode == 200) {
+            
+            this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
             if (this.getFormIndexValue() < this.formSequence.length - 1) {
               this.incrementIndex();
               this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
@@ -2829,15 +2849,136 @@ export class RugDynamicFormComponent {
           console.error(err);
         }
       });
-    }else{
+    }else if(this.getFormIndexValue() == 1){
       if (this.getFormIndexValue() < this.formSequence.length - 1) {
         this.incrementIndex();
         this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
         
       }
     }
+    else if(this.getFormIndexValue() == 2){
+      console.log(this.dynamicFormGroup.value);
+      console.log(this.yatraService.policyDetails);
+      console.log(this.nomineeRelations)
+      let filteredRelationCode = this.filterRelationByName(this.dynamicFormGroup.value.relationWithProposer);
+      this.yatraService.policyDetails.nomineeDetails.nomineeRelationCode = filteredRelationCode[0].relationCode;
+      this.yatraService.policyDetails.nomineeDetails.leadId = this.yatraService.policyDetails.proposerDetails.leadId;
+      this.yatraService.policyDetails.nomineeDetails.nomineeRelation = this.dynamicFormGroup.value.relationWithProposer;
+      this.yatraService.policyDetails.nomineeDetails.nomineeFirstName = this.dynamicFormGroup.value.firstName;
+      this.yatraService.policyDetails.nomineeDetails.nomineeLastName = this.dynamicFormGroup.value.lastName;
+      this.yatraService.policyDetails.nomineeDetails.nomineeContactNumber = this.dynamicFormGroup.value.mobileNumber;
+      this.yatraService.policyDetails.nomineeDetails.nomineeAddress = this.dynamicFormGroup.value.nomineeAddress;
+      this.yatraService.policyDetails.nomineeDetails.dateOfBirth = this.dynamicFormGroup.value.dob;
+      this.yatraService.policyDetails.nomineeDetails.nomineeGender = this.dynamicFormGroup.value.nomineeGender;
+      this.yatraService.policyDetails.nomineeDetails.appointeeName = this.dynamicFormGroup.value.appointeeName;
+      this.yatraService.policyDetails.nomineeDetails.appointeeContactNo = this.dynamicFormGroup.value.appointeeMobileNumber;
+      this.yatraService.policyDetails.nomineeDetails.appointeeDOB = this.dynamicFormGroup.value.appointeeDob;
+      this.yatraService.policyDetails.nomineeDetails.relationshipOfAppointeeWithNominee = this.dynamicFormGroup.value.relationWithNominee;
+      // if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
+      // }
+      let commonDraftRequest = {
+        leadId: this.yatraService.policyDetails.proposerDetails.leadId,
+        requestData: JSON.stringify({      
+          proposerDetails: this.yatraService.policyDetails.proposerDetails,
+          insuredDetails:this.yatraService.policyDetails.insuredDetails,
+          nomineeDetails:this.yatraService.policyDetails.nomineeDetails
+        }),
+        isFinalSubmit: false,
+        leadStatus: "Draft"
+      }
+      this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          if (res.isSuccess == true && res.statusCode == 200) {
+            this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+            if (this.getFormIndexValue() < this.formSequence.length - 1) {
+              this.incrementIndex();
+              this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+              
+            }
+  
+          }
+  
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }else if(this.getFormIndexValue() == 3){
+      console.log(this.dynamicFormGroup.value);
+      console.log(this.yatraService.policyDetails);
+      this.yatraService.policyDetails.proposerDetails.paymentMode = this.dynamicFormGroup.value.paymentMode == "no" ? "paymentgateway" : "easyPay";
+      // if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
+      // }
+      let commonDraftRequest = {
+        leadId: this.yatraService.policyDetails.proposerDetails.leadId,
+        requestData: JSON.stringify({      
+          proposerDetails: this.yatraService.policyDetails.proposerDetails,
+          insuredDetails:this.yatraService.policyDetails.insuredDetails,
+          nomineeDetails:this.yatraService.policyDetails.nomineeDetails
+        }),
+        isFinalSubmit: false,
+        leadStatus: "Draft"
+      }
+      this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          if (res.isSuccess == true && res.statusCode == 200) {
+            this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+            if (this.getFormIndexValue() < this.formSequence.length - 1) {
+              this.incrementIndex();
+              this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+              
+            }
+  
+          }
+  
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+    else{
+      // if (this.getFormIndexValue() < this.formSequence.length - 1) {
+      //   this.incrementIndex();
+      //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+        
+      // }
+      let commonDraftRequest = {
+        leadId: this.yatraService.policyDetails.proposerDetails.leadId,
+        requestData: JSON.stringify({      
+          proposerDetails: this.yatraService.policyDetails.proposerDetails,
+          insuredDetails:this.yatraService.policyDetails.insuredDetails,
+          nomineeDetails:this.yatraService.policyDetails.nomineeDetails
+        }),
+        isFinalSubmit: true,
+        leadStatus: "SUBMITTED"
+      }
+      this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          if (res.isSuccess == true && res.statusCode == 200) {
+            this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+            if (this.getFormIndexValue() < this.formSequence.length - 1) {
+              this.incrementIndex();
+              this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+              
+            }
+  
+          }
+  
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
  
 
+  }
+  filterRelationByName(relationName: string) {
+    return this.nomineeRelations.filter((relation: any) => relation.relationName === relationName);
   }
   mergeArrays(firstArray: any[], insuredDetails: any[]): void {
     console.log(firstArray);
@@ -2846,6 +2987,7 @@ export class RugDynamicFormComponent {
       console.log(JSON.parse(firstItem.relationshipType));
       console.log(index);
       let firstItemRelation = JSON.parse(firstItem.relationshipType);
+      insuredDetails.splice(1);
       const existingItem = insuredDetails.find((item, index) => (firstItemRelation.id != undefined && item.relationCode === firstItemRelation.id));
       if (existingItem) {
         existingItem.firstName = firstItem.firstName;
@@ -2994,6 +3136,69 @@ export class RugDynamicFormComponent {
 
   }
   changeMainFormDependentControls(
+    dependentControlNames: (string | { name: string; visibility: boolean })[],
+    visibility: boolean,
+    controlName: string | null = null,
+    parentControlName: string | null = null,
+    controlIndex: number | null = null
+  ) {
+    console.log(dependentControlNames, visibility);
+
+    const tempIndex = this.activeMemberTabIndex;
+    setTimeout(() => {
+      dependentControlNames.forEach((dependent) => {
+        // Extract control name and visibility from either string or object
+        const dependentName = typeof dependent === 'string' ? dependent : dependent.name;
+        const dependentVisibility = typeof dependent === 'string' ? visibility : dependent.visibility;
+
+        this.form.formSections.forEach((section: IFormSections) => {
+          section.formControls.forEach((control: IFormControl) => {
+            if (control.dynamicControls && controlIndex != null && control.dynamicControls.length > controlIndex) {
+              const targetDynamicControl = JSON.parse(JSON.stringify(control.dynamicControls[controlIndex]));
+              targetDynamicControl.forEach((dynamicControl: IDynamicControl) => {
+                if (dynamicControl.name === dependentName) {
+                  dynamicControl.visible = dependentVisibility;
+                } else if (dynamicControl.subControls && dynamicControl.name === parentControlName) {
+                  dynamicControl.subControls.forEach((subControlArray: any) => {
+                    subControlArray.forEach((subControl: ISubControl) => {
+                      if (subControl.name === dependentName) {
+                        subControl.visible = dependentVisibility;
+                      }
+                    });
+                  });
+                }
+              });
+
+              control.dynamicControls[controlIndex] = targetDynamicControl;
+
+            } else if (control.name === dependentName) {
+              control.visible = dependentVisibility;
+              if (dependentVisibility) {
+                let controlValidators: any = [];
+                control.validators?.forEach((val: IValidator) => {
+                  if (val.validatorName === 'required') controlValidators.push(Validators.required);
+                  if (val.validatorName === 'email') controlValidators.push(Validators.email);
+                  if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+                  if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+                  if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+                });
+                this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
+              } else {
+                this.dynamicFormGroup.get(control.name)?.clearValidators();
+                this.dynamicFormGroup.get(control.name)?.reset();
+              }
+            }
+          });
+        });
+      });
+      this.changeDetectorRef.detectChanges();
+    }, 0);
+
+    this.activeMemberTabIndex = tempIndex;
+    console.log(this.form);
+  }
+
+  changeBBPaymentDependentControls(
     dependentControlNames: (string | { name: string; visibility: boolean })[],
     visibility: boolean,
     controlName: string | null = null,
@@ -4965,7 +5170,8 @@ export class RugDynamicFormComponent {
         console.log(this.nomineeRelations);
         this.nomineeRelations = this.nomineeRelations.relationShipModels;
         this.nomineeRelations.map((item: any) => {
-            item.name = item.relationName
+            item.name = item.relationName;
+            item.value = item.relationName;
         })
         control.options = this.nomineeRelations;
       },
