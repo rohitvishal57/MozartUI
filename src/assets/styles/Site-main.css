@@ -5074,6 +5074,13 @@ input[type="search"]::-webkit-search-results-decoration {
   background: #fff url(../Img/down_arrow.svg) no-repeat 96% 50% !important;
   border-radius: 20px !important;
 }
+.input-selectBox_white, .input-selectBox_white:focus {
+  padding: 6px 12px !important;
+  height: auto;
+  border: 1px solid #E6E6E6 !important;
+  background: #fff url(../Img/down_arrow.svg) no-repeat 96% 50% !important;
+  border-radius: 20px !important;
+}
 .note_remarkText_width {
   max-width: 320px;
 }
