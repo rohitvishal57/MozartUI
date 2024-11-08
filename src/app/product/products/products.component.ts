@@ -225,12 +225,14 @@ export class ProductsComponent implements OnInit {
     const MAX_COMPARE_ITEMS = 3; // Define a constant for the max compare limit
     // Check if the limit has been reached
     if (this.compareItems.length >= MAX_COMPARE_ITEMS) {
-      this.toast.error({ detail: 'Only three products can be added to compare!' });
+      this.toast.error({ detail:"",summary: 'Only three products can be added to compare!' ,duration:5000});
       return;
     }
     // Check if the item already exists in the array
-    const isAlreadyPresent = this.compareItems.some(existingItem => existingItem === item);
+    const isAlreadyPresent = this.compareItems.some(existingItem => existingItem.productName === item.productName);
     if (isAlreadyPresent) {
+      this.toast.warning({ detail: "", summary: 'This product has already been added for comparison. Please choose another product. ', duration: 5000 });
+
       return; // Skip adding the item
     }
     this.getProductInformation(item.productId);
