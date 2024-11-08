@@ -7,7 +7,8 @@
             </div> -->
             <div class="row">
                 <div class="col-12">
-                    <h2 class="mb-2">Plan Comparison</h2>
+                    <h2 class="icon_withHeading" aria-hidden="true"  ><a class="btn_backPage"  (click)="backToProducts()" title="Back To Products"></a>Plan Comparison</h2> 
+
                     <p>Compare our diverse health insurance plans to find the one that best suits your needs. Secure
                         your health and well-being with the right coverage.</p>
                 </div>
@@ -171,6 +172,8 @@
                                         Buy Now
                                     </button>
                                 </div>
+
+                                
                                 <span class="compare_delete" (click)="deleteProduct(comparisonItem3)"><img
                                         src="assets/Img/icon_plans_comparison_delete_grey.svg"></span>
                             </header>

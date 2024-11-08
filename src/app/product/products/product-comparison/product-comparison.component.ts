@@ -24,6 +24,7 @@ export class ProductComparisonComponent {
   comparisonItem1 : any = {};
   comparisonItem2 : any = {};
   comparisonItem3 : any = {};
+  productComparison : Boolean = false;
 
   constructor(private router: Router,private productService: ProductsService,
     private common: CommonService,private encryptionService: EncryptionService, 
@@ -72,7 +73,9 @@ export class ProductComparisonComponent {
           }
           const productData = {
             partnerId: comparisonItem.partnerId,
-            productId: comparisonItem.productId
+            productId: comparisonItem.productId,
+            productComparison:true
+
           }
             this.router.navigate(['yatra'], {
               state: { productData: productData, formSequence: this.formSequence }
@@ -95,6 +98,8 @@ export class ProductComparisonComponent {
     this.comparisonItems = this.comparisonItems.filter((item : any) => item.productName !== comparisonItem.productName);
     console.log('this.comparisonItems',this.comparisonItems);
     this.refreshComparisonItems();
+    this.toast.success({ detail: "", summary: 'Product has been deleted from product comparison successfully.', duration: 3000 });
+
   }
 
   getProductList() {
@@ -141,6 +146,11 @@ export class ProductComparisonComponent {
         this.toast.error({ detail: 'Failed to Add Product for Comparison ' });
         console.error(err);
       }
+    });
+  }
+
+  backToProducts(){
+    this.router.navigate(['/products'], {
     });
   }
 

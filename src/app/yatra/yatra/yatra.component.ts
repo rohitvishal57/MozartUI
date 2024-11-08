@@ -106,6 +106,7 @@ export class YatraComponent {
   feedbackImpressedValue: String = '';
   kidCount = 0;
   quickQuoteRedirect :Boolean =false;
+  productComparison :Boolean= false;
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -142,6 +143,9 @@ export class YatraComponent {
     }
     if (history.state.productData.quickQuoteRedirect) {
       this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
+    }
+    if(history.state.productData.productComparison){
+      this.productComparison =  history.state.productData.productComparison;
     }
     if (history.state.productData.tenure) {
       this.formData = { ...this.formData, tenure: history.state.productData.tenure }
@@ -4721,6 +4725,11 @@ export class YatraComponent {
 
   backToleads() {
     this.router.navigate(['/leads/leadsList'], {
+    });
+  }
+
+  backToProductComparison() {
+    this.router.navigate(['/products/comparison'], {
     });
   }
 

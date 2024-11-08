@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
@@ -8,7 +8,7 @@ import { CommonService } from 'src/app/services/common.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit ,OnDestroy {
   currentLanguage: string = 'en';
   isSidenavOpen: boolean = false;
   isDesktopView: boolean = window.innerWidth >= 768;
@@ -27,6 +27,12 @@ export class HeaderComponent implements OnInit {
     this.currentLanguage = this.getLanguage();
     this.notification();
     this.notificationCount = this.notifications.length;
+  }
+
+  
+  ngOnDestroy() {
+    //this.openNotifications();
+    this.showNotifications = false;
   }
 
   logOut() {
