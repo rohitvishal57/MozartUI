@@ -25,6 +25,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.currentLanguage = this.getLanguage();
+    this.notification();
+    this.notificationCount = this.notifications.length;
   }
 
   logOut() {
@@ -65,28 +67,31 @@ export class HeaderComponent implements OnInit {
   }
 
   openNotifications(){
-    this.notifications = [
-      {
-        message: 'You have a new comment on your post.',
-        timestamp: new Date('2024-10-01T14:23:00'),
-        type: 'comment',
-        read: false
-      },
-      {
-        message: 'Your order #12345 has been shipped.',
-        timestamp: new Date('2024-10-02T09:45:00'),
-        type: 'order',
-        read: false
-      },
-      {
-        message: 'You have a new follower: John Doe.',
-        timestamp: new Date('2024-10-03T16:10:00'),
-        type: 'follower',
-        read: true
-      }
-    ];
     this.showNotifications = this.showNotifications == false? true :false;
   }
+
+ notification(){
+  this.notifications = [
+    {
+      message: 'You have a new comment on your post.',
+      timestamp: new Date('2024-10-01T14:23:00'),
+      type: 'comment',
+      read: false
+    },
+    {
+      message: 'Your order #12345 has been shipped.',
+      timestamp: new Date('2024-10-02T09:45:00'),
+      type: 'order',
+      read: false
+    },
+    {
+      message: 'You have a new follower: John Doe.',
+      timestamp: new Date('2024-10-03T16:10:00'),
+      type: 'follower',
+      read: true
+    }
+  ];
+ }
 
 }
 
