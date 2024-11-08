@@ -75,7 +75,7 @@ export class MyPerformaceComponent {
     (response) => {
       // if (response.isSuccess == true && response.statusCode == "200") {
         if (response) {
-        this.detailedList = response.agentProposalsDetailedViewLists;
+        this.detailedList = response.data.agentProposalsDetailedViewLists;
       }
       else { console.error("API request was not successful."); }
     },
