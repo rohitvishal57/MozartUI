@@ -50,6 +50,14 @@
             <img  src="../../../assets/images/name.png" >
           </a>
         </div>
+<div class="block-hide">
+
+        <button mat-icon-button *ngIf="isLoggedIn;" (click)="openNotifications()">
+          <mat-icon class="icon">notifications</mat-icon>
+          <span class="badge" *ngIf="notificationCount > 0">{{notificationCount}}</span>
+        </button>
+  
+      </div>
       </div>
     </div>
   </div>
@@ -61,5 +69,17 @@
   </div>
   <!--Logo Tag end-->
 
+  <div *ngIf="showNotifications;">
+    <button id="MarkAll" name="leadsearch" type="button">MarkAll As Read</button>
+
+    <mat-list>
+      <mat-list-item *ngFor="let notification of notifications">
+        <span>{{notification.message}}</span>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
 </header>
 <!--Header end-->
+
+

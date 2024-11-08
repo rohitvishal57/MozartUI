@@ -12,6 +12,10 @@ export class HeaderComponent implements OnInit {
   currentLanguage: string = 'en';
   isSidenavOpen: boolean = false;
   isDesktopView: boolean = window.innerWidth >= 768;
+  notificationCount : number = 1;
+  notifications :any[]=[];
+  showNotifications : Boolean = false;
+  
   @Input() isLoggedIn: any;
 
   constructor(private router: Router,
@@ -58,6 +62,32 @@ export class HeaderComponent implements OnInit {
   }
   redirect(value: any) {
     this.router.navigate([value]);
+  }
+
+  openNotifications(){
+    this.notifications = [
+      {
+        message: 'You have a new comment on your post.',
+        timestamp: new Date('2024-10-01T14:23:00'),
+        type: 'comment',
+        read: false
+      },
+      {
+        message: 'Your order #12345 has been shipped.',
+        timestamp: new Date('2024-10-02T09:45:00'),
+        type: 'order',
+        read: false
+      },
+      {
+        message: 'You have a new follower: John Doe.',
+        timestamp: new Date('2024-10-03T16:10:00'),
+        type: 'follower',
+        read: true
+      }
+    ];
+
+    console.log('message',this.notifications);
+    this.showNotifications = true;
   }
 
 }
