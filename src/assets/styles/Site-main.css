@@ -5067,10 +5067,12 @@ input[type="search"]::-webkit-search-results-decoration {
   width: 100%;
   margin: 0;
 }
-.compare_inputblock .input-selectBox {
-  padding: 6px 16px !important;
+.compare_inputblock .input-selectBox, .compare_inputblock .input-selectBox:focus {
+  padding: 6px 12px !important;
   height: auto;
-  border-radius: 4px !important;
+  border: 1px solid #E6E6E6 !important;
+  background: #fff url(../Img/down_arrow.svg) no-repeat 96% 50% !important;
+  border-radius: 20px !important;
 }
 .note_remarkText_width {
   max-width: 320px;
