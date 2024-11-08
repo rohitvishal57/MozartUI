@@ -201,12 +201,12 @@ export class YatraComponent {
       this.proposalId = "";
     }
 
-    if (sessionStorage.getItem('quoteId') != null) {
-      this.quoteId = this.encryptionService.decrypt(sessionStorage.getItem('quoteId') as string);
-    }
-    else {
-      this.quoteId = "";
-    }
+    // if (sessionStorage.getItem('quoteId') != null) {
+    //   this.quoteId = this.encryptionService.decrypt(sessionStorage.getItem('quoteId') as string);
+    // }
+    // else {
+    //   this.quoteId = "";
+    // }
 
 
     if (this.formData.noOfChildrens) {
@@ -610,7 +610,9 @@ export class YatraComponent {
                   section.formControls.forEach((formControl: any) => {
                     if (formControl.name == 'totalPremium' && formControl.type == 'custom-radio') {
                       this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
-                      this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                      if(this.QuoteNumber.length > 0){
+                        this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                      }
                       this.formData.tenure = this.selectedIndex + 1;
                       console.log(this.selectedIndex, this.formData);
                     }
@@ -675,7 +677,7 @@ export class YatraComponent {
       this.flattenObject(this.formData);
       this.spinner.hide();
     }
-    console.log(this.dynamicFormGroup.value);
+    console.log(this.dynamicFormGroup.value,this.formData);
 
 
   }
@@ -2611,7 +2613,7 @@ export class YatraComponent {
             await this.resolveMethod(this.form.saveBtnFunction); // Handle other functions
           }
         }
-
+        console.log(this.formData);
         sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
         sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonForm));
 
@@ -2620,7 +2622,9 @@ export class YatraComponent {
           sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
           sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
           console.log(this.QuoteNumber, this.selectedIndex);
-          this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+          if(this.QuoteNumber.length > 0){
+            this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+          }
         }
 
 
@@ -2940,7 +2944,9 @@ export class YatraComponent {
               this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
             }
             console.log(this.QuoteNumber, this.selectedIndex);
-            this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+            if(this.QuoteNumber.length > 0){
+              this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+            }
             // this.formData.tenure = this.selectedIndex;
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
           })
@@ -3927,6 +3933,9 @@ export class YatraComponent {
   }
 
   setPremiumAmount(control?: any) {
+    if(this.formData.tenure){
+      this.selectedIndex = this.formData.tenure - 1;
+    }
     console.log(this.dynamicFormGroup.value, this.form, this.displayTaxList, this.selectedIndex, this.formData, this.QuoteNumber);
     this.tenureAmount.forEach(member => {
       console.log(member);
@@ -3989,7 +3998,9 @@ export class YatraComponent {
                 }
 
                 // Update additional data
-                this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                if(this.QuoteNumber.length > 0){
+                  this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                }
                 this.formData.tenure = this.selectedIndex + 1;
               }
             });
@@ -4684,9 +4695,10 @@ export class YatraComponent {
                       //     // If no dName, push the innerArray as is
                       //     productQuestionnaire.push(innerArray);
                       // }
-                      const filteredInnerArray = Object.fromEntries(
-                        Object.entries(innerArray).filter(([key, value]) => value !== "")
-                      );
+                      const filteredInnerArray = innerArray;
+                      // const filteredInnerArray = Object.fromEntries(
+                      //   Object.entries(innerArray).filter(([key, value]) => value !== "")
+                      // );
                       console.log(innerArray, filteredInnerArray);
                       if (filteredInnerArray['diseaseName'] !== "" && Object.keys(filteredInnerArray).length > 0) {
                         innerArray.parentQuestionCode = questionId;
