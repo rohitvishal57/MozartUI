@@ -242,6 +242,7 @@ export class QuoteProductsComponent implements OnInit {
     }
     item.selectedPremiumAmount = item[selectedPremiumKey];
     item.QuoteNumber = item[QuoteNumber];
+    item.tenure = this.selectedPlanIndex;
     console.log(item);
 
     await this.getProposalNum();
