@@ -75,11 +75,11 @@ export class LoginComponent implements OnInit{
   onVerifySubmit(){
     if(this.codeForm.valid){
       this.contactDetailsReqBody.userId = this.codeForm.value.verify;
-      localStorage.setItem("agentCode", this.codeForm.value.verify);
       this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
         .subscribe({  
           next: (res:any)=>{
             this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
+            localStorage.setItem("agentCode", this.codeForm.value.verify);
             this.openModal(this.contactInfoData);
           },
           error: (err => {
@@ -253,8 +253,7 @@ export class LoginComponent implements OnInit{
         .subscribe({  
           next: (res:any)=> {
             if(res.data && res.statusCode == '200' && res.isSuccess && res.token !== null) {
-              this.loginService.storeToken(res.token);
-              // localStorage.setItem('agentCode', res.data.agentCode);
+              localStorage.setItem('userData', JSON.stringify(res.data));
               this.router.navigate(['dashboard']);
             } else {
               this.errorMessage = res.message;

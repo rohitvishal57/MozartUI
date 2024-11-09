@@ -1,31 +1,18 @@
-<!-- <div class="sideNavMain">
-    <div class="sideNavSub">
-        <div class="navMain">
-            <div class="hilight" (click)="redirect('dashboard')"><img src="assets/Img/icon_menu_boxes_grey.svg"></div>
-            <div class="hilight" (click)="redirect('products')"><img src="assets/Img/icon_products.svg"></div>
-            <div class="hilight" (click)="redirect('renewals/renewalList')"><img src="assets/Img/icon_bullet_list_grey.svg"></div>
-            <div class="hilight" (click)="redirect('claims/claimsList')"><img src="assets/Img/icon_menu_calims_grey.svg"></div>
-            <div class="hilight" (click)="redirect('endorsements')"><img src="assets/Img/icon_paper_grey.svg"></div>
-            <div class="hilight" (click)="redirect('')"><img src="assets/Img/logout.svg" (click)="logOut()"></div>
-        </div>
-    </div>
-</div> -->
 <nav id="siteSidenav" class="siteSidenav" [ngClass]="{'expand': isExpanded, 'active': isActive}">
     <div class="siteSidenavMain">
-        <div class="sidenavMenu">
-          <a [ngClass]="{'active': isRouteActive('/dashboard')}" title="Dashboard" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('dashboard')"><span class="img_link"><img src="assets/Img/icon_menu_boxes_grey.svg"></span><span>Dashboard</span></a>
-            <a [ngClass]="{'active': isRouteActive('/products')}" routerLinkActive="active" title="Products" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('products')"><span class="img_link"><img src="assets/Img/icon_products.svg"></span><span>Products</span></a>
-            <a [ngClass]="{'active': isRouteActive('/endorsements')}"  title="Endorsements" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('endorsements')"><span class="img_link"><img src="assets/Img/icon_paper_grey.svg"></span><span>Endorsements</span></a>
-            <a [ngClass]="{'active': isRouteActive('/claims')}"  title="Claims" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('claims/claimsList')"><span class="img_link"><img src="assets/Img/icon_menu_calims_grey.svg"></span><span>Claims</span></a>
-            <!-- <a  title="Wishlist" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()"><span class="img_link"><img src="assets/Img/icon_menu_wishlist_grey.svg"></span><span>Wishlist</span></a> -->
-            <a [ngClass]="{'active': isRouteActive('/leads')}"  title="My Leads" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('leads/leadsList')"><span class="img_link"><img src="assets/Img/icon_healthcare_grey.svg"></span><span>My Leads</span></a>
-            <a [ngClass]="{'active': isRouteActive('/renewal')}"  title="Renewals" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('renewal/renewalList')"><span class="img_link"><img src="assets/Img/icon_bullet_list_grey.svg"></span><span>Renewals</span></a>
-            <a [ngClass]="{'active': isRouteActive('/customers')}"  title="Customers" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('customers/customersList')"><span class="img_link"><img src="assets/Img/icon_menu_customers_grey.svg"></span><span>Customers</span></a>
-            <a [ngClass]="{'active': isRouteActive('/proposals')}" title="Proposals" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('proposals/proposalsList')" ><span class="img_link menu-proposals"><img src="assets/Img/icon_menu_proposal.png" ></span><span>Proposals</span></a>
-            <a [ngClass]="{'active': isRouteActive('/performance/my-performance')}" title="Performance" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('performance/my-performance')" ><span class="img_link"><img src="assets/Img/icon_menu_performance.png" ></span><span>My Performance</span></a>
-            <a [ngClass]="{'active': isRouteActive('/performance/upload-performance')}" title="Upload Report" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('performance/upload-performance')" ><span class="img_link "><img src="assets/Img/icon_menu_uploadreports.png" ></span><span>Upload Report</span></a>
-            <!-- <a [ngClass]="{'active': isRouteActive('/declaration')}" title="Declaration" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" (click)="redirect('declaration')" ><span class="img_link"><img src="assets/Img/icon_more.svg" ></span><span>Declaration</span></a> -->
-            <a title="logout" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" class="linkLogout" (click)="redirect('')"><span class="img_link"><img src="assets/Img/icon_menu_logout.svg"></span><span>Logout</span></a>
-        </div>
+      <div class="sidenavMenu">
+        <a *ngFor="let item of sideMenuList" 
+           [ngClass]="{'active': isRouteActive(item.path)}" 
+           [title]="item.displayName" 
+           (mouseenter)="expandSideNav()" 
+           (mouseleave)="collapseSideNav()" 
+           (click)="redirect(item.path)">
+          <span class="img_link">
+            <img [src]="item.imagePath" [alt]="item.displayName">
+          </span>
+          <span>{{ item.displayName }}</span>
+        </a>
+        <a title="logout" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" class="linkLogout" (click)="redirect('login')"><span class="img_link"><img src="assets/Img/icon_menu_logout.svg"></span><span>Logout</span></a>
       </div>
+    </div>
 </nav>
