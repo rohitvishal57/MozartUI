@@ -35,6 +35,7 @@ export class StatusValidationComponent implements OnInit {
               next: (res:any) => {
                 if(res.data && res.isSuccess && res.statusCode == '200') {
                   localStorage.setItem('agentCode', res.data.agentcode);
+                  localStorage.setItem('userData', JSON.stringify(res.data));
                   this.toast.success({
                     detail: 'SUCCESS',
                     summary: 'Login Successfull',
@@ -66,6 +67,7 @@ export class StatusValidationComponent implements OnInit {
             next: (res:any) => {
               if(res.data && res.isSuccess && res.statusCode == '200') {
                 localStorage.setItem('agentCode', res.data.agentcode);
+                localStorage.setItem('userData', JSON.stringify(res.data));
                 this.toast.success({
                   detail: 'SUCCESS',
                   summary: 'Login Successfull',
