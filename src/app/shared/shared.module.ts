@@ -4,9 +4,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedTableComponent } from './components/shared-table/shared-table.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 @NgModule({
-  declarations : [SharedTableComponent],
+  declarations : [SharedTableComponent, FileUploadComponent],
   imports: [
     FormsModule,
     CommonModule,

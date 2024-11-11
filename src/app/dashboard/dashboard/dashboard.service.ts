@@ -15,13 +15,18 @@ export class DashboardService {
     return this.httpService.post(PinCodeByCity, reqdata);
   }
 
-  fetchLeadStatusCount(): Observable<any> {
-    const PinCodeByCity = this.configService.config.baseUrl + this.configService.config.pinCodeDetails;
-    return this.httpService.get(PinCodeByCity);
+  fetchLeadStatusCount(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.getLeadStatusCount;
+    return this.httpService.post(url, payload);
   }
 
-  fetchProposalStatusCount(): Observable<any> {
-    const PinCodeByCity = this.configService.config.baseUrl + this.configService.config.pinCodeDetails;
-    return this.httpService.get(PinCodeByCity);
+  fetchProposalStatusCount(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.getProposalStatusCount;
+    return this.httpService.post(url, payload);
+  }
+
+  fetchRenewalStatusCount(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.getRenewalStatusCount;
+    return this.httpService.post(url, payload);
   }
 }

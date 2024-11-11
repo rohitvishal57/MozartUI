@@ -104,7 +104,6 @@
     "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode",
     "saveBBCommonDraft":"/BranchBanking/SaveBBCommonDraft",
     "getLeadStatusCount":"/GetLeadStatusCount",
-    "getProposalStatusCount":"/GetProposalStatusCount"
-
-
+    "getProposalStatusCount":"/GetProposalStatusCount",
+    "getRenewalStatusCount":"/GetRenewalStatusCount"
 }

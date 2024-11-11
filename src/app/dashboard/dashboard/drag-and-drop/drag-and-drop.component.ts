@@ -522,8 +522,9 @@ export class DragAndDropComponent implements OnInit {
 
   ngOnInit(): void {
     forkJoin({
-      GetLeadStatusCount: this.dashboardService.fetchLeadStatusCount(),
-      GetProposalStatusCount: this.dashboardService.fetchProposalStatusCount()
+      GetLeadStatusCount: this.dashboardService.fetchLeadStatusCount(''),
+      GetProposalStatusCount: this.dashboardService.fetchProposalStatusCount(''),
+      GetRenewalStatusCount: this.dashboardService.fetchProposalStatusCount('')
     }).subscribe((data: any) => {
       console.log(data)
     })
