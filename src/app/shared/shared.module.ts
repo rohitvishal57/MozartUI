@@ -1,27 +1,33 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SharedTableComponent } from './components/shared-table/shared-table.component';
-import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { SharedModalComponent } from './components/shared-modal/shared-modal.component';
+import { MyMaterialModule } from '../material.module';
+import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 
 @NgModule({
-  declarations : [SharedTableComponent, FileUploadComponent],
+  declarations: [
+    SharedModalComponent, ConfirmModalComponent],
   imports: [
     FormsModule,
     CommonModule,
     TranslateModule,
     NgxSpinnerModule,
     ReactiveFormsModule,
+    MyMaterialModule
   ],
-  exports:[
+  exports: [
     FormsModule,
     CommonModule,
     TranslateModule,
     NgxSpinnerModule,
     ReactiveFormsModule,
-    SharedTableComponent
-  ]
+    SharedModalComponent,
+    ConfirmModalComponent,
+    MyMaterialModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SharedModule { }

@@ -1,0 +1,45 @@
+<ng-container  *ngIf="dialogName != 'template_modal' && dialogName != 'custom_dialog'">
+    <div class="message-window">
+        <div class="message-content">
+            <div>
+                <img class="icon-size" src="assets/images/svg/{{data.iconName}}.svg" />
+            </div>
+            <div class="message" [innerHTML]="data?.description">
+                asdasd
+            </div>
+        </div>
+        <div>
+            <div class="button-spacing">
+                <button class="btn btn-block mt-2 cancel-btn" *ngIf="data?.showNoButton" (click)="dialogRef.close(false)">{{
+                    data?.noButton ? data.noButton : 'Cancel' }}</button>
+                <button class="btn btn-block mt-2 okay-btn" (click)="yes()">{{ data?.yesButton ? data.yesButton : 'Okay'}}</button>
+    
+            </div>
+        </div>
+    </div>
+    
+    
+</ng-container>
+<ng-container *ngIf="dialogName == 'custom_dialog'">
+    <div class="dialog_main_container" *ngIf="dialogData['description']">
+        <div class="dialog_subs">
+            <div class="left_icon">
+                <img [src]="'assets/images/modal_icons/'+dialogData['iconName']+'.svg'" alt="">
+            </div>
+            <div class="right_content">
+                <h3>{{dialogData['description']}}</h3>
+                <ng-container *ngIf="dialogData?.['additionalData']">
+                    <br>
+                    <br>
+                    <h3>{{dialogData['additionalData']}}</h3>
+                </ng-container>
+            </div>
+        </div>
+        <div class="btn_container">
+            <ng-container *ngFor="let btn of dialogData['btnArr']">
+                <button class="btn_lgn_scr btn_scr" (click)="closeModal(btn.btnName)">{{btn.btnName}}</button>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>
+
