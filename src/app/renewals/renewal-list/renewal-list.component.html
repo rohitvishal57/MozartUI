@@ -135,8 +135,8 @@
                                     <td>{{ row.renewalStatusDescription }}</td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Edit" class="btn_action btn_editAction" (click)="renewalJourney(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" id="renewal" name="renewal" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(row, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                            <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="renewal" name="renewal" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                             <button type="button" id="renewalmore" name="renewalmore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
@@ -190,8 +190,8 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Edit" class="btn_action btn_editAction" (click)="renewalJourney(row)"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(row, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                     <button type="button" id="renewalgridmore" name="renewalgridmore" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
                                     aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">

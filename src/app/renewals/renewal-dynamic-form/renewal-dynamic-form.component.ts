@@ -1,5 +1,5 @@
 import { Component,OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RenewalsService } from '../renewals.service';
 import { Options } from '@angular-slider/ngx-slider';
@@ -65,7 +65,6 @@ export class RenewalDynamicFormComponent implements OnInit {
   productsList:any[]=[];
   hideSection:boolean=true;
   link: string = ''; 
-  bankNameList:any;
   kycData:any
   kycFormGroup!: FormGroup;
   kycDetailsSubmitted = false;
@@ -74,7 +73,12 @@ export class RenewalDynamicFormComponent implements OnInit {
   fileName: string | null = null;
   kycLink:any
   memberDetails:boolean=false;
-  
+  activeAction:any;
+  offlinePaymentForm!: FormGroup;
+  bankNameList:any[]=[];
+  bankNameControl = new FormControl('');
+  filteredBankNamesList:any[]=[]
+
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,
     private router: Router,private toast: NgToastService,
@@ -82,45 +86,36 @@ export class RenewalDynamicFormComponent implements OnInit {
     private commonService:CommonService,private encryptionService: EncryptionService) {}
 
   ngOnInit() {    
+    this.offlinePaymentForm = new FormGroup({
+      paymentOption: new FormControl('', Validators.required),
+      chequeAmount: new FormControl({ value: 'this.renewalInfo?.response?.policyData[0]?.NetPremium', disabled: true }),
+      chequeNumber: new FormControl('', [Validators.required,Validators.pattern('^[0-9]{6}$')]),
+      chequeDate: new FormControl('', Validators.required),
+      ifscCode: new FormControl('', [Validators.required,Validators.pattern('^[A-Z]{4}[0]{1}[A-Z0-9]{6}$')]),
+      bankNameControl: new FormControl('', Validators.required),
+      file: new FormControl(null)
+    });
     this.kycFormGroup = this.fb.group({
       panNumber: ['',[Validators.required, Validators.pattern('[A-Z]{5}[0-9]{4}[A-Z]{1}')]],
       dateOfBirth: ['', [Validators.required,Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
     });
     this.ac.paramMap.subscribe((params) => {
-      const policyNumber = this.encryptionService.decrypt(sessionStorage.getItem('policyNumberRen') as string);
-      const activeSection = this.encryptionService.decrypt(sessionStorage.getItem('policyActionRen') as string);
-      if (policyNumber) {this.policyNumber = policyNumber;}
-      if(activeSection){
-        if(activeSection == 'payment'){
-          this.activeSection='policySummary';
-          this.getRenewalInfo();          
-          this.hideSection=false;
+      this.policyNumber = this.encryptionService.decrypt(sessionStorage.getItem('policyNumberRen') as string);
+      this.activeAction = this.encryptionService.decrypt(sessionStorage.getItem('policyActionRen') as string);
+      if(this.activeAction){
+        if(this.activeAction== 'withoutmodify'){
+          this.setSection('payment')
+          this.getRenewalInfo(); 
         }
         else{
-          this.getRenewalInfo();
-          this.getProducts(); 
-          this.activeSection = activeSection;
-          // this.loadDataSequentially(activeSection);
+          this.getRenewalInfo(); 
+          this.getProducts();
         }
-      }
-      const paymentStatus = this.renewalService.getPaymentStatus();      
-      if (paymentStatus === '1') {this.submit = false;
-      } else if (paymentStatus === '2') {this.activeSection = 'payment';
       }
     });
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
+   this.bankNameControl.valueChanges.subscribe(value => this.filterBankList(value));
  }
-
-//  async loadDataSequentially(activeSection:any) {
-//   try {
-//     await this.getRenewalInfo();
-//     await this.getProducts(); 
-//     this.activeSection = activeSection;
-//   } catch (error) {
-//     console.error("Error loading data:", error);
-//   }
-// }
-
   initializeForm() {
     const group: { [key: string]: any } = {};
     if (this.formObject && Object.keys(this.formObject).length > 0) {
@@ -132,7 +127,6 @@ export class RenewalDynamicFormComponent implements OnInit {
     } else {console.warn('formObject is empty or undefined.');}
     this.form = this.fb.group(group);
   }
-  
   onSumInsuredChange(eventValue: any) {
    this.selectedSumInsured = eventValue;
   }
@@ -151,7 +145,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   }
   handleAction(event: string,item?: any) {
      switch (event) {
-       case 'Member':
+        case 'Member':
          if (this.memberRole === 'Add' && this.form.valid) {  
             this.form.value.SumInsured=this.selectedSumInsured;
             this.requestObject.member=JSON.stringify(this.form.value);
@@ -201,7 +195,7 @@ export class RenewalDynamicFormComponent implements OnInit {
          } 
          else {console.log('Form is invalid'); return;} 
          break;
-       case 'editMember':
+        case 'editMember':
         if(this.form.valid){
           this.formId=5001;
         }else{
@@ -209,7 +203,7 @@ export class RenewalDynamicFormComponent implements OnInit {
           return;
         }
          break;
-       case 'editAddress':
+        case 'editAddress':
          if(this.form.invalid){   
           return;
          }else if (event === 'editAddress' && this.form.valid) {
@@ -270,7 +264,7 @@ export class RenewalDynamicFormComponent implements OnInit {
          console.warn('Unknown action:', event);
      }
   }
-  preexistingCondition(value:any){
+  preExistingCondition(value:any){
    this.preexistingConditionSelected=value
   }
  selectButton(value?: any,content? : any,member?:number) {
@@ -348,81 +342,108 @@ export class RenewalDynamicFormComponent implements OnInit {
 }
 private formatDate(dateString: string): string {
   if (!dateString) return '';
-  return dateString.split('T')[0]; // Extracts just the date part (YYYY-MM-DD)
+  return dateString.split('T')[0]; 
 }
-
  selectPaymentType(option: any) {
   if(option == 'offline'){
     this.selectedPaymentType = option;
     this.yatraService.getAllBankDetails().subscribe({
-      next: (res: any) => {this.bankNameList = res.data;},
+      next: (res: any) => {
+        console.log("bank names list",res.data);
+        this.bankNameList = res.data;
+        this.filteredBankNamesList = this.bankNameList;
+      },
       error: (err) => {console.error(err);}
     });
   }
-  if(option == 'E-Nach' || option == 'E-Mandate' || option == 'Auto_Debit'){
+  if(option == 'online' || option == 'E-Mandate' || option == 'Auto_Debit'){
     this.selectedPaymentType = option;
     console.log("payment type",this.selectedPaymentType);
   }
  }
+ filterBankList(event: any): void {
+  const input = (event.target as HTMLInputElement).value.toLowerCase();
+  const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+  const regex = /^[a-zA-Z]$/;   
+  if (!allowedKeys.includes(event.key) && !regex.test(event.key)) {
+    event.preventDefault();
+    return;
+  }
+  this.filteredBankNamesList = this.bankNameList.filter((bank: any) =>
+    bank.name.toLowerCase().includes(input)
+  );
+  console.log("input value", input);
+  console.log("filtered names", this.filteredBankNamesList);
+}
+onBankNameSelected(selectedBankName: string): void {
+  this.offlinePaymentForm.get('bankNameControl')?.setValue(selectedBankName);
+  console.log("selected bank name", this.offlinePaymentForm.get('bankNameControl')?.value);
+}
  setSection(section: string) {
-  if(section == 'additional'){ this.formId = 5001;}
    this.activeSection = section;
  }
- proceed(value? :any) {
-   if (this.activeSection === 'primary') {
-     this.formId = 5001;
-     this.setSection('additional');
-   } 
-   else if (this.activeSection === 'additional') {
-     this.formId = 5001;
-     this.setSection('policySummary');
-   } 
-   else if (this.activeSection === 'policySummary') {
-      this.setSection('payment')
-   }
-   else if (this.activeSection === 'payment') {
-    if(value == 'back') this.setSection('policySummary');
+goNext(){
+  if(this.activeSection== 'primary'){
+    this.setSection('additional')
   }
-  console.log("active section",this.activeSection);
-  
- }
- renewNow() {
-   this.formId = 5001;
-   this.setSection('policySummary')
- }
- nextMethod(){
-  if(this.activeSection== 'policySummary'){
-    if(this.kycFlag == true){
-      this.setSection('payment')
-    }
-    else{
-      this.setSection('kyc')
-    }
-  }
-  else if(this.activeSection == 'kyc'){
-    if(this.kycData){
-      this.setSection('payment')
-    }
-    else{
-      this.toast.error({ detail: 'ERROR',summary: 'Please complete the KYC',duration: 1000});
-    }
+  else if(this.activeSection == 'additional'){
+    this.setSection('policySummary')
   } 
-  else if(this.activeSection== 'payment' && this.selectedPaymentType == 'offline'){
-    this.submit=false
+  else if(this.activeSection== 'policySummary'){
+    this.setSection('payment')
+  }else if(this.activeSection == 'payment'){
+    this.setSection('thankyou')
+    this.hideSection=false
+  }
+}
+comeBack(){
+  if(this.activeAction=='withoutmodify'){
+    if(this.activeSection == 'payment'){
+      this.router.navigate(['renewal/renewalList'])
+    }else if(this.activeSection == 'additional'){
+      this.setSection('primary')
+    }else if(this.activeSection == "policySummary"){
+      this.setSection('additional')
+    }
+  }
+  else{
+    if(this.activeSection == 'primary'){
+      this.router.navigate(['renewal/renewalList'])
+    }else if(this.activeSection == 'additional'){
+      this.setSection('primary')
+    }else if(this.activeSection == "policySummary"){
+      this.setSection('additional')
+    }else if(this.activeSection == 'payment'){
+      this.setSection('policySummary')
+    }
   }
 }
 payNow(){
    const paymentRequestBody={
     "agentcode": this.agentCode,
-    "proposalNumber": this.policyNumber,
+    "proposalNumber": "",
     "paymentMethod": this.selectedPaymentType,
     "source": "Retail",
     "policyType": "Renewal",
-    "policyNumber": "",
+    "policyNumber": this.policyNumber,
     "quoteNumber": "",
     "orderId": ""
    }
-   if (paymentRequestBody.paymentMethod == "E-Nach" || paymentRequestBody.paymentMethod == "E-Mandate" ||
+   
+   const PayOfflineRequestBody = {
+    policyType: '',
+    paymentMethod: '',
+    paymentOption: '',
+    premiumAmount: '',
+    checkNo: '',
+    checkDate: '',
+    policyNumber: '',
+    agentCode: '',
+    bankName: '',
+    ifsc: '',
+    formFile: [],
+  };
+   if (paymentRequestBody.paymentMethod == "online" || paymentRequestBody.paymentMethod == "E-Mandate" ||
     paymentRequestBody.paymentMethod == "Auto_Debit") {
     this.renewalService.paymentGatewayApi(paymentRequestBody).subscribe({
       next: (response: any) => {
@@ -440,7 +461,7 @@ payNow(){
     });
    }
 }
- getProducts() {
+getProducts() {
   const reqData={
     "agentCode": this.agentCode
   }  
@@ -456,7 +477,6 @@ payNow(){
     }
   })
 }
-
 async getRenewalInfo() {
   const base = this.encryptionService.decrypt(sessionStorage.getItem('renewalData') as string);
   this.renewalInfo = JSON.parse(base.data.baseResponse);
@@ -489,10 +509,6 @@ async getRenewalInfo() {
     else {
       console.error("Product name is not available in renewalInfo.");
     }
-  }
-  changeroute(){
-    this.renewalService.setQuote(this.renewalInfo);
-    this.router.navigate(["renewal/quote"]);
   }
   getproductdetailsandfeatures() {
     const productName = this.renewalInfo?.response?.policyData?.[0]?.Name_of_product;    
@@ -581,22 +597,22 @@ async getRenewalInfo() {
       if (file) {this.fileName = file.name;}
     }
 
-    comeBack(){
-      if(this.activeSection == 'policySummary'){
-        if(this.hideSection == false){
-          this.renewalService.clearPaymentStatus();
-          this.router.navigate([`renewal/renewalList`]);
-        }else if(this.activeSection == 'policySummary'){
-          this.setSection('additional')
-        }
-      }else if(this.activeSection == 'kyc'){
-        this.setSection('policySummary')
-      }else if(this.activeSection == "payment"){
-        if(this.kycFlag){
-          this.setSection('policySummary');
-        }else if(!this.kycFlag){
-        this.setSection('kyc');
-        }
-      }
-    }
+      // handleDropdownChange(value: string): void {
+      //   const selectedPolicyNumber = value;
+      //     this.bankNameControl.valueChanges.subscribe(policyValue => {
+      //     // if (!policyValue) {
+      //     //   this.form.get('memberName')?.setValue('');
+      //     //   this.memberNames = []; 
+      //     // }
+      //   });
+      //   const filteredMembers = this.response.filter(
+      //     (item: any) => item.policyNumber === selectedPolicyNumber
+      //   );
+      //     this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
+      //     this.form.get("memberName")?.setValue("");
+      //     this.cdr.markForCheck();
+      // }
+      
+     
+    
 }

@@ -148,7 +148,7 @@
                                 </div>
                                 <div class="compare_btnGroup">
                                     <div class="input-block input-block-renew compare_inputblock">
-                                        <select class="form-select input-selectBox" (change)="addCompareItem($event)">
+                                        <select class="form-select input-selectBox" (change)="addCompareItem($event)" [ngModel]="selectedProduct" >
                                             <option value="" disabled selected>Select Product</option>
                                             <option *ngFor="let item of ProductList" [value]="item.productName">
                                                 {{ item.productName }}

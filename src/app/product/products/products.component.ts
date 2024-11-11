@@ -263,6 +263,10 @@ removeCompareItem(item: any){
   console.log('Item removed from comparison.');
 }
 navigateToProductComparison(){
+  this.compareItems = this.compareItems.map((product:any) =>{
+    product.keyFeatures = JSON.parse(product.keyFeatures.split(",")); // Convert string to array
+    return product;
+  });
   sessionStorage.setItem('compareItems', JSON.stringify(this.compareItems));
   this.router.navigate(['/products/comparison'], {
   });

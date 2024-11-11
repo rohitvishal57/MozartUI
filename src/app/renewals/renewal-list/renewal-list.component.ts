@@ -37,7 +37,7 @@ export class RenewalListComponent {
   filterType: string = "totalRecords";
   activeSection:string= "primary"
   StaticPolicyTypes = [
-    { name: 'Individual', selected: false },
+    { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   currentDate = new Date().toISOString().split('T')[0];
@@ -47,7 +47,7 @@ export class RenewalListComponent {
     private commonService:CommonService,private toast: NgToastService,private encryptionService: EncryptionService
   ) {}
 
-  renewalLisRequestBody={
+  renewalListRequestBody={
     "agentCode": this.agentCode,
     "proposer": "",
     "productName": "",
@@ -72,9 +72,9 @@ export class RenewalListComponent {
     this.getRenewalsList();
   }
   getRenewalsList() {
-    this.renewalLisRequestBody.pageNumber = this.page;
-    this.renewalLisRequestBody.pageSize = this.rows;    
-    this.renewalService.getRenewalListApi(this.renewalLisRequestBody).subscribe(
+    this.renewalListRequestBody.pageNumber = this.page;
+    this.renewalListRequestBody.pageSize = this.rows;    
+    this.renewalService.getRenewalListApi(this.renewalListRequestBody).subscribe(
       (response:any) => { 
         if (response.isSuccess) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
@@ -84,11 +84,11 @@ export class RenewalListComponent {
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType];  
         }else {
-          this.toast.error({ detail: "Error", summary: "Failed to get Renewals List.", duration: 2000 });
+          this.toast.error({ detail: "Error", summary: "Failed to get Renewals List.", duration: 3000 });
         }
       },
       (error) => {
-        this.toast.error({ detail: "Error", summary: "Error while generating Renewal List.", duration: 2000 });
+        this.toast.error({ detail: "Error", summary: "Error while generating Renewal List.", duration: 3000 });
       }
     );
   }
@@ -96,7 +96,7 @@ export class RenewalListComponent {
     return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
   filterQuotes(filter: string,filterRange: string) {
-    this.renewalLisRequestBody.filterType = filter;
+    this.renewalListRequestBody.filterType = filter;
     this.first = 0;
     this.page = 1;
     this.getRenewalsList();
@@ -143,21 +143,21 @@ export class RenewalListComponent {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
-    this.renewalLisRequestBody.startDate=this.startDate;
-    console.log("start date taken by request body",this.renewalLisRequestBody.startDate);
-    this.renewalLisRequestBody.endDate=this.endDate;
-    console.log("end date taken by request body",this.renewalLisRequestBody.endDate);
+    this.renewalListRequestBody.startDate=this.startDate;
+    console.log("start date taken by request body",this.renewalListRequestBody.startDate);
+    this.renewalListRequestBody.endDate=this.endDate;
+    console.log("end date taken by request body",this.renewalListRequestBody.endDate);
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
       console.log("selectedProducts",selectedProducts);     
-    this.renewalLisRequestBody.productName = selectedProducts.join(", ");
-     console.log("product names which are taking by request body",this.renewalLisRequestBody.productName);    
+    this.renewalListRequestBody.productName = selectedProducts.join(", ");
+     console.log("product names which are taking by request body",this.renewalListRequestBody.productName);    
     const selectedPolicyTypes = this.StaticPolicyTypes
     .filter((policyType) => policyType.selected)
     .map((policyType) => policyType.name);
-    this.renewalLisRequestBody.policyType = selectedPolicyTypes.join(", ");
-    console.log("policy types which are taking by request body",this.renewalLisRequestBody.policyType); 
+    this.renewalListRequestBody.policyType = selectedPolicyTypes.join(", ");
+    console.log("policy types which are taking by request body",this.renewalListRequestBody.policyType); 
     this.first = 0;
     this.page = 1;
     this.getRenewalsList();
@@ -169,10 +169,10 @@ export class RenewalListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
-    this.renewalLisRequestBody.productName = "";
-    this.renewalLisRequestBody.policyType = "";
-    this.renewalLisRequestBody.startDate = null;
-    this.renewalLisRequestBody.endDate = null;
+    this.renewalListRequestBody.productName = "";
+    this.renewalListRequestBody.policyType = "";
+    this.renewalListRequestBody.startDate = null;
+    this.renewalListRequestBody.endDate = null;
     this.toggeledropdown = false;
     this.getRenewalsList();
   }
@@ -182,10 +182,10 @@ export class RenewalListComponent {
     this.startDate = null;
     this.endDate = null;
     this.appliedFiltersCount = 0;
-    this.renewalLisRequestBody.productName = "";
-    this.renewalLisRequestBody.policyType = "";
-    this.renewalLisRequestBody.startDate = null;
-    this.renewalLisRequestBody.endDate = null;
+    this.renewalListRequestBody.productName = "";
+    this.renewalListRequestBody.policyType = "";
+    this.renewalListRequestBody.startDate = null;
+    this.renewalListRequestBody.endDate = null;
     this.getRenewalsList();
   }
   onSelectChanges(event: any): void {
@@ -231,9 +231,9 @@ export class RenewalListComponent {
   }
   cancelSearch() {
     this.selected = "";
-    this.renewalLisRequestBody.mobileNumber = "";
-    this.renewalLisRequestBody.proposer = "";
-    this.renewalLisRequestBody.policyNumber = "";
+    this.renewalListRequestBody.mobileNumber = "";
+    this.renewalListRequestBody.proposer = "";
+    this.renewalListRequestBody.policyNumber = "";
     this.searchInputControl.reset();
     this.getRenewalsList();
   }
@@ -253,17 +253,17 @@ export class RenewalListComponent {
     if (this.searchInputControl.valid) {
       const trimmedValue = this.searchInputControl.value?.trim(); 
       if (this.selected === "mobileNumber") {
-        this.renewalLisRequestBody.mobileNumber = trimmedValue || "";
-        this.renewalLisRequestBody.proposer = "";
-        this.renewalLisRequestBody.policyNumber = "";
+        this.renewalListRequestBody.mobileNumber = trimmedValue || "";
+        this.renewalListRequestBody.proposer = "";
+        this.renewalListRequestBody.policyNumber = "";
       } else if (this.selected === "proposerName") {
-        this.renewalLisRequestBody.proposer = trimmedValue || "";
-        this.renewalLisRequestBody.mobileNumber = "";
-        this.renewalLisRequestBody.policyNumber = "";
+        this.renewalListRequestBody.proposer = trimmedValue || "";
+        this.renewalListRequestBody.mobileNumber = "";
+        this.renewalListRequestBody.policyNumber = "";
       } else if (this.selected === "policyNumber") {
-        this.renewalLisRequestBody.policyNumber = trimmedValue || "";
-        this.renewalLisRequestBody.mobileNumber = "";
-        this.renewalLisRequestBody.proposer = "";
+        this.renewalListRequestBody.policyNumber = trimmedValue || "";
+        this.renewalListRequestBody.mobileNumber = "";
+        this.renewalListRequestBody.proposer = "";
       }
       this.first = 0;
       this.page = 1;
@@ -276,43 +276,39 @@ export class RenewalListComponent {
   handleAction(item: RenewalList, event?: string) {
     switch (event) {
       case 'download':
-        const downloadRequestBody={
-          EventName:"Search policy kit request from customers",
-          AgentCode:this.agentCode,
-          ReferenceId:this.agentCode,
-          SearchOperator:"AND",
-          SearchRequest: [
-            {
-              CategoryID: "",
-              DocumentID: "",
-              ReferenceID: "",
-              FileName: "",
-              Description: "",
-              DataClassParam: [
-                {
-                    DocSearchParamId: "2",
-                    Value: "21-24-0002917-00"
-                },
-                {
-                    DocSearchParamId: "15",
-                    Value: "PS_04"
-                }
-              ]
-            }
-          ],
-          Category: "N/A",
-          UserRole: "Guest",
-          SessionId: "0000",
-          UserLevel: "Basic",
-          BranchCode: "000",
-          Designation: "N/A",
-          IntCategory: "N/A",
-          SourceSystemName: "Portal"
-        }
-        break;
-      case 'payment':
-        this.activeSection = event;
-        this.renewalJourney(item);
+        // const downloadRequestBody={
+        //   EventName:"Search policy kit request from customers",
+        //   AgentCode:this.agentCode,
+        //   ReferenceId:this.agentCode,
+        //   SearchOperator:"AND",
+        //   SearchRequest: [
+        //     {
+        //       CategoryID: "",
+        //       DocumentID: "",
+        //       ReferenceID: "",
+        //       FileName: "",
+        //       Description: "",
+        //       DataClassParam: [
+        //         {
+        //             DocSearchParamId: "2",
+        //             Value: "21-24-0002917-00"
+        //         },
+        //         {
+        //             DocSearchParamId: "15",
+        //             Value: "PS_04"
+        //         }
+        //       ]
+        //     }
+        //   ],
+        //   Category: "N/A",
+        //   UserRole: "Guest",
+        //   SessionId: "0000",
+        //   UserLevel: "Basic",
+        //   BranchCode: "000",
+        //   Designation: "N/A",
+        //   IntCategory: "N/A",
+        //   SourceSystemName: "Portal"
+        // }
         break;
       case 'email':
         const emailRequestBody = {
@@ -352,23 +348,23 @@ export class RenewalListComponent {
         );
         break;
       case 'copyPayLink':
-        const copyPayLinkRequestBody = {
-          policy: item.policyNumber,
-          mobile: item.proposerMobileNumber,
-          source: "UnifiedPortal"
-        };
-        this.renewalService.generatePaymentlinkApi(copyPayLinkRequestBody).subscribe(
-          (response: any) => {
-            if (response.isSuccess) {
-              this.toast.success({ detail: "Success", summary: "Payment link copied successfully.", duration: 1500 });
-            } else {
-              this.toast.error({ detail: "Error", summary: "Failed to copy payment link.", duration: 1500});
-            }
-          },
-          (error: any) => {
-            this.toast.error({ detail: "Error", summary: "Error while copying payment link.", duration: 1500 });
-          }
-        );
+        // const copyPayLinkRequestBody = {
+        //   policy: item.policyNumber,
+        //   mobile: item.proposerMobileNumber,
+        //   source: "UnifiedPortal"
+        // };
+        // this.renewalService.generatePaymentlinkApi(copyPayLinkRequestBody).subscribe(
+        //   (response: any) => {
+        //     if (response.isSuccess) {
+        //       this.toast.success({ detail: "Success", summary: "Payment link copied successfully.", duration: 1500 });
+        //     } else {
+        //       this.toast.error({ detail: "Error", summary: "Failed to copy payment link.", duration: 1500});
+        //     }
+        //   },
+        //   (error: any) => {
+        //     this.toast.error({ detail: "Error", summary: "Error while copying payment link.", duration: 1500 });
+        //   }
+        // );
         break;
       case 'sms':
         const smsRequestBody = {
@@ -422,10 +418,10 @@ export class RenewalListComponent {
         console.warn('Unknown action:', event);
     }
   }
-  renewalJourney(proposerDetail : RenewalList) {
+  renewalJourney(proposerDetail : RenewalList, action:string) {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
     sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
-    sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(this.activeSection));
+    sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
     const renewalInfoRequestBody = {
       policy_Number: proposerDetail.policyNumber,
     };
@@ -433,14 +429,24 @@ export class RenewalListComponent {
       (res: any) => {
         if (res.isSuccess) {
           sessionStorage.setItem("renewalData", this.encryptionService.encrypt(res));
-          this.router.navigate(['renewal/payment']);
+          if(action=='withmodify'){
+            console.log("active action",action);
+            sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
+            this.router.navigate(['renewal/payment']);
+          }
+          else if(action=='withoutmodify'){
+            this.activeSection="policySummary";
+            console.log("active action",action);
+            sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
+            this.router.navigate(['renewal/payment']);
+          }
         } else {
-          this.toast.error({ detail: "Error", summary: res.message, duration: 1500 });
+          this.toast.error({ detail: "Error", summary: res.message, duration: 3000 });
         }
       },
       (err) => {
         console.error("Error from getRenewalInfo API:", err);
-        this.toast.error({ detail: "Error", summary: "Failed to fetch renewal information", duration: 1500 });
+        this.toast.error({ detail: "Error", summary: "Error while getiiong renwal Information", duration: 3000 });
       }
     );
   }

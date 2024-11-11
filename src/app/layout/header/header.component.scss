@@ -254,3 +254,81 @@
   color: #ffffff;
   text-align: center;
 }
+
+/*----Notifications start---*/
+.overlay_notification {
+  right: -13px;
+  top: 24px;
+  .insurer_detailsMain {
+    gap:15px;
+  }
+  .checkbox_disease_scroll {
+    max-height: 400px;
+    overflow-x: hidden;
+  }
+}
+.notificationList {
+  display: flex;
+  flex-direction: column;
+  gap:8px;
+  .tipInfo_org{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    padding: 16px;
+    border-radius: 7px 21px 21px 21px;
+    background: #F9FAFB;
+    gap:8px;
+  }
+  .read_notification {
+    .tipInfo_org{
+      color: #afb3c0;
+      img {
+        filter: brightness(0.1);
+        opacity: 0.4;
+      }
+    }
+  }
+}
+.header_notification {
+  position: relative;
+  .btn_headerSearch {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    img{
+      width: 20px;
+      height: 20px;
+    }
+    .badge {
+      background: #f7a500;
+      color: #000000;
+      top: -4px;
+      left: auto;
+      right: -6px;
+      width: auto;
+      height: auto;
+      font-size: 12px;
+      padding: 2px 6px;
+    }
+  }
+}
+.btn_markAsRead {
+  padding: 12px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 14px;
+}
+.btn_groupNotification button {
+  width: 100%;
+  flex: auto;
+  &.btn_white {
+    color: #c7222a;
+    &:hover {
+      border: 1px solid #c7222a;
+    }
+  }
+}
+/*----Notifications end---*/

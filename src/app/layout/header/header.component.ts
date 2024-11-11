@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgToastService } from 'ng-angular-popup';
@@ -9,29 +9,27 @@ import { CommonService } from 'src/app/services/common.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit ,OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy {
   currentLanguage: string = 'en';
   isSidenavOpen: boolean = false;
   isDesktopView: boolean = window.innerWidth >= 768;
-  notificationCount : number = 1;
-  notifications :any[]=[];
-  showNotifications : Boolean = false;
-  
+  notificationCount: number = 1;
+  notifications: any[] = [];
+  showNotifications: Boolean = false;
+
   @Input() isLoggedIn: any;
 
-  constructor(private router: Router, private translate: TranslateService,
-    private loginService: CommonService, private toast: NgToastService
+  constructor(private router: Router,
+    private loginService: CommonService, private toast: NgToastService, private el: ElementRef
   ) {
-    translate.setDefaultLang('en');
   }
-
   ngOnInit() {
     this.currentLanguage = this.getLanguage();
     this.notification();
     this.notificationCount = this.notifications.length;
   }
 
-  
+
   ngOnDestroy() {
     //this.openNotifications();
     this.showNotifications = false;
@@ -73,32 +71,48 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.router.navigate([value]);
   }
 
-  openNotifications(){
-    this.showNotifications = this.showNotifications == false? true :false;
+  openNotifications() {
+    this.showNotifications = this.showNotifications == false ? true : false;
   }
 
- notification(){
-  this.notifications = [
-    {
-      message: 'You have a new comment on your post.',
-      timestamp: new Date('2024-10-01T14:23:00'),
-      type: 'comment',
-      read: false
-    },
-    {
-      message: 'Your order #12345 has been shipped.',
-      timestamp: new Date('2024-10-02T09:45:00'),
-      type: 'order',
-      read: false
-    },
-    {
-      message: 'You have a new follower: John Doe.',
-      timestamp: new Date('2024-10-03T16:10:00'),
-      type: 'follower',
-      read: true
+  closePopup(): void {
+    this.showNotifications = false;
+  }
+
+  onPopupClick(event: MouseEvent): void {
+    event.stopPropagation();  // Prevent the click from bubbling up to the overlay
+  }
+
+  // This will detect clicks outside the popup
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent): void {
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.closePopup();
     }
-  ];
- }
+  }
+
+  notification() {
+    this.notifications = [
+      {
+        message: 'You have a new comment on your post.',
+        timestamp: new Date('2024-10-01T14:23:00'),
+        type: 'comment',
+        read: false
+      },
+      {
+        message: 'Your order #12345 has been shipped.',
+        timestamp: new Date('2024-10-02T09:45:00'),
+        type: 'order',
+        read: false
+      },
+      {
+        message: 'You have a new follower: John Doe.',
+        timestamp: new Date('2024-10-03T16:10:00'),
+        type: 'follower',
+        read: true
+      }
+    ];
+  }
 
 }
 

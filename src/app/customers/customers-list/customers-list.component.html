@@ -6,7 +6,7 @@
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
                         <li class="quickFilterHeading block-hide">Quick Filter</li>
-                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter active">All Policies({{totalRecords}})</button></li>
+                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter active">All ({{totalRecords}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight">
@@ -122,6 +122,7 @@
                                 <tr>
                                   <th scope="col" nowrap>Policy Number</th>
                                   <th scope="col" nowrap>Product Name</th>
+                                  <th scope="col" nowrap>Policy Type</th>
                                   <th scope="col">No.Of.Members</th>
                                   <th scope="col">Sum Insured</th>
                                   <th scope="col">Premiun</th>
@@ -135,6 +136,7 @@
                                 <tr *ngFor="let policy of row.policyDetails">
                                   <td>{{ policy.policyNumber }}</td>
                                   <td>{{ policy.productVariantName }}</td>
+                                  <td>{{ policy.policyType }}</td>
                                   <td>{{policy.noOfInsured}}</td>
                                   <td>{{policy.sumInsured}}</td>
                                   <td>{{policy.totalPremium}}</td>
@@ -233,6 +235,10 @@
                                 <div class="userInfoItem">
                                     <div class="item_lable">Product Name</div>
                                     <div class="item_value">{{ policy.productVariantName }}</div>
+                                </div>
+                                <div class="userInfoItem">
+                                    <div class="item_lable">Policy Type</div>
+                                    <div class="item_value">{{ policy.policyType }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
                                     <div class="item_lable">No.Of.Members</div>

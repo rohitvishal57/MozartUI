@@ -138,11 +138,11 @@ export class UploadLeadComponent implements OnInit{
 
         this.leadsService.uploadfile(data).subscribe(
           (response: any) => { 
-            console.log(response);
-            if (response) {
+            console.log(response.data);
+            if (response.data) {
               console.log(response);
-              window.open(response.url, '_blank');
-                this.toast.success({ detail: "", summary:response.status, duration: 5000 });
+              window.open(response.data.url, '_blank');
+                this.toast.success({ detail: "", summary:response.data.status, duration: 5000 });
 
             } 
             else {console.error("API request was not successful.");}
