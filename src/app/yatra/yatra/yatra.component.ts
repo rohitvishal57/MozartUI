@@ -680,6 +680,10 @@ export class YatraComponent {
     console.log(this.dynamicFormGroup.value,this.formData);
 
 
+      this.customerFeedbackModule.show();
+    }
+
+
   }
 
   initializeSubControls(subControls: any) {
