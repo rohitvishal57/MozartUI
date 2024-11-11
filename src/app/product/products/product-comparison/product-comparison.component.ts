@@ -26,7 +26,6 @@ export class ProductComparisonComponent {
   comparisonItem2 : any = {};
   comparisonItem3 : any = {};
   productComparison : Boolean = false;
-  selectedProduct : any ;
   productForm:any= FormGroup;  // FormGroup to manage form state
 
   constructor(private router: Router,private productService: ProductsService,
@@ -47,9 +46,7 @@ export class ProductComparisonComponent {
 
     this.refreshComparisonItems();
     this.getProductList();
-    this.productForm = this.fb.group({
-      selectedProduct: ['', []]  // Initially empty or can set a default product
-    });  }
+   }
 
 
   redirectProducts(comparisonItem: any) {   
@@ -127,7 +124,6 @@ export class ProductComparisonComponent {
     let selectProductName = event.target.value;
     const productCheck : Boolean = this.comparisonItems.find((product: any) => product.productName == selectProductName);
     if(productCheck){
-      this.selectedProduct = '';
       this.toast.warning({ detail: "", summary: 'Selected product is already added.', duration: 5000 });
     }else{
       const selectedProduct = this.ProductList.find((product: any) => product.productName == selectProductName);
