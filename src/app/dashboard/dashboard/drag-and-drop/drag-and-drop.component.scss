@@ -6,12 +6,18 @@
   // border:1px solid black;
   background: #F1F3F6;
 
-  .wish-cnt{
+  .wish-cnt {
     display: flex;
     justify-content: space-between;
 
-    .wish-cnt-actions{
+    .wish-cnt-actions {
       display: flex;
+
+      .raise-req {
+        padding: 10px 16px 10px 16px;
+        gap: 8px;
+        border-radius: 12px 0px 0px 0px;
+      }
     }
   }
 
@@ -587,7 +593,7 @@
       }
     }
 
-    
+
   }
 
 }

@@ -1,17 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { forkJoin } from 'rxjs';
+import { DashboardService } from '../dashboard.service';
 
 @Component({
   selector: 'app-drag-and-drop',
   templateUrl: './drag-and-drop.component.html',
   styleUrls: ['./drag-and-drop.component.scss']
 })
-export class DragAndDropComponent {
+export class DragAndDropComponent implements OnInit {
 
   public allowDragging: boolean = false;
   public showAllItems: boolean = false;
   private previouslyVisibleItems: Set<any> = new Set();
   selectedIndex: any;
+
+  constructor(private dashboardService: DashboardService) { }
 
   cards = [
     {
@@ -169,7 +173,7 @@ export class DragAndDropComponent {
       renewInfo: {
         product: 'Active User',
         policyNo: 'Active User',
-        proposer : 'sukhadev',
+        proposer: 'sukhadev',
         renewalPremium: 'Active User',
         mobileNo: 'Active User',
         dateofRenewal: 'Active User',
@@ -190,7 +194,7 @@ export class DragAndDropComponent {
       renewInfo: {
         product: 'Active User',
         policyNo: 'Active User',
-        proposer : 'sukhadev',
+        proposer: 'sukhadev',
         renewalPremium: 'Active User',
         mobileNo: 'Active User',
         dateofRenewal: 'Active User',
@@ -211,7 +215,7 @@ export class DragAndDropComponent {
       renewInfo: {
         product: 'Active User',
         policyNo: 'Active User',
-        proposer : 'sukhadev',
+        proposer: 'sukhadev',
         renewalPremium: 'Active User',
         mobileNo: 'Active User',
         dateofRenewal: 'Active User',
@@ -516,6 +520,15 @@ export class DragAndDropComponent {
 
   ];
 
+  ngOnInit(): void {
+    forkJoin({
+      GetLeadStatusCount: this.dashboardService.fetchLeadStatusCount(),
+      GetProposalStatusCount: this.dashboardService.fetchProposalStatusCount()
+    }).subscribe((data: any) => {
+      console.log(data)
+    })
+  }
+
   toggleDragAndDrop() {
     if (!this.showAllItems) {
       this.previouslyVisibleItems = new Set(this.items.filter(item => item.visible));
@@ -541,12 +554,12 @@ export class DragAndDropComponent {
     moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
   }
 
-  hideItem(item: any, index : any) {
+  hideItem(item: any, index: any) {
     item.visible = false;
     this.items.filter(item => item.visible);
   }
 
-  addItem(item: any, index : any) {
+  addItem(item: any, index: any) {
     item.visible = true;
     this.items.filter(item => item.visible);
   }
@@ -563,6 +576,6 @@ export class DragAndDropComponent {
     return this.showAllItems && this.previouslyVisibleItems.has(item);
   }
 
-  onClickbtn(btnName : any, index : number){
+  onClickbtn(btnName: any, index: number) {
   }
 }
