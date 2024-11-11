@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   @Input() isLoggedIn: any;
 
   constructor(private router: Router,
-    private loginService: CommonService, private toast: NgToastService
+    private loginService: CommonService, private toast: NgToastService,private el: ElementRef
   ) {
   }
 
@@ -76,15 +76,20 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.showNotifications = this.showNotifications == false? true :false;
   }
 
-  onOverlayClick(event: MouseEvent): void {
-    this.closePopup();
-  }
   closePopup(): void {
     this.showNotifications = false;
   }
 
   onPopupClick(event: MouseEvent): void {
     event.stopPropagation();  // Prevent the click from bubbling up to the overlay
+  }
+
+  // This will detect clicks outside the popup
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent): void {
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.closePopup();
+    }
   }
 
  notification(){
