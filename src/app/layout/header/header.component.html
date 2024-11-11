@@ -50,39 +50,48 @@
             <img  src="../../../assets/images/name.png" >
           </a>
         </div>
- <div style="position: relative;"> 
+ <div class="header_notification"> 
 
-        <button mat-icon-button *ngIf="isLoggedIn;" (click)="openNotifications()">
-          <mat-icon class="icon">notifications</mat-icon>
+        <button type="button" id="count-notification" name="count-notification" class="btn_headerSearch" *ngIf="isLoggedIn;" (click)="openNotifications()">
+          <img  src="../../../assets/Img/icon_notifications.svg" >
           <span class="badge" *ngIf="notificationCount > 0">{{notificationCount}}</span>
         </button>
-
-        <div class="overlay_popupMain overlay_dropdown_w518" *ngIf="showNotifications" style="right:0; backdrop-filter:none;background: #ffffff;">
-          <!--Overlay: Personal details start-->
+        <!--Overlay: Notifications start-->
+        <div class="overlay_popupMain overlay_dropdown_w386 overlay_notification" *ngIf="showNotifications">
+          
           <div class="option_policyType">
             <div class="overlay_body insurer_detailsMain">
-              <div class="button-container">
-                <button mat-button id="markAll" type="button">
-                  <mat-icon>check_circle</mat-icon> Mark All As Read
-                </button>
-              
-                <button mat-button id="showAll" type="button">
-                  <mat-icon>notifications</mat-icon> Show All Notifications
-                </button>
-              </div>              
-              <div class="row">
-                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="input-block input-block-renew input-filed-white">
-                    <mat-list-item *ngFor="let notification of notifications ; let i =index">
-                      <span style="color: black;">{{i+1}}: {{notification.message}}</span>
-                    </mat-list-item>
+              <h3>Notifications ({{notificationCount}})</h3>
+              <div class="checkbox_disease_scroll">           
+                <div class="row">
+                  <div class="col-12">
+                    <div class="input-block input-block-renew input-filed-white">
+                      <ul class="notificationList">
+                        <li *ngFor="let notification of notifications ; let i =index">
+                          <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">{{notification.message}}</div>
+                        </li>
+                        <li class="read_notification">
+                          <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">Don't forget to talk to your fit customers about how they can earn back a 100% of their premium through the activ fit and activ health platinum enhanced plans</div>
+                        </li>
+                      </ul>
+                      <!--<mat-list-item *ngFor="let notification of notifications ; let i =index">
+                        <span style="color: black;">{{i+1}}: {{notification.message}}</span>
+                      </mat-list-item>-->
+                    </div>
                   </div>
                 </div>
-              </div>
+              </div> 
            
             </div>
-      </div>
-      </div>
+            <div class="overlay_footer">
+              <div class="btn_groupAction">
+                <button id="markAll" name="markAll" type="button" class="btn_red btn_markAsRead">Mark All As Read</button>
+                <button id="showAll" name="showAll" type="button" class="btn_linkText">Show All </button>
+              </div> 
+            </div>
+          </div>
+        </div>
+        <!--Overlay: Notifications end-->
   
        </div> 
       </div>
