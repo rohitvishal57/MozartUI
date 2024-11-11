@@ -680,6 +680,7 @@ export class YatraComponent {
     console.log(this.dynamicFormGroup.value,this.formData);
 
 
+    if(this.formSequence[this.getFormIndexValue()].formName == "Confirmation"){
       this.customerFeedbackModule.show();
     }
 
