@@ -19,9 +19,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   @Input() isLoggedIn: any;
 
-  constructor(private router: Router,
+  constructor(private router: Router, private translate : TranslateService,
     private loginService: CommonService, private toast: NgToastService, private el: ElementRef
   ) {
+    translate.setDefaultLang('en');
   }
   ngOnInit() {
     this.currentLanguage = this.getLanguage();
