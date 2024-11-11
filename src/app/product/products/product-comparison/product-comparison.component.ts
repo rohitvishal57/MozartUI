@@ -26,11 +26,11 @@ export class ProductComparisonComponent {
   comparisonItem2 : any = {};
   comparisonItem3 : any = {};
   productComparison : Boolean = false;
-  productForm:any= FormGroup;  // FormGroup to manage form state
+  selectedProduct : any ='';
 
   constructor(private router: Router,private productService: ProductsService,
     private common: CommonService,private encryptionService: EncryptionService, 
-    private toast: NgToastService,private quoteservices: QuoteService,private fb: FormBuilder
+    private toast: NgToastService,private quoteservices: QuoteService
   ){
   }
 
@@ -124,7 +124,8 @@ export class ProductComparisonComponent {
     let selectProductName = event.target.value;
     const productCheck : Boolean = this.comparisonItems.find((product: any) => product.productName == selectProductName);
     if(productCheck){
-      this.toast.warning({ detail: "", summary: 'Selected product is already added.', duration: 5000 });
+      this.selectedProduct ='';
+      this.toast.warning({ detail: "", summary: 'The selected product is already chosen. Please select a different product.', duration: 5000 });
     }else{
       const selectedProduct = this.ProductList.find((product: any) => product.productName == selectProductName);
       this. getProductInformation(selectedProduct.productId);
