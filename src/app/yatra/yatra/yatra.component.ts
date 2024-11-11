@@ -107,7 +107,7 @@ export class YatraComponent {
   kidCount = 0;
   quickQuoteRedirect :Boolean =false;
   productComparison :Boolean= false;
-  isFeedBackModalVisible :Boolean= true;
+  isFeedBackModalVisible :Boolean= false;
 
   
 
