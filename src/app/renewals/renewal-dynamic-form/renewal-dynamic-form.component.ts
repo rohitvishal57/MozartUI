@@ -71,13 +71,14 @@ export class RenewalDynamicFormComponent implements OnInit {
   actionKyc:number=3002;
   submit:boolean=true;
   fileName: string | null = null;
-  kycLink:any
+  kycLink:any;
   memberDetails:boolean=false;
   activeAction:any;
   offlinePaymentForm!: FormGroup;
   bankNameList:any[]=[];
   bankNameControl = new FormControl('');
-  filteredBankNamesList:any[]=[]
+  filteredBankNamesList:any[]=[];
+  currentDate = new Date().toISOString().split('T')[0];
 
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,
@@ -86,15 +87,6 @@ export class RenewalDynamicFormComponent implements OnInit {
     private commonService:CommonService,private encryptionService: EncryptionService) {}
 
   ngOnInit() {    
-    this.offlinePaymentForm = new FormGroup({
-      paymentOption: new FormControl('', Validators.required),
-      chequeAmount: new FormControl({ value: 'this.renewalInfo?.response?.policyData[0]?.NetPremium', disabled: true }),
-      chequeNumber: new FormControl('', [Validators.required,Validators.pattern('^[0-9]{6}$')]),
-      chequeDate: new FormControl('', Validators.required),
-      ifscCode: new FormControl('', [Validators.required,Validators.pattern('^[A-Z]{4}[0]{1}[A-Z0-9]{6}$')]),
-      bankNameControl: new FormControl('', Validators.required),
-      file: new FormControl(null)
-    });
     this.kycFormGroup = this.fb.group({
       panNumber: ['',[Validators.required, Validators.pattern('[A-Z]{5}[0-9]{4}[A-Z]{1}')]],
       dateOfBirth: ['', [Validators.required,Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
@@ -346,6 +338,16 @@ private formatDate(dateString: string): string {
 }
  selectPaymentType(option: any) {
   if(option == 'offline'){
+    this.formObject = {
+      paymentOption: '',
+      chequeAmount: this.renewalInfo?.response?.policyData[0]?.NetPremium || '',
+      chequeNumber: '',
+      chequeDate: '',
+      ifscCode: '',
+      bankNameControl: '',
+      file: null
+    };
+    this.initializeForm();
     this.selectedPaymentType = option;
     this.yatraService.getAllBankDetails().subscribe({
       next: (res: any) => {
@@ -355,8 +357,7 @@ private formatDate(dateString: string): string {
       },
       error: (err) => {console.error(err);}
     });
-  }
-  if(option == 'online' || option == 'E-Mandate' || option == 'Auto_Debit'){
+  }else if(option == 'online' || option == 'E-Mandate' || option == 'Auto_Debit'){
     this.selectedPaymentType = option;
     console.log("payment type",this.selectedPaymentType);
   }
@@ -376,8 +377,8 @@ private formatDate(dateString: string): string {
   console.log("filtered names", this.filteredBankNamesList);
 }
 onBankNameSelected(selectedBankName: string): void {
-  this.offlinePaymentForm.get('bankNameControl')?.setValue(selectedBankName);
-  console.log("selected bank name", this.offlinePaymentForm.get('bankNameControl')?.value);
+  this.form.get('bankNameControl')?.setValue(selectedBankName);
+  console.log("selected bank name", this.form.get('bankNameControl')?.value);
 }
  setSection(section: string) {
    this.activeSection = section;
@@ -392,6 +393,10 @@ goNext(){
   else if(this.activeSection== 'policySummary'){
     this.setSection('payment')
   }else if(this.activeSection == 'payment'){
+    if(this.selectedPaymentType == 'offline' && !this.form.valid){
+      this.form.markAllAsTouched();
+      return;
+    }
     this.setSection('thankyou')
     this.hideSection=false
   }

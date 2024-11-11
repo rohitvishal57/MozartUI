@@ -8,6 +8,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
+import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
 
 @Component({
   selector: 'app-renewal-list',
@@ -30,7 +31,7 @@ export class RenewalListComponent {
   endDate: any;
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
-  selected: string = "";
+  selected: string = '';
   searchInputControl = new FormControl("");
   isDesktopView:boolean=false
   agentCode=localStorage.getItem('agentCode');
@@ -191,44 +192,52 @@ export class RenewalListComponent {
   onSelectChanges(event: any): void {
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
-    if (this.selected === "mobileNumber") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(/^\s*[6-9][0-9]{9}\s*$/) 
-      ]);
-    } else if (this.selected === "policyNumber") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(/^\s*[0-9]{2}-[0-9]{2}-[0-9]{7}-[0-9]{2}\s*$/) 
-      ]);
-    } else if (this.selected === "proposerName") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/) 
-      ]);
-    } 
+    const selectedValidators = searchValidationConfig[this.selected] || [];
+    this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }
-  getErrorMessage(): string {
-    if (this.searchInputControl.dirty && this.selected === "") {
-      return "Select an option and enter.";
-    }
-    if (this.searchInputControl.hasError("required")) {
-      return "This field is required.";
-    }
-    if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "mobileNumber") {
-        return "Enter a valid 10-digit mobile number.";
-      }
-      else if (this.selected === "policyNumber") {
-        return "Enter a valid policy number.";
-      }
-      else if (this.selected === "proposerName") {
-        return "Enter a valid proposer name.";
-      }
-    }
-    return "";
-  }
+  // onSelectChanges(event: any): void {
+  //   this.searchInputControl.reset("");
+  //   this.searchInputControl.clearValidators();
+  //   if (this.selected === "mobileNumber") {
+  //     this.searchInputControl.setValidators([
+  //       Validators.required,
+  //       Validators.pattern(/^\s*[6-9][0-9]{9}\s*$/) 
+  //     ]);
+  //   } else if (this.selected === "policyNumber") {
+  //     this.searchInputControl.setValidators([
+  //       Validators.required,
+  //       Validators.pattern(/^\s*[0-9]{2}-[0-9]{2}-[0-9]{7}-[0-9]{2}\s*$/) 
+  //     ]);
+  //   } else if (this.selected === "proposerName") {
+  //     this.searchInputControl.setValidators([
+  //       Validators.required,
+  //       Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/) 
+  //     ]);
+  //   } 
+  //   this.searchInputControl.updateValueAndValidity();
+  // }
+
+  // getErrorMessage(): string {
+  //   if (this.searchInputControl.dirty && this.selected === "") {
+  //     return "Select an option and enter.";
+  //   }
+  //   if (this.searchInputControl.hasError("required")) {
+  //     return "This field is required.";
+  //   }
+  //   if (this.searchInputControl.hasError("pattern")) {
+  //     if (this.selected === "mobileNumber") {
+  //       return "Enter a valid 10-digit mobile number.";
+  //     }
+  //     else if (this.selected === "policyNumber") {
+  //       return "Enter a valid policy number.";
+  //     }
+  //     else if (this.selected === "proposerName") {
+  //       return "Enter a valid proposer name.";
+  //     }
+  //   }
+  //   return "";
+  // }
   cancelSearch() {
     this.selected = "";
     this.renewalListRequestBody.mobileNumber = "";
@@ -244,8 +253,7 @@ export class RenewalListComponent {
       return "Enter Proposer Name";
     } else if (this.selected === "policyNumber") {
       return "Enter Policy Number";
-    }
-    else {
+    }else {
       return "Search...";
     }
   }

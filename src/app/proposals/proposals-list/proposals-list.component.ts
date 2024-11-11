@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
+import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
+
 @Component({
   selector: 'app-proposals-list',
   templateUrl: './proposals-list.component.html',
@@ -203,55 +205,12 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.endDate = null;
     this.getProposalList();
   }
-
   onSelectChanges(event: any): void {
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
-    if (this.selected === "mobileNumber") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(/^\s*[6-9][0-9]{9}\s*$/) // Allow spaces before and after
-      ]);
-    } else if (this.selected === "leadId") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(/^\s*UPL\d{12}\s*$/) 
-      ]);
-    } else if (this.selected === "proposerName") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/) 
-      ]);
-    } else if (this.selected === "proposalNumber") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(/^\s*UPP\d{12}\s*$/) 
-      ]);
-     } 
+    const selectedValidators = searchValidationConfig[this.selected] || [];
+    this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
-  }
-  getErrorMessage(): string {    
-    if (this.searchInputControl.hasError("required")) {
-      return "This field is required.";
-    }
-    if (this.searchInputControl.dirty && this.selected === "") {
-      return "Select an option and enter.";
-    }
-    if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "mobileNumber") {
-        return "Enter a valid 10-digit mobile number.";
-      }
-      else if (this.selected === "leadId") {
-        return "Enter a valid lead id.";
-      }
-      else if (this.selected === "proposerName") {
-        return "Enter a valid proposer name.";
-      }
-      if (this.selected === "proposalNumber") {
-        return "Enter a valid proposal number.";
-      }
-    }
-    return "";
   }
   getPlaceholder(): string {
     if (this.selected === "mobileNumber") {

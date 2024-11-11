@@ -5,6 +5,8 @@ import { endorsementDetails } from 'src/app/interface/endorsement.interface';
 import { EndorsementsRequestsService } from './endorsements-requests.service';
 import { DatePipe } from '@angular/common';
 import { CommonService } from 'src/app/services/common.service';
+import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
+
 
 @Component({
   selector: 'app-endorsements-requests',
@@ -278,23 +280,26 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.selected = inputElement.value;
     this.searchInputControl.reset();
     this.searchInputControl.clearValidators();
-    if (this.selected === "memberName") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/),
-      ]);
-    }
-    else if (this.selected === "caseId") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),
-      ]);
-    } else if (this.selected === "policyNumber") {
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^\\s*[0-9-]+\\s*$"),
-      ]);
-    } else if (this.selected === "") {
+    const selectedValidators = searchValidationConfig[this.selected] || [];
+    this.searchInputControl.setValidators(selectedValidators);
+    // if (this.selected === "memberName") {
+    //   this.searchInputControl.setValidators([
+    //     Validators.required,
+    //     Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/),
+    //   ]);
+    // }
+    // else if (this.selected === "caseId") {
+    //   this.searchInputControl.setValidators([
+    //     Validators.required,
+    //     Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),
+    //   ]);
+    // } else if (this.selected === "policyNumber") {
+    //   this.searchInputControl.setValidators([
+    //     Validators.required,
+    //     Validators.pattern("^\\s*[0-9-]+\\s*$"),
+    //   ]);
+    // } 
+    if (this.selected === "") {
       this.requestsListRequestBody.searchColumn = "";
       this.requestsListRequestBody.searchString = "";
       this.getRequestList();
@@ -316,27 +321,27 @@ export class EndorsementsRequestsComponent implements OnInit {
     }
   }
 
-  getErrorMessage(): string {
-    if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
-    }
+  // getErrorMessage(): string {
+  //   if (this.searchInputControl.hasError("required")) {
+  //     return "This field is required";
+  //   }
   
-    if (this.searchInputControl.dirty && this.selected === "") {
-      return "Select an option and Enter";
-    }
+  //   if (this.searchInputControl.dirty && this.selected === "") {
+  //     return "Select an option and Enter";
+  //   }
   
-    if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "caseId") {
-        return "Enter Valid Request Id";
-      } else if (this.selected === "policyNumber") {
-        return "Enter Valid Policy Number";
-      } else if (this.selected === "memberName") {
-        return "Enter Valid Member Name";
-      }
-    }
+  //   if (this.searchInputControl.hasError("pattern")) {
+  //     if (this.selected === "caseId") {
+  //       return "Enter Valid Request Id";
+  //     } else if (this.selected === "policyNumber") {
+  //       return "Enter Valid Policy Number";
+  //     } else if (this.selected === "memberName") {
+  //       return "Enter Valid Member Name";
+  //     }
+  //   }
   
-    return "";
-  }
+  //   return "";
+  // }
   
 
   applySearch() {

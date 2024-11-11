@@ -1109,7 +1109,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3" *ngIf="selectedPaymentType == 'offline'">
-                                        <form [formGroup]="offlinePaymentForm">
+                                        <form [formGroup]="form">
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
@@ -1119,12 +1119,10 @@
                                                         <option value="Demand Draft">Demand Draft</option>
                                                         <option value="NEFT">NEFT</option>
                                                     </select>
-                                                    <label for="Relation">Payment Option</label>
-                                                    <span class="ui-error" *ngIf="offlinePaymentForm.get('paymentOption')?.invalid && offlinePaymentForm.get('paymentOption')?.touched">
-                                                        Please select a payment option.
-                                                      </span>                                               
-                                                 </div>
-                                            </div>                
+                                                    <label for="Relation">Payment Option *</label>
+                                                    <span class="ui-error" *ngIf="form?.get('paymentOption')?.invalid && form.get('paymentOption')?.touched">payment option is required field.</span>                                               
+                                                </div>
+                                            </div>               
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input type="number" id="cheque_Amount" name="cheque_Amount" [(ngModel)]="renewalInfo.response.policyData[0].NetPremium" class="form-control input-textBox" formControlName="chequeAmount">
@@ -1135,38 +1133,38 @@
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input type="number" id="cheque_Number" name="cheque_Number" placeholder="" class="form-control input-textBox" formControlName="chequeNumber">
                                                     <label for="cheque_Number">Cheque Number</label>
-                                                    <div *ngIf="offlinePaymentForm.get('chequeNumber')?.invalid && offlinePaymentForm.get('chequeNumber')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="offlinePaymentForm.get('chequeNumber')?.hasError('required')">Cheque number is required.</small>
-                                                        <small class="ui-error block-show" *ngIf="offlinePaymentForm.get('chequeNumber')?.hasError('pattern')">Cheque number must be exactly 6 digits.</small>
-                                                    </div>
+                                                    <span *ngIf="form.get('chequeNumber')?.invalid && form.get('chequeNumber')?.touched">
+                                                        <small class="ui-error block-show" *ngIf="form.get('chequeNumber')?.hasError('required')">Cheque number is required.</small>
+                                                        <small class="ui-error block-show" *ngIf="form.get('chequeNumber')?.hasError('pattern')">Cheque number must be exactly 6 digits.</small>
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="date" id="cheque_Date" name="cheque_Date" placeholder="" class="form-control input-textBox" formControlName="chequeDate">
+                                                    <input type="date" id="cheque_Date" name="cheque_Date" placeholder="" [max]="currentDate" class="form-control input-textBox" formControlName="chequeDate">
                                                     <label for="cheque_Date">Cheque Date</label>
-                                                    <div *ngIf="offlinePaymentForm.get('chequeDate')?.invalid && offlinePaymentForm.get('chequeDate')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="offlinePaymentForm.get('chequeDate')?.hasError('required')">Cheque date is required.</small>
-                                                    </div>                                                
+                                                    <span *ngIf="form.get('chequeDate')?.invalid && form.get('chequeDate')?.touched">
+                                                        <small class="ui-error block-show" *ngIf="form.get('chequeDate')?.hasError('required')">Cheque date is required.</small>
+                                                    </span>                                                
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode">
                                                     <label for="IFSC_COde">IFSC Code</label>
-                                                    <div *ngIf="offlinePaymentForm.get('ifscCode')?.invalid && offlinePaymentForm.get('ifscCode')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="offlinePaymentForm.get('ifscCode')?.hasError('required')">IFSC Code is required.</small>
-                                                        <small class="ui-error block-show" *ngIf="offlinePaymentForm.get('ifscCode')?.hasError('pattern')">IFSC Code must be 11 characters: first 4 uppercase letters, followed by 0, and 6 alphanumeric characters.</small>
-                                                    </div>                                               
+                                                    <span *ngIf="form.get('ifscCode')?.invalid && form.get('ifscCode')?.touched">
+                                                        <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('required')">IFSC Code is required.</small>
+                                                        <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('pattern')">IFSC Code must be 11 characters: first 4 uppercase letters, followed by 0, and 6 alphanumeric characters.</small>
+                                                    </span>                                               
                                                  </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox"  [matAutocomplete]="auto" formControlName="bankNameControl" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
                                                      <label for="bankName">Search Bank Name</label>
-                                                     <div *ngIf="offlinePaymentForm.get('bankNameControl')?.invalid && offlinePaymentForm.get('bankNameControl')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="offlinePaymentForm.get('bankNameControl')?.hasError('required')">Bank Name is required.</small>
-                                                      </div>
+                                                     <span *ngIf="form.get('bankNameControl')?.invalid && form.get('bankNameControl')?.touched">
+                                                        <small class="ui-error block-show" *ngIf="form.get('bankNameControl')?.hasError('required')">Bank Name is required.</small>
+                                                      </span>
                                                 </div>
                                                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onBankNameSelected($event.option.value)">
                                                     <mat-option *ngFor="let bank of filteredBankNamesList" [value]="bank.name">
@@ -1492,7 +1490,7 @@
           </div>
       </div>
   </div>
-  <div class="bottomInfoMain">
+  <div class="bottomInfoMain" *ngIf="activeSection !== 'thankyou'">
       <div class="bottomInfoSubMain">
           <div class="bi_left">
               <div class="planProductInfo">
@@ -1512,15 +1510,10 @@
           </div>
           <div class="bi_right">
               <button type="button" id="back" name="back" value="back" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()">Back</button>
-              <button type="button" id="next" name="next" value="next" class="btn_red btn_redRenew" (click)="goNext()" *ngIf="activeSection!=='payment' || selectedPaymentType == 'offline' ">Next</button>
+              <button type="button" id="next" name="next" value="next" class="btn_red btn_redRenew" (click)="goNext()" *ngIf="(activeSection!=='payment' || selectedPaymentType == 'offline')  ">Next</button>
               <button type="button" id="paynow" name="paynow" value="paynow" class="btn_red btn_redRenew" 
-              (click)="payNow()" 
-              *ngIf="activeSection == 'payment' && 
-                      (selectedPaymentType == 'online' || 
-                       selectedPaymentType == 'E-Mandate' || 
-                       selectedPaymentType == 'Auto_Debit')">
-              Pay Now
-            </button>
+              (click)="payNow()" *ngIf="activeSection == 'payment' && (selectedPaymentType == 'online' || 
+              selectedPaymentType == 'E-Mandate' || selectedPaymentType == 'Auto_Debit')">Pay Now</button>
          </div>
       </div>
   </div> 
@@ -1531,7 +1524,7 @@
                 <h2>Details Of Your Proposal</h2>
                 <div class="row mt-3">
                     <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
-                        <label>Proposal Number</label>
+                        <label>Policy Number</label>
                         <h6></h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
@@ -1547,15 +1540,23 @@
                         <h6></h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>Policy End Date</label>
+                        <h6></h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>Receipt ID</label>
                         <h6></h6>
                     </div>
-                    <div class="col-12 mt-3">
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>Policy Status</label>
+                        <h6></h6>
+                    </div>
+                    <!-- <div class="col-12 mt-3">
                         <div class="download_policyKit">
                             <h6>Download Your Insurance Policy Kit</h6>
                             <button type="button" id="downloadkit" name="downloadkit" class="btn_downloadKit">Download Kit <img src="assets/Img/icon_download_kit_blue.svg"></button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </section>
             <section class="white_container">

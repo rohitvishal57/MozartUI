@@ -27,7 +27,14 @@
                             <div class="filterFieldGroup">
                                 <input class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                                 <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                                <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
+                                    <small *ngIf="searchInputControl.dirty && selected === '' ">Select an option and enter.</small>
+                                    <small *ngIf="searchInputControl.hasError('required')">This field is required.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">Enter a valid 10-digit mobile number.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">Enter a valid policy number.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'proposerName'">Enter a valid proposer name.</small>
+                                </span>
                             </div>
                         </div>
                     </div>

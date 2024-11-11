@@ -33,7 +33,13 @@
                             <div>
                                 <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                                 <button [disabled]="selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
+                                    <small *ngIf="searchInputControl.dirty && selected === '' ">Select an option and enter.</small>
+                                    <small *ngIf="searchInputControl.hasError('required')">This field is required.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">Enter Valid Request Id.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">Enter Valid Member Name.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">Enter Valid Policy Number.</small>
+                                </span>
                             </div>
                         </div>
                     </div>
