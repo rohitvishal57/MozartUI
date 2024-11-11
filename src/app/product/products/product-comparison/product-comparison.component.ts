@@ -6,6 +6,7 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ProductsService } from '../products.service';
 import { QuoteService } from 'src/app/quote/quote.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 
 @Component({
@@ -25,10 +26,12 @@ export class ProductComparisonComponent {
   comparisonItem2 : any = {};
   comparisonItem3 : any = {};
   productComparison : Boolean = false;
+  selectedProduct : any ;
+  productForm:any= FormGroup;  // FormGroup to manage form state
 
   constructor(private router: Router,private productService: ProductsService,
     private common: CommonService,private encryptionService: EncryptionService, 
-    private toast: NgToastService,private quoteservices: QuoteService
+    private toast: NgToastService,private quoteservices: QuoteService,private fb: FormBuilder
   ){
   }
 
@@ -37,14 +40,16 @@ export class ProductComparisonComponent {
     if (savedItems) {
       this.comparisonItems = JSON.parse(savedItems);
     }
-    this.comparisonItems = this.comparisonItems.map((product:any) =>{
-      product.keyFeatures = JSON.parse(product.keyFeatures.split(",")); // Convert string to array
-      return product;
-    });
+    // this.comparisonItems = this.comparisonItems.map((product:any) =>{
+    //   product.keyFeatures = JSON.parse(product.keyFeatures.split(",")); // Convert string to array
+    //   return product;
+    // });
 
     this.refreshComparisonItems();
     this.getProductList();
-  }
+    this.productForm = this.fb.group({
+      selectedProduct: ['', []]  // Initially empty or can set a default product
+    });  }
 
 
   redirectProducts(comparisonItem: any) {   
@@ -92,6 +97,7 @@ export class ProductComparisonComponent {
     this.comparisonItem1 = (this?.comparisonItems?.length ?? 0) > 0 ? this.comparisonItems[0] : "";
     this.comparisonItem2 = (this?.comparisonItems?.length ?? 0) > 1 ? this.comparisonItems[1] : "";
     this.comparisonItem3 = (this?.comparisonItems?.length ?? 0) > 2 ? this.comparisonItems[2] : "";
+    sessionStorage.setItem("compareItems", JSON.stringify( this.comparisonItems));
   }
 
   deleteProduct(comparisonItem : any){
@@ -121,6 +127,7 @@ export class ProductComparisonComponent {
     let selectProductName = event.target.value;
     const productCheck : Boolean = this.comparisonItems.find((product: any) => product.productName == selectProductName);
     if(productCheck){
+      this.selectedProduct = '';
       this.toast.warning({ detail: "", summary: 'Selected product is already added.', duration: 5000 });
     }else{
       const selectedProduct = this.ProductList.find((product: any) => product.productName == selectProductName);
