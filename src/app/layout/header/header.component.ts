@@ -2,6 +2,8 @@ import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 
 @Component({
   selector: 'app-header',
@@ -19,11 +21,22 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   @Input() isLoggedIn: any;
 
   constructor(private router: Router,
-    private loginService: CommonService, private toast: NgToastService,private el: ElementRef
-  ) {
+    private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService) {
+      this.languageService.language$.subscribe(language => {
+        this.currentLanguage = language;
+      });
   }
 
   ngOnInit() {
+    this.languageService.language$.subscribe(lang => {
+      this.currentLanguage = lang;
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+    
     this.currentLanguage = this.getLanguage();
     this.notification();
     this.notificationCount = this.notifications.length;
@@ -41,11 +54,16 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.router.navigate(['']);
   }
 
+  // setLanguage(event: any) {
+  //   console.log(event);
+  //   let language = event.target.value;
+  //   localStorage.setItem('preferredLanguage', language);
+  //   this.currentLanguage = language;
+  // }
+
   setLanguage(event: any) {
-    console.log(event);
-    let language = event.target.value;
-    localStorage.setItem('preferredLanguage', language);
-    this.currentLanguage = language;
+    const selectedLanguage = event.target.value;
+    this.languageService.setLanguage(selectedLanguage); // Update language through the service
   }
 
   getLanguage(): string {

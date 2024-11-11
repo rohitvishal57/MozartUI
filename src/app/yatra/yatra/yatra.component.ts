@@ -11,7 +11,9 @@ import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
 import { LoadingService } from 'src/app/services/loading.service';
+import { LanguageService } from 'src/app/services/language.service';
 declare var bootstrap: any;
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-yatra',
@@ -110,15 +112,27 @@ export class YatraComponent {
   isFeedBackModalVisible :Boolean= false;
 
   
-
+  currentLanguage = 'en';
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute, private languageService: LanguageService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
+
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+  
+  
+
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
     console.log(this.formSequence);
