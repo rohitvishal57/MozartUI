@@ -133,5 +133,11 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   ];
  }
 
+ showAllNotifications(){
+  this.router.navigate(['/notifications'], {
+    queryParams: { agentCode:  localStorage.getItem('agentCode') },
+  });
+ }
+
 }
 

@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 const routes: Routes = [
-  { path: '', 
-    loadChildren:() => import('./login/login/login.module').then((m)=>m.LoginModule)
-   },
+  {
+    path: 'notifications',
+    component: NotificationsComponent
+  },
+  {
+    path: '',
+    loadChildren: () => import('./login/login/login.module').then((m) => m.LoginModule)
+  },
    { path: 'dashboard', 
     loadChildren:() => import('./dashboard/dashboard/dashboard.module').then((m)=>m.DashboardModule)
    },
