@@ -76,6 +76,17 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.showNotifications = this.showNotifications == false? true :false;
   }
 
+  onOverlayClick(event: MouseEvent): void {
+    this.closePopup();
+  }
+  closePopup(): void {
+    this.showNotifications = false;
+  }
+
+  onPopupClick(event: MouseEvent): void {
+    event.stopPropagation();  // Prevent the click from bubbling up to the overlay
+  }
+
  notification(){
   this.notifications = [
     {

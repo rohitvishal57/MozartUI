@@ -265,7 +265,7 @@ export class LeadsListComponent {
     this.getLeadsList();
     this.toggeledropdown = false;
     this.selected = "Select an option";
-    this.searchInputControl.reset();
+    //this.searchInputControl.reset();
 
   }
   cancel() {
