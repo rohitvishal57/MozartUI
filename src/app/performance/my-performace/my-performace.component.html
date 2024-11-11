@@ -132,7 +132,116 @@
                                         </div>
                                     </div>
                                 </mat-tab>
+
                                 <mat-tab label="Detailed View">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngFor="let row of detailedList; let i = index">
+                                            <div class="claims_member_info">
+                                                <h4>Performance Detailed View</h4>
+                                                <ul class="list-detailsInfo">
+                                                    <li>
+                                                        <span class="label">Agent Code:</span>
+                                                        <span class="value membername">{{ row.agentCode || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Proposal ID:</span>
+                                                        <span class="value">{{ row.proposalID || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Proposal Substatus:</span>
+                                                        <span class="value">{{ row.proposalSubStatus || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Client ID:</span>
+                                                        <span class="value">{{ row.clientID || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Insured Name:</span>
+                                                        <span class="value">{{ row.insuredName || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Business Type:</span>
+                                                        <span class="value">{{ row.businessType || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Policy Start Date:</span>
+                                                        <span class="value">{{ row.policyStartDate || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Policy End Date:</span>
+                                                        <span class="value">{{ row.policyEndDate || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Policy Number:</span>
+                                                        <span class="value">{{ row.policyNumber || 'N/A' }}</span>
+                                                    </li>
+													   <li>
+                                                        <span class="label">Product Name:</span>
+                                                        <span class="value">{{ row.productName || 'N/A' }}</span>
+                                                    </li>   <li>
+                                                        <span class="label">Policy Variant:</span>
+                                                        <span class="value">{{ row.policyVariant || 'N/A' }}</span>
+                                                    </li>   <li>
+                                                        <span class="label">Plan Type:</span>
+                                                        <span class="value">{{ row.planType || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">Plan Variant:</span>
+                                                        <span class="value">{{ row.planVariant || 'N/A' }}</span>
+                                                    </li>                                                                    
+													<li>
+                                                        <span class="label">Portability:</span>
+                                                        <span class="value">{{ row.planVariant || 'N/A' }}</span>
+                                                    </li>
+													  <li>
+                                                        <span class="label">Net Premium:</span>
+                                                        <span class="value">{{ row.netPremium|| 'N/A' }}</span>
+                                                    </li>
+													  <li>
+                                                        <span class="label">Sum Insured:</span>
+                                                        <span class="value">{{ row.sumInsured|| 'N/A' }}</span>
+                                                    </li>
+													  <li>
+                                                        <span class="label">Inwarded Date:</span>
+                                                        <span class="value">{{ row.inwardedDate || 'N/A' }}</span>
+                                                    </li>
+													  <li>
+                                                        <span class="label">Issue Date:</span>
+                                                        <span class="value">{{ row.issueDate || 'N/A' }}</span>
+                                                    </li>  <li>
+                                                        <span class="label">PR Date:</span>
+                                                        <span class="value">{{ row.prDate || 'N/A' }}</span>
+                                                    </li>
+													 <li>
+                                                        <span class="label">Port%:</span>
+                                                        <span class="value">{{ row.portPercent || 'N/A' }}</span>
+                                                    </li>
+													 <li>
+                                                        <span class="label">Super%:</span>
+                                                        <span class="value">{{ row.superPercent || 'N/A' }}</span>
+                                                    </li>
+													<li>
+                                                        <span class="label">CI/CS/PA/ASP/Credit%:</span>
+                                                        <span class="value">{{ row.cI_CS_PA_ASPCreditPercent || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">SI Credit%:</span>
+                                                        <span class="value">{{ row.siCreditPercent || 'N/A' }}</span>
+                                                    </li>
+													<li>
+                                                        <span class="label">Weighted Net Premium of Annual Club Apr 16 2024 6:17PM:</span>
+                                                        <span class="value">{{ row.weightedNetPremium || 'N/A' }}</span>
+                                                    </li>
+                                                </ul>
+                                                <div class="claims_member_info-gradient"></div>
+                                            </div>
+                                        </div>                              
+                                    </div>
+                                </mat-tab>
+
+
+
+                                <!-- <mat-tab label="Detailed View">
                                     <div class="body_flex_column gap-32">
                                         <section id="quotes-list" class="tableMain quoteView block-show "
                                             *ngIf="selectedView == 'list'">
@@ -183,7 +292,7 @@
                                                                 <td>{{row.policyVariant}}</td>
                                                                 <td>{{row.planType}}</td>
                                                                 <td>{{row.planVariant}}</td>
-                                                                <td>{{row.portability}}</td>
+                                                                <td>{{row.planVariant}}</td>
                                                                 <td>{{row.netPremium}}</td>
                                                                 <td>{{row.sumInsured}}</td>
                                                                 <td>{{row.inwardedDate}}</td>
@@ -198,7 +307,7 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!-- <div class="tableNav" *ngIf="countsList.totalRecords > 0">
                                                 <nav>
                                                     <ul class="pagination">
@@ -216,7 +325,7 @@
                                                     </ul>
                                                 </nav>
                                             </div> -->
-                                        </section>
+                                        <!-- </section>
                                         <section id="quotes-card" class="cardViewMain quoteView mobile-block"
                                             *ngIf="selectedView == 'grid'">
                                             <div class="cardViewWraper">
@@ -229,7 +338,7 @@
                                                                 </div>
                                                             </h6>
                                                             <div class="item_productName">{{ row.interestedInPlan }}</div>
-                                                        </div>
+                                                        </div> -->
                                                         <!-- <div class="card_btnGroup">
                                                             <div class="btn_groupAction">
                                                                 <button type="button" value="Assign to" title="Assign to" 
@@ -243,7 +352,7 @@
                                                                         src="assets/Img/icon_add_notes.svg"></button>
                                                             </div>
                                                         </div> -->
-                                                    </header>
+                                                    <!-- </header>
                                                     <div class="cardViewBody">
                                                         <div class="cv_bodyItems cv_bodyItems_45">
                                                             <div class="item_lable">Phone Number</div>
@@ -267,7 +376,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <!-- <div class="tableNav" *ngIf="countsList.totalRecords > 0">
                                                 <nav>
                                                     <ul class="pagination">
@@ -285,7 +394,7 @@
                                                     </ul>
                                                 </nav>
                                             </div> -->
-                                        </section>
+                                        <!-- </section> -->
                                         <!-- <section id="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="countsList.totalRecords === 0">
                                             <div class="cardViewWraper">
                                                 <div class="no_dataFound">
@@ -294,8 +403,8 @@
                                                 </div>
                                             </div>
                                         </section> -->
-                                    </div>
-                                </mat-tab>
+                                    <!-- </div>
+                                </mat-tab> -->
                             </mat-tab-group>
                         </div>
                     </div>

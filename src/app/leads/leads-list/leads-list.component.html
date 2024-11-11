@@ -18,7 +18,7 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                         <li class="quickFilterHeading">Quick filter</li> 
+                         <li class="quickFilterHeading block-hide">Quick filter</li> 
                         <li>
                             <button type="button" id="allleads" name="allleads" value="allpolicies" class="btn_quickFilter"
                                 [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Leads</button>
@@ -87,7 +87,7 @@
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" [max]="today" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
+                                                    <input type="date" [max]="today" id="startdate" name="startdate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (change)="formatDate('startDate')">
                                                     <label for="startdate">Start Date</label>
                                                     <span class="ui-error">Please enter date of birth</span>
                                                 </div>

@@ -3,12 +3,13 @@ import { LeadsList } from '../leads-list.interface';
 import { FormControl, Validators } from '@angular/forms';
 import { LeadsService } from '../leads.service';
 import { CommonService } from 'src/app/services/common.service';
-import { MatMenuTrigger } from '@angular/material/menu';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
 import { ProductsService } from 'src/app/product/products/products.service';
+import { firstValueFrom } from 'rxjs';
+import { EncryptionService } from 'src/app/services/encryption.service';
 declare var bootstrap: any;
 
 @Component({
@@ -17,6 +18,7 @@ declare var bootstrap: any;
   styleUrls: ['./leads-list.component.scss']
 })
 export class LeadsListComponent {
+  
 
   leadsList: LeadsList[] = [];
   countsList: any = [];
@@ -59,14 +61,21 @@ export class LeadsListComponent {
   statusUpdateLead: any;
   startDate: any;
   endDate: any;
+  todayDate : any = new Date().toISOString().split('T')[0];
   filterLeads = false;
   today: string = '';
   StaticPolicyTypes = [
     { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
+  formSequence: any[] = [];
+  private allJsonFormData: any[] = [];
+  formData: any = {};
   filterFeildType = 'text';
   filterFeildmaxlength = 10;
+  interestedProductName : string ='';
+  interestedProductItem : any = '';
+  ProductList :any = [];
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -75,7 +84,8 @@ export class LeadsListComponent {
     private datePipe: DatePipe,
     private toast: NgToastService,
     private productService: ProductsService,
-
+    private common: CommonService,
+    private encryptionService: EncryptionService
   ) { }
 
 
@@ -468,15 +478,15 @@ export class LeadsListComponent {
     this.filterFeildmaxlength = 50;
     if (this.selected === 'leadId') {
       this.filterFeildmaxlength = 20;
-      return 'Enter Lead Id';
+      return 'Enter Lead ID';
     } else if (this.selected === 'mobileNumber') {
       this.filterFeildType = "number";
       this.filterFeildmaxlength = 10;
-      return 'Enter mobile Number';
+      return 'Enter Mobile Number';
     } else if (this.selected === 'name') {
       return 'Enter Name';
     } else if (this.selected == 'email') {
-      return 'Enter Email Id';
+      return 'Enter Email ID';
     }
     else {
       return 'Search...';
@@ -490,7 +500,7 @@ export class LeadsListComponent {
       errorMessage = 'This field is required.';
     }
     if (this.selected === 'leadId') {
-      errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9)';
+      errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).';
     } else if (this.selected === 'mobileNumber') {
       errorMessage = 'Mobile Number should be exactly 10 digits.';
     } else if (this.selected === 'name') {
@@ -508,17 +518,13 @@ export class LeadsListComponent {
     } else if (dateType === "endDate" && this.endDate) {
       this.endDate = this.datePipe.transform(this.endDate, "yyyy-MM-dd");
     }
-  }
+   
 
-  redirectProducts(lead: any) {
-    if (lead.interestedProductName && lead.planType) {
-      this.router.navigate(['/products'], {
-        queryParams: { productName: lead.interestedProductName, leadId: lead.leadNumber }
-      });
-    } else {
-      this.router.navigate(['/products'], {
-      });
+    if (this.startDate > new Date().toISOString().split('T')[0]) {
+      this.startDate = ''; // Clear the invalid date
+      this.toast.warning({ detail: "", summary: 'StartDate should not be greater than today date.', duration: 5000 });
     }
+
   }
 
   formatCreatedOn(dateString: string | null | undefined) {
@@ -530,5 +536,62 @@ export class LeadsListComponent {
     return formattedDate || 'Invalid Date'; // Handle invalid date
   }
 
+  redirectProducts(lead: any) {
+    if (lead.interestedProductName ) {
+   
+      const reqData = {
+        "agentCode": this.agentCode
+      }
+      this.productService.Getproductlist(reqData).subscribe({
+        next: async (res: any) => {
+           const ProductList = res.data;
+          console.log('this.ProductList',ProductList)
+       
+          const interestedProductItem  = ProductList.find((product: any) => product.productName == lead.interestedProductName); 
+       
+          try {
+           // sessionStorage.clear();
+            const reqData = {
+              "partnerId": interestedProductItem.partnerId,
+              "productId": interestedProductItem.productId
+      
+            }
+            console.log(reqData);
+            const res = await firstValueFrom(this.common.Getformsequence(reqData));
+            console.log(res);
+            this.formSequence = JSON.parse(res.data.formSequence);
+            console.log(this.formSequence);
+      
+            if (this.formSequence != null && this.formSequence.length > 0) {
+              this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+              sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
+            }
+            console.log(this.allJsonFormData);
+            sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+            localStorage.setItem("formIndex", "0");
+          } catch (err) {
+            this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+          }
+          const productData = {
+            partnerId: interestedProductItem.partnerId,
+            productId: interestedProductItem.productId,
+            quickQuoteRedirect : true
+    
+          }
+
+            this.router.navigate(['yatra'], {
+              state: { productData: productData, formSequence: this.formSequence }
+           });
+          
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    } else {
+      this.router.navigate(['/products'], {
+      });
+    }
+  }
 
 }

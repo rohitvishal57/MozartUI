@@ -51,8 +51,10 @@
       </div>
     </div>
     <div class="right-panel">
-      <h2 class="icon_withHeading" aria-hidden="true" *ngIf="quickQuoteRedirect" ><a class="btn_backPage"  (click)="backToleads()" ></a>Back to Leads</h2>
-      <form [formGroup]="dynamicFormGroup" style="margin-bottom: 20%;">
+    <h2 class="icon_withHeading" aria-hidden="true" *ngIf="quickQuoteRedirect" ><a class="btn_backPage"  (click)="backToleads()" title="Back To Leads"></a>Back to Leads</h2> 
+    <h2 class="icon_withHeading" aria-hidden="true" *ngIf="productComparison" ><a class="btn_backPage"  (click)="backToProductComparison()" title="Back to ProductComparison"></a>Back to ProductComparison</h2> 
+
+    <form [formGroup]="dynamicFormGroup" style="margin-bottom: 20%;">
         <!-- <h2 *ngIf="form.formTitle!=''">{{form.formTitle}}</h2> -->
         <!-- <div class="card-body"> -->
         <ng-container *ngFor="let section of form.formSections">

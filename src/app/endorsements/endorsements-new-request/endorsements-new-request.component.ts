@@ -203,7 +203,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.getactivepolicynumbersApi(data).subscribe(
       (resp: any) => {
-        if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
+        if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
           this.policies = resp.data.getPolicyDetails;
           console.log(this.policies);
           this.policiesListData = this.removeDuplicates(this.policies, "policynumber");
@@ -561,7 +561,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementCreateRequestApi(payloadObj).subscribe(
       (resp) => {
-          if (resp.data && resp.statusCode == "200" && resp.isSuccess && resp.data.response.caseId != null) {
+          if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess && resp?.data?.response?.caseId != null) {
             if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
               if (!this.selectedFile) {
                 this.isFilenotSelected = true;
@@ -582,17 +582,23 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   .pipe()
                   .subscribe((Respevent: any) => {
                     let event: any = Respevent;
-                    if (Respevent.data && Respevent.statusCode == "200" && Respevent.isSuccess) {
+                    if (Respevent?.data && Respevent?.statusCode == "200" && Respevent?.isSuccess) {
                       this.toast.success({
                         detail: 'SUCCESS',
                         summary: `Your request ${resp.data.response.caseId} has been registered`,
                         duration: 5000,
                       });
                     }
-                    else if (Respevent.message) {
+                    else if (Respevent?.message) {
                       this.toast.error({
                         detail: 'ERROR',
                         summary: Respevent.message,
+                        duration: 5000,
+                      });
+                    }  else if (Respevent == null || Respevent?.message == undefined) {
+                      this.toast.error({
+                        detail: 'ERROR',
+                        summary: "File upload was not successfull. Try again later!",
                         duration: 5000,
                       });
                     }
@@ -696,7 +702,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     this.endorsement_service.endorsementSendOtpApi(this.otpObj).subscribe(
       (resp: any) => {
-        if (resp && resp.statusCode == "200" && resp.isSuccess && resp.data.requestId !== null) {
+        if (resp && resp?.statusCode == "200" && resp?.isSuccess && resp?.data?.requestId !== null) {
           this.otpInfoObject = {
             requestId: resp.data.requestId,
             otp: "",
@@ -737,7 +743,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       };
       this.loginservice.validateOtpRequestApi(modal).subscribe(
         (resp: any) => {
-          if (resp.data && resp.statusCode == "200" && resp.isSuccess) {
+          if (resp && resp?.statusCode == "200" && resp?.isSuccess) {
             if (resp.message) {
               this.toast.success({
                 detail: 'SUCCESS',
@@ -796,7 +802,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       }
       this.endorsement_service.getEndorsementPolicyInfoApi(policyObj).subscribe(
         (resp: any) => {
-          if (resp && resp.statusCode == "200" && resp.isSuccess) {
+          if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
             this.policyInfoDetails = resp.data;
             this.externalPolicyData = this.policyInfoDetails.externalPolicyData.response;
           }

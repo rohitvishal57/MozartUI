@@ -76,8 +76,9 @@ export class ClaimsListViewComponent implements OnInit {
   //-------------filters--------------//
   filterClaims(status: string) {
     this.claimsReqBody.status = status;
-    this.first = 0;
     this.selectedStatus = status;
+    this.isSearch = true;
+    this.first = 0;
     this.fetchData();
   }
 
@@ -213,8 +214,8 @@ applyFilter() {
   this.formatDate("fromDate");
   this.formatDate("toDate");
 
-  this.claimsReqBody.fromDate = this.fromDate || "";
-  this.claimsReqBody.toDate = this.toDate || "";
+  this.claimsReqBody.fromDate = this.fromDate;
+  this.claimsReqBody.toDate = this.toDate;
 
   const selectedPolicyTypes = this.StaticRequestTypes 
     ? this.StaticRequestTypes.filter((requestType: any) => requestType.selected).map((requestType: any) => requestType.name)
@@ -222,8 +223,9 @@ applyFilter() {
 
   if (selectedPolicyTypes.length === this.StaticRequestTypes.length || selectedPolicyTypes.length === 0) {
     this.claimsReqBody.requestType = "";
+  
   } else {
-    this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
+    this.claimsReqBody.requestType = selectedPolicyTypes[0];
   }
 
   // selected products
@@ -287,12 +289,12 @@ clear() {
     }
   
     if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "caseId") {
+      if (this.selected === "claimInfoId") {
         return "Enter Valid Request Id";
       } else if (this.selected === "policyNumber") {
         return "Enter Valid Policy Number";
-      } else if (this.selected === "memberName") {
-        return "Enter Valid Member Name";
+      } else if (this.selected === "memberId") {
+        return "Enter Valid Member Id";
       }
     }
   
@@ -301,14 +303,14 @@ clear() {
 
   applySearch(): void {
     let searchValue = this.searchInputControl.value?.trim();
-    if (searchValue) {
+    if (searchValue && this.searchInputControl.valid) {
       this.claimsReqBody.searchType = this.selected;
       this.claimsReqBody.searchString = [searchValue];    
+      this.isSearch = true;
+      this.first = 0;
+      this.fetchData();
+
     }
-    this.isSearch = true;
-    this.fetchData();
-    this.first = 0;
-    
   }
 
 onSelectChanges(event: any): void {
@@ -323,16 +325,32 @@ onSelectChanges(event: any): void {
   //     Validators.pattern('^[0-9]*$') 
   //   ]);
   // }
-   if (this.selected === 'claimInfoId' || this.selected === 'policyNumber' || this.selected === 'memberId') {
+  //  if (this.selected === 'claimInfoId' || this.selected === 'policyNumber' || this.selected === 'memberId') {
+  //   this.searchInputControl.setValidators([
+  //     Validators.required,
+  //     Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
+  //   ]);
+  // }
+  if (this.selected === "claimInfoId") {
     this.searchInputControl.setValidators([
       Validators.required,
-      Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
+      Validators.pattern("^\\s*[0-9-]+\\s*$"),
     ]);
-  }
+}
+else if (this.selected === "memberId") {
+  this.searchInputControl.setValidators([
+    Validators.required,
+    Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),
+  ]);
+} else if (this.selected === "policyNumber") {
+  this.searchInputControl.setValidators([
+    Validators.required,
+    Validators.pattern("^\\s*[0-9-]+\\s*$"),
+  ]);
+}
   else {
     this.claimsReqBody.searchString = ['']
     this.claimsReqBody.searchType = ''
-
     this.fetchData();
   }
     this.searchInputControl.updateValueAndValidity();

@@ -194,8 +194,7 @@ export class QuoteProductsComponent implements OnInit {
     item.tenureAmounts = [];
     this.formData = {
       ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount,
-      firstName: this.formData.proposerName, quoteId:item.quoteNumber, tenure : this.selectedPlanIndex + ' years',
-      proposalNumber: this.proposalNum
+      firstName: this.formData.proposerName, quoteId:item.quoteNumber,proposalNumber:item.proposalNum
     }
     console.log(this.formData);
     try {
@@ -204,16 +203,22 @@ export class QuoteProductsComponent implements OnInit {
       for (let i = 1; i <= 3; i++) {
         const premiumKey = `t${i}PremiumAmount`;
         console.log(item[premiumKey]);
+        if(item.selectedPremiumAmount == item[premiumKey]){
+          item.tenure = i;
+        }
         item.tenureAmounts[i - 1] = item[premiumKey]
       }
-      console.log(item)
+      this.formData = {
+        ...this.formData, tenure : item.tenure + ' years'
+      }
+      console.log(item,this.formData)
       const productData = {
         partnerId: this.partnerId,
         productId: item.productId,
         tenureAmounts: item.tenureAmounts,
         selectedAddons: item.selectedAddons,
-        proposalNum:this.proposalNum,
-        tenure: this.selectedPlanIndex
+        proposalNum:item.proposalNum,
+        tenure: item.tenure
       }
       sessionStorage.setItem("isQuote", true.toString());
       console.log(productData)
@@ -242,6 +247,7 @@ export class QuoteProductsComponent implements OnInit {
     }
     item.selectedPremiumAmount = item[selectedPremiumKey];
     item.QuoteNumber = item[QuoteNumber];
+    item.tenure = this.selectedPlanIndex;
     console.log(item);
 
     await this.getProposalNum();

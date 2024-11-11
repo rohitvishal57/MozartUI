@@ -18,11 +18,16 @@ export class MyPerformaceComponent {
   page: number = 1;
   first: number = 0;
   rows: number = 10;
+  agentCode :any = '';
   constructor(
     private performanceService: PerformanceService,
 
   ) { }
   ngOnInit(): void {
+    const storedAgentCode = localStorage.getItem('agentCode');
+    if (storedAgentCode) {
+      this.agentCode = storedAgentCode;
+    }
     this.getPerformanceData();
     this.getPerformanceDetailedViewCount();
     this.getPerformanceDetailedList();
@@ -30,15 +35,15 @@ export class MyPerformaceComponent {
 
   getPerformanceData() {
     let reqObj = {
-        agentCode: "ABH1102376"
+        agentCode: this.agentCode
     }
     this.performanceService.getPerformanceDataApi(reqObj).subscribe(
       (response) => {
         // if (response.isSuccess == true && response.statusCode == "200") {
-          if (response) {
-          this.agentPerformanceData = response;
-        this.annualClubPerformance = response.annualClubPermormance;
-        this.campaignPerformance = response.campaignPermormance;
+        if (response) {
+        this.agentPerformanceData = response.data;
+        this.annualClubPerformance = response.data.annualClubPermormance;
+        this.campaignPerformance = response.data.campaignPermormance;
         }
         else { console.error("API request was not successful."); }
       },
@@ -49,7 +54,7 @@ export class MyPerformaceComponent {
   }
   getPerformanceDetailedViewCount() {
     let reqObj = {
-      agent_Code: "ABH1101006",
+      agent_Code: this.agentCode,
       isViewed: true
   }
   this.performanceService.getPerformanceDetailedViewLatestCount(reqObj).subscribe(
@@ -66,7 +71,7 @@ export class MyPerformaceComponent {
   }
   getPerformanceDetailedList(){
     let reqObj = {
-      agentCode: "ABH1101006",
+      agentCode: this.agentCode,
       start: this.page,
       length: this.rows,
       isViewed: true
@@ -75,7 +80,7 @@ export class MyPerformaceComponent {
     (response) => {
       // if (response.isSuccess == true && response.statusCode == "200") {
         if (response) {
-        this.detailedList = response.agentProposalsDetailedViewLists;
+        this.detailedList = response?.data?.agentProposalsDetailedViewLists||[];
       }
       else { console.error("API request was not successful."); }
     },

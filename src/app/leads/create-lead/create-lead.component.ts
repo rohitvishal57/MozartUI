@@ -300,15 +300,15 @@ export class CreateLeadComponent implements OnInit {
       premium: this.submittedUser.premium,
       duePremiun: this.submittedUser.duePremiun,
       familyConstruct: this.submittedUser.familyConstruct,
-      policyType: this.submittedUser.policyType,
+      policyType: this.submittedUser?.policyType??'' ,
       policyNumber: this.submittedUser.policyNumber,
       campaignname: this.submittedUser.campaignname,
       campaignnumber: this.submittedUser.campaignnumber,
       leadnumber: this.submittedUser.leadNumber,
       leadAssignee: this.submittedUser.leadAssignee,
       isUpdate: this.submittedUser.isUpdate || 1,
-      leadStatus : this.submittedUser.leadStatus,
-      interestedProductName: this.submittedUser.interestedProductName,
+      leadStatus : this.submittedUser?.leadStatus??'',
+      interestedProductName: this.submittedUser?.interestedProductName??'',
     });
     this.changeReferStatus(this.submittedUser.leadStatus);
     this.changeSumInsured(this.submittedUser.interestedProductName);

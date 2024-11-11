@@ -50,6 +50,41 @@
             <img  src="../../../assets/images/name.png" >
           </a>
         </div>
+ <div style="position: relative;"> 
+
+        <button mat-icon-button *ngIf="isLoggedIn;" (click)="openNotifications()">
+          <mat-icon class="icon">notifications</mat-icon>
+          <span class="badge" *ngIf="notificationCount > 0">{{notificationCount}}</span>
+        </button>
+
+        <div class="overlay_popupMain overlay_dropdown_w518" *ngIf="showNotifications" style="right:0; backdrop-filter:none;background: #ffffff;">
+          <!--Overlay: Personal details start-->
+          <div class="option_policyType">
+            <div class="overlay_body insurer_detailsMain">
+              <div class="button-container">
+                <button mat-button id="markAll" type="button">
+                  <mat-icon>check_circle</mat-icon> Mark All As Read
+                </button>
+              
+                <button mat-button id="showAll" type="button">
+                  <mat-icon>notifications</mat-icon> Show All Notifications
+                </button>
+              </div>              
+              <div class="row">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                  <div class="input-block input-block-renew input-filed-white">
+                    <mat-list-item *ngFor="let notification of notifications ; let i =index">
+                      <span style="color: black;">{{i+1}}: {{notification.message}}</span>
+                    </mat-list-item>
+                  </div>
+                </div>
+              </div>
+           
+            </div>
+      </div>
+      </div>
+  
+       </div> 
       </div>
     </div>
   </div>
@@ -60,6 +95,9 @@
     <div class="logoTagText">Aditya Birla Health Insurance</div>
   </div>
   <!--Logo Tag end-->
-
 </header>
 <!--Header end-->
+
+  
+
+
