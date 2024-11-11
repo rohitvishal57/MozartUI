@@ -257,7 +257,8 @@
 
 /*----Notifications start---*/
 .overlay_notification {
-  right: 0;
+  right: -13px;
+  top: 24px;
   .insurer_detailsMain {
     gap:15px;
   }
@@ -302,8 +303,8 @@
       height: 20px;
     }
     .badge {
-      background: #f4d26b;
-      color: #c7222a;
+      background: #f7a500;
+      color: #000000;
       top: -4px;
       left: auto;
       right: -6px;
@@ -315,8 +316,19 @@
   }
 }
 .btn_markAsRead {
-  padding: 8px 8px;
+  padding: 12px 8px;
   border-radius: 6px;
   font-size: 14px;
+  line-height: 14px;
+}
+.btn_groupNotification button {
+  width: 100%;
+  flex: auto;
+  &.btn_white {
+    color: #c7222a;
+    &:hover {
+      border: 1px solid #c7222a;
+    }
+  }
 }
 /*----Notifications end---*/

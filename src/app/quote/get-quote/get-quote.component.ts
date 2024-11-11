@@ -629,6 +629,7 @@ export class GetQuoteComponent {
     this.selectedPlan = planType;
     this.quoteFormGroup.get('memberPolicyType')?.setValue(planType);
     this.activeDropdown = null;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onSumInsuredChange(eventValue: any) {
@@ -721,6 +722,7 @@ export class GetQuoteComponent {
         duration: 3000
       });
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
 

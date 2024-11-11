@@ -61,7 +61,9 @@
           
           <div class="option_policyType" (click)="onPopupClick($event)">
             <div class="overlay_body insurer_detailsMain">
-              <h3>Notifications ({{notificationCount}})</h3>
+              <div class="body_flex_row justify-content-between">
+                <h3>Notifications ({{notificationCount}})</h3>
+              </div>
               <div class="checkbox_disease_scroll">           
                 <div class="row">
                   <div class="col-12">
@@ -84,9 +86,9 @@
            
             </div>
             <div class="overlay_footer">
-              <div class="btn_groupAction">
-                <button id="markAll" name="markAll" type="button" class="btn_red btn_markAsRead">Mark All As Read</button>
-                <button id="showAll" name="showAll" type="button" class="btn_linkText">Show All </button>
+              <div class="btn_groupAction btn_groupNotification">
+                <button id="markAll" name="markAll" type="button" class="btn_white btn_markAsRead">Mark As Read All</button>
+                <button id="showAll" name="showAll" type="button" class="btn_red btn_markAsRead">Show All </button>
               </div> 
             </div>
           </div>
