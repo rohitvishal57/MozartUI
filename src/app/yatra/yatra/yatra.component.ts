@@ -93,7 +93,7 @@ export class YatraComponent {
   question: any;
   leadnumber: string = "";
   QuoteNumber: any = [];
-  customerFeedbackModule: any;
+  //customerFeedbackModule: any;
   customerFeedbackForm !: FormGroup;
   formIndexValue: number = 0;
   stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
@@ -107,6 +107,9 @@ export class YatraComponent {
   kidCount = 0;
   quickQuoteRedirect :Boolean =false;
   productComparison :Boolean= false;
+  isFeedBackModalVisible :Boolean= true;
+
+  
 
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -164,7 +167,6 @@ export class YatraComponent {
     if (sessionStorage.getItem('allJsonForm'))
       this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-    this.customerFeedbackModule = new bootstrap.Modal(document.getElementById('customerFeedbackModule'));
     this.customerFeedbackForm = this.fb.group({
       message: [''],
       rating: [null, Validators.required], // Add rating to the form
@@ -681,7 +683,8 @@ export class YatraComponent {
 
 
     if(this.formSequence[this.getFormIndexValue()].formName == "Confirmation"){
-      this.customerFeedbackModule.show();
+      //this.customerFeedbackModule.show();
+      this.isFeedBackModalVisible = true;
     }
 
 
@@ -1028,7 +1031,6 @@ export class YatraComponent {
 
   addNavbar(index: number, value: any) {
     if (value.formName === 'Confirmation') {
-      this.customerFeedbackModule.show();
       this.feedbackSubmit = false;
       this.impressedValues = false;
       this.feedBackMessage = false;
@@ -4592,8 +4594,14 @@ export class YatraComponent {
     }, (error) => {
       this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
     });
-    this.customerFeedbackModule.hide();
+    // this.customerFeedbackModule.hide();
+    this.isFeedBackModalVisible = false;
   }
+
+  closeIsFeedBackModalVisible(){
+    this.isFeedBackModalVisible = false;
+  }
+
   onSelectValue(value: String) {
     this.feedbackImpressedValue = value;
   }
