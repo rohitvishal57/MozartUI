@@ -20,6 +20,9 @@ const routes: Routes = [
    { path: 'claims', 
     loadChildren:() => import('./claims/claims-view/claims-view.module').then((m)=>m.ClaimsViewModule)
    },
+   { path: 'events', 
+    loadChildren:() => import('./events/events-new/events.module').then((m)=>m.EventsModule)
+   },
    { path: 'endorsements', 
     loadChildren:() => import('./endorsements/endorsements-requests/endorsements-requests.module').then((m)=>m.EndorsementsRequestsModule)
    },

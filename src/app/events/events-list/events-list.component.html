@@ -1,0 +1,83 @@
+<main class="siteBody">
+  <div class="contentBody bodyColumns-1">
+    <div class="bodyColumn body_flex_column">
+      <button class="col-sm-1 Addbtn" type="btn-red" (click)="addEvents()">Add Event</button>
+      <div class="calendar-wrapper">
+        <!-- Header Section -->
+        <div class="calendar-navigation">
+          <div class="nav-left">
+            <button class="icon-btn" (click)="today()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              Today
+            </button>
+            <button class="nav-arrow" (click)="previousDate()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button class="nav-arrow" (click)="nextDate()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+            <h2 class="current-month">{{ viewDate | date:'MMMM yyyy' }}</h2>
+          </div>
+          <div class="nav-right">
+            <div class="dropdown">
+              <button class="btn btn-outline-primary dropdown-toggle" type="button" id="viewDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ view }}
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="viewDropdown">
+                <li><a class="dropdown-item" (click)="setView(CalendarView.Day)">Day</a></li>
+                <li><a class="dropdown-item" (click)="setView(CalendarView.Week)">Week</a></li>
+                <li><a class="dropdown-item" (click)="setView(CalendarView.Month)">Month</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar Grid with Custom Header -->
+        <div class="calendar-grid">
+          <div class="custom-day-header" *ngIf="view === CalendarView.Day">
+            <div class="date-display">
+              <span class="date-number">{{ viewDate | date:'d' }}</span>
+              <span class="date-day">{{ viewDate | date:'EEEE' }}</span>
+            </div>
+          </div>
+
+          <mwl-calendar-day-view
+            *ngIf="view === CalendarView.Day"
+            [viewDate]="viewDate"
+            [events]="events"
+            [hourSegments]="2"
+            [dayStartHour]="0"
+            [dayEndHour]="24"
+            (eventClicked)="handleEventClick($event)">
+          </mwl-calendar-day-view>
+
+          <mwl-calendar-week-view
+            *ngIf="view === CalendarView.Week"
+            [viewDate]="viewDate"
+            [events]="events"
+            [hourSegments]="2"
+            [dayStartHour]="0"
+            [dayEndHour]="24"
+            (eventClicked)="handleEventClick($event)">
+          </mwl-calendar-week-view>
+
+          <mwl-calendar-month-view
+            *ngIf="view === CalendarView.Month"
+            [viewDate]="viewDate"
+            [events]="events"
+            (eventClicked)="handleEventClick($event)">
+          </mwl-calendar-month-view>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

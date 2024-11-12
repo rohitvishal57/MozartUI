@@ -25,6 +25,7 @@ import { LeadsModule } from './leads/leads.module';
 import { ProfileModule } from './profile/profile.module';
 import { EncryptionInterceptor } from './intercepter/aesEncryptToken.interceptor';
 import { LoadingService } from './services/loading.service';
+import { EventsModule } from './events/events-new/events.module';
 import { NotificationsComponent } from './notifications/notifications.component';
 
 export function loadConfig(configService: ConfigService) {
@@ -59,6 +60,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProductsModule,
     ProfileModule,
     NgxPaginationModule,
+    EventsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

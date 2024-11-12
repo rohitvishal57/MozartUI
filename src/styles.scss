@@ -5,6 +5,10 @@
 @import '~bootstrap/dist/css/bootstrap.min.css'; 
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
+
 /*----Site css files----*/
 @import '../src/assets/styles/Site-main.css';
 @import '../src/assets/styles/Responsive.css';
+@import 'node_modules/angular-calendar/css/angular-calendar.css';
+@import '~flatpickr/dist/flatpickr.css';
+
