@@ -265,7 +265,7 @@ export class LeadsListComponent {
     this.getLeadsList();
     this.toggeledropdown = false;
     this.selected = "Select an option";
-    //this.searchInputControl.reset();
+    this.searchInputControl.reset();
 
   }
   cancel() {
@@ -342,11 +342,20 @@ export class LeadsListComponent {
 
 
   applySearch() {
+    this.leadsInfoListRequestBody.searchlist = "";
+    this.leadsInfoListRequestBody.policyList = "";
+    this.leadsInfoListRequestBody.fromdate = null;
+    this.leadsInfoListRequestBody.todate = null;
+    this.appliedFiltersCount =  0;
+    this.productsList.forEach((product) => (product.selected = false));
+    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.startDate ='';
+    this.endDate ='';
     console.log('this.searchInputControl', this.searchInputControl.errors)
     if (this.searchInputControl.errors) {
       this.getSearchInputControlPatternMessage();
     }
-    if (this.searchInputControl.valid) {
+    if (this.searchInputControl.valid == true) {
       this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
     } else {
       this.leadsInfoListRequestBody.searchby = "";
@@ -355,7 +364,7 @@ export class LeadsListComponent {
       this.getLeadsList();
       this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign ? 'assignedLead' : 'unAssignedLead';
     }
-    this.searchInputControl.reset();
+    //this.searchInputControl.reset();
   }
   renewalListView(view: string) {
     this.selectedView = view;
