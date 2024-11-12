@@ -5,7 +5,7 @@ import { CustomerList } from 'src/app/interface/customers.interface';
 import { CustomersService } from '../customers.service';
 import { CommonService } from 'src/app/services/common.service';
 import { NgToastService } from 'ng-angular-popup';
-import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
+import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 
 @Component({
   selector: 'app-customers-list',

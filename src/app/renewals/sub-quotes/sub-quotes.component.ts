@@ -76,6 +76,8 @@ export class SubQuotesComponent {
       (res:any)=>{
         if(res.isSuccess){
           this.subQuotesList=res.data;
+          console.log(this.subQuotesList);
+          
         }
         else{
           this.toast.error({ detail: "Error", summary: "Failed to generate Subquotes List.", duration: 1000 });

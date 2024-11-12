@@ -8,7 +8,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
-import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
+import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 
 @Component({
   selector: 'app-renewal-list',

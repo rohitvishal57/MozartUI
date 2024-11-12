@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
-import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
+import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 
 @Component({
   selector: 'app-proposals-list',

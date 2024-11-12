@@ -38,14 +38,24 @@
                     <div class="body_flex_row leads_searchWraper">
                         <div class="field_searchMain">
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
-                                <option value="Select an option">Select an option</option>
+                                <option value="">Select an option</option>
                                 <option value="leadId">Lead ID</option>
                                 <option value="mobileNumber">Mobile Number</option>
                                 <option value="name">Name</option>
                                 <option value="email">Email ID</option>
                             </select>
-                            <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" [type]="filterFeildType" [maxlength]="filterFeildmaxlength" [placeholder]="getPlaceholder()">
-                            <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                            <div class="filterFieldGroup">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" [type]="filterFeildType" [maxlength]="filterFeildmaxlength" [placeholder]="getPlaceholder()">
+                                <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
+                                    <small *ngIf="searchInputControl.dirty && selected === '' ">Select an option and enter.</small>
+                                    <small *ngIf="searchInputControl.hasError('required')">This field is required.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">Mobile Number should be exactly 10 digits.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'leadId'">Lead ID should contain only alphanumeric characters (A-Z, 0-9).</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">Name should contain only letters and spaces.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'email'">Please enter a valid email address (e.g., user@example.com).</small>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="filterWraper">

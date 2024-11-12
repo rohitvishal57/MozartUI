@@ -5,7 +5,7 @@ import { endorsementDetails } from 'src/app/interface/endorsement.interface';
 import { EndorsementsRequestsService } from './endorsements-requests.service';
 import { DatePipe } from '@angular/common';
 import { CommonService } from 'src/app/services/common.service';
-import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
+import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 
 
 @Component({

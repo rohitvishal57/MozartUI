@@ -10,6 +10,7 @@ import { NgToastService } from 'ng-angular-popup';
 import { ProductsService } from 'src/app/product/products/products.service';
 import { firstValueFrom } from 'rxjs';
 import { EncryptionService } from 'src/app/services/encryption.service';
+import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 declare var bootstrap: any;
 
 @Component({
@@ -32,8 +33,8 @@ export class LeadsListComponent {
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
-  selected: string = "Select an option";
-  searchInputControl = new FormControl("", Validators.required);
+  selected: string = "";
+  searchInputControl = new FormControl("");
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
   placeholder: string = '';
@@ -263,7 +264,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
-    this.selected = "Select an option";
+    this.selected = "";
     this.searchInputControl.reset();
 
   }
@@ -300,41 +301,43 @@ export class LeadsListComponent {
   }
 
   onSelectChanges(event: any): void {
-    this.searchInputControl.setValue("");
+    this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
-    if (this.selected === "mobileNumber") {
-      this.placeholder = 'Mobile Number';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[6-9][0-9]{9}$")
-      ]);
-    }
-    else if (this.selected === "name") {
-      this.placeholder = 'Proposer Name';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[A-Za-zÀ-ÿ ]+$")
-      ]);
-    }
-    else if (this.selected === "email") {
-      this.placeholder = 'Email';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$")
-      ]);
-    }
-    else if (this.selected === "leadId") {
-      this.placeholder = 'Lead Id';
-      this.searchInputControl.setValidators([
-        Validators.required,
-        Validators.pattern("^[A-Za-z]{3}\\d{12}$")
-      ]);
-    }
-    else if (this.selected = 'Select an option') {
-      this.placeholder = 'Search...';
-      this.leadsInfoListRequestBody.searchby = '';
-      this.getLeadsList();
-    }
+    const selectedValidators = searchValidationConfig[this.selected] || [];
+    this.searchInputControl.setValidators(selectedValidators);
+    // if (this.selected === "mobileNumber") {
+    //   this.placeholder = 'Mobile Number';
+    //   this.searchInputControl.setValidators([
+    //     Validators.required,
+    //     Validators.pattern("^[6-9][0-9]{9}$")
+    //   ]);
+    // }
+    // else if (this.selected === "name") {
+    //   this.placeholder = 'Proposer Name';
+    //   this.searchInputControl.setValidators([
+    //     Validators.required,
+    //     Validators.pattern("^[A-Za-zÀ-ÿ ]+$")
+    //   ]);
+    // }
+    // else if (this.selected === "email") {
+    //   this.placeholder = 'Email';
+    //   this.searchInputControl.setValidators([
+    //     Validators.required,
+    //     Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$")
+    //   ]);
+    // }
+    // else if (this.selected === "leadId") {
+    //   this.placeholder = 'Lead Id';
+    //   this.searchInputControl.setValidators([
+    //     Validators.required,
+    //     Validators.pattern("^[A-Za-z]{3}\\d{12}$")
+    //   ]);
+    // }
+    // else if (this.selected = 'Select an option') {
+    //   this.placeholder = 'Search...';
+    //   this.leadsInfoListRequestBody.searchby = '';
+    //   this.getLeadsList();
+    // }
     this.searchInputControl.updateValueAndValidity();
     this.getPlaceholder();
   }
@@ -351,9 +354,9 @@ export class LeadsListComponent {
     this.startDate ='';
     this.endDate ='';
     console.log('this.searchInputControl', this.searchInputControl.errors)
-    if (this.searchInputControl.errors) {
-      this.getSearchInputControlPatternMessage();
-    }
+    // if (this.searchInputControl.errors) {
+    //   this.getSearchInputControlPatternMessage();
+    // }
     if (this.searchInputControl.valid == true) {
       this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
     } else {
@@ -501,24 +504,23 @@ export class LeadsListComponent {
     }
   }
 
+  // getSearchInputControlPatternMessage() {
+  //   let errorMessage: string = '';
+  //   if (this.searchInputControl.hasError('required')) {
+  //     errorMessage = 'This field is required.';
+  //   }
+  //   if (this.selected === 'leadId') {
+  //     errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).';
+  //   } else if (this.selected === 'mobileNumber') {
+  //     errorMessage = 'Mobile Number should be exactly 10 digits.';
+  //   } else if (this.selected === 'name') {
+  //     errorMessage = 'Name should contain only letters and spaces.';
+  //   } else if (this.selected === 'email') {
+  //     errorMessage = 'Please enter a valid email address (e.g., user@example.com).';
+  //   }
+  //   return this.toast.warning({ detail: "", summary: errorMessage, duration: 5000 });
 
-  getSearchInputControlPatternMessage() {
-    let errorMessage: string = '';
-    if (this.searchInputControl.hasError('required')) {
-      errorMessage = 'This field is required.';
-    }
-    if (this.selected === 'leadId') {
-      errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).';
-    } else if (this.selected === 'mobileNumber') {
-      errorMessage = 'Mobile Number should be exactly 10 digits.';
-    } else if (this.selected === 'name') {
-      errorMessage = 'Name should contain only letters and spaces.';
-    } else if (this.selected === 'email') {
-      errorMessage = 'Please enter a valid email address (e.g., user@example.com).';
-    }
-    return this.toast.warning({ detail: "", summary: errorMessage, duration: 5000 });
-
-  }
+  // }
 
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {

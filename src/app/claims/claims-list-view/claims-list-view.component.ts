@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { ClaimsInterface } from 'src/app/interface/claims.interface';
 import { ClaimsViewService } from '../claims-view/claims-view.service';
-import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
+import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 
 @Component({
   selector: 'app-claims-list-view',
