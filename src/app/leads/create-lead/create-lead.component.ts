@@ -87,34 +87,18 @@ export class CreateLeadComponent implements OnInit {
     }
     this.agentCode = obj.agent;
 
-
-
-
-    await this.getProducts();
     if (this.leadNumber && this.action) {
+      await this.getLeadInformationByLeadNumber(this.leadNumber);
+      await this.getProducts();
       await this.getReferenceStatus();
       await this.fetchActivityTypeInfo();
-      await this.getLeadInformationByLeadNumber(this.leadNumber);
-
       if (this.action === 'addNotes') {
         this.getLeadNotes(this.leadNumber);
       }
-
+    }else{
+       this.getProducts();
     }
 
-
-    // this.leadsService.getActiveCampaignDetails(obj).subscribe(
-    //   (response) => { 
-    //     console.log(response.data);
-    //     if (response.success) {
-    //       console.log(response);
-    //     } 
-    //     else {console.error("API request was not successful.");}
-    //   },
-    //   (error) => {
-    //     console.error("Error from getRenewalsList API:", error);
-    //   }
-    // );
     this.today = new Date().toISOString().split('T')[0];
 
   }
@@ -310,12 +294,6 @@ export class CreateLeadComponent implements OnInit {
       leadStatus : this.submittedUser?.leadStatus??'',
       interestedProductName: this.submittedUser?.interestedProductName??'',
     });
-    this.changeReferStatus(this.submittedUser.leadStatus);
-    this.changeSumInsured(this.submittedUser.interestedProductName);
-    this.userValidations.patchValue({
-      leadSubStatus: this.submittedUser?.leadSubStatus??'',
-      sumInsured: this.submittedUser?.sumInsured ?? ''
-    });
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
@@ -342,6 +320,14 @@ export class CreateLeadComponent implements OnInit {
       (response: any) => {
         console.log(response);
         this.referenceStatus = response?.data;
+
+        if(this.submittedUser){
+          this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === this.submittedUser.leadStatus);
+          this.userValidations.patchValue({
+            leadSubStatus: this.submittedUser?.leadSubStatus??'',
+          });
+        }
+    
       },
       (error) => {
         console.error("Error from getMyReportingUsers API:", error);
@@ -470,7 +456,12 @@ export class CreateLeadComponent implements OnInit {
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res) => {
         this.productsList = res.data;
-        console.log("product list", this.productsList)
+        if (this.submittedUser) {
+          this.productSumInsured = this.productsList.find((product: any) => product.productName === this.submittedUser.interestedProductName)?.sumInsured.split(",");
+          this.userValidations.patchValue({
+          sumInsured: this.submittedUser?.sumInsured ?? ''
+          });
+        }
       },
       error: (err) => {
         console.log("error coming form getproduct list API");

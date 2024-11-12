@@ -4831,6 +4831,7 @@ export class YatraComponent {
           occupation: this.redirectLeadInformation.occupation,
           maritalStatus: this.redirectLeadInformation.maritalStatus,
           memberPolicyType : this.redirectLeadInformation.policyType
+
         });
 
         }
