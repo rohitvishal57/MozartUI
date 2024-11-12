@@ -162,10 +162,29 @@
         <!--Performance Overview start-->
         <div class="contentBody dashboard_contentContainer">
           <div class="performance-overview">
-            <div class="body_flex_row justify-content-between">
+            <div class="body_flex_row justify-content-between align-items-center">
               <h2>Performance Overview</h2>
               <div class="filter_performanceOverview">
-
+                  <div class="filterfields_PO">
+                    <div class="filterfields_input">
+                      <div class="input-block input-block-renew compare_inputblock">
+                        <input type="text" id="filter-date" name="filter-date" value="As of 24th July 2024" class="input-textBox">
+                        <span class="icon_date"><img src="assets/Img/icon_date_black.svg"></span>
+                      </div>
+                    </div>
+                    <div class="filterfields_input">
+                      <div class="input-block input-block-renew compare_inputblock">
+                        <select id="filter-annually" name="filter-annually" class="form-select input-selectBox">
+                          <option value="" >Select</option>
+                          <option value="annually" selected>Annually</option>
+                          <option value="monthly">Monthly</option>
+                          <option value="weekly">Weekly</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn_iconText btn_customiseDashboard" id="btn-customiseDashboard" name="btn-customiseDashboard"><img
+                    src="assets/Img/icon_custom_dashboard.svg"> Customise Your Dashboard</button>
               </div>
             </div>
             <div class="subHeader">

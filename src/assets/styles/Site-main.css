@@ -5110,12 +5110,20 @@ background: var(--white-color);
 .compare_inputblock {
   width: 100%;
   margin: 0;
+  position: relative;
 }
 .compare_inputblock .input-selectBox, .compare_inputblock .input-selectBox:focus {
   padding: 6px 12px !important;
   height: auto;
   border: 1px solid #E6E6E6 !important;
   background: #fff url(../Img/down_arrow.svg) no-repeat 96% 50% !important;
+  border-radius: 20px !important;
+}
+.compare_inputblock .input-textBox, .compare_inputblock .input-textBox:focus {
+  padding: 6px 12px !important;
+  height: auto;
+  border: 1px solid #E6E6E6 !important;
+  background: #fff !important;
   border-radius: 20px !important;
 }
 .input-selectBox_white, .input-selectBox_white:focus {
@@ -5137,6 +5145,15 @@ background: var(--white-color);
   width: 100%;
   padding-right: 10px;
   word-break: break-word;
+}
+.icon_date {
+  position: absolute;
+  right: 11px;
+  top: 6px;
+}
+.icon_date img {
+  width: 15px;
+  height: 15px;
 }
 /*.lead_btnList button {
   position: relative;

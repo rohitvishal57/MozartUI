@@ -540,4 +540,36 @@ h2 {
         opacity: 0.5;
     }
 }
+.filter_performanceOverview {
+    display: flex;
+    gap: 40px;
+}
+.filterfields_PO {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.filterfields_input {
+    .compare_inputblock .input-selectBox, .compare_inputblock .input-selectBox:focus {
+        padding: 4px 25px 4px 12px !important;
+        background-position: 92% 50% !important;
+    }
+    .compare_inputblock .input-textBox, .compare_inputblock .input-textBox:focus {
+        padding: 4px 12px !important;
+    }
+}
+.btn_customiseDashboard {
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid #C7222A;
+    &:hover {
+        background: #C7222A;
+        color: #ffffff;
+        opacity: 1;
+        img {
+            filter: brightness(0) invert(1);
+        }
+    }
+}
 /*---dahboard new sections styles end---*/
