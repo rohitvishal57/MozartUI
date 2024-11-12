@@ -3,7 +3,7 @@
     <div class="bodyColumn body_flex_column">
       <div class="contentBody dashboard_contentContainer body_flex_column">
         <!--Goodmorning, Raise ticket start-->
-        <div class="section_fullWidth white_container dashboard_topSection commonSection block-hide">
+        <div class="section_fullWidth white_container dashboard_topSection commonSection ">
           <div class="row">
             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
               <h6>Good morning, Ajay</h6>
@@ -28,8 +28,37 @@
           </div>
         </div>
         <!--Goodmorning, Raise ticket end-->
+        <!--Search, Get Quote start-->
+        <div class="section_fullWidth">
+          <div class="cardWraper">
+            <div class="cardItem">
+              <div class="cardItem_header">
+                <div class="cardItem_headerSearch">
+                  <div class="field_searchMain">
+                    <input type="text" class="filterSearch"
+                      placeholder="Search Your Customer, Leads, Claims No and more" />
+                    <img src="assets/Img/icon_magnify_grey.svg">
+                  </div>
+                </div>
+                <div class="cardItem_headerButtons">
+                  <button class="get-quote-btn" type="button" id="getquote" name="getquote" (click)="getQuote()">
+                    <i class="fas fa-plus"></i> Get Quote
+                  </button>
+                  <button class="get-quote-btn" type="button" id="createlead" name="createlead" (click)="createLead()">
+                    <i class="fas fa-plus"></i> Create Lead
+                  </button>
+
+                </div>
+              </div>
+              <div *ngIf="showCard">
+                <app-get-quote></app-get-quote>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Search, Get Quote end-->
         <!--Important tasks start-->
-        <div class="body_flex_column dashboard_improtantTasks commonSection block-hide">
+        <div class="body_flex_column dashboard_improtantTasks suggested_styles commonSection ">
           <h2>Important Tasks</h2>
           <div class="card_wraper improtantTasks">
             <div class="cardsub_wraper">
@@ -53,7 +82,7 @@
         </div>
         <!--Important tasks end-->
         <!--Latest from ABHI start-->
-        <div class="body_flex_column dashboard_latestABHI commonSection block-hide">
+        <div class="body_flex_column dashboard_latestABHI commonSection ">
           <div class="body_flex_row justify-content-between">
             <h6>Latest from ABHI</h6>
             <button type="button" id="btn-exploreMore" name="btn-exploreMore" class="btn_iconText btn_exploreMore">Explore More <img src="assets/Img/icon_red_downarrow.svg"> </button>
@@ -130,35 +159,7 @@
           </div>
       </div>
       <!--Latest from ABHI end-->
-        <!--Search, Get Quote start-->
-        <div class="section_fullWidth">
-          <div class="cardWraper">
-            <div class="cardItem">
-              <div class="cardItem_header">
-                <div class="cardItem_headerSearch">
-                  <div class="field_searchMain">
-                    <input type="text" class="filterSearch"
-                      placeholder="Search Your Customer, Leads, Claims No and more" />
-                    <img src="assets/Img/icon_magnify_grey.svg">
-                  </div>
-                </div>
-                <div class="cardItem_headerButtons">
-                  <button class="get-quote-btn" type="button" id="getquote" name="getquote" (click)="getQuote()">
-                    <i class="fas fa-plus"></i> Get Quote
-                  </button>
-                  <button class="get-quote-btn" type="button" id="createlead" name="createlead" (click)="createLead()">
-                    <i class="fas fa-plus"></i> Create Lead
-                  </button>
-
-                </div>
-              </div>
-              <div *ngIf="showCard">
-                <app-get-quote></app-get-quote>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!--Search, Get Quote end-->
+        
         <!--Performance Overview start-->
         <div class="contentBody dashboard_contentContainer">
           <div class="performance-overview">
@@ -234,6 +235,21 @@
           </div>
         </div>
         <!--Performance Overview end-->
+        <!--All Tasks start-->
+        <div class="body_flex_column dashboard_allTasks white_container commonSection">
+          <div class="body_flex_row justify-content-between">
+            <h6>All Tasks</h6>
+            <span class="common-badge common-badge-rounded tasks-badge tasks-badge-blue"><em></em>5 Tasks Pending</span>
+          </div>
+          <div class="card_wraper">
+            <div class="cardsub_wraper">
+              <div class="card_item ">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--All Tasks end-->
         <!--Top Widgets and Other start-->
         <div class="dashboard_topWidgets block-hide">
           <app-drag-and-drop  ></app-drag-and-drop>
