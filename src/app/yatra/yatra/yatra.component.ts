@@ -4808,18 +4808,17 @@ export class YatraComponent {
     this.leadsService.getLeadsListApi(leadsInfoListRequestBody).subscribe(
       (response) => {
         if (response) {
+
          this.redirectLeadInformation = response.data.leadList[0];
 
-         this.dynamicFormGroup.patchValue({
-          //panNo:this.redirectLeadInformation.panNumber,
-          //memberDobProposer : this.redirectLeadInformation.dob,
+         this.patchDropDownValues();
 
+         this.dynamicFormGroup.patchValue({
           memberDobProposer : this.datepipe.transform(this.redirectLeadInformation.dob, 'yyyy-MM-dd'),
           firstName: this.redirectLeadInformation.firstName,
           middleName: this.redirectLeadInformation.middleName,
           lastName: this.redirectLeadInformation.lastName,
           memberAgeProposer: this.redirectLeadInformation.age,
-          proposerGender: this.redirectLeadInformation.gender,
           emailId: this.redirectLeadInformation.email,
           proposerAddress1: this.redirectLeadInformation.address1,
           proposerAddress2: this.redirectLeadInformation.address2,
@@ -4827,11 +4826,7 @@ export class YatraComponent {
           city: this.redirectLeadInformation.city,
           state: this.redirectLeadInformation.state,
           mobileNumber: this.redirectLeadInformation.phoneNumber,
-          educationDetails: this.redirectLeadInformation.education,
-          occupation: this.redirectLeadInformation.occupation,
-          maritalStatus: this.redirectLeadInformation.maritalStatus,
-          memberPolicyType : this.redirectLeadInformation.policyType
-
+          educationDetails: this.redirectLeadInformation.education
         });
 
         }
@@ -4843,5 +4838,15 @@ export class YatraComponent {
     );
   }
 
+
+  patchDropDownValues() {
+    let personalDetailsSection: any = this.form.formSections.find((formSection: any) => formSection.sectionTitle === 'Personal Details');
+    let maritalStatusInfo: any = personalDetailsSection.formControls.find((formControl: any) => formControl.name === "maritalStatus");
+    const maritalStatusPatchValue = maritalStatusInfo.options.find((option: any) => option.value === this.redirectLeadInformation.maritalStatus);
+    this.dynamicFormGroup.patchValue({
+      maritalStatus: JSON.stringify(maritalStatusPatchValue),
+      proposerGender: this.redirectLeadInformation.gender
+    });
+  }
 }
 
