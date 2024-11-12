@@ -4510,7 +4510,7 @@ export class YatraComponent {
           memberOccupation: formData[`insuredMemberDetails.${index}.productMemberOccupation`] || '',
           covers: member?.covers || [],
           productQuestionnaire: formData[`insuredMemberDetails.${index}.productQuestionnaire`] || '',
-          memberRoomCategory:member?.memberRoomCategory || ''
+          memberRoomCategory:formData[`insuredMemberDetails.${index}.memberRoomCategory`] || ''
         };
       }) || [],
       CKYCNo: formData?.ckycNo || '',
@@ -4739,8 +4739,10 @@ export class YatraComponent {
                       // const filteredInnerArray = Object.fromEntries(
                       //   Object.entries(innerArray).filter(([key, value]) => value !== "")
                       // );
-                      console.log(innerArray, filteredInnerArray);
-                      if (filteredInnerArray['diseaseName'] !== "" && Object.keys(filteredInnerArray).length > 0) {
+                      const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
+
+                      console.log(innerArray, filteredInnerArray,allValuesEmpty);
+                      if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
                         innerArray.parentQuestionCode = questionId;
                         productQuestionnaire.push(filteredInnerArray);
                       }
