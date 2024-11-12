@@ -137,9 +137,9 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ row.proposerMobileNumber }}</td>
+                                    <td>{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }}</td>
                                     <td>{{ row.policyEndDate }}</td>
-                                    <td>{{ row.renewalStatusDescription }}</td>
+                                    <td>{{ row.renewalStatus }}</td>
                                     <td>
                                         <div class="btn_groupAction">
                                             <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')"><img src="assets/Img/icon_edit_grey.svg"></button>
@@ -233,11 +233,11 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Status</div>
-                                <div class="item_value">{{ row.renewalStatusDescription }}</div>
+                                <div class="item_value">{{ row.renewalStatus }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Mobile No.</div>
-                                <div class="item_value">{{ row.proposerMobileNumber}}</div>
+                                <div class="item_value">{{ row.proposerMobileNumber ? row.proposerMobileNumber : '-' }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Date of Renewal</div>

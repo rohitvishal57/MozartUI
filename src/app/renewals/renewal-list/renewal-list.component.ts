@@ -38,7 +38,7 @@ export class RenewalListComponent {
   filterType: string = "totalRecords";
   activeSection:string= "primary"
   StaticPolicyTypes = [
-    { name: 'Multi Individual', selected: false },
+    { name: 'Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   currentDate = new Date().toISOString().split('T')[0];
