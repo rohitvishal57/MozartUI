@@ -110,6 +110,7 @@ export class YatraComponent {
   quickQuoteRedirect :Boolean =false;
   productComparison :Boolean= false;
   isFeedBackModalVisible :Boolean= false;
+  leadNumber : string = ''
 
   
   currentLanguage = 'en';
@@ -161,6 +162,10 @@ export class YatraComponent {
     if (history.state.productData.quickQuoteRedirect) {
       this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
     }
+    if (history.state.productData.leadId) {
+      this.leadNumber = history.state.productData.leadId;
+    }
+
     if(history.state.productData.productComparison){
       this.productComparison =  history.state.productData.productComparison;
     }

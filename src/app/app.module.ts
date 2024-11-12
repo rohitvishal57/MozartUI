@@ -25,6 +25,7 @@ import { LeadsModule } from './leads/leads.module';
 import { ProfileModule } from './profile/profile.module';
 import { EncryptionInterceptor } from './intercepter/aesEncryptToken.interceptor';
 import { LoadingService } from './services/loading.service';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 export function loadConfig(configService: ConfigService) {
   return () => configService.loadConfig().toPromise();
@@ -38,7 +39,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     HeaderComponent,
-    SideNavbarComponent
+    SideNavbarComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,

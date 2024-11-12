@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class NotificationsComponent {
 
+
+  backToPreviousPage() {
+    window.history.back();
+  }
+
 }

@@ -764,45 +764,7 @@
             </section>
             
 
-            <section id="quotes-list" class="tableMain quoteView block-show block-hide" *ngIf="action=='addNotes' && notes.length>0"> 
-                <div class="tableSubMain">
-                    <div class="table-responsive">
-                        <table class="table table-borderless table-search">
-                            <thead>
-                                <tr>
-                
-                                    <th>Note ID</th>
-                                    <th>Note Title</th>
-                                    <th>Note Type</th>
-                                    <th>Note StartDate<div><small>(dd-mm-yyyy)</small></div></th>
-                                    <!-- <th>Activity StartTime</th> -->
-                                    <th>Note EndDate<div><small>(dd-mm-yyyy)</small></div></th>
-                                    <!-- <th>Activity EndTime</th> -->
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-group-divider">
-                                <tr *ngFor="let row of notes;let i = index">
-                                  
-                                    <td>{{row.id}}</td>
-                                    <td>{{row.title}}</td>
-                                    <td>{{row.type}}</td> 
-                                    <td>{{formatCreatedOn(row.startDate)}}</td>
-                                    <!-- <td>{{row.startDate}}</td> -->
-                                    <td>{{formatCreatedOn(row.endDate)}}</td>
-                                    <!-- <td>{{row.startDate}}</td> -->
-                                    <td>{{row.remarks}}</td>
-
-                                    
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-            </section> 
-
-
+            
         </div>
     </div>
 </main>
