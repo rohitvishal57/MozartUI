@@ -37,7 +37,7 @@
               <div *ngIf="i > getFormIndexValue() && i != formSequence.length-1" class="line-container">
                 <div class="line2"></div>
               </div>
-              <div class="step-label">{{case.formName}}</div>
+              <div class="step-label">{{case.formName | translate}}</div>
             </div>
           </div>
           <!-- <div class="seperateLine"></div>
@@ -64,7 +64,7 @@
             <!-- <div class="line" style="display: none;"></div> -->
             <div class="accordionCardHeader" *ngIf="section.visibleLabel == true"
               (click)="toggleSection(section.sectionTitle)">
-              <h3 [innerHTML]="section.sectionTitle" [class]="section.class"></h3>
+              <h3 [innerHTML]="section.sectionTitle | translate" [class]="section.class"></h3>
               <span class="accordionArrow" [class.rotated]="isSectionCollapsed(section.sectionTitle)"></span>
             </div>
             <div class="accordionCardBody" *ngIf="!isSectionCollapsed(section.sectionTitle)">
@@ -380,8 +380,7 @@
                                         </option>
                                       </ng-container>
                                     </select>
-                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
-                                      translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
+                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label | translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
                                   </div>
                                   <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
                                     getValidationErrors(subControl,control,i-1)?
@@ -390,14 +389,13 @@
                                   <div *ngIf="subControl.type ==='radio'" class="typecss col-md-2">
                                     <label *ngIf="subControl.visibleLabel==true">{{ subControl.label ?
                                       (subControl.label
-                                      |
-                                      translate) : '' }}<span *ngIf="subControl.validators">*</span></label>
+                                      | translate) : '' }}<span *ngIf="subControl.validators">*</span></label>
                                     <div class="radio-button">
                                       <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
                                         <input type="radio" formControlName="{{subControl.name}}"
                                           [name]="subControl.name" [id]="subControl.name" [value]="option.value" style="margin-right: 10px;">
                                         <label>
-                                          {{ option.label }}
+                                          {{ option.label | translate }}
                                         </label>
                                       </div>
                                     </div>
@@ -821,8 +819,7 @@
                                       <div *ngFor="let addOnDetail of subControl.innerSubControls">
 
                                         <div *ngIf="addOnDetail.type === 'select'" [class]="addOnDetail.class">
-                                          <label *ngIf="addOnDetail.visibleLabel==true">{{
-                                            addOnDetail.label }} <span *ngIf="addOnDetail.validators"></span></label>
+                                          <label *ngIf="addOnDetail.visibleLabel==true">{{ addOnDetail.label | translate }} <span *ngIf="addOnDetail.validators"></span></label>
                                           <select class="inputField_Select" *ngIf="!addOnDetail.disabled"
                                             [formControlName]="addOnDetail.name" aria-label="Default select example"
                                             style="width: 140px;margin-right: 10px;">
@@ -830,7 +827,7 @@
                                             </option>
                                             <ng-container *ngFor="let opt of addOnDetail.options">
                                               <option [value]="opt.id ? stringifyObject(opt) : opt.value">
-                                                {{ opt.name }}
+                                                {{ opt.name | translate}}
                                               </option>
                                             </ng-container>
                                           </select>
@@ -848,14 +845,13 @@
 
 
                           <div *ngIf="subControl.type ==='radio'" class="typecss col-md-2">
-                            <label *ngIf="subControl.visibleLabel==true">{{ subControl.label ? (subControl.label |
-                              translate) : '' }}<span *ngIf="subControl.validators"></span></label>
+                            <label *ngIf="subControl.visibleLabel==true">{{ subControl.label ? (subControl.label | translate) : '' }}<span *ngIf="subControl.validators"></span></label>
                             <div class="radio-button">
                               <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
                                 <input type="radio" formControlName="{{subControl.name}}" [id]="subControl.name" [name]="subControl.name"
                                   [value]="option.value" style="margin-right: 10px;">
                                 <label>
-                                  {{ option.label }}
+                                  {{ option.label | translate }}
                                 </label>
                               </div>
                             </div>
@@ -906,8 +902,7 @@
                                                 <option selected value="">Choose...</option>
                                                 <ng-container *ngFor="let opt of innerControl.options">
                                                   <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{
-                                                    opt.name
-                                                    }}
+                                                    opt.name }}
                                                   </option>
                                                 </ng-container>
                                               </select>
@@ -964,14 +959,14 @@
                                           <div *ngFor="let addOnDetail of subControl.innerSubControls">
       
                                             <div *ngIf="addOnDetail.type === 'select'" [class]="addOnDetail.class">
-                                              <label *ngIf="addOnDetail.visibleLabel==true">{{ addOnDetail.label }} <span
+                                              <label *ngIf="addOnDetail.visibleLabel==true">{{ addOnDetail.label | translate}} <span
                                                   *ngIf="addOnDetail.validators">*</span></label>
                                               <select class="inputField_Select" *ngIf="!addOnDetail.disabled"
                                                 [formControlName]="addOnDetail.name" aria-label="Default select example"
                                                 style="width: 180px;margin-right: 10px;">
                                                 <option selected value="">Choose...</option>
                                                 <ng-container *ngFor="let opt of addOnDetail.options">
-                                                  <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{ opt.name }}
+                                                  <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{ opt.name | translate}}
                                                   </option>
                                                 </ng-container>
                                               </select>
@@ -1252,5 +1247,56 @@
         </div>
       </form>
     </div>
+  </div>
+</div>
+
+<div class="modal-background" *ngIf="isFeedBackModalVisible">
+  <div class="modal-container">
+    <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
+      <div class="modal-header">
+        <h5 class="modal-title">Rate Your Experience</h5>
+      </div>
+      <div class="modal-body">
+        <p class="para-rate-18">Please rate your online renewal experience with us.</p>
+
+        <!-- Star Rating -->
+        <div class="star-rating">
+          <span class="star" 
+                *ngFor="let star of stars; let i = index"
+                [ngClass]="{'selected': i < rating}"
+                (click)="setRating(i + 1)">
+            ★
+          </span>
+        </div>
+
+        <div class="feedback-impressed" *ngIf="impressedValues">
+          <div class="impressed-label">
+            <p class="para-rate-16">{{impressedLable}}</p>
+          </div>
+          <div class="feedback-buttons">
+            <button type="button" class="feedback-btn" 
+                    (click)="onSelectValue(value)" 
+                    [ngClass]="{'selected': feedbackImpressedValue === value}" 
+                    *ngFor="let value of feedbackImpressedValues;">
+              {{value}}
+            </button>
+          </div>
+        </div>
+
+        <div class="feedback-message" *ngIf="feedBackMessage">
+          <div class="message-label">
+            <p class="para-rate-lable">What can we do to improve your experience?</p>
+          </div>
+          <div class="textarea-wrapper">
+            <textarea class="input-textBox" id="notes" placeholder="Enter your message" formControlName="message"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button *ngIf="feedbackSubmit" type="submit" class="btn-submit">Submit</button>
+        <button type="button" class="btn-skip" (click)="closeIsFeedBackModalVisible()">Skip for now</button>
+      </div>
+    </form>
   </div>
 </div>

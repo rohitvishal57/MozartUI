@@ -11,7 +11,9 @@ import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
 import { LoadingService } from 'src/app/services/loading.service';
+import { LanguageService } from 'src/app/services/language.service';
 declare var bootstrap: any;
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-yatra',
@@ -93,7 +95,7 @@ export class YatraComponent {
   question: any;
   leadnumber: string = "";
   QuoteNumber: any = [];
-  customerFeedbackModule: any;
+  //customerFeedbackModule: any;
   customerFeedbackForm !: FormGroup;
   formIndexValue: number = 0;
   stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
@@ -107,15 +109,30 @@ export class YatraComponent {
   kidCount = 0;
   quickQuoteRedirect :Boolean =false;
   productComparison :Boolean= false;
+  isFeedBackModalVisible :Boolean= false;
 
+  
+  currentLanguage = 'en';
 
   constructor(private renderer: Renderer2, private el: ElementRef,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute, private languageService: LanguageService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
+
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+  
+  
+
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
     console.log(this.formSequence);
@@ -164,7 +181,6 @@ export class YatraComponent {
     if (sessionStorage.getItem('allJsonForm'))
       this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-    this.customerFeedbackModule = new bootstrap.Modal(document.getElementById('customerFeedbackModule'));
     this.customerFeedbackForm = this.fb.group({
       message: [''],
       rating: [null, Validators.required], // Add rating to the form
@@ -681,7 +697,8 @@ export class YatraComponent {
 
 
     if(this.formSequence[this.getFormIndexValue()].formName == "Confirmation"){
-      this.customerFeedbackModule.show();
+      //this.customerFeedbackModule.show();
+      this.isFeedBackModalVisible = true;
     }
 
 
@@ -1028,7 +1045,6 @@ export class YatraComponent {
 
   addNavbar(index: number, value: any) {
     if (value.formName === 'Confirmation') {
-      this.customerFeedbackModule.show();
       this.feedbackSubmit = false;
       this.impressedValues = false;
       this.feedBackMessage = false;
@@ -4592,8 +4608,14 @@ export class YatraComponent {
     }, (error) => {
       this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
     });
-    this.customerFeedbackModule.hide();
+    // this.customerFeedbackModule.hide();
+    this.isFeedBackModalVisible = false;
   }
+
+  closeIsFeedBackModalVisible(){
+    this.isFeedBackModalVisible = false;
+  }
+
   onSelectValue(value: String) {
     this.feedbackImpressedValue = value;
   }

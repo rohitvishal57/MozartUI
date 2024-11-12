@@ -64,6 +64,9 @@ export class UploadLeadComponent implements OnInit{
     let files;
     let file;
     this.isFilenotSelected = false;
+
+
+
     if (e) {
       files = e.target.files;
       file = files[0];
@@ -81,6 +84,13 @@ export class UploadLeadComponent implements OnInit{
     if (this.fileExt == 'xlsx' || this.fileExt == 'csv' ||this.fileExt==='xls') {
     } else {
       this.showNote = true;
+    }
+
+    const isDuplicateFile: boolean = this.UploadedFilesInformation.some((file: any) => file.fileName === this.selctedFileName);
+
+    if (isDuplicateFile) {
+      this.toast.warning({ detail: "", summary: 'File is already uploaded.Please upload another file.', duration: 5000 });
+      return;
     }
 
     this.UploadedFilesInformation.push({ fileName: this.selectedFile.name, fileExt: this.selectedFile.name.replace(/^.*\./, ''), fileSize: file.size });
@@ -102,6 +112,7 @@ export class UploadLeadComponent implements OnInit{
       //   this.submitted = false;
       //   return;
       // }
+
       if (!this.selectedFile) {
         this.isFilenotSelected = true;
         return;

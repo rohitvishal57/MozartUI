@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { ClaimsInterface } from 'src/app/interface/claims.interface';
 import { ClaimsViewService } from '../claims-view/claims-view.service';
-
+import { searchValidationConfig }  from 'src/app/interface/renewal-list.interface';
 
 @Component({
   selector: 'app-claims-list-view',
@@ -279,27 +279,27 @@ clear() {
   //     }
   //     this.toggleSearchdropdown = !this.toggleSearchdropdown;
   // }
-  getErrorMessage(): string {
-    if (this.searchInputControl.hasError("required")) {
-      return "This field is required";
-    }
+  // getErrorMessage(): string {
+  //   if (this.searchInputControl.hasError("required")) {
+  //     return "This field is required";
+  //   }
   
-    if (this.searchInputControl.dirty && this.selected === "") {
-      return "Select an option and Enter";
-    }
+  //   if (this.searchInputControl.dirty && this.selected === "") {
+  //     return "Select an option and Enter";
+  //   }
   
-    if (this.searchInputControl.hasError("pattern")) {
-      if (this.selected === "claimInfoId") {
-        return "Enter Valid Request Id";
-      } else if (this.selected === "policyNumber") {
-        return "Enter Valid Policy Number";
-      } else if (this.selected === "memberId") {
-        return "Enter Valid Member Id";
-      }
-    }
+  //   if (this.searchInputControl.hasError("pattern")) {
+  //     if (this.selected === "claimInfoId") {
+  //       return "Enter Valid Request Id";
+  //     } else if (this.selected === "policyNumber") {
+  //       return "Enter Valid Policy Number";
+  //     } else if (this.selected === "memberId") {
+  //       return "Enter Valid Member Id";
+  //     }
+  //   }
   
-    return "";
-  }
+  //   return "";
+  // }
 
   applySearch(): void {
     let searchValue = this.searchInputControl.value?.trim();
@@ -312,50 +312,57 @@ clear() {
 
     }
   }
-
-onSelectChanges(event: any): void {
-  //event.stopPropagation(); 
-  // this.selected !== "";
-  this.searchInputControl.setValue('');
-  this.searchInputControl.clearValidators();
-
-  // if (this.selected === 'mobileNumber') {
-  //   this.searchInputControl.setValidators([
-  //     Validators.required,
-  //     Validators.pattern('^[0-9]*$') 
-  //   ]);
-  // }
-  //  if (this.selected === 'claimInfoId' || this.selected === 'policyNumber' || this.selected === 'memberId') {
-  //   this.searchInputControl.setValidators([
-  //     Validators.required,
-  //     Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
-  //   ]);
-  // }
-  if (this.selected === "claimInfoId") {
-    this.searchInputControl.setValidators([
-      Validators.required,
-      Validators.pattern("^\\s*[0-9-]+\\s*$"),
-    ]);
-}
-else if (this.selected === "memberId") {
-  this.searchInputControl.setValidators([
-    Validators.required,
-    Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),
-  ]);
-} else if (this.selected === "policyNumber") {
-  this.searchInputControl.setValidators([
-    Validators.required,
-    Validators.pattern("^\\s*[0-9-]+\\s*$"),
-  ]);
-}
-  else {
-    this.claimsReqBody.searchString = ['']
-    this.claimsReqBody.searchType = ''
-    this.fetchData();
-  }
+  onSelectChanges(event: any): void {
+    this.searchInputControl.reset("");
+    this.searchInputControl.clearValidators();
+    const selectedValidators = searchValidationConfig[this.selected] || [];
+    this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
-    this.searchInputControl.markAsUntouched(); 
   }
+
+// onSelectChanges(event: any): void {
+//   //event.stopPropagation(); 
+//   // this.selected !== "";
+//   this.searchInputControl.setValue('');
+//   this.searchInputControl.clearValidators();
+
+//   // if (this.selected === 'mobileNumber') {
+//   //   this.searchInputControl.setValidators([
+//   //     Validators.required,
+//   //     Validators.pattern('^[0-9]*$') 
+//   //   ]);
+//   // }
+//   //  if (this.selected === 'claimInfoId' || this.selected === 'policyNumber' || this.selected === 'memberId') {
+//   //   this.searchInputControl.setValidators([
+//   //     Validators.required,
+//   //     Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
+//   //   ]);
+//   // }
+//   if (this.selected === "claimInfoId") {
+//     this.searchInputControl.setValidators([
+//       Validators.required,
+//       Validators.pattern("^\\s*[0-9-]+\\s*$"),
+//     ]);
+// }
+// else if (this.selected === "memberId") {
+//   this.searchInputControl.setValidators([
+//     Validators.required,
+//     Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),
+//   ]);
+// } else if (this.selected === "policyNumber") {
+//   this.searchInputControl.setValidators([
+//     Validators.required,
+//     Validators.pattern("^\\s*[0-9-]+\\s*$"),
+//   ]);
+// }
+//   else {
+//     this.claimsReqBody.searchString = ['']
+//     this.claimsReqBody.searchType = ''
+//     this.fetchData();
+//   }
+//     this.searchInputControl.updateValueAndValidity();
+//     this.searchInputControl.markAsUntouched(); 
+//   }
 
 getPlaceholder(): string {
   if (this.selected === 'policyNumber') {
