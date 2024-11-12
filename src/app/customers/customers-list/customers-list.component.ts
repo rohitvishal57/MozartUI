@@ -32,8 +32,8 @@ export class CustomersListComponent {
   customerId:any;
   agentCode :any =localStorage.getItem('agentCode'); 
   StaticPolicyTypes = [
-    { name: 'Multi Individual', selected: false },
-    { name: 'Family Floater', selected: false },
+    { name: 'Individual', selected: false },
+    { name: 'Floater', selected: false },
   ];
   currentDate = new Date().toISOString().split('T')[0];
   moreInfoIndex: number | null = null;
@@ -89,7 +89,7 @@ export class CustomersListComponent {
         }
       },
       (error) => {
-        this.toast.error({ detail: "Error", summary: "Failed to get customers list", duration: 2000 });
+        this.toast.error({ detail: "", summary: "Failed to get customers list.", duration: 2000 });
       }
     );
   }
@@ -116,7 +116,7 @@ export class CustomersListComponent {
         console.log("product list",this.productsList)
       },
       error: (err) => {
-        this.toast.error({ detail: "Error", summary: "Failed to get products list", duration: 2000 });
+        this.toast.error({ detail: "", summary: "Failed to get products list.", duration: 2000 });
       }
     })
   }
@@ -169,17 +169,7 @@ export class CustomersListComponent {
     this.toggeledropdown=false;
   }
   cancel() {
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = null;
-    this.endDate = null;
-    this.appliedFiltersCount = 0;
-    this.customerListRequestBody.productName = "";
-    this.customerListRequestBody.policyType = "";
-    this.customerListRequestBody.startDate = null;
-    this.customerListRequestBody.endDate = null;
     this.toggeledropdown = false;
-    this.getCustomerList();
   }
   clear(){
     this.productsList.forEach((product) => (product.selected = false));
@@ -321,13 +311,13 @@ export class CustomersListComponent {
     this.customerService.sendCustomerDetails(RequestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.toast.success({ detail: "Success", summary: "customer data shared successfully.", duration: 2000 });
+          this.toast.success({ detail: "", summary: "customer data shared successfully.", duration: 2000 });
         } else {
-          this.toast.error({ detail: "Error", summary: "Failed to send customer data.", duration: 2000 });
+          this.toast.error({ detail: "", summary: "Failed to send customer data.", duration: 2000 });
         }
       },
       (error: any) => {
-        this.toast.error({ detail: "Error", summary: "Error while sending customer data.", duration: 2000 });
+        this.toast.error({ detail: "", summary: "Error while sending customer data.", duration: 2000 });
       }
     );
   }
@@ -368,13 +358,13 @@ export class CustomersListComponent {
     this.customerService.downloadCustomerData(downloadRequestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.toast.success({ detail: "Success", summary: "customer data downloaded successfully.", duration: 2000 });
+          this.toast.success({ detail: "", summary: "customer data downloaded successfully.", duration: 2000 });
         } else {
-          this.toast.error({ detail: "Error", summary: "Failed to downloaded customer data.", duration: 2000 });
+          this.toast.error({ detail: "", summary: "Failed to downloaded customer data.", duration: 2000 });
         }
       },
       (error: any) => {
-        this.toast.error({ detail: "Error", summary: "Error while downloaded customer data.", duration: 2000 });
+        this.toast.error({ detail: "", summary: "Error while downloaded customer data.", duration: 2000 });
       }
     )
   }

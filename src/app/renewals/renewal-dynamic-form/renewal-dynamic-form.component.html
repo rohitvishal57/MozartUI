@@ -1490,7 +1490,7 @@
           </div>
       </div>
   </div>
-  <div class="bottomInfoMain" *ngIf="activeSection !== 'thankyou'">
+  <div class="bottomInfoMain" *ngIf="hideSection">
       <div class="bottomInfoSubMain">
           <div class="bi_left">
               <div class="planProductInfo">
@@ -1618,4 +1618,57 @@
         </div>
     </div>    
   </div>
+</div>
+
+<div *ngIf="activeSection === 'feedback'">
+    <div class="modal-background" *ngIf="isFeedBackModalVisible">
+        <div class="modal-container">
+          <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
+            <div class="modal-header">
+              <h5 class="modal-title">Rate Your Experience</h5>
+            </div>
+            <div class="modal-body">
+              <p class="para-rate-18">Please rate your online renewal experience with us.</p>
+      
+              <!-- Star Rating -->
+              <div class="star-rating">
+                <span class="star" 
+                      *ngFor="let star of stars; let i = index"
+                      [ngClass]="{'selected': i < rating}"
+                      (click)="setRating(i + 1)">
+                  ★
+                </span>
+              </div>
+      
+              <div class="feedback-impressed" *ngIf="impressedValues">
+                <div class="impressed-label">
+                  <p class="para-rate-16">{{impressedLable}}</p>
+                </div>
+                <div class="feedback-buttons">
+                  <button type="button" class="feedback-btn" 
+                          (click)="onSelectValue(value)" 
+                          [ngClass]="{'selected': feedbackImpressedValue === value}" 
+                          *ngFor="let value of feedbackImpressedValues;">
+                    {{value}}
+                  </button>
+                </div>
+              </div>
+      
+              <div class="feedback-message" *ngIf="feedBackMessage">
+                <div class="message-label">
+                  <p class="para-rate-lable">What can we do to improve your experience?</p>
+                </div>
+                <div class="textarea-wrapper">
+                  <textarea class="input-textBox" id="notes" placeholder="Enter your message" formControlName="message"></textarea>
+                </div>
+              </div>
+            </div>
+      
+            <div class="modal-footer">
+              <button *ngIf="feedbackSubmit" type="submit" class="btn-submit">Submit</button>
+              <button type="button" class="btn-skip" (click)="closeIsFeedBackModalVisible()">Skip for now</button>
+            </div>
+          </form>
+        </div>
+    </div>
 </div>

@@ -79,6 +79,18 @@ export class RenewalDynamicFormComponent implements OnInit {
   bankNameControl = new FormControl('');
   filteredBankNamesList:any[]=[];
   currentDate = new Date().toISOString().split('T')[0];
+  isFeedBackModalVisible :Boolean= false;
+  customerFeedbackForm !: FormGroup;
+  formIndexValue: number = 0;
+  stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
+  rating: number = 0; // Holds the current selected rating
+  feedbackImpressedValues: String[] = ['Seamless payment', 'Ease of policy modification', 'Speedy Policy renewal', 'Payment receipt & confirm']
+  feedBackMessage: boolean = false;
+  impressedValues: boolean = false;
+  feedbackSubmit: boolean = false;
+  impressedLable: String = "";
+  feedbackImpressedValue: String = '';
+  fullquotecondition:boolean=false;
 
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,
@@ -107,6 +119,10 @@ export class RenewalDynamicFormComponent implements OnInit {
     });
    this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
    this.bankNameControl.valueChanges.subscribe(value => this.filterBankList(value));
+   this.customerFeedbackForm = this.fb.group({
+    message: [''],
+    rating: [null, Validators.required], 
+  });
  }
   initializeForm() {
     const group: { [key: string]: any } = {};
@@ -157,7 +173,7 @@ export class RenewalDynamicFormComponent implements OnInit {
                 }
               },
               (err) => {
-                this.toast.error({ detail: "Error", summary: "Failed to Add New Member.", duration: 1500 });
+                this.toast.error({ detail: "", summary: "Failed to Add New Member.", duration: 1500 });
               }
             );this.formId=5001;
          } 
@@ -181,7 +197,7 @@ export class RenewalDynamicFormComponent implements OnInit {
                 }
               },
               (err) => {
-                this.toast.error({ detail: "Error", summary: "Failed to Update Member.", duration: 1500 });
+                this.toast.error({ detail: "", summary: "Failed to Update Member.", duration: 1500 });
                 }
             );this.formId=5001;
          } 
@@ -214,7 +230,7 @@ export class RenewalDynamicFormComponent implements OnInit {
                 }
               },
               (err) => {
-                this.toast.error({ detail: "Error", summary: "Failed to Update Address.", duration: 1500 });
+                this.toast.error({ detail: "", summary: "Failed to Update Address.", duration: 1500 });
                 }
             ); this.formId=5001; 
          } 
@@ -237,7 +253,7 @@ export class RenewalDynamicFormComponent implements OnInit {
               }
              },
              (err) => {
-              this.toast.error({ detail: "Error", summary: "Failed to Update Nominee Details.", duration: 1500 });
+              this.toast.error({ detail: "", summary: "Failed to Update Nominee Details.", duration: 1500 });
               }
             );this.formId=5001;
           } 
@@ -393,12 +409,20 @@ goNext(){
   else if(this.activeSection== 'policySummary'){
     this.setSection('payment')
   }else if(this.activeSection == 'payment'){
-    if(this.selectedPaymentType == 'offline' && !this.form.valid){
-      this.form.markAllAsTouched();
-      return;
-    }
+    // if(this.selectedPaymentType == 'offline' && !this.form.valid){
+    //   this.form.markAllAsTouched();
+    //   return;
+    // }
     this.setSection('thankyou')
     this.hideSection=false
+    this.fullquotecondition=true
+    console.log("active section",this.activeSection);
+    if(this.fullquotecondition==true){
+      this.setSection('feedback')
+      console.log("active section",this.activeSection);
+      
+      this.isFeedBackModalVisible = true;
+    }
   }
 }
 comeBack(){
@@ -461,7 +485,7 @@ payNow(){
         }
       },
       error: (error: any) => {
-        this.toast.error({ detail: 'ERROR',summary: 'Failed to payment ',duration: 3000});
+        this.toast.error({ detail: '',summary: 'Failed to payment.',duration: 3000});
       }
     });
    }
@@ -547,7 +571,7 @@ async getRenewalInfo() {
   handleKyc(action: any) {
         this.kycDetailsSubmitted = true;
         if (this.kycFormGroup.invalid) {
-          this.toast.error({ detail: 'ERROR',summary: 'Please enter valid KYC details',duration: 3000});
+          this.toast.error({ detail: '',summary: 'Please enter valid KYC details.',duration: 3000});
         } else {
           const reqData = this.kycFormGroup.value;
           this.yatraService.GetKycDetails(reqData).subscribe(
@@ -566,16 +590,16 @@ async getRenewalInfo() {
                   (err)=>{console.log(err);}
                 )
                 this.actionKyc = action;
-                this.toast.success({detail: 'SUCCESS',summary: 'KYC Details Fetched Successfully', duration: 1000}); 
+                this.toast.success({detail: '',summary: 'KYC Details Fetched Successfully.', duration: 1000}); 
              } else if(response.isSuccess === false){
-              this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
+              this.toast.error({detail: '',summary: 'Failed to Fetch KYC Details,Please try again later.',duration: 1000});
               this.getkycURL();
              }
              console.log("responsec body",response.isSuccess);
             },
             (error: any) => {
               this.getkycURL();
-              this.toast.error({detail: 'ERROR',summary: 'Failed to Fetch KYC Details. Please try again later.',duration: 1000});
+              this.toast.error({detail: '',summary: 'Failed to Fetch KYC Details,Please try again later.',duration: 1000});
             }
           );          
       }
@@ -596,28 +620,42 @@ async getRenewalInfo() {
         }
       );
     }
-
+    setRating(star: number) {
+      this.rating = star;
+      this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
+      this.feedbackSubmit = true;
+      this.impressedValues = true;
+      if (star > 3) {
+        this.impressedLable = 'What Impressed you ?';
+        this.feedBackMessage = false;
+      } else {
+        this.impressedLable = 'Why aren\'t you happy?';
+        this.feedBackMessage = true;
+      }
+    }
+    submitFeedback() {
+      let reqData: any = {};
+      reqData.agentCode = this.agentCode;
+      reqData.rating = this.customerFeedbackForm.value.rating;
+      reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
+      reqData.customerId = "";
+      this.yatraService.submitFeedback(reqData).subscribe((response) => {
+        this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
+      }, (error) => {
+        this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
+      });
+      // this.customerFeedbackModule.hide();
+      this.isFeedBackModalVisible = false;
+    }
+    closeIsFeedBackModalVisible(){
+      this.isFeedBackModalVisible = false;
+    }
+    onSelectValue(value: String) {
+      this.feedbackImpressedValue = value;
+    }
     onFileSelected(event: any) {
       const file: File = event.target.files[0];
       if (file) {this.fileName = file.name;}
     }
-
-      // handleDropdownChange(value: string): void {
-      //   const selectedPolicyNumber = value;
-      //     this.bankNameControl.valueChanges.subscribe(policyValue => {
-      //     // if (!policyValue) {
-      //     //   this.form.get('memberName')?.setValue('');
-      //     //   this.memberNames = []; 
-      //     // }
-      //   });
-      //   const filteredMembers = this.response.filter(
-      //     (item: any) => item.policyNumber === selectedPolicyNumber
-      //   );
-      //     this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
-      //     this.form.get("memberName")?.setValue("");
-      //     this.cdr.markForCheck();
-      // }
-      
-     
     
 }
