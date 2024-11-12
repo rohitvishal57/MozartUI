@@ -1,50 +1,5 @@
 <div class="outer-cnt">
-  <div class="wish-cnt">
-    <h1>Good morning, Ajay</h1>
-    <div class="wish-cnt-actions">
-      <div class="raise-req">
-        <img src="../../../../" />
-        <button>Raise a Ticket</button>
-
-      </div>
-      <button>fthtyj</button>
-      <img src="../../../../assets/Img/mingcute_notification-fill.png" />
-    </div>
-  </div>
   <div class="main-cnt">
-    <div class="performance-overview-cnt">
-      <div class="top-widgets-title">Performance Overview</div>
-      <div class="drag-boundary">
-        <div class="dashboard" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropCard($event)">
-          <div class="card" *ngFor="let card of cards; let i = index" cdkDrag>
-            <div class="card-header">
-              <i class="icon">{{ card.icon }}</i>
-              <span>{{ card.title }}</span>
-            </div>
-            <div class="card-content">
-              <h2>{{ card.value }}</h2>
-              <p>{{ card.description }}</p>
-              <ng-container *ngIf="card.type === 'progress'">
-                <div class="progress-bar">
-                  <div class="progress" [style.width]="card.progress + '%'"></div>
-                </div>
-              </ng-container>
-              <ng-container *ngIf="card.type === 'action'">
-                <a href="#" class="action-link">Actionable link ></a>
-              </ng-container>
-              <ng-container *ngIf="card.type === 'gauge'">
-                <div class="gauge">
-                  <div class="gauge-content">
-                    <span>{{ card.progress }}%</span>
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
     <div class="top-widgets-cnt">
       <div class="top-widgets-header-cnt">
         <div class="top-widgets-title">Top Widgets</div>
@@ -161,9 +116,9 @@
     </div>
     <div class="due-for-renewal-cnt">
       <h2>Due for Renewal</h2>
-      <div class="base-quote-container">
+      <div class="base-quote-container" cdkDropList (cdkDropListDropped)="dropQuotes($event)">
         <ng-container *ngFor="let quote of baseQuotes; let i = index">
-          <div class="card quote-card">
+          <div class="card quote-card" cdkDrag>
             <div class="quote-header">
               <div class="quote-info">
                 <h2>{{quote.quoteName}}</h2>

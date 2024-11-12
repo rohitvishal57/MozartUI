@@ -551,6 +551,10 @@ export class DragAndDropComponent implements OnInit {
     this.selectedIndex = this.tabsInfo.indexOf(prevActive);
   }
 
+  dropQuotes(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.baseQuotes, event.previousIndex, event.currentIndex);
+  }
+
   dropCard(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
   }

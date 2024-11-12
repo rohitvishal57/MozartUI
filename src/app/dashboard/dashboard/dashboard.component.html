@@ -9,31 +9,35 @@
               <h6>Good morning, Ajay</h6>
             </div>
             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                <div class="topSection_notifyUserInfo">
-                    <div class="item_notifyUserInfo">
-                      <button type="button" class="btn_iconText" id="btn-raiseaTicket" name="btn-raiseaTicket"><img src="assets/Img/icon_raise_ticket.svg"> Raise a Ticket</button>
-                    </div>
-                    <div class="item_notifyUserInfo">
-                      <button type="button" id="as-user" name="as-user" class="btn_asUser"><img src="assets/Img/icon_red_user.svg">AS<img src="assets/Img/icon_red_downarrow.svg"></button>
-                    </div>
-                    <div class="item_notifyUserInfo">
-                      <button type="button" id="count-notification2" name="count-notification2" class="btn_notification"><img src="../../../assets/Img/icon_notifications.svg"><span class="badge">3</span></button>
-                    </div>
+              <div class="topSection_notifyUserInfo">
+                <div class="item_notifyUserInfo">
+                  <button type="button" class="btn_iconText" id="btn-raiseaTicket" name="btn-raiseaTicket"><img
+                      src="assets/Img/icon_raise_ticket.svg"> Raise a Ticket</button>
                 </div>
+                <div class="item_notifyUserInfo">
+                  <button type="button" id="as-user" name="as-user" class="btn_asUser"><img
+                      src="assets/Img/icon_red_user.svg">AS<img src="assets/Img/icon_red_downarrow.svg"></button>
+                </div>
+                <div class="item_notifyUserInfo">
+                  <button type="button" id="count-notification2" name="count-notification2"
+                    class="btn_notification"><img src="../../../assets/Img/icon_notifications.svg"><span
+                      class="badge">3</span></button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <!--Goodmorning, Raise ticket end-->
         <!--Important tasks start-->
         <div class="dashboard_improtantTasks block-hide">
-            <h2>Important Tasks</h2>
-            <div class="card_wraper improtantTasks">
-              <div class="cardsub_wraper">
-                  <div class="card_item">
-                    dfsd
-                  </div>
+          <h2>Important Tasks</h2>
+          <div class="card_wraper improtantTasks">
+            <div class="cardsub_wraper">
+              <div class="card_item">
+                dfsd
               </div>
             </div>
+          </div>
         </div>
         <!--Important tasks end-->
         <!--Search, Get Quote start-->
@@ -55,20 +59,20 @@
                   <button class="get-quote-btn" type="button" id="createlead" name="createlead" (click)="createLead()">
                     <i class="fas fa-plus"></i> Create Lead
                   </button>
-                  
+
                 </div>
               </div>
               <div *ngIf="showCard">
-                <app-get-quote ></app-get-quote>
-              </div>
+                <app-get-quote></app-get-quote>
               </div>
             </div>
+          </div>
         </div>
         <!--Search, Get Quote end-->
       </div>
       <!-- <app-get-quote></app-get-quote> -->
 
-       <!--Performance Overview start-->
+      <!--Performance Overview start-->
       <div class="contentBody dashboard_contentContainer">
         <div class="performance-overview">
           <header>
@@ -86,7 +90,8 @@
             <div class="cardItem policies-sold">
               <header><img src="assets/Img/icon_police_sold.svg">Policies sold</header>
               <div class="value">1295</div>
-              <div class="card-tip"><img src="assets/Img/icon_price_tag.svg"> You seem to be setting a majority of Active
+              <div class="card-tip"><img src="assets/Img/icon_price_tag.svg"> You seem to be setting a majority of
+                Active
                 FD plans</div>
             </div>
             <div class="cardItem premium">
@@ -102,7 +107,8 @@
             <div class="cardItem commission-earned">
               <header><img src="assets/Img/icon_commission_earned.svg">Commission Earned</header>
               <div class="value">₹ 50,000</div>
-              <div class="card-tip"><img src="assets/Img/icon_rupee.svg"> You can potentially earn 10,000 more with your 2
+              <div class="card-tip"><img src="assets/Img/icon_rupee.svg"> You can potentially earn 10,000 more with your
+                2
                 more policies</div>
             </div>
             <div class="cardItem my-goals">
@@ -119,6 +125,7 @@
         </div>
       </div>
       <!--Performance Overview end-->
+      <app-drag-and-drop style="display: none;" ></app-drag-and-drop>
     </div>
   </div>
 </main>
