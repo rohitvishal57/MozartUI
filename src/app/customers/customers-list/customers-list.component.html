@@ -103,7 +103,7 @@
                       <thead>
                         <tr>
                           <th scope="col">Name</th>
-                          <th scope="col" nowrap>Customer Id</th>
+                          <th scope="col" nowrap>Customer ID</th>
                           <th scope="col">No.Of.Policies</th>
                           <th scope="col" nowrap>Email ID</th>
                           <th scope="col" nowrap>Mobile Number</th>
@@ -133,7 +133,7 @@
                                   <th scope="col" nowrap>Policy Type</th>
                                   <th scope="col">No.Of.Members</th>
                                   <th scope="col">Sum Insured</th>
-                                  <th scope="col">Premiun</th>
+                                  <th scope="col">Premium</th>
                                   <th scope="col" nowrap>Start Date <div><small>(dd-mm-yyyy)</small></div></th>
                                   <th scope="col" nowrap>End Date <div><small>(dd-mm-yyyy)</small></div></th>
                                   <th scope="col">Status</th>
@@ -142,7 +142,7 @@
                               </thead>
                               <tbody class="table-group-divider">
                                 <tr *ngFor="let policy of row.policyDetails">
-                                  <td>{{ policy.policyNumber }}</td>
+                                  <td>{{ policy.policyNumber ? policy.policyNumber : '-' }}</td>
                                   <td>{{ policy.productVariantName }}</td>
                                   <td>{{ policy.policyType }}</td>
                                   <td>{{policy.noOfInsured}}</td>
@@ -152,8 +152,10 @@
                                   <td>{{ formatPolicyStartDate(policy.policyEndDate) }}</td>
                                   <td>
                                     <span class="info_status" [ngClass]="{
-                                        'info_status_green': policy.policyStatus === 'Inforced' || policy.policyStatus === 'Renewed',
-                                        'info_status_red': policy.policyStatus !== 'Inforced' && policy.policyStatus !== 'Renewed'
+                                        'info_status_green': policy.policyStatus === 'IF',
+                                        'info_status_yellow': policy.policyStatus === 'IP',
+                                        'info_status_red': policy.policyStatus == 'RJ',
+                                        'info_status_gray': policy.policyStatus == 'CN'
                                       }">
                                       {{ policy.policyStatus }}
                                     </span>
@@ -238,7 +240,7 @@
                             <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo" *ngFor="let policy of row.policyDetails">
                                 <div class="userInfoItem">
                                     <div class="item_lable">Policy Number</div>
-                                    <div class="item_value">{{ policy.policyNumber }}</div>
+                                    <div class="item_value">{{ policy.policyNumber ? policy.policyNumber : '-' }}</div>
                                 </div>
                                 <div class="userInfoItem">
                                     <div class="item_lable">Product Name</div>
@@ -271,8 +273,10 @@
                                 <div class="userInfoItem userInfoItem-30">
                                     <div class="item_lable">Status</div>
                                     <span class="info_status" [ngClass]="{
-                                        'info_status_green': policy.policyStatus === 'Inforced' || policy.policyStatus === 'Renewed',
-                                        'info_status_red': policy.policyStatus !== 'Inforced' && policy.policyStatus !== 'Renewed'
+                                        'info_status_green': policy.policyStatus === 'IF',
+                                        'info_status_yellow': policy.policyStatus === 'IP',
+                                        'info_status_red': policy.policyStatus == 'RJ',
+                                        'info_status_gray': policy.policyStatus == 'CN'
                                       }">
                                       {{ policy.policyStatus }}
                                     </span>

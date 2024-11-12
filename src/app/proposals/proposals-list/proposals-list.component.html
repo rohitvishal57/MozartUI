@@ -106,9 +106,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Proposal Number</th>
-                                    <th scope="col">Lead Id</th>
+                                    <th scope="col">Lead ID</th>
                                     <th scope="col" nowrap>Proposer Name</th>
-                                    <th scope="col">Product</th>
+                                    <th scope="col">Product Name</th>
                                     <th scope="col" nowrap>Policy Type</th>
                                     <th scope="col" nowrap>Premium</th>
                                     <th scope="col">Status</th>
@@ -200,6 +200,10 @@
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Created Date</div>
                                 <div class="item_value">{{ row.policyStartDate }}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">Lead ID</div>
+                                <div class="item_value">{{ row.leadId }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Premium</div>

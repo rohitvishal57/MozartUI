@@ -97,7 +97,7 @@ export class ProposalsListComponent {
         }
       },
       (error) => {
-        this.toast.error({ detail: "Error", summary: "Failed to get proposals list", duration: 2000 });
+        this.toast.error({ detail: "", summary: "Failed to get proposals list.", duration: 2000 });
       }
     );
   }
@@ -128,7 +128,7 @@ export class ProposalsListComponent {
         this.productsList=res.data
       },
       error: (err) => {
-        this.toast.error({ detail: "WARNING", summary: "Failed to get Product Names", duration: 2000 });
+        this.toast.error({ detail: "", summary: "Failed to get Product Names.", duration: 2000 });
       }
     })
   }
@@ -331,7 +331,7 @@ export class ProposalsListComponent {
       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
       localStorage.setItem("formIndex", "0");
     } catch (err) {
-      this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+      this.toast.warning({ detail: "", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
 }

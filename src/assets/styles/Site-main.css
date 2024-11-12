@@ -5012,6 +5012,12 @@ background: var(--white-color);
 .info_status_red {
   background:#C7222A ;
 }
+.info_status_yellow {
+  background:#FFD700 ;
+}
+.info_status_gray {
+  background: #A9A9A9;
+}
 .cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 .insureName {
 	max-width: 160px;
     white-space: nowrap;
