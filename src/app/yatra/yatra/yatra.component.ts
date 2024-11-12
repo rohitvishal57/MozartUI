@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, Inject, Renderer2, inject } f
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
 import { CommonService } from 'src/app/services/common.service';
-import { DOCUMENT } from '@angular/common';
+import { DatePipe, DOCUMENT } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { LanguageService } from 'src/app/services/language.service';
 declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
+import { LeadsService } from 'src/app/leads/leads.service';
 
 @Component({
   selector: 'app-yatra',
@@ -111,6 +112,8 @@ export class YatraComponent {
   productComparison :Boolean= false;
   isFeedBackModalVisible :Boolean= false;
   leadNumber : string = ''
+  redirectLeadInformation :any ={};
+
 
   
   currentLanguage = 'en';
@@ -120,7 +123,7 @@ export class YatraComponent {
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route: ActivatedRoute, private languageService: LanguageService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,  private leadsService: LeadsService, private datepipe: DatePipe) { }
 
   ngOnInit() {
 
@@ -165,7 +168,6 @@ export class YatraComponent {
     if (history.state.productData.leadId) {
       this.leadNumber = history.state.productData.leadId;
     }
-
     if(history.state.productData.productComparison){
       this.productComparison =  history.state.productData.productComparison;
     }
@@ -178,7 +180,6 @@ export class YatraComponent {
     if (history.state.productData.selectedAddons) {
       this.selectedAddons = history.state.productData.selectedAddons
     }
-
     // this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
     // console.log(this.formData)
     // this.formData = { ...this.formData, ...{ productName: this.productName } }
@@ -191,6 +192,9 @@ export class YatraComponent {
       rating: [null, Validators.required], // Add rating to the form
     });
 
+    if(this.quickQuoteRedirect){
+     this.getLeadInformation();
+    }
 
   }
 
@@ -706,8 +710,12 @@ export class YatraComponent {
       this.isFeedBackModalVisible = true;
     }
 
+    if(this.quickQuoteRedirect){
+      this.getLeadInformation();
+    }
 
   }
+
 
   initializeSubControls(subControls: any) {
     console.log(subControls);
@@ -4775,6 +4783,62 @@ export class YatraComponent {
   backToProductComparison() {
     this.router.navigate(['/products/comparison'], {
     });
+  }
+
+  getLeadInformation(){
+  const  leadsInfoListRequestBody = {
+      "agentcode": this.agentCode,
+      "myleads": true,
+      "assignedleads": true,
+      "unassignedleads": true,
+      "start": 1,
+      "viewBy": [
+        ""
+      ],
+      "length": 10,
+      "searchby": this.leadNumber,
+      "searchlist": "",
+      "fromdate": null,
+      "todate": null,
+      "policyList": "",
+      "isSellerPortal": true
+    }
+
+    debugger;
+    this.leadsService.getLeadsListApi(leadsInfoListRequestBody).subscribe(
+      (response) => {
+        if (response) {
+         this.redirectLeadInformation = response.data.leadList[0];
+
+         this.dynamicFormGroup.patchValue({
+          //panNo:this.redirectLeadInformation.panNumber,
+          //memberDobProposer : this.redirectLeadInformation.dob,
+
+          memberDobProposer : this.datepipe.transform(this.redirectLeadInformation.dob, 'yyyy-MM-dd'),
+          firstName: this.redirectLeadInformation.firstName,
+          middleName: this.redirectLeadInformation.middleName,
+          lastName: this.redirectLeadInformation.lastName,
+          memberAgeProposer: this.redirectLeadInformation.age,
+          proposerGender: this.redirectLeadInformation.gender,
+          emailId: this.redirectLeadInformation.email,
+          proposerAddress1: this.redirectLeadInformation.address1,
+          proposerAddress2: this.redirectLeadInformation.address2,
+          proposerAddress3: this.redirectLeadInformation.address3,
+          city: this.redirectLeadInformation.city,
+          state: this.redirectLeadInformation.state,
+          mobileNumber: this.redirectLeadInformation.phoneNumber,
+          educationDetails: this.redirectLeadInformation.education,
+          occupation: this.redirectLeadInformation.occupation,
+          maritalStatus: this.redirectLeadInformation.maritalStatus
+        });
+
+        }
+        else { console.error("API request was not successful."); }
+      },
+      (error) => {
+        console.error("Error from getRenewalsList API:", error);
+      }
+    );
   }
 
 }

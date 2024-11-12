@@ -105,7 +105,6 @@ export class LeadsListComponent {
     "todate": null,
     "policyList": "",
     "isSellerPortal": true
-
   }
 
   ngOnInit(): void {
