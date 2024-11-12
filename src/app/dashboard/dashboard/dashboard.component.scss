@@ -57,9 +57,12 @@
         background-color: #C7222A;
         color: white;
         border: none;
-        padding: 10px 30px;
+        padding: 10px 20px;
         border-radius: 10px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap:10px;
       }
       
       .get-quote-btn:hover {
@@ -79,6 +82,7 @@
     max-width: 1082px;
     width: 100%;
     margin: auto;
+    gap: 24px;
   }
 h2 {
     font-family: "Anek Latin", sans-serif;
@@ -418,7 +422,7 @@ h2 {
             }
             h5 {
                 font-size: 20px;
-                line-height: 28px;
+                line-height: 20px;
                 color: #4c4c4c;
             }
             p {
@@ -492,7 +496,7 @@ h2 {
                             }
                             h5 {
                                 display: block;
-                                width: 90%;
+                                width: 80%;
                             }
                         }
                         h5 {
