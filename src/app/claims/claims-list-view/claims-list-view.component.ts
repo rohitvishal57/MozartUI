@@ -199,12 +199,7 @@ else{
   
 
 cancel() {
-  // this.fromDate = null;
-  // this.toDate = null;
-  // this.claimsReqBody.fromDate = null;
-  // this.claimsReqBody.toDate = null;
   this.toggeledropdown = false;
- // this.fetchData();
 }
 
 applyFilter() {

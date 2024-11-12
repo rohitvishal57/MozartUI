@@ -181,17 +181,7 @@ export class ProposalsListComponent {
     this.toggeledropdown=false;
   }
   cancel() {
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = null;
-    this.endDate = null;
-    this.appliedFiltersCount = 0;
-    this.proposalListRequestBody.productVarientName = "";
-    this.proposalListRequestBody.policyType = "";
-    this.proposalListRequestBody.startDate = null;
-    this.proposalListRequestBody.endDate = null;
     this.toggeledropdown = false;
-    this.getProposalList();
   }
   clear(){
     this.productsList.forEach((product) => (product.selected = false));

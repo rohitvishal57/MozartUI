@@ -165,17 +165,7 @@ export class RenewalListComponent {
     this.toggeledropdown=false;
   }
   cancel() {
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = null;
-    this.endDate = null;
-    this.appliedFiltersCount = 0;
-    this.renewalListRequestBody.productName = "";
-    this.renewalListRequestBody.policyType = "";
-    this.renewalListRequestBody.startDate = null;
-    this.renewalListRequestBody.endDate = null;
     this.toggeledropdown = false;
-    this.getRenewalsList();
   }
   clear(){
     this.productsList.forEach((product) => (product.selected = false));

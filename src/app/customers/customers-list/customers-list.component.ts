@@ -169,17 +169,7 @@ export class CustomersListComponent {
     this.toggeledropdown=false;
   }
   cancel() {
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = null;
-    this.endDate = null;
-    this.appliedFiltersCount = 0;
-    this.customerListRequestBody.productName = "";
-    this.customerListRequestBody.policyType = "";
-    this.customerListRequestBody.startDate = null;
-    this.customerListRequestBody.endDate = null;
     this.toggeledropdown = false;
-    this.getCustomerList();
   }
   clear(){
     this.productsList.forEach((product) => (product.selected = false));
