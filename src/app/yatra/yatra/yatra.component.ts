@@ -4829,7 +4829,8 @@ export class YatraComponent {
           mobileNumber: this.redirectLeadInformation.phoneNumber,
           educationDetails: this.redirectLeadInformation.education,
           occupation: this.redirectLeadInformation.occupation,
-          maritalStatus: this.redirectLeadInformation.maritalStatus
+          maritalStatus: this.redirectLeadInformation.maritalStatus,
+          memberPolicyType : this.redirectLeadInformation.policyType
         });
 
         }
