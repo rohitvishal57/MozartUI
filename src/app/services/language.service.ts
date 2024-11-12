@@ -10,10 +10,10 @@ export class LanguageService {
   }
  
   private languageSubject = new BehaviorSubject<string>(localStorage.getItem('preferredLanguage') || 'en');
-  language$ = this.languageSubject.asObservable(); // Expose as Observable
+  language$ = this.languageSubject.asObservable(); 
  
   setLanguage(lang: any) {
-    this.languageSubject.next(lang); // Update the language
-    localStorage.setItem('preferredLanguage', lang); // Save to localStorage
+    this.languageSubject.next(lang); 
+    localStorage.setItem('preferredLanguage', lang); 
   }
 }

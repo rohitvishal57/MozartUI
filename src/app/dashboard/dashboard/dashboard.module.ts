@@ -9,8 +9,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MyMaterialModule } from 'src/app/material.module';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { QuoteModule } from 'src/app/quote/quote.module';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { DragAndDropComponent } from './drag-and-drop/drag-and-drop.component';
 
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/','.json');
+}
 @NgModule({
   declarations: [DashboardComponent, DragAndDropComponent],
   imports: [
@@ -20,7 +26,14 @@ import { DragAndDropComponent } from './drag-and-drop/drag-and-drop.component';
     MyMaterialModule,
     NgxSliderModule,
     DashboardRoutingModule,
-    QuoteModule
+    QuoteModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ]
 })
 export class DashboardModule { }

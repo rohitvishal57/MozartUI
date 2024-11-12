@@ -3,8 +3,8 @@
         <div class="bodyColumn body_flex_column">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="mb-2">Products</h2>
-                    <p>Discover our products to insure your health</p>
+                    <h2 class="mb-2">{{"Products" | translate}}</h2>
+                    <p>{{"Discover our products to insure your health" | translate}}</p>
                 </div>
             </div>
             <div class="row" *ngIf="ProductList.length > 0; else noProducts">
@@ -15,22 +15,22 @@
                                 <header>
                                     <div class="body_flex_row">
                                         <img src="assets/logo/activeOne.svg">
-                                        <h6>{{item.productName}}</h6>
+                                        <h6>{{ item.productName?(item.productName | translate): ''}}</h6>
                                     </div>
                                 </header>
                                 <div class="cardViewBody">
-                                    <p>{{item.productDescription}}</p>
+                                    <p>{{item.productDescription | translate}}</p>
                                 </div>
                                 <footer>
                                     <div class="btn_groupAction">
                                         <button type="button" id="buynow" name="buynow" value="buynow" class="btn_red btn_products btn_buy" (click)="buyNow(item)">
                                             <img src="assets/Img/trolley1.svg" alt="">
-                                            Buy Now
+                                            {{"Buy Now" | translate}}
                                         </button>
-                                        <button type="button" id="viewdetails" name="viewdetails" value="viewdetails" class="btn_pink btn_products" (click)="productsDetail(item)">View details</button>
+                                        <button type="button" id="viewdetails" name="viewdetails" value="viewdetails" class="btn_pink btn_products" (click)="productsDetail(item)">{{"View details" | translate}}</button>
                                         <button type="button" id="addtocompare" name="addtocompare" value="addtocompare" class="btn_grey btn_products btn_addtocompare"  (click)="addToCompare(item)">
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
-                                            Add to Compare
+                                           {{"Add to Compare" | translate}}
                                         </button>
                                     </div>
                                 </footer>

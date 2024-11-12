@@ -14,7 +14,7 @@
       <div class="left-navInner">
         <!--     style="cursor: pointer;"-->
         <div class="yourProgress">
-          <h1>Your Progress</h1>
+          <h1>{{"Your Progress" | translate}}</h1>
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
               <div class="step-count" >
@@ -79,15 +79,14 @@
                       formControlName="{{ control.name }}" [type]="control.type" [id]="control.name" [name]="control.name"
                       [ngClass]="{'disabled-has-value': hasAnyValue(control)}" (change)="onInputChange($event, control)"
                       readonly>
-                    <label *ngIf="control.visibleLabel">{{ control.label?(control.label|translate):''}}
+                    <label *ngIf="control.visibleLabel">{{ control.label?(control.label | translate):''}}
                       <span *ngIf="control.validators">*</span>
                     </label>
                   </div>
                   <!-- <label *ngIf="control.visibleLabel==true">{{ control.label }}</label> -->
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
-                    class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) :
-                    ''}}
+                    class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) : ''}}
                   </small>
                 </div>
 
@@ -106,16 +105,14 @@
                   <!-- <label *ngIf="control.visibleLabel==true">{{ control.label }}</label> -->
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
-                    class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) :
-                    ''}}
+                    class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) : ''}}
                   </small>
                 </div>
 
                 <div *ngIf="control.type === 'summary'" [class]="control.class" class="typecss"
                   [hidden]="!control.visible">
                   <div class="label-value-container">
-                    <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label |
-                      translate) : '' }}</label>
+                    <label *ngIf="control.visibleLabel" class="label-text">{{ control.label ? (control.label | translate) : '' }}</label>
                     <div class="value-text">{{ control.value }}</div>
                   </div>
                 </div>
@@ -128,7 +125,7 @@
                       <!-- <option value="" disabled selected>Select {{ control.label }}</option> -->
                       <ng-container *ngFor="let opt of control.options" [class]="control.class">
                         <option [value]="opt.id ? stringifyObject(opt) : opt.value" [class]="opt.class">
-                          {{ opt.name }}</option>
+                          {{ opt.name ? (opt.name | translate) : ''}}</option>
                       </ng-container>
                     </select>
                     <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}
@@ -137,8 +134,7 @@
                   </div>
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
-                    class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) :
-                    ''}}
+                    class="text-danger">{{ getValidationErrors(control)? (getValidationErrors(control)| translate) : ''}}
                   </small>
                 </div>
 
@@ -161,8 +157,7 @@
                     <input *ngIf="!control.disabled" class="inputField_Text"
                       [ngClass]="{'has-value': hasAnyValue(control)}" formControlName="{{ control.name }}"
                       [name]="control.name" [id]="control.name"type="text" />
-                    <label *ngIf="control.visibleLabel">{{ control.label ? (control.label |
-                      translate) : '' }} <span *ngIf="control.validators">*</span></label>
+                    <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }} <span *ngIf="control.validators">*</span></label>
                     <!-- <small *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)" class="text-danger">
                   {{getValidationErrors(control)}}
                 </small> -->
@@ -365,7 +360,7 @@
                                       <!-- <option value="" disabled selected>Select {{
                                     subControl.label }}</option> -->
                                       <ng-container *ngFor="let opt of subControl.options">
-                                        <option [value]="opt.value">{{ opt.name }}
+                                        <option [value]="opt.value">{{opt.name?(opt.name | translate): '' }}
                                         </option>
                                       </ng-container>
                                     </select>
@@ -376,7 +371,7 @@
                                       <!-- <option value="" disabled selected>Select {{
                                     subControl.label }}</option> -->
                                       <ng-container *ngFor="let opt of subControl.options">
-                                        <option [value]="opt.value">{{ opt.name }}
+                                        <option [value]="opt.value">{{ opt.name?(opt.name | translate): '' }}
                                         </option>
                                       </ng-container>
                                     </select>
@@ -479,7 +474,7 @@
                                         <!-- <option value="" disabled selected>Select {{
                                     subControl.label }}</option> -->
                                         <ng-container *ngFor="let opt of subControl.options">
-                                          <option [value]="opt.value">{{ opt.name }}
+                                          <option [value]="opt.value">{{ opt.name?(opt.name|translate):'' }}
                                           </option>
                                         </ng-container>
                                       </select>
@@ -491,7 +486,7 @@
                                       subControl.label }}</option> -->
                                         <ng-container *ngFor="let opt of subControl.options">
                                           <option [value]="opt.id ? stringifyObject(opt) : opt.value">
-                                            {{ opt.name }}</option>
+                                            {{ opt.name?(opt.name|translate):'' }}</option>
                                         </ng-container>
                                       </select>
                                       <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
@@ -529,12 +524,11 @@
                                         [type]="subControl.type"
                                         [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                         (change)="onInputChange($event, subControl)" readonly>
-                                      <label *ngIf="control.visibleLabel">{{ subControl.label ? (subControl.label |
-                                        translate) : '' }}<span *ngIf="subControl.validators">*</span></label>
+                                      <label *ngIf="control.visibleLabel">{{ subControl.label ? (subControl.label |translate) : '' }}<span *ngIf="subControl.validators">*</span></label>
                                     </div>
                                     <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
                                       getValidationErrors(subControl,control,i-1)?
-                                      (getValidationErrors(subControl,control,i-1)| translate) : ''}}
+                                      (getValidationErrors(subControl,control,i-1) | translate) : ''}}
                                     </small>
                                   </div>
                                   <div *ngIf="subControl.type === 'paragraph'" class="paragraphs"
@@ -692,7 +686,7 @@
                   </div>
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
-                    class="text-danger">{{getValidationErrors(control)}}
+                    class="text-danger">{{getValidationErrors(control) | translate}}
                   </small>
                 </div>
 
@@ -706,7 +700,7 @@
                     <div [class]="control.class" *ngFor="let option of control.radioOptions">
                       <input type="radio" [formControlName]="control.name" [name]="control.name" [id]="control.name" [value]="option.value"
                         style="margin-right: 10px;" (change)="onInputChange($event, control)">
-                      <label [innerHTML]="option.label"></label>
+                      <label [innerHTML]="option.label ? (option.label | translate) : ''"></label>
                     </div>
                   </div>
                 </div>
@@ -773,7 +767,7 @@
                       <input type="radio" [id]="option.name" [formControlName]="control.name" [name]="control.name"
                       [value]="option.value" class="radio-card" [checked]="option.value === dynamicFormGroup.get('totalPremium')?.value"/>
                       <label [for]="option.name" class="radio-card-label">
-                        <div class="year">{{ option.year }}</div>
+                        <div class="year">{{  option.year ? (option.year | translate) : ''}}</div>
                         <div class="price">₹{{ option.value }}.00</div>
                         <div class="discount">{{ option.discount }}</div>
                       </label>
@@ -841,9 +835,6 @@
                               extra from p-dialog
                               (onHide)="onPopupHide()"
                               -->
-
-
-
                           <div *ngIf="subControl.type ==='radio'" class="typecss col-md-2">
                             <label *ngIf="subControl.visibleLabel==true">{{ subControl.label ? (subControl.label | translate) : '' }}<span *ngIf="subControl.validators"></span></label>
                             <div class="radio-button">
@@ -902,7 +893,7 @@
                                                 <option selected value="">Choose...</option>
                                                 <ng-container *ngFor="let opt of innerControl.options">
                                                   <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{
-                                                    opt.name }}
+                                                    opt.name?(opt.name|translate):'' }}
                                                   </option>
                                                 </ng-container>
                                               </select>
@@ -1083,7 +1074,7 @@
                                                 <option selected value="">Choose...</option>
                                                 <option *ngFor="let opt of innerControl.options"
                                                   [value]="opt.id ? stringifyObject(opt) : opt.value">
-                                                  {{ opt.name }}
+                                                  {{ opt.name?(opt.name|translate):''}}
                                                 </option>
                                               </select>
                                               <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}

@@ -10,9 +10,9 @@
           <span class="img_link">
             <img [src]="item.imagePath" [alt]="item.displayName">
           </span>
-          <span>{{ item.displayName }}</span>
+          <span>{{ item.displayName | translate}}</span>
         </a>
-        <a title="logout" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" class="linkLogout" (click)="redirect('login')"><span class="img_link"><img src="assets/Img/icon_menu_logout.svg"></span><span>Logout</span></a>
+        <a title="logout" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" class="linkLogout" (click)="redirect('login')"><span class="img_link"><img src="assets/Img/icon_menu_logout.svg"></span><span>{{"Logout" | translate}}</span></a>
       </div>
     </div>
 </nav>

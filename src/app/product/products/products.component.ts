@@ -8,6 +8,8 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { ProductsService } from './products.service';
 import { QuoteService } from 'src/app/quote/quote.service';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-products',
@@ -40,17 +42,26 @@ export class ProductsComponent implements OnInit {
   showSpecialForm: boolean = false;
   state: any;
 
-   
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
    private quoteservices: QuoteService,private aesEncryptService: AesEncryptionService,
-   private route: ActivatedRoute
+   private route: ActivatedRoute, private languageService: LanguageService,
+   private translateService: TranslateService
   ) {
 
   }
 
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+
+
     console.log(this.agentCode);
     // sessionStorage.clear()
     if (sessionStorage.getItem("cardListProducts"))
