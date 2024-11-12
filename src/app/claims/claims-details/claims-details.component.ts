@@ -591,14 +591,21 @@ convertBytesToKB(bytes: number): string {
 
   updateClaim(): void {
     const UpdateClaimReqBody = this.uploadedFiles.map(file => {
-        return {
-            documentId: file.documentId,
-            documentName: file.name,
-            status: file.status,         
-            labelName: file.label       
-        };
+        return   {
+          "agentCode": localStorage.getItem('agentCode'),
+          "claimNumber": this.claimInfoId,
+          "policyNumber": this.policyNumber,
+          "documentsArray": [
+            {
+              "documentId": file.documentId,
+              "documentName": file.name,
+              "status": file.status,         
+              "labelName": file.label,
+            }
+          ]
+        }
     });
-
+ 
     this.claimsService.updateClaim(UpdateClaimReqBody).subscribe(
         (response:any) => {
           if(response.isSuccess){
@@ -678,6 +685,6 @@ convertBytesToKB(bytes: number): string {
   //       this.cdr.markForCheck();
   //     }
   //   );
-  // }
+  // 
 
 }
