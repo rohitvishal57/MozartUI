@@ -3,7 +3,7 @@
     <div class="bodyColumn body_flex_column">
       <div class="contentBody dashboard_contentContainer body_flex_column">
         <!--Goodmorning, Raise ticket start-->
-        <div class="section_fullWidth white_container dashboard_topSection commonSection ">
+        <section class="section_fullWidth white_container dashboard_topSection commonSection ">
           <div class="row">
             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
               <h6>Good morning, Ajay</h6>
@@ -26,7 +26,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </section>
         <!--Goodmorning, Raise ticket end-->
         <!--Search, Get Quote start-->
         <div class="section_fullWidth">
@@ -58,7 +58,7 @@
         </div>
         <!--Search, Get Quote end-->
         <!--Important tasks start-->
-        <div class="body_flex_column dashboard_improtantTasks suggested_styles commonSection ">
+        <section class="body_flex_column dashboard_improtantTasks suggested_styles commonSection ">
           <h2>Important Tasks</h2>
           <div class="card_wraper improtantTasks">
             <div class="cardsub_wraper">
@@ -79,10 +79,10 @@
                 </div>
             </div>
           </div>
-        </div>
+        </section>
         <!--Important tasks end-->
         <!--Latest from ABHI start-->
-        <div class="body_flex_column dashboard_latestABHI commonSection ">
+        <section class="body_flex_column dashboard_latestABHI commonSection ">
           <div class="body_flex_row justify-content-between">
             <h6>Latest from ABHI</h6>
             <button type="button" id="btn-exploreMore" name="btn-exploreMore" class="btn_iconText btn_exploreMore">Explore More <img src="assets/Img/icon_red_downarrow.svg"> </button>
@@ -157,7 +157,7 @@
               </div>
             </div>
           </div>
-      </div>
+      </section>
       <!--Latest from ABHI end-->
         
         <!--Performance Overview start-->
@@ -236,20 +236,74 @@
         </div>
         <!--Performance Overview end-->
         <!--All Tasks start-->
-        <div class="body_flex_column dashboard_allTasks white_container commonSection">
+        <section class="body_flex_column dashboard_allTasks white_container commonSection">
           <div class="body_flex_row justify-content-between">
             <h6>All Tasks</h6>
             <span class="common-badge common-badge-rounded tasks-badge tasks-badge-blue"><em></em>5 Tasks Pending</span>
           </div>
           <div class="card_wraper">
             <div class="cardsub_wraper">
+
               <div class="card_item ">
-                
+                <div class="head_tasks">
+                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Rohini Pandey
+                </div>
+                <div class="card-tip">
+                  <img src="assets/Img/icon_currency.svg"> 
+                  Your customers payment had failed! get them to retry payment.
+                </div>
+                <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink" class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img src="assets/Img/icon_red_downarrow.svg"></button>
               </div>
+              <div class="card_item ">
+                <div class="head_tasks">
+                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Alok Shah
+                </div>
+                <div class="card-tip">
+                  <img src="assets/Img/icon_currency.svg"> 
+                  Document requested from Mr. Alos is yet to be received. 
+                </div>
+                <button type="button" id="btn-send-reminder" name="btn-send-reminder" class="btn_iconText btn_exploreMore">Send a reminder to Alok <img src="assets/Img/icon_red_downarrow.svg"></button>
+              </div>
+              <div class="card_item ">
+                <div class="head_tasks">
+                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Alok Shah
+                </div>
+                <div class="card-tip">
+                  <img src="assets/Img/icon_currency.svg"> 
+                  Document requested from Mr. Alos is yet to be received. 
+                </div>
+                <button type="button" id="btn-send-reminder" name="btn-send-reminder" class="btn_iconText btn_exploreMore">Send a reminder to Alok <img src="assets/Img/icon_red_downarrow.svg"></button>
+              </div>
+              <div class="card_item ">
+                <div class="head_tasks">
+                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Alok Shah
+                </div>
+                <div class="card-tip">
+                  <img src="assets/Img/icon_currency.svg"> 
+                  Document requested from Mr. Alos is yet to be received. 
+                </div>
+                <button type="button" id="btn-send-reminder" name="btn-send-reminder" class="btn_iconText btn_exploreMore">Send a reminder to Alok <img src="assets/Img/icon_red_downarrow.svg"></button>
+              </div>
+              <div class="card_item ">
+                <div class="head_tasks">
+                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Alok Shah
+                </div>
+                <div class="card-tip">
+                  <img src="assets/Img/icon_currency.svg"> 
+                  Document requested from Mr. Alos is yet to be received. 
+                </div>
+                <button type="button" id="btn-send-reminder" name="btn-send-reminder" class="btn_iconText btn_exploreMore">Send a reminder to Alok <img src="assets/Img/icon_red_downarrow.svg"></button>
+              </div>
+
             </div>
           </div>
-        </div>
+        </section>
         <!--All Tasks end-->
+        <!--Leads, Proposal, Renewals Tabs start-->
+        <section class="body_flex_column dashboard_allTasks white_container commonSection block-hide">
+          saasda
+        </section>
+        <!--Leads, Proposal, Renewals Tabs end-->
         <!--Top Widgets and Other start-->
         <div class="dashboard_topWidgets block-hide">
           <app-drag-and-drop  ></app-drag-and-drop>
