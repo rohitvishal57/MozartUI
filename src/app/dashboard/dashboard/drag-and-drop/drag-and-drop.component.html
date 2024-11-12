@@ -1,0 +1,214 @@
+<div class="outer-cnt">
+  <div class="main-cnt">
+    <div class="top-widgets-cnt">
+      <div class="top-widgets-header-cnt">
+        <div class="top-widgets-title">Top Widgets</div>
+        <div class="customize-button" (click)="toggleDragAndDrop()">
+          <div class="customize-icon">
+            <img src="assets/images/customize-icon.png" alt="">
+          </div>
+          <button>{{ showAllItems ? 'Finish Customizing' : 'Customize Widgets' }}</button>
+        </div>
+      </div>
+      <div class="widgets-cnt" cdkDropList (cdkDropListDropped)="drop($event)">
+        <ng-container *ngFor="let item of getItemsToShow(); let i = index">
+          <div class="widget-cnt" cdkDrag>
+            <div class="widget-header-cnt">
+              <div class="widget-title">{{ item.title }}</div>
+              <div>
+                <div class="dropdown-name"><span>{{ item.dropdownName }}</span></div>
+                <div (click)="hideItem(item, i)" *ngIf="item.visible && allowDragging">x</div>
+                <div (click)="addItem(item, i)" *ngIf="!item.visible && allowDragging">Add</div>
+              </div>
+            </div>
+            <div class="inner-list">
+              <!-- Handle Products -->
+              <div class="inner-box" *ngFor="let product of item.products">
+                <div class="product-cnt">
+                  <div class="product-info">
+                    <div class="product-logo-name">
+                      <div class="product-logo" style="height:24px; width:24px;">
+                        <img [src]="product.productLogo" alt="">
+                      </div>
+                      <div class="product-name">{{ product.productName }}</div>
+                    </div>
+                    <div class="premium-details">
+                      <span class="premium">₹{{ product.premium }}*</span>
+                      <span class="tenure">/{{ product.tenure }} years</span>
+                    </div>
+                  </div>
+                  <div class="product-features">
+                    <div class="feature">&#10003; {{ product.feature1 }}</div>
+                    <div class="feature">&#10003; {{ product.feature2 }}</div>
+                    <div class="feature">&#10003; {{ product.feature3 }}</div>
+                  </div>
+                </div>
+                <div class="product-footer">
+                  <div>Show selling tips for me</div>
+                </div>
+              </div>
+
+              <!-- Handle Tasks -->
+              <div class="inner-box" *ngFor="let task of item.tasks">
+                <div class="profile-info">
+                  <img [src]="task.profileImage" alt="">
+                  <div class="profile-name">{{ task.profileName }}</div>
+                </div>
+                <div class="description-box">
+                  <i class="icon">₹</i>
+                  <div class="description">{{ task.description }}</div>
+                </div>
+                <div class="resend-link">{{ task.resendLink }} ></div>
+              </div>
+
+              <!-- Handle Courses -->
+              <div class="inner-box" *ngFor="let course of item.knowledgeItems">
+                <div>{{ course.name }}</div>
+              </div>
+
+              <!-- Handle Wellness Items -->
+              <div class="inner-box" *ngFor="let wellness of item.wellnessItems">
+                <div class="wellness-item">
+                  <div>
+                    <div class="icon-container">
+                      <img src="path-to-icon.png" alt="Icon" class="wellness-icon">
+                    </div>
+                    <div class="wellness-name">{{ wellness.name }}</div>
+                  </div>
+                  <div class="content-container">
+                    <div class="wellness-description">{{ wellness.description }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="inner-box" *ngFor="let wellness of item.wellnessItems">
+                <div class="wellness-item">
+                  <div>
+                    <div class="icon-container">
+                      <img src="path-to-icon.png" alt="Icon" class="wellness-icon">
+                    </div>
+                    <div class="wellness-name">{{ wellness.name }}</div>
+                  </div>
+                  <div class="content-container">
+                    <div class="wellness-description">{{ wellness.description }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="inner-box" *ngFor="let wellness of item.wellnessItems">
+                <div class="wellness-item">
+                  <div>
+                    <div class="icon-container">
+                      <img src="path-to-icon.png" alt="Icon" class="wellness-icon">
+                    </div>
+                    <div class="wellness-name">{{ wellness.name }}</div>
+                  </div>
+                  <div class="content-container">
+                    <div class="wellness-description">{{ wellness.description }}</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="due-for-renewal-cnt">
+      <h2>Due for Renewal</h2>
+      <div class="base-quote-container" cdkDropList (cdkDropListDropped)="dropQuotes($event)">
+        <ng-container *ngFor="let quote of baseQuotes; let i = index">
+          <div class="card quote-card" cdkDrag>
+            <div class="quote-header">
+              <div class="quote-info">
+                <h2>{{quote.quoteName}}</h2>
+                <h3>{{quote.subQuoteName}}</h3>
+              </div>
+              <div class="quote-actions">
+                <ul class="unorderList ul_withIcon">
+                  <li *ngFor="let bt of quote?.actionButtons" (click)="onClickbtn(bt, i)"><img
+                      src="../../../../assets/images/{{bt}}.png"></li>
+                </ul>
+              </div>
+            </div>
+            <div class="quote-body">
+              <div class="bind-field">
+                <h3>Product</h3>
+                <span>{{quote?.renewInfo?.product}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Policy No</h3>
+                <span>{{quote?.renewInfo?.policyNo}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Proposer</h3>
+                <span>{{quote?.renewInfo?.proposer}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Renewal Premium</h3>
+                <span>{{quote?.renewInfo?.renewalPremium}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Mobile No</h3>
+                <span>{{quote?.renewInfo?.mobileNo}}</span>
+              </div>
+              <div class="bind-field">
+                <h3>Date of renewal</h3>
+                <span>{{quote?.renewInfo?.dateofRenewal}}</span>
+              </div>
+              <div class="footer">
+                <div class="detail-footer">modifiedDetails</div>
+                <div class="bind-field">
+                  <h3>Members</h3>
+                  <span>{{quote?.renewInfo?.modifiedDetails?.members}}</span>
+                </div>
+                <div class="bind-field">
+                  <h3>Tenure</h3>
+                  <span>{{quote?.renewInfo?.modifiedDetails?.tenure}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="leads-proposal-cnt">
+      <mat-tab-group cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropTab($event)"
+        cdkDropListElementContainer=".mat-mdc-tab-labels" class="example-drag-tabs" [(selectedIndex)]="selectedIndex"
+        animationDuration="0">
+        <div *ngFor="let tab of tabsInfo; let i = index">
+          <mat-tab style="display: flex;">
+            <ng-template mat-tab-label>
+              <span cdkDrag cdkDragPreviewClass="example-drag-tabs-preview"
+                cdkDragRootElement=".mat-mdc-tab">{{tab.tabName}}</span>
+            </ng-template>
+            <ng-container *ngIf="tab.tabName == 'Leads'">
+              <div class="lead-categories-list" *ngFor="let cat of tab?.category">
+                <h2>{{cat.name}}</h2>
+                <div *ngFor="let catInfo of cat?.catInfoList">
+                  <mat-accordion class="example-headers-align" multi>
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header>
+                        <mat-panel-title><span>{{catInfo?.name}}</span></mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <span>{{catInfo?.status}}</span>
+                      <span>{{catInfo?.desc}}</span>
+                      <span>{{catInfo?.noteInfo}}</span>
+                      <span>{{catInfo?.redirentlink}}</span>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="tab.tabName == 'Proposal'">
+              erg4egrther
+            </ng-container>
+            <ng-container *ngIf="tab.tabName == 'Renewals'">
+              erg4egrther
+            </ng-container>
+          </mat-tab>
+        </div>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

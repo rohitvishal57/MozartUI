@@ -102,5 +102,8 @@
     "getSumInsuredDetails":"/Product/GetSumInsuredList",
     "getPremiumDetaiks": "/Product/GetPremium",
     "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode",
-    "saveBBCommonDraft":"/BranchBanking/SaveBBCommonDraft"
+    "saveBBCommonDraft":"/BranchBanking/SaveBBCommonDraft",
+    "getLeadStatusCount":"/GetLeadStatusCount",
+    "getProposalStatusCount":"/GetProposalStatusCount",
+    "getRenewalStatusCount":"/GetRenewalStatusCount"
 }
