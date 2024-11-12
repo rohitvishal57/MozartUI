@@ -36,44 +36,11 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="details_claimsInfo">
-                             <h5>{{ claims?.memberName }} <span>{{ claims?.policyNumber }}(policyNo.)</span></h5>  
-                            <h5>{{ claims?.memberName }}</h5>
-                            <h6>{{ claims?.productName }}<span class="info-dot"></span>{{ claims?.requestType }}<span class="info-dot"></span><b>{{ claims?.claimStatus }}</b></h6>
-                        </div>-->
-                        <!-- <div class="details_claimsAmount">
-                        <div class="claim_amount">
-                            <h6>Policy Number</h6>
-                            <p>{{ claims?.policyNumber }}</p>
-                        </div>
-                        <div class="claim_amount">
-                            <h6>Member Name</h6>
-                            <p>{{ claims?.memberName }}</p>
-                        </div>
-                    </div> -->
-                    <!-- <br/> -->
-                    <!-- <div class="details_claimsAmount col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <div class="claim_amount col-5">
-                            <h6>Product Name</h6>
-                            <p>{{ claims?.productName }}</p>
-                            </div>
-                            <div class="claim_amount col-4">
-                            <h6>Claim Status</h6>
-                            <p>{{ status?.claimStatus }}</p>
-                        </div>
-                    </div>  -->
+                      
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
                     <div class="details_claimsAmount">
-                       
-                        <!-- <div class="claim_amount">
-                            <h6>Request Type</h6>
-                            <p>{{ claims?.requestType }}</p>
-                        </div> 
-                        <div class="claim_amount">
-                            <h6>Policy Number</h6>
-                            <p>{{ claims?.policyNumber }}</p>
-                        </div>-->
+                   
                         <div class="claim_amount">
                             <h6>Claim Amount</h6>
                             <p>₹  {{ claims?.claimedAmount }}</p>
@@ -85,81 +52,7 @@
                     </div>
                 </div>
            </div>
-                <!-- <div class="row" *ngIf="underDef">
-                    <div class="col-12" >
-                        <div class="white_container claim_underDeficiency">
-                            <div class="info_underDeficiency">
-                                <h5>Under Deficiency</h5>
-                                <h6>Kindly provide Aadhaar card and doctor’s prescription</h6>
-                            </div>
-                            <div class="button_underDeficiency">
-                                <button type="button" name="uploaddocument" id="uploaddocument" (click)="underDeficiencyFileInput.click()" class="btn_red">Upload Documents</button>
-                                <div class="btn_groupAction">
-                                    <button name="viewdetails" id="viewdetails" href="" class="btn_iconText">View Details</button>
-                                    <button name="caremanager" id="caremanager" href="" class="btn_iconText"><img src="../../../assets/Img/icon_phone_red.svg"> Care Manager</button>
-                                </div>
-                                <input type="file" #underDeficiencyFileInput name="underDeficiency" (change)="onUnderDeficiencyFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
-                            </div>
-                        </div>
-                        <span class="ui-error block-show" *ngIf="uploadValidFormat">
-                      File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files.
-                    </span>
-                    </div>
-                  
-                    <div class="uploadDocument_listMain" *ngIf="uploadedUnderDeficiencyFiles.length > 0">  
-                        <div class="uploadDocument_filesList">
-                            <div class="filesList_head">
-                                <div class="filesList_headLeft">Uploads:</div>
-                                <div class="filesList_headRight">{{ underDeficiencyUploadStatus }}</div>
-                            </div>
-                            <div class="filesList_body">
-                                <ul class="uploadedFiles_main">
-                                    <li *ngFor="let file of uploadedUnderDeficiencyFiles; let i = index" class="uploadedFiles_item">
-                                        <div class="uploadedFiles_headInfo">
-                                            <div class="headInfo_item">
-                                                <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
-                                                    <ng-container *ngIf="!file.isEditing">
-                                                        <span class="label-text">{{ file.label }}</span>
-                                                        <button name="uploadedit" id="uploadedit" (click)="startEditing(file)" class="edit-button">
-                                                            <img src="assets/Img/icon_pencil_blue.svg" alt="Edit">
-                                                        </button>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="file.isEditing">
-                                                        <input type="text" [formControl]="editableControl" (blur)="stopEditing(file)" autofocus />
-                                                    </ng-container>
-                                                </div>
-                                            </div>
-                                            <div class="headInfo_item">
-                                                <div class="upload-success" *ngIf="uploadSuccess"><img src="../../../../../assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
-                                                <div class="upload-fail" *ngIf="!uploadSuccess"><img src="../../../../../assets/Img/icon_failure.svg"><span class="failed-text">Failed</span></div>
-                                                <div *ngIf="file.uploadDateTime">
-                                                    <span class="date-time">{{ file.formattedUploadDateTime }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="uploadedFiles_info">
-                                            <div class="uploadedFiles_infoItem">
-                                                <span class="file-index">{{i+ 1}}</span>
-                                                <h6>{{ file.name }}</h6>
-                                                <p>{{ file.type }}</p>
-                                            </div>
-                                            <div class="uploadedFiles_infoItem">
-                                                <button name="filedelete" id="filedelete" class="delete-button" (click)="deleteFile(file,false)">
-                                                    <img src="../../../../../assets/Img/icon_delete_red2.svg">
-                                                </button>
-                                                <div class="size-align">
-                                                    <p>{{ convertBytesToKB(file.size) }}</p>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
+  
                 <div class="row">
                     <div class="col-12 ">
                         <div class="claims_matTabs_container">
@@ -404,7 +297,7 @@
                                        
                                             <div class="row">
                                                 <div class="col-12 text-center">
-                                                    <button name="submit" id="submit" class="button_red" type="button" (click)="submitClaim()">Submit</button>
+                                                    <button name="submit" id="submit" class="button_red" type="button" (click)="updateClaim()">Submit</button>
                                                 </div>
                                             </div>
                                         </div>

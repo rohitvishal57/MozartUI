@@ -364,64 +364,7 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
   }
   
   // Submit claim method
-  submitClaim(): void {
-    if (
-      this.uploadedFiles.length === 0 &&
-      this.uploadedUnderDeficiencyFiles.length === 0
-    ) {
-      //   this.showError("Please upload at least one document");
-      return;
-    }
 
-    const allFiles = [
-      ...this.uploadedFiles,
-      ...this.uploadedUnderDeficiencyFiles,
-    ];
-
-    const formData: FormData = new FormData();
-    const createdBy = localStorage.getItem("agentCode") || "defaultAgentCode";
-
-    allFiles.forEach((fileData, index) => {
-      formData.append(`fileDetails[${index}].AgentCode`, createdBy);
-      formData.append(`fileDetails[${index}].policyNumber`, this.policyNumber);
-      formData.append(`fileDetails[${index}].Notes`, "Prescription");
-      formData.append(`fileDetails[${index}].documentName`, fileData.name);
-      formData.append(
-        `fileDetails[${index}].documentType`,
-        fileData.type.split("/")[1]
-      );
-      formData.append(`fileDetails[${index}].createdBy`, createdBy);
-      formData.append(
-        `fileDetails[${index}].file`,
-        fileData.file,
-        fileData.name
-      );
-      formData.append(
-        `fileDetails[${index}].memberid`,
-        this.saveForm?.value.memberId || ""
-      );
-    });
-
-    this.claimsService.uploadFiles(formData).subscribe({
-      next: (response) => {
-        this.handleSuccessResponse(response);
-        this.toast.success({ detail: "Claim submitted successfully" });
-        this.router.navigate(["claims/claimsList"]);
-
-      },
-      error: (error) => {
-        this.handleErrorResponse(error);
-        this.toast.error({ detail: "Error occurred during claims submission" });
-      },
-    });
-  }
-  handleSuccessResponse(response: any): void {
-    // Logic to handle success
-  }
-
-  handleErrorResponse(error: any): void {
-    // Logic to handle error
-  }
 
   formatDate(date: Date): string {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
@@ -443,275 +386,113 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
     });
   }
 
-  // onFileSelected(event: any): void {
-  //   const files = event.target.files;
-  //   this.totalFilesCount += files.length;
-  //   // this.totalFilesDocCount += files.length;
-  //   let uploadedFilesData =
-  //     event.target.name == "underDeficiency"
-  //       ? this.uploadedUnderDeficiencyFiles
-  //       : this.uploadedFiles;
-
-  //   //this.uploadedFilesCount =  this.totalFilesCount; // Reset count for new batch
-  //   //this.failedFilesCount = this.totalFilesCount   // Reset failed files count for new batch
-  //   for (let i = 0; i < files.length; i++) {
-  //     const file = files[i];
-  //     const fileExists = this.uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size);
-  
-  //     if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-  //       uploadedFilesData.push({
-  //         name: file.name,
-  //         type: file.type,
-  //         size: file.size,
-  //         label: "Label this document",
-  //         isEditing: false,
-  //         editableControl: new FormControl("Label this document"),
-  //         uploadDateTime: new Date(),
-  //         formattedUploadDateTime: this.formatDate(new Date()),
-  //         status: "pending",
-  //         file: file,
-  //         policyNumber: this.saveForm?.value.policyNumber,
-  //         documentName: this.saveForm?.value.documentName,
-  //         documentType: this.saveForm?.value.documentType,
-  //         createdBy: this.saveForm?.value.createdBy,
-  //       });
-  //       event.target.name == "underDeficiency"
-  //         ? (this.uploadValidFormat = false)
-  //         : (this.uploadValidFormt = false);
-  //     } else {
-  //       event.target.name == "underDeficiency"
-  //         ? (this.uploadValidFormat = true)
-  //         : (this.uploadValidFormt = true);
-  //       event.target.value = "";
-  //     }
-  //   }
-  //   if (
-  //     this.uploadedUnderDeficiencyFiles.length > 0 &&
-  //     event.target.name === "underDeficiency"
-  //   ) {
-  //     // Update the saveForm with the latest file info
-  //     this.saveForm?.patchValue({
-  //       file: this.uploadedUnderDeficiencyFiles[0].file, // Assuming you want to take the first file
-  //     });
-  //   } else if (
-  //     this.uploadedFiles.length > 0 &&
-  //     event.target.name === "docUpload"
-  //   ) {
-  //     this.saveForm?.patchValue({
-  //       file: this.uploadedFiles[0].file, // Assuming you want to take the first file
-  //     });
-  //   }
-  //   this.updateStatusLabel(event.target.name);
-  //   this.uploadFiles(Array.from(files), event.target.name);
-  // }
   onFileSelected(event: any): void {
     const inputElement = event.target;
     const files = inputElement.files;
     this.totalFilesCount += files.length;
-  
-    let uploadedFilesData =
-      inputElement.name === "underDeficiency"
-        ? this.uploadedUnderDeficiencyFiles
-        : this.uploadedFiles;
-  
+
     for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-  
-      const fileExists = uploadedFilesData.some(
-        (uploadedFile) =>
-          uploadedFile.name === file.name && uploadedFile.size === file.size
-      );
-  
-      if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-        uploadedFilesData.push({
-          documentId: uuidv4(),
-          name: file.name,
-          type: file.type,
-          size: file.size,
-          label: "Label this document",
-          isEditing: false,
-          editableControl: new FormControl("Label this document"),
-          uploadDateTime: new Date(),
-          formattedUploadDateTime: this.formatDate(new Date()),
-          status: "pending",
-          file: file,
-          policyNumber: this.saveForm?.value.policyNumber,
-          documentName: this.saveForm?.value.documentName,
-          documentType: this.saveForm?.value.documentType,
-          createdBy: this.saveForm?.value.createdBy,
-        });
-  
-        inputElement.name === "underDeficiency"
-          ? (this.uploadValidFormat = false)
-          : (this.uploadValidFormt = false);
-      } else {
-        inputElement.name === "underDeficiency"
-          ? (this.uploadValidFormat = true)
-          : (this.uploadValidFormt = true);
-      }
+        const file = files[i];
+
+        const fileExists = this.uploadedFiles.some(
+            (uploadedFile) =>
+                uploadedFile.name === file.name && uploadedFile.size === file.size
+        );
+
+        if (!fileExists && this.allowedFileTypes.includes(file.type)) {
+            this.uploadedFiles.push({
+                documentId: uuidv4(),
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                label: "Label this document",
+                isEditing: false,
+                editableControl: new FormControl("Label this document"),
+                uploadDateTime: new Date(),
+                formattedUploadDateTime: this.formatDate(new Date()),
+                status: "pending",
+                file: file,
+                policyNumber: this.saveForm?.value.policyNumber,
+                documentName: this.saveForm?.value.documentName,
+                documentType: this.saveForm?.value.documentType,
+                createdBy: this.saveForm?.value.createdBy,
+            });
+            this.uploadValidFormt = false;
+        } else {
+            this.uploadValidFormt = true;
+        }
     }
-  
+
     inputElement.value = '';
-  
-    if (
-      this.uploadedUnderDeficiencyFiles.length > 0 &&
-      inputElement.name === "underDeficiency"
-    ) {
-      this.saveForm?.patchValue({
-        file: this.uploadedUnderDeficiencyFiles[0].file, 
-      });
-    } else if (
-      this.uploadedFiles.length > 0 &&
-      inputElement.name === "docUpload"
-    ) {
-      this.saveForm?.patchValue({
-        file: this.uploadedFiles[0].file, 
-      });
+
+    if (this.uploadedFiles.length > 0) {
+        this.saveForm?.patchValue({
+            file: this.uploadedFiles[0].file, 
+        });
     }
-  
     this.updateStatusLabel(inputElement.name);
-  
-    this.uploadFiles(Array.from(files), inputElement.name);
-  }
-  
-  
-  convertBytesToKB(bytes: number): string {
-    const kb = bytes / 1024;
-    return `${kb.toFixed(2)} KB`;
-  }
+    this.uploadFiles(Array.from(files), 'docUpload');
+}
 
-  // uploadFiles(files: File[],  section: string): void {
-  //   const fileNames: string[] = files.map(file => file.name);
-  //   const fileTypes: string[] = files.map(file => file.type);
-  //   this.documentType = fileTypes;
-  //   this.namesVariable = fileNames;
-  //   const formData = new FormData();
-  //   this.uploadedUnderDeficiencyFiles.forEach((file, index) => {
-
-  //   const metadata = {
-  //     policyNumber:this.policyNumber || '',
-  //     labelName: file.label || '',
-  //     documentName: this.namesVariable || '',
-  //     documentType: this.documentType || '',
-  //     createdBy: file.createdBy || '',
-  //     claimInfoId: "21727183717381",
-  //     // claimInfoId: this.claimInfoId || "",
-  //      // memberId: this.form.get("memberId")?.value || "",
-  //      memberId: 'PT85650665',
-  //      documentId: "test2",
-
-  //     };
-  //     formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
-  //     formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-  //     formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
-  //     formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
-  //     formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-  //     formData.append(`fileDetails[${index}].file`, file.file, file.name);
-  //     formData.append(`fileDetails[${index}].claimInfoId`,metadata.claimInfoId );
-  //     formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
-  //     formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
-
-  //     });
-  //     this.claimsService.uploadFiles(formData).subscribe((response:any) => {
-  //     //const uploadedFile = this.uploadedFiles.find(f => f.file.name === file.name);
-  //     if (response.success) {
-  //       this.uploadedUnderDeficiencyFiles.map(file => file.status = 'success')
-  //       this.uploadSuccess = true;
-  //       this.uploadedFilesCount++;
-  //       }
-  //       this.updateStatusLabel();
-  //       this.cdr.markForCheck();
-  //       }, (_error: any) => {
-  //       this.uploadedFile = this.uploadedUnderDeficiencyFiles.find(f => f.file.name === f.file.name);
-  //       this.uploadedUnderDeficiencyFiles.map(file => file.status = 'failed')
-  //       this.uploadSuccess = false;
-  //       this.failedFilesCount++;
-  //       this.updateStatusLabel();
-  //       this.cdr.markForCheck();
-  //       });
-  //   }
-
-  uploadFiles(files: File[], section: string): void {
+uploadFiles(files: File[], section: string): void {
+    const formData = new FormData();
     const fileNames: string[] = files.map((file) => file.name);
     const fileTypes: string[] = files.map((file) => file.type);
     this.documentType = fileTypes;
     this.namesVariable = fileNames;
+    this.uploadedFiles.forEach((file, index) => {
+            const metadata = {
+                policyNumber: this.policyNumber || "",
+                labelName: file.label || "",  
+                documentName: file.name || "",
+                documentType: file.type || "",
+                createdBy: file.createdBy || "",
+                claimInfoId: "",  
+                memberId: "", 
+                documentId: file.documentId, 
+            }
 
-    const formData = new FormData();
+            formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
+            formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
+            formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
+            formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
+            formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
+            formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
+            formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
+            formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
+            formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
 
-    // Loop through uploadedUnderDeficiencyFiles
-    this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
-      const matchingFile = files.find(
-        (file) => file.name === deficiencyFile.file.name
-      );
-
-      if (matchingFile) {
-        const metadata = {
-          policyNumber: this.policyNumber || "",
-          labelName: section || "",
-          documentName: matchingFile.name || "",
-          documentType: matchingFile.type || "",
-          createdBy: deficiencyFile.createdBy || "",
-          claimInfoId: "21727183717381",
-          memberId: "PT85650665",
-          documentId: "",
-        };
-
-        // Append metadata and file to FormData
-        formData.append(
-          `fileDetails[${index}].policyNumber`,
-          metadata.policyNumber
-        );
-        formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-        formData.append(
-          `fileDetails[${index}].documentName`,
-          metadata.documentName
-        );
-        formData.append(
-          `fileDetails[${index}].documentType`,
-          metadata.documentType
-        );
-        formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-        formData.append(
-          `fileDetails[${index}].file`,
-          matchingFile,
-          matchingFile.name
-        );
-        formData.append(
-          `fileDetails[${index}].claimInfoId`,
-          metadata.claimInfoId
-        );
-        formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
-        formData.append(
-          `fileDetails[${index}].documentId`,
-          metadata.documentId
-        );
-      }
+        //  else {
+        //     console.error('Matching file not found:', file);
+        // }
     });
 
     this.claimsService.uploadFiles(formData).subscribe(
-      (response: any) => {
-        if (response.success) {
-          this.uploadedUnderDeficiencyFiles.forEach(
-            (file) => (file.status = "success")
-          );
-          this.uploadSuccess = true;
-          this.uploadedFilesCount++;
+        (response: any) => {
+            console.log('Upload response:', response);
+            if (response.success) {
+                this.uploadedFiles.forEach((file) => (file.status = "success"));
+                this.uploadSuccess = true;
+                this.uploadedFilesCount++;
+            }
+            this.updateStatusLabel(section);
+            this.cdr.markForCheck();
+        },
+        (error: any) => {
+            console.error('Upload error:', error);
+            this.uploadedFiles.forEach((file) => (file.status = "failed"));
+            this.uploadSuccess = false;
+            this.failedFilesCount++;
+            this.updateStatusLabel(section); 
+            this.cdr.markForCheck();
         }
-        this.updateStatusLabel(section); // Update the status label on UI
-        this.cdr.markForCheck(); // Ensure the change detection runs
-      },
-      (error: any) => {
-        this.uploadedUnderDeficiencyFiles.forEach(
-          (file) => (file.status = "failed")
-        );
-        this.uploadSuccess = false;
-        this.failedFilesCount++;
-        this.updateStatusLabel(section); // Update status on UI for failed files
-        this.cdr.markForCheck();
-      }
     );
-  }
+}
+
+convertBytesToKB(bytes: number): string {
+    const kb = bytes / 1024;
+    return `${kb.toFixed(2)} KB`;
+}
 
   updateStatusLabel(section: string): void {
     if (section === "underDeficiency") {
@@ -732,10 +513,11 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
       (response:any) => {
         if (response.isSuccess) {
           console.log('File deleted successfully:', response);
-          //  this.uploadedFiles = this.uploadedFiles.filter(
-          //  (file) => file.documentId !== fileToDelete.documentId 
-         // );
+           this.uploadedFiles = this.uploadedFiles.filter(
+           (file) => file.documentId !== fileToDelete.documentId 
+         );
           this.totalFilesCount = this.uploadedFiles.length;
+          this.cdr.detectChanges();
         } else {
           console.error('Failed to delete file:', response.message);
         }
@@ -806,6 +588,37 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
   moveToDocsSection(data: any) {
     this.selectedTabIndex = data;
   }
+
+  updateClaim(): void {
+    const UpdateClaimReqBody = this.uploadedFiles.map(file => {
+        return {
+            documentId: file.documentId,
+            documentName: file.name,
+            status: file.status,         
+            labelName: file.label       
+        };
+    });
+
+    this.claimsService.updateClaim(UpdateClaimReqBody).subscribe(
+        (response:any) => {
+          if(response.isSuccess){
+            console.log('Submission successful', response);
+        
+            this.uploadSuccess = true;
+          }
+          else{
+            console.error('Submission failed');
+
+          }
+        },
+        (error) => {
+            console.error('Submission failed', error);
+          
+            this.uploadSuccess = false;
+        }
+    );
+}
+
   // submitClaim(files: File[], section: string) {
 
   //   this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
