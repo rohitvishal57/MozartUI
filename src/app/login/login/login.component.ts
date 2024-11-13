@@ -9,6 +9,8 @@ import { CommonService } from 'src/app/services/common.service';
 import {take} from 'rxjs/operators';
 import { SendOtpViaComponent } from '../send-otp-via/send-otp-via.component';
 import { LoginService } from './login.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +18,8 @@ import { LoginService } from './login.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit{
+
+  
   loginForm!: FormGroup;
   codeForm!: FormGroup;
   verifyOtpEnable:boolean = false;
@@ -39,7 +43,8 @@ export class LoginComponent implements OnInit{
   constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,
     private toast: NgToastService,public common:CommonService,
     private route: ActivatedRoute,
-    public dialog: MatDialog){
+    public dialog: MatDialog, private languageService: LanguageService,
+    private translateService: TranslateService){
       this.loginForm = this.fb.group({
         userName: ['', [Validators.required]],
         captcha: ['', [Validators.required]]
@@ -52,6 +57,14 @@ export class LoginComponent implements OnInit{
   }
 
   ngOnInit(){
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+
     this.backgroundImageUrl = "assets/logo/Backgroundimage_ABHI.jpg"; 
     localStorage.clear();
     sessionStorage.clear();
