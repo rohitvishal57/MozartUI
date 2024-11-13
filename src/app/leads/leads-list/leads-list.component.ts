@@ -33,7 +33,7 @@ export class LeadsListComponent {
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
-  selected: string = "";
+  selected: string = "Select an option";
   searchInputControl = new FormControl("");
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
@@ -77,6 +77,7 @@ export class LeadsListComponent {
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
+
   constructor(
     private leadsService: LeadsService,
     private commonService: CommonService,
@@ -264,7 +265,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
-    this.selected = "";
+    //this.selected = "";
     this.searchInputControl.reset();
 
   }

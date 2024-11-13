@@ -115,22 +115,28 @@ export class HeaderComponent implements OnInit ,OnDestroy {
 
 
  showAllNotifications(){
+  this.closePopup();
   this.router.navigate(['/notifications'], {
     queryParams: { agentCode:  this.agentCode },
   });
  }
 
  notificationInfo() {
-
   this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
     (response) => {
     this.notifications = response?.data;
     this.notificationCount = this.notifications.length;
+    console.log('notifications',this.notifications);
     },
     error => {
       console.log('Failed to fetch notifications',error)
     });
 
+}
+
+routeNotification(notification : any){
+this.closePopup();
+this.router.navigate([notification.redirectionURL]);
 }
 
 }

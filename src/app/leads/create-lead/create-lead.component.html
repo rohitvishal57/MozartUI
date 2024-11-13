@@ -596,7 +596,7 @@
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input class="form-control input-textBox" id="activityTitle" name="activityTitle" placeholder=""
-                                                formControlName="activityTitle" type="text"
+                                                formControlName="activityTitle" type="text" maxlength="50"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
                                             <label for="activityTitle">Activity Title*</label>
                                             <span class="invalid-feedback"

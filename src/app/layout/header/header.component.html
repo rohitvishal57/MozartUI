@@ -70,11 +70,11 @@
                     <div class="input-block input-block-renew input-filed-white">
                       <ul class="notificationList" *ngFor="let item of notifications ; let i =index">
                         <li>
-                          <div class="tipInfo_org" *ngIf="item.isRead ==false"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
+                          <div class="tipInfo_org" *ngIf="item.isRead ==false" (click)="routeNotification(item)"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
                         </li>
-                        <li class="read_notification">
+                        <!-- <li class="read_notification">
                           <div class="tipInfo_org" *ngIf="item.isRead"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
-                        </li>
+                        </li> -->
                       </ul>
                       <!--<mat-list-item *ngFor="let notification of notifications ; let i =index">
                         <span style="color: black;">{{i+1}}: {{notification.message}}</span>

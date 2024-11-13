@@ -164,12 +164,17 @@ export class CreateLeadComponent implements OnInit {
 
   changeDob(event: any) {
     console.log("date", event.target.value);
-    let age: any = ''
-    age = this.calculateAge(event.target.value);
-    this.userValidations.get('age')?.setValue(age);
-    this.userValidations.updateValueAndValidity();
-    this.userValidations.get('age')?.disable()
+    if (event.target.value == '') {
+      this.userValidations.get('age')?.setValue(0)
+    } else {
+      let age: any = ''
+      age = this.calculateAge(event.target.value);
+      this.userValidations.get('age')?.setValue(age);
+      this.userValidations.updateValueAndValidity();
+      this.userValidations.get('age')?.disable()
+    }
   }
+
   calculateAge(dob: any) {
     let timeDiff = Math.abs(Date.now() - new Date(dob).getTime());
     let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
@@ -206,10 +211,15 @@ export class CreateLeadComponent implements OnInit {
     this.CreateLead.PhoneNumber = this.userValidations.get('mobilenumber')?.value;
     this.CreateLead.campaignname = 'Self'
     this.CreateLead.dob = this.userValidations?.get('dob')?.value;
-    let dobFormatted = this.datePipe.transform(this.CreateLead.dob, 'yyyy-MM-dd');
-    let timeDiff = Math.abs(Date.now() - new Date(dobFormatted as string).getTime());
-    let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
+    let age = 0;
+     if( this.CreateLead.dob !=''){
+      let dobFormatted = this.datePipe.transform(this.CreateLead.dob, 'yyyy-MM-dd');
+      let timeDiff = Math.abs(Date.now() - new Date(dobFormatted as string).getTime());
+      let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
+    }
     this.CreateLead.age = age.toString();
+
+   
 
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
