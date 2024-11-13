@@ -90,7 +90,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   feedbackSubmit: boolean = false;
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
-  fullquotecondition:boolean=false;
+  fullQuoteResponse:any;
 
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,
@@ -373,10 +373,34 @@ private formatDate(dateString: string): string {
       },
       error: (err) => {console.error(err);}
     });
-  }else if(option == 'online' || option == 'E-Mandate' || option == 'Auto_Debit'){
-    this.selectedPaymentType = option;
-    console.log("payment type",this.selectedPaymentType);
   }
+  else if(option == 'online' || option == 'E-Mandate' || option == 'Auto_Debit'){
+    this.selectedPaymentType = option;
+    const paymentRequestBody={
+      "agentcode": this.agentCode,
+      "proposalNumber": "",
+      "paymentMethod": this.selectedPaymentType,
+      "source": "Retail",
+      "policyType": "Renewal",
+      "policyNumber": this.policyNumber,
+      "quoteNumber": "",
+      "orderId": ""
+     }
+      this.renewalService.paymentGatewayApi(paymentRequestBody).subscribe({
+        next: (response: any) => {
+          const paymenturl=response.data.paymentURL
+          if (response.isSuccess==true && paymenturl) {
+            window.open(paymenturl, '_blank');
+          }
+          else {
+            console.log('Payment initiation failed:', response.message || 'Unknown error');
+          }
+        },
+        error: (error: any) => {
+          this.toast.error({ detail: '',summary: 'Failed to payment.',duration: 3000});
+        }
+      });
+     }  
  }
  filterBankList(event: any): void {
   const input = (event.target as HTMLInputElement).value.toLowerCase();
@@ -409,20 +433,43 @@ goNext(){
   else if(this.activeSection== 'policySummary'){
     this.setSection('payment')
   }else if(this.activeSection == 'payment'){
-    // if(this.selectedPaymentType == 'offline' && !this.form.valid){
-    //   this.form.markAllAsTouched();
-    //   return;
-    // }
-    this.setSection('thankyou')
-    this.hideSection=false
-    this.fullquotecondition=true
-    console.log("active section",this.activeSection);
-    if(this.fullquotecondition==true){
-      this.setSection('feedback')
-      console.log("active section",this.activeSection);
-      
-      this.isFeedBackModalVisible = true;
+    if(this.selectedPaymentType == 'offline' && !this.form.valid){
+      this.form.markAllAsTouched();
+      return;
     }
+    const offlinePaymentRequestBody = {
+      "policyType": "Renewal",
+      "paymentMethod": "Offline",
+      "paymentOption": this.form.value.paymentOption.toString(),
+      "premiumAmount": this.form.value.chequeAmount.toString(),
+      "checkNo": this.form.value.chequeNumber.toString(),
+      "checkDate": this.form.value.chequeDate.toString(),
+      "policyNumber": this.policyNumber.toString(),
+      "agentCode": this.agentCode?.toString(),
+      "bankName": this.form.value.bankNameControl.toString(),
+      "ifsc": this.form.value.ifscCode.toString(),
+      "formFile": []
+    };
+    console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
+    this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
+      (res:any)=>{
+        if(res.isSuccess){
+          console.log("offline payment reponse",res.data);
+          this.fullQuoteResponse=JSON.parse(res.data);          
+          this.setSection('thankyou')
+          this.hideSection=false
+        }
+        else{
+          this.toast.error({ detail: '',summary:res.message,duration: 3000});
+        }
+      },
+      (err)=>{
+        this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
+        console.log("error is coming from fullquote api");
+    })
+      //  this.setSection('feedback');
+      //  this.isFeedBackModalVisible = true;
+      //  this.hideSection=false
   }
 }
 comeBack(){
@@ -447,49 +494,6 @@ comeBack(){
     }
   }
 }
-payNow(){
-   const paymentRequestBody={
-    "agentcode": this.agentCode,
-    "proposalNumber": "",
-    "paymentMethod": this.selectedPaymentType,
-    "source": "Retail",
-    "policyType": "Renewal",
-    "policyNumber": this.policyNumber,
-    "quoteNumber": "",
-    "orderId": ""
-   }
-   
-   const PayOfflineRequestBody = {
-    policyType: '',
-    paymentMethod: '',
-    paymentOption: '',
-    premiumAmount: '',
-    checkNo: '',
-    checkDate: '',
-    policyNumber: '',
-    agentCode: '',
-    bankName: '',
-    ifsc: '',
-    formFile: [],
-  };
-   if (paymentRequestBody.paymentMethod == "online" || paymentRequestBody.paymentMethod == "E-Mandate" ||
-    paymentRequestBody.paymentMethod == "Auto_Debit") {
-    this.renewalService.paymentGatewayApi(paymentRequestBody).subscribe({
-      next: (response: any) => {
-        const paymenturl=response.data.paymentURL
-        if (response.isSuccess==true && paymenturl) {
-          window.open(paymenturl, '_blank');
-        }
-        else {
-          console.log('Payment initiation failed:', response.message || 'Unknown error');
-        }
-      },
-      error: (error: any) => {
-        this.toast.error({ detail: '',summary: 'Failed to payment.',duration: 3000});
-      }
-    });
-   }
-}
 getProducts() {
   const reqData={
     "agentCode": this.agentCode
@@ -510,7 +514,6 @@ async getRenewalInfo() {
   const base = this.encryptionService.decrypt(sessionStorage.getItem('renewalData') as string);
   this.renewalInfo = JSON.parse(base.data.baseResponse);
   console.log(this.renewalInfo);
-  
   this.kycFlag = base.data.isKYCComplete;
   this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
 }

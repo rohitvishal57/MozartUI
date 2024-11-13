@@ -381,7 +381,7 @@ h2 {
                 color: #000000;
             }
             .card_item_badge {
-                width: 90%;
+                width: 97%;
                 margin: 1px auto 10px;
                 padding: 4px 8px;
                 border-radius: 0 0 8px 8px;
@@ -833,6 +833,73 @@ h2 {
                 height: 4px;
                 background: #5A5A65;
             }
+        }
+    }
+}
+.board_otherSections {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    .item_otherSections {
+        padding: 20px 16px;
+        border-radius: 16px;
+        background: #ffffff;
+        max-width: 524px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        .otherSections_wraper {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            header {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                h2 {
+                    font-weight: 600;
+                    font-size: 20px;
+                    line-height: 22px;
+                    margin: 0;
+                }
+                .otherSections_head {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+            }
+            .otherSections_body {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                .card_wraper {
+                    overflow: hidden;
+                    .cardsub_wraper {
+                        //overflow-x: auto;
+                        padding-bottom: 10px;
+                        .card_item {
+                            flex: 0 0 220px;
+                            padding: 12px;
+                            border-radius: 12px;
+                            box-shadow: 0px 2px 6px 0px #0000000F;
+                            &.knowledgeInfo {
+                                h6 {
+                                    font-weight: 600;
+                                    font-size: 14px;
+                                    line-height: 18px;
+                                    color: #000000;
+                                    margin: 0;
+                                }
+                                .btn_exploreMore {
+                                    font-weight: 500;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        
         }
     }
 }
