@@ -587,7 +587,7 @@ export class LeadsListComponent {
             partnerId: interestedProductItem.partnerId,
             productId: interestedProductItem.productId,
             quickQuoteRedirect : true,
-            leadId :  lead.leadnumber
+            leadId :  lead.leadNumber
           }
 
             this.router.navigate(['yatra'], {
