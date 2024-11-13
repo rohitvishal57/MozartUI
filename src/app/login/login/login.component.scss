@@ -538,39 +538,40 @@
                     cursor: pointer;
                 }
                 
-.otp-container {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px auto;
-  }
+            .otp-container {
+                display: flex;
+                justify-content: space-between;
+                margin: 20px auto;
+            }
   
-  .otp-input {
-    width: 50px !important;
-    margin-right: 10px !important;
-    padding: 10px !important;
-    text-align: center;
-    font-size: 18px;
-    border: 1px solid #F1F3F6;
-    border: 1px solid #e7e8e9;
-    @media (max-width:390px) {
-        width: 41px !important;
+            .otp-input {
+                width: 50px !important;
+                margin-right: 10px !important;
+                padding: 10px !important;
+                text-align: center;
+                font-size: 18px;
+                border: 1px solid #F1F3F6;
+                border: 1px solid #e7e8e9;
+                @media (max-width:390px) {
+                    width: 41px !important;
+                }
+            }
+            .otp-text-wrap{
+                color: #000000;
+                opacity: 0.6;
+                position: relative;
+                top: 10px;
+                font-weight: 500;
+            }
+            .error-message {
+                color: red;
+                text-align: center;
+            }
+            .margin-btn-wrap{
+                margin-top: 0px !important;
+            }
+        
     }
-  }
-  .otp-text-wrap{
-    color: #000000;
-    opacity: 0.6;
-    position: relative;
-    top: 10px;
-    font-weight: 500;
-  }
-  .error-message {
-    color: red;
-    text-align: center;
-  }
-  .margin-btn-wrap{
-    margin-top: 0px !important;
-  }
-}
   
             .bg-white-wrap{
                 .pad-wrap-10{
@@ -798,6 +799,11 @@
         top: 0;
         left: 14%;
         z-index: -1;*/
+    }
+}
+@media (max-width:1222px) {
+    .login-mainContainer .login-formMain {
+        padding: 8% 0% 0%;
     }
 }
 /*====New Styles August 18-2024===*/
