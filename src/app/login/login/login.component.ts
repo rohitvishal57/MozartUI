@@ -22,75 +22,48 @@ export class LoginComponent implements OnInit{
   private readonly _destroying$ = new Subject<void>();
   backgroundImageUrl: string | undefined;
   otp: string[] = ['', '', '', '', '', ''];  // Initialize OTP array
-  activeBtn:string = "Login with User Code";
   maskedUserCode:any = ''
   loginWithUsername:boolean = true;
-  loginWithUserOTP:boolean = true;
   errorMessage: string = '';
   timeLeft: number = 30; 
   isTimerRunning: boolean = false; 
   contactInfoData: string[] = [];
   timerOn: boolean = true;
+  userErrorMsg: string = "";
+  captchaErrorMsg: string = "";
+
+  captchaCode: string | any;
+  enteredCaptchaCode: string | any = '';
+  isSubmitted: boolean = false;
+  
   constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,
     private toast: NgToastService,public common:CommonService,
     private route: ActivatedRoute,
     public dialog: MatDialog){
+      this.loginForm = this.fb.group({
+        userName: ['', [Validators.required]],
+        captcha: ['', [Validators.required]]
+      })
+      this.codeForm = this.fb.group({
+        verify: ['', [Validators.required]],
+      })
+  
+      this.captchaCode = this.generateCaptcha();
   }
 
   ngOnInit(){
     this.backgroundImageUrl = "assets/logo/Backgroundimage_ABHI.jpg"; 
-    localStorage.clear()
-    sessionStorage.clear()
-    this.loginForm = this.fb.group({
-      userName: ['', [Validators.required]],
-    })
-    this.codeForm = this.fb.group({
-      verify: ['', [Validators.required]],
-    })
+    localStorage.clear();
+    sessionStorage.clear();
   }
 
-  selectFormType(data:any){
-    this.activeBtn = data;
-    if(data == 'Login with User Code'){
-      this.loginWithUserOTP = false;
-      this.loginWithUsername = true;
-       this.codeForm = this.fb.group({
-        verify: ['', [Validators.required]],
-      })
-      this.verifyOtpEnable = false;
-      this.otp = ['', '', '', '', '', ''];
-    }else{
-      this.loginWithUserOTP = true;
-      this.loginWithUsername = false;
-      this.loginForm = this.fb.group({
-        userName: ['', [Validators.required]],
-      })
+  generateCaptcha(): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let captcha = '';
+    for (let i = 0; i < 6; i++) {
+      captcha += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-  }
-
-  contactDetailsReqBody: any = {
-    "userId": ""
-  }
-  
-  onVerifySubmit(){
-    if(this.codeForm.valid){
-      this.contactDetailsReqBody.userId = this.codeForm.value.verify;
-      this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
-        .subscribe({  
-          next: (res:any)=>{
-            this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
-            localStorage.setItem("agentCode", this.codeForm.value.verify);
-            this.openModal(this.contactInfoData);
-          },
-          error: (err => {
-            console.log(err);
-            this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
-          })
-        })
-    }else{
-      this.verifyOtpEnable = false;
-      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 5000 })
-    }
+    return captcha;
   }
 
   openModal(contactInfoData: string[]) {
@@ -172,21 +145,108 @@ export class LoginComponent implements OnInit{
     });
   }
 
-  onSubmit(){
-    if(this.loginForm.valid){
-      this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
-        .subscribe({  
-          next: (res:any)=>{
-            if(res.data && res.isSuccess && res.statusCode == '200') {
-              localStorage.setItem('agentCode', this.loginForm.value.userName);
-              window.open(res.data.redirectUrl, "_blank");
-            }
-          },
-          error: ((err:any) => {
-            console.log(err);
-            this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
-          })
+  resetPasswordPayload = {
+    "userName": ""
+  }
+
+
+  handleReset() {
+    if(this.loginForm.valid) {
+      this.resetPasswordPayload.userName = this.loginForm.value.userName;
+      this.loginService.resetPasswordRequestApi(this.resetPasswordPayload)
+      .subscribe({  
+        next: (res:any)=>{
+            window.open(res.data.redirectUrl, "_blank");
+        },
+        error: ((err:any) => {
+          console.log(err);
+          this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
         })
+      })
+    } else {
+        Object.keys(this.loginForm.controls).forEach(field => {
+          const control = this.loginForm.get(field);
+          if (control instanceof FormGroup) {
+            control?.markAsDirty({ onlySelf: true });
+          }
+          else {
+            control?.markAsTouched({ onlySelf: true });
+          }
+        });
+      }
+    
+  }
+
+  refreshCaptcha(){
+    this.enteredCaptchaCode = '';
+    this.captchaCode = this.generateCaptcha();
+  }
+
+  resetFormAndCaptcha(){
+    // this.loginForm.reset();
+    this.enteredCaptchaCode = '';
+    this.captchaCode = this.generateCaptcha();
+  }
+
+  onKeyDownEvent() {
+    this.captchaErrorMsg = "";
+    this.isSubmitted = false;
+  }
+
+  contactDetailsReqBody: any = {
+    "userId": ""
+  }
+
+  onSubmit(data:any){
+    if(this.loginForm.valid){
+      this.userErrorMsg = "";
+      this.isSubmitted = true;
+      if(this.enteredCaptchaCode == this.captchaCode){
+        if(data == 'SSO'){
+          this.loginService.sendAgentLoginRequestApi(this.loginForm.value)
+            .subscribe({  
+              next: (res:any)=>{
+                if(res.data && res.isSuccess && res.statusCode == '200') {
+                  this.resetFormAndCaptcha();
+                  localStorage.setItem('agentCode', this.loginForm.value.userName);
+                  window.open(res.data.redirectUrl, "_blank");
+                } else {
+                  this.userErrorMsg = res.message;
+                }
+              },
+              error: ((err:any) => {
+                console.log(err);
+                this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
+                this.resetFormAndCaptcha();
+              })
+            })
+        } else{
+          this.contactDetailsReqBody.userId = this.loginForm.value.userName;
+          this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody)
+            .subscribe({  
+              next: (res:any)=>{
+                if(res?.data?.contactInfo?.length > 0){
+                  this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
+                  localStorage.setItem("agentCode", this.loginForm.value.userName);
+                  console.log(this.contactInfoData);
+                  this.openModal(this.contactInfoData);
+                  this.loginWithUsername = false;
+                }else{
+                  this.userErrorMsg = res.message;
+                }
+              
+              },
+              error: (err => {
+                this.toast.error({ detail: "ERROR", summary:err, duration: 5000 });
+                this.resetFormAndCaptcha();
+              })
+            })
+        }
+      } else {
+            // this.toast.error({ detail: "ERROR", summary:'Please enter valid CAPTCHA', duration: 5000 });
+            this.captchaErrorMsg = 'Please enter valid CAPTCHA';
+            this.resetFormAndCaptcha();
+        }
     }
     else {
       console.log('Form is invalid', this.loginForm);
@@ -199,10 +259,6 @@ export class LoginComponent implements OnInit{
           control?.markAsTouched({ onlySelf: true });
         }
       });
-      if (this.loginForm.invalid)
-        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 5000 })
-      else if (this.loginForm.get('nationality') && this.loginForm.get('nationality')?.value !== 'Indian')
-        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 5000 })
     }
   }
 

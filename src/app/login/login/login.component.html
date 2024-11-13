@@ -1,81 +1,68 @@
 <div class="login-mainContainer">
-  <div class="body">
+    <div class="body">
       <router-outlet></router-outlet>
-  </div>
-  <div class="login-formMain">
+    </div>
+    <div class="login-formMain">
       <div class="login-form">
-          <h1>Welcome to Aditya Birla Health Insurance</h1>
-          <div class="bg-white-wrap">
-              <div class="row pad-wrap-10 m-0">
-                  <div class="col-6 pad-0">
-                      <button id="loginwithusercode" name="loginwithusercode" (click)="selectFormType('Login with User Code')" [ngClass]="{'activeBtn': activeBtn ==='Login with User Code'}" class="login-otp-btn-wrap borderlt">Login with User Code</button>
-                  </div>
-                  <div class="col-6 pad-0">
-                      <button id="loginwithotp" name="loginwithotp" class="login-otp-btn-wrap bordertl" (click)="selectFormType('Login with OTP')" [ngClass]="{'activeBtn': activeBtn ==='Login with OTP'}">Login with OTP</button>
-                  </div>
-              </div>
-          </div>
-          <form [formGroup]="loginForm" *ngIf="loginWithUsername">
-              <div class="login-form-section">
-                  <div class="input-item">
-                      <div class="input-with-icon">
-                          <input type="text" id="userName" name="userName" placeholder="AgentCode/Email/IRDA License Number" formControlName="userName">
-                      </div>
-                      <small *ngIf="loginForm.controls['userName'].touched && !loginForm.controls['userName'].hasError('maxlength') && loginForm.controls['userName'].hasError('required')" class="text-danger">AgentCode/Email/IRDA License Number is required</small>
-                  </div>
-                  <div class="submit-button">
-                      <button type="submit" id="continue" name="continue" class="login-button" (click)="onSubmit()">
-                          <span>Continue</span>
-                      </button>
-                  </div>
-              </div>
-          </form>
-          <form [formGroup]="codeForm" *ngIf="loginWithUserOTP && !loginWithUsername && !verifyOtpEnable">
-              <div class="login-form-section">
-                  <div class="input-item">
-                      <div class="input-with-icon">
-                          <input type="text" id="userCode" name="userCode" placeholder="Enter your User Code" formControlName="verify">
-                      </div>
-                      <div class="row">
-                          <div class="col-6">
-                              <small *ngIf="codeForm.controls['verify'].touched && !codeForm.controls['verify'].hasError('maxlength') && codeForm.controls['verify'].hasError('required')" class="text-danger">User Code is required</small>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="submit-button">
-                      <button type="submit" id="sendotp" name="sendotp" class="login-button" (click)="onVerifySubmit()">
-                          <span>Send OTP </span>
-                      </button>
-                  </div>
-                  <p class="text-danger text-center">{{errorMessage}}</p>
-              </div>
-          </form>
-          <div class="verify-e-p-otp-wrap" *ngIf="verifyOtpEnable">
-              <label class="otp-text-wrap">The OTP has been to {{ maskedUserCode }}</label>
-              <div class="otp-container">
-                  <input type="password" #otp0 class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
-                  <input type="password" #otp1 class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
-                  <input type="password" #otp2 class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
-                  <input type="password" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
-                  <input type="password" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
-                  <input type="password" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
-              </div>
-              <div class="submit-button margin-btn-wrap">
-                  <button type="submit" id="verifylogin" name="verifylogin" class="login-button" (click)="onVerifyOTP()">
-                      <span>Verify & Login</span>
-                  </button>
-              </div>
-              <p class="text-danger text-center">{{errorMessage}}</p>
-              <div class="d-flex justify-content-center" *ngIf="timerOn">
-                  <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds</label>
-                  <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">Resend OTP</label>
-              </div>
-          </div>
+        <h1>Welcome to Aditya Birla Health Insurance</h1>
+
+        <form [formGroup]="loginForm" *ngIf="loginWithUsername">
           <div>
+            <input type="text" id="userName" name="userName" placeholder="AgentCode/Email/IRDA License Number" formControlName="userName" (keydown)="onKeyDownEvent()">
+            <small *ngIf="loginForm.controls['userName'].touched && !loginForm.controls['userName'].hasError('maxlength') && loginForm.controls['userName'].hasError('required')" class="text-danger">AgentCode/Email/IRDA License Number is required</small>
+            <small *ngIf="isSubmitted" class="text-danger">{{userErrorMsg}}</small>
           </div>
+
+          <div class="d-flex flex-row justify-content-between captcha-container">
+            <div class="col-6">
+                <input id="captcha" placeholder="Enter CAPTCHA" [(ngModel)]="enteredCaptchaCode" (keydown)="onKeyDownEvent()" type="text" formControlName="captcha" />
+                <small *ngIf="loginForm.controls['captcha'].touched && loginForm.controls['captcha'].hasError('required') && !isSubmitted" class="text-danger">Captcha is required</small>
+                <small *ngIf="isSubmitted" class="text-danger">{{captchaErrorMsg}}</small>
+            </div>
+            <div class="col-6">
+                <label class="captcha-label">
+                    <span *ngFor="let char of captchaCode.split('')">{{ char }}</span>
+                </label>
+                <mat-icon style="position: relative; top: 5px; left:5px; cursor: pointer;" (click)="refreshCaptcha()">refresh</mat-icon>       
+            </div>
+          </div>
+
+          <div class="row pt-4">
+            <div class="col-6 pad-0">
+              <button id="loginwithusercode" name="loginwithusercode" (click)="onSubmit('SSO')" class="login-button borderlt">Login with SSO</button>
+            </div>
+            <div class="col-6 pad-0">
+              <button id="loginwithotp" name="loginwithotp" (click)="onSubmit('OTP')" class="login-button borderlt">Login with OTP</button>
+            </div>
+            <div class="text-danger" (click)="handleReset()" style="text-align: center; text-decoration: underline; cursor: pointer;" formControlName="userName">Reset password</div>
+          </div>
+        </form>
+
+        <div class="verify-e-p-otp-wrap" *ngIf="verifyOtpEnable">
+          <label class="otp-text-wrap">The OTP has been to {{ maskedUserCode }}</label>
+          <div class="otp-container">
+            <input type="password" #otp0 class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
+            <input type="password" #otp1 class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
+            <input type="password" #otp2 class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
+            <input type="password" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
+            <input type="password" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
+            <input type="password" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
+          </div>
+          <div class="submit-button margin-btn-wrap">
+            <button type="submit" id="verifylogin" name="verifylogin" class="login-button" (click)="onVerifyOTP()">
+              <span>Verify & Login</span>
+            </button>
+          </div>
+          <p class="text-danger text-center">{{errorMessage}}</p>
+          <div class="d-flex justify-content-center" *ngIf="timerOn">
+            <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">Send OTP again in <span class="timeLeft_color">{{timeLeft}}</span> seconds </label>
+            <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">Resend OTP</label>
+          </div>
+        </div>
+        <div></div>
       </div>
-      <!--<img src="assets/logo/Backgroundimage_ABHI.jpg" alt="ABHI" class="background-image">-->
-      
+    </div>
+    <div class="background-image2">
+      <img src="assets/Img/background_img_abhi.png" class="">
+    </div>
   </div>
-  <div class="background-image2"><img src="assets/Img/background_img_abhi.png" class=""></div>
-</div>

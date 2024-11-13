@@ -18,6 +18,11 @@ export class LoginService {
     return this.httpService.post(sendAgentLoginRequestApi, loginData)
   }
 
+  resetPasswordRequestApi(loginData: any) {
+    const resetPasswordRequestApi = this.configService.config.baseUrl + this.configService.config.resetPassword;
+    return this.httpService.post(resetPasswordRequestApi, loginData)
+  }
+
   storeToken(token: string) {
     localStorage.setItem('token', token);
   }

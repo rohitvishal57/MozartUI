@@ -58,6 +58,7 @@
     "getPerformanceDetailedViewLatestCount": "api/yatra/getPerformanceDetailedViewLatestCount",
     "uploadAgencyPerformance": "api/yatra/UploadAgencyPerformance",
     "partnerlogin": "api/auth/login",
+    "resetPassword": "api/auth/resetpassword",
     "validateadfstoken": "api/auth/validateadfstoken?Idtoken=",
     "validatecyberarktoken": "api/auth/validatecyberarktoken?Idtoken=",
     "getContactDetailsByAgentCode": "api/auth/getcontactdetailsbyagentcode",
