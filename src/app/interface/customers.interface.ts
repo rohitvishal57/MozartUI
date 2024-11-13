@@ -18,6 +18,7 @@ export interface CustomerList {
   proposalNumber: string | null;
   noOfPolicy: number;
   policyDetails: PolicyDetail[];
+  activePolicy?: number;
 }
 
 export interface PolicyDetail {

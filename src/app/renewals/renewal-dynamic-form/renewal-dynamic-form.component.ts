@@ -509,6 +509,8 @@ getProducts() {
 async getRenewalInfo() {
   const base = this.encryptionService.decrypt(sessionStorage.getItem('renewalData') as string);
   this.renewalInfo = JSON.parse(base.data.baseResponse);
+  console.log(this.renewalInfo);
+  
   this.kycFlag = base.data.isKYCComplete;
   this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
 }
@@ -655,7 +657,11 @@ async getRenewalInfo() {
     }
     onFileSelected(event: any) {
       const file: File = event.target.files[0];
-      if (file) {this.fileName = file.name;}
+      const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+      const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+      if (file) {
+        this.fileName = file.name;
+      }
     }
     
 }

@@ -236,8 +236,23 @@
                                 <div class="item_lable">Email ID</div>
                                 <div class="item_value">{{ row.emailID }}</div>
                             </div>
-                            <span class="modifiedBadge userPolicyBadge">Policy Info</span>
-                            <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo" *ngFor="let policy of row.policyDetails">
+                            <section class="quickFilterMain policyAlign">
+                                <span class="modifiedBadge userPolicyBadge">PolicyInfo</span>
+                                <div class="quickFilterLeft">
+                                    <ul class="quickFilter">
+                                        <li *ngIf="row.noOfPolicy >= 1">
+                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 1}"(click)="activePolicys(1, i)">Policy 1</button>
+                                        </li>
+                                        <li *ngIf="row.noOfPolicy >= 2">
+                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 2}"(click)="activePolicys(2, i)">Policy 2</button>
+                                        </li>
+                                        <li *ngIf="row.noOfPolicy >= 3">
+                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 3}"(click)="activePolicys(3, i)">View All</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </section>
+                            <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo" *ngFor="let policy of getFilteredPolicies(row.policyDetails, row.activePolicy || 0,i)">
                                 <div class="userInfoItem">
                                     <div class="item_lable">Policy Number</div>
                                     <div class="item_value">{{ policy.policyNumber ? policy.policyNumber : '-' }}</div>

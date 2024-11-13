@@ -186,48 +186,6 @@ export class RenewalListComponent {
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }
-  // onSelectChanges(event: any): void {
-  //   this.searchInputControl.reset("");
-  //   this.searchInputControl.clearValidators();
-  //   if (this.selected === "mobileNumber") {
-  //     this.searchInputControl.setValidators([
-  //       Validators.required,
-  //       Validators.pattern(/^\s*[6-9][0-9]{9}\s*$/) 
-  //     ]);
-  //   } else if (this.selected === "policyNumber") {
-  //     this.searchInputControl.setValidators([
-  //       Validators.required,
-  //       Validators.pattern(/^\s*[0-9]{2}-[0-9]{2}-[0-9]{7}-[0-9]{2}\s*$/) 
-  //     ]);
-  //   } else if (this.selected === "proposerName") {
-  //     this.searchInputControl.setValidators([
-  //       Validators.required,
-  //       Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/) 
-  //     ]);
-  //   } 
-  //   this.searchInputControl.updateValueAndValidity();
-  // }
-
-  // getErrorMessage(): string {
-  //   if (this.searchInputControl.dirty && this.selected === "") {
-  //     return "Select an option and enter.";
-  //   }
-  //   if (this.searchInputControl.hasError("required")) {
-  //     return "This field is required.";
-  //   }
-  //   if (this.searchInputControl.hasError("pattern")) {
-  //     if (this.selected === "mobileNumber") {
-  //       return "Enter a valid 10-digit mobile number.";
-  //     }
-  //     else if (this.selected === "policyNumber") {
-  //       return "Enter a valid policy number.";
-  //     }
-  //     else if (this.selected === "proposerName") {
-  //       return "Enter a valid proposer name.";
-  //     }
-  //   }
-  //   return "";
-  // }
   cancelSearch() {
     this.selected = "";
     this.renewalListRequestBody.mobileNumber = "";

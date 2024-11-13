@@ -37,6 +37,8 @@ export class CustomersListComponent {
   ];
   currentDate = new Date().toISOString().split('T')[0];
   moreInfoIndex: number | null = null;
+  activePolicy?: number= 1;
+  filteredPolicyDetails = [];
   
   constructor(
     private customerService: CustomersService ,private datePipe: DatePipe,
@@ -77,6 +79,7 @@ export class CustomersListComponent {
       (response) => { 
         if (response.isSuccess) {
           this.customerList = response.data.customerList
+          this.customerList = this.customerList.map(customer => ({...customer,activePolicy: 1}));
           console.log("customers List",this.customerList);
           this.totalRecords = response.data.totalRecords 
           if (this.customerList.length > 0) {
@@ -93,8 +96,6 @@ export class CustomersListComponent {
       }
     );
   }
-
-  
 
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
@@ -190,55 +191,6 @@ export class CustomersListComponent {
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }
-  // onSelectChanges(event: any): void {
-  //   this.searchInputControl.reset("");
-  //   this.searchInputControl.clearValidators();
-  //   if (this.selected === "mobileNumber") {
-  //     this.searchInputControl.setValidators([
-  //       Validators.required,
-  //       Validators.pattern(/^\s*[6-9][0-9]{9}\s*$/) 
-  //     ]);
-  //   } else if (this.selected === "policyNumber") {
-  //     this.searchInputControl.setValidators([
-  //       Validators.required,
-  //       Validators.pattern(/^\s*[0-9]{2}-[0-9]{2}-[0-9]{7}-[0-9]{2}\s*$/) 
-  //     ]);
-  //   } else if (this.selected === "emailID") {
-  //     this.searchInputControl.setValidators([
-  //       Validators.required,
-  //       Validators.pattern(/^\s*[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\s*$/) 
-  //     ]);
-  //   } else if (this.selected === "name") {
-  //     this.searchInputControl.setValidators([
-  //       Validators.required,
-  //       Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/) 
-  //     ]);
-  //   } 
-  //   this.searchInputControl.updateValueAndValidity();
-  // }
-  // getErrorMessage(): string {
-  //   if (this.searchInputControl.dirty && this.selected === "") {
-  //     return "Select an option and enter.";
-  //   }
-  //   if (this.searchInputControl.hasError("required")) {
-  //     return "This field is required.";
-  //   }
-  //   if (this.searchInputControl.hasError("pattern")) {
-  //     if (this.selected === "mobileNumber") {
-  //       return "Enter a valid 10-digit mobile number.";
-  //     }
-  //     else if (this.selected === "policyNumber") {
-  //       return "Enter a valid policy number.";
-  //     }
-  //     else if (this.selected === "name") {
-  //       return "Enter a valid name.";
-  //     }
-  //     if (this.selected === "emailID") {
-  //       return "Enter a valid email id.";
-  //     }
-  //   }
-  //   return "";
-  // }
   getPlaceholder(): string {
     if (this.selected === "name") {
       return "Enter Name";
@@ -291,12 +243,35 @@ export class CustomersListComponent {
       this.getCustomerList();
     }
   }
-  customerListView(view: string) {
+
+activePolicys(active: number, index: number) {
+  this.customerList[index].activePolicy = active;
+}
+
+getFilteredPolicies(policyDetails: any[], activePolicy: number,index:number) {
+  if (activePolicy === 1) {
+      return policyDetails.slice(0, 1);  
+  } else if (activePolicy === 2) {
+      return policyDetails.slice(1, 2);
+  } else if (activePolicy === 3){
+      this.customerListView('list');
+      this.toggleMoreInfo(index);
+  }
+  return null;
+}
+
+customerListView(view: string) {
+  if (this.selectedView !== view) {
     this.selectedView = view;
+    this.resetActivePolicy();
   }
-  toggleMoreInfo(index: number): void {
-    this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
-  }
+}
+resetActivePolicy() {
+  this.customerList.forEach(row => row.activePolicy = 1);
+}
+toggleMoreInfo(index: number): void {
+  this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
+}
 
   sendCustomerDetails(data:any,policy: any,event:number){        
     const RequestBody = {
