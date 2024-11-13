@@ -6,7 +6,7 @@
         <section class="section_fullWidth white_container dashboard_topSection commonSection ">
           <div class="row">
             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-              <h6>Good {{getTimeOfDay()}} , {{profileDetails?.firstName}}</h6>
+              <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}}</h6>
             </div>
             <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
               <div class="topSection_notifyUserInfo">
@@ -59,15 +59,15 @@
         <!--Search, Get Quote end-->
         <!--Important tasks start-->
         <section class="body_flex_column dashboard_improtantTasks suggested_styles commonSection ">
-          <h2>Important Tasks</h2>
+          <h2>{{"Important Tasks" | translate}}</h2>
           <div class="card_wraper improtantTasks">
-            <div class="cardsub_wraper" cdkDropList (cdkDropListDropped)="dropTasks($event)">
+            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropTasks($event)">
               <ng-container *ngFor="let tasks of taskList">
                 <div class="card_item" cdkDrag>
-                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.taskStatus}}<img
+                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.taskStatus | translate}}<img
                       src="assets/Img/icon_star_four_points.svg"></div>
-                  <h5>{{tasks.taskHeader}}</h5>
-                  <p>{{tasks.subtaskHeaderDesc}}</p>
+                  <h5>{{tasks.taskHeader | translate}}</h5>
+                  <p>{{tasks.subtaskHeaderDesc | translate}}</p>
                 </div>
               </ng-container>
             </div>
@@ -77,9 +77,9 @@
         <!--Latest from ABHI start-->
         <section class="body_flex_column dashboard_latestABHI commonSection ">
           <div class="body_flex_row justify-content-between">
-            <h6>Latest from ABHI</h6>
+            <h6>{{"Latest from ABHI" | translate}}</h6>
             <button type="button" id="btn-exploreMore" name="btn-exploreMore"
-              class="btn_iconText btn_exploreMore">Explore More <img src="assets/Img/icon_red_downarrow.svg"> </button>
+              class="btn_iconText btn_exploreMore">{{"Explore More" | translate}} <img src="assets/Img/icon_red_downarrow.svg"> </button>
           </div>
 
           <div class="card_wraper latestFromABHI">
@@ -163,46 +163,46 @@
         <div class="contentBody dashboard_contentContainer">
           <div class="performance-overview">
             <header>
-              <h2>Performance Overview</h2>
+              <h2>{{"Performance Overview" | translate}}</h2>
             </header>
             <div class="subHeader">
               <div class="notification">
-                <img src="assets/Img/icon_tips.svg">You've converted 10% more people this month compared to last month
+                <img src="assets/Img/icon_tips.svg">{{"You've converted 10% more people this month compared to last month" | translate}}
               </div>
               <div class="badge badge-purple">
-                <img src="assets/Img/icon_badge.svg">Top Seller
+                <img src="assets/Img/icon_badge.svg">{{"Top Seller" | translate}}
               </div>
             </div>
             <div>
-              <div class="cardWraper-container" cdkDropList (cdkDropListDropped)="dropPerformance($event)">
+              <div class="cardWraper-container" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropPerformance($event)">
                 <ng-container *ngFor="let perform of performanceCard">
                   <ng-container [ngSwitch]="perform.type">
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'" cdkDrag>
-                      <header><img [src]="perform.icon">{{perform.title}}</header>
+                      <header><img [src]="perform.icon">{{perform.title | translate}}</header>
                       <div class="value">{{perform.value}}</div>
-                      <div class="card-tip"><img [src]="perform.subIcon">{{perform.description}}</div>
+                      <div class="card-tip"><img [src]="perform.subIcon">{{perform.description | translate}}</div>
                     </div>
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'progress'" cdkDrag>
-                      <header><img [src]="perform.icon">{{perform.title}}</header>
+                      <header><img [src]="perform.icon">{{perform.title | translate}}</header>
                       <div class="value">{{perform.value}}</div>
                       <div class="progress-barMain">
-                        <p>{{perform.description}}</p>
+                        <p>{{perform.description | translate}}</p>
                         <div class="progress-bar">
                           <div class="progress" [ngStyle]="{ 'width': perform.progress + 'px' }"></div>
                         </div>
                       </div>
                     </div>
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag>
-                      <header><img [src]="perform.icon">{{perform.title}}</header>
+                      <header><img [src]="perform.icon">{{perform.title | translate}}</header>
                       <div class="value">{{perform.value}}</div>
-                      <div class="card-tip"><img src="assets/Img/icon_rupee.svg">{{perform.description}}</div>
+                      <div class="card-tip"><img src="assets/Img/icon_rupee.svg">{{perform.description | translate}}</div>
                     </div>
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'" cdkDrag>
-                      <header><img [src]="perform.icon">{{perform.title}}</header>
+                      <header><img [src]="perform.icon">{{perform.title | translate}}</header>
                       <div class="gauge">
                         <div class="gauge-body">
                           <div class="gauge-fill"></div>
-                          <div class="sub-text">Policies</div>
+                          <div class="sub-text">{{"Policies" | translate}}</div>
                           <div class="gauge-cover">{{perform.progress}}</div>
                         </div>
                       </div>
@@ -217,13 +217,13 @@
         <!--All Tasks start-->
         <section class="body_flex_column dashboard_allTasks white_container commonSection">
           <div class="body_flex_row justify-content-between">
-            <h6>All Tasks</h6>
+            <h6>{{"All Tasks" | translate}}</h6>
             <span
               class="common-badge common-badge-rounded tasks-badge tasks-badge-blue"><em></em>{{taskDetailsList.length}}
-              Tasks Pending</span>
+             {{" Tasks Pending" | translate}}</span>
           </div>
           <div class="card_wraper">
-            <div class="cardsub_wraper" cdkDropList (cdkDropListDropped)="dropTaskDetail($event)">
+            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropTaskDetail($event)">
               <ng-container *ngFor="let taskDetails of taskDetailsList">
                 <div class="card_item" cdkDrag>
                   <div class="head_tasks">
@@ -248,15 +248,15 @@
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
               <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="tab-leads-tab" data-bs-toggle="tab" data-bs-target="#tab-leads"
-                  type="button" role="tab" aria-controls="tab-leads" aria-selected="true">Leads</button>
+                  type="button" role="tab" aria-controls="tab-leads" aria-selected="true">{{"Leads" | translate}}</button>
               </li>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-proposal-tab" data-bs-toggle="tab" data-bs-target="#tab-proposal"
-                  type="button" role="tab" aria-controls="tab-proposal" aria-selected="false">Proposal</button>
+                  type="button" role="tab" aria-controls="tab-proposal" aria-selected="false">{{"Proposal" | translate}}</button>
               </li>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="tab-renewals-tab" data-bs-toggle="tab" data-bs-target="#tab-renewals"
-                  type="button" role="tab" aria-controls="tab-renewals" aria-selected="false">Renewals</button>
+                  type="button" role="tab" aria-controls="tab-renewals" aria-selected="false">{{"Renewals" | translate}}</button>
               </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">

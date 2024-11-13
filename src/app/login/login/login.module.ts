@@ -8,6 +8,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MyMaterialModule } from 'src/app/material.module';
 import { SendOtpViaComponent } from '../send-otp-via/send-otp-via.component';
 import { StatusValidationComponent } from '../status-validation/status-validation.component';
+import { HttpClient } from '@angular/common/http';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/','.json');
+}
+
 
 @NgModule({
   declarations: [LoginComponent,SendOtpViaComponent, StatusValidationComponent],
@@ -16,7 +24,14 @@ import { StatusValidationComponent } from '../status-validation/status-validatio
     PrimeNgModule,
     ReactiveFormsModule,
     MyMaterialModule,
-    LoginRoutingModule
+    LoginRoutingModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
 })

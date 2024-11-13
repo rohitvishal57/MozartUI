@@ -319,7 +319,7 @@
                   <button (click)="increment(control.name,control.text)">+</button>
                   <small
                     *ngIf="dynamicFormGroup.get(control.name)?.invalid && (dynamicFormGroup.get(control.name)?.touched)"
-                    class="text-danger">{{getValidationErrors(control)}}
+                    class="text-danger">{{getValidationErrors(control) | translate}}
                   </small>
                 </div>
                 <div *ngIf="control.type === 'details'" [class]="control.class" class="typecss">
@@ -486,7 +486,7 @@
                                       subControl.label }}</option> -->
                                         <ng-container *ngFor="let opt of subControl.options">
                                           <option [value]="opt.id ? stringifyObject(opt) : opt.value">
-                                            {{ opt.name?(opt.name|translate):'' }}</option>
+                                            {{ opt.name?(opt.name | translate):'' }}</option>
                                         </ng-container>
                                       </select>
                                       <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
@@ -893,7 +893,7 @@
                                                 <option selected value="">Choose...</option>
                                                 <ng-container *ngFor="let opt of innerControl.options">
                                                   <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{
-                                                    opt.name?(opt.name|translate):'' }}
+                                                    opt.name?(opt.name | translate):'' }}
                                                   </option>
                                                 </ng-container>
                                               </select>
