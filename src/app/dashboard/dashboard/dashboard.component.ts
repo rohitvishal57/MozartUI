@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ProfileService } from 'src/app/profile/profile.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +13,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 export class DashboardComponent {
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
+  profileDetails : any;
 
   taskDetailsList = [
     {
@@ -453,7 +455,7 @@ export class DashboardComponent {
   ];
 
 
-  constructor(private route: Router, private languageService: LanguageService,
+  constructor(private route: Router, private languageService: LanguageService,private profileService : ProfileService,
     private translateService: TranslateService) {
 
   }
@@ -465,6 +467,30 @@ export class DashboardComponent {
         }
       });
     });
+
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
+      if (res.isSuccess) {
+        this.profileDetails = res.data;
+      }
+    })
+  }
+
+  getTimeOfDay() {
+    const now = new Date();
+    const hour = now.getHours();
+  
+    if (hour >= 5 && hour < 12) {
+      return "Morning";
+    } else if (hour >= 12 && hour < 17) {
+      return "Afternoon";
+    } else if (hour >= 17 && hour < 21) {
+      return "Evening";
+    } else {
+      return "Night";
+    }
   }
 
   dropTasks(event: CdkDragDrop<any[]>) {
