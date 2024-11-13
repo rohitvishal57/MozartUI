@@ -12,8 +12,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 export class DashboardComponent {
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
-  private previouslyVisibleItems: Set<any> = new Set();
-  selectedIndex: any;
+
   taskDetailsList = [
     {
       title: 'Rohini Pandey',
