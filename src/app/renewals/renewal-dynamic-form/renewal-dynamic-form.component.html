@@ -1125,7 +1125,7 @@
                                             </div>               
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="number" id="cheque_Amount" name="cheque_Amount" [(ngModel)]="renewalInfo.response.policyData[0].NetPremium" class="form-control input-textBox" formControlName="chequeAmount">
+                                                    <input type="number" id="cheque_Amount" name="cheque_Amount" [(ngModel)]="renewalInfo.response.policyData[0].premium.Renewal_Gross_Premium" class="form-control input-textBox" formControlName="chequeAmount">
                                                     <label for="cheque_Amount">Check Amount</label>
                                                 </div>
                                             </div>
@@ -1218,7 +1218,7 @@
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Premium</label>
-                                            <h6>₹{{renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0'}}</h6>
+                                            <h6>₹{{renewalInfo?.response?.policyData[0]?.premium.Renewal_Gross_Premium | number:'1.0-0'}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                                             <label>Cover</label>
@@ -1448,7 +1448,7 @@
                   </div>
                   <div class="planProductQuote">
                       <div class="label">Base Quote/ incl tax</div>
-                      <div class="value">₹{{renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0'}}</div>
+                      <div class="value">₹{{renewalInfo?.response?.policyData[0]?.premium.Renewal_Gross_Premium | number:'1.0-0'}}</div>
                   </div>
                   <div class="planProductQuote">
                       <div class="label">Term</div>
@@ -1482,7 +1482,7 @@
               <footer *ngIf="activeAction !=='withoutmodify' ">
                   <div class="workingQuote">
                       <span>Working Quote/ incl tax</span>
-                      <label>₹{{(renewalInfo?.response?.policyData[0]?.NetPremium)-(renewalInfo?.response?.policyData[0]?.healthReturn ) | number:'1.0-0'}}</label>
+                      <label>₹{{(renewalInfo?.response?.policyData[0]?.premium.Renewal_Gross_Premium)-(renewalInfo?.response?.policyData[0]?.healthReturn ) | number:'1.0-0'}}</label>
                   </div>
                   <button type="button" id="savenew" name="savenew" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
                   <button type="button" id="viewall" name="viewall" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
@@ -1505,15 +1505,12 @@
               </div>
               <div class="planProductQuote">
                   <div class="label">Total Premium/ incl tax</div>
-                  <div class="value">₹{{ renewalInfo?.response?.policyData[0]?.NetPremium | number:'1.0-0' }}</div>
+                  <div class="value">₹{{ renewalInfo?.response?.policyData[0]?.premium.Renewal_Gross_Premium | number:'1.0-0' }}</div>
               </div>
           </div>
           <div class="bi_right">
               <button type="button" id="back" name="back" value="back" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()">Back</button>
               <button type="button" id="next" name="next" value="next" class="btn_red btn_redRenew" (click)="goNext()" *ngIf="(activeSection!=='payment' || selectedPaymentType == 'offline')  ">Next</button>
-              <button type="button" id="paynow" name="paynow" value="paynow" class="btn_red btn_redRenew" 
-              (click)="payNow()" *ngIf="activeSection == 'payment' && (selectedPaymentType == 'online' || 
-              selectedPaymentType == 'E-Mandate' || selectedPaymentType == 'Auto_Debit')">Pay Now</button>
          </div>
       </div>
   </div> 
@@ -1525,31 +1522,31 @@
                 <div class="row mt-3">
                     <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                         <label>Policy Number</label>
-                        <h6></h6>
+                        <h6>{{ fullQuoteResponse?.policyNumber || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                         <label>Product Name</label>
-                        <h6>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h6>
+                        <h6>{{ fullQuoteResponse?.productName  || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>Premium Paid</label>
-                        <h6></h6>
+                        <h6>{{ fullQuoteResponse?.premiumPaid  || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>Policy Start Date</label>
-                        <h6></h6>
+                        <h6>{{ fullQuoteResponse?.policyStartDate  || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>Policy End Date</label>
-                        <h6></h6>
+                        <h6>{{ fullQuoteResponse?.policyEndDate  || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>Receipt ID</label>
-                        <h6></h6>
+                        <h6>{{ fullQuoteResponse?.receiptID  || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
                         <label>Policy Status</label>
-                        <h6></h6>
+                        <h6>{{ fullQuoteResponse?.status  || '-' }}</h6>
                     </div>
                     <!-- <div class="col-12 mt-3">
                         <div class="download_policyKit">

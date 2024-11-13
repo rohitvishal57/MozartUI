@@ -383,7 +383,7 @@ export class RenewalListComponent {
     };
     this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
       (res: any) => {
-        if (res.isSuccess) {
+        if (res.isSuccess) {          
           sessionStorage.setItem("renewalData", this.encryptionService.encrypt(res));
           if(action=='withmodify'){
             console.log("active action",action);
@@ -396,7 +396,8 @@ export class RenewalListComponent {
             sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
             this.router.navigate(['renewal/payment']);
           }
-        } else {
+        }
+         else {
           this.toast.error({ detail: "", summary: res.message, duration: 3000 });
         }
       },
