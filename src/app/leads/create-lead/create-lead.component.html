@@ -252,21 +252,20 @@
                                     formControlName="mobilenumber" type="text" (keypress)="isNumber($event)" maxlength="10"
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }">
                                 <label for="nomineeName">Mobile Number *</label>
-                                <span class="invalid-feedback"
-                                    *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
+                                <span class="invalid-feedback" *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
                                     <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobile number
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobile
+                                        number
                                         cannot
                                         be blank.</span>
-                                    <span class="ui-error block-show"
-                                        *ngIf="submitted && userValidations.get('mobilenumber')?.errors?.['pattern']">Enter
-                                        a valid 10-digit mobile
-                                        number.
-                                    </span>
+                                </span>
+                                <span class="ui-error block-show"
+                                    *ngIf="userValidations.get('mobilenumber')?.invalid && userValidations.get('mobilenumber')?.errors?.['pattern']">Enter
+                                    a valid 10-digit mobile
+                                    number.
                                 </span>
                             </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        </div> <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" id="isWhatsapp" name="isWhatsapp" formControlName="isWhatsapp"
                                     (selectionChange)="campnoSelected()">
