@@ -605,10 +605,10 @@ convertBytesToKB(bytes: number): string {
     this.claimsService.updateClaim(UpdateClaimReqBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.toast.success({ detail: "Claims Updated successfully" });
+          this.toast.success({ detail: "Claims updated successfully" });
           this.uploadSuccess = true;
         } else {
-          console.error('Submission failed');
+          this.toast.error({ detail: "Failed to update claims" });
         }
       },
       (error) => {
