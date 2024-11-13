@@ -374,6 +374,16 @@
     }
 }
 
+.captcha-container {
+    gap: 12px;
+    margin-top: 18px;
+}
+
+// .submit-container {
+//     display: flex;
+//     margin-top: 18px;
+// }
+
 /*====New Styles August 18-2024===*/
 .login-mainContainer {
     width: 100%;
@@ -571,10 +581,10 @@
                         .login-otp-btn-wrap{
                             background-color: #FFFFFF;
                             margin: 0px 0px;
-                           
                         }
                         .borderlt{ 
                             border-radius: 12px 0px 0px 12px !important;
+                            align-items: center;
                         }
                         .bordertl{ 
                             border-radius: 0px 12px 12px 0px !important;
@@ -690,10 +700,11 @@
                 box-shadow: none;
                 border: 0px;
                 width: 100%;
+                color: white;
                 font-size: medium;
                 margin: 15px 0px;
                 background-color: #C7222A;
-                padding: 10px 12px;
+                padding: 10px 10px;
                 @media (max-width:390px) {
                     font-size: 13px;
                     font-weight: 600;
