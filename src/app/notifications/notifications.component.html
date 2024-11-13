@@ -16,7 +16,7 @@
                                     <section id="quotes-list" class="tableMain quoteView block-show ">
                                         <div class="tableSubMain">
                                             <div class="table-responsive">
-                                                <table class="table table-borderless table-search">
+                                                <table class="table table-borderless table-search" >
                                                     <thead>
                                                         <tr>
                                                             <th>Sr No</th>
@@ -24,8 +24,11 @@
                                                             <th>TimeSheet</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody class="table-group-divider">
+                                                    <tbody class="table-group-divider" *ngFor="let item of notifications ; let i =index">
                                                         <tr>
+                                                            <td>{{item.id}}</td>
+                                                            <td>{{item.notificationType}}</td>
+                                                            <td>{{item.createdOn}}</td>
 
                                                         </tr>
                                                     </tbody>

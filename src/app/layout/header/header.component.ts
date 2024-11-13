@@ -4,6 +4,7 @@ import { NgToastService } from 'ng-angular-popup';
 import { CommonService } from 'src/app/services/common.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
+import { NotificationService } from 'src/app/notifications/notification.service';
 
 @Component({
   selector: 'app-header',
@@ -14,14 +15,15 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   currentLanguage: string = 'en';
   isSidenavOpen: boolean = false;
   isDesktopView: boolean = window.innerWidth >= 768;
-  notificationCount : number = 1;
+  notificationCount : number = 0;
   notifications :any[]=[];
   showNotifications : Boolean = false;
+  agentCode : any;
   
   @Input() isLoggedIn: any;
 
   constructor(private router: Router,
-    private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService) {
+    private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService) {
       this.languageService.language$.subscribe(language => {
         this.currentLanguage = language;
       });
@@ -38,8 +40,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     });
     
     this.currentLanguage = this.getLanguage();
-    this.notification();
-    this.notificationCount = this.notifications.length;
+    this.agentCode = localStorage.getItem('agentCode') 
+    this.notificationInfo();
   }
 
   
@@ -110,33 +112,25 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     }
   }
 
- notification(){
-  this.notifications = [
-    {
-      message: 'You have a new comment on your post.',
-      timestamp: new Date('2024-10-01T14:23:00'),
-      type: 'comment',
-      read: false
-    },
-    {
-      message: 'Your order #12345 has been shipped.',
-      timestamp: new Date('2024-10-02T09:45:00'),
-      type: 'order',
-      read: false
-    },
-    {
-      message: 'You have a new follower: John Doe.',
-      timestamp: new Date('2024-10-03T16:10:00'),
-      type: 'follower',
-      read: true
-    }
-  ];
- }
+
 
  showAllNotifications(){
   this.router.navigate(['/notifications'], {
-    queryParams: { agentCode:  localStorage.getItem('agentCode') },
+    queryParams: { agentCode:  this.agentCode },
   });
  }
+
+ notificationInfo() {
+
+  this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
+    (response) => {
+    this.notifications = response?.data;
+    this.notificationCount = this.notifications.length;
+    },
+    error => {
+      console.log('Failed to fetch notifications',error)
+    });
+
+}
 
 }

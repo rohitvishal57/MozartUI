@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NotificationService } from './notification.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-notifications',
@@ -7,9 +9,31 @@ import { Component } from '@angular/core';
 })
 export class NotificationsComponent {
 
+  agentCode:any;
+  notifications :any;
+  
+  constructor(private notificationService: NotificationService ,private route : ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.agentCode = params['agentCode'];
+      this.notificationInfo();
+    });
+  }
 
   backToPreviousPage() {
     window.history.back();
   }
+
+  notificationInfo() {
+    this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
+      (response) => {
+      this.notifications = response?.data;
+      },
+      error => {
+        console.log('Failed to fetch notifications',error)
+      });
+  }
+  
 
 }

@@ -4806,7 +4806,6 @@ export class YatraComponent {
       "isSellerPortal": true
     }
 
-    debugger;
     this.leadsService.getLeadsListApi(leadsInfoListRequestBody).subscribe(
       (response) => {
         if (response) {

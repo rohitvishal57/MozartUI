@@ -68,12 +68,12 @@
                 <div class="row">
                   <div class="col-12">
                     <div class="input-block input-block-renew input-filed-white">
-                      <ul class="notificationList">
-                        <li *ngFor="let notification of notifications ; let i =index">
-                          <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">{{notification.message}}</div>
+                      <ul class="notificationList" *ngFor="let item of notifications ; let i =index">
+                        <li>
+                          <div class="tipInfo_org" *ngIf="item.isRead ==false"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
                         </li>
                         <li class="read_notification">
-                          <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">Don't forget to talk to your fit customers about how they can earn back a 100% of their premium through the activ fit and activ health platinum enhanced plans</div>
+                          <div class="tipInfo_org" *ngIf="item.isRead"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
                         </li>
                       </ul>
                       <!--<mat-list-item *ngFor="let notification of notifications ; let i =index">
