@@ -12,13 +12,12 @@ import { QuoteModule } from 'src/app/quote/quote.module';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { DragAndDropComponent } from './drag-and-drop/drag-and-drop.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
 @NgModule({
-  declarations: [DashboardComponent, DragAndDropComponent],
+  declarations: [DashboardComponent],
   imports: [
     CommonModule,
     PrimeNgModule,

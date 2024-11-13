@@ -14,7 +14,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     EventsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
