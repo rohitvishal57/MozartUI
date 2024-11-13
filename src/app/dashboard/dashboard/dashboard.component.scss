@@ -644,4 +644,196 @@ h2 {
         }
     }
 }
+.dashboard_productTabs{
+    box-shadow: 0px 4px 4px 0px #00000040;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+.main_productTabs {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    .nav-pills {
+        gap: 8px;
+        .nav-link {
+            padding: 5px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 24px;
+            color: #000000;
+            &.active {
+                color: #ffffff;
+                background: #C7222A;
+            }
+        }
+    }
+}
+.leads_content {
+    display: grid;
+    grid-template-columns: repeat(4, 284px);
+    gap: 28px;
+    /*overflow-x: auto;
+    padding-bottom: 10px;*/
+    .leads_item {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        &.leads_open {
+            header {
+                background: #E1E4E8;
+            }
+        }
+        &.leads_inprogress {
+            header {
+                background: #F0E7F6;
+            }
+        }
+        &.leads_won {
+            header {
+                background: #D0F1E5;
+            }
+        }
+        &.leads_lost {
+            header {
+                background: #FFDCE0;
+            }
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 20px;
+            padding: 6px 16px;
+            background: #f5f5f5;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 17px;
+            color: #4d4d4d;
+            label {
+                font-weight: 700;
+                font-size: 22px;
+                line-height: 24px;
+                color: #2e2e2e;
+            }
+        }
+        .leads_body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            .card_wraper {
+                .cardsub_wraper {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    flex-wrap: wrap;
+                    .card_item {
+                        flex: auto;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 15px;
+                        border-radius: 20px;
+                        box-shadow: 0px 4px 12px 0px #00000014;
+                        padding: 12px 16px 12px;
+                        .head_tasks {
+                            display: flex;
+                            justify-content: space-between;
+                            gap: 4px;
+                            font-weight: 700;
+                            font-size: 16px;
+                            color: #000;
+                            cursor: pointer;
+                            &.active {
+                                .profile_arrow{
+                                    img {
+                                        filter: brightness(0) invert(0);
+                                        opacity: 0.8;
+                                        transform: rotate(180deg);
+                                    }
+                                }
+                            }
+                            .profile_heading {
+                                display: flex;
+                                gap: 8px;
+                            }
+                            .profile_arrow{
+                                img {
+                                    filter: brightness(0) invert(0);
+                                    opacity: 0.8;
+                                }
+                            }
+                        }
+                        .card-tip{
+                            background: #FFF6C7;
+                            border-width: 0;
+                            padding: 10px 15px;
+                            gap: 12px;
+                        }
+                        .btn_exploreMore {
+                            font-weight: 500;
+                            font-size: 14px;
+                            justify-content: space-between;
+                        }
+                        .body_processSteps {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 15px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.card_processSteps{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 8px 0;
+    li {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 15px;
+        color: #4d4d4d;
+        display: flex;
+        gap: 6px;
+        &.status-success {
+            text-decoration:line-through ;
+            .text_processSteps {
+                opacity: 0.6;
+            }
+            .status_processSteps{
+                position: relative;
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 5px;
+                    height: 9px;
+                    border: solid #5A5A65;
+                    border-width: 0 1px 1px 0;
+                    transform: rotate(38deg);
+                    position: absolute;
+                    bottom: 5px;
+                    left: 5px;
+                    background: transparent;
+                }
+            }
+        }
+        .status_processSteps {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            background: #E1E4E8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &::before {
+                content: "";
+                width: 4px;
+                height: 4px;
+                background: #5A5A65;
+            }
+        }
+    }
+}
 /*---dahboard new sections styles end---*/
