@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { ProfileService } from 'src/app/profile/profile.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,7 +13,48 @@ import { LanguageService } from 'src/app/services/language.service';
 export class DashboardComponent {
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
+  profileDetails : any;
 
+  taskDetailsList = [
+    {
+      title: 'Rohini Pandey',
+      desc: 'Your customers payment had failed! get them to retry payment.',
+      redirectLink: 'Resend payment link to rohini',
+    },
+    {
+      title: 'Alok Shah',
+      desc: 'Document requested from Mr. Alos is yet to be received. ',
+      redirectLink: 'Send a reminder to Alok',
+    },
+    {
+      title: 'Rohini Pandey',
+      desc: 'Your customers payment had failed! get them to retry payment.',
+      redirectLink: 'Resend payment link to rohini',
+    },
+    {
+      title: 'Alok Shah',
+      desc: 'Document requested from Mr. Alos is yet to be received. ',
+      redirectLink: 'Send a reminder to Alok',
+    }
+  ]
+
+  taskList = [
+    {
+      taskHeader: 'Task 1',
+      subtaskHeaderDesc: 'Sub Task 1',
+      taskStatus: 'Do this to achieve 75% of your target'
+    },
+    {
+      taskHeader: 'Task 2',
+      subtaskHeaderDesc: 'Sub Task 2',
+      taskStatus: 'Do this to achieve 75% of your target'
+    },
+    {
+      taskHeader: 'Task 3',
+      subtaskHeaderDesc: 'Sub Task 3',
+      taskStatus: 'Do this to achieve 75% of your target'
+    }
+  ]
 
   performanceCard = [
     {
@@ -54,8 +97,365 @@ export class DashboardComponent {
     }
   ];
 
+  baseQuotes = [
+    {
+      quoteName: 'Base Quote 1',
+      subQuoteName: 'Sub Quote 1',
+      actionButtons: [
+        'edit-pen', 'renew', 'detail'
+      ],
+      renewInfo: {
+        product: 'Active User',
+        policyNo: 'Active User',
+        proposer: 'sukhadev',
+        renewalPremium: 'Active User',
+        mobileNo: 'Active User',
+        dateofRenewal: 'Active User',
 
-  constructor(private route: Router, private languageService: LanguageService,
+        modifiedDetails: {
+          members: '1',
+          tenure: '1 year'
+        }
+
+      }
+    },
+    {
+      quoteName: 'Base Quote 2',
+      subQuoteName: 'Sub Quote 2',
+      actionButtons: [
+        'edit-pen', 'renew', 'detail'
+      ],
+      renewInfo: {
+        product: 'Active User',
+        policyNo: 'Active User',
+        proposer: 'sukhadev',
+        renewalPremium: 'Active User',
+        mobileNo: 'Active User',
+        dateofRenewal: 'Active User',
+
+        modifiedDetails: {
+          members: '1',
+          tenure: '1 year'
+        }
+
+      }
+    },
+    {
+      quoteName: 'Base Quote 3',
+      subQuoteName: 'Sub Quote 3',
+      actionButtons: [
+        'edit-pen', 'renew', 'detail'
+      ],
+      renewInfo: {
+        product: 'Active User',
+        policyNo: 'Active User',
+        proposer: 'sukhadev',
+        renewalPremium: 'Active User',
+        mobileNo: 'Active User',
+        dateofRenewal: 'Active User',
+
+        modifiedDetails: {
+          members: '1',
+          tenure: '1 year'
+        }
+
+      }
+    }
+  ]
+
+  tabsInfo = [
+    {
+      tabName: 'Leads',
+      category: [
+        {
+          name: 'open',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        },
+        {
+          name: 'Inprogress',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentredirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        },
+        {
+          name: 'won',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        },
+        {
+          name: 'lost',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      tabName: 'Proposal',
+      category: [
+        {
+          name: 'open',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        },
+        {
+          name: 'open',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        },
+        {
+          name: 'open',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      tabName: 'Renewals',
+      category: [
+        {
+          name: 'open',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        },
+        {
+          name: 'open',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        },
+        {
+          name: 'open',
+
+          catInfoList: [
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            },
+            {
+              name: 'Amit Kumar',
+              status: 'Member Detailing Pending',
+              desc: 'Lead Created',
+              noteInfo: 'Your customers payment had failed! get them to retry payment.',
+              redirentlink: 'Resend payment link to Rohini'
+            }
+          ]
+        }
+      ]
+    }
+
+  ];
+
+
+  constructor(private route: Router, private languageService: LanguageService,private profileService : ProfileService,
     private translateService: TranslateService) {
 
   }
@@ -67,8 +467,57 @@ export class DashboardComponent {
         }
       });
     });
+
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
+      if (res.isSuccess) {
+        this.profileDetails = res.data;
+      }
+    })
   }
 
+  getTimeOfDay() {
+    const now = new Date();
+    const hour = now.getHours();
+  
+    if (hour >= 5 && hour < 12) {
+      return "Morning";
+    } else if (hour >= 12 && hour < 17) {
+      return "Afternoon";
+    } else if (hour >= 17 && hour < 21) {
+      return "Evening";
+    } else {
+      return "Night";
+    }
+  }
+
+  dropTasks(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.taskList, event.previousIndex, event.currentIndex);
+  }
+
+  dropPerformance(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.performanceCard, event.previousIndex, event.currentIndex);
+  }
+
+  dropTaskDetail(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.taskDetailsList, event.previousIndex, event.currentIndex);
+  }
+
+  // dropTab(event: CdkDragDrop<string[]>) {
+  //   const prevActive = this.tabsInfo[this.selectedIndex];
+  //   moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
+  //   this.selectedIndex = this.tabsInfo.indexOf(prevActive);
+  // }
+
+  // dropQuotes(event: CdkDragDrop<string[]>) {
+  //   moveItemInArray(this.baseQuotes, event.previousIndex, event.currentIndex);
+  // }
+
+  // dropCard(event: CdkDragDrop<any[]>) {
+  //   moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
+  // }
 
 
   getQuote() {

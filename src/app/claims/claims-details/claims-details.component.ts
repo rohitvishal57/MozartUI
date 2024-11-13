@@ -590,41 +590,34 @@ convertBytesToKB(bytes: number): string {
   }
 
   updateClaim(): void {
-    const UpdateClaimReqBody = this.uploadedFiles.map(file => {
-        return   {
-          "agentCode": localStorage.getItem('agentCode'),
-          "claimNumber": this.claimInfoId,
-          "policyNumber": this.policyNumber,
-          "documentsArray": [
-            {
-              "documentId": file.documentId,
-              "documentName": file.name,
-              "status": file.status,         
-              "labelName": file.label,
-            }
-          ]
-        }
-    });
- 
+    const UpdateClaimReqBody = {
+      agentCode: localStorage.getItem('agentCode'),
+      claimNumber: this.claimInfoId,
+      policyNumber: this.policyNumber,
+      documentsArray: this.uploadedFiles.map(file => ({
+        documentId: file.documentId,
+        documentName: file.name,
+        status: file.status,         
+        labelName: file.label
+      }))
+    };
+  
     this.claimsService.updateClaim(UpdateClaimReqBody).subscribe(
-        (response:any) => {
-          if(response.isSuccess){
-            console.log('Submission successful', response);
-        
-            this.uploadSuccess = true;
-          }
-          else{
-            console.error('Submission failed');
-
-          }
-        },
-        (error) => {
-            console.error('Submission failed', error);
-          
-            this.uploadSuccess = false;
+      (response: any) => {
+        if (response.isSuccess) {
+          this.toast.success({ detail: "Claims updated successfully" });
+          this.uploadSuccess = true;
+        } else {
+          this.toast.error({ detail: "Failed to update claims" });
         }
+      },
+      (error) => {
+        console.error('Submission failed', error);
+        this.uploadSuccess = false;
+      }
     );
-}
+  }
+  
 
   // submitClaim(files: File[], section: string) {
 
