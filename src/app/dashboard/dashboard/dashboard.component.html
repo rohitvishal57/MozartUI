@@ -61,25 +61,15 @@
         <section class="body_flex_column dashboard_improtantTasks suggested_styles commonSection ">
           <h2>Important Tasks</h2>
           <div class="card_wraper improtantTasks">
-            <div class="cardsub_wraper">
-              <div class="card_item">
-                <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">Do this to achieve 75% of
-                  your target<img src="assets/Img/icon_star_four_points.svg"></div>
-                <h5>Task header</h5>
-                <p>Task sub-header</p>
-              </div>
-              <div class="card_item">
-                <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">Do this to achieve 75% of
-                  your target<img src="assets/Img/icon_star_four_points.svg"></div>
-                <h5>Task header</h5>
-                <p>Task sub-header</p>
-              </div>
-              <div class="card_item">
-                <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">Do this to achieve 75% of
-                  your target<img src="assets/Img/icon_star_four_points.svg"></div>
-                <h5>Task header</h5>
-                <p>Task sub-header</p>
-              </div>
+            <div class="cardsub_wraper" cdkDropList (cdkDropListDropped)="dropTasks($event)">
+              <ng-container *ngFor="let tasks of taskList">
+                <div class="card_item" cdkDrag>
+                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.taskStatus}}<img
+                      src="assets/Img/icon_star_four_points.svg"></div>
+                  <h5>{{tasks.taskHeader}}</h5>
+                  <p>{{tasks.subtaskHeaderDesc}}</p>
+                </div>
+              </ng-container>
             </div>
           </div>
         </section>
@@ -184,30 +174,30 @@
               </div>
             </div>
             <div>
-              <div class="cardWraper-container">
+              <div class="cardWraper-container" cdkDropList (cdkDropListDropped)="dropPerformance($event)">
                 <ng-container *ngFor="let perform of performanceCard">
                   <ng-container [ngSwitch]="perform.type">
-                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'">
+                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'" cdkDrag>
                       <header><img [src]="perform.icon">{{perform.title}}</header>
                       <div class="value">{{perform.value}}</div>
                       <div class="card-tip"><img [src]="perform.subIcon">{{perform.description}}</div>
                     </div>
-                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'progress'">
+                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'progress'" cdkDrag>
                       <header><img [src]="perform.icon">{{perform.title}}</header>
                       <div class="value">{{perform.value}}</div>
                       <div class="progress-barMain">
                         <p>{{perform.description}}</p>
                         <div class="progress-bar">
-                          <div class="progress" style="width: 78%;"></div>
+                          <div class="progress" [ngStyle]="{ 'width': perform.progress + 'px' }"></div>
                         </div>
                       </div>
                     </div>
-                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'">
+                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag>
                       <header><img [src]="perform.icon">{{perform.title}}</header>
                       <div class="value">{{perform.value}}</div>
                       <div class="card-tip"><img src="assets/Img/icon_rupee.svg">{{perform.description}}</div>
                     </div>
-                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'">
+                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'" cdkDrag>
                       <header><img [src]="perform.icon">{{perform.title}}</header>
                       <div class="gauge">
                         <div class="gauge-body">
@@ -228,72 +218,26 @@
         <section class="body_flex_column dashboard_allTasks white_container commonSection">
           <div class="body_flex_row justify-content-between">
             <h6>All Tasks</h6>
-            <span class="common-badge common-badge-rounded tasks-badge tasks-badge-blue"><em></em>5 Tasks Pending</span>
+            <span
+              class="common-badge common-badge-rounded tasks-badge tasks-badge-blue"><em></em>{{taskDetailsList.length}}
+              Tasks Pending</span>
           </div>
           <div class="card_wraper">
-            <div class="cardsub_wraper">
-
-              <div class="card_item ">
-                <div class="head_tasks">
-                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Rohini Pandey
+            <div class="cardsub_wraper" cdkDropList (cdkDropListDropped)="dropTaskDetail($event)">
+              <ng-container *ngFor="let taskDetails of taskDetailsList">
+                <div class="card_item" cdkDrag>
+                  <div class="head_tasks">
+                    <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>{{taskDetails.title}}
+                  </div>
+                  <div class="card-tip">
+                    <img src="assets/Img/icon_currency.svg">
+                    {{taskDetails.desc}}
+                  </div>
+                  <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink"
+                    class="btn_iconText btn_exploreMore">{{taskDetails.redirectLink}}<img
+                      src="assets/Img/icon_red_downarrow.svg"></button>
                 </div>
-                <div class="card-tip">
-                  <img src="assets/Img/icon_currency.svg">
-                  Your customers payment had failed! get them to retry payment.
-                </div>
-                <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink"
-                  class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img
-                    src="assets/Img/icon_red_downarrow.svg"></button>
-              </div>
-              <div class="card_item ">
-                <div class="head_tasks">
-                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Alok Shah
-                </div>
-                <div class="card-tip">
-                  <img src="assets/Img/icon_currency.svg">
-                  Document requested from Mr. Alos is yet to be received.
-                </div>
-                <button type="button" id="btn-send-reminder" name="btn-send-reminder"
-                  class="btn_iconText btn_exploreMore">Send a reminder to Alok <img
-                    src="assets/Img/icon_red_downarrow.svg"></button>
-              </div>
-              <div class="card_item ">
-                <div class="head_tasks">
-                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Alok Shah
-                </div>
-                <div class="card-tip">
-                  <img src="assets/Img/icon_currency.svg">
-                  Document requested from Mr. Alos is yet to be received.
-                </div>
-                <button type="button" id="btn-send-reminder" name="btn-send-reminder"
-                  class="btn_iconText btn_exploreMore">Send a reminder to Alok <img
-                    src="assets/Img/icon_red_downarrow.svg"></button>
-              </div>
-              <div class="card_item ">
-                <div class="head_tasks">
-                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Alok Shah
-                </div>
-                <div class="card-tip">
-                  <img src="assets/Img/icon_currency.svg">
-                  Document requested from Mr. Alos is yet to be received.
-                </div>
-                <button type="button" id="btn-send-reminder" name="btn-send-reminder"
-                  class="btn_iconText btn_exploreMore">Send a reminder to Alok <img
-                    src="assets/Img/icon_red_downarrow.svg"></button>
-              </div>
-              <div class="card_item ">
-                <div class="head_tasks">
-                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Alok Shah
-                </div>
-                <div class="card-tip">
-                  <img src="assets/Img/icon_currency.svg">
-                  Document requested from Mr. Alos is yet to be received.
-                </div>
-                <button type="button" id="btn-send-reminder" name="btn-send-reminder"
-                  class="btn_iconText btn_exploreMore">Send a reminder to Alok <img
-                    src="assets/Img/icon_red_downarrow.svg"></button>
-              </div>
-
+              </ng-container>
             </div>
           </div>
         </section>
@@ -303,292 +247,341 @@
           <div class="main_productTabs">
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
               <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tab-leads-tab" data-bs-toggle="tab" data-bs-target="#tab-leads" type="button" role="tab" aria-controls="tab-leads" aria-selected="true">Leads</button>
+                <button class="nav-link active" id="tab-leads-tab" data-bs-toggle="tab" data-bs-target="#tab-leads"
+                  type="button" role="tab" aria-controls="tab-leads" aria-selected="true">Leads</button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-proposal-tab" data-bs-toggle="tab" data-bs-target="#tab-proposal" type="button" role="tab" aria-controls="tab-proposal" aria-selected="false">Proposal</button>
+                <button class="nav-link" id="tab-proposal-tab" data-bs-toggle="tab" data-bs-target="#tab-proposal"
+                  type="button" role="tab" aria-controls="tab-proposal" aria-selected="false">Proposal</button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-renewals-tab" data-bs-toggle="tab" data-bs-target="#tab-renewals" type="button" role="tab" aria-controls="tab-renewals" aria-selected="false">Renewals</button>
+                <button class="nav-link" id="tab-renewals-tab" data-bs-toggle="tab" data-bs-target="#tab-renewals"
+                  type="button" role="tab" aria-controls="tab-renewals" aria-selected="false">Renewals</button>
               </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
               <div class="tab-pane fade show active" id="tab-leads" role="tabpanel" aria-labelledby="tab-leads-tab">
-                  <div class="leads_content">
-                    <div class="leads_item leads_open">
-                      <header>
-                        <span>Open</span>
-                        <label>18</label>
-                      </header>
-                      <div class="leads_body">
-                        <div class="card_wraper">
-                          <div class="cardsub_wraper">
+                <div class="leads_content">
+                  <div class="leads_item leads_open">
+                    <header>
+                      <span>Open</span>
+                      <label>18</label>
+                    </header>
+                    <div class="leads_body">
+                      <div class="card_wraper">
+                        <div class="cardsub_wraper">
 
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Amit Kumar
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                              </div>
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Amit Kumar
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
                             </div>
-
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Amit Kumar
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps block-hide">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                              </div>
+                            <div class="body_processSteps">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
                             </div>
-
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Amit Kumar
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps block-hide">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                              </div>
-                            </div>
-
                           </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="leads_item leads_inprogress">
-                      <header>
-                        <span>In progress</span>
-                        <label>11</label>
-                      </header>
-                      <div class="leads_body">
-                        <div class="card_wraper">
-                          <div class="cardsub_wraper">
 
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                                <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink" class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img src="assets/Img/icon_red_downarrow.svg"></button>
-                              </div>
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Amit Kumar
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
                             </div>
-
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps block-hide">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                                <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink" class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img src="assets/Img/icon_red_downarrow.svg"></button>
-                              </div>
+                            <div class="body_processSteps block-hide">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
                             </div>
-
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps">
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                              </div>
-                            </div>
-
                           </div>
-                        </div>
 
-                      </div>
-                    </div>
-                    <div class="leads_item leads_won">
-                      <header>
-                        <span>Won</span>
-                        <label>6</label>
-                      </header>
-                      <div class="leads_body">
-
-                        <div class="card_wraper">
-                          <div class="cardsub_wraper">
-
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Iqbal Hussain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps">
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                              </div>
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Amit Kumar
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
                             </div>
-
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Iqbal Hussain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                              </div>
+                            <div class="body_processSteps block-hide">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
                             </div>
-
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps">
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                              </div>
-                            </div>
-
                           </div>
+
                         </div>
-
-                      </div>
-                    </div>
-                    <div class="leads_item leads_lost">
-                      <header>
-                        <span>Lost</span>
-                        <label>8</label>
-                      </header>
-                      <div class="leads_body">
-
-                        <div class="card_wraper">
-                          <div class="cardsub_wraper">
-
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps block-hide">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                                <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink" class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img src="assets/Img/icon_red_downarrow.svg"></button>
-                              </div>
-                            </div>
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps block-hide">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                                <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink" class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img src="assets/Img/icon_red_downarrow.svg"></button>
-                              </div>
-                            </div>
-                            <div class="card_item ">
-                              <div class="head_tasks">
-                                <span class="profile_heading">
-                                  <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
-                                </span>
-                                <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
-                              </div>
-                              <div class="body_processSteps block-hide">
-                                <ul class="card_processSteps">
-                                  <li><span class="status_processSteps"></span><span class="text_processSteps">Member details pending</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Payment successful</span></li>
-                                  <li class="status-success"><span class="status_processSteps"></span><span class="text_processSteps">Lead created</span></li>
-                                </ul>
-                                <div class="card-tip">
-                                  <img src="assets/Img/icon_spark.svg"> 
-                                  Your customers payment had failed! get them to retry payment.
-                                </div>
-                                <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink" class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img src="assets/Img/icon_red_downarrow.svg"></button>
-                              </div>
-                            </div>
-
-                          </div>
-                        </div>
-
                       </div>
                     </div>
                   </div>
+                  <div class="leads_item leads_inprogress">
+                    <header>
+                      <span>In progress</span>
+                      <label>11</label>
+                    </header>
+                    <div class="leads_body">
+                      <div class="card_wraper">
+                        <div class="cardsub_wraper">
+
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                              <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink"
+                                class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
+                          </div>
+
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps block-hide">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                              <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink"
+                                class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
+                          </div>
+
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps">
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="leads_item leads_won">
+                    <header>
+                      <span>Won</span>
+                      <label>6</label>
+                    </header>
+                    <div class="leads_body">
+
+                      <div class="card_wraper">
+                        <div class="cardsub_wraper">
+
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Iqbal Hussain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps">
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Iqbal Hussain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps">
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="leads_item leads_lost">
+                    <header>
+                      <span>Lost</span>
+                      <label>8</label>
+                    </header>
+                    <div class="leads_body">
+
+                      <div class="card_wraper">
+                        <div class="cardsub_wraper">
+
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps block-hide">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                              <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink"
+                                class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
+                          </div>
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps block-hide">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                              <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink"
+                                class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
+                          </div>
+                          <div class="card_item ">
+                            <div class="head_tasks">
+                              <span class="profile_heading">
+                                <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>Surendra Jain
+                              </span>
+                              <span class="profile_arrow"><img src="assets/Img/icon_red_downarrow.svg"></span>
+                            </div>
+                            <div class="body_processSteps block-hide">
+                              <ul class="card_processSteps">
+                                <li><span class="status_processSteps"></span><span class="text_processSteps">Member
+                                    details pending</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Payment successful</span></li>
+                                <li class="status-success"><span class="status_processSteps"></span><span
+                                    class="text_processSteps">Lead
+                                    created</span></li>
+                              </ul>
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_spark.svg">
+                                Your customers payment had failed! get them to retry payment.
+                              </div>
+                              <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink"
+                                class="btn_iconText btn_exploreMore">Resend payment link to Rohini <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="tab-pane fade" id="tab-proposal" role="tabpanel" aria-labelledby="tab-proposal-tab">2...</div>
               <div class="tab-pane fade" id="tab-renewals" role="tabpanel" aria-labelledby="tab-renewals-tab">3...</div>
@@ -606,58 +599,3 @@
     </div>
   </div>
 </main>
-
-<!--OLD CODE START-->
-<div class="dashboard-main" style="display: none;">
-  <app-get-quote></app-get-quote>
-  <div class="contentBody dashboard_contentContainer">
-    <div class="performance-overview">
-      <header>
-        <h2>Performance Overview</h2>
-      </header>
-      <div class="subHeader">
-        <div class="notification">
-          <img src="assets/Img/icon_tips.svg">You've converted 10% more people this month compared to last month
-        </div>
-        <div class="badge badge-purple">
-          <img src="assets/Img/icon_badge.svg">Top Seller
-        </div>
-      </div>
-      <div class="cards-container">
-        <div class="card policies-sold">
-          <header><img src="assets/Img/icon_police_sold.svg">Policies sold</header>
-          <div class="value">1295</div>
-          <div class="card-tip"><img src="assets/Img/icon_price_tag.svg"> You seem to be setting a majority of Active
-            FD plans</div>
-        </div>
-        <div class="card premium">
-          <header><img src="assets/Img/icon_police_premium.svg">Premium</header>
-          <div class="value">₹ 369.96 L</div>
-          <div class="progress-barMain">
-            <p>78% of monthly goal achieved</p>
-            <div class="progress-bar">
-              <div class="progress" style="width: 78%;"></div>
-            </div>
-          </div>
-        </div>
-        <div class="card commission-earned">
-          <header><img src="assets/Img/icon_commission_earned.svg">Commission Earned</header>
-          <div class="value">₹ 50,000</div>
-          <div class="card-tip"><img src="assets/Img/icon_rupee.svg"> You can potentially earn 10,000 more with your 2
-            more policies</div>
-        </div>
-        <div class="card my-goals">
-          <header><img src="assets/Img/icon_my_goals.svg">My Goals</header>
-          <div class="gauge">
-            <div class="gauge-body">
-              <div class="gauge-fill"></div>
-              <div class="sub-text">Policies</div>
-              <div class="gauge-cover">25</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!--OLD CODE END-->
