@@ -61,7 +61,7 @@
         <section class="body_flex_column dashboard_improtantTasks suggested_styles commonSection ">
           <h2>{{"Important Tasks" | translate}}</h2>
           <div class="card_wraper improtantTasks">
-            <div class="cardsub_wraper" cdkDropList (cdkDropListDropped)="dropTasks($event)">
+            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropTasks($event)">
               <ng-container *ngFor="let tasks of taskList">
                 <div class="card_item" cdkDrag>
                   <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.taskStatus | translate}}<img
@@ -174,7 +174,7 @@
               </div>
             </div>
             <div>
-              <div class="cardWraper-container" cdkDropList (cdkDropListDropped)="dropPerformance($event)">
+              <div class="cardWraper-container" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropPerformance($event)">
                 <ng-container *ngFor="let perform of performanceCard">
                   <ng-container [ngSwitch]="perform.type">
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'" cdkDrag>
@@ -223,7 +223,7 @@
              {{" Tasks Pending" | translate}}</span>
           </div>
           <div class="card_wraper">
-            <div class="cardsub_wraper" cdkDropList (cdkDropListDropped)="dropTaskDetail($event)">
+            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropTaskDetail($event)">
               <ng-container *ngFor="let taskDetails of taskDetailsList">
                 <div class="card_item" cdkDrag>
                   <div class="head_tasks">
