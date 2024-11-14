@@ -4,6 +4,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
+import { forkJoin } from 'rxjs';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -455,7 +457,7 @@ export class DashboardComponent {
 
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
-    private translateService: TranslateService) {
+    private translateService: TranslateService, private dashboardService : DashboardService) {
 
   }
   ngOnInit() {
@@ -466,7 +468,7 @@ export class DashboardComponent {
         }
       });
     });
-
+    // this.combineCalls()
     const reqData = {
       "agentCode": localStorage.getItem('agentCode')
     }
@@ -474,6 +476,24 @@ export class DashboardComponent {
       if (res.isSuccess) {
         this.profileDetails = res.data;
       }
+    })
+  }
+
+  combineCalls(){
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    const payload = {
+      "filterType": "Last7Days"
+    }
+    forkJoin({
+        profileDetails : this.profileService.getProfileDetails(reqData),
+        leadDetails : this.dashboardService.fetchLeadStatusCount(payload),
+        renewalDetails : this.dashboardService.fetchRenewalStatusCount(payload),
+        proposalDetails : this.dashboardService.fetchProposalStatusCount(payload),
+
+    }).subscribe((data : any) =>{
+        console.log(data)
     })
   }
 

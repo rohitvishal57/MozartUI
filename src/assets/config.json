@@ -108,8 +108,8 @@
     "getPremiumDetaiks": "/Product/GetPremium",
     "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode",
     "saveBBCommonDraft":"/BranchBanking/SaveBBCommonDraft",
-    "getLeadStatusCount":"/GetLeadStatusCount",
-    "getProposalStatusCount":"/GetProposalStatusCount",
-    "getRenewalStatusCount":"/GetRenewalStatusCount",
+    "getLeadStatusCount":"GetLeadStatusCount",
+    "getProposalStatusCount":"GetProposalStatusCount",
+    "getRenewalStatusCount":"GetRenewalStatusCount",
     "getNotification":"api/quote/notificationlist?agentcode="
 }
