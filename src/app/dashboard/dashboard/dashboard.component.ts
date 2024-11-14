@@ -13,7 +13,7 @@ import { ProfileService } from 'src/app/profile/profile.service';
 export class DashboardComponent {
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
-  profileDetails : any;
+  profileDetails: any;
 
   taskDetailsList = [
     {
@@ -169,7 +169,6 @@ export class DashboardComponent {
       category: [
         {
           name: 'open',
-
           catInfoList: [
             {
               name: 'Amit Kumar',
@@ -455,7 +454,7 @@ export class DashboardComponent {
   ];
 
 
-  constructor(private route: Router, private languageService: LanguageService,private profileService : ProfileService,
+  constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService) {
 
   }
@@ -481,7 +480,7 @@ export class DashboardComponent {
   getTimeOfDay() {
     const now = new Date();
     const hour = now.getHours();
-  
+
     if (hour >= 5 && hour < 12) {
       return "Morning";
     } else if (hour >= 12 && hour < 17) {
@@ -505,19 +504,6 @@ export class DashboardComponent {
     moveItemInArray(this.taskDetailsList, event.previousIndex, event.currentIndex);
   }
 
-  // dropTab(event: CdkDragDrop<string[]>) {
-  //   const prevActive = this.tabsInfo[this.selectedIndex];
-  //   moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
-  //   this.selectedIndex = this.tabsInfo.indexOf(prevActive);
-  // }
-
-  // dropQuotes(event: CdkDragDrop<string[]>) {
-  //   moveItemInArray(this.baseQuotes, event.previousIndex, event.currentIndex);
-  // }
-
-  // dropCard(event: CdkDragDrop<any[]>) {
-  //   moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
-  // }
 
 
   getQuote() {
@@ -530,6 +516,16 @@ export class DashboardComponent {
   createLead() {
     this.route.navigate(['/leads/createLead'], {
     });
+  }
+
+  onToggle(event: any) {
+    const button = event.target;
+    const contentBlock = button.nextElementSibling;
+    if (contentBlock.style.display === 'none') {
+      contentBlock.style.display = 'block';
+    } else {
+      contentBlock.style.display = 'none';
+    }
   }
 }
 
