@@ -1442,6 +1442,22 @@ export class YatraComponent {
         // If not a radio control, just resolve using the control
         this.resolveMethod(control.onChangeMethod, control, eventValue);
       }
+
+
+      if (control.type === 'select') {
+        const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
+        console.log(selectedValue);
+
+        eventValue = selectedValue === 'Others' ? true : false;
+        const selectedOption = control.options.find((option: any) => option.value === selectedValue);
+
+        const dependent = control.dependentControls
+          ? control.dependentControls
+          : selectedOption?.dependentControls ?? control;
+        this.resolveMethod(control.onChangeMethod, dependent, eventValue);
+      } else {
+        this.resolveMethod(control.onChangeMethod, control, eventValue);
+      }
     }
 
 
