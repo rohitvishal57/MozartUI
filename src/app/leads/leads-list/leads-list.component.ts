@@ -488,22 +488,23 @@ export class LeadsListComponent {
   getPlaceholder(): string {
     this.filterFeildType = "text";
     this.filterFeildmaxlength = 50;
+
     if (this.selected === 'leadId') {
-      this.filterFeildmaxlength = 20;
-      return 'Enter Lead ID';
+        this.filterFeildmaxlength = 20;
+        return 'Enter Lead ID';
     } else if (this.selected === 'mobileNumber') {
-      this.filterFeildType = "number";
-      this.filterFeildmaxlength = 10;
-      return 'Enter Mobile Number';
+        this.filterFeildType = "number";
+        this.filterFeildmaxlength = 10;
+        return 'Enter Mobile Number';
     } else if (this.selected === 'name') {
-      return 'Enter Name';
-    } else if (this.selected == 'email') {
-      return 'Enter Email ID';
-    }
-    else {
-      return 'Search...';
+        return 'Enter Name';
+    } else if (this.selected === 'email') {
+        return 'Enter Email ID';
+    } else {
+        return 'Search...';
     }
   }
+
 
   // getSearchInputControlPatternMessage() {
   //   let errorMessage: string = '';

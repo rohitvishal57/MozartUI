@@ -108,7 +108,7 @@ export class RenewalsService {
     return this.httpService.post(paymentStatus,reqBody)
   }
   getFullQuoteApi(reqBody:any){
-    const fullquote = this.configService.config.baseUrl + this.configService.config.fullQuote;
+    const fullquote = this.configService.config.baseUrl1 + this.configService.config.fullQuote;
     return this.httpService.post(fullquote, reqBody);
   }
 

@@ -423,7 +423,7 @@ onBankNameSelected(selectedBankName: string): void {
  setSection(section: string) {
    this.activeSection = section;
  }
-goNext(){
+ goNext(){
   if(this.activeSection== 'primary'){
     this.setSection('additional')
   }
@@ -437,6 +437,8 @@ goNext(){
       this.form.markAllAsTouched();
       return;
     }
+    // const data = new FormData();
+    // data.append('Files', this.file)
     const offlinePaymentRequestBody = {
       "policyType": "Renewal",
       "paymentMethod": "Offline",
@@ -455,9 +457,10 @@ goNext(){
       (res:any)=>{
         if(res.isSuccess){
           console.log("offline payment reponse",res.data);
-          this.fullQuoteResponse=JSON.parse(res.data);          
+          this.fullQuoteResponse=res.data;          
           this.setSection('thankyou')
           this.hideSection=false
+          this.isFeedBackModalVisible = true;
         }
         else{
           this.toast.error({ detail: '',summary:res.message,duration: 3000});
@@ -467,9 +470,6 @@ goNext(){
         this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
         console.log("error is coming from fullquote api");
     })
-      //  this.setSection('feedback');
-      //  this.isFeedBackModalVisible = true;
-      //  this.hideSection=false
   }
 }
 comeBack(){
