@@ -5177,6 +5177,83 @@ background: var(--white-color);
   text-align: left;
   color: var(--text-grey-79);
 }
+.common_ProductInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+.common_ppi_img {
+  width: 40px;
+  height: 40px;
+}
+.common_ppi_img img {
+  width: 100%;
+}
+.common_ppi_info {
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 13px;
+  color: var(--text-black-2e);
+  gap: 4px;
+}
+.common_ppi_info h4 {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 19px;
+  color: var(--black-color);
+  margin: 0;
+}
+.common_ProductPrice {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--text-black-4c);
+}
+.btn_sellingTips {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #4c4c4c;
+  padding: 6px 11px;
+  border-radius: 38px;
+  background: linear-gradient(222.8deg, #FFF4CE 12.42%, #FFDC63 89%);
+}
+.btn_sellingTips span {
+  gap: 8px;
+}
+.btn_sellingTips em {
+  width: 16px;
+  height: 16px;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn_sellingTips em img{
+  width: 5px;
+}
+.common_iconText {
+  display: flex;
+  gap: 6px;
+  font-weight:500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #4c4c4c;
+}
+.btn_knowMore{
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 15px;
+}
+.block_bg_blue {
+  background: #8CACE7 !important;
+}
+.block_bg_green {
+  background: #8DCDA9 !important;
+}
 /*----New styles added 13-nov-24 start----*/
 .note_remarkText_width {
   max-width: 320px;

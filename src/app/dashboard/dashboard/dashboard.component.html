@@ -591,7 +591,7 @@
         <!--Leads, Proposal, Renewals Tabs end-->
 
         <!--Dashboard: Other sections start-->
-        <section class="dashboard_otherSections commonSection block-hide">
+        <section class="dashboard_otherSections commonSection">
           <div class="board_otherSections">
               <!--Knowledge Centre start-->
               <div class="item_otherSections">
@@ -599,9 +599,8 @@
                   <header>
                     <div class="otherSections_head">
                       <h2>Knowledge Centre</h2>
-                      <button type="button" id="btn-view-all-courses" name="btn-view-all-courses"
-                                class="btn_iconText btn_exploreMore">View All Courses <img
-                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                      <button type="button" id="btn-view-all-courses" name="btn-view-all-courses" class="btn_iconText btn_exploreMore">
+                        View All Courses <img src="assets/Img/icon_red_downarrow.svg"></button>
                     </div>
                   </header>
                   <div class="otherSections_body">
@@ -612,9 +611,10 @@
                     </ul>
                     <div class="card_wraper">
                       <div class="cardsub_wraper">
+
                         <div class="card_item body_flex_column knowledgeInfo">
                             <div class="video_knowledgeInfo">
-                              1
+                              <img src="assets/Img/img_knowledge.png">
                             </div>
                             <div class="content_knowledgeInfo body_flex_row">
                               <h6>Insurance Selling Masterclass</h6>
@@ -623,12 +623,29 @@
                                   src="assets/Img/icon_red_downarrow.svg"></button>
                             </div>
                         </div>
-                        <div class="card_item ">
-                          sdfsd 2
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>Insurance Selling Masterclass</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">Resume <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
                         </div>
-                        <div class="card_item ">
-                          sdfsd 3
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>Insurance Selling Masterclass</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">Resume <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
                         </div>
+
                       </div>
                     </div>
 
@@ -638,13 +655,188 @@
               </div>
               <!--Knowledge Centre end-->
               <!--DHA & HR Portfolio start-->
-              <div class="item_otherSections">1</div>
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>DHA & HR Portfolio</h2>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper">
+                      <div class="cardsub_wraper">
+                        <div class="cardItem">
+                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_dha.svg"></span>Digital Health Assessments</header>
+                          <div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+                              <div class="value">241</div>
+                              <div class="label">Total Assessments</div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                              <div class="value">199</div>
+                              <div class="label">Users</div>
+                            </div>
+                          </div>
+                          <div class="card-tip">
+                            <img src="assets/Img/icon_lightbulb.svg">
+                            Dummy placeholder text
+                          </div>
+                        </div>
+                        <div class="cardItem">
+                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_healthreturn.svg"></span>Health Returns</header>
+                          <div class="value">₹ 50,000</div>
+                          <div class="card-tip">
+                            <img src="assets/Img/icon_currency.svg">
+                            Nudge your users to actively participate to save more
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <!--DHA & HR Portfolio end-->
               <!--Top Selling Products start-->
-              <div class="item_otherSections">1</div>
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>Top Selling Products</h2>
+                      <div class="filterfields_input">
+                        <div class="input-block input-block-renew compare_inputblock">
+                          <select id="filter-topselling" name="filter-topselling" class="form-select input-selectBox">
+                            <option value="" >Select</option>
+                            <option value="seniorcitizens" selected>For Senior Citizens</option>
+                            <option value="seniorcitizens">For Senior Citizens</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper topSellingProducts">
+                      <div class="cardsub_wraper">
+
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <header class="body_flex_row head_tsp">
+                              <div class="common_ProductInfo">
+                                  <div class="common_ppi_img">
+                                    <img src="assets/Img/icon_activeone.svg">
+                                  </div>
+                                  <div class="common_ppi_info">
+                                    <h4>Activ One NXT</h4>
+                                  </div>
+                              </div>
+                              <div class="common_ProductPrice">
+                                <span class="text-red">₹6,863*</span>/ 1 year
+                              </div>
+                          </header>
+                          <ul class="tick_round">
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">5X Coverage of Base Sum </div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">Health Assessment </div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">Cover Home-based Treatments</div></li>
+                          </ul>
+                          <footer>
+                            <button type="button" id="btn-sellingTips" name="btn-sellingTips"
+                              class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span class="body_flex_row"><img
+                              src="assets/Img/icon_lightbulb2.svg">Show selling tips for me</span> <em><img
+                                src="assets/Img/icon_right_arrow_black.svg"></em></button>
+                          </footer>
+                        </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <header class="body_flex_row head_tsp">
+                              <div class="common_ProductInfo">
+                                  <div class="common_ppi_img">
+                                    <img src="assets/Img/icon_activeone.svg">
+                                  </div>
+                                  <div class="common_ppi_info">
+                                    <h4>Activ One NXT</h4>
+                                  </div>
+                              </div>
+                              <div class="common_ProductPrice">
+                                <span class="text-red">₹6,863*</span>/ 1 year
+                              </div>
+                          </header>
+                          <ul class="tick_round">
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">5X Coverage of Base Sum </div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">Health Assessment </div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">Cover Home-based Treatments</div></li>
+                          </ul>
+                          <footer>
+                            <button type="button" id="btn-sellingTips" name="btn-sellingTips"
+                              class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span class="body_flex_row"><img
+                              src="assets/Img/icon_lightbulb2.svg">Show selling tips for me</span> <em><img
+                                src="assets/Img/icon_right_arrow_black.svg"></em></button>
+                          </footer>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <!--Top Selling Products end-->
               <!--Participate in challenge to start-->
-              <div class="item_otherSections">1</div>
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head otherSections_head_column">
+                      <h2>Participate in challenge to</h2>
+                      <div class="body_flex_row">
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_hityourdailygoal.svg">Hit your daily goal</span>
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_competewithpeer.svg">Compete with peers</span>
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_earnbadge.svg">Earn badges</span>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper topSellingProducts participateChallenge">
+                      <div class="cardsub_wraper">
+
+                        <div class="card_item body_flex_row knowledgeInfo">
+                          <div class="left_PC block_bg_blue">
+                            #95k Steps in 15 Days
+                          </div>
+                          <div class="right_PC">
+                              <div class="body_flex_column">
+                                <div class="PC_information">
+                                  <div class="PC_head">
+                                    <img src="assets/Img/icon_dashboard_totalparticipants.svg">Total 34,000 Participants
+                                  </div>
+                                  <h5>Join the steps challenges & win an iPhone 13</h5>
+                                  <div class="PC_dateInfo">
+                                    <span>05 days left</span><span>•</span><span>Ending on <b>29th Jun’ 24</b></span>
+                                  </div>
+                                </div>
+                                <button type="button" id="btn-knowmore" name="btn-knowmore" class="btn_pink btn_knowMore">Know More</button>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="card_item body_flex_row knowledgeInfo">
+                          <div class="left_PC block_bg_green">
+                            #1200 Calorie Burn
+                          </div>
+                          <div class="right_PC">
+                              <div class="body_flex_column">
+                                <div class="PC_information">
+                                  <div class="PC_head">
+                                    <img src="assets/Img/icon_dashboard_totalparticipants.svg">Total 34,000 Participants
+                                  </div>
+                                  <h5>Join the steps challenges & win an iPhone 13</h5>
+                                  <div class="PC_dateInfo">
+                                    <span>05 days left</span><span>•</span><span>Ending on <b>29th Jun’ 24</b></span>
+                                  </div>
+                                </div>
+                                <button type="button" id="btn-knowmore" name="btn-knowmore" class="btn_pink btn_knowMore">Know More</button>
+                              </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <!--Participate in challenge to end-->
           </div>
         </section>
