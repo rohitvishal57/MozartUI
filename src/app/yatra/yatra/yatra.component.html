@@ -193,7 +193,7 @@
                 <div *ngIf="control.type === 'fileupload'" [class]="control.class" class="typecss"
                   [hidden]="!control.visible">
                   <div class="custom-file-upload">
-                    <label *ngIf="control.visibleLabel == true">{{ control.label }} <span
+                    <label *ngIf="control.visibleLabel == true">{{control.label?(control.label | translate):'' }} <span
                         *ngIf="control.validators">*</span></label>
                     <div class="file-input-container">
                       <button *ngIf="!control.disabled" type="button" class="file-upload-btn"
@@ -204,7 +204,7 @@
                       <input *ngIf="control.disabled == true" formControlName="{{ control.name }}" [id]="control.name" [name]="control.name"
                         type="file" readonly />
                     </div>
-                    <div class="fileUploadInfo">File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed</div>
+                    <div class="fileUploadInfo">{{"File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed" | translate}}</div>
                   </div>
                   <div *ngIf="this.dynamicFormGroup.value[control.name]" style="margin-top: 5px;">
                     <!-- selected file: {{ selectedFile.name }} -->
@@ -241,13 +241,13 @@
                     <div (click)="toggleContent(i)" style="display: flex ; flex-direction: row;">
                       <img *ngIf="control.image?.src" src="{{ control.image?.src }}" alt="{{control.image?.alt}}"
                         class="expandable-image">
-                      <label class="expandable-label">{{control.label}}</label>
+                      <label class="expandable-label">{{control.label?(control.label | translate):'' }}</label>
                     </div>
                   </div>
                 </div>
 
                 <div *ngIf="control.type === 'search'" class="search-bar">
-                  <label *ngIf="control.visibleLabel">{{ control.label }}</label>
+                  <label *ngIf="control.visibleLabel">{{ control.label?(control.label | translate):'' }}</label>
                   <div [class]="control.class">
                     <input formControlName="{{ control.name }}" [id]="control.name" [name]="control.name" type="text" class="form-control"
                       placeholder="Search conditions">
@@ -271,10 +271,10 @@
                           <div (click)="toggleContent(item.name)" [class]="control.class"
                             style="display: flex; flex-direction: row;">
                             <img src="{{item.image?.src}}" alt="{{item.image?.alt}}" class="expandable-image">
-                            <label class="expandable-label">{{item.label}}</label>
+                            <label class="expandable-label">{{ item.label?(item.label | translate):''}}</label>
                           </div>
                           <div *ngIf="expandedItem === item.name">
-                            <p>Details about {{item.label}}</p>
+                            <p>Details about {{item.label?(item.label | translate):''}}</p>
                           </div>
                         </div>
                       </div>
@@ -284,7 +284,7 @@
               </div> -->
 
                 <div *ngIf="control.type === 'multiSelectCheckbox'">
-                  <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label }}<span
+                  <label *ngIf="control.visibleLabel" class="multi-select-label">{{ control.label?(control.label | translate):'' }}<span
                       *ngIf="control.validators">*</span></label>
                   <div [formGroupName]="control.name" class="checkbox-container"
                     *ngIf="dynamicFormGroup.get(control.name)">
@@ -311,7 +311,7 @@
 
 
                 <div *ngIf="control.type === 'increment'" [class]="control.class" class="increment-typecss">
-                  <label *ngIf="control.visibleLabel==true">{{ control.label }}</label>
+                  <label *ngIf="control.visibleLabel==true">{{ control.label?(control.label | translate):'' }}</label>
                   <!-- <button (click)="decrement(control.name,control.text)">-</button> -->
                   <button (click)="decrement(control.name,control.text)">-</button>
                   <input formControlName="{{ control.name }}" [id]="control.name" [name]="control.name" type="number"
@@ -341,8 +341,7 @@
                                       [ngClass]="{'disabled-has-value': hasAnyValue(subControl,control,i-1)}"
                                       [formControlName]="subControl.name" [name]="subControl.name" [id]="subControl.name"
                                       class="inputField_Text_disabled" [type]="subControl.type" readonly>
-                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label |
-                                      translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
+                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label ? (subControl.label | translate) : '' }} <span *ngIf="subControl.validators">*</span></label>
                                   </div>
                                   <small *ngIf="checkValidations(subControl,control,i-1)" class="text-danger">{{
                                     getValidationErrors(subControl,control,i-1)?
@@ -358,7 +357,7 @@
                                       [ngClass]="{'has-value': hasAnyValue(subControl,control,i-1)}"
                                       (change)="onInputChange($event, subControl,control,i-1)">
                                       <!-- <option value="" disabled selected>Select {{
-                                    subControl.label }}</option> -->
+                                      subControl.label }}</option> -->
                                       <ng-container *ngFor="let opt of subControl.options">
                                         <option [value]="opt.value">{{opt.name?(opt.name | translate): '' }}
                                         </option>
@@ -548,7 +547,7 @@
                                     </div>
                                   </div>
                                   <div *ngIf="subControl.type === 'search'" class="search-bar">
-                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label }}</label>
+                                    <label *ngIf="subControl.visibleLabel">{{ subControl.label?(subControl.label | translate):'' }}</label>
                                     <div [class]="subControl.class">
                                       <input formControlName="{{ subControl.name }}" [name]="subControl.name"
                                         type="text" class="form-control" placeholder="Search conditions">
@@ -558,8 +557,7 @@
                                     <ul class="nav nav-tabs custom-tab" role="tablist">
                                       <li class="nav-item" *ngFor="let tab of subControl.tabs; let i = index">
                                         <a class="nav-link" [class.active]="activeTab === tab.name"
-                                          (click)="selectTab(tab.name)">{{ tab.label
-                                          }}</a>
+                                          (click)="selectTab(tab.name)">{{ tab.label | translate}}</a>
                                       </li>
                                     </ul>
                                     <div class="tab-content">
@@ -597,8 +595,7 @@
                                     </div>
                                   </div>
                                   <div *ngIf="subControl.type === 'multiSelectCheckbox'">
-                                    <label *ngIf="subControl.visibleLabel" class="multi-select-label">{{
-                                      subControl.label }}</label>
+                                    <label *ngIf="subControl.visibleLabel" class="multi-select-label">{{ subControl.label?(subControl.label | translate):''}}</label>
                                     <div [formGroupName]="subControl.name" class="checkbox-container">
                                       <div *ngFor="let option of subControl.selectCheckboxOptions"
                                         class="checkbox-wrapper col-6 col-md-6 col-lg-3">
@@ -638,7 +635,7 @@
                                 <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
                                   [class]="subControl.class" class="display-container" [hidden]="!subControl.visible">
                                   <label class="display_label" *ngIf="subControl.visibleLabel === true">
-                                    {{ subControl.label }}
+                                    {{ subControl.label?(subControl.label | translate):'' }}
                                     <span *ngIf="subControl.validators">*</span>
                                   </label>
                                   <input *ngIf="subControl.disabled" class="view_Text"
@@ -662,7 +659,7 @@
                         <i class="fa-regular fa-copy"></i>
                     </div> -->
                     <div style="display: flex; flex-direction: row;">
-                      <p>{{ control.value }}</p>
+                      <p>{{ control.value ?(control.value  | translate):''}}</p>
                       <input *ngIf="control.disabled" class="inputField_Text_disabled"
                         formControlName="{{ control.name }}" [name]="control.name" [id]="control.name"
                         [ngClass]="{'disabled-has-value': hasAnyValue(control)}" readonly>
@@ -709,7 +706,7 @@
                 <div *ngIf="control.type === 'bigbutton'" [class]="control.class">
                   <label for="">{{ control.label ? (control.label | translate) : '' }}</label>
                   <div class="select-button">
-                    <button [name]="control.name" [id]="control.name" type="button" class="bigbutton">SELECT</button>
+                    <button [name]="control.name" [id]="control.name" type="button" class="bigbutton">{{"SELECT" | translate}}</button>
                   </div>
                 </div>
 
@@ -721,7 +718,7 @@
                     </div>
                   </div>
                   <div *ngIf="control.type === 'imageButton'" [class]="control.class">
-                    <button [name]="control.name" [id]="control.name" type="button" class="image-button"
+                    <button [name]="control.name | translate" [id]="control.name" type="button" class="image-button"
                       (click)="callMethod(control.methodName, control)">
                       <img [src]="control.imageUrl" alt="Button Image">
                     </button>
@@ -741,13 +738,13 @@
                     <input *ngIf="!control.disabled" class="boldtext_input colorbold" 
                            formControlName="{{ control.name }}" 
                            [name]="control.name"  [id]="control.name"
-                           [type]="control.type"
+                           [type]="control.type | translate"
                            (change)="onInputChange($event, control)">
                     
                     <input *ngIf="control.disabled" class="boldtext_input colorbold no-border" 
                            formControlName="{{ control.name }}" 
                            [name]="control.name" [id]="control.name"
-                           [type]="control.type" 
+                           [type]="control.type | translate" 
                            (change)="onInputChange($event, control)" 
                            readonly>
                   </div>
@@ -788,9 +785,7 @@
                         <ng-container *ngIf="subControl.visible!=false">
                           <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
                             [class]="subControl.class" class="typecss">
-                            <label class="subControl.label" *ngIf="subControl.visibleLabel==true">{{
-                              subControl.label
-                              }} <span *ngIf="subControl.validators"></span></label>
+                            <label class="subControl.label" *ngIf="subControl.visibleLabel==true">{{ subControl.label?(subControl.label | translate):'' }} <span *ngIf="subControl.validators"></span></label>
                             <input class="inputField_Text" *ngIf="!subControl.disabled"
                               [formControlName]="subControl.name" [name]="subControl.name" [type]="subControl.type"
                               (change)="onInputChange($event,control)">
@@ -817,7 +812,7 @@
                                           <select class="inputField_Select" *ngIf="!addOnDetail.disabled"
                                             [formControlName]="addOnDetail.name" aria-label="Default select example"
                                             style="width: 140px;margin-right: 10px;">
-                                            <option selected value="">Choose...
+                                            <option selected value="">{{"Choose..." | translate}}
                                             </option>
                                             <ng-container *ngFor="let opt of addOnDetail.options">
                                               <option [value]="opt.id ? stringifyObject(opt) : opt.value">
@@ -867,7 +862,7 @@
                             <div class="popup-overlay" *ngIf="isOverlayVisible">
                               <div class="row">
                                 <div class="col-12 col-sm-8 col-md-8 col-lg-8 col-xl-8 text-right">
-                                  <p>Select Member</p>
+                                  <p>{{"Select Member" | translate}}</p>
                                 </div>
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
                                   <i class="fa-solid fa-xmark" (click)="closeOverlay(subControl)"></i>
@@ -884,13 +879,13 @@
                                             <!--<div *ngFor="let coreControl of innerControl.coreControls"> -->
                                             <div *ngIf="innerControl.type === 'select'" [class]="innerControl.class"
                                               class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                              <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
+                                              <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label?(innerControl.label | translate):''}}
                                                 <span *ngIf="innerControl.validators">*</span></label>
                                               <select class="inputField_Select" *ngIf="!innerControl.disabled"
                                                 (change)="onInputChange($event, subControl,control)"
                                                 [formControlName]="innerControl.name" [name]="innerControl.name"
                                                 aria-label="Default select example">
-                                                <option selected value="">Choose...</option>
+                                                <option selected value="">{{"Choose..." | translate}}</option>
                                                 <ng-container *ngFor="let opt of innerControl.options">
                                                   <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{
                                                     opt.name?(opt.name | translate):'' }}
@@ -907,7 +902,7 @@
                                                   [name]="innerControl.name"
                                                   style="height:25px; width:25px; margin-left: 10px;"
                                                   (change)="onInputChange($event, subControl,control)" />
-                                                <label [for]="innerControl.name" [innerHTML]="innerSubForm.label"
+                                                <label [for]="innerControl.name" [innerHTML]="innerSubForm.label?(innerSubForm.label | translate):''"
                                                   class="checkbox-label" style="padding-left: 15px;
                                       font-weight: 600;
                                       font-size: 16px;
@@ -925,9 +920,9 @@
 
                                           <input *ngIf="innerSubForm.disabled == false" type="button" class="next-btn"
                                             (click)="addOnMemberAdded(subControl,control)" [name]="control.name"
-                                            value="Done" />
+                                            [value]="'Done' | translate" />
                                           <input *ngIf="innerSubForm.disabled == true" [name]="control.name"
-                                            type="button" class="next-btn disable" [disabled]="true" value="Done" />
+                                            type="button" class="next-btn disable" [disabled]="true" [value]="'Done' | translate" />
                                         </div>
                                       </div>
                                     </div>
@@ -937,7 +932,7 @@
                               <!-- <div class="row">
                                 <div class="col-12 col-xl-12 text-right">
                                   
-                                  <input *ngIf="showDoneButton" type="button" class="next-btn" (click)="closeOverlay($event,subControl,control)" value="Done" />
+                                  <input *ngIf="showDoneButton" type="button" class="next-btn" (click)="closeOverlay($event,subControl,control)" [value]="'Done' | translate" />
 
                                 </div>
                               </div> -->
@@ -955,7 +950,7 @@
                                               <select class="inputField_Select" *ngIf="!addOnDetail.disabled"
                                                 [formControlName]="addOnDetail.name" aria-label="Default select example"
                                                 style="width: 180px;margin-right: 10px;">
-                                                <option selected value="">Choose...</option>
+                                                <option selected value="">{{"Choose..." | translate}}</option>
                                                 <ng-container *ngFor="let opt of addOnDetail.options">
                                                   <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{ opt.name | translate}}
                                                   </option>
@@ -971,7 +966,7 @@
                             </div>
                           </div>
                           <div *ngIf="subControl.type === 'button'" class="col-lg-4">
-                            <input type="button" class="subButton" [value]="subControl.label"
+                            <input type="button" class="subButton" [value]="'subControl.label' | translate"
                               (click)="showOverlay(control)">
                           </div>
                         </ng-container>
@@ -990,13 +985,13 @@
                       <ng-container [formGroupName]="i"> -->
                       <div [class]="control.class" class="typecss">
                         <label class="control.label" *ngIf="control.visibleLabel==true">
-                          {{ h+1 }}. {{ control.label }}</label>
+                          {{ h+1 }}. {{ control.label?(control.label | translate):'' }}</label>
                       </div>
                       <div class="col-lg-8">
                         <div style="display: flex;">
 
                           <input type="button" (click)="onCheckboxChange($event,'',control)" style="margin-left: 10px;"
-                            value="SELECT" class="add-btn" />
+                          [value] = "'SELECT' | translate" class="add-btn" />
                         </div>
                       </div>
                       <div class="backdrop" *ngIf="isOverlayVisible"></div>
@@ -1071,13 +1066,13 @@
                                               <select class="inputField_Select" [formControlName]="innerControl.name"
                                                 (change)="onInputChange($event, subControl,control,k-1,innerControl)"
                                                 [ngClass]="{'has-value': hasInnerValue(control,subControl,innerControl,k-1)}">
-                                                <option selected value="">Choose...</option>
+                                                <option selected value="">{{"Choose..." | translate}}</option>
                                                 <option *ngFor="let opt of innerControl.options"
                                                   [value]="opt.id ? stringifyObject(opt) : opt.value">
-                                                  {{ opt.name?(opt.name|translate):''}}
+                                                  {{ opt.name?(opt.name | translate):''}}
                                                 </option>
                                               </select>
-                                              <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label }}
+                                              <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label | translate}}
                                                 <span *ngIf="innerControl.validators">*</span></label>
                                               <!-- <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}</label> -->
                                             </div>
@@ -1130,11 +1125,11 @@
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
 
                                   <input *ngIf="subControl.disabled == false" type="button" class="next-btn"
-                                    (click)="closePopUp()" value="Done" />
+                                    (click)="closePopUp()" [value]="'Done' | translate" />
                                   <!-- <input *ngIf="innerSubForm.disabled == false" type="button" class="next-btn"
                                     (click)="addOnMemberAdded(subControl,control)" value="Done" /> -->
                                   <input *ngIf="subControl.disabled == true" type="button" class="next-btn disable"
-                                    [disabled]="true" value="Done" />
+                                    [disabled]="true" [value]="'Done' | translate" />
                                 </div>
                               </div>
                             </div>
