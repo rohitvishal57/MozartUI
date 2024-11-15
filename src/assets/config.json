@@ -111,5 +111,7 @@
     "getLeadStatusCount":"GetLeadStatusCount",
     "getProposalStatusCount":"GetProposalStatusCount",
     "getRenewalStatusCount":"GetRenewalStatusCount",
-    "getNotification":"api/quote/notificationlist?agentcode="
+    "getNotification":"api/quote/notificationlist?agentcode=",
+    "markAllReadNotifications":"api/quote/readall?agentCode="
+
 }

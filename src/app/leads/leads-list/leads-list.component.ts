@@ -305,6 +305,7 @@ export class LeadsListComponent {
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
     const selectedValidators = searchValidationConfig[this.selected] || [];
+    console.log('selectedValidators',selectedValidators);
     this.searchInputControl.setValidators(selectedValidators);
     // if (this.selected === "mobileNumber") {
     //   this.placeholder = 'Mobile Number';

@@ -197,7 +197,6 @@ export class CreateLeadComponent implements OnInit {
   sendOTP() {
   }
   onSubmit() {
-    debugger;
     this.submitted = true;
 
     if (this.userValidations.invalid) {

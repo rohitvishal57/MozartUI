@@ -5,6 +5,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 import { NotificationService } from 'src/app/notifications/notification.service';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-header',
@@ -112,8 +113,6 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     }
   }
 
-
-
  showAllNotifications(){
   this.closePopup();
   this.router.navigate(['/notifications'], {
@@ -124,19 +123,33 @@ export class HeaderComponent implements OnInit ,OnDestroy {
  notificationInfo() {
   this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
     (response) => {
-    this.notifications = response?.data;
-    this.notificationCount = this.notifications.length;
-    console.log('notifications',this.notifications);
+      if (response?.isSuccess) {
+        this.notifications = response?.data;
+        this.notificationCount =  this.notifications.filter(notification => notification?.isRead === false).length;
+      }
     },
     error => {
       console.log('Failed to fetch notifications',error)
     });
-
 }
 
-routeNotification(notification : any){
-this.closePopup();
-this.router.navigate([notification.redirectionURL]);
-}
+  markAllReadNotification() {
+    this.notificationService.markAllNotification(this.agentCode).subscribe(
+      (response) => {
+        if (response?.isSuccess) {
+          this.toast.success({ detail: "", summary: 'Successfully marked all notifications as read.', duration: 5000 });
+          this.notificationInfo();
+          this.showNotifications = false;
+        }
+      },
+      error => {
+        console.log('Failed to Mark notifications', error)
+      });
+  }
+
+  routeNotification(notification: any) {
+    this.closePopup();
+    this.router.navigate([notification.redirectionURL]);
+  }
 
 }

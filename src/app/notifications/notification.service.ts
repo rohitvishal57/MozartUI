@@ -10,9 +10,13 @@ export class NotificationService {
 
   constructor(private http:HttpClient, private configService: ConfigService, private httpService: HttpService) { }
 
-
   fetchNotificationInfo(agentCode: string) {
     const url = `${this.configService.config.baseUrl}${this.configService.config.getNotification}${agentCode}`;
+    return this.http.post<any>(url, agentCode);
+  }
+
+  markAllNotification(agentCode: string) {
+    const url = `${this.configService.config.baseUrl}${this.configService.config.markAllReadNotifications}${agentCode}`;
     return this.http.post<any>(url, agentCode);
   }
 }
