@@ -143,7 +143,7 @@ export interface ISelectCheckboxOption {
   imagePath?: string;
   isIncrement?: boolean;
   name?:string;
-  
+  dependentControls?: any;
 }
 
 export interface IImage {
