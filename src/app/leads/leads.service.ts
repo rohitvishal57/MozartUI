@@ -79,8 +79,13 @@ export class LeadsService {
   }
 
   fetchActivityType(requestBody:any):Observable<any>{
-    const getDuplicateLeadRequest = this.configService.config.baseUrl + this.configService.config.fetchActivityType;
-    return this.http.post<any>(getDuplicateLeadRequest, requestBody);
+    const url = this.configService.config.baseUrl + this.configService.config.fetchActivityType;
+    return this.http.post<any>(url, requestBody);
+  }
+
+  getOccupationInfo(requestBody:any):Observable<any>{
+    const getOccupationRequestURL = this.configService.config.baseUrl + this.configService.config.getProposerOccupation;
+    return this.http.get<any>(getOccupationRequestURL, requestBody);
   }
 
   

@@ -4843,7 +4843,9 @@ export class YatraComponent {
           city: this.quoteLeadInformation.city,
           state: this.quoteLeadInformation.state,
           mobileNumber: this.quoteLeadInformation.phoneNumber,
-          educationDetails: this.quoteLeadInformation.education
+          educationDetails: this.quoteLeadInformation.education,
+          memberPolicyType : this.quoteLeadInformation.policyType
+
         });
 
         }

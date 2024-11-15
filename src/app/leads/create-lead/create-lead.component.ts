@@ -8,6 +8,7 @@ import { NgToastService } from 'ng-angular-popup';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CommonService } from 'src/app/services/common.service';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-create-lead',
@@ -50,6 +51,7 @@ export class CreateLeadComponent implements OnInit {
   ];
   productsList: any = [];
   productSumInsured: any = [];
+  occupationInfo : any;
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -99,6 +101,7 @@ export class CreateLeadComponent implements OnInit {
        this.getProducts();
     }
 
+    this.fetchOccupationInfo();
     this.today = new Date().toISOString().split('T')[0];
 
   }
@@ -236,8 +239,6 @@ export class CreateLeadComponent implements OnInit {
         else { console.error("API request was not successful."); }
       },
       (error) => {
-        // this.toast.error({ detail: 'Failed to submit claims' });
-
         console.error("Error from getRenewalsList API:", error);
       }
     );
@@ -477,5 +478,18 @@ export class CreateLeadComponent implements OnInit {
         console.log("error coming form getproduct list API");
       }
     });
+  }
+
+  fetchOccupationInfo() {
+    this.leadsService.getOccupationInfo('').subscribe(
+      (response) => {
+        if(response.isSuccess){
+          this.occupationInfo =  response?.data;
+          console.log('occupationInfo',this.occupationInfo);
+        }
+      }, (error) => {
+        console.log('Failed to Fetch Occupation Information',error);
+      }
+    );
   }
 }
