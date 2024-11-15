@@ -355,21 +355,17 @@ export class LeadsListComponent {
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.startDate ='';
     this.endDate ='';
-    console.log('this.searchInputControl', this.searchInputControl.errors)
-    // if (this.searchInputControl.errors) {
-    //   this.getSearchInputControlPatternMessage();
-    // }
-    if (this.searchInputControl.valid == true) {
+    // if (this.searchInputControl.valid == true) {
       this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
-    } else {
-      this.leadsInfoListRequestBody.searchby = "";
-    }
-    if (this.selected != 'Select an option') {
+    // } else {
+    //   this.leadsInfoListRequestBody.searchby = "";
+    // }
+    // if (this.selected != 'Select an option') {
       this.getLeadsList();
-      this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign ? 'assignedLead' : 'unAssignedLead';
-    }
-    //this.searchInputControl.reset();
+      // this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign ? 'assignedLead' : 'unAssignedLead';
+    // }
   }
+
   renewalListView(view: string) {
     this.selectedView = view;
   }
