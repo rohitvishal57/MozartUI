@@ -197,6 +197,7 @@ export class CreateLeadComponent implements OnInit {
   sendOTP() {
   }
   onSubmit() {
+    debugger;
     this.submitted = true;
 
     if (this.userValidations.invalid) {
@@ -215,7 +216,7 @@ export class CreateLeadComponent implements OnInit {
      if( this.CreateLead.dob !=''){
       let dobFormatted = this.datePipe.transform(this.CreateLead.dob, 'yyyy-MM-dd');
       let timeDiff = Math.abs(Date.now() - new Date(dobFormatted as string).getTime());
-      let age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
+      age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     }
     this.CreateLead.age = age.toString();
 
