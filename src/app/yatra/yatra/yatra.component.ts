@@ -112,7 +112,7 @@ export class YatraComponent {
   productComparison :Boolean= false;
   isFeedBackModalVisible :Boolean= false;
   leadNumber : string = ''
-  redirectLeadInformation :any ={};
+  quoteLeadInformation :any ={};
 
 
   
@@ -4826,24 +4826,24 @@ export class YatraComponent {
       (response) => {
         if (response) {
 
-         this.redirectLeadInformation = response.data.leadList[0];
+         this.quoteLeadInformation = response.data.leadList[0];
 
          this.patchDropDownValues();
 
          this.dynamicFormGroup.patchValue({
-          memberDobProposer : this.datepipe.transform(this.redirectLeadInformation.dob, 'yyyy-MM-dd'),
-          firstName: this.redirectLeadInformation.firstName,
-          middleName: this.redirectLeadInformation.middleName,
-          lastName: this.redirectLeadInformation.lastName,
-          memberAgeProposer: this.redirectLeadInformation.age,
-          emailId: this.redirectLeadInformation.email,
-          proposerAddress1: this.redirectLeadInformation.address1,
-          proposerAddress2: this.redirectLeadInformation.address2,
-          proposerAddress3: this.redirectLeadInformation.address3,
-          city: this.redirectLeadInformation.city,
-          state: this.redirectLeadInformation.state,
-          mobileNumber: this.redirectLeadInformation.phoneNumber,
-          educationDetails: this.redirectLeadInformation.education
+          memberDobProposer : this.datepipe.transform(this.quoteLeadInformation.dob, 'yyyy-MM-dd'),
+          firstName: this.quoteLeadInformation.firstName,
+          middleName: this.quoteLeadInformation.middleName,
+          lastName: this.quoteLeadInformation.lastName,
+          memberAgeProposer: this.quoteLeadInformation.age,
+          emailId: this.quoteLeadInformation.email,
+          proposerAddress1: this.quoteLeadInformation.address1,
+          proposerAddress2: this.quoteLeadInformation.address2,
+          proposerAddress3: this.quoteLeadInformation.address3,
+          city: this.quoteLeadInformation.city,
+          state: this.quoteLeadInformation.state,
+          mobileNumber: this.quoteLeadInformation.phoneNumber,
+          educationDetails: this.quoteLeadInformation.education
         });
 
         }
@@ -4859,10 +4859,10 @@ export class YatraComponent {
   patchDropDownValues() {
     let personalDetailsSection: any = this.form.formSections.find((formSection: any) => formSection.sectionTitle === 'Personal Details');
     let maritalStatusInfo: any = personalDetailsSection.formControls.find((formControl: any) => formControl.name === "maritalStatus");
-    const maritalStatusPatchValue = maritalStatusInfo.options.find((option: any) => option.value === this.redirectLeadInformation.maritalStatus);
+    const maritalStatusPatchValue = maritalStatusInfo.options.find((option: any) => option.value === this.quoteLeadInformation.maritalStatus);
     this.dynamicFormGroup.patchValue({
       maritalStatus: JSON.stringify(maritalStatusPatchValue),
-      proposerGender: this.redirectLeadInformation.gender
+      proposerGender: this.quoteLeadInformation.gender
     });
   }
 }

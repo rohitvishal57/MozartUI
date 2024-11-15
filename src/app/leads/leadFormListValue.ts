@@ -79,6 +79,6 @@ export class LeadFormListValue {
         {product:"Super Health Top Up",plan:["NA","Plan A", "Plan B"]}
 
     ]
-    FamilyConstruct: string[] = ["Family Floater", "Individual"];
-    PolicyType: string[] = ["Individual", "Family Floater"];
+    FamilyConstruct: string[] = ["FAMILY FLOATER", "MULTI INDIVIDUAL"];
+    PolicyType: string[] = ["MULTI INDIVIDUAL", " FAMILY FLOATER"];
 }
