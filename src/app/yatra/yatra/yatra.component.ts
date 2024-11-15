@@ -115,7 +115,6 @@ export class YatraComponent {
   quoteLeadInformation :any ={};
 
 
-  
   currentLanguage = 'en';
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -123,7 +122,7 @@ export class YatraComponent {
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route: ActivatedRoute, private languageService: LanguageService,
-    private translateService: TranslateService,  private leadsService: LeadsService, private datepipe: DatePipe) { }
+    private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe) { }
 
   ngOnInit() {
 
@@ -134,8 +133,8 @@ export class YatraComponent {
         }
       });
     });
-  
-  
+
+
 
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
@@ -168,8 +167,8 @@ export class YatraComponent {
     if (history.state.productData.leadId) {
       this.leadNumber = history.state.productData.leadId;
     }
-    if(history.state.productData.productComparison){
-      this.productComparison =  history.state.productData.productComparison;
+    if (history.state.productData.productComparison) {
+      this.productComparison = history.state.productData.productComparison;
     }
     if (history.state.productData.tenure) {
       this.formData = { ...this.formData, tenure: history.state.productData.tenure }
@@ -192,8 +191,8 @@ export class YatraComponent {
       rating: [null, Validators.required], // Add rating to the form
     });
 
-    if(this.quickQuoteRedirect){
-     this.getLeadInformation();
+    if (this.quickQuoteRedirect) {
+      this.getLeadInformation();
     }
 
   }
@@ -525,15 +524,15 @@ export class YatraComponent {
                 const currentYear = currentDate.getFullYear();
                 const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
                 const currentDay = String(currentDate.getDate()).padStart(2, '0');
-            
+
                 // Construct dobRegex pattern as a string
-                const dobPattern = 
+                const dobPattern =
                   `^(18[0-9]{2}|19[0-9]{2}|20[0-${currentYear.toString().slice(2, 3)}][0-${currentYear.toString().slice(3, 4)}])` + // Years 1800-Current Year
                   `-(0[1-9]|1[0-2])` + // All valid months for past years
                   `-(0[1-9]|[12][0-9]|3[01])` + // All valid days for past years and months
                   `|${currentYear}-(${currentMonth}|0[1-9]|1[0-9])` + // Current year, only months up to current month
                   `-${currentDay}|(0[1-9]|[12][0-9]|3[01])$`; // Only days up to current day for the current month
-            
+
                 // Push the pattern as a validator to the control
                 control.validators?.push({
                   validatorName: "pattern",
@@ -635,7 +634,7 @@ export class YatraComponent {
                   section.formControls.forEach((formControl: any) => {
                     if (formControl.name == 'totalPremium' && formControl.type == 'custom-radio') {
                       this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
-                      if(this.QuoteNumber.length > 0){
+                      if (this.QuoteNumber.length > 0) {
                         this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
                       }
                       this.formData.tenure = this.selectedIndex + 1;
@@ -653,15 +652,15 @@ export class YatraComponent {
                 const currentYear = currentDate.getFullYear();
                 const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
                 const currentDay = String(currentDate.getDate()).padStart(2, '0');
-            
+
                 // Construct dobRegex pattern as a string
-                const dobPattern = 
+                const dobPattern =
                   `^(18[0-9]{2}|19[0-9]{2}|20[0-${currentYear.toString().slice(2, 3)}][0-${currentYear.toString().slice(3, 4)}])` + // Years 1800-Current Year
                   `-(0[1-9]|1[0-2])` + // All valid months for past years
                   `-(0[1-9]|[12][0-9]|3[01])` + // All valid days for past years and months
                   `|${currentYear}-(${currentMonth}|0[1-9]|1[0-9])` + // Current year, only months up to current month
                   `-${currentDay}|(0[1-9]|[12][0-9]|3[01])$`; // Only days up to current day for the current month
-            
+
                 // Push the pattern as a validator to the control
                 control.validators?.push({
                   validatorName: "pattern",
@@ -670,11 +669,11 @@ export class YatraComponent {
                 });
               }
             }
-            
+
 
             this.dynamicFormGroup.addControl(control.name, new FormControl(control.value, controlValidators));
-            if(control.name == 'memberDobProposer'){
-              console.log(control,this.dynamicFormGroup.get(control.name));
+            if (control.name == 'memberDobProposer') {
+              console.log(control, this.dynamicFormGroup.get(control.name));
             }
             if (control.type == 'custom-radio' && this.formData[control.name]) {
               const radioControl = this.dynamicFormGroup.get(control.name);
@@ -702,15 +701,15 @@ export class YatraComponent {
       this.flattenObject(this.formData);
       this.spinner.hide();
     }
-    console.log(this.dynamicFormGroup.value,this.formData);
+    console.log(this.dynamicFormGroup.value, this.formData);
 
 
-    if(this.formSequence[this.getFormIndexValue()].formName == "Confirmation"){
+    if (this.formSequence[this.getFormIndexValue()].formName == "Confirmation") {
       //this.customerFeedbackModule.show();
       this.isFeedBackModalVisible = true;
     }
 
-    if(this.quickQuoteRedirect){
+    if (this.quickQuoteRedirect) {
       this.getLeadInformation();
     }
 
@@ -1438,23 +1437,27 @@ export class YatraComponent {
 
         // Call the resolveMethod with the found dependent controls
         this.resolveMethod(control.onChangeMethod, dependent, eventValue);
-      } else {
-        // If not a radio control, just resolve using the control
-        this.resolveMethod(control.onChangeMethod, control, eventValue);
       }
+      // else {
+      //   // If not a radio control, just resolve using the control
+      //   this.resolveMethod(control.onChangeMethod, control, eventValue);
+      // }
 
 
       if (control.type === 'select') {
         const selectedValue = this.dynamicFormGroup.get(control.name)?.value;
         console.log(selectedValue);
-
-        eventValue = selectedValue === 'Others' ? true : false;
-        const selectedOption = control.options.find((option: any) => option.value === selectedValue);
-
-        const dependent = control.dependentControls
-          ? control.dependentControls
-          : selectedOption?.dependentControls ?? control;
-        this.resolveMethod(control.onChangeMethod, dependent, eventValue);
+        if (control.dependentControls) {
+          this.resolveMethod(control.onChangeMethod, control, eventValue);
+        }
+        else {
+          eventValue = selectedValue === 'Others' ? true : false;
+          const selectedOption = control.options.find((option: any) => option.value === selectedValue);
+          const dependent = control.dependentControls
+            ? control.dependentControls
+            : selectedOption?.dependentControls ?? control;
+          this.resolveMethod(control.onChangeMethod, selectedOption?.dependentControls, eventValue);
+        }
       } else {
         this.resolveMethod(control.onChangeMethod, control, eventValue);
       }
@@ -1499,7 +1502,7 @@ export class YatraComponent {
     if (control.type == 'date') {
       const dob = event.target.value;
 
-      console.log(dob, dob.length,this.dynamicFormGroup.get(control.name));
+      console.log(dob, dob.length, this.dynamicFormGroup.get(control.name));
 
       // Split the input date assuming 'yyyy-MM-dd' format (browser behavior)
       const dobArray = dob.split('-'); // [YYYY, MM, DD]
@@ -2672,7 +2675,7 @@ export class YatraComponent {
           sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
           sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
           console.log(this.QuoteNumber, this.selectedIndex);
-          if(this.QuoteNumber.length > 0){
+          if (this.QuoteNumber.length > 0) {
             this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
           }
         }
@@ -2994,7 +2997,7 @@ export class YatraComponent {
               this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
             }
             console.log(this.QuoteNumber, this.selectedIndex);
-            if(this.QuoteNumber.length > 0){
+            if (this.QuoteNumber.length > 0) {
               this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
             }
             // this.formData.tenure = this.selectedIndex;
@@ -3983,7 +3986,7 @@ export class YatraComponent {
   }
 
   setPremiumAmount(control?: any) {
-    if(this.formData.tenure){
+    if (this.formData.tenure) {
       this.selectedIndex = this.formData.tenure - 1;
     }
     console.log(this.dynamicFormGroup.value, this.form, this.displayTaxList, this.selectedIndex, this.formData, this.QuoteNumber);
@@ -4048,7 +4051,7 @@ export class YatraComponent {
                 }
 
                 // Update additional data
-                if(this.QuoteNumber.length > 0){
+                if (this.QuoteNumber.length > 0) {
                   this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
                 }
                 this.formData.tenure = this.selectedIndex + 1;
@@ -4526,7 +4529,7 @@ export class YatraComponent {
           memberOccupation: formData[`insuredMemberDetails.${index}.productMemberOccupation`] || '',
           covers: member?.covers || [],
           productQuestionnaire: formData[`insuredMemberDetails.${index}.productQuestionnaire`] || '',
-          memberRoomCategory:formData[`insuredMemberDetails.${index}.memberRoomCategory`] || ''
+          memberRoomCategory: formData[`insuredMemberDetails.${index}.memberRoomCategory`] || ''
         };
       }) || [],
       CKYCNo: formData?.ckycNo || '',
@@ -4641,7 +4644,7 @@ export class YatraComponent {
     this.isFeedBackModalVisible = false;
   }
 
-  closeIsFeedBackModalVisible(){
+  closeIsFeedBackModalVisible() {
     this.isFeedBackModalVisible = false;
   }
 
@@ -4757,7 +4760,7 @@ export class YatraComponent {
                       // );
                       const allValuesEmpty = Object.values(filteredInnerArray).every(value => value === "");
 
-                      console.log(innerArray, filteredInnerArray,allValuesEmpty);
+                      console.log(innerArray, filteredInnerArray, allValuesEmpty);
                       if (filteredInnerArray['diseaseName'] !== "" && !allValuesEmpty) {
                         innerArray.parentQuestionCode = questionId;
                         productQuestionnaire.push(filteredInnerArray);
@@ -4803,8 +4806,8 @@ export class YatraComponent {
     });
   }
 
-  getLeadInformation(){
-  const  leadsInfoListRequestBody = {
+  getLeadInformation() {
+    const leadsInfoListRequestBody = {
       "agentcode": this.agentCode,
       "myleads": true,
       "assignedleads": true,
@@ -4828,7 +4831,7 @@ export class YatraComponent {
 
          this.quoteLeadInformation = response.data.leadList[0];
 
-         this.patchDropDownValues();
+          this.patchDropDownValues();
 
          this.dynamicFormGroup.patchValue({
           memberDobProposer : this.datepipe.transform(this.quoteLeadInformation.dob, 'yyyy-MM-dd'),

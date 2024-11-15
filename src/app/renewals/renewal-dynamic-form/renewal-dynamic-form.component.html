@@ -999,8 +999,8 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages">
                                             <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers">
-                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check">
-                                                <label [for]="cover.featureName">
+                                                <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" [checked]="selectedOptionalCoverages.includes(cover.featureName)" [disabled]="selectedOptionalCoverages.includes(cover.featureName)">
+                                                <label [for]="cover.featureName" [ngClass]="{'active': selectedOptionalCoverages.includes(cover.featureName)}">
                                                   <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
                                                   <em class="head">{{cover.featureName}}</em>
                                                   <em class="headInfo">{{cover.featureDescription}}</em>
@@ -1022,8 +1022,8 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages checkbox_healthAddOns">
                                             <div class="input-checkbox-feild" *ngFor="let cover of healthAddOns">
-                                                <input type="checkbox" [id]="cover.featureName" [name]="cover.featureName" [value]="cover.featureName" class="input-check">
-                                                <label [for]="cover.featureName">
+                                                <input type="checkbox" [id]="cover.featureName" [name]="cover.featureName" [value]="cover.featureName" class="input-check" [checked]="selectedHealthAddons.includes(cover.featureName)" [disabled]="selectedHealthAddons.includes(cover.featureName)">
+                                                <label [for]="cover.featureName" [ngClass]="{'active': selectedHealthAddons.includes(cover.featureName)}">
                                                   <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
                                                   <em class="head">{{cover.featureName}}</em>
                                                   <em class="headInfo">{{cover.featureDescription}}</em>
@@ -1616,8 +1616,6 @@
     </div>    
   </div>
 </div>
-
-<!-- <div *ngIf="activeSection === 'feedback'"> -->
     <div class="modal-background" *ngIf="isFeedBackModalVisible">
         <div class="modal-container">
           <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
@@ -1667,5 +1665,5 @@
             </div>
           </form>
         </div>
-    </div>
-<!-- </div> -->
+    
+</div>

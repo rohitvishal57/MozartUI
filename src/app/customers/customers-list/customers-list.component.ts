@@ -32,8 +32,8 @@ export class CustomersListComponent {
   customerId:any;
   agentCode :any =localStorage.getItem('agentCode'); 
   StaticPolicyTypes = [
-    { name: 'Individual', selected: false },
-    { name: 'Floater', selected: false },
+    { name: 'Multi Individual', selected: false },
+    { name: 'Family Floater', selected: false },
   ];
   currentDate = new Date().toISOString().split('T')[0];
   moreInfoIndex: number | null = null;
@@ -247,7 +247,6 @@ export class CustomersListComponent {
 activePolicys(active: number, index: number) {
   this.customerList[index].activePolicy = active;
 }
-
 getFilteredPolicies(policyDetails: any[], activePolicy: number,index:number) {
   if (activePolicy === 1) {
       return policyDetails.slice(0, 1);  
@@ -259,7 +258,6 @@ getFilteredPolicies(policyDetails: any[], activePolicy: number,index:number) {
   }
   return null;
 }
-
 customerListView(view: string) {
   if (this.selectedView !== view) {
     this.selectedView = view;

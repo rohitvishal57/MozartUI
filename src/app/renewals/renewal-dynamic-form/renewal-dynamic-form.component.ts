@@ -91,7 +91,9 @@ export class RenewalDynamicFormComponent implements OnInit {
   impressedLable: String = "";
   feedbackImpressedValue: String = '';
   fullQuoteResponse:any;
-
+  file!: File;
+  selectedOptionalCoverages: string[] = ["Personal Accident", "Annual Screening Package for Cancer Diagnosed Patients"];
+  selectedHealthAddons: string[] = ["Vaccine Cover"];
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,
     private router: Router,private toast: NgToastService,
@@ -437,23 +439,40 @@ onBankNameSelected(selectedBankName: string): void {
       this.form.markAllAsTouched();
       return;
     }
-    // const data = new FormData();
-    // data.append('Files', this.file)
-    const offlinePaymentRequestBody = {
-      "policyType": "Renewal",
-      "paymentMethod": "Offline",
-      "paymentOption": this.form.value.paymentOption.toString(),
-      "premiumAmount": this.form.value.chequeAmount.toString(),
-      "checkNo": this.form.value.chequeNumber.toString(),
-      "checkDate": this.form.value.chequeDate.toString(),
-      "policyNumber": this.policyNumber.toString(),
-      "agentCode": this.agentCode?.toString(),
-      "bankName": this.form.value.bankNameControl.toString(),
-      "ifsc": this.form.value.ifscCode.toString(),
-      "formFile": []
-    };
-    console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
-    this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
+    // const offlinePaymentRequestBody = {
+    //   "policyType": "Renewal",
+    //   "paymentMethod": "Offline",
+    //   "paymentOption": this.form.value.paymentOption.toString(),
+    //   "premiumAmount": this.form.value.chequeAmount.toString(),
+    //   "checkNo": this.form.value.chequeNumber.toString(),
+    //   "checkDate": this.form.value.chequeDate.toString(),
+    //   "policyNumber": this.policyNumber.toString(),
+    //   "agentCode": this.agentCode?.toString(),
+    //   "bankName": this.form.value.bankNameControl.toString(),
+    //   "ifsc": this.form.value.ifscCode.toString(),
+    //   "formFile": []
+    // };
+    // console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
+    const checkNumber= this.form.value.chequeNumber.toString()
+    const checkAmount= this.form.value.chequeAmount.toString()
+    console.log(checkAmount,checkNumber);
+    
+    const data = new FormData();
+    data.append("policyType", "Renewal");
+    data.append("paymentMethod", "Offline");
+    data.append("paymentOption", this.form.value.paymentOption);
+    data.append("premiumAmount", checkAmount);
+    data.append("checkNo", checkNumber);
+    data.append("checkDate", this.form.value.chequeDate);
+    data.append("policyNumber", this.policyNumber);
+    data.append("agentCode", this.agentCode|| "");
+    data.append("bankName", this.form.value.bankNameControl);
+    data.append("ifsc", this.form.value.ifscCode);
+    data.append('formFile', this.file);
+    console.log("uploaded file",this.file);
+    console.log("data",data);
+        // this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
+      this.renewalService.getFullQuoteApi(data).subscribe(
       (res:any)=>{
         if(res.isSuccess){
           console.log("offline payment reponse",res.data);
@@ -548,16 +567,18 @@ async getRenewalInfo() {
     const productName = this.renewalInfo?.response?.policyData?.[0]?.Name_of_product;    
     if (productName) {
       const matchingProduct = this.productsList.find((product: any) => product.productName === productName);
-      if (matchingProduct) {
+      // if (matchingProduct) {
+        if(true){          
         const request = {
-          productId: matchingProduct.productId,
+          // productId: matchingProduct.productId,
+          productId:1,
           agentCode: this.agentCode
         };  
         this.renewalService.getproductdetailsandfeatures(request).subscribe(
           (res: any) => {
             const productFeatures = res.data.productFeatures;
             this.optionalCovers = productFeatures.filter((feature: any) => feature.categoryName === 'Optional Covers');
-            this.healthAddOns = productFeatures.filter((feature: any) => feature.categoryName === 'Health Add On');
+            this.healthAddOns = productFeatures.filter((feature: any) => feature.categoryName === 'Health Add On');           
           },
           (err) => {
             console.error("Error coming from getproductdetailsandfeatures API", err);
@@ -659,12 +680,16 @@ async getRenewalInfo() {
       this.feedbackImpressedValue = value;
     }
     onFileSelected(event: any) {
-      const file: File = event.target.files[0];
+      this.file = event.target.files
+      console.log('filetr',this.file);
+      
+      this.file = event.target.files[0];
       const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
       const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
-      if (file) {
-        this.fileName = file.name;
+      if (this.file) {
+        this.fileName = this.file.name;
       }
+      console.log("file",this.file);
     }
     
 }
