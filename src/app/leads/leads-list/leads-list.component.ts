@@ -66,14 +66,12 @@ export class LeadsListComponent {
   filterLeads = false;
   today: string = '';
   StaticPolicyTypes = [
-    { name: 'Individual', selected: false },
+    { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   formSequence: any[] = [];
   private allJsonFormData: any[] = [];
   formData: any = {};
-  filterFeildType = 'text';
-  filterFeildmaxlength = 10;
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
@@ -192,21 +190,21 @@ export class LeadsListComponent {
     );
   }
   filterQuotes(filter: string) {
-    this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
-    this.leadsInfoListRequestBody.searchlist = "";
+   // this.leadsInfoListRequestBody.searchby = "";
+   // this.leadsInfoListRequestBody.fromdate = null;
+   // this.leadsInfoListRequestBody.todate = null;
+   // this.leadsInfoListRequestBody.searchlist = "";
+   // this.productsList.forEach((product) => (product.selected = false));
+   // this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+   // this.startDate = "";
+   // this.endDate = "";
     this.leadsInfoListRequestBody.myleads = true;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = true;
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = "";
-    this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
-    this.searchInputControl.reset();
+   // this.searchInputControl.reset();
   }
 
   getProducts() {
@@ -241,6 +239,9 @@ export class LeadsListComponent {
   }
 
   applyFilter() {
+    this.page =1;
+    this.first = 0;
+    this.rows = 10;
     this.filterLeads = true;
     this.calculateAppliedFiltersCount();
     const selectedProducts = this.productsList.filter((product) => product.selected)
@@ -254,7 +255,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
-    this.searchInputControl.reset();
+   // this.searchInputControl.reset();
 
   }
   cancel() {
@@ -290,14 +291,13 @@ export class LeadsListComponent {
   }
 
   onSelectChanges(event: any): void {
+    debugger;
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
     const selectedValidators = searchValidationConfig[this.selected] || [];
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
-    //this.getPlaceholder();
-    if (this.selected == 'Select an option') {
-        this.placeholder = 'Search...';
+    if (this.selected == '') {
         this.leadsInfoListRequestBody.searchby = '';
         this.getLeadsList();
       }
@@ -305,7 +305,9 @@ export class LeadsListComponent {
 
 
   applySearch() {
-
+    this.page =1;
+    this.first = 0;
+    this.rows = 10;
     if(this.activeFilter== 'assignedLead'){
       this.leadsInfoListRequestBody.assignedleads = true;
       this.leadsInfoListRequestBody.unassignedleads = false;
@@ -320,6 +322,8 @@ export class LeadsListComponent {
 
     this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
     this.getLeadsList();
+
+    
   }
 
   renewalListView(view: string) {
@@ -403,53 +407,49 @@ export class LeadsListComponent {
     this.showAssigneLeadDialog(this.selectedleadInformation);
   }
   getAssignedLeads() {
-    this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
-    this.leadsInfoListRequestBody.searchlist = "";
+   // this.leadsInfoListRequestBody.searchby = "";
+   // this.leadsInfoListRequestBody.fromdate = null;
+   // this.leadsInfoListRequestBody.todate = null;
+   // this.leadsInfoListRequestBody.searchlist = "";
+   // this.productsList.forEach((product) => (product.selected = false));
+   //this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+   //  this.startDate = "";
+   // this.endDate = "";
+
+    this.filterLeads = false;
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = false;
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = "";
-    this.endDate = "";
-    this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
-    this.searchInputControl.reset();
+    //this.searchInputControl.reset();
   }
   getUnAssignedLeads() {
-    this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
-    this.leadsInfoListRequestBody.searchlist = "";
+   // this.leadsInfoListRequestBody.searchby = "";
+   // this.leadsInfoListRequestBody.fromdate = null;
+   // this.leadsInfoListRequestBody.todate = null;
+   // this.leadsInfoListRequestBody.searchlist = "";
+   //this.productsList.forEach((product) => (product.selected = false));
+   //this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+   //this.startDate = "";
+  // this.endDate = "";
+
+    this.filterLeads = false;
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = false;
     this.leadsInfoListRequestBody.unassignedleads = true;
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = "";
-    this.endDate = "";
-    this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
-    this.searchInputControl.reset();
+   // this.searchInputControl.reset();
   }
   getPlaceholder(): string {
-    this.filterFeildType = "text";
-    this.filterFeildmaxlength = 50;
-
     if (this.selected === 'leadId') {
-        this.filterFeildmaxlength = 20;
         return 'Enter Lead ID';
     } else if (this.selected === 'mobileNumber') {
-        this.filterFeildType = "number";
-        this.filterFeildmaxlength = 10;
         return 'Enter Mobile Number';
     } else if (this.selected === 'name') {
         return 'Enter Name';
-    } else if (this.selected === 'email') {
+    } else if (this.selected === 'emailID') {
         return 'Enter Email ID';
     } else {
         return 'Search...';

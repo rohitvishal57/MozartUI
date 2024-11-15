@@ -5,7 +5,6 @@ export const searchValidationConfig: { [key: string]: ValidatorFn[] } = {
   policyNumber: [Validators.required,Validators.pattern("^\\s*[0-9-]+\\s*$"),],
   proposerName: [Validators.required,Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/),],
   emailID: [Validators.required,Validators.pattern(/^\s*[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\s*$/) ],
-  email: [Validators.required,Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$")],
   name: [Validators.required,Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/) ],
   leadId: [Validators.required,Validators.pattern(/^\s*UPL\d{12}\s*$/) ],
   proposalNumber: [Validators.required, Validators.pattern(/^\s*UPP\d{12}\s*$/) ],
