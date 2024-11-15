@@ -25,7 +25,7 @@
                                 </select>
                             </div>
                             <div class="filterFieldGroup">
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)">
                                 <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                                 <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">

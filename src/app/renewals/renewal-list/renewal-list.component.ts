@@ -205,6 +205,12 @@ export class RenewalListComponent {
       return "Search...";
     }
   }
+  restrictInput(event: KeyboardEvent): void {
+    if (this.selected === 'mobileNumber' && !/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+  
   applySearch() {
     if (this.searchInputControl.valid) {
       const trimmedValue = this.searchInputControl.value?.trim(); 
@@ -290,6 +296,8 @@ export class RenewalListComponent {
             }
           }
         };
+        console.log("email",emailRequestBody);
+        
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -339,6 +347,8 @@ export class RenewalListComponent {
           isAutoSMS: true,
           sessionId: ""
         };
+        console.log("sms",smsRequestBody);
+        
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -357,6 +367,8 @@ export class RenewalListComponent {
           templateCode: "DUE-CSTMR",
           policyNumbers: [item.policyNumber]
         };
+        console.log("whatsApp",whatsAppRequestBody);
+        
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
