@@ -151,10 +151,6 @@ export class LeadsListComponent {
           console.log("Renewal List", this.leadsList);
           this.countsList = response.data;
           this.totalRecords = this.countsList.totalCount;
-          // this.appliedFiltersCount = 0;
-          // if (this.filterLeads == true) {
-          //  this.appliedFiltersCount = response.data.totalCount;
-          //}
         }
         else { console.error("API request was not successful."); }
       },
@@ -236,18 +232,12 @@ export class LeadsListComponent {
   }
 
   calculateAppliedFiltersCount() {
-    const selectedProductsCount = this.productsList.filter(
-      (product) => product.selected).length;
-
-    const selectedpolicyTypeCount = this.StaticPolicyTypes.filter(
-      (policyType) => policyType.selected).length;
-
+    const selectedProductsCount = this.productsList.filter((product) => product.selected).length;
+    const selectedpolicyTypeCount = this.StaticPolicyTypes.filter((policyType) => policyType.selected).length;
     let count = selectedProductsCount + selectedpolicyTypeCount;
-
     if (this.startDate && this.endDate) {
       count++;
     }
-
     this.appliedFiltersCount = count || 0;
   }
 
@@ -265,7 +255,6 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
-    //this.selected = "";
     this.searchInputControl.reset();
 
   }
@@ -305,65 +294,33 @@ export class LeadsListComponent {
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
     const selectedValidators = searchValidationConfig[this.selected] || [];
-    console.log('selectedValidators',selectedValidators);
     this.searchInputControl.setValidators(selectedValidators);
-    // if (this.selected === "mobileNumber") {
-    //   this.placeholder = 'Mobile Number';
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[6-9][0-9]{9}$")
-    //   ]);
-    // }
-    // else if (this.selected === "name") {
-    //   this.placeholder = 'Proposer Name';
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[A-Za-zÀ-ÿ ]+$")
-    //   ]);
-    // }
-    // else if (this.selected === "email") {
-    //   this.placeholder = 'Email';
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$")
-    //   ]);
-    // }
-    // else if (this.selected === "leadId") {
-    //   this.placeholder = 'Lead Id';
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[A-Za-z]{3}\\d{12}$")
-    //   ]);
-    // }
-    // else if (this.selected = 'Select an option') {
-    //   this.placeholder = 'Search...';
-    //   this.leadsInfoListRequestBody.searchby = '';
-    //   this.getLeadsList();
-    // }
     this.searchInputControl.updateValueAndValidity();
-    this.getPlaceholder();
+    //this.getPlaceholder();
+    if (this.selected == 'Select an option') {
+        this.placeholder = 'Search...';
+        this.leadsInfoListRequestBody.searchby = '';
+        this.getLeadsList();
+      }
   }
 
 
   applySearch() {
-    this.leadsInfoListRequestBody.searchlist = "";
-    this.leadsInfoListRequestBody.policyList = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
-    this.appliedFiltersCount =  0;
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate ='';
-    this.endDate ='';
-    // if (this.searchInputControl.valid == true) {
-      this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
-    // } else {
-    //   this.leadsInfoListRequestBody.searchby = "";
-    // }
-    // if (this.selected != 'Select an option') {
-      this.getLeadsList();
-      // this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign ? 'assignedLead' : 'unAssignedLead';
-    // }
+
+    if(this.activeFilter== 'assignedLead'){
+      this.leadsInfoListRequestBody.assignedleads = true;
+      this.leadsInfoListRequestBody.unassignedleads = false;
+
+    }else if(this.activeFilter == 'unAssignedLead'){
+      this.leadsInfoListRequestBody.assignedleads = false;
+      this.leadsInfoListRequestBody.unassignedleads = true;
+    }else{
+      this.leadsInfoListRequestBody.assignedleads = true;
+      this.leadsInfoListRequestBody.unassignedleads = true;
+    }
+
+    this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
+    this.getLeadsList();
   }
 
   renewalListView(view: string) {
