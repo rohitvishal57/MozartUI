@@ -33,7 +33,7 @@ export class LeadsListComponent {
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
-  selected: string = "Select an option";
+  selected: string = '';
   searchInputControl = new FormControl("");
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
@@ -207,9 +207,8 @@ export class LeadsListComponent {
     this.getLeadsList();
     this.activeFilter = filter;
     this.searchInputControl.reset();
-    this.selected = "Select an option";
-    this.getPlaceholder();
   }
+
   getProducts() {
     const reqData = {
       "agentCode": this.agentCode
@@ -418,7 +417,6 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
-    this.selected = "Select an option";
     this.searchInputControl.reset();
   }
   getUnAssignedLeads() {
@@ -436,7 +434,6 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
-    this.selected = "Select an option";
     this.searchInputControl.reset();
   }
   getPlaceholder(): string {
@@ -458,25 +455,6 @@ export class LeadsListComponent {
         return 'Search...';
     }
   }
-
-
-  // getSearchInputControlPatternMessage() {
-  //   let errorMessage: string = '';
-  //   if (this.searchInputControl.hasError('required')) {
-  //     errorMessage = 'This field is required.';
-  //   }
-  //   if (this.selected === 'leadId') {
-  //     errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).';
-  //   } else if (this.selected === 'mobileNumber') {
-  //     errorMessage = 'Mobile Number should be exactly 10 digits.';
-  //   } else if (this.selected === 'name') {
-  //     errorMessage = 'Name should contain only letters and spaces.';
-  //   } else if (this.selected === 'email') {
-  //     errorMessage = 'Please enter a valid email address (e.g., user@example.com).';
-  //   }
-  //   return this.toast.warning({ detail: "", summary: errorMessage, duration: 5000 });
-
-  // }
 
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
