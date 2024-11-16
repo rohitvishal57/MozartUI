@@ -151,7 +151,7 @@
                                                     class="add-wrapper" [ngClass]="{'selected': addon.isSelected}">
                                                     <label for="{{addon.featureName}}" class="add-checkbox">
                                                         <input type="checkbox" [value]="addon.featureName"
-                                                            id="{{addon.featureName}}" [checked]="addon.isSelected"
+                                                            id="{{addon.featureName}}" name="{{addon.featureName}}" [checked]="addon.isSelected"
                                                             (change)="onCheckboxChange($event, addon,i)" />
                                                         <span>{{addon.featureName}}</span>
                                                     </label>
@@ -161,7 +161,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                                <button class="get" (click)="closeOverlay()">Continue</button>
+                                                <button id="Continue" name="Continue"
+                                                 class="get" (click)="closeOverlay()">Continue</button>
                                             </div>
                                         </div>
                                     </div>
@@ -171,12 +172,14 @@
                                     </p> -->
                                     <div class="product-button">
                                         <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
-                                        <button class="get" (click)="addToCart(item)">
+                                        <button class="get" id="Add to Cart" name="Add to Cart"
+                                         (click)="addToCart(item)">
                                             <img src="assets/Img/trolley1.svg" alt="">
                                             Add to Cart
                                         </button>
-                                        <button class="get1" (click)="showOverlay(i)">View Recommended Add-Ons</button>
-                                        <button class="get2">
+                                        <button class="get1" id="View Recommended Add-Ons" name="View Recommended Add-Ons"
+                                         (click)="showOverlay(i)">View Recommended Add-Ons</button>
+                                        <button class="get2" id="Add to Compare" name="Add to Compare">
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                             Add to Compare
                                         </button>
@@ -206,7 +209,8 @@
                 </div>
                 <div *ngIf="cartProductList.length >0">
                     <div class="allitem">
-                        <input type="button" class="product-remove-btn" value="Remove All"
+                        <input type="button" class="product-remove-btn" id="Remove All"
+                        name="Remove All" value="Remove All"
                                     (click)="deleteallcartitems()">
                     </div>
                     <div *ngFor="let item of cartProductList; let i = index">
@@ -225,7 +229,7 @@
                                 <div class="cart-productText"><img src="assets/logo/activeOne.svg"
                                         class="cart-productImage"> {{item.productName}}</div>
                                 <input type="button" class="product-remove-btn" value="Remove"
-                                    (click)="deleteagentcartitems([item.id])">
+                                id="Remove" name="Remove" (click)="deleteagentcartitems([item.id])">
                             </div>
                             <div class="product-features">
                                 <div *ngFor="let key of item.productFeatures">
@@ -270,7 +274,8 @@
                                 Premium might increase based on the addOns.
                             </div>
                             <!-- <div class=""> -->
-                            <input type="button" class="buy-btn" (click)="insurenow(item)" value="Buy now">
+                            <input type="button" class="buy-btn" (click)="insurenow(item)"
+                            id="Buy now" name="Buy now" value="Buy now">
                             <!-- </div> -->
                         </div>
                         <div class="line">
