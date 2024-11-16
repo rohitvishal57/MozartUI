@@ -9,6 +9,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CommonService } from 'src/app/services/common.service';
 import { error } from 'jquery';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-create-lead',
@@ -91,19 +92,15 @@ export class CreateLeadComponent implements OnInit {
 
     if (this.leadNumber && this.action) {
       await this.getLeadInformationByLeadNumber(this.leadNumber);
-      await this.getProducts();
-      await this.getReferenceStatus();
-      await this.fetchActivityTypeInfo();
       if (this.action === 'addNotes') {
         this.getLeadNotes(this.leadNumber);
       }
-    }else{
-       this.getProducts();
     }
-
-    this.fetchOccupationInfo();
+     this.getProducts();
+     this.fetchOccupationInfo();
+     this.getReferenceStatus();
+     this.fetchActivityTypeInfo();
     this.today = new Date().toISOString().split('T')[0];
-
   }
 
   inItForm() {
@@ -124,7 +121,8 @@ export class CreateLeadComponent implements OnInit {
       gender: [''],
       maritalStatus: [''],
       numberOfKids: ['', [Validators.pattern('[0-9]*')]],
-      occupation: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
+      //occupation: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
+      occupation: [''],
       address1: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       education: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       address2: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
@@ -203,6 +201,7 @@ export class CreateLeadComponent implements OnInit {
     this.submitted = true;
 
     if (this.userValidations.invalid) {
+      console.log('userValidations ',this.userValidations.errors)
       // this.disableFormFields()
       return;
     }
@@ -245,7 +244,7 @@ export class CreateLeadComponent implements OnInit {
 
   }
 
-  getLeadInformationByLeadNumber(leadNumber: any) {
+  async getLeadInformationByLeadNumber(leadNumber: any) {
     console.log("getLeadInformationByLeadNumber ", leadNumber)
     let requestBody: any = {};
     requestBody.agentCode = localStorage.getItem('agentCode');
@@ -257,16 +256,14 @@ export class CreateLeadComponent implements OnInit {
     requestBody.length = 10;
     requestBody.searchby = leadNumber;
     requestBody.isSellerPortal = true;
-
-    this.leadsService.getLeadInfoByLeadID(requestBody).subscribe((response) => {
+    try {
+      const response = await firstValueFrom(this.leadsService.getLeadInfoByLeadID(requestBody));
       this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
-    },
-      (error) => {
+    } 
+    catch(error) {
         console.log("Failed to fetch lead Information!")
       }
-    );
-
   }
 
   updateleadInformation() {
@@ -282,7 +279,6 @@ export class CreateLeadComponent implements OnInit {
       isWhatsapp: this.submittedUser.isWhatsapp,
       maritalStatus: this.submittedUser.maritalStatus,
       numberOfKids: this.submittedUser.numberOfKids,
-      occupation: this.submittedUser.occupation,
       education: this.submittedUser.education,
       address1: this.submittedUser.address1,
       address2: this.submittedUser.address2,
@@ -481,15 +477,25 @@ export class CreateLeadComponent implements OnInit {
   }
 
   fetchOccupationInfo() {
+    console.log('this.submittedUser fetchOccupationInfo',this.submittedUser?.occupation);
     this.leadsService.getOccupationInfo('').subscribe(
       (response) => {
-        if(response.isSuccess){
+        if(response?.isSuccess){
           this.occupationInfo =  response?.data;
-          console.log('occupationInfo',this.occupationInfo);
+          if(this.submittedUser){
+            this.userValidations.patchValue({
+              occupation: this.submittedUser?.occupation  ?? ''
+            });
+          }
         }
       }, (error) => {
         console.log('Failed to Fetch Occupation Information',error);
       }
     );
   }
+
+  stringifyJson(opt: any): string {
+    return JSON.stringify(opt); 
+  }
+
 }

@@ -4827,12 +4827,8 @@ export class YatraComponent {
 
     this.leadsService.getLeadsListApi(leadsInfoListRequestBody).subscribe(
       (response) => {
-        if (response) {
-
+        if (response?.data?.leadList) {
          this.quoteLeadInformation = response.data.leadList[0];
-
-          this.patchDropDownValues();
-
          this.dynamicFormGroup.patchValue({
           memberDobProposer : this.datepipe.transform(this.quoteLeadInformation.dob, 'yyyy-MM-dd'),
           firstName: this.quoteLeadInformation.firstName,
@@ -4847,11 +4843,11 @@ export class YatraComponent {
           state: this.quoteLeadInformation.state,
           mobileNumber: this.quoteLeadInformation.phoneNumber,
           educationDetails: this.quoteLeadInformation.education,
-          memberPolicyType : this.quoteLeadInformation.policyType
-
+          memberPolicyType : this.quoteLeadInformation.policyType,
+          occupation : this.quoteLeadInformation.occupation
         });
-
-        }
+        this.patchDropDownValues();
+      }
         else { console.error("API request was not successful."); }
       },
       (error) => {
