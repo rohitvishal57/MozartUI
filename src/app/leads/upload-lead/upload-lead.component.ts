@@ -188,6 +188,8 @@ export class UploadLeadComponent implements OnInit{
         //     }
         //   })
       } 
+      this.fileList = [];
+      this.selctedFileName ='';
     }
     downloadurl(){
       // window.open(this.url, '_blank');
