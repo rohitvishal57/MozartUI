@@ -102,6 +102,7 @@ export interface ISubControl {
   visible?: boolean;
   disabled?: boolean;
   method?: string;
+  innerControls?: ISubControl[];
   innerSubControls?: ISubControl[];
   displayOnly?: boolean;
   coreControls?: ISubControl[];
@@ -110,6 +111,7 @@ export interface ISubControl {
   getAllOption?: string;
   isButton?:boolean;
   innerArrayControl?:IDynamicControl[][];
+  conditionCheck?:boolean;
 }
 
 export interface ITab {
