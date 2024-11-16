@@ -94,6 +94,9 @@ export class RenewalDynamicFormComponent implements OnInit {
   file!: File;
   selectedOptionalCoverages: string[] = ["Personal Accident", "Annual Screening Package for Cancer Diagnosed Patients"];
   selectedHealthAddons: string[] = ["Vaccine Cover"];
+  tenureDetail:any;
+  chronicApplication: FormGroup= this.fb.group({});
+
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,
     private router: Router,private toast: NgToastService,
@@ -153,11 +156,36 @@ export class RenewalDynamicFormComponent implements OnInit {
   setActiveTab(tabName: string): void {
     this.activeTab = tabName;
   }
+  memberDetail(){
+    this.form.value.SumInsured=this.selectedSumInsured;
+    this.form.value.Name = `${this.form.value.FirstName} ${this.form.value.MiddleName} ${this.form.value.LastName}`.trim();
+    this.form.value.Policy_Type='IND';
+    this.form.value.PrimaryMember="N";
+    this.form.value.Age = this.calculateAge(this.form.value.DoB).toString();
+    this.form.value.ChronicManagementApplicable = this.isAnyConditionSelected() ? 'Y' : 'N';
+  }
+  calculateAge(dob: Date): number | string {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    if (age < 1) {
+      const diffInMs = today.getTime() - birthDate.getTime();
+      const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+      return `${diffInDays}days`;
+    }
+    return age;
+  }
+
   handleAction(event: string,item?: any) {
      switch (event) {
         case 'Member':
          if (this.memberRole === 'Add' && this.form.valid) {  
-            this.form.value.SumInsured=this.selectedSumInsured;
+            this.requestObject = {};
+            this.memberDetail();
             this.requestObject.member=JSON.stringify(this.form.value);
             this.requestObject.policyNumber='21-24-0002334-00';
             this.requestObject.referenceNumber=this.referenceNumber; 
@@ -165,6 +193,7 @@ export class RenewalDynamicFormComponent implements OnInit {
             this.requestObject.productId=2;
             this.requestObject.quoteData="";
             console.log("update or add",this.requestObject);
+            console.log("add",this.form.value);
             this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
@@ -180,13 +209,14 @@ export class RenewalDynamicFormComponent implements OnInit {
             );this.formId=5001;
          } 
          else if (this.memberRole === 'Update' && this.form.valid) {
+            this.requestObject = {};
             this.form.value.SumInsured=this.selectedSumInsured;
             this.requestObject.member=JSON.stringify(this.form.value);
             this.requestObject.policyNumber='21-24-0002334-00';
             this.requestObject.referenceNumber=this.referenceNumber; 
             this.requestObject.agentCode="4620973";
             this.requestObject.productId=2;
-            this.requestObject.quoteData="";
+            this.requestObject.quoteData="";            
             this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
@@ -216,12 +246,17 @@ export class RenewalDynamicFormComponent implements OnInit {
         case 'editAddress':
          if(this.form.invalid){   
           return;
-         }else if (event === 'editAddress' && this.form.valid) {
+         }else if (event === 'editAddress' && this.form.valid) {  
+            this.requestObject = {};        
             this.requestObject.updatedAddress=JSON.stringify(this.form.value);
             this.requestObject.policyNumber=this.policyNumber;
             this.requestObject.referenceNumber=this.referenceNumber; 
+            console.log(this.requestObject);                      
+
             this.renewalService.updateaddressApi(this.requestObject).subscribe(
               (res:any) => {
+                console.log(res);
+                
                 if(res.data.isUpdateSuccess == true){
                   Object.keys(this.form.value).forEach((key) => {
                     if (this.form.value[key] !== null && this.form.value[key] !== undefined && this.form.value[key] !== '') {
@@ -240,9 +275,11 @@ export class RenewalDynamicFormComponent implements OnInit {
          break;
         case 'editNominee':
           if (event === 'editNominee' && this.form.valid) {
+            this.requestObject = {};
             this.requestObject.updatedNomineeDetails=JSON.stringify(this.form.value);
             this.requestObject.policyNumber='21-24-0002334-00';
-            this.requestObject.referenceNumber=this.referenceNumber;                        
+            this.requestObject.referenceNumber=this.referenceNumber;  
+            console.log(this.requestObject);                      
             this.renewalService.updatenomineeApi(this.requestObject).subscribe(
              (res:any) => {
               if(res.data.isUpdateSuccess == true){
@@ -277,6 +314,14 @@ export class RenewalDynamicFormComponent implements OnInit {
   preExistingCondition(value:any){
    this.preexistingConditionSelected=value
   }
+  isAnyConditionSelected(): boolean {
+    return (
+      this.chronicApplication.get('highBlood')?.value || this.chronicApplication.get('asthma')?.value || this.chronicApplication.get('diabetes')?.value || this.chronicApplication.get('heart')?.value || this.chronicApplication.get('lung')?.value || this.chronicApplication.get('ent')?.value ||
+      this.chronicApplication.get('kidney')?.value || this.chronicApplication.get('brain')?.value || this.chronicApplication.get('cancer')?.value || this.chronicApplication.get('sexuallyTransmitted')?.value ||
+      this.chronicApplication.get('anemia')?.value || this.chronicApplication.get('accidental')?.value
+    );
+  }
+  
  selectButton(value?: any,content? : any,member?:number) {
   if (this.selectedButton === 'primary') {
     if (value == 5006) {
@@ -316,6 +361,12 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
           .reduce((acc: any, key: any) => { acc[key] = '';return acc; }, {});
       this.formObject = {...this.subObject};
+      this.chronicApplication = this.fb.group({
+        highBlood: [false],asthma: [false],diabetes: [false],heart: [false],
+        lung: [false],ent: [false],kidney: [false],brain: [false],
+        cancer: [false],sexuallyTransmitted: [false],anemia: [false],
+        accidental: [false]
+      });
     }
     else if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editMember'){
       this.memberRole='Update';
@@ -521,7 +572,7 @@ getProducts() {
     next: (res) => {
       this.productsList = res.data;
       this.getTenureDetails();
-      if(res != null){
+      if(res != null){        
       this.getproductdetailsandfeatures();}
     },
     error: (err) => {
@@ -540,14 +591,22 @@ async getRenewalInfo() {
     const productName = this.renewalInfo?.response?.policyData[0]?.Name_of_product;        
     if (productName) {
       const matchingProduct = this.productsList.find((product:any) => product.productName === productName);      
-      if (matchingProduct) {
+      // if (matchingProduct) {
+      if(true){
         const tenureRequestBody = {
           agentCode: this.agentCode,
-          productId: matchingProduct.productId,  
-          quoteData: "{\n  \"proposerPincode\": \"500013\",\n  \"typeOfBusiness\": \"NB\",\n  \"isEmployee\": false,\n  \"sumInsured\": \"5000000\",\n  \"numberOfInsuredMembers\": \"1\",\n  \"familySize\": \"1A\",\n  \"proposerName\": \"Manjunath Saukar\",\n  \"mobileNumber\": \"9876543211\",\n  \"memberPolicyType\": \"Multi Individual\",\n  \"insuredMemberDetails\": [\n    {\n      \"roomCategory\": \"\",\n      \"memberAge\": \"43\",\n      \"sumInsured\": \"5000000\",\n      \"isChronic\": \"No\",\n      \"chronicDiseases\": null,\n  \"pincode\": \"360380\",\n     \"zone\": \"Zone II\",\n      \"memberGender\": \"M\",\n      \"memberDob\": \"1980-12-31\",\n      \"memberRelation\": \"self\",\n      \"memberRelationCode\": \"24\",\n      \"covers\": [\n        {\n          \"coverId\": \"CIL\",\n          \"value\": \"1000000\"\n        },\n        {\n          \"coverId\": \"DECOV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"SCOP\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"ANCANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"PCDED\",\n          \"value\": \"15000\"\n        },\n        {\n          \"coverId\": \"PPNDISC\",\n          \"value\": \"\"\n        },\n        {\n          \"coverId\": \"COMV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"CANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RVCV\",\n          \"value\": \"500\"\n        },\n        {\n          \"coverId\": \"TOPD\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RRTO\",\n          \"value\": \"YSY\"\n        }\n      ]\n    }\n  ]\n}"
+          // productId: matchingProduct.productId,  
+          productId:1,
+          // quoteData: "{\n  \"proposerPincode\": \"500013\",\n  \"typeOfBusiness\": \"NB\",\n  \"isEmployee\": false,\n  \"sumInsured\": \"5000000\",\n  \"numberOfInsuredMembers\": \"1\",\n  \"familySize\": \"1A\",\n  \"proposerName\": \"Manjunath Saukar\",\n  \"mobileNumber\": \"9876543211\",\n  \"memberPolicyType\": \"Multi Individual\",\n  \"insuredMemberDetails\": [\n    {\n      \"roomCategory\": \"\",\n      \"memberAge\": \"43\",\n      \"sumInsured\": \"5000000\",\n      \"isChronic\": \"No\",\n      \"chronicDiseases\": null,\n  \"pincode\": \"360380\",\n     \"zone\": \"Zone II\",\n      \"memberGender\": \"M\",\n      \"memberDob\": \"1980-12-31\",\n      \"memberRelation\": \"self\",\n      \"memberRelationCode\": \"24\",\n      \"covers\": [\n        {\n          \"coverId\": \"CIL\",\n          \"value\": \"1000000\"\n        },\n        {\n          \"coverId\": \"DECOV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"SCOP\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"ANCANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"PCDED\",\n          \"value\": \"15000\"\n        },\n        {\n          \"coverId\": \"PPNDISC\",\n          \"value\": \"\"\n        },\n        {\n          \"coverId\": \"COMV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"CANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RVCV\",\n          \"value\": \"500\"\n        },\n        {\n          \"coverId\": \"TOPD\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RRTO\",\n          \"value\": \"YSY\"\n        }\n      ]\n    }\n  ]\n}"
+          quoteData:JSON.stringify(this.renewalInfo)
         };  
+        console.log(tenureRequestBody);
+        
         this.renewalService.getTenureDetailsApi(tenureRequestBody).subscribe(
-          (res) => {
+          (res:any) => {
+            if(res.isSuccess){
+              this.tenureDetail=res.data
+            }
             console.log("Tenure details received:", res);
           },
           (err) => {
@@ -576,6 +635,8 @@ async getRenewalInfo() {
         };  
         this.renewalService.getproductdetailsandfeatures(request).subscribe(
           (res: any) => {
+            console.log(res);
+            
             const productFeatures = res.data.productFeatures;
             this.optionalCovers = productFeatures.filter((feature: any) => feature.categoryName === 'Optional Covers');
             this.healthAddOns = productFeatures.filter((feature: any) => feature.categoryName === 'Health Add On');           
@@ -680,7 +741,7 @@ async getRenewalInfo() {
       this.feedbackImpressedValue = value;
     }
     onFileSelected(event: any) {
-      this.file = event.target.files
+      // this.file = event.target.files
       console.log('filetr',this.file);
       
       this.file = event.target.files[0];
