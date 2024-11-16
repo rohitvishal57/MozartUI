@@ -382,8 +382,7 @@
                                   </small>
                                   <div *ngIf="subControl.type ==='radio'" class="typecss col-md-2">
                                     <label *ngIf="subControl.visibleLabel==true">{{ subControl.label ?
-                                      (subControl.label
-                                      | translate) : '' }}<span *ngIf="subControl.validators">*</span></label>
+                                      (subControl.label| translate) : '' }}<span *ngIf="subControl.validators">*</span></label>
                                     <div class="radio-button">
                                       <div [class]="subControl.class" *ngFor="let option of subControl.radioOptions">
                                         <input type="radio" formControlName="{{subControl.name}}"
@@ -976,7 +975,7 @@
                               </div> -->
                               <!-- <div *ngIf="subControl.type === 'addOnDetails'" style="margin-left: 10px;">
                                     <ng-container [formArrayName]="subControl.name">
-                                      <label *ngIf="subControl.visibleLabel==true" [innerHTML]="subControl.label"></label>
+                                      <label *ngIf="subControl.visibleLabel==true" [innerHTML]="subControl.label | translate"></label>
       
                                       <ng-container [formGroupName]="0">
                                         <div style="display: flex; flex-direction: row;">
@@ -1004,7 +1003,7 @@
                             </div>
                           </div>
                           <div *ngIf="subControl.type === 'button'" class="col-lg-4">
-                            <input type="button" class="subButton" [value]="'subControl.label' | translate"
+                            <input type="button" class="subButton" [value]="subControl.label?(subControl.label | translate):''"
                               (click)="showOverlay(control)">
                           </div>
                         </ng-container>
