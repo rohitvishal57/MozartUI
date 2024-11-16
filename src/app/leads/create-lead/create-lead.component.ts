@@ -245,19 +245,9 @@ export class CreateLeadComponent implements OnInit {
   }
 
   async getLeadInformationByLeadNumber(leadNumber: any) {
-    console.log("getLeadInformationByLeadNumber ", leadNumber)
-    let requestBody: any = {};
-    requestBody.agentCode = localStorage.getItem('agentCode');
-    requestBody.myleads = false;
-    requestBody.assignedleads = false;
-    requestBody.unassignedleads = false;
-    requestBody.start = 1;
-    requestBody.viewBy = [];
-    requestBody.length = 10;
-    requestBody.searchby = leadNumber;
-    requestBody.isSellerPortal = true;
     try {
-      const response = await firstValueFrom(this.leadsService.getLeadInfoByLeadID(requestBody));
+      debugger;
+      const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(leadNumber));
       this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
     } 
@@ -494,8 +484,8 @@ export class CreateLeadComponent implements OnInit {
     );
   }
 
+
   stringifyJson(opt: any): string {
     return JSON.stringify(opt); 
   }
-
 }

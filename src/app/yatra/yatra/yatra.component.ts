@@ -4979,25 +4979,7 @@ export class YatraComponent {
   }
 
   getLeadInformation() {
-    const leadsInfoListRequestBody = {
-      "agentcode": this.agentCode,
-      "myleads": true,
-      "assignedleads": true,
-      "unassignedleads": true,
-      "start": 1,
-      "viewBy": [
-        ""
-      ],
-      "length": 10,
-      "searchby": this.leadNumber,
-      "searchlist": "",
-      "fromdate": null,
-      "todate": null,
-      "policyList": "",
-      "isSellerPortal": true
-    }
-
-    this.leadsService.getLeadsListApi(leadsInfoListRequestBody).subscribe(
+    this.leadsService.getLeadInformationByLeadID(this.leadNumber).subscribe(
       (response) => {
         if (response?.data?.leadList) {
          this.quoteLeadInformation = response.data.leadList[0];

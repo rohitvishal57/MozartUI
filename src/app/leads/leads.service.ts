@@ -60,6 +60,11 @@ export class LeadsService {
     const addLeadNotesRequest = this.configService.config.baseUrl + this.configService.config.getLeadsListApi;
     return this.http.post<any>(addLeadNotesRequest, requestBody);
   }
+
+  getLeadInformationByLeadID(leadnumber:any):Observable<any>{
+    const requestURL = `${this.configService.config.baseUrl}${this.configService.config.getLeadInfoByLeadNumber}${leadnumber}`;
+    return this.http.get<any>(requestURL,leadnumber);
+  }
   
   viewAuditTrail(leadnumber: string) {
     const url = `${this.configService.config.baseUrl}${this.configService.config.viewaudittrail}${leadnumber}`;

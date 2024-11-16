@@ -20,6 +20,7 @@
     "getLeadsListApi": "api/yatra/getleaddetailslist",
     "getActiveCampaignDetails": "api/yatra/getactivecampaignsdetails",
     "saveLeadData": "api/yatra/createlead",
+    "getLeadInfoByLeadNumber": "api/yatra/leadbyleadnumber?leadNumber=",
     "getcampaignsdetails": "api/yatra/getcampaignsdetails",
     "createbulklead": "api/yatra/createbulklead",
     "viewaudittrail": "api/yatra/viewaudittrail?leadnumber=",
