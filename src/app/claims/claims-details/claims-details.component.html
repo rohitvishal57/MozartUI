@@ -3,7 +3,7 @@
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
                 <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListClaim()"><a class="btn_backPage"
-                        title="Back To List"></a>Claims</h2>
+                        title="Back To List"></a>{{"Claims" | translate}}</h2>
             </div>
             <section class="white_container white_container_shadow">
                 <div class="row">
@@ -11,28 +11,28 @@
                         <div class="details_claimsInfo">
                             <div class="row_claimsInfo">
                                 <div class="claim_amount">
-                                    <label>Member Name</label>
+                                    <label>{{"Member Name" | translate}}</label>
                                     <h6><b>{{ claims?.memberName }}</b></h6>
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
-                                    <label>Policy Number</label>
+                                    <label>{{"Policy Number" | translate}}</label>
                                     <h6>{{ claims?.policyNumber }}</h6>
                                 </div>
                             </div>
                             <div class="row_claimsInfo sub_claimsInfo">
                                 <div class="claim_amount">
-                                    <label>Product Name</label>
+                                    <label>{{"Product Name" | translate}}</label>
                                     <h6>{{ claims?.productName }}</h6>
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
-                                    <label>Request Type</label>
+                                    <label>{{"Request Type" | translate}}</label>
                                     <h6>{{ claims?.requestType }}</h6>
                                 </div>
                                 <span class="info-dot1"></span>
                                 <div class="claim_amount">
-                                    <label>Claim Status</label>
+                                    <label>{{"Claim Status" | translate}}</label>
                                     <h6><b>{{ status?.claimStatus }}</b></h6>
                                 </div>
                             </div>
@@ -43,11 +43,11 @@
                         <div class="details_claimsAmount">
 
                             <div class="claim_amount">
-                                <h6>Claim Amount</h6>
+                                <h6>{{"Claim Amount" | translate}}</h6>
                                 <p>₹ {{ claims?.claimedAmount }}</p>
                             </div>
                             <div class="claim_amount">
-                                <h6>Approved Amount</h6>
+                                <h6>{{"Approved Amount" | translate}}</h6>
                                 <p>₹ {{ claims?.approvedAmount !== null ? claims.approvedAmount : '--' }}</p>
                             </div>
                         </div>
@@ -59,26 +59,26 @@
                         <div class="claims_matTabs_container">
                             <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="claims_matTabs"
                                 (selectedTabChange)="onTabChanged($event)">
-                                <mat-tab label="Claims Info">
+                                <mat-tab [label]="'Claims Info' | translate">
                                     <div class="row">
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="claims_member_info">
-                                                <h4>Member and Policy</h4>
+                                                <h4>{{"Member and Policy" | translate}}</h4>
                                                 <ul class="list-detailsInfo">
                                                     <li>
-                                                        <span class="label">Member Name:</span>
+                                                        <span class="label">{{"Member Name:" | translate}}</span>
                                                         <span class="value membername">{{claims?.memberName}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Member ID:</span>
+                                                        <span class="label">{{"Member ID:" | translate}}</span>
                                                         <span class="value">{{claims?.memberId}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Policy No.:</span>
+                                                        <span class="label">{{"Policy No.:" | translate}}</span>
                                                         <span class="value">{{claims?.policyNumber}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Cover Type:</span>
+                                                        <span class="label">{{"Cover Type:" | translate}}</span>
                                                         <span class="value">{{claims?.productName}}</span>
                                                     </li>
                                                 </ul>
@@ -87,36 +87,36 @@
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="claims_member_info">
-                                                <h4>Claim Details</h4>
+                                                <h4>{{"Claim Details" | translate}}</h4>
                                                 <ul class="list-detailsInfo">
                                                     <li>
-                                                        <span class="label">Raised On:</span>
+                                                        <span class="label">{{"Raised On:" | translate}}</span>
                                                         <span class="value">{{claims?.reportedDateTime |
                                                             datepipe}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Document Recv. Date:</span>
+                                                        <span class="label">{{"Document Recv. Date:" | translate}}</span>
                                                         <span class="value">{{claims?.reportedDateTime |
                                                             datepipe}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Coverage Name:</span>
+                                                        <span class="label">{{"Coverage Name:" | translate}}</span>
                                                         <span class="value">{{claims?.coverName}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Hospital Name:</span>
+                                                        <span class="label">{{"Hospital Name:" | translate}}</span>
                                                         <span class="value">{{claims?.hospitalName}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Date of Recommendation:</span>
+                                                        <span class="label">{{"Date of Recommendation:" | translate}}</span>
                                                         <span class="value">{{claims?.admissionDate}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Date of Admission:</span>
+                                                        <span class="label">{{"Date of Admission:" | translate}}</span>
                                                         <span class="value">{{claims?.admissionDate}}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Date of Discharge:</span>
+                                                        <span class="label">{{"Date of Discharge:" | translate}}</span>
                                                         <span class="value">{{claims?.dischargeDate}}</span>
                                                     </li>
                                                 </ul>
@@ -126,10 +126,10 @@
 
                                     </div>
                                 </mat-tab>
-                                <mat-tab label="Documents">
+                                <mat-tab [label]="'Documents' | translate">
                                     <div class="body_flex_column gap-32">
                                         <div class="uploadDocument_head body_flex_column gap-2">
-                                            <h3 class="heading-20-black">Upload Documents</h3>
+                                            <h3 class="heading-20-black">{{"Upload Documents" | translate}}</h3>
                                             <p>Please upload the documents mentioned below. The files should be in .png
                                                 / .jpg / .pdf with less than 2 MB size per image.</p>
                                         </div>

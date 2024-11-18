@@ -2,18 +2,18 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2>My Claims</h2>
+                <h2>{{"My Claims" | translate}}</h2>
                 <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest" (click)="navigateToCreateClaim()">
-                    <img src="assets/Img/icon_plus_red.svg">New Requests
+                    <img src="assets/Img/icon_plus_red.svg">{{"New Requests" | translate}}
                 </button>
             </div>
             <section class="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li><button type="button" id="claims-all" name="claims-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('all')"  [ngClass]="{'active': selectedStatus === 'all'}">All </button></li>
-                        <li><button type="button" id="claims-active" name="claims-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('active')" [ngClass]="{'active': selectedStatus === 'active'}">Active </button></li>
-                        <li><button type="button" id="claims-resolved" name="claims-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">Resolved </button></li>
-                        <li><button type="button" id="claims-cancelled" name="claims-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('cancelled')" [ngClass]="{'active': selectedStatus === 'cancelled'}">Cancelled </button></li>
+                        <li><button type="button" id="claims-all" name="claims-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('all')"  [ngClass]="{'active': selectedStatus === 'all'}">{{"All" | translate}} </button></li>
+                        <li><button type="button" id="claims-active" name="claims-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('active')" [ngClass]="{'active': selectedStatus === 'active'}">{{"Active" | translate}} </button></li>
+                        <li><button type="button" id="claims-resolved" name="claims-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('resolved')" [ngClass]="{'active': selectedStatus === 'resolved'}">{{"Resolved" | translate}} </button></li>
+                        <li><button type="button" id="claims-cancelled" name="claims-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  (click)="filterClaims('cancelled')" [ngClass]="{'active': selectedStatus === 'cancelled'}">{{"Cancelled" | translate}}</button></li>
 
                         
                     </ul>  
@@ -25,21 +25,21 @@
                         <div class="field_searchMain">
                             <div>
                             <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
-                                <option value=""  selected>Select an option</option>
-                                <option value="claimInfoId">Request ID</option>
-                                <option value="policyNumber">Policy Number</option>
-                                <option value="memberId">Member Id</option> 
+                                <option value=""  selected>{{"Select an option" | translate}}</option>
+                                <option value="claimInfoId">{{"Request ID" | translate}}</option>
+                                <option value="policyNumber">{{"Policy Number" | translate}}</option>
+                                <option value="memberId">{{"Member Id" | translate}}</option> 
                             </select>
                             </div>
                        <div>
                             <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                             <button [disabled]="selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                             <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
-                                <small *ngIf="searchInputControl.dirty && selected === '' ">Select an option and enter.</small>
-                                <small *ngIf="searchInputControl.hasError('required')">This field is required.</small>
-                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'claimInfoId'">Enter Valid Request Id.</small>
-                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">Enter Valid Policy Number.</small>
-                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberId'">Enter Valid Member Id.</small>
+                                <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
+                                <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'claimInfoId'">{{"Enter Valid Request Id." | translate}}</small>
+                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
+                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberId'">{{"Enter Valid Member Id." | translate}}</small>
                             </span>                       
                        </div>
                 </div>
@@ -47,56 +47,56 @@
              
 
                     <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter ({{appliedFiltersCount}})</button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">{{"Filter" | translate}} ({{appliedFiltersCount}})</button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
-                                    <header>Filter</header>
+                                    <header>{{"Filter" | translate}}</header>
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
                             <div class="fw_formBody"> 
                                 <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
-                                    <h6>Products</h6>
+                                    <h6>{{"Products" | translate}}</h6>
                                     <div class="fw_checkboxWraper">
                                         <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                             <div class="input-checkbox-feild">
                                                 <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                <label for="product{{i}}">{{product.productName}}</label>
+                                                <label for="product{{i}}">{{product.productName | translate}}</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="fw_formRow">
-                                    <h6>Request Type</h6>
+                                    <h6>{{"Request Type" | translate}}</h6>
                                     <div class="fw_checkboxWraper">
                                         <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
                                             <div class="input-checkbox-feild">
                                               <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                              <label for="policytype{{i}}">{{policyType.name}}</label>
+                                              <label for="policytype{{i}}">{{policyType.name | translate}}</label>
                                             </div>
                                           </div>                                              
                                     </div>
                                 </div>
                                 <div class="fw_formRow">
-                                    <h6>Date Range</h6>
+                                    <h6>{{"Date Range" | translate}}</h6>
                                     <div class="row">
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="input-block form-floating input-block-dob">
                                                 <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
-                                                <label for="fromDate">From Date</label>
-                                                <span class="ui-error">Please enter start date</span>
+                                                <label for="fromDate">{{"From Date" | translate}}</label>
+                                                <span class="ui-error">{{"Please enter start date" | translate}}</span>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="input-block form-floating input-block-dob">
                                                 <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
-                                                <label for="toDate">To Date</label>
-                                                <span class="ui-error">Please enter end date</span>
+                                                <label for="toDate">{{"To Date" | translate}}</label>
+                                                <span class="ui-error">{{"Please enter end date" | translate}}</span>
                                             </div>
                                         </div>
                                         <footer>
-                                            <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                            <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                            <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
+                                            <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
                                         </footer>
                                     </div>
                                 </div>
@@ -116,14 +116,14 @@
                         <table class="table table-borderless table-search">
                           <thead>
                             <tr>
-                                <th scope="col">Request</th>
-                                <th scope="col">Policy No.</th>
-                                <th scope="col" nowrap>Product Name</th>
-                                <th scope="col" nowrap>Member Id</th>
-                                <th scope="col" nowrap>Request Type</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Raised Date <div><small class="text-secondary">(dd-mm-yyyy)</small></div></th>
-                                <th scope="col">Action</th>
+                                <th scope="col">{{"Request" | translate}}</th>
+                                <th scope="col">{{"Policy No." | translate}}</th>
+                                <th scope="col" nowrap>{{"Product Name" | translate}}</th>
+                                <th scope="col" nowrap>{{"Member Id" | translate}}</th>
+                                <th scope="col" nowrap>{{"Request Type" | translate}}</th>
+                                <th scope="col">{{"Status" | translate}}</th>
+                                <th scope="col">{{"Raised Date" | translate}} <div><small class="text-secondary">{{'(dd-mm-yyyy)' | translate}}</small></div></th>
+                                <th scope="col">{{"Action" | translate}}</th>
                             </tr>
                           </thead>
                           <tbody class="table-group-divider">
@@ -131,12 +131,12 @@
 
                             
                               <tr class="table-values"  *ngFor="let row of claims;let i = index">
-                                <td class="card_insureInfo">{{ row?.claimInfoId }}</td>
+                                <td class="card_insureInfo">{{ row?.claimInfoId | translate}}</td>
                                 <td>{{ row?.policyNumber }}</td>
-                                <td><span class="text-break-w100">{{ row?.productName }}</span></td>
+                                <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
                                 <td>{{ row?.memberId }}</td>
                                 <td>{{ row?.requestType }}</td>
-                                <td><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
+                                <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
                                 <td>{{ row?.reportedDateTime | datepipe }}</td>
                                 <td>
                                     <div class="btn_groupAction">
@@ -156,7 +156,7 @@
                         <header>
                             <div class="card_insureInfo">
                                  <h6>
-                                    <div class="insureName">{{ gridClaims.claimInfoId }} </div>  
+                                    <div class="insureName">{{ gridClaims.claimInfoId | translate}} </div>  
                                 </h6>
                             </div>
                             <div class="card_btnGroup">
@@ -166,19 +166,19 @@
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Policy No.</div>
-                                <div class="item_value">{{ gridClaims.policyNumber }}</div>
+                                <div class="item_value">{{ gridClaims.policyNumber | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Product Name</div>
-                                <div class="item_value">{{ gridClaims.productName }}</div>
+                                <div class="item_value">{{ gridClaims.productName | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Member Id</div>
-                                <div class="item_value">{{ gridClaims.memberId }}</div>
+                                <div class="item_value">{{ gridClaims.memberId | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Request Type</div>
-                                <div class="item_value">{{ gridClaims.requestType }}</div>
+                                <div class="item_value">{{ gridClaims.requestType | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Raised Date</div>
@@ -186,7 +186,7 @@
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Status</div>
-                                <div class="item_value">{{ gridClaims.claimStatus }}</div>
+                                <div class="item_value">{{ gridClaims.claimStatus | translate}}</div>
                             </div>
                         </div>
                     </div>

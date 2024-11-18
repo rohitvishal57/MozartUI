@@ -8,6 +8,9 @@ import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { ClaimsViewService } from './claims-view.service';
 import { v4 as uuidv4 } from 'uuid';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
+
 
 @Component({
   selector: "app-claims-view",
@@ -119,7 +122,9 @@ export class ClaimsViewComponent {
     private cdr: ChangeDetectorRef,
     private router: Router,
     private toast: NgToastService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private languageService: LanguageService,
+    private translateService: TranslateService
   ) {
     this.billsForm = this.fb.group({
       billsArray: this.fb.array([]),
@@ -133,6 +138,14 @@ export class ClaimsViewComponent {
   }
 
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+
     this.createForm();
     this.saveUpload();
     this.getProposalDetails();

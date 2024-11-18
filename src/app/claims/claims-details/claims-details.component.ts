@@ -6,7 +6,8 @@ import { ClaimsViewService } from "../claims-view/claims-view.service";
 import { formatDate } from "@angular/common";
 import { NgToastService } from "ng-angular-popup";
 import { v4 as uuidv4 } from 'uuid';
-
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: "app-claims-details",
@@ -113,7 +114,9 @@ export class ClaimsDetailsComponent {
     private claimsService: ClaimsViewService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private toast: NgToastService
+    private toast: NgToastService,
+    private languageService: LanguageService,
+    private translateService: TranslateService
 
   ) {
     this.route.queryParams.subscribe((params) => {
@@ -124,6 +127,13 @@ export class ClaimsDetailsComponent {
   }
 
   ngOnInit() {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.fetchfileUploads(this.claimInfoId, this.policyNumber)
     if (this.claimId && this.policyNumber && this.claimInfoId) {
       this.fetchClaimDetails(this.claimId, this.policyNumber, this.claimInfoId);

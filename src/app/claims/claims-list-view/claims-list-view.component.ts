@@ -7,6 +7,9 @@ import { CommonService } from 'src/app/services/common.service';
 import { ClaimsInterface } from 'src/app/interface/claims.interface';
 import { ClaimsViewService } from '../claims-view/claims-view.service';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
+
 
 @Component({
   selector: 'app-claims-list-view',
@@ -46,9 +49,18 @@ export class ClaimsListViewComponent implements OnInit {
     { name: 'Cashless', selected: false },
     { name: 'Reimbursement', selected: false },
   ];
-  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
+  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService, private languageService: LanguageService,
+    private translateService: TranslateService){ }
 
   ngOnInit(){
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+
     this.fetchData(); 
     this.getProducts();
   }
