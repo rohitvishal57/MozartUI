@@ -53,6 +53,7 @@ export class CreateLeadComponent implements OnInit {
   productsList: any = [];
   productSumInsured: any = [];
   occupationInfo : any;
+    
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
     private router: Router,
@@ -111,6 +112,7 @@ export class CreateLeadComponent implements OnInit {
       source: [''],
       subSource: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       mobilenumber: ['', [Validators.required, Validators.pattern('^[6-9]\\d{9}$')]],
+      salutation : [''],
       firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       MiddleName: ['', [Validators.pattern('[a-zA-Z ]*')]],
       lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
@@ -256,6 +258,7 @@ export class CreateLeadComponent implements OnInit {
 
   updateleadInformation() {
     this.userValidations.patchValue({
+      salutation : this.submittedUser.salutation,
       firstname: this.submittedUser.firstName,
       MiddleName: this.submittedUser.middleName,
       lastname: this.submittedUser.lastName,

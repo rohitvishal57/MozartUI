@@ -81,4 +81,10 @@ export class LeadFormListValue {
     ]
     FamilyConstruct: string[] = ["Family Floater", "Multi Individual"];
     PolicyType: string[] = ["Multi Individual", "Family Floater"];
+    salutations = ["Mr", "Mrs","Ms","Dr","Mx","Miss","Others"];
+    educationLevels = [ "Below Metric","Metric","Under Graduate","Graduate","Post Graduate", "Diploma","Professional","Other"];
+      
+   
+      
+
 }

@@ -201,6 +201,20 @@
                         <div class="col-12 mb-4">
                             <h6 class="heading-16-red">Lead Details</h6>
                         </div>
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="salutation" name="salutation" formControlName="salutation"
+                                (selectionChange)="campnoSelected()">
+                                <option value="" disabled selected>Choose Option</option>
+                                <option *ngFor="let opt of CreateLeadList.salutations" [value]="opt">
+                                    {{ opt }}
+                                </option>
+                            </select>
+                                <label for="salutation">salutation</label>
+                            </div>
+                        </div>
+
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="firstname" name="firstname" placeholder=""
@@ -347,17 +361,6 @@
                             </div>
                         </div>
                     
-                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                            <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="occupation" name="occupation" placeholder=""
-                                    formControlName="occupation" type="text" maxlength="20">
-                                <label for="occupation">Occupation</label>
-                                <span class="ui-error block-show"
-                                    *ngIf="submitted && userValidations.get('occupation')?.errors?.['pattern']">Please
-                                    enter proper value.</span>
-                            </div>
-                        </div> -->
-
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" id="occupation" name="occupation" formControlName="occupation"
@@ -370,15 +373,17 @@
                                 <label for="occupation">Occupation</label>
                             </div>
                         </div>
-						
+
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="education" name="education" placeholder=""
-                                    formControlName="education" type="text" maxlength="20">
+                                <select class="form-select input-selectBox" id="education" name="education" formControlName="education"
+                                (selectionChange)="campnoSelected()">
+                                <option value="" disabled selected>Choose Option</option>
+                                <option *ngFor="let opt of CreateLeadList.educationLevels" [value]="opt">
+                                    {{ opt }}
+                                </option>
+                            </select>
                                 <label for="education">Education</label>
-                                <span class="ui-error block-show"
-                                    *ngIf="submitted && userValidations.get('education')?.errors?.['pattern']">Please
-                                    enter proper value.</span>
                             </div>
                         </div>
                     </div>

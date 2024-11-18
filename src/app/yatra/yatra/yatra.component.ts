@@ -5081,9 +5081,12 @@ export class YatraComponent {
     let personalDetailsSection: any = this.form.formSections.find((formSection: any) => formSection.sectionTitle === 'Personal Details');
     let maritalStatusInfo: any = personalDetailsSection.formControls.find((formControl: any) => formControl.name === "maritalStatus");
     const maritalStatusPatchValue = maritalStatusInfo.options.find((option: any) => option.value === this.quoteLeadInformation.maritalStatus);
+    let educationDetails: any = personalDetailsSection.formControls.find((formControl: any) => formControl.name === "educationDetails");
+    const educationDetailsPatchValue = educationDetails.options.find((option: any) => option.value === this.quoteLeadInformation.education);
     this.dynamicFormGroup.patchValue({
       maritalStatus: JSON.stringify(maritalStatusPatchValue),
-      proposerGender: this.quoteLeadInformation.gender
+      proposerGender: this.quoteLeadInformation.gender,
+      educationDetails : JSON.stringify(educationDetailsPatchValue)
     });
   }
 }
