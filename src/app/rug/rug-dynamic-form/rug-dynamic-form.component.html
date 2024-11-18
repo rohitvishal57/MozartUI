@@ -310,7 +310,7 @@
                     }}
                   </small>
                 </div>
-                <div *ngIf="control.type === 'checkbox' && isD2C && control.name === 'decl2'" class="input-checkbox-block input-checkbox-declaration">
+                <div *ngIf="control.type === 'checkbox' && isD2C && (control.name === 'decl1' || control.name === 'decl2')" class="input-checkbox-block input-checkbox-declaration">
                   <div class="input-checkbox-feild">
                     <!-- <input type="checkbox" id="abhip-agree" value="agree" class="input-check"> -->
                     <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name"

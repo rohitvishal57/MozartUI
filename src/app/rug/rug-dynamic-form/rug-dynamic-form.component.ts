@@ -2330,6 +2330,12 @@ export class RugDynamicFormComponent {
       this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     }
   }
+  onD2cPrevious(){
+    if (this.getFormIndexValue() > 0) {
+      this.decrementIndex()
+      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+    }
+  }
   onBBPrevious(){
     console.log("asdasd")
     if (this.getFormIndexValue() > 0) {
