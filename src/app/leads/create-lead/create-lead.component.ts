@@ -220,7 +220,6 @@ export class CreateLeadComponent implements OnInit {
       age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     }
     this.CreateLead.age = age.toString();
-
    
 
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
@@ -246,7 +245,6 @@ export class CreateLeadComponent implements OnInit {
 
   async getLeadInformationByLeadNumber(leadNumber: any) {
     try {
-      debugger;
       const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(leadNumber));
       this.submittedUser = response.data.leadList[0];
       this.updateleadInformation();
@@ -414,6 +412,33 @@ export class CreateLeadComponent implements OnInit {
     } else {
       this.addNoteForm.get('activityEndDate')?.setErrors(null);
     }
+    this.validateEndTime();
+  }
+
+  validateEndTime(): void {
+    const startDate = new Date(this.addNoteForm.get('activityStartDate')?.value);
+    const endDate = new Date(this.addNoteForm.get('activityEndDate')?.value);
+    const today = new Date();
+    if (startDate && endDate) {
+      const isBothDatesToday = startDate.toDateString() === today.toDateString() && endDate.toDateString() === today.toDateString();
+      if (isBothDatesToday) {
+        const startTimeInMinutes = this.convertToMinutes(this.addNoteForm.get('activityStartTime')?.value);
+        const endTimeInMinutes = this.convertToMinutes(this.addNoteForm.get('activityEndTime')?.value);
+        if (endTimeInMinutes < startTimeInMinutes) {
+          this.addNoteForm.get('activityEndTime')?.setErrors({ incorrect: true });
+          console.log('activityEndTime',this.addNoteForm.get('activityEndTime')?.getError )
+        } else {
+          this.addNoteForm.get('activityEndTime')?.setErrors(null); 
+        }
+      }else{
+        this.addNoteForm.get('activityEndTime')?.setErrors(null);
+      }
+    }
+  }
+
+  convertToMinutes(time: string): number {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
   }
 
   isCharacter(event: KeyboardEvent) {
@@ -484,8 +509,12 @@ export class CreateLeadComponent implements OnInit {
     );
   }
 
+  validateActivityEndTime(){
+  
+  }
 
   stringifyJson(opt: any): string {
     return JSON.stringify(opt); 
   }
 }
+

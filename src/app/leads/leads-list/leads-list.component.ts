@@ -538,4 +538,10 @@ export class LeadsListComponent {
     }
   }
 
+  restrictInput(event: KeyboardEvent): void {
+    if (this.selected === 'mobileNumber' && !/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
 }

@@ -677,7 +677,7 @@
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input class="form-control input-textBox" id="activityEndTime" name="activityEndTime" placeholder=""
-                                                formControlName="activityEndTime" type="time"
+                                                formControlName="activityEndTime" type="time" (change)="validateEndTime()"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }">
                                             <label for="activityEndTime">Activity End Time*</label>
                                             <span class="invalid-feedback"
@@ -686,6 +686,10 @@
                                                     *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
                                                     Activity end time cannot be blank.</span>
                                             </span>
+                                            <span class="ui-error block-show"
+                                                *ngIf="addNoteForm.get('activityEndTime')?.errors?.['incorrect']">
+                                                Activity end time must be after activity starttime.</span>
+                                       
                                         </div>
                                     </div>
         
