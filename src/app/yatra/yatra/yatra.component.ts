@@ -4641,7 +4641,6 @@ export class YatraComponent {
   async mappedFormDataFullQuote(formData: any): Promise<Partial<Root>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     console.log(formData);
-
     const mappedData: Partial<Root> = {
       agentCode: this.agentCode || '',
       productName: formData?.productName || '',
@@ -5047,9 +5046,11 @@ export class YatraComponent {
   getLeadInformation() {
     this.leadsService.getLeadInformationByLeadID(this.leadNumber).subscribe(
       (response) => {
+        console.log(response);
         if (response?.data?.leadList) {
          this.quoteLeadInformation = response.data.leadList[0];
          this.dynamicFormGroup.patchValue({
+          productName: this.quoteLeadInformation.interestedProductName,
           memberDobProposer : this.datepipe.transform(this.quoteLeadInformation.dob, 'yyyy-MM-dd'),
           firstName: this.quoteLeadInformation.firstName,
           middleName: this.quoteLeadInformation.middleName,
