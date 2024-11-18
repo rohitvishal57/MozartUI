@@ -504,6 +504,19 @@ export class YatraComponent {
                       const tempRelationshipType = JSON.parse(member.relationshipType);
                       tempInnerControl.label = tempRelationshipType.value;
                       tempInnerControl.name = tempRelationshipType.value;
+                      if(subControl.conditionCheck){
+                        tempInnerControl.coreControls.forEach((corecontrol:any,index:any) => {
+                          if(corecontrol.dependentControls){
+                            const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
+                            corecontrol.dependentControls.forEach((question:any) => {
+                              let newcontrol = tempInnerControl.coreControls.find((item:any) => item.name == question)
+                              newcontrol.visible = newvalue;
+                              console.log(corecontrol.name,question,newcontrol,newvalue); 
+                            })
+                            console.log(this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name],control,subControl,tempRelationshipType.value,index,corecontrol);
+                          }
+                        })
+                      }
                       subControl.innerSubControls?.push(tempInnerControl);
                     }
                   });
@@ -4732,6 +4745,59 @@ export class YatraComponent {
     };
 
     return mappedData;
+  }
+
+  getfullquoteviaofflinepayment(){
+    const data = this.dynamicFormGroup.value;
+    const formData = new FormData();
+    formData.append('policyType', this.proposalNum);
+    formData.append('paymentMethod', this.selectedButton || '');
+    formData.append('premiumAmount', this.formData?.totalPremium);
+    formData.append('instrumentNo', this.formData?.chequeNumber || '');
+    formData.append('instrumentDate', this.formData?.chequeDate || '');
+    formData.append('policyNumber', "");
+    formData.append('agentCode', this.agentCode || '');
+    formData.append('bankName', this.jsonParse(this.formData?.bankName, 'name'));
+    formData.append('IFSC', this.formData?.ifscCode);
+    formData.append('micrNo', this.formData?.micrCode);
+    formData.append('instrumentType', this.formData.paymentOption);
+    formData.append('source', "Retail");
+    formData.append('formFile', this.selectedFile);
+    formData.append('proposalNum', this.proposalNum);
+    this.yatraService.getfullquoteviaofflinepayment(formData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+      },
+      error: (err)=>{
+        console.error(err);
+      }
+    });
+  }
+
+  insertfullquotejson(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.mappedFormDataFullQuote(this.formData).then((data) => {
+        console.log(data);
+        const req = {
+          proposalNum: this.proposalNum,
+          fullQuoteJson: JSON.stringify(data)
+        }
+        this.yatraService.insertfullquotejson(req).subscribe({
+          next: (res: any) => {
+            console.log(res);
+            this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.`, duration: 3000 });
+            resolve();
+          },
+          error: (err) => {
+            console.error(err);
+            reject(err);
+          }
+        });
+      }).catch((err) => {
+        this.toast.error({ detail: "ERROR", summary: "Failed to map form data", duration: 3000 });
+        reject(err);
+      });
+    });
   }
 
   jsonParse(string: any, extract: any) {
