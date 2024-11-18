@@ -621,8 +621,12 @@
                                             <span class="invalid-feedback"
                                                 *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
                                                 <span class="ui-error block-show"
-                                                    *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.invalid">
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.hasError('required')">
                                                     Activity title cannot be blank.</span>
+                                                <span class="ui-error block-show"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors?.['pattern']">ActivityTitle 
+                                                    should contain alphanumeric.</span>
+                                                    
                                             </span>
         
                                         </div>
@@ -721,7 +725,7 @@
                                             <textarea class="form-control input-textBox" id="notes" name="notes"
                                                 placeholder="Type your note..." formControlName="notes" maxlength="250"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('notes')?.errors }"></textarea>
-                                            <label for="notes">Note*:</label>
+                                            <label for="notes">Note*</label>
                                             <span class="invalid-feedback"
                                                 *ngIf="notesSubmitted && addNoteForm.get('notes')?.errors">
                                                 <span class="ui-error block-show"

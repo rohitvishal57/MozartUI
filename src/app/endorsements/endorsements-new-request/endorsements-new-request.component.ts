@@ -8,6 +8,8 @@ import { EndorsementsRequestsService } from '../endorsements-requests/endorsemen
 import { NgToastService } from 'ng-angular-popup';
 import { LoginService } from 'src/app/login/login/login.service';
 declare var bootstrap: any;
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -149,9 +151,18 @@ export class EndorsementsNewRequestComponent implements OnInit {
     private loginservice: LoginService,
     private toast: NgToastService,
     private _router: Router,
-    private dialog: MatDialog) {
+    private dialog: MatDialog, private languageService: LanguageService,
+    private translateService: TranslateService) {
   }
   ngOnInit() {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+
     this.isDesktop = this.screenSize > 768;
     this.agentCode = localStorage.getItem('agentCode');
     this.otpModal = new bootstrap.Modal(document.getElementById('otpModal'));

@@ -48,7 +48,7 @@ export class ClaimsViewService {
 
   getClaimsHistory(claimHistoryReqBody:any, policyNo:any){
     const getClaimsHistory = this.configService.config.baseUrl + this.configService.config.getClaimHistory+`=${policyNo}`;
-   return this.httpService.post(getClaimsHistory, claimHistoryReqBody);
+    return this.httpService.post(getClaimsHistory, claimHistoryReqBody);
    // return this.httpService.post('https://localhost:7026/api/getclaimHistory?policynumber='+policyNo, claimHistoryReqBody);
   }
 
@@ -76,7 +76,6 @@ export class ClaimsViewService {
     const updateClaim = this.configService.config.baseUrl + this.configService.config.updateClaim
     return this.httpService.post(updateClaim, UpdateClaimReqBody)
     //return this.httpService.post('https://localhost:7026/api/getclaimsdocument', UpdateClaimReqBody);
-
   }
   deleteFile(ClaimsDelBody:any){
     const deleteFile = this.configService.config.baseUrl + this.configService.config.deleteFile

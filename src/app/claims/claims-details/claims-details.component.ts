@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class ClaimsDetailsComponent {
   claimId: string | null = null;
-  claimsHistory: any;
+  claimsHistory: any[] = [];
   policyNumber: string | any;
   claimInfoId: string | any;
   filesUploaded: any[] = [];
@@ -251,26 +251,86 @@ export class ClaimsDetailsComponent {
   //   window.URL.revokeObjectURL(url);
   // }
  
-fetchfileUploads(policyNumber: string, claimInfoId: string) {
+// fetchfileUploads(claimInfoId: string, policyNumber: string) {
+//   let claimsFilesReqBody = {
+//     "documentId": "",
+//     "policyNumber":policyNumber,
+//     "claimNumber":claimInfoId
+//   };
+
+//   this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe(
+//     (response: any) => {
+//       if (response.isSuccess ) {
+//         // Parse the stringified data array
+//        // const fileDataArray = JSON.parse(response.data);
+
+//         if (response.data.length > 0) {
+//           this.noFilesFound = false;
+//           this.fileUploads = response.data.map((file: any) => ({
+//             documentName: file.title, 
+//             documentType: file.colour, 
+//             base64: file.base64Document, 
+//             fileBlob: this.convertBase64ToBlob(file.base64Document, file.documentType)
+//           }));
+//         } else {
+//           this.noFilesFound = true;
+//           this.fileUploads = [];
+//         }
+//       } else {
+//         this.noFilesFound = true;
+//         this.fileUploads = [];
+//       }
+//     },
+//     (error) => {
+//       console.error('Error fetching uploaded files', error);
+//       this.noFilesFound = true;
+//     }
+//   );
+// }
+  
+//   convertBase64ToBlob(base64: string, fileType: string): Blob {
+//     const byteCharacters = atob(base64);
+//     const byteNumbers = new Array(byteCharacters.length);
+//     for (let i = 0; i < byteCharacters.length; i++) {
+//       byteNumbers[i] = byteCharacters.charCodeAt(i);
+//     }
+//     const byteArray = new Uint8Array(byteNumbers);
+//     return new Blob([byteArray], { type: fileType });
+//   }
+  
+//   downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
+//     if (!file.fileBlob) {
+//       console.error("File blob is not available for download.");
+//       return;
+//     }
+//     const url = window.URL.createObjectURL(file.fileBlob);
+//     const anchor = document.createElement('a');
+//     anchor.href = url;
+//     anchor.download = file.name;
+//     document.body.appendChild(anchor);
+//     anchor.click();
+//     document.body.removeChild(anchor);
+//     window.URL.revokeObjectURL(url);
+//   }
+  
+fetchfileUploads(claimInfoId: string, policyNumber: string) {
   let claimsFilesReqBody = {
     "documentId": "",
-    "policyNumber":policyNumber,
-    "claimNumber":claimInfoId
+    "policyNumber": policyNumber,
+    "claimNumber": claimInfoId
   };
 
   this.claimsService.getUploadedFiles(claimsFilesReqBody).subscribe(
     (response: any) => {
-      if (response.isSuccess && response.data.isSuccess) {
-        // Parse the stringified data array
-        const fileDataArray = JSON.parse(response.data.data);
-
-        if (fileDataArray.length > 0) {
+      if (response.isSuccess) {
+        if (response.data.length > 0) {
           this.noFilesFound = false;
-          this.fileUploads = fileDataArray.map((file: any) => ({
-            name: file.title, 
-            type: file.colour, 
-            base64: file.base64Document, 
-            fileBlob: this.convertBase64ToBlob(file.base64Document, file.documentType)
+          this.fileUploads = response.data.map((file: any) => ({
+            name: file.documentName,  
+            type: file.documentType, 
+            base64: file.base64Document,
+            fileBlob: this.convertBase64ToBlob(file.base64Document, this.getMimeType(file.colour)),
+            documentId: file.documentId  
           }));
         } else {
           this.noFilesFound = true;
@@ -287,32 +347,53 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
     }
   );
 }
-  
-  convertBase64ToBlob(base64: string, fileType: string): Blob {
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], { type: fileType });
+
+
+convertBase64ToBlob(base64: string, fileType: string): Blob {
+  // Remove data URI prefix if it's present (e.g., "data:application/pdf;base64,")
+  const base64Data = base64.startsWith('data:') ? base64.split(',')[1] : base64;
+
+  // Convert the base64 string to a byte array
+  const byteCharacters = atob(base64Data);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
   }
-  
-  downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
-    if (!file.fileBlob) {
-      console.error("File blob is not available for download.");
-      return;
-    }
-    const url = window.URL.createObjectURL(file.fileBlob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = file.name;
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    window.URL.revokeObjectURL(url);
+  const byteArray = new Uint8Array(byteNumbers);
+
+  // Create a Blob object from the byte array
+  return new Blob([byteArray], { type: fileType });
+}
+
+// A helper function to return MIME type from the document type
+getMimeType(documentType: string): string {
+  // You can expand this to handle different document types based on the 'documentType' field
+  switch (documentType) {
+    case 'Pdf':
+      return 'application/pdf';
+    case 'Image':
+      return 'image/png';  // Example, adjust based on your document types
+    default:
+      return 'application/octet-stream'; // fallback MIME type
   }
-  
+}
+
+downloadFile(file: { name: string, fileBlob?: Blob, type: string }) {
+  if (!file.fileBlob) {
+    console.error("File blob is not available for download.");
+    return;
+  }
+
+  const url = window.URL.createObjectURL(file.fileBlob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = file.name;
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+  window.URL.revokeObjectURL(url);
+}
+
 
   onUnderDeficiencyFileSelected(event: any): void {
     const files = event.target.files;
@@ -363,9 +444,6 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
     }
   }
   
-  // Submit claim method
-
-
   formatDate(date: Date): string {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
   }
@@ -378,10 +456,8 @@ fetchfileUploads(policyNumber: string, claimInfoId: string) {
       documentType: [this.documentType],
       createdBy: [localStorage.getItem("agentCode")],
       file: ["/D:/Downloads/ABHI_06_Ma"],
-      claimInfoId: "21727183717381",
-      // claimInfoId: this.claimInfoId || "",
-      // memberId: this.form.get("memberId")?.value || "",
-      memberId: "PT85650665",
+      claimInfoId: this.claimInfoId || "",
+      memberId: "",
       documentId: "",
     });
   }
@@ -461,10 +537,7 @@ uploadFiles(files: File[], section: string): void {
             formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
             formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
             formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
-
-        //  else {
-        //     console.error('Matching file not found:', file);
-        // }
+       
     });
 
     this.claimsService.uploadFiles(formData).subscribe(
@@ -527,27 +600,7 @@ convertBytesToKB(bytes: number): string {
       }
     );
   }
-  // deleteFile(fileToDelete: any, isUploaded: boolean) {
-  //   if (isUploaded)
-  //     this.uploadedFiles = this.uploadedFiles.filter(
-  //       (file) => file !== fileToDelete
-  //     );
-  //   else
-  //     this.uploadedUnderDeficiencyFiles =
-  //       this.uploadedUnderDeficiencyFiles.filter(
-  //         (file) => file !== fileToDelete
-  //       );
-
-  //   this.totalFilesCount = isUploaded
-  //     ? this.uploadedFiles.length
-  //     : this.uploadedUnderDeficiencyFiles.length;
-
-  //   const section = isUploaded
-  //     ? "uploadedFiles"
-  //     : "uploadedUnderDeficiencyFiles";
-
-  //   this.updateStatusLabel(section);
-  // }
+ 
   //******* file upload input label *********//
   startEditing(file: any) {
     file.isEditing = true;
@@ -566,18 +619,25 @@ convertBytesToKB(bytes: number): string {
 
   fetchClaimHistory(policyNumber: string) {
     console.log(this.claimInfoId);
-    const policyNo = policyNumber;
-    let claimHistoryReqBody = {
-      policyNumber: policyNo,
-    };
+    const claimHistoryReqBody = { policyNumber };
 
-    this.claimsService
-      .getClaimsHistory(claimHistoryReqBody, policyNo)
-      .subscribe((response: any) => {
-        this.claimsHistory = response.data;
-        console.log("resp", this.claimsHistory);
-      });
-  }
+    this.claimsService.getClaimsHistory(claimHistoryReqBody, policyNumber).subscribe(
+        (response: any) => {
+            if (response.isSuccess && response.data.length > 0) {
+                this.claimsHistory = response.data;
+                this.isViewVisible = true; 
+            } else {
+                this.claimsHistory = []; 
+                this.isViewVisible = true; 
+            }
+        },
+        (error: any) => {
+            console.error("Error fetching claim history:", error);
+            this.claimsHistory = [];
+            this.isViewVisible = true;
+        }
+    );
+}
 
   navigateToListClaim() {
     this.router.navigate(["claims/claimsList"]);
@@ -618,66 +678,4 @@ convertBytesToKB(bytes: number): string {
     );
   }
   
-
-  // submitClaim(files: File[], section: string) {
-
-  //   this.uploadedUnderDeficiencyFiles.forEach((deficiencyFile, index) => {
-  //     const matchingFile = files.find(file => file.name === deficiencyFile.file.name);
-  //     const formData = new FormData();
-  //     if (matchingFile) {
-  //       // Create metadata for each file
-  //       const metadata = {
-  //         policyNumber: this.policyNumber || '',
-  //         labelName: section || '', // Use section value for label
-  //         documentName: matchingFile.name || '',
-  //         documentType: matchingFile.type || '',
-  //         createdBy: deficiencyFile.createdBy || '',  // Source from deficiencyFile
-  //         claimInfoId: "21727183717381",             // Static claimInfoId, replace dynamically if needed
-  //         memberId: 'PT85650665',                    // Static memberId, replace dynamically if needed
-  //         documentId: "test2",                       // Static documentId
-  //       };
-
-  //       // Append metadata and file to FormData
-  //       formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
-  //       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-  //       formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
-  //       formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
-  //       formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
-  //       formData.append(`fileDetails[${index}].file`, matchingFile, matchingFile.name);
-  //       formData.append(`fileDetails[${index}].claimInfoId`, metadata.claimInfoId);
-  //       formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
-  //       formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
-  //     }
-  //   });
-  //   // Prepare form data with uploaded files
-  //   const formData = this.uploadFiles(files, section);
-
-  //   // Call the service to upload the files
-  //   this.claimsService.uploadFiles(formData).subscribe(
-  //     (response: any) => {
-  //       if (response.success) {
-  //         // Update status for each file as success
-  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'success');
-  //         this.uploadSuccess = true;
-  //         this.uploadedFilesCount++;
-  //       } else {
-  //         // Handle any errors returned in the response
-  //         this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
-  //         this.uploadSuccess = false;
-  //         this.failedFilesCount++;
-  //       }
-  //       this.updateStatusLabel(section); // Update the status label on UI
-  //       this.cdr.markForCheck();  // Ensure the change detection runs
-  //     },
-  //     (error: any) => {
-  //       // Handle failure, mark all files as failed
-  //       this.uploadedUnderDeficiencyFiles.forEach(file => file.status = 'failed');
-  //       this.uploadSuccess = false;
-  //       this.failedFilesCount++;
-  //       this.updateStatusLabel(section); // Update status on UI for failed files
-  //       this.cdr.markForCheck();
-  //     }
-  //   );
-  // 
-
 }

@@ -6,6 +6,8 @@ import { EndorsementsRequestsService } from './endorsements-requests.service';
 import { DatePipe } from '@angular/common';
 import { CommonService } from 'src/app/services/common.service';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 
 @Component({
@@ -107,10 +109,20 @@ export class EndorsementsRequestsComponent implements OnInit {
     private endorsementService: EndorsementsRequestsService,
     private _router: Router,
     private datePipe: DatePipe,
-    private commonService: CommonService,
+    private commonService: CommonService, private languageService: LanguageService,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit(): void {
+
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
+
     this.getRequestList();
     this.getProducts();
   }

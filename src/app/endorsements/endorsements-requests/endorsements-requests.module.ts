@@ -9,6 +9,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { EndorsementDetailsComponent } from '../endorsement-details/endorsement-details.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/','.json');
+}
 
 @NgModule({
   declarations: [EndorsementsNewRequestComponent,EndorsementsRequestsComponent,EndorsementDetailsComponent],
@@ -19,7 +27,14 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     NgxPaginationModule,
     FormsModule,
     EndorsementsRoutingModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ]
 })
 export class EndorsementsRequestsModule { }
