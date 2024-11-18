@@ -3,8 +3,7 @@
     <div class="bodyColumn body_flex_column">
 <div class="container my-4 p-4 shadow-sm rounded bg-white">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">Create Event</h5>
-    <!-- <button type="button" class="btn-close" aria-label="Close"></button> -->
+    <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListEvent()"><a class="btn_backPage" title="Back To List"></a>Create Event</h2>
   </div>
 
   <form [formGroup]="saveEvent" (ngSubmit)="onSubmit()">
@@ -103,7 +102,7 @@
 
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn_red" [disabled]="isSubmitting">
-        Save Event
+        Save
       </button>
       <!-- <button type="button" class="btn btn-secondary ms-2">Cancel</button> -->
     </div>

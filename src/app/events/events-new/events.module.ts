@@ -7,10 +7,13 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { EventsListComponent } from '../events-list/events-list.component';
 import { FormsModule } from '@angular/forms'; 
 import { ReactiveFormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import { MyMaterialModule } from 'src/app/material.module';
 @NgModule({
   declarations: [EventsListComponent, EventsNewComponent],
   imports: [
     CommonModule,
+    MyMaterialModule,
     EventsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
@@ -18,6 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
       provide: DateAdapter,
       useFactory: adapterFactory
     })
-  ]
+  ],
+  providers: [DatePipe]
 })
 export class EventsModule { }
