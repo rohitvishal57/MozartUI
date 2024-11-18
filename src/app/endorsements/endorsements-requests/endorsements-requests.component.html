@@ -3,19 +3,19 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2>All Requests</h2>
+                <h2>{{"All Requests" | translate}}</h2>
                 <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest" (click)="redirect('endorsements/new-request')">
-                    <img src="assets/Img/icon_plus_red.svg">New Requests
+                    <img src="assets/Img/icon_plus_red.svg">{{"New Requests" | translate}}
                 </button>
             </div>
             <section class="quickFilterMain">
                 <div class="quickFilterLeft" #filterSection>
                     <ul class="quickFilter">
                         <li class="quickFilterHeading block-hide">Claim Staus</li>
-                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All')">All </button></li>
-                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active')">Active </button></li>
-                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved')">Resolved </button></li>
-                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled')">Cancelled </button></li>
+                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All')">{{"All" | translate}} </button></li>
+                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active')">{{"Active" | translate}} </button></li>
+                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved')">{{"Resolved" | translate}} </button></li>
+                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled')">{{"Cancelled" | translate}} </button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight" >
@@ -24,31 +24,31 @@
                         <div class="field_searchMain">
                             <div>
                                 <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
-                                    <option value="">Select an option</option>
-                                    <option value="caseId">Request ID</option>
-                                    <option value="policyNumber">Policy Number</option>
-                                    <option value="memberName">Member Name</option>
+                                    <option value="">{{"Select an option" | translate}}</option>
+                                    <option value="caseId">{{"Request ID" | translate}}</option>
+                                    <option value="policyNumber">{{"Policy Number" | translate}}</option>
+                                    <option value="memberName">{{"Member Name" | translate}}</option>
                                 </select>
                             </div>
                             <div>
                                 <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()">
                                 <button [disabled]="selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
-                                    <small *ngIf="searchInputControl.dirty && selected === '' ">Select an option and enter.</small>
-                                    <small *ngIf="searchInputControl.hasError('required')">This field is required.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">Enter Valid Request Id.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">Enter Valid Member Name.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">Enter Valid Policy Number.</small>
+                                    <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Request Id." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">{{"Enter Valid Member Name." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">Filter ({{appliedFiltersCount}})</button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">{{"Filter" | translate}} ({{appliedFiltersCount}})</button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
-                                    <header>Filter</header>
+                                    <header>{{"Filter" | translate}}</header>
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
                                 <div class="fw_formBody"> 
@@ -58,7 +58,7 @@
                                             <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                                 <div class="input-checkbox-feild">
                                                     <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                    <label for="product{{i}}">{{product.productName}}</label>
+                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -75,25 +75,25 @@
                                         </div>
                                     </div> -->
                                     <div class="fw_formRow">
-                                        <h6>Date Range</h6>
+                                        <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
-                                                    <label for="fromDate">From Date</label>
-                                                    <span class="ui-error">Please enter start date</span>
+                                                    <label for="fromDate">{{"From Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter start date" | translate}}</span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
-                                                    <label for="toDate">To Date</label>
+                                                    <label for="toDate">{{"To Date" | translate}}</label>
                                                     <span class="ui-error">Please enter end date</span>
                                                 </div>
                                             </div>
                                             <footer>
-                                                <button type="button" value="cancel" id="filterClear" name="filterClear" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                                <button type="button" value="apply" id="filterApply" name="filterApply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                                <button type="button" value="cancel" id="filterClear" name="filterClear" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
+                                                <button type="button" value="apply" id="filterApply" name="filterApply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
                                             </footer>
                                         </div>
                                     </div>
@@ -112,15 +112,15 @@
                         <table class="table table-borderless table-search">
                           <thead>
                             <tr>
-                                <th scope="col">Request</th>
-                                <th scope="col">Policy No.</th>
-                                <th scope="col">Product Name</th>
-                                <th scope="col">Member Name</th>
+                                <th scope="col">{{"Request" | translate}}</th>
+                                <th scope="col">{{"Policy No." | translate}}</th>
+                                <th scope="col">{{"Product Name" | translate}}</th>
+                                <th scope="col">{{"Member Name" | translate}}</th>
                                 <!--<th scope="col">Member Relation</th>-->
-                                <th scope="col">Request Type</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Raised Date <div><small class="text-secondary">(dd-mm-yyyy)</small></div></th>
-                                <th scope="col">Action</th>
+                                <th scope="col">{{"Request Type" | translate}}</th>
+                                <th scope="col">{{"Status" | translate}}</th>
+                                <th scope="col">{{"Raised Date" | translate}} <div><small class="text-secondary">{{'(dd-mm-yyyy)' | translate}}</small></div></th>
+                                <th scope="col">{{"Action" | translate}}</th>
                                 <!--<th scope="col">Download</th>-->
                             </tr>
                           </thead>
