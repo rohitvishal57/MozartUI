@@ -95,6 +95,7 @@ export class RugDynamicFormComponent {
   leadnumber: string = "";
   QuoteNumber: any = [];
   customerFeedbackModule: any;
+  isPlanDetailsVisible = false;
   customerFeedbackForm !: FormGroup;
   formIndexValue: number = 0;
   stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
@@ -113,7 +114,7 @@ export class RugDynamicFormComponent {
   productCombinationData: any;
   bbPremiumData: any;
   familyConstructsData: any;
-
+  isD2C: boolean = true;
   constructor(private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef, private aesEncryptService: AesEncryptionService,
@@ -1048,7 +1049,10 @@ export class RugDynamicFormComponent {
     this.activeTab = tabName;
     this.expandedItem = '';
   }
+  planSummary(){
+    this.isPlanDetailsVisible = !this.isPlanDetailsVisible; // Toggle the state
 
+  }
   addNavbar(index: number, value: any) {
     if (value.formName === 'Confirmation') {
       this.customerFeedbackModule.show();
@@ -2326,6 +2330,13 @@ export class RugDynamicFormComponent {
       this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     }
   }
+  onBBPrevious(){
+    console.log("asdasd")
+    if (this.getFormIndexValue() > 0) {
+      this.decrementIndex()
+      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+    }
+  }
   onBbPrevious() {
     console.log("asdasd")
     if (this.getFormIndexValue() > 0) {
@@ -2542,6 +2553,11 @@ export class RugDynamicFormComponent {
   }
   async onSubmit() {
     this.changesMade = false;
+    if (this.getFormIndexValue() < this.formSequence.length - 1) {
+      this.incrementIndex();
+      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+      
+    }
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
 
     if (this.dynamicFormGroup.get('numberOfInsuredMembers')?.value < 2 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
@@ -2797,6 +2813,16 @@ export class RugDynamicFormComponent {
     this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
+  }
+  ond2cSubmit(){
+    // if(!this.dynamicFormGroup.valid){
+    //   return;
+    // }
+    if (this.getFormIndexValue() < this.formSequence.length - 1) {
+      this.incrementIndex();
+      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+      
+    }
   }
   onBbSubmit() {
     console.log(this.bbdetails);
