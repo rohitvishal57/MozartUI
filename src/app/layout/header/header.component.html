@@ -1,5 +1,5 @@
 <!--Header start-->
-<header class="siteHeader">
+<header class="siteHeader" *ngIf="agentCode != '467899' && agentCode != '467898'">
 
   <!--ABC Links start-->
   <div class="abcLinksMain">
@@ -108,6 +108,22 @@
   <!--Logo Tag end-->
 </header>
 <!--Header end-->
+<!--Axis Header start-->  
+<header class="pageHeader" *ngIf="agentCode == '467898'">
+  <div class="pageHeaderContainer">
+          <div class="ph_Left">
+              <img src="assets/axis_assets/images/logo_axis.svg" alt="Axis insurance" class="logo_desktop">
+              <img src="assets/axis_assets/images/logo_axis_a.svg" alt="Axis insurance" class="logo_mobile">
+          </div>
+      <div class="ph_Right">
+          <div class="ph_RightCurve">
+              <span class="ph_RightCurveSmall"></span>
+              <div class="logo_openInsurance"></div>
+          </div>
+      </div>
+  </div>
+</header>
+<!--Axis Header end-->
 
   
 

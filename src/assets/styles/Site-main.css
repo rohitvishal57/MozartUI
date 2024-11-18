@@ -5320,3 +5320,136 @@ background: var(--white-color);
   transform: rotate(calc(-4deg + 10deg * random()));
 }
 /*----New styles added 13-nov-24 end----*/
+
+
+
+/*----Axis D2C Header start----*/
+.pageHeader {   
+  background: #FFFFFF;
+  position: relative;
+  z-index: 9;
+  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.08);
+  height: 80px;
+  border-bottom: 16px solid #fff;
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+/*.ph-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9;
+  animation: slideDown 0.35s ease-out;
+}*/
+.pageHeaderContainer {
+  display: flex;
+  background: #861f41;
+  height: 100%;
+}
+.ph_Left {
+  max-width: 280px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 0 0 20px;
+}
+.ph_Left img {
+  width: 189px;
+  height: 35px;
+}
+.ph_Right {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.ph_RightCurve {
+  background: #fff url(/assets/axis_assets/images/menucurve.jpg) no-repeat;
+  background-position: 0 0;
+  height: 51px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.pageHeaderContainer {
+background: #97144d;
+}
+.ph_Left{
+  position: relative;  
+}
+.ph_Left:after {
+  content: '';
+  background: #97144d;
+  position: absolute;
+  height: 120%;
+  width: 25px;
+  border-radius: 0 0 20px 0;
+  right: -14px;
+  top: -6px;
+  margin-right: -17px;
+  -webkit-transform: rotate(35deg);
+  -ms-transform: rotate(35deg);
+  transform: rotate(35deg);
+  z-index: 1;          
+}
+.ph_RightCurve {
+background: #fff;
+position: relative;
+}
+.ph_RightCurve:before {
+  content: '';
+  background: #97144d;
+  position: absolute;
+  height: 80%;
+  width: 30px;
+  border-radius: 0 0 20px 0;
+  left: 0;
+  top: -4px;
+  margin-left: 0;
+}
+.ph_RightCurveSmall {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 15px;
+  height: 15px;
+  margin-left: 43px;
+  -webkit-transform: rotate(20deg);
+  -ms-transform: rotate(20deg);
+  transform: rotate(20deg);
+}
+.ph_RightCurveSmall:before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: -1;
+  background: #97144d;
+  width: 100%;
+  height: 100%;
+}
+.ph_RightCurveSmall:after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  top: 0;
+  left: 0;
+  border-top-left-radius: 30px;
+}
+.logo_openInsurance {
+  background:url(/assets/axis_assets/images/open_insurance.svg) no-repeat;
+  background-position: 0 0;
+  height: 16px;
+  width: 122px;
+  margin-left: 60px;
+  position: relative;
+  top: 5px;
+}
+.logo_mobile {
+  display: none;
+}
+
+/*----Axis D2C Header end----*/
