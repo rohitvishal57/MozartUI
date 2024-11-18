@@ -27,7 +27,7 @@ export class SideNavbarComponent {
     { id: 11, displayName: 'Events', path: 'events/eventsList', imagePath: 'assets/Img/icon_paper_grey.svg' },
 
   ];
-
+  agentCode: any;
   constructor(
     private router: Router,
     private loginService: CommonService,
@@ -36,6 +36,7 @@ export class SideNavbarComponent {
   ) { }
 
   ngOnInit(): void {
+    this.agentCode = localStorage.getItem('agentCode')
     // Fetch allowed pages from AuthService
     const allowedPages = this.authService.getAllowedModules();
     

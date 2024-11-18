@@ -101,6 +101,8 @@
     "profileDetails": "api/auth/GetAgentProfileDetails",
     "fetchPolicyDetailsFromFile": "api/yatra/getcustomerpolicydetailsfrompolicydocument",
     "justPayRedirection": "api/yatra/Payment/JuspayOrder",
+    "insertfullquotejson":"api/yatra/insertfullquotejson",
+    "getfullquoteviaofflinepayment":"api/yatra/getfullquoteviaofflinepayment",
     "paymentGateway": "api/yatra/Payment/JuspayOrder",
     "getRelations":"/Product/GetProposerRelations",
     "getProductCombination":"/Product/GetProductCombination",

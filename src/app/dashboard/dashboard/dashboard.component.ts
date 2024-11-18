@@ -6,6 +6,9 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { forkJoin } from 'rxjs';
 import { DashboardService } from './dashboard.service';
+import { AgGauge } from "ag-charts-angular";
+import { AgRadialGaugeOptions } from "ag-charts-enterprise";
+import "ag-charts-enterprise";
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +19,8 @@ export class DashboardComponent {
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
   profileDetails: any;
+
+  public options: AgRadialGaugeOptions;
 
   taskDetailsList = [
     {
@@ -458,7 +463,14 @@ export class DashboardComponent {
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService : DashboardService) {
-
+      this.options = {
+        type: "radial-gauge",
+        value: 80,
+        scale: {
+          min: 0,
+          max: 100,
+        },
+    };
   }
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {

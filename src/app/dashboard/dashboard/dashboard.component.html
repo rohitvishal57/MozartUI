@@ -200,6 +200,7 @@
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'" cdkDrag>
                       <header><img [src]="perform.icon">{{perform.title | translate}}</header>
                       <div class="gauge">
+                        <!-- <ag-gauge [options]="options"></ag-gauge> -->
                         <div class="gauge-body">
                           <div class="gauge-fill"></div>
                           <div class="sub-text">{{"Policies" | translate}}</div>

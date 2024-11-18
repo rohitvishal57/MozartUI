@@ -864,7 +864,9 @@
                                   <p>{{"Select Member" | translate}}</p>
                                 </div>
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
-                                  <i class="fa-solid fa-xmark" (click)="closeOverlay(subControl,control)"></i>
+                                  <i (click)="closeOverlay(subControl,control)">
+                                    <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close" width="16%">
+                                  </i>
                                 </div>
                               </div>
                               <div class="row" style="height: 95%; overflow-y: scroll;">
@@ -1040,7 +1042,9 @@
                             <p>Add Disease</p>
                           </div>
                           <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
-                            <i class="fa-solid fa-xmark" (click)="closePopUp()"></i>
+                            <i (click)="closePopUp()">
+                              <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close" width="16%">
+                            </i>
                           </div>
                         </div>
                         <div class="row" style="height: 95%; overflow-y: scroll;">
