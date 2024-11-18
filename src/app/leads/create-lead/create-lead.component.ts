@@ -154,7 +154,7 @@ export class CreateLeadComponent implements OnInit {
 
 
     this.addNoteForm = this.formBuilder.group({
-      activityTitle: ['', Validators.required], // activityTitle is required
+      activityTitle: ['', [Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       activityStartDate: ['', Validators.required], // Start date is required
       activityStartTime: ['', Validators.required], // Start time is required
       activityEndDate: ['', Validators.required], // Use null if control is not available  
