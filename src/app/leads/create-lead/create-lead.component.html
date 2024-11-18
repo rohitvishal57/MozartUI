@@ -347,7 +347,7 @@
                             </div>
                         </div>
                     
-                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="occupation" name="occupation" placeholder=""
                                     formControlName="occupation" type="text" maxlength="20">
@@ -356,7 +356,21 @@
                                     *ngIf="submitted && userValidations.get('occupation')?.errors?.['pattern']">Please
                                     enter proper value.</span>
                             </div>
+                        </div> -->
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="occupation" name="occupation" formControlName="occupation"
+                                (selectionChange)="campnoSelected()">
+                                <option value="" disabled selected>Choose Option</option>
+                                <option *ngFor="let opt of occupationInfo" [value]="stringifyJson(opt)">
+                                    {{ opt.name }}
+                                </option>
+                            </select>
+                                <label for="occupation">Occupation</label>
+                            </div>
                         </div>
+						
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="education" name="education" placeholder=""

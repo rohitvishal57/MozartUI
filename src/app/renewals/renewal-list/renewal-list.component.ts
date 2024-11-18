@@ -38,7 +38,7 @@ export class RenewalListComponent {
   filterType: string = "totalRecords";
   activeSection:string= "primary"
   StaticPolicyTypes = [
-    { name: 'Individual', selected: false },
+    { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   currentDate = new Date().toISOString().split('T')[0];
@@ -205,6 +205,12 @@ export class RenewalListComponent {
       return "Search...";
     }
   }
+  restrictInput(event: KeyboardEvent): void {
+    if (this.selected === 'mobileNumber' && !/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+  
   applySearch() {
     if (this.searchInputControl.valid) {
       const trimmedValue = this.searchInputControl.value?.trim(); 
@@ -290,6 +296,8 @@ export class RenewalListComponent {
             }
           }
         };
+        console.log("email",emailRequestBody);
+        
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -339,6 +347,8 @@ export class RenewalListComponent {
           isAutoSMS: true,
           sessionId: ""
         };
+        console.log("sms",smsRequestBody);
+        
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -357,6 +367,8 @@ export class RenewalListComponent {
           templateCode: "DUE-CSTMR",
           policyNumbers: [item.policyNumber]
         };
+        console.log("whatsApp",whatsAppRequestBody);
+        
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -377,7 +389,6 @@ export class RenewalListComponent {
   renewalJourney(proposerDetail : RenewalList, action:string) {
     console.log("proposer PolicyNumber",proposerDetail.policyNumber);
     sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
-    sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
     const renewalInfoRequestBody = {
       policy_Number: proposerDetail.policyNumber,
     };
@@ -385,17 +396,9 @@ export class RenewalListComponent {
       (res: any) => {
         if (res.isSuccess) {          
           sessionStorage.setItem("renewalData", this.encryptionService.encrypt(res));
-          if(action=='withmodify'){
-            console.log("active action",action);
-            sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
-            this.router.navigate(['renewal/payment']);
-          }
-          else if(action=='withoutmodify'){
-            this.activeSection="policySummary";
-            console.log("active action",action);
-            sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
-            this.router.navigate(['renewal/payment']);
-          }
+          console.log("active action",action);
+          sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
+          this.router.navigate(['renewal/payment']);
         }
          else {
           this.toast.error({ detail: "", summary: res.message, duration: 3000 });

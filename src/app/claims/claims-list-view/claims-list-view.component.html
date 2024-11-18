@@ -52,23 +52,9 @@
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader" >
                                     <header>Filter</header>
-                                    <!--<button type="button" value="cancel" class="btn_iconGrey" aria-label="close search" (click)="cancel()">
-                                        <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close">
-                                    </button>-->
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
                             <div class="fw_formBody"> 
-                                <!-- <div class="fw_formRow" *ngIf="productList && productList.length > 0">
-                                    <h6>Products</h6>
-                                    <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let product of productList; let i = index">
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                <label for="product{{i}}">{{product.productName}}</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
                                 <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
                                     <h6>Products</h6>
                                     <div class="fw_checkboxWraper">
@@ -91,17 +77,6 @@
                                           </div>                                              
                                     </div>
                                 </div>
-                                <!-- <div class="fw_formRow">
-                                    <h6>Status</h6>
-                                    <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let status of statuses; let i = index">
-                                            <div class="input-checkbox-feild">
-                                              <input type="checkbox" id="status{{i}}" value="policytype" class="input-check" [(ngModel)]="status.selected" (change)="calculateAppliedFiltersCount()">
-                                              <label for="status{{i}}">{{status.name}}</label>
-                                            </div>
-                                          </div>                                              
-                                    </div>
-                                </div> -->
                                 <div class="fw_formRow">
                                     <h6>Date Range</h6>
                                     <div class="row">
@@ -144,9 +119,7 @@
                                 <th scope="col">Request</th>
                                 <th scope="col">Policy No.</th>
                                 <th scope="col" nowrap>Product Name</th>
-                                <!-- <th scope="col" nowrap>Member Name</th> -->
-                               <th scope="col" nowrap>Member Id</th>
-                             <!--  <th scope="col" nowrap>Mobile Number</th> -->
+                                <th scope="col" nowrap>Member Id</th>
                                 <th scope="col" nowrap>Request Type</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Raised Date <div><small class="text-secondary">(dd-mm-yyyy)</small></div></th>
@@ -161,9 +134,7 @@
                                 <td class="card_insureInfo">{{ row?.claimInfoId }}</td>
                                 <td>{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
-                                <!-- <td>{{ row?.memberName }}</td> -->
                                 <td>{{ row?.memberId }}</td>
-                                <!-- <td>{{ row?.mobileNumber }}</td> -->
                                 <td>{{ row?.requestType }}</td>
                                 <td><span class="text-break-w100">{{ row?.claimStatus }}</span></td>
                                 <td>{{ row?.reportedDateTime | datepipe }}</td>
@@ -174,16 +145,6 @@
                                 </td>
                               </tr>
                             </ng-container>
-                      
-                              <!-- <tr *ngIf="selectedClaim?.id === row.id" class="details-row visible-row">
-                                <td [attr.colspan]="8">
-                                  <div class="additional-info">
-                                    <p><strong>Mobile No:987****456</strong> <span>{{ maskPhoneNumber(row?.policyNumber) }}</span></p>
-                                    <p><strong>Email ID:vvs***k@gmail.com</strong> {{ row?.email }}</p>
-                                    <button class="claimDetails_btn" (click)="navigateToViewClaim(row)">View Claim Details</button>
-                                  </div>
-                                </td>
-                              </tr> -->
                           </tbody>
                         </table>
                     </div>
@@ -197,11 +158,9 @@
                                  <h6>
                                     <div class="insureName">{{ gridClaims.claimInfoId }} </div>  
                                 </h6>
-                                <!-- <div class="item_value">{{ gridClaims.id }}</div> -->
                             </div>
                             <div class="card_btnGroup">
                                 <button type="button" id="viewclaimcard" name="viewclaimcard" value="view" title="View-Claim" class="btn_action btn_claimAction" (click)="navigateToViewClaim(gridClaims)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                                <!--<button type="button" class="btn_iconGrey btn_cardDownload"><img src="../../../../../assets/Img/icon_download_grey.svg"></button>-->
                             </div>
                         </header>
                         <div class="cardViewBody">
@@ -213,18 +172,10 @@
                                 <div class="item_lable">Product Name</div>
                                 <div class="item_value">{{ gridClaims.productName }}</div>
                             </div>
-                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Member Name</div>
-                                <div class="item_value">{{ gridClaims.memberName }}</div>
-                            </div> -->
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Member Id</div>
                                 <div class="item_value">{{ gridClaims.memberId }}</div>
                             </div>
-                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">Mobile Number</div>
-                                <div class="item_value">{{ gridClaims.mobileNumber }}</div>
-                            </div> -->
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Request Type</div>
                                 <div class="item_value">{{ gridClaims.requestType }}</div>

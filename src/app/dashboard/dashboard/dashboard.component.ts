@@ -4,6 +4,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
+import { forkJoin } from 'rxjs';
+import { DashboardService } from './dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +15,7 @@ import { ProfileService } from 'src/app/profile/profile.service';
 export class DashboardComponent {
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
-  profileDetails : any;
+  profileDetails: any;
 
   taskDetailsList = [
     {
@@ -169,7 +171,6 @@ export class DashboardComponent {
       category: [
         {
           name: 'open',
-
           catInfoList: [
             {
               name: 'Amit Kumar',
@@ -455,8 +456,8 @@ export class DashboardComponent {
   ];
 
 
-  constructor(private route: Router, private languageService: LanguageService,private profileService : ProfileService,
-    private translateService: TranslateService) {
+  constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
+    private translateService: TranslateService, private dashboardService : DashboardService) {
 
   }
   ngOnInit() {
@@ -467,7 +468,7 @@ export class DashboardComponent {
         }
       });
     });
-
+    // this.combineCalls()
     const reqData = {
       "agentCode": localStorage.getItem('agentCode')
     }
@@ -478,10 +479,28 @@ export class DashboardComponent {
     })
   }
 
+  combineCalls(){
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    const payload = {
+      "filterType": "Last7Days"
+    }
+    forkJoin({
+        profileDetails : this.profileService.getProfileDetails(reqData),
+        leadDetails : this.dashboardService.fetchLeadStatusCount(payload),
+        renewalDetails : this.dashboardService.fetchRenewalStatusCount(payload),
+        proposalDetails : this.dashboardService.fetchProposalStatusCount(payload),
+
+    }).subscribe((data : any) =>{
+        console.log(data)
+    })
+  }
+
   getTimeOfDay() {
     const now = new Date();
     const hour = now.getHours();
-  
+
     if (hour >= 5 && hour < 12) {
       return "Morning";
     } else if (hour >= 12 && hour < 17) {
@@ -505,19 +524,6 @@ export class DashboardComponent {
     moveItemInArray(this.taskDetailsList, event.previousIndex, event.currentIndex);
   }
 
-  // dropTab(event: CdkDragDrop<string[]>) {
-  //   const prevActive = this.tabsInfo[this.selectedIndex];
-  //   moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
-  //   this.selectedIndex = this.tabsInfo.indexOf(prevActive);
-  // }
-
-  // dropQuotes(event: CdkDragDrop<string[]>) {
-  //   moveItemInArray(this.baseQuotes, event.previousIndex, event.currentIndex);
-  // }
-
-  // dropCard(event: CdkDragDrop<any[]>) {
-  //   moveItemInArray(this.cards, event.previousIndex, event.currentIndex);
-  // }
 
 
   getQuote() {
@@ -530,6 +536,16 @@ export class DashboardComponent {
   createLead() {
     this.route.navigate(['/leads/createLead'], {
     });
+  }
+
+  onToggle(event: any) {
+    const button = event.target;
+    const contentBlock = button.nextElementSibling;
+    if (contentBlock.style.display === 'none') {
+      contentBlock.style.display = 'block';
+    } else {
+      contentBlock.style.display = 'none';
+    }
   }
 }
 

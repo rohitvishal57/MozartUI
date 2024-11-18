@@ -5254,6 +5254,170 @@ background: var(--white-color);
 .block_bg_green {
   background: #8DCDA9 !important;
 }
+
+/*---Bottom Plan Details start---*/
+.bottom_planDetails {
+  margin: 24px 0;
+}
+.bottom_planDetails_sub {
+  max-height: 400px;
+  overflow-y: auto;
+}
+.bottom_planDetails_sub::-webkit-scrollbar-button {
+width: 0px;
+height: 0;
+}
+.bottom_planSummary{
+  padding: 16px;
+  border-radius: 16px;
+  background: #F9FAFB;
+  display: flex;
+  flex-direction: column;
+  gap:16px
+}
+.info_planSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 400;
+  font-size: 12px;
+  color: #2e2e2e;
+}
+.info_planSummary h5, .info_planSummary h6 {
+  margin: 0;
+  font-size: 12px;
+}
+.info_planSummary h5 span {
+  display: block;
+  font-weight: 600;
+  font-size: 10px;
+  color: #979CAE;
+}
+.info_planSummary h6 {
+  font-weight: 600;
+  color: #202428;
+}
+.total_planSummary {
+  border-top: 1px solid #D5D7DE;
+  padding-top: 24px;
+}
+.total_planSummary h5 {
+  color: #797979;
+}
+.main_productTabs {
+ display: flex;
+ flex-direction: column;
+ gap: 24px;
+}
+.main_productTabs .nav-pills {
+ gap: 8px;
+}
+.main_productTabs .nav-pills .nav-link {
+ padding: 5px 18px;
+ border-radius: 8px;
+ font-weight: 600;
+ font-size: 18px;
+ line-height: 24px;
+ color: #000;
+}
+.main_productTabs .nav-pills .nav-link.active {
+ color: #fff;
+ background: #c7222a;
+}
+.bottom_planDetails .main_productTabs {
+  gap:16px;
+}
+.bottom_planDetails .main_productTabs .nav-pills .nav-link {
+  padding: 5px 12px;
+  font-weight: 500;
+  font-size: 16px;
+}
+.bottom_planDetails .main_productTabs .nav-pills .nav-link.active {
+ color: #C7222A;
+ background: #FEE0DD;
+}
+.checkbox_planDetails {
+  flex-direction: column;
+}
+.checkbox_planDetails .input-checkbox-feild {
+  flex: auto;
+}
+.checkbox_planDetails .input-checkbox-feild .input-check + label {
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #D5D7DE;
+  display: flex;
+  gap:16px;
+}
+.checkbox_planDetails .input-checkbox-feild .input-check + label:before {
+  min-width: 17px;
+  height: 17px;
+  border: 1px solid #C2D1D9;
+  border-radius: 2px;
+  margin-right: 0;
+}
+.checkbox_planDetails .input-checkbox-feild .input-check:checked + label:before {
+  border: 1px solid var(--primary-red-color);
+}
+.checkbox_planDetails .input-checkbox-feild .input-check:checked + label:after {
+  top: 14px;
+  bottom: auto;
+  left: 17px;
+}
+.checkbox_planDetails em {
+  font-style: normal;
+}
+.checkbox_planDetails .input-checkbox-feild .input-check + label span {
+  display: flex;
+  flex-direction: column;
+  gap:8px;
+  flex: auto;
+  font-weight: 300;
+  font-size: 12px;
+  color:#2e2e2e;
+}
+.checkbox_planDetails .main_infoAddon {
+  display: flex;
+  justify-content: space-between;
+}
+.checkbox_planDetails .main_infoAddon .left_infoAddon {
+  display: flex;
+  flex-direction: row;
+  gap:8px;
+}
+.checkbox_planDetails .main_infoAddon  .right_infoAddon {
+  display: flex;
+  flex-direction: column;
+  gap:4px;
+}
+.checkbox_planDetails .main_infoAddon .name_addon {
+  font-weight: 400;
+  font-size: 14px;
+  max-width: 100px;
+}
+.checkbox_planDetails .main_infoAddon .price-addon {
+  font-weight: 500;
+  font-size: 18px;
+  color: #C7222A;
+}
+.checkbox_planDetails .info-addons {
+  max-width: 60%;
+}
+.icon_addon{
+  width: 30px;
+  height: 30px;
+  background: var(--site-pink);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bottomInfoMain{
+  z-index: 9999;
+}
+/*---Bottom Plan Details end---*/
+
 /*----New styles added 13-nov-24 start----*/
 .note_remarkText_width {
   max-width: 320px;

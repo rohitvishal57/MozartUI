@@ -33,7 +33,7 @@ export class LeadsListComponent {
   appliedFiltersCount: number = 0;
   toggeledropdown: boolean = false;
   toggeleSearchdropdown: boolean = false;
-  selected: string = "Select an option";
+  selected: string = '';
   searchInputControl = new FormControl("");
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode');
@@ -66,14 +66,12 @@ export class LeadsListComponent {
   filterLeads = false;
   today: string = '';
   StaticPolicyTypes = [
-    { name: 'Individual', selected: false },
+    { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   formSequence: any[] = [];
   private allJsonFormData: any[] = [];
   formData: any = {};
-  filterFeildType = 'text';
-  filterFeildmaxlength = 10;
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
@@ -151,10 +149,6 @@ export class LeadsListComponent {
           console.log("Renewal List", this.leadsList);
           this.countsList = response.data;
           this.totalRecords = this.countsList.totalCount;
-          // this.appliedFiltersCount = 0;
-          // if (this.filterLeads == true) {
-          //  this.appliedFiltersCount = response.data.totalCount;
-          //}
         }
         else { console.error("API request was not successful."); }
       },
@@ -196,24 +190,23 @@ export class LeadsListComponent {
     );
   }
   filterQuotes(filter: string) {
-    this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
-    this.leadsInfoListRequestBody.searchlist = "";
+   // this.leadsInfoListRequestBody.searchby = "";
+   // this.leadsInfoListRequestBody.fromdate = null;
+   // this.leadsInfoListRequestBody.todate = null;
+   // this.leadsInfoListRequestBody.searchlist = "";
+   // this.productsList.forEach((product) => (product.selected = false));
+   // this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+   // this.startDate = "";
+   // this.endDate = "";
     this.leadsInfoListRequestBody.myleads = true;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = true;
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = "";
-    this.endDate = "";
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
-    this.searchInputControl.reset();
-    this.selected = "Select an option";
-    this.getPlaceholder();
+   // this.searchInputControl.reset();
   }
+
   getProducts() {
     const reqData = {
       "agentCode": this.agentCode
@@ -236,22 +229,19 @@ export class LeadsListComponent {
   }
 
   calculateAppliedFiltersCount() {
-    const selectedProductsCount = this.productsList.filter(
-      (product) => product.selected).length;
-
-    const selectedpolicyTypeCount = this.StaticPolicyTypes.filter(
-      (policyType) => policyType.selected).length;
-
+    const selectedProductsCount = this.productsList.filter((product) => product.selected).length;
+    const selectedpolicyTypeCount = this.StaticPolicyTypes.filter((policyType) => policyType.selected).length;
     let count = selectedProductsCount + selectedpolicyTypeCount;
-
     if (this.startDate && this.endDate) {
       count++;
     }
-
     this.appliedFiltersCount = count || 0;
   }
 
   applyFilter() {
+    this.page =1;
+    this.first = 0;
+    this.rows = 10;
     this.filterLeads = true;
     this.calculateAppliedFiltersCount();
     const selectedProducts = this.productsList.filter((product) => product.selected)
@@ -265,8 +255,7 @@ export class LeadsListComponent {
     this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
-    //this.selected = "";
-    this.searchInputControl.reset();
+   // this.searchInputControl.reset();
 
   }
   cancel() {
@@ -302,73 +291,41 @@ export class LeadsListComponent {
   }
 
   onSelectChanges(event: any): void {
+    debugger;
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
     const selectedValidators = searchValidationConfig[this.selected] || [];
     this.searchInputControl.setValidators(selectedValidators);
-    // if (this.selected === "mobileNumber") {
-    //   this.placeholder = 'Mobile Number';
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[6-9][0-9]{9}$")
-    //   ]);
-    // }
-    // else if (this.selected === "name") {
-    //   this.placeholder = 'Proposer Name';
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[A-Za-zÀ-ÿ ]+$")
-    //   ]);
-    // }
-    // else if (this.selected === "email") {
-    //   this.placeholder = 'Email';
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z]+\.[a-zA-Z]{2,}$")
-    //   ]);
-    // }
-    // else if (this.selected === "leadId") {
-    //   this.placeholder = 'Lead Id';
-    //   this.searchInputControl.setValidators([
-    //     Validators.required,
-    //     Validators.pattern("^[A-Za-z]{3}\\d{12}$")
-    //   ]);
-    // }
-    // else if (this.selected = 'Select an option') {
-    //   this.placeholder = 'Search...';
-    //   this.leadsInfoListRequestBody.searchby = '';
-    //   this.getLeadsList();
-    // }
     this.searchInputControl.updateValueAndValidity();
-    this.getPlaceholder();
+    if (this.selected == '') {
+        this.leadsInfoListRequestBody.searchby = '';
+        this.getLeadsList();
+      }
   }
 
 
   applySearch() {
-    this.leadsInfoListRequestBody.searchlist = "";
-    this.leadsInfoListRequestBody.policyList = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
-    this.appliedFiltersCount =  0;
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate ='';
-    this.endDate ='';
-    console.log('this.searchInputControl', this.searchInputControl.errors)
-    // if (this.searchInputControl.errors) {
-    //   this.getSearchInputControlPatternMessage();
-    // }
-    if (this.searchInputControl.valid == true) {
-      this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
-    } else {
-      this.leadsInfoListRequestBody.searchby = "";
+    this.page =1;
+    this.first = 0;
+    this.rows = 10;
+    if(this.activeFilter== 'assignedLead'){
+      this.leadsInfoListRequestBody.assignedleads = true;
+      this.leadsInfoListRequestBody.unassignedleads = false;
+
+    }else if(this.activeFilter == 'unAssignedLead'){
+      this.leadsInfoListRequestBody.assignedleads = false;
+      this.leadsInfoListRequestBody.unassignedleads = true;
+    }else{
+      this.leadsInfoListRequestBody.assignedleads = true;
+      this.leadsInfoListRequestBody.unassignedleads = true;
     }
-    if (this.selected != 'Select an option') {
-      this.getLeadsList();
-      this.activeFilter = this.leadsList.length > 0 && this.leadsList[0].isAssign ? 'assignedLead' : 'unAssignedLead';
-    }
-    //this.searchInputControl.reset();
+
+    this.leadsInfoListRequestBody.searchby = this.searchInputControl.value?.trim() || '';
+    this.getLeadsList();
+
+    
   }
+
   renewalListView(view: string) {
     this.selectedView = view;
   }
@@ -450,79 +407,54 @@ export class LeadsListComponent {
     this.showAssigneLeadDialog(this.selectedleadInformation);
   }
   getAssignedLeads() {
-    this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
-    this.leadsInfoListRequestBody.searchlist = "";
+   // this.leadsInfoListRequestBody.searchby = "";
+   // this.leadsInfoListRequestBody.fromdate = null;
+   // this.leadsInfoListRequestBody.todate = null;
+   // this.leadsInfoListRequestBody.searchlist = "";
+   // this.productsList.forEach((product) => (product.selected = false));
+   //this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+   //  this.startDate = "";
+   // this.endDate = "";
+
+    this.filterLeads = false;
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = false;
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = "";
-    this.endDate = "";
-    this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "assignedLead";
-    this.selected = "Select an option";
-    this.searchInputControl.reset();
+    //this.searchInputControl.reset();
   }
   getUnAssignedLeads() {
-    this.leadsInfoListRequestBody.searchby = "";
-    this.leadsInfoListRequestBody.fromdate = null;
-    this.leadsInfoListRequestBody.todate = null;
-    this.leadsInfoListRequestBody.searchlist = "";
+   // this.leadsInfoListRequestBody.searchby = "";
+   // this.leadsInfoListRequestBody.fromdate = null;
+   // this.leadsInfoListRequestBody.todate = null;
+   // this.leadsInfoListRequestBody.searchlist = "";
+   //this.productsList.forEach((product) => (product.selected = false));
+   //this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+   //this.startDate = "";
+  // this.endDate = "";
+
+    this.filterLeads = false;
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = false;
     this.leadsInfoListRequestBody.unassignedleads = true;
-    this.productsList.forEach((product) => (product.selected = false));
-    this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-    this.startDate = "";
-    this.endDate = "";
-    this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = "unAssignedLead";
-    this.selected = "Select an option";
-    this.searchInputControl.reset();
+   // this.searchInputControl.reset();
   }
   getPlaceholder(): string {
-    this.filterFeildType = "text";
-    this.filterFeildmaxlength = 50;
-
     if (this.selected === 'leadId') {
-        this.filterFeildmaxlength = 20;
         return 'Enter Lead ID';
     } else if (this.selected === 'mobileNumber') {
-        this.filterFeildType = "number";
-        this.filterFeildmaxlength = 10;
         return 'Enter Mobile Number';
     } else if (this.selected === 'name') {
         return 'Enter Name';
-    } else if (this.selected === 'email') {
+    } else if (this.selected === 'emailID') {
         return 'Enter Email ID';
     } else {
         return 'Search...';
     }
   }
-
-
-  // getSearchInputControlPatternMessage() {
-  //   let errorMessage: string = '';
-  //   if (this.searchInputControl.hasError('required')) {
-  //     errorMessage = 'This field is required.';
-  //   }
-  //   if (this.selected === 'leadId') {
-  //     errorMessage = 'Lead ID should contain only alphanumeric characters (A-Z, 0-9).';
-  //   } else if (this.selected === 'mobileNumber') {
-  //     errorMessage = 'Mobile Number should be exactly 10 digits.';
-  //   } else if (this.selected === 'name') {
-  //     errorMessage = 'Name should contain only letters and spaces.';
-  //   } else if (this.selected === 'email') {
-  //     errorMessage = 'Please enter a valid email address (e.g., user@example.com).';
-  //   }
-  //   return this.toast.warning({ detail: "", summary: errorMessage, duration: 5000 });
-
-  // }
 
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {

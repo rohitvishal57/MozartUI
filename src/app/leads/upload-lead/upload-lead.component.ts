@@ -21,7 +21,7 @@ export class UploadLeadComponent implements OnInit{
   selectedFile: any;
   AgentCode: string = '';
   uploadedFiles : boolean = false;
-  UploadedFilesInformation: any[] = [];
+  fileList : any[] =[];
 
   constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService,    private router: Router  ){
 
@@ -59,44 +59,42 @@ export class UploadLeadComponent implements OnInit{
       }
     );
   }
+
   newfile(e: any) {
+    this.showNote = false;
     this.uploadedFiles = true;
-    let files;
-    let file;
     this.isFilenotSelected = false;
-
-
-
+    let files: any[];
     if (e) {
       files = e.target.files;
-      file = files[0];
-      if (!file) {
-        return;
+      for (let i = 0; i < files.length; i++) {
+        const isDuplicateFile: boolean = this.fileList.some((item: any) => item.file.name === files[i].name);
+        if (isDuplicateFile) {
+          this.toast.warning({ detail: "", summary: 'File is already uploaded.Please upload another file.', duration: 5000 });
+          return;
+        } 
+        this.selectedFile = files[i];
+        if (!this.selectedFile) {
+          return;
+        }
+        this.fileExt = this.selectedFile.name.replace(/^.*\./, '');
+        if (this.fileExt == 'xlsx' || this.fileExt == 'csv' || this.fileExt === 'xls') {
+          this.selctedFileName = this.selectedFile.name;
+          this.fileSize = this.selectedFile.size;
+          const fileWithFileExt = {
+            file: files[i],                 
+            fileExt : this.fileExt           
+          };
+          this.fileList.push(fileWithFileExt);
+          console.log('fileList',this.fileList);
+        }else{
+          this.showNote = true;
+        } 
       }
-      this.selectedFile = file;
-      console.log(this.selectedFile);
-      this.selctedFileName = this.selectedFile.name;
-      this.fileExt = this.selectedFile.name.replace(/^.*\./, '');
-      this.fileSize = file.size;
       e.target.value = '';
     }
-
-    if (this.fileExt == 'xlsx' || this.fileExt == 'csv' ||this.fileExt==='xls') {
-    } else {
-      this.showNote = true;
-    }
-
-    const isDuplicateFile: boolean = this.UploadedFilesInformation.some((file: any) => file.fileName === this.selctedFileName);
-
-    if (isDuplicateFile) {
-      this.toast.warning({ detail: "", summary: 'File is already uploaded.Please upload another file.', duration: 5000 });
-      return;
-    }
-
-    this.UploadedFilesInformation.push({ fileName: this.selectedFile.name, fileExt: this.selectedFile.name.replace(/^.*\./, ''), fileSize: file.size });
-
-    console.log('this.UploadedFilesInformation',this.UploadedFilesInformation);
   }
+
   deleteFile() {
     // this.namesVariable = "";
     // this.documentType = "";
@@ -133,13 +131,16 @@ export class UploadLeadComponent implements OnInit{
   
       if (fileExt == 'xlsx' || fileExt == 'csv'||fileExt==='xls') {
        if (fileExt == 'xlsx' || fileExt == 'csv'|| fileExt==='xls') {
-          data.append('FormFile', file)
+
+        for(let i=0;i<this.fileList.length;i++){
+          data.append('FormFile', this.fileList[i].file)
+        }
           // data.append('CampaignNumber', campnumb?.campaignNo)
           // data.append('CampaignName', campnumb?.name)
           data.append('CampaignNumber', "6536575")
           data.append('CampaignName', "casdasda")
           data.append('AgentCode', this.AgentCode)
-        data.append('requestid',"8757458")
+          data.append('requestid',"8757458")
           // if (this.selectedExistingGroup) {
           //   data.append('GroupId', this.existingGroupId)
           // }
@@ -187,6 +188,8 @@ export class UploadLeadComponent implements OnInit{
         //     }
         //   })
       } 
+      this.fileList = [];
+      this.selctedFileName ='';
     }
     downloadurl(){
       // window.open(this.url, '_blank');
@@ -226,10 +229,11 @@ export class UploadLeadComponent implements OnInit{
   
 
   removeFile(fileInfo: any) {
-    this.UploadedFilesInformation = this.UploadedFilesInformation.filter((uploadFile: any) => {
-      return uploadFile.fileName !== fileInfo.fileName
+    this.fileList = this.fileList.filter((item: any) => {
+      return item.file.name !== fileInfo.file.name
     });
-    if(this.selctedFileName == fileInfo.fileName){
+
+    if(this.selctedFileName == fileInfo.file.name){
       this.selctedFileName='';
     }
   }

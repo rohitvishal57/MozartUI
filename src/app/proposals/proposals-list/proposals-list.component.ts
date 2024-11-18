@@ -202,6 +202,11 @@ export class ProposalsListComponent {
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }
+  restrictInput(event: KeyboardEvent): void {
+    if (this.selected === 'mobileNumber' && !/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
   getPlaceholder(): string {
     if (this.selected === "mobileNumber") {
       return "Enter Mobile Number";

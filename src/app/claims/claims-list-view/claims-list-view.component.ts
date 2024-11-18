@@ -12,7 +12,6 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
   selector: 'app-claims-list-view',
   templateUrl: './claims-list-view.component.html',
   styleUrls: ['./claims-list-view.component.scss'],
-  //encapsulation: ViewEncapsulation.Emulated,
 })
 export class ClaimsListViewComponent implements OnInit {
   displayedColumns: string[] = ['request', 'policyNo', 'productName', 'memberName', 'memberRelation', 'requestType', 'status', 'raisedDate', 'download'];
@@ -47,15 +46,6 @@ export class ClaimsListViewComponent implements OnInit {
     { name: 'Cashless', selected: false },
     { name: 'Reimbursement', selected: false },
   ];
-  // statuses = [
-  //   { name: 'Intimated', selected: false },
-  //   { name: 'Inward Completed	', selected: false },
-  //   { name: 'RI Registration Raised', selected: false},
-  //   { name: 'Approved', selected: false},
-  //   { name: 'Scanning Completed', selected: false},
-  //   { name: 'Cancelled', selected: false}
-  // ]
-  
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService){ }
 
   ngOnInit(){
@@ -165,14 +155,13 @@ else{
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res:any) => {
         this.productsList = res.data;
-        console.log("product list",this.productsList)
         const uniqueRequestTypes = Array.from(new Set(this.productsList
          .map((product:any) => product.familyPlan)))
          .map((requestType) => ({ name: requestType, selected: false }));
          this.requestTypes = uniqueRequestTypes;
       },
       error: (err:any) => {
-         console.log("error coming form getproduct list API");
+         console.error(err,"error coming form getproduct list API");
       }
     })
   }
@@ -233,7 +222,7 @@ applyFilter() {
     this.claimsReqBody.searchString = [""];
   } else {
     this.claimsReqBody.searchType = "productName";
-    this.claimsReqBody.searchString = selectedProducts.join(", ");
+    this.claimsReqBody.searchString = selectedProducts;
   }
   this.isSearch = true;
   this.first = 0;
@@ -266,35 +255,6 @@ clear() {
   this.toggeledropdown = false;
 }
 
-  //-----------search dropdown----------//
-  // toggleSearchDropdown(event: any){
-  //   if(this.toggledropdown==true)
-  //     {
-  //       this.toggledropdown=false;
-  //     }
-  //     this.toggleSearchdropdown = !this.toggleSearchdropdown;
-  // }
-  // getErrorMessage(): string {
-  //   if (this.searchInputControl.hasError("required")) {
-  //     return "This field is required";
-  //   }
-  
-  //   if (this.searchInputControl.dirty && this.selected === "") {
-  //     return "Select an option and Enter";
-  //   }
-  
-  //   if (this.searchInputControl.hasError("pattern")) {
-  //     if (this.selected === "claimInfoId") {
-  //       return "Enter Valid Request Id";
-  //     } else if (this.selected === "policyNumber") {
-  //       return "Enter Valid Policy Number";
-  //     } else if (this.selected === "memberId") {
-  //       return "Enter Valid Member Id";
-  //     }
-  //   }
-  
-  //   return "";
-  // }
 
   applySearch(): void {
     let searchValue = this.searchInputControl.value?.trim();
@@ -315,50 +275,6 @@ clear() {
     this.searchInputControl.updateValueAndValidity();
   }
 
-// onSelectChanges(event: any): void {
-//   //event.stopPropagation(); 
-//   // this.selected !== "";
-//   this.searchInputControl.setValue('');
-//   this.searchInputControl.clearValidators();
-
-//   // if (this.selected === 'mobileNumber') {
-//   //   this.searchInputControl.setValidators([
-//   //     Validators.required,
-//   //     Validators.pattern('^[0-9]*$') 
-//   //   ]);
-//   // }
-//   //  if (this.selected === 'claimInfoId' || this.selected === 'policyNumber' || this.selected === 'memberId') {
-//   //   this.searchInputControl.setValidators([
-//   //     Validators.required,
-//   //     Validators.pattern('^[a-zA-Z0-9@#$%^&*! ]*$') 
-//   //   ]);
-//   // }
-//   if (this.selected === "claimInfoId") {
-//     this.searchInputControl.setValidators([
-//       Validators.required,
-//       Validators.pattern("^\\s*[0-9-]+\\s*$"),
-//     ]);
-// }
-// else if (this.selected === "memberId") {
-//   this.searchInputControl.setValidators([
-//     Validators.required,
-//     Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),
-//   ]);
-// } else if (this.selected === "policyNumber") {
-//   this.searchInputControl.setValidators([
-//     Validators.required,
-//     Validators.pattern("^\\s*[0-9-]+\\s*$"),
-//   ]);
-// }
-//   else {
-//     this.claimsReqBody.searchString = ['']
-//     this.claimsReqBody.searchType = ''
-//     this.fetchData();
-//   }
-//     this.searchInputControl.updateValueAndValidity();
-//     this.searchInputControl.markAsUntouched(); 
-//   }
-
 getPlaceholder(): string {
   if (this.selected === 'policyNumber') {
       return 'Enter Policy Number';
@@ -367,34 +283,11 @@ getPlaceholder(): string {
     } else if (this.selected === 'memberId') {
       return 'Enter Member ID';
     }
-    //  else if (this.selected === 'mobileNumber') {
-    //   return 'Enter Mobile Number';
-    // } else if (this.selected === 'memberId') {
-    //   return 'Enter Member Id';
-    // }
   else {
       return 'Search...';
     }
   } 
-  
-  // toggleDropdown(row: any) {
-  //   if (this.selectedClaim && this.selectedClaim.id === row.id) {
-  //     this.selectedClaim = null; 
-  //   } else {
-  //     this.selectedClaim = row;
-  //   }
-  // }
- // maskPhoneNumber(policyNumber: string) {
-    // if (!policyNumber || policyNumber.length < 4) {
-    //   return policyNumber; 
-    // }
-    
-    // const start = policyNumber.slice(0, 4); 
-    // const end = policyNumber.slice(-2);
-    // const masked = '******';
-    
-    // return `${start}${masked}${end}`;
-  //}
+
   navigateToViewClaim(row:any){
     let claimDetailsReqBody = {
       "id": row.id,
@@ -404,13 +297,6 @@ getPlaceholder(): string {
     this.claimsService.getClaimDetailsView(claimDetailsReqBody).subscribe(
       (response) => {
         this.router.navigate([`/claims/detailsView/${row.id}/${row.claimInfoId}/${row.policyNumber}`]);
-        // this.router.navigate([`/claims/detailsView`], {
-        //   queryParams: {
-        //     id: row.id,
-        //     claimNumber: '',
-        //     policyNumber: row.policyNumber
-        //   }
-        // });
       },
       (error) => {
         console.error('Error fetching claim details', error);
@@ -418,6 +304,5 @@ getPlaceholder(): string {
       }
     );
   }
-  
   
 }

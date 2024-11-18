@@ -7,10 +7,10 @@
                     <ul class="quickFilter">
                         <li class="quickFilterHeading block-hide">Quick filter</li>
                         <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all','totalRecords')">All ({{countsList.totalRecords}})</button></li>
+                        <li><button type="button" id="expired" name="expired" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">Expired ({{countsList.expiredCount}})</button></li>
                         <li><button type="button" id="30days" name="30days" value="30days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '<30DaysExpired'}" (click)="filterQuotes('<30DaysExpired','expiringInLessThan30DaysCount')"> < 30 Days ({{countsList.expiringInLessThan30DaysCount}})</button></li>
                         <li><button type="button" id="60days" name="60days" value="60days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '30-60Days'}" (click)="filterQuotes('30-60Days','expiringIn30To60DaysCount')">30-60 Days ({{countsList.expiringIn30To60DaysCount}})</button></li>
-                        <li><button type="button" id="90days" name="90days" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days','expiringIn60To90DaysCount')">60-90 Days ({{countsList.expiringIn60To90DaysCount}})</button></li>
-                        <li><button type="button" id="expired" name="expired" value="expired" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'ExpiredPolicies'}" (click)="filterQuotes('ExpiredPolicies','expiredCount')">Expired ({{countsList.expiredCount}})</button></li>
+                        <li><button type="button" id="90days" name="90days" value="90days" class="btn_quickFilter" [ngClass]="{'active': activeFilter === '60-90Days'}" (click)="filterQuotes('60-90Days','expiringIn60To90DaysCount')">Lapsed ({{countsList.lapsedCount}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight">
@@ -25,7 +25,7 @@
                                 </select>
                             </div>
                             <div class="filterFieldGroup">
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" type="text" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)">
                                 <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                                 <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
@@ -142,8 +142,8 @@
                                     <td>{{ row.renewalStatus }}</td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" id="renewal" name="renewal" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                            <button type="button" id="renewaledit" name="renewaledit" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="row.renewalStatus !== 'LAPSED'"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="renewal" name="renewal" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" *ngIf="row.renewalStatus !== 'LAPSED'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                             <button type="button" id="renewalmore" name="renewalmore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
@@ -197,8 +197,8 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button type="button" id="renewaleditgrid" name="renewaleditgrid" value="edit" title="Modify" class="btn_action btn_editAction" (click)="renewalJourney(row,'withmodify')" *ngIf="row.renewalStatus !== 'LAPSED'"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" id="renewalgrid" name="renewalgrid" value="renewal" title="Renew" class="btn_action btn_renewalAction" (click)="renewalJourney(row,'withoutmodify')" *ngIf="row.renewalStatus !== 'LAPSED'"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                     <button type="button" id="renewalgridmore" name="renewalgridmore" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
                                     aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">

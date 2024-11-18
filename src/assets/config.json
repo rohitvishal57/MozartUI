@@ -20,6 +20,7 @@
     "getLeadsListApi": "api/yatra/getleaddetailslist",
     "getActiveCampaignDetails": "api/yatra/getactivecampaignsdetails",
     "saveLeadData": "api/yatra/createlead",
+    "getLeadInfoByLeadNumber": "api/yatra/leadbyleadnumber?leadNumber=",
     "getcampaignsdetails": "api/yatra/getcampaignsdetails",
     "createbulklead": "api/yatra/createbulklead",
     "viewaudittrail": "api/yatra/viewaudittrail?leadnumber=",
@@ -108,8 +109,10 @@
     "getPremiumDetaiks": "/Product/GetPremium",
     "getFamilyConstruct":"/Common/GetFamilyConstructByProductCode",
     "saveBBCommonDraft":"/BranchBanking/SaveBBCommonDraft",
-    "getLeadStatusCount":"/GetLeadStatusCount",
-    "getProposalStatusCount":"/GetProposalStatusCount",
-    "getRenewalStatusCount":"/GetRenewalStatusCount",
-    "getNotification":"api/quote/notificationlist?agentcode="
+    "getLeadStatusCount":"GetLeadStatusCount",
+    "getProposalStatusCount":"GetProposalStatusCount",
+    "getRenewalStatusCount":"GetRenewalStatusCount",
+    "getNotification":"api/quote/notificationlist?agentcode=",
+    "markAllReadNotifications":"api/quote/readall?agentCode="
+
 }
