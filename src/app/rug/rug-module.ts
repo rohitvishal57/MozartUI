@@ -9,18 +9,21 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { RugRoutingModule } from "./rug-routing.module";
+import { OtpPopupComponent } from './otp-popup/otp-popup.component';
+import { MyMaterialModule } from "../material.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
 @NgModule({
-    declarations:[RugDynamicFormComponent],
+    declarations:[RugDynamicFormComponent, OtpPopupComponent],
     imports:[
         CommonModule,
         PrimeNgModule,
         ClipboardModule,
         ReactiveFormsModule,
         RugRoutingModule,
+        MyMaterialModule,
         TranslateModule.forRoot({
             loader: {
               provide: TranslateLoader,

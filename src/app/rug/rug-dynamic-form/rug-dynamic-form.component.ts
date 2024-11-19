@@ -12,6 +12,8 @@ import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OtpPopupComponent } from '../otp-popup/otp-popup.component';
 declare var bootstrap: any;
 
 @Component({
@@ -115,7 +117,7 @@ export class RugDynamicFormComponent {
   bbPremiumData: any;
   familyConstructsData: any;
   isD2C: boolean = true;
-  constructor(private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
+  constructor(private dialog: MatDialog, private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef, private aesEncryptService: AesEncryptionService,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
@@ -2823,6 +2825,16 @@ export class RugDynamicFormComponent {
     this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
+    // const dialogRef = this.dialog.open(OtpPopupComponent, {
+    //   width: "500px",
+    //   autoFocus: false,
+    //   data: {
+    //     fields: "this.fields"
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe((result: any) => {
+    //   console.log(result);
+    // })
   }
   ond2cSubmit(){
     // if(!this.dynamicFormGroup.valid){

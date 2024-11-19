@@ -1,0 +1,79 @@
+<!-- Modal Start-->
+<div class="modal popupModalMain show fade" id="OTPModal" tabindex="-1" aria-labelledby="OTPModalLabel"
+    aria-hidden="true" style="display: block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roomModalLabel">Validate OTP</h5>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            </div>
+            <div class="modal-body">
+                <div class="OTP-subHeader">OTP has been sent successfully to your registered <b>Mobile Number</b> and
+                    <b>Email ID</b>
+                </div>
+                <!--OTP Field start-->
+                <div class="row ">
+                    <div class="col-12 col-sm-12 col-md-10 col-lg-10 col-xl-10">
+                        <!--add the "input-otp-blockError" or "input-otp-blockSuccess" class for below div to show error message-->
+                        <div class="input-block m-0">
+                            <label for="">Enter OTP</label>
+                            <div class="input-group-block input-otp-block">
+                                <input type="text" maxlength="1" class="input-textBox"
+                                    (input)="focusNext($event, input2)" #input1 (keypress)="restrictToNumbers($event)"
+                                    (keydown)="focusPrevious($event, input1)">
+                                <input type="text" maxlength="1" class="input-textBox"
+                                    (input)="focusNext($event, input3)" #input2 (keypress)="restrictToNumbers($event)"
+                                    (keydown)="focusPrevious($event, input1)">
+                                <input type="text" maxlength="1" class="input-textBox"
+                                    (input)="focusNext($event, input4)" #input3 (keypress)="restrictToNumbers($event)"
+                                    (keydown)="focusPrevious($event, input2)">
+                                <input type="text" maxlength="1" class="input-textBox"
+                                    (input)="focusNext($event, input5)" #input4 (keypress)="restrictToNumbers($event)"
+                                    (keydown)="focusPrevious($event, input3)">
+                                <input type="text" maxlength="1" class="input-textBox"
+                                    (input)="focusNext($event, input6)" #input5 (keypress)="restrictToNumbers($event)"
+                                    (keydown)="focusPrevious($event, input4)">
+                                <input type="text" maxlength="1" class="input-textBox" (input)="onComplete()" #input6
+                                    (keypress)="restrictToNumbers($event)" (keydown)="focusPrevious($event, input5)">
+                            </div>
+                            <span class="ui-error">Please enter valid OTP</span>
+                            <span class="ui-error ui-success">Entered valid OTP</span>
+                        </div>
+                    </div>
+                </div>
+                <!--OTP Field end-->
+                <!--Captcha Field start-->
+                <div class="row " [formGroup]="form">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="input-block m-0">
+                            <label for="">Enter Captcha Code</label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="input-block input-otp-block m-0">
+                            <!-- <input type="text" name="otp-captcha" value="" placeholder="" class="input-textBox"> -->
+                            <input type="text" id="captchaInput" formControlName="captchaInput" class="input-textBox" />
+                            <span class="ui-error">Please enter valid captcha</span>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <canvas #captchaCanvas width="150" height="50" style="display: none;"></canvas>
+                        <img [src]="captchaImage" alt="CAPTCHA" height="44px" />
+                        <!-- <img [src]="captchaImage" alt="CAPTCHA" height="44px"/> -->
+                        <button type="button" (click)="reloadCaptcha()"
+                            style="height: 44px; margin-left: 5px; border-width: 0;"><mat-icon>refresh</mat-icon></button>
+                    </div>
+                </div>
+                <!--Captcha Field end-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" (click)="validateOtp()" id="validateotp" name="validateotp"
+                    class="btn_red btn_fullWidth">Validate OTP</button>
+                <button type="button" (click)="resendOtp()" id="resendotp" name="resendotp"
+                    class="btn_white btn_fullWidth">Resend
+                    OTP</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal End-->
