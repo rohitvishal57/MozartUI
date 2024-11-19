@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
     for (let i = 0; i < 6; i++) {
       captcha += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    return 'ABHI';
+    return captcha;
   }
 
   openModal(contactInfoData: string[]) {
