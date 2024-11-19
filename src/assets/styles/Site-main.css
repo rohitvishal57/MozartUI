@@ -5427,6 +5427,53 @@ height: 0;
 }
 /*---Bottom Plan Details end---*/
 
+/*---OTP Popup start---*/
+.modal {
+  z-index: 9999;
+}
+.OTP-subHeader {
+  padding: 0 0 16px;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.32px;
+  color: #278829;
+  font-weight: 400;
+  position: absolute;
+  top: 0px;
+}
+.OTP-subHeader b, .OTP-subHeader strong {
+font-weight: bolder !important;
+}
+.input-group-block {
+  display: flex;
+  gap: 8px;
+}
+.input-otp-block .input-textBox {
+  font-weight: 400;
+  font-size: 20px;
+  border: 2px solid #DBDBDB;
+  text-align: center;
+  border-radius: 6px !important;
+  padding: 14px 16px !important;
+  height: 56px !important;
+  box-shadow: 0px 4px 12px 0px #00000014;
+}
+.input-otp-block .input-textBox:focus {
+  border: 2px solid #C7222A !important;
+  color: #C7222A;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0; 
+}
+.ui-success {
+  color: #278829;
+}
+/*---OTP Popup end---*/
+
 /*----New styles added 13-nov-24 start----*/
 .note_remarkText_width {
   max-width: 320px;
