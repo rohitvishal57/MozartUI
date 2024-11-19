@@ -16,15 +16,20 @@ export class OtpPopupComponent implements OnInit{
   @ViewChild('input5') input5!: ElementRef;
   @ViewChild('input6') input6!: ElementRef;
   otpInfoObject: any;
+  captchaFormOne!: FormGroup;
   form!: FormGroup;
   captchaText: any;
   captchaImage: string | null = null;
+  isCaptchaOne: boolean = true;
   constructor(private fb: FormBuilder,
     private dialogRef: MatDialogRef<OtpPopupComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
   ) { }
   ngOnInit() {
     console.log(this.data);
+    this.captchaFormOne = this.fb.group({
+      captchaOneInput: ['', Validators.required]
+    });
     this.form = this.fb.group({
       captchaInput: ['', Validators.required]
     });

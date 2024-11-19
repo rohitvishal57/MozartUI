@@ -2825,16 +2825,16 @@ export class RugDynamicFormComponent {
     this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
-    // const dialogRef = this.dialog.open(OtpPopupComponent, {
-    //   width: "500px",
-    //   autoFocus: false,
-    //   data: {
-    //     fields: "this.fields"
-    //   }
-    // });
-    // dialogRef.afterClosed().subscribe((result: any) => {
-    //   console.log(result);
-    // })
+    const dialogRef = this.dialog.open(OtpPopupComponent, {
+      width: "500px",
+      autoFocus: false,
+      data: {
+        fields: "this.fields"
+      }
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log(result);
+    })
   }
   ond2cSubmit(){
     // if(!this.dynamicFormGroup.valid){
