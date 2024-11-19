@@ -7,15 +7,17 @@
         <h1>{{"Welcome to Aditya Birla Health Insurance" | translate}}</h1>
 
         <form [formGroup]="loginForm" *ngIf="loginWithUsername">
-          <div>
-            <input type="text" id="userName" name="userName" placeholder="AgentCode/Email/IRDA License Number" formControlName="userName" (keydown)="onKeyDownEvent()">
+          <div class="input-block form-floating input-block-renew">
+            <input class="form-control input-textBox" type="text" id="userName" name="userName" placeholder="" formControlName="userName" (keydown)="onKeyDownEvent()">
+            <label for="userName">AgentCode/Email/IRDA License Number<span class="text-danger">*</span></label>
             <small *ngIf="loginForm.controls['userName'].touched && !loginForm.controls['userName'].hasError('maxlength') && loginForm.controls['userName'].hasError('required')" class="text-danger">{{"AgentCode/Email/IRDA License Number is required" | translate}}</small>
             <small *ngIf="isSubmitted" class="text-danger">{{userErrorMsg | translate}}</small>
           </div>
 
           <div class="d-flex flex-row justify-content-between captcha-container">
-            <div class="col-6">
-                <input id="captcha" name="captcha" placeholder="Enter CAPTCHA" [(ngModel)]="enteredCaptchaCode" (keydown)="onKeyDownEvent()" type="text" formControlName="captcha" />
+            <div class="col-6 input-block form-floating input-block-renew">
+                <input class="form-control input-textBox" id="captcha" name="captcha" placeholder="" [(ngModel)]="enteredCaptchaCode" (keydown)="onKeyDownEvent()" type="text" formControlName="captcha" />
+                <label for="captcha">Enter CAPTCHA<span class="text-danger">*</span></label>
                 <small *ngIf="loginForm.controls['captcha'].touched && loginForm.controls['captcha'].hasError('required') && !isSubmitted" class="text-danger">{{"Captcha is required" | translate}}</small>
                 <small *ngIf="isSubmitted" class="text-danger">{{captchaErrorMsg | translate}}</small>
             </div>
@@ -34,7 +36,7 @@
             <div class="col-6 pad-0">
               <button id="loginwithotp" name="loginwithotp" (click)="onSubmit('OTP')" class="login-button borderlt">{{"Login with OTP" | translate}}</button>
             </div>
-            <div class="text-danger" (click)="handleReset()" style="text-align: center; text-decoration: underline; cursor: pointer;" formControlName="userName">{{"Reset password" | translate}}</div>
+            <div class="text-danger" (click)="onSubmit('RESET')" style="text-align: center; text-decoration: underline; cursor: pointer;" formControlName="userName">{{"Reset password" | translate}}</div>
           </div>
         </form>
 
@@ -59,7 +61,7 @@
             <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">{{"Resend OTP" | translate}}</label>
           </div>
         </div>
-        <div></div>
+        
       </div>
     </div>
     <div class="background-image2">
