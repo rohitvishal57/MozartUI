@@ -2,7 +2,7 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>Upload Bulk File</h2>
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>{{"Upload Bulk File" | translate}}</h2>
             </div>
             <!-- <section class="white_container">
                 <h6 class="heading-16-red">Lead Details</h6>
@@ -25,20 +25,20 @@
                     </div> -->
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mb-4">
                         <div class="sample_uploadDocument">
-                            <a href="assets/lms-assets/UploadSample.xlsx">Click to download sample template file.</a>
+                            <a href="assets/lms-assets/UploadSample.xlsx">{{"Click to download sample template file." | translate}}</a>
                         </div>
                         <div class="uploadDocument_main">
                             <div class="uploadDocument_area" (click)="file.click()">
                                 <div class="ud_area_left">
-                                    <h6>Upload Documents</h6>
+                                    <h6>{{"Upload Documents" | translate}}</h6>
                                     <p>.xlsx/.xls/.csv Files</p>
-                                    {{selctedFileName}}
+                                    {{selctedFileName | translate}}
                                 </div>
                                 <div class="ud_area_right">
                                     <button type="button" id="uploadfiles" name="uploadfiles" class="btn_uploadDocument">
                                         <span class="upload_icon"><img
                                                 src="assets/Img/icon_upload_white.svg"></span>
-                                        Upload
+                                        {{"Upload" | translate}}
                                     </button>
                                 </div>
                                 <!-- <input type="file" id="file" #fileInput (change)="newfile($event)" style="display:none;" /> -->
@@ -47,16 +47,16 @@
                             </div>
                         </div>
                         <span *ngIf="isFilenotSelected" class="ui-error block-show">
-                            Please select a file to continue.
+                           {{" Please select a file to continue." | translate}}
                         </span>
                         <span class="ui-error block-show" *ngIf="showNote">
-                            File format not supported ! Please upload .xls, .xlsx or .csv files.
+                           {{"File format not supported ! Please upload .xls, .xlsx or .csv files." | translate}}
                         </span>
                     </div>
                     <div class="uploadDocument_listMain" *ngIf="fileList">
                         <div class="uploadDocument_filesList">
                             <div class="filesList_head">
-                                <div class="filesList_headLeft">Uploads:</div>
+                                <div class="filesList_headLeft">{{"Uploads:" | translate}}</div>
                                 <!-- <div class="filesList_headRight">{{ documentsUploadStatus }}</div> -->
                             </div>
                             <div class="filesList_body" >
@@ -65,8 +65,8 @@
                                         <div class="uploadedFiles_info">
                                             <div class="uploadedFiles_infoItem">
                                                 <!-- <span class="file-index">1</span> -->
-                                                <h6>{{item.file.name}}</h6>
-                                                 <p>Type: .{{item.fileExt}}</p> 
+                                                <h6>{{item.file.name | translate}}</h6>
+                                                 <p>Type: .{{item.fileExt | translate}}</p> 
                                             </div>
                                             <div class="uploadedFiles_infoItem uploadedFiles_infoSize">
                                                 <button type="button" id="deletefile" name="deletefile" class="delete-button" (click)="removeFile(item)" >
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                     <div class="col-12 mt-5">
-                        <button type="submit" id="leadcontinue" name="leadcontinue" (click)="continueFileUpload()" class="btn_red">Continue</button>
+                        <button type="submit" id="leadcontinue" name="leadcontinue" (click)="continueFileUpload()" class="btn_red">{{"Continue" | translate}}</button>
                     </div>
                 </section>
 

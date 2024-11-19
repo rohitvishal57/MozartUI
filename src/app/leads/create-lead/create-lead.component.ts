@@ -10,6 +10,8 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CommonService } from 'src/app/services/common.service';
 import { error } from 'jquery';
 import { firstValueFrom } from 'rxjs';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 
 @Component({
   selector: 'app-create-lead',
@@ -64,11 +66,21 @@ export class CreateLeadComponent implements OnInit {
     public CreateLeadList: LeadFormListValue,
     private cdr: ChangeDetectorRef,
     private datepipe: DatePipe,
-    private commonService: CommonService) {
+    private commonService: CommonService,
+    private languageService: LanguageService,
+    private translateService: TranslateService
+  ) {
 
   }
 
   async ngOnInit() {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en');
+        }
+      });
+    });
     this.inItForm();
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadNumber'];

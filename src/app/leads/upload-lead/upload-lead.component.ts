@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { LeadsService } from '../leads.service';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 
 @Component({
   selector: 'app-upload-lead',
@@ -23,10 +25,19 @@ export class UploadLeadComponent implements OnInit{
   uploadedFiles : boolean = false;
   fileList : any[] =[];
 
-  constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService,    private router: Router  ){
+  constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService,   private languageService: LanguageService,
+    private translateService: TranslateService,   private router: Router  ){
 
   }
   ngOnInit(){
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en');
+        }
+      });
+    });
+
     const storedAgentCode = localStorage.getItem('agentCode');
     if (storedAgentCode) {
       this.AgentCode = storedAgentCode;
