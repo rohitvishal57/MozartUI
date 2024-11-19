@@ -1945,7 +1945,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .bodyColumn h3 {
   font-weight: 600;
   font-size: 13px;
-  line-height: 24px;
+  line-height: normal;
   color: var(--black-color);
 }
 
@@ -4456,6 +4456,7 @@ input[type="search"]::-webkit-search-results-decoration {
   overflow: hidden;
   text-overflow: ellipsis;
   margin: 0;
+  line-height: normal;
 }
 .submain_claimProgressSteps .item_claimProgressSteps .item_info small {
   font-size: 10px;
