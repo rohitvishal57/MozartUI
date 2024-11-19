@@ -126,7 +126,12 @@ export class RugDynamicFormComponent {
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
     console.log(this.formSequence);
-
+    if (localStorage.getItem('agentCode')){
+      this.agentCode = localStorage.getItem('agentCode');
+    }
+    if(this.agentCode != "467898"){
+      this.isD2C = false;
+    }
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadId'];
       if (this.leadNumber) {
@@ -143,8 +148,7 @@ export class RugDynamicFormComponent {
     // this.productEndDate = history.state.productData.productEndDate;
     // this.productStartDate = history.state.productData.productStartDate;
     // this.proposalNum = history.state.productData.proposalNumber;
-    if (localStorage.getItem('agentCode'))
-      this.agentCode = localStorage.getItem('agentCode');
+
     // this.agencyCode = history.state.productData.agencyCode;
     if (history.state.productData.productId)
       this.productId = history.state.productData.productId;
@@ -659,7 +663,7 @@ export class RugDynamicFormComponent {
         console.log(this.dynamicFormGroup.value);
         console.log(this.bbdetails);
         this.dynamicFormGroup.patchValue({
-          Salutation:this.bbdetails.proposerDetails.salutation,
+          preFix:this.bbdetails.proposerDetails.salutation,
           firstName: this.bbdetails.proposerDetails.customerFirstName,
           lastName: this.bbdetails.proposerDetails.customerLastName,
           proposerGender: this.bbdetails.proposerDetails.gender,
