@@ -42,10 +42,10 @@
                 </div>
                 <div class="cardItem_headerButtons">
                   <button class="get-quote-btn" type="button" id="getquote" name="getquote" (click)="getQuote()">
-                    <i class="fas fa-plus"></i> {{"Get Quote" | translate}}
+                    <img src="assets/Img/plus_icon.svg"> {{"Get Quote" | translate}}
                   </button>
                   <button class="get-quote-btn" type="button" id="createlead" name="createlead" (click)="createLead()">
-                    <i class="fas fa-plus"></i> {{"Create Lead" | translate}}
+                    <img src="assets/Img/plus_icon.svg"> {{"Create Lead" | translate}}
                   </button>
 
                 </div>
@@ -178,12 +178,12 @@
                 <ng-container *ngFor="let perform of performanceCard">
                   <ng-container [ngSwitch]="perform.type">
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'" cdkDrag>
-                      <header><img [src]="perform.icon">{{perform.title | translate}}</header>
+                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}</header>
                       <div class="value">{{perform.value}}</div>
                       <div class="card-tip"><img [src]="perform.subIcon">{{perform.description | translate}}</div>
                     </div>
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'progress'" cdkDrag>
-                      <header><img [src]="perform.icon">{{perform.title | translate}}</header>
+                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}</header>
                       <div class="value">{{perform.value}}</div>
                       <div class="progress-barMain">
                         <p>{{perform.description | translate}}</p>
@@ -193,12 +193,12 @@
                       </div>
                     </div>
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag>
-                      <header><img [src]="perform.icon">{{perform.title | translate}}</header>
+                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}</header>
                       <div class="value">{{perform.value}}</div>
                       <div class="card-tip"><img src="assets/Img/icon_rupee.svg">{{perform.description | translate}}</div>
                     </div>
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'" cdkDrag>
-                      <header><img [src]="perform.icon">{{perform.title | translate}}</header>
+                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}</header>
                       <div class="gauge">
                         <!-- <ag-gauge [options]="options"></ag-gauge> -->
                         <div class="gauge-body">
