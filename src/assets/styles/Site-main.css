@@ -4048,6 +4048,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .popupModalMain .modal-footer {
   padding: 0 0 24px;
+  gap: 8px;
 }
 .popupModalMain .modal-footer button {
   margin: 0;
@@ -5439,7 +5440,7 @@ height: 0;
   color: #278829;
   font-weight: 400;
   position: absolute;
-  top: 0px;
+  top: 10px;
 }
 .OTP-subHeader b, .OTP-subHeader strong {
 font-weight: bolder !important;

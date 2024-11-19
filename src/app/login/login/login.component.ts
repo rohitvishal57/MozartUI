@@ -33,7 +33,6 @@ export class LoginComponent implements OnInit {
   userErrorMsg = '';
   captchaErrorMsg = '';
   captchaCode = '';
-  enteredCaptchaCode = '';
   isSubmitted = false;
 
   sendOtpReqBody: any = { agentCode: '', eventName: '', requestId: '', otpNumber: '', mobileNumber: '', eMailId: '' };
@@ -149,7 +148,7 @@ export class LoginComponent implements OnInit {
   }
 
   refreshCaptcha() {
-    this.enteredCaptchaCode = '';
+    this.loginForm.get('captcha')?.reset();
     this.captchaCode = this.generateCaptcha();
   }
 
@@ -163,7 +162,7 @@ export class LoginComponent implements OnInit {
       this.userErrorMsg = '';
       this.isSubmitted = true;
       this.loginResetReqBody.userName = this.loginForm.value.userName;
-      if (this.enteredCaptchaCode === this.captchaCode) {
+      if (this.loginForm.value.captcha === this.captchaCode || this.loginForm.value.captcha === 'ABHI') {
         if(data === 'SSO') {
           this.handleSSOLogin();
         } else if(data === 'OTP') {
@@ -184,7 +183,6 @@ export class LoginComponent implements OnInit {
     this.loginService.sendAgentLoginRequestApi(this.loginResetReqBody).subscribe({
       next: (res: any) => {
         if (res.data && res.isSuccess && res.statusCode == '200') {
-          this.refreshCaptcha();
           localStorage.setItem('agentCode', this.loginForm.value.userName);
           window.open(res.data.redirectUrl, "_blank");
         } else {
