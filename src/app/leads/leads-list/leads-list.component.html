@@ -50,7 +50,7 @@
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">Select an option and enter.</small>
                                     <small *ngIf="searchInputControl.hasError('required')">This field is required.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">Mobile Number should be exactly 10 digits.</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">Enter a valid 10-digit mobile number.</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'leadId'">Lead ID should contain only alphanumeric characters (A-Z, 0-9).</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">Name should contain only letters and spaces.</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">Please enter a valid email address (e.g., user@example.com).</small>

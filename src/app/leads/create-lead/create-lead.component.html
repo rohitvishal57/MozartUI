@@ -667,7 +667,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input class="form-control input-textBox" id="activityEndDate" name="activityEndDate" placeholder=""
                                                 formControlName="activityEndDate" type="date"
-                                                [min]="addNoteForm.get('activityStartDate')?.value" [max]="maxDate"
+                                                [min]="today" [max]="maxDate"
                                                 (change)="onEndDateChange()"
                                                 [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
                                             <label for="activityEndDate">Activity End Date*</label>
