@@ -16,7 +16,7 @@
 
           <div class="d-flex flex-row justify-content-between captcha-container">
             <div class="col-6 input-block form-floating input-block-renew">
-                <input class="form-control input-textBox" id="captcha" name="captcha" placeholder="" [(ngModel)]="enteredCaptchaCode" (keydown)="onKeyDownEvent()" type="text" formControlName="captcha" />
+                <input class="form-control input-textBox" id="captcha" name="captcha" placeholder="" (keydown)="onKeyDownEvent()" type="text" formControlName="captcha" />
                 <label for="captcha">Enter CAPTCHA<span class="text-danger">*</span></label>
                 <small *ngIf="loginForm.controls['captcha'].touched && loginForm.controls['captcha'].hasError('required') && !isSubmitted" class="text-danger">{{"Captcha is required" | translate}}</small>
                 <small *ngIf="isSubmitted" class="text-danger">{{captchaErrorMsg | translate}}</small>
