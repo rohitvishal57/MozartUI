@@ -68,7 +68,7 @@ export class DashboardComponent {
       title: 'Policies Sold',
       value: '1295',
       description: 'You seem to be selling a majority of Activ Fit plans',
-      icon: 'assets/Img/icon_police_sold.svg',
+      icon: 'assets/Img/icon_dashboard_policysold.svg',
       subIcon: 'assets/Img/icon_price_tag.svg',
       type: 'text',
       class: ''
@@ -77,7 +77,7 @@ export class DashboardComponent {
       title: 'Premium',
       value: '₹ 369.96 L',
       description: '78% of monthly goal achieved',
-      icon: 'assets/Img/icon_police_premium.svg',
+      icon: 'assets/Img/icon_dashboard_premium.svg',
       type: 'progress',
       progress: 78,
       class: 'premium'
@@ -87,7 +87,7 @@ export class DashboardComponent {
       title: 'Commission Earned',
       value: '₹ 50,000',
       description: 'You can potentially earn 10,000 more with just 2 more policies',
-      icon: 'assets/Img/icon_commission_earned.svg',
+      icon: 'assets/Img/icon_dashboard_healthreturn.svg',
       type: 'action',
       class: 'commission-earned'
 
@@ -96,7 +96,7 @@ export class DashboardComponent {
       title: 'My Goals',
       value: '',
       description: 'Achievement',
-      icon: 'assets/Img/icon_my_goals.svg',
+      icon: 'assets/Img/icon_dashboard_myperformance.svg',
       type: 'gauge',
       progress: '25%',
       class: 'my-goals'

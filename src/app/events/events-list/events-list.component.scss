@@ -110,3 +110,78 @@
       gap: 1rem;
     }
   }
+
+.dropdown-toggle{
+  width: 8rem;
+  font-size: 17px;
+  background-color: white;
+  color: black;
+  border: 1px solid #e0e0e0;
+}
+.dropdown-toggle:focus{
+  background-color: white;
+  color: black;
+  border: 1px solid #e0e0e0;
+}
+  .event-template {
+    padding: 5px !important;
+    border-radius: 5px !important;
+    background-color: #D1E8FF !important;
+  }
+  
+  .event-title {
+    font-weight: bold !important;
+    color: #1e90ff !important;
+  }
+  
+  .event-note {
+    color: #333 !important;
+  }
+
+  :host ::ng-deep .cal-event-title {
+    white-space: normal !important;
+  }
+
+  .mat-card {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .card-title {
+    color: #1e90ff;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .mb-1 {
+    margin-bottom: 0.25rem;
+  }
+  
+  .mb-2 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .mb-3 {
+    margin-bottom: 1rem;
+  }
+  
+  strong {
+    color: #495057;
+  }
+  
+  .row {
+    display: flex;
+    margin: 0 -8px;
+  }
+  
+  .col-md-6 {
+    flex: 0 0 50%;
+    padding: 0 8px;
+  }
+  
+  .col-12 {
+    flex: 0 0 100%;
+    padding: 0 8px;
+  }
+
+  

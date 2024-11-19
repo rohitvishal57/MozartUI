@@ -211,7 +211,7 @@
                                     {{ opt }}
                                 </option>
                             </select>
-                                <label for="salutation">salutation</label>
+                                <label for="salutation">Salutation</label>
                             </div>
                         </div>
 
@@ -262,10 +262,10 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" id="nomineeName" name="nomineeName" placeholder=""
+                                <input class="form-control input-textBox" id="mobilenumber" name="mobilenumber" placeholder=""
                                     formControlName="mobilenumber" type="text" (keypress)="isNumber($event)" maxlength="10"
                                     [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }">
-                                <label for="nomineeName">Mobile Number *</label>
+                                <label for="mobilenumber">Mobile Number *</label>
                                 <span class="invalid-feedback" *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
                                     <span class="ui-error block-show"
                                         *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">Mobile
@@ -595,7 +595,7 @@
 
                 <div class="row mt-4" *ngIf="action!='addNotes'">
                     <div class="col-12">
-                        <button type="submit" id="addnotesave" name="addnotesave" class="btn_red">Save</button>
+                        <button type="submit" id="save" name="save" class="btn_red">Save</button>
                     </div>
                 </div>
 
