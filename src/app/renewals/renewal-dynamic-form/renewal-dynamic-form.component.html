@@ -272,13 +272,15 @@
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="number" id="mobilenumber" name="mobilenumber" formControlName="Mobile_Number" placeholder="" class="form-control input-textBox">
-                                            <label for="mobilenumber">Mobile Number</label>
+                                            <label for="mobilenumber">Mobile Number *</label>
+                                            <span class="ui-error" *ngIf="form.get('Mobile_Number')?.invalid && (form.get('Mobile_Number')?.touched || memberDetails)">Mobile Number is required field</span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="email" id="email" name="email" formControlName="Email" placeholder="" class="form-control input-textBox">
-                                            <label for="email">Email Address</label>
+                                            <label for="email">Email Address *</label>
+                                            <span class="ui-error" *ngIf="form.get('Email')?.invalid && (form.get('Email')?.touched || memberDetails)">Email is required field</span>
                                         </div>
                                       </div>
                                   </div>
@@ -665,25 +667,25 @@
                                       </div>
                                   </div>
                                   <div class="row" *ngIf="preexistingConditionSelected === 'yes'">
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngFor="let condition of healthConditions">
-                                          <div class="row align-items-center mb-3">
-                                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <span class="para-grey-12">{{ condition }}  </span>
-                                              </div>
-                                              <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                  <div class="input-radio-block radio_additionalInfo">
-                                                      <label class="input-radiolabel ">
-                                                          <input type="radio" [name]="condition" [value]="condition" [id]="condition">
-                                                          <span>Yes</span>
-                                                      </label>
-                                                      <label class="input-radiolabel ">
-                                                          <input type="radio" [name]="condition" [value]="condition" [id]="condition" checked>
-                                                          <span>No</span>
-                                                      </label>
-                                                  </div>
-                                              </div>
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngFor="let condition of healthConditions">
+                                      <div class="row align-items-center mb-3">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <span class="para-grey-12">{{ condition }}</span>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                          <div class="input-radio-block radio_additionalInfo">
+                                            <label class="input-radiolabel">
+                                              <input type="radio" [name]="condition" value="Y" (change)="isAnyPreExistingDiseasesConditionSelected()">
+                                              <span>Yes</span>
+                                            </label>
+                                            <label class="input-radiolabel">
+                                              <input type="radio" [name]="condition" value="N" (change)="isAnyPreExistingDiseasesConditionSelected()" checked>
+                                              <span>No</span>
+                                            </label>
                                           </div>
+                                        </div>
                                       </div>
+                                    </div>
                                   </div>
                               </div>
                           </div>
@@ -782,12 +784,12 @@
                                               <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">First Name is required field</span>
                                           </div>
                                       </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                      <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="nomine-mName" name="nomine-mName" placeholder="" class="form-control input-textBox">
                                             <label for="nomine-mName">Middle Name</label>
                                         </div>
-                                      </div>
+                                      </div> -->
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-lname" name="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
@@ -812,6 +814,7 @@
                                                   <option value="Mother">Mother</option>
                                                   <option value="Daughter">Daughter</option>
                                                   <option value="Uncle">Uncle</option>
+                                                  <option value="Brother">Brother</option>
                                               </select>
                                               <label for="nomine-relation">Relation with Proposer *</label>
                                               <span class="ui-error" *ngIf="form?.get('Relationship')?.invalid && form?.get('Relationship')?.touched">
@@ -819,7 +822,7 @@
                                           </span>
                                           </div>
                                       </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                      <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="gender" name="gender"  placeholder="" class="form-control input-selectBox">
                                                 <option value="">Select gender</option>
@@ -828,9 +831,8 @@
                                                 <option value="O">Other</option>
                                             </select>
                                             <label for="gender">Gender</label>
-                                            <!-- <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">Please select gender</span> -->
                                         </div>
-                                      </div>
+                                      </div> -->
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="nomine-address" name="nomine-address" formControlName="Nominee_Address" placeholder="" class="form-control input-textBox">
@@ -844,12 +846,12 @@
                                               <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">Nominee contact no is required field</span>
                                           </div>
                                       </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                      <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="email" id="Email" name="Email" formControlName="" placeholder="" class="form-control input-textBox">
                                             <label for="Email">Email Address</label>
                                         </div>
-                                      </div>
+                                      </div> -->
                                   </div>
                               </div>
                           </div>
@@ -960,23 +962,23 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-radio-block raido_policyTenure ">
                                             <label class="input-radiolabel ">
-                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" (click)="tenureUpdate('1', tenureDetail?.tenure1Premium )">
                                                 <span><em class="tenure-year">1 Year</em>
-                                                    <em class="tenure-amount">₹ {{ tenureDetail.tenure1Premium | number:'1.0-0'}}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{ tenureDetail?.tenure1Premium | number:'1.0-0' }}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
-                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" (click)="tenureUpdate('2',tenureDetail?.tenure2Premium )">
                                                 <span><em class="tenure-year">2 Years</em>
-                                                    <em class="tenure-amount">₹ {{ tenureDetail.tenure2Premium | number:'1.0-0'}}<em>/ yr</em></em>
-                                                <em class="tenure-off">₹ 7.5 off {{ tenureDetail.t2DiscountAmount | number:'1.0-0' }}</em>
+                                                <em class="tenure-amount">₹ {{ tenureDetail?.tenure2Premium | number:'1.0-0'}}<em>/ yr</em></em>
+                                                <em class="tenure-off">₹ 7.5 off {{ tenureDetail?.t2DiscountAmount | number:'1.0-0' }}</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
-                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" >
+                                                <input type="radio" id="policyTenure" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" (click)="tenureUpdate('3',tenureDetail?.tenure3Premium)">
                                                 <span><em class="tenure-year">3 Years</em>
-                                                <em class="tenure-amount">₹ {{ tenureDetail.tenure3Premium | number:'1.0-0'}}<em>/ yr</em></em>
-                                                <em class="tenure-off">₹ 10 off {{ tenureDetail.t3DiscountAmount | number:'1.0-0' }}</em>
+                                                <em class="tenure-amount">₹ {{ tenureDetail?.tenure3Premium | number:'1.0-0'}}<em>/ yr</em></em>
+                                                <em class="tenure-off">₹ 10 off {{ tenureDetail?.t3DiscountAmount | number:'1.0-0' }}</em>
                                             </span>
                                                 <em class="badge-recommended">Recommended</em>
                                             </label>
@@ -990,7 +992,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordionItem" >
+                <div class="accordionItem">
                     <header>Optional coverages</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
@@ -1209,8 +1211,45 @@
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Members</label>
-                                            <div>
-                                            <span *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members">{{ member.Relation | titlecase }}, </span></div>
+                                            <div><ng-container *ngFor="let member of renewalBaseObject?.response?.policyData[0]?.Members; let i = index; let last = last">
+                                                    {{ member.Relation | titlecase }}<span *ngIf="!last">, </span>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                            <label>Policy</label>
+                                            <h6>{{renewalBaseObject?.response?.policyData[0]?.Name_of_product}}</h6>
+                                        </div>
+                                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                                            <label>Premium</label>
+                                            <h6>₹{{renewalBaseObject?.response?.policyData[0]?.premium.Renewal_Gross_Premium | number:'1.0-0'}}</h6>
+                                        </div>
+                                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                                            <label>Cover</label>
+                                            <h6>₹{{ renewalBaseObject?.response?.policyData[0]?.Members[0].SumInsuredPerUnit | number:'1.0-0' }}</h6>
+                                        </div>
+                                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                                            <label>Tenure</label>
+                                            <h6>{{ renewalBaseObject?.response?.policyData[0]?.Tenure }} Year</h6>
+                                        </div>
+                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
+                                            <label>Add ons</label>
+                                            <div class="list_addons">
+                                                <span class="item_addon">Personal accident cover</span>
+                                                <span class="item_addon">Vaccine cover</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                                <section class="block_bg_lightgreen memberPoliySummary mt-2" *ngIf="referenceNumber != null">
+                                    <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-blue">Modified</span>
+                                    <div class="row mt-2">
+                                        <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                            <label>Members</label>
+                                            <div><ng-container *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index; let last = last">
+                                                    {{ member.Relation | titlecase }}<span *ngIf="!last">, </span>
+                                                </ng-container>
+                                            </div>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
                                             <label>Policy</label>
@@ -1231,45 +1270,13 @@
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
                                             <label>Add ons</label>
                                             <div class="list_addons">
-                                                <!-- <span class="item_addon">Cancer secure cover</span>
-                                                <span class="item_addon">Personal accident cover</span> -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
-                                <!-- <section class="block_bg_lightgreen memberPoliySummary mt-2">
-                                    <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-blue">Modified</span>
-                                    <div class="row mt-2">
-                                        <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
-                                            <label>Members</label>
-                                            <h6></h6>
-                                        </div>
-                                        <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
-                                            <label>Policy</label>
-                                            <h6></h6>
-                                        </div>
-                                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Premium</label>
-                                            <h6></h6>
-                                        </div>
-                                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Cover</label>
-                                            <h6></h6>
-                                        </div>
-                                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Tenure</label>
-                                            <h6></h6>
-                                        </div>
-                                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
-                                            <label>Add ons</label>
-                                            <div class="list_addons">
-                                                <span class="item_addon">Cancer secure cover</span>
+                                                <!-- <span class="item_addon">Cancer secure cover</span> -->
                                                 <span class="item_addon">Personal accident cover</span>
                                                 <span class="item_addon">Vaccine cover</span>
                                             </div>
                                         </div>
                                     </div>
-                                </section> -->
+                                </section>
                                 <!-- <div class="detailsHeading-12">Free benefits included with your plan</div>
                                 <section class="plan_freeBenefits">
                                     <div class="item_freeBenefits">

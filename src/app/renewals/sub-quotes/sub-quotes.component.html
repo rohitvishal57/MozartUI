@@ -46,8 +46,8 @@
                                     <td><span class="table-modification">{{quote.comment}}, Tenure {{quote.tenure}} Year</span></td>
                                     <td>
                                         <div class="btn_groupAction">
-                                            <button type="button" id="editBtn" name="editBtn" value="edit" title="Edit" class="btn_action btn_editAction" (click)="handleAction(quote, 'primary')"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                            <button type="button" id="renewBtn" name="renewBtn" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(quote, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                            <button type="button" id="editBtn" name="editBtn" value="edit" title="Edit" class="btn_action btn_editAction" (click)="handleAction(quote, 'withmodify')"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                            <button type="button" id="renewBtn" name="renewBtn" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(quote, 'withoutmodify')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                             <!-- <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button> -->
                                         </div>
                                     </td>
@@ -75,8 +75,8 @@
                             </div>
                             <div class="card_btnGroup">
                                 <div class="btn_groupAction">
-                                    <button type="button" id="editBtn" name="editBtn" value="edit" title="Edit" class="btn_action btn_editAction" (click)="handleAction(quote, 'primary')"><img src="assets/Img/icon_edit_grey.svg"></button>
-                                    <button type="button" id="renewBtn" name="renewBtn" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(quote, 'payment')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button type="button" id="editBtn" name="editBtn" value="edit" title="Edit" class="btn_action btn_editAction" (click)="handleAction(quote, 'withmodify')"><img src="assets/Img/icon_edit_grey.svg"></button>
+                                    <button type="button" id="renewBtn" name="renewBtn" value="renewal" title="Renewal" class="btn_action btn_renewalAction" (click)="handleAction(quote, 'withoutmodify')"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
                                     <!-- <button type="button" value="download" title="Download" class="btn_action btn_moreAction"><img src="assets/Img/icon_download_grey.svg" alt="Download"></button> -->
                                 </div>
                             </div>
@@ -140,7 +140,7 @@
                                     <h5>{{ quote.isBaseQuote ? 'Base Quote' : 'Sub Quote' }}</h5>
                                     <h6>₹{{ quote.annualPremium }}<span>{{quote.tenure}}/year</span></h6>
                                 </div>
-                                <button type="button" id="buyPlan" name="buyPlan" value="buyplan" class="btn_red btn_buyPlan" (click)="handleAction(quote, 'payment')">Buy Plan</button>
+                                <button type="button" id="buyPlan" name="buyPlan" value="buyplan" class="btn_red btn_buyPlan" (click)="handleAction(quote, 'withoutmodify')">Buy Plan</button>
                             </header>
                             <div class="upgradeInfo">{{ quote.discountPercentage }} Off on {{ quote.tenure }} years tenure</div>
                             <div class="qc_info">

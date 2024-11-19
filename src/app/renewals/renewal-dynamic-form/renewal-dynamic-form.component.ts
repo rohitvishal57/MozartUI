@@ -25,6 +25,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   activeSection: string = 'primary';
   policyNumber:string=''; 
   renewalInfo: any;
+  renewalBaseObject:any;
   formObject: any = {};
   subObject:any = {};
   selectedSumInsured: any;
@@ -82,8 +83,8 @@ export class RenewalDynamicFormComponent implements OnInit {
   isFeedBackModalVisible :Boolean= false;
   customerFeedbackForm !: FormGroup;
   formIndexValue: number = 0;
-  stars: number[] = [1, 2, 3, 4, 5]; // Array for star ratings
-  rating: number = 0; // Holds the current selected rating
+  stars: number[] = [1, 2, 3, 4, 5];
+  rating: number = 0;
   feedbackImpressedValues: String[] = ['Seamless payment', 'Ease of policy modification', 'Speedy Policy renewal', 'Payment receipt & confirm']
   feedBackMessage: boolean = false;
   impressedValues: boolean = false;
@@ -96,12 +97,13 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectedHealthAddons: string[] = ["Vaccine Cover"];
   tenureDetail:any;
   chronicApplication: FormGroup= this.fb.group({});
+  PreExistingDiseases: FormGroup= this.fb.group({});
+
 
   constructor(
-    private fb: FormBuilder,private renewalService: RenewalsService,
-    private router: Router,private toast: NgToastService,
-    private ac:ActivatedRoute,private yatraService:YatraService,
-    private commonService:CommonService,private encryptionService: EncryptionService) {}
+    private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,private toast: NgToastService,
+    private ac:ActivatedRoute,private yatraService:YatraService,private commonService:CommonService,private encryptionService: EncryptionService) {
+  }
 
   ngOnInit() {    
     this.kycFormGroup = this.fb.group({
@@ -127,8 +129,8 @@ export class RenewalDynamicFormComponent implements OnInit {
    this.customerFeedbackForm = this.fb.group({
     message: [''],
     rating: [null, Validators.required], 
-  });
- }
+   });
+  }
   initializeForm() {
     const group: { [key: string]: any } = {};
     if (this.formObject && Object.keys(this.formObject).length > 0) {
@@ -137,12 +139,14 @@ export class RenewalDynamicFormComponent implements OnInit {
         const validators = validationConfig[key] || [];        
         group[key] = [controlValue || "", validators];
       });
-    } else {console.warn('formObject is empty or undefined.');}
+    } else { console.warn('formObject is empty or undefined.');}
     this.form = this.fb.group(group);
   }
+
   onSumInsuredChange(eventValue: any) {
    this.selectedSumInsured = eventValue;
   }
+
   formatTickLabel(value: number, forSlider: boolean): string {
     if (value >= 10000000) {
       return forSlider == true ? (value / 10000000) + 'Cr' : '₹' + (value / 10000000) + ' Crores';
@@ -153,25 +157,43 @@ export class RenewalDynamicFormComponent implements OnInit {
     }
     return value.toString();
   }
+
+  tenureUpdate(value: string, premium: number): void {
+    const tenureRequest={
+        agentCode: this.agentCode,
+        policyNumber: this.policyNumber,
+        referenceNumber: this.referenceNumber || null,
+        quoteNumber:"QE0042548062411"
+    };
+    console.log(tenureRequest);
+    this.selectedTenure=value;
+    this.renewalInfo.response.policyData[0].Tenure = value;
+    this.renewalInfo.response.policyData[0].NetPremium = premium
+    this.renewalInfo.response.policyData[0].premium.Renewal_Gross_Premium = premium
+    console.log(this.renewalInfo);
+  }
+
   setActiveTab(tabName: string): void {
     this.activeTab = tabName;
   }
+
   memberDetail(){
-    this.form.value.SumInsured=this.selectedSumInsured;
+    this.form.value.Mobile_Number=this.form.value.Mobile_Number.toString();
     this.form.value.Name = `${this.form.value.FirstName} ${this.form.value.MiddleName} ${this.form.value.LastName}`.trim();
     this.form.value.Policy_Type='IND';
     this.form.value.PrimaryMember="N";
     this.form.value.Age = this.calculateAge(this.form.value.DoB).toString();
-    this.form.value.ChronicManagementApplicable = this.isAnyConditionSelected() ? 'Y' : 'N';
+    this.form.value.ChronicManagementApplicable = this.isAnyConditionSelected() ? 'Yes' : 'No';
+    this.form.value.PreExistingDiseasesApplicable = this.isAnyConditionSelected() ? 'Yes' : 'No';
+    this.form.value.SumInsured=this.selectedSumInsured.toString();
   }
+
   calculateAge(dob: Date): number | string {
     const today = new Date();
     const birthDate = new Date(dob);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) { age--; }
     if (age < 1) {
       const diffInMs = today.getTime() - birthDate.getTime();
       const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
@@ -187,9 +209,10 @@ export class RenewalDynamicFormComponent implements OnInit {
             this.requestObject = {};
             this.memberDetail();
             this.requestObject.member=JSON.stringify(this.form.value);
-            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.policyNumber=this.policyNumber;
             this.requestObject.referenceNumber=this.referenceNumber; 
-            this.requestObject.agentCode="4620973";
+            this.requestObject.agentCode=this.agentCode;
+            this.requestObject.memberId="";
             this.requestObject.productId=2;
             this.requestObject.quoteData="";
             console.log("update or add",this.requestObject);
@@ -197,6 +220,7 @@ export class RenewalDynamicFormComponent implements OnInit {
             this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
               (res:any) => {
                 if(res.data.isUpdateSuccess == true){
+                  this.form.value.MemberId=res.MemberId;
                   this.renewalInfo.response.policyData[0].Members.push(this.form.value);
                   const newMemberIndex = this.renewalInfo.response.policyData[0].Members.length - 1;
                   this.renewalInfo.response.policyData[0].Members[newMemberIndex].SumInsured = this.selectedSumInsured;
@@ -206,15 +230,17 @@ export class RenewalDynamicFormComponent implements OnInit {
               (err) => {
                 this.toast.error({ detail: "", summary: "Failed to Add New Member.", duration: 1500 });
               }
-            );this.formId=5001;
+            );
+            this.formId=5001;
          } 
          else if (this.memberRole === 'Update' && this.form.valid) {
             this.requestObject = {};
             this.form.value.SumInsured=this.selectedSumInsured;
             this.requestObject.member=JSON.stringify(this.form.value);
-            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.policyNumber= this.policyNumber;
             this.requestObject.referenceNumber=this.referenceNumber; 
-            this.requestObject.agentCode="4620973";
+            this.requestObject.memberId=this.form.value.MemberId;
+            this.requestObject.agentCode=this.agentCode;
             this.requestObject.productId=2;
             this.requestObject.quoteData="";            
             this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
@@ -277,7 +303,7 @@ export class RenewalDynamicFormComponent implements OnInit {
           if (event === 'editNominee' && this.form.valid) {
             this.requestObject = {};
             this.requestObject.updatedNomineeDetails=JSON.stringify(this.form.value);
-            this.requestObject.policyNumber='21-24-0002334-00';
+            this.requestObject.policyNumber=this.policyNumber;
             this.requestObject.referenceNumber=this.referenceNumber;  
             console.log(this.requestObject);                      
             this.renewalService.updatenomineeApi(this.requestObject).subscribe(
@@ -305,15 +331,18 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.formId=5001;
           break;  
         case 'cancel':
+          this.memberDetails=false;
           this.formId=5001;
           break;
         default:
          console.warn('Unknown action:', event);
      }
   }
+
   preExistingCondition(value:any){
    this.preexistingConditionSelected=value
   }
+
   isAnyConditionSelected(): boolean {
     return (
       this.chronicApplication.get('highBlood')?.value || this.chronicApplication.get('asthma')?.value || this.chronicApplication.get('diabetes')?.value || this.chronicApplication.get('heart')?.value || this.chronicApplication.get('lung')?.value || this.chronicApplication.get('ent')?.value ||
@@ -321,9 +350,13 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.chronicApplication.get('anemia')?.value || this.chronicApplication.get('accidental')?.value
     );
   }
+
+  isAnyPreExistingDiseasesConditionSelected(): boolean {
+    return this.healthConditions.some(condition => {const controlValue = this.PreExistingDiseases.get(condition)?.value;return controlValue === 'Y';});
+  }
   
- selectButton(value?: any,content? : any,member?:number) {
-  if (this.selectedButton === 'primary') {
+  selectButton(value?: any,content? : any,member?:number) {
+   if (this.selectedButton === 'primary') {
     if (value == 5006) {
       if (this.renewalInfo?.response?.policyData?.length > 0) {
         this.formObject = {...this.renewalInfo?.response?.policyData[0]?.HomeAddress };
@@ -349,6 +382,8 @@ export class RenewalDynamicFormComponent implements OnInit {
     else if (value == 5003) {
       if(this.form.valid){
         this.formId = value;
+        this.PreExistingDiseases = this.fb.group({Asthma: ['N'], Diabetes: ['N'],
+          Hyperlipidaemia: ['N'],Hypertension: ['N'],PTCA: ['N'],COPD: ['N'],HighBMI: ['N']});
       }else{
         this.memberDetails=true;
         console.log('Form is invalid');
@@ -358,14 +393,58 @@ export class RenewalDynamicFormComponent implements OnInit {
     else if (value == 5002) {
       if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'addMember'){
         this.memberRole='Add';
+      // this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
+      //     .reduce((acc: any, key: any) => { acc[key] = '';return acc; }, {});
+
+      // this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
+      //   .reduce((acc: any, key: any) => {
+      //     const value = this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0][key];
+      //     acc[key] = Array.isArray(value) ? [] : '';
+      //     return acc;
+      //   }, {});
       this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
-          .reduce((acc: any, key: any) => { acc[key] = '';return acc; }, {});
+       .reduce((acc: any, key: any) => {
+      const value = this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0][key];
+      if (Array.isArray(value)) {
+        acc[key] = [];
+      } else if (value !== null && typeof value === 'object') {
+        acc[key] = Object.keys(value).reduce((nestedAcc: any, nestedKey: any) => {
+          nestedAcc[nestedKey] = ''; 
+          return nestedAcc;
+        }, {});
+      } else {
+        acc[key] = '';
+      } 
+      return acc;
+      }, {});
+      // this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
+      // .reduce((acc: any, key: any) => {
+      //   const value = this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0][key];
+      //   if (Array.isArray(value)) {
+      //     acc[key] = value.map(item => {
+      //       if (typeof item === 'object' && item !== null) {
+      //         return Object.keys(item).reduce((nestedAcc: any, nestedKey: any) => {
+      //           nestedAcc[nestedKey] = ''; 
+      //           return nestedAcc;
+      //         }, {});
+      //       }
+      //       return '';
+      //     });
+      //   } else if (value !== null && typeof value === 'object') {
+      //     acc[key] = Object.keys(value).reduce((nestedAcc: any, nestedKey: any) => {
+      //       nestedAcc[nestedKey] = ''; 
+      //       return nestedAcc;
+      //     }, {});
+      //   } else {
+      //     acc[key] = '';
+      //   }
+      //   return acc;
+      // }, {});
+      console.log(this.subObject);
       this.formObject = {...this.subObject};
       this.chronicApplication = this.fb.group({
-        highBlood: [false],asthma: [false],diabetes: [false],heart: [false],
-        lung: [false],ent: [false],kidney: [false],brain: [false],
-        cancer: [false],sexuallyTransmitted: [false],anemia: [false],
-        accidental: [false]
+        highBlood: [false],asthma: [false],diabetes: [false],heart: [false],lung: [false],ent: [false],kidney: [false]
+        ,brain: [false],cancer: [false],sexuallyTransmitted: [false],anemia: [false],accidental: [false]
       });
     }
     else if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editMember'){
@@ -378,7 +457,7 @@ export class RenewalDynamicFormComponent implements OnInit {
         const sumInsuredValue = Number(this.formObject.SumInsured);
         const closestValue = this.sliderOptions?.stepsArray?.reduce((prev, curr) => {
           return Math.abs(curr.value - sumInsuredValue) < Math.abs(prev.value - sumInsuredValue) ? curr : prev;});
-        this.selectedSumInsured = closestValue?.value ?? 0;
+        this.selectedSumInsured = closestValue?.value ?? 0;        
       } else {this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;}     
     }
      this.initializeForm();
@@ -401,10 +480,12 @@ export class RenewalDynamicFormComponent implements OnInit {
     }
   }
 }
+
 private formatDate(dateString: string): string {
   if (!dateString) return '';
   return dateString.split('T')[0]; 
 }
+
  selectPaymentType(option: any) {
   if(option == 'offline'){
     this.formObject = {
@@ -469,13 +550,16 @@ private formatDate(dateString: string): string {
   console.log("input value", input);
   console.log("filtered names", this.filteredBankNamesList);
 }
+
 onBankNameSelected(selectedBankName: string): void {
   this.form.get('bankNameControl')?.setValue(selectedBankName);
   console.log("selected bank name", this.form.get('bankNameControl')?.value);
 }
+
  setSection(section: string) {
    this.activeSection = section;
  }
+
  goNext(){
   if(this.activeSection== 'primary'){
     this.setSection('additional')
@@ -542,6 +626,7 @@ onBankNameSelected(selectedBankName: string): void {
     })
   }
 }
+
 comeBack(){
   if(this.activeAction=='withoutmodify'){
     if(this.activeSection == 'payment'){
@@ -564,6 +649,7 @@ comeBack(){
     }
   }
 }
+
 getProducts() {
   const reqData={
     "agentCode": this.agentCode
@@ -580,13 +666,16 @@ getProducts() {
     }
   })
 }
+
 async getRenewalInfo() {
   const base = this.encryptionService.decrypt(sessionStorage.getItem('renewalData') as string);
   this.renewalInfo = JSON.parse(base.data.baseResponse);
+  this.renewalBaseObject = this.renewalInfo;
   console.log(this.renewalInfo);
   this.kycFlag = base.data.isKYCComplete;
   this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
 }
+
   getTenureDetails() {
     const productName = this.renewalInfo?.response?.policyData[0]?.Name_of_product;        
     if (productName) {
@@ -600,7 +689,7 @@ async getRenewalInfo() {
           // quoteData: "{\n  \"proposerPincode\": \"500013\",\n  \"typeOfBusiness\": \"NB\",\n  \"isEmployee\": false,\n  \"sumInsured\": \"5000000\",\n  \"numberOfInsuredMembers\": \"1\",\n  \"familySize\": \"1A\",\n  \"proposerName\": \"Manjunath Saukar\",\n  \"mobileNumber\": \"9876543211\",\n  \"memberPolicyType\": \"Multi Individual\",\n  \"insuredMemberDetails\": [\n    {\n      \"roomCategory\": \"\",\n      \"memberAge\": \"43\",\n      \"sumInsured\": \"5000000\",\n      \"isChronic\": \"No\",\n      \"chronicDiseases\": null,\n  \"pincode\": \"360380\",\n     \"zone\": \"Zone II\",\n      \"memberGender\": \"M\",\n      \"memberDob\": \"1980-12-31\",\n      \"memberRelation\": \"self\",\n      \"memberRelationCode\": \"24\",\n      \"covers\": [\n        {\n          \"coverId\": \"CIL\",\n          \"value\": \"1000000\"\n        },\n        {\n          \"coverId\": \"DECOV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"SCOP\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"ANCANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"PCDED\",\n          \"value\": \"15000\"\n        },\n        {\n          \"coverId\": \"PPNDISC\",\n          \"value\": \"\"\n        },\n        {\n          \"coverId\": \"COMV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"CANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RVCV\",\n          \"value\": \"500\"\n        },\n        {\n          \"coverId\": \"TOPD\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RRTO\",\n          \"value\": \"YSY\"\n        }\n      ]\n    }\n  ]\n}"
           quoteData:JSON.stringify(this.renewalInfo)
         };  
-        console.log(tenureRequestBody);
+        console.log(tenureRequestBody,"tenure");
         
         this.renewalService.getTenureDetailsApi(tenureRequestBody).subscribe(
           (res:any) => {
@@ -622,6 +711,7 @@ async getRenewalInfo() {
       console.error("Product name is not available in renewalInfo.");
     }
   }
+
   getproductdetailsandfeatures() {
     const productName = this.renewalInfo?.response?.policyData?.[0]?.Name_of_product;    
     if (productName) {
@@ -652,9 +742,11 @@ async getRenewalInfo() {
       console.error("Product name is not available in renewalInfo.");
     }
   }  
+
   sendLink(){
     this.link=" "
   }
+
   handleKyc(action: any) {
         this.kycDetailsSubmitted = true;
         if (this.kycFormGroup.invalid) {
@@ -671,7 +763,6 @@ async getRenewalInfo() {
                 this.renewalService.kycUpdate(kycRequestBody).subscribe(
                   (res)=>{
                     console.log("Kyc value after kycUpdate call",this.kycData);
-                    
                     this.kycFlag=res
                   },
                   (err)=>{console.log(err);}
@@ -709,7 +800,7 @@ async getRenewalInfo() {
     }
     setRating(star: number) {
       this.rating = star;
-      this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
+      this.customerFeedbackForm.patchValue({ rating: this.rating });
       this.feedbackSubmit = true;
       this.impressedValues = true;
       if (star > 3) {
@@ -720,6 +811,7 @@ async getRenewalInfo() {
         this.feedBackMessage = true;
       }
     }
+
     submitFeedback() {
       let reqData: any = {};
       reqData.agentCode = this.agentCode;
@@ -734,16 +826,16 @@ async getRenewalInfo() {
       // this.customerFeedbackModule.hide();
       this.isFeedBackModalVisible = false;
     }
+
     closeIsFeedBackModalVisible(){
       this.isFeedBackModalVisible = false;
     }
+
     onSelectValue(value: String) {
       this.feedbackImpressedValue = value;
     }
+
     onFileSelected(event: any) {
-      // this.file = event.target.files
-      console.log('filetr',this.file);
-      
       this.file = event.target.files[0];
       const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
       const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
@@ -752,5 +844,4 @@ async getRenewalInfo() {
       }
       console.log("file",this.file);
     }
-    
 }
