@@ -5440,7 +5440,7 @@ height: 0;
   color: #278829;
   font-weight: 400;
   position: absolute;
-  top: 0px;
+  top: 10px;
 }
 .OTP-subHeader b, .OTP-subHeader strong {
 font-weight: bolder !important;
