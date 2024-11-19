@@ -10,30 +10,11 @@ import {
   subWeeks,
 } from "date-fns";
 import { Subject } from "rxjs";
-import { CalendarEvent as CE } from "angular-calendar";
 import { Router } from "@angular/router";
 import { EventsService } from "../events-new/events.service";
 import { MatDialog } from "@angular/material/dialog";
+import { CalendarEvent, CalendarView } from "src/app/interface/events.interface";
 
-
-export interface CalendarEvent extends CE {
-  id: number;
-  note: string;
-  title: string;
-  start: Date;
-  end: Date;
-  color?: {
-    primary: string;
-    secondary: string;
-  };
-  allDay?: boolean;
-}
-
-export enum CalendarView {
-  Day = 'day',
-  Week = 'week',
-  Month = 'month',
-}
 @Component({
   selector: "app-events-list",
   templateUrl: "./events-list.component.html",
@@ -140,19 +121,15 @@ export class EventsListComponent implements OnInit {
   
   parseDateTime(date: string, time: string): Date | null {
     try {
-      // Remove any milliseconds from the time string if present
-      const cleanTime = time.split('.')[0];
-      
-      // Combine date and time
-      const dateTimeStr = `${date}T${cleanTime}`;
+     
+      const cleanTime = time.split('.')[0];  // Remove any milliseconds from the time string if present
+      const dateTimeStr = `${date}T${cleanTime}`; // Combine date and time
       const dateTime = new Date(dateTimeStr);
   
-      // Validate the parsed date
-      if (isNaN(dateTime.getTime())) {
+      if (isNaN(dateTime.getTime())) {      // Validate the parsed date
         console.error(`Invalid DateTime: ${dateTimeStr}`);
         return null;
       }
-  
       return dateTime;
     } catch (error) {
       console.error("Error parsing date and time:", error);
@@ -198,14 +175,6 @@ export class EventsListComponent implements OnInit {
         break;
     }
   }
-  getEventWidth(event: CalendarEvent) {
-    // const eventDuration = (event.end?.getTime() - event.start.getTime()) / (1000 * 60); // Duration in minutes
-    // const availableWidth = 100; // Adjust based on available space in cell
-    // const eventWidth = (eventDuration / 1440) * availableWidth; // 1440 minutes in a day
-
-    // return `${Math.min(eventWidth, 100)}%`; // Ensure the width is never more than 100%
-  }
-
 
   handleEventClick(event: any) {
     this.selectedEvent = event.event;

@@ -83,7 +83,6 @@ export class ClaimsViewComponent {
   hospitalAddress: any;
   searchText: string = '';
   isDropdownOpen: boolean = false;  
-  activityList : any[] = []
   selectedPolicyNumber:any;
   isFocused: boolean = false;
   fromDate: any;
@@ -151,7 +150,7 @@ export class ClaimsViewComponent {
     this.getProposalDetails();
     this.fetchStates();
     const policyNumberControl = this.form.get('policyNumber');
-   // this.filteredPolicyNumbers = [...this.policyNumbers]; 
+   
   }
   
   navigateToListClaim(){
@@ -245,12 +244,8 @@ export class ClaimsViewComponent {
     this.claimsService.getProposalDetails(this.agentCode).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.response = response.data;
-          console.log('getprop', this.response);
-          
+          this.response = response.data;          
           const allData: ClaimData[] = response.data;
-          console.log('resp all', allData);
-
           this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');          
           this.policyNumbers = this.extractUniqueValues(
             allData,
@@ -306,9 +301,7 @@ export class ClaimsViewComponent {
     // Prevent default if the key is not allowed
     if (!regex.test(event.key)) {
       event.preventDefault();
-    }
-    
-   
+    }  
   }
 
   onInput(event: KeyboardEvent): void {
@@ -336,7 +329,6 @@ export class ClaimsViewComponent {
   }
 
   filterPolicyNumbers(value: unknown): void {
-    console.log('filterPolicyNumbers');
     const query = this.searchText.toLowerCase();
   }
 
@@ -347,20 +339,6 @@ export class ClaimsViewComponent {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
 }
-  // selectPolicyNumber(policy: string): void {
-  //   console.log('selectPolicyNumber');
-  //   this.form.get('policyNumber')?.setValue(policy);
-  //   this.searchText = policy; 
-  //   this.isDropdownOpen = false; 
-  // }
-
-  // handleClickOutside(event: Event): void {
-  //   console.log('handleClickOutside');
-  //   const target = event.target as HTMLElement;
-  //   if (!target.closest('.custom-dropdown')) {
-  //     this.isDropdownOpen = false;
-  //   }
-  // }
 
   // ngAfterViewInit() {
   //   document.addEventListener('click', this.handleClickOutside.bind(this));
@@ -412,7 +390,6 @@ export class ClaimsViewComponent {
 
   onCoverNameChange(event: any): void {
     const selectedCover = event.target.value;
-    console.log("selectedCover");
     this.selectedCoverName = selectedCover;
     this.billsArray.clear();
 
@@ -455,23 +432,12 @@ export class ClaimsViewComponent {
     let statesReqBody = {
       agentId: 0,
       agentCode: localStorage.getItem("agentCode"),
-      eventName: "string",
-      sessionId: "string",
-      userLevel: "string",
-      userRole: "string",
-      superiorId: 0,
-      designation: "string",
-      intCategory: "string",
-      category: "string",
-      branchCode: "string",
     };
     this.claimsService.getStates(statesReqBody).subscribe(
       (info: any) => {
         console.log("resp", info);
         if (info.isSuccess) {
-          this.states = info.data.response;
-          console.log('states',this.states);
-          
+          this.states = info.data.response;          
         } else {
           console.error("Failed to fetch states", info.message);
         }
@@ -498,15 +464,6 @@ export class ClaimsViewComponent {
     let citiesReqBody = {
       agentId: 0,
       agentCode: localStorage.getItem("agentCode"),
-      eventName: "string",
-      sessionId: "string",
-      userLevel: "string",
-      userRole: "string",
-      superiorId: 0,
-      designation: "string",
-      intCategory: "string",
-      category: "string",
-      branchCode: "string",
       stateID: this.selectedState,
     };
 
@@ -631,7 +588,6 @@ export class ClaimsViewComponent {
         });
         this.uploadValidFormat = false;
       } else if (fileExists) {
-        // Show some warning or handle duplicate file logic here
         console.warn('File already uploaded.');
       } else {
         this.uploadValidFormat = true;
@@ -647,7 +603,6 @@ export class ClaimsViewComponent {
     const fileTypes: string[] = files.map((file) => file.type);
     const policyNumber = this.form.get("policyNumber")?.value
     if (!policyNumber) {
-      // Set each file status to "failed" if policy number is not selected
       this.uploadedFiles.forEach((file) => (file.status = "failed"));
       this.uploadSuccess = false;
       this.updateStatusLabel();
@@ -665,13 +620,9 @@ export class ClaimsViewComponent {
         documentName: this.namesVariable || "",
         documentType: this.documentType || "",
         createdBy: file.createdBy || "",
-        //claimInfoId: "21727183717381",
-       claimInfoId: "",
-        // memberId: this.form.get("memberId")?.value || "",
+        claimInfoId: "",
         memberId: '',
-       // documentId: "test2",
         documentId: file.documentId
-        // documentId: this.documentId || "",
       };
       formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
       formData.append(`fileDetails[${index}].AgentCode`, metadata.createdBy);
@@ -721,30 +672,24 @@ export class ClaimsViewComponent {
     // this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
     this.uploadStatus = `${this.totalFilesCount} of ${this.totalFilesCount} files uploaded`;
   }
-  // deleteFile(fileToDelete: any) {
-  //   this.uploadedFiles = this.uploadedFiles.filter(
-  //     (file) => file !== fileToDelete
-  //   );
-  //   this.totalFilesCount = this.uploadedFiles.length;
-  //   // Ensure the status label is updated accordingly
-  //   this.updateStatusLabel();
-  // }
+
   deleteFile(fileToDelete: any): void {
     const payload = {
-      policyNumber:  this.form.get("policyNumber")?.value, 
+      policyNumber: this.form.get("policyNumber")?.value,
       documentId: fileToDelete.documentId,
       claimNumber: ""
     };
   
     this.claimsService.deleteFile(payload).subscribe(
-      (response:any) => {
+      (response: any) => {
         if (response.isSuccess) {
-          console.log('File deleted successfully:', response);
             this.uploadedFiles = this.uploadedFiles.filter(
-            (file) => file.documentId !== fileToDelete.documentId 
+            (file) => file.documentId !== fileToDelete.documentId
           );
           this.totalFilesCount = this.uploadedFiles.length;
-            this.updateStatusLabel();
+          this.updateStatusLabel();
+          this.cdr.detectChanges();
+          console.log('Updated uploadedFiles list:', this.uploadedFiles);
         } else {
           console.error('Failed to delete file:', response.message);
         }
@@ -754,10 +699,7 @@ export class ClaimsViewComponent {
       }
     );
   }
-  
   ////////////////////file upload input label //////////////////
-
-  // Method to start editing a file
   startEditing(file: any) {
     file.isEditing = true;
     if (!file.editableControl) {
@@ -782,9 +724,7 @@ export class ClaimsViewComponent {
 
   submitRequest(): void {
     if (this.saveForm.valid || this.form.valid) {
-      const saveClaimData = { ...this.form.value };
-  
-      
+      const saveClaimData = { ...this.form.value };     
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : null;
   
@@ -802,14 +742,12 @@ export class ClaimsViewComponent {
       }
   
       const documentsArray = this.uploadedFiles.map((file) => ({
+        documentId: file.documentId,
         documentName: file.name,
         status: file.status,
         labelName: file.label
       }));
-      saveClaimData.documentsArray = documentsArray;
-  
-      console.log('saveck', saveClaimData);
-  
+      saveClaimData.documentsArray = documentsArray;  
       this.claimsService.saveClaims(saveClaimData).subscribe(
         (response: any) => {
           if (response?.isSuccess) {

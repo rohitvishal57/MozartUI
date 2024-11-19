@@ -12,6 +12,8 @@ import { firstValueFrom } from 'rxjs';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 declare var bootstrap: any;
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 
 @Component({
   selector: 'app-leads-list',
@@ -85,7 +87,10 @@ export class LeadsListComponent {
     private toast: NgToastService,
     private productService: ProductsService,
     private common: CommonService,
-    private encryptionService: EncryptionService
+    private encryptionService: EncryptionService,
+    private languageService: LanguageService,
+    private translateService: TranslateService
+
   ) { }
 
 
@@ -108,6 +113,14 @@ export class LeadsListComponent {
   }
 
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en');
+        }
+      });
+    });
+
     this.assigneLeadModal = new bootstrap.Modal(document.getElementById('assigneLeadModal'));
     this.agentCode = localStorage.getItem('agentCode');
     this.getLeadsList();
