@@ -68,8 +68,8 @@
                 <div class="row">
                   <div class="col-12">
                     <div class="input-block input-block-renew input-filed-white">
-                      <ul class="notificationList" *ngFor="let item of notifications ; let i =index">
-                        <li>
+                      <ul class="notificationList" >
+                        <li *ngFor="let item of notifications ; let i =index">
                           <div class="tipInfo_org" *ngIf="item.isRead ==false" (click)="routeNotification(item)"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
                         </li>
                         <!-- <li class="read_notification">

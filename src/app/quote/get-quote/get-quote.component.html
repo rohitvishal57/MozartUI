@@ -26,6 +26,7 @@
 
           <div class="insurance_optionHUB"  [formGroup]="quoteFormGroup">
             <div class="dropdown-container " >
+              <div class="dropdown_backdrop block-hide"></div>
               <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
                 <!-- Label -->
                 <label class="field_label">{{ dropdown.label }}</label>
@@ -51,10 +52,10 @@
                         {{ diseaseNames != null ? diseaseNames : 'No Diseases Selected' }}
                       </ng-container>
 
-                    </span><i class="fas fa-chevron-down"></i>
+                    </span><img src="assets/Img/down_arrow.svg">
                   </div>
                 </button>
-
+                
               <!-- Dropdown content for each item, displayed only when the activeDropdown matches the index -->
               <div class="dropdownContent" *ngIf="activeDropdown === i">
                
