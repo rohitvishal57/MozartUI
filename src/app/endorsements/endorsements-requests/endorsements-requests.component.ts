@@ -31,7 +31,6 @@ export class EndorsementsRequestsComponent implements OnInit {
   isDesktopView: boolean = false
   fromDate: any;
   toDate: any;
-  toggeleSearchdropdown: boolean = false;
   toggeledropdown: boolean = false;
   appliedFiltersCount: number = 0;
   maxDate: string | undefined
@@ -233,10 +232,6 @@ export class EndorsementsRequestsComponent implements OnInit {
   }
 
   toggleFilterDropdown() {
-    if(this.toggeleSearchdropdown==true)
-    {
-      this.toggeleSearchdropdown=false;
-    }
     this.toggeledropdown = !this.toggeledropdown;
     this.maxDate = new Date().toISOString().split('T')[0];  
   }
@@ -261,7 +256,6 @@ export class EndorsementsRequestsComponent implements OnInit {
     this.requestsListRequestBody.products = [];
     this.requestsListRequestBody.fromDate = "";
     this.requestsListRequestBody.toDate = "";
-    this.toggeledropdown = false;
     this.getRequestList();
   }
   applyFilter() {
