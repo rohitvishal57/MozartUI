@@ -182,7 +182,7 @@ export class RugDynamicFormComponent {
       rating: [null, Validators.required], // Add rating to the form
     });
     console.log(this.formSequence[0].formName);
-    if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
+    if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
       let reqObj = {
         leadId: "934345345342"
       }
@@ -1997,7 +1997,7 @@ export class RugDynamicFormComponent {
           // For each relationship option, add a control
           res.data.relationShip.forEach((option: any) => {
             console.log(option);
-            if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
+            if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
               controlGroup.addControl(option.value, new FormControl(option.id == "R001" ? true : false));
               if (option.id == "R001") {
                 this.logSelection(null, option, control);
@@ -2265,7 +2265,7 @@ export class RugDynamicFormComponent {
     this.updateValueAndGroupError(this.dynamicFormGroup.get(controls.name) as FormGroup);
 
 
-    if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
+    if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
       console.log(this.dynamicFormGroup.value);
       console.log(this.bbdetails);
       let selfResult = this.centimetersToFeetAndInches(this.bbdetails.insuredDetails[0].height)
