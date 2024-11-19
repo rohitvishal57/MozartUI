@@ -73,6 +73,7 @@ export class YatraComponent {
   formSequence: any[] = [];
   agentCode: any;
   productName: any;
+  applicableZone:any;
   productStartDate: any;
   productEndDate: any;
   parentControl: any;
@@ -129,12 +130,10 @@ export class YatraComponent {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
-          this.translateService.use('en'); // Fallback to English if translation file is missing
+          this.translateService.use('en');
         }
       });
     });
-
-
 
     this.showHtmlContent = false;
     this.formSequence = history.state.formSequence;
@@ -142,13 +141,10 @@ export class YatraComponent {
 
     if (localStorage.getItem('code'))
       this.Code = localStorage.getItem('code');
-    // this.verticalCode = localStorage.getItem('verticalCode');
-    // this.insurancetypecode = history.state.productData.insurancetypecode;
-    // this.productid = history.state.productData.productid;
-    // this.productName = history.state.productData.productName;
-    // this.productEndDate = history.state.productData.productEndDate;
-    // this.productStartDate = history.state.productData.productStartDate;
-    // this.proposalNum = history.state.productData.proposalNumber;
+
+    this.applicableZone=history.state.productData.applicableZones
+    console.log(this.applicableZone);
+    
     if (localStorage.getItem('agentCode'))
       this.agentCode = localStorage.getItem('agentCode');
     // this.agencyCode = history.state.productData.agencyCode;

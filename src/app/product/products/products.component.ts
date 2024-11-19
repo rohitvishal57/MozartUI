@@ -166,7 +166,7 @@ export class ProductsComponent implements OnInit {
     try {
       await this.getProposalNum();
       console.log(item)
-      this.formData = { ...this.formData,proposalNumber:this.proposalNum}
+      this.formData = { ...this.formData,proposalNumber:this.proposalNum,applicableZones:item.applicableZones}
       await this.getFormSequence(item);
       console.log(item)
       console.log(this.formData);
@@ -174,8 +174,8 @@ export class ProductsComponent implements OnInit {
       const productData = {
         partnerId: item.partnerId,
         productId: item.productId,
-        proposalNum: this.proposalNum
-
+        proposalNum: this.proposalNum,
+        applicableZones:item.applicableZones
       }
       console.log(productData)
       // if (this.formSequence != null && this.formSequence.length > 0) {

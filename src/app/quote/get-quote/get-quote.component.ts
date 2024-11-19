@@ -26,6 +26,9 @@ export class GetQuoteComponent {
   showDropdownsFlag: boolean = false;
   showCustomDiv = false;
   selectedDropdown = '';
+  availableZones: string[] = [];
+  currentZone: string = ''; // Example current zone
+  zoneHierarchy: string[] = ["Zone IV", "Zone III", "Zone II", "Zone I"];
   relationCountMap: Map<string, number> = new Map([
     ["R003", 0],
     ["R004", 0]
@@ -195,6 +198,7 @@ export class GetQuoteComponent {
       proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
       mobileNumber: [null, [Validators.required, Validators.pattern('^[6-9][0-9]{9}$'), Validators.maxLength(10)]],
       typeOfBusiness: ["NB"],
+      proposerZone: [''],
       isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
       numberOfInsuredMembers: [null],
@@ -205,6 +209,7 @@ export class GetQuoteComponent {
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
     });
+    this.calculateUpgradeableZones();
     if (formData) {
       this.quoteFormGroup.patchValue(formData);
       console.log(formData);
@@ -737,28 +742,58 @@ export class GetQuoteComponent {
     }
   }
 
+  calculateUpgradeableZones(): void {
+    const currentIndex = this.zoneHierarchy.indexOf(this.currentZone);
+    console.log(currentIndex);
 
+    if (currentIndex === -1) {
+      console.error('Invalid current zone:', this.currentZone);
+      return;
+    }
 
-  // getProposerPincode(event: any) {
+    if (this.currentZone === 'Zone I') {
+      this.availableZones = ['Zone I'];
+    } else {
+      this.availableZones = this.zoneHierarchy.slice(currentIndex).reverse();
+    }
+  }
 
-  //   console.log(event.target.value, typeof event)
-  //   const reqdata = {
-  //     "pincode": event.target.value
-  //   }
-  //   this.service.getPinCodeByCity(reqdata).subscribe({
-  //     next: (res) => {
-  //       console.log(res)
-  //       this.proposerZone = res.data.zone;
-  //       this.proposerCity = res.data.city;
-  //       this.proposerState = res.data.state;
-  //       this.proposerZoneValue = res.data.zoneCode;
-  //     },
-  //     error: (err) => {
-  //       console.error(err)
-  //       this.toast.warning({ detail: "WARNING", summary: "Could not fetch pincode details.", duration: 1000 });
-  //     }
-  //   });
+  getProposerPincode(event: any) {
 
-  // }
+    console.log(event.target.value, typeof event)
+    const reqdata = {
+      "pincode": event.target.value
+    }
+
+    this.availableZones = [];
+    this.service.getPinCodeByCity(reqdata).subscribe({
+      next: (res) => {
+        console.log(res)
+        this.currentZone=res.data.zone;
+        this.proposerZone = res.data.zone;
+        this.proposerCity = res.data.city;
+        this.proposerState = res.data.state;
+        this.proposerZoneValue = res.data.zoneCode;
+
+        console.log(this.currentZone);
+        
+
+        this.calculateUpgradeableZones();
+
+        if (res.data.zone) {
+          if (!this.availableZones.includes(res.data.zone)) {
+            this.availableZones.push(res.data.zone);
+          }
+          this.quoteFormGroup.get('proposerZone')?.setValue(this.currentZone);
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        const errorMessage = err?.error?.message || "An unexpected error occurred. Please try again.";
+        this.toast.error({ detail: "WARNING", summary: errorMessage, duration: 3000 });
+      }
+    });
+
+  }
 
 }
