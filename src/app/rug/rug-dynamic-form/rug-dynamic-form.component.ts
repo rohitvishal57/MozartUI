@@ -14,6 +14,8 @@ import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OtpPopupComponent } from '../otp-popup/otp-popup.component';
+import { PaymentInfoComponent } from '../payment-info/payment-info.component';
+import { CaptchaPopupComponent } from '../captcha-popup/captcha-popup.component';
 declare var bootstrap: any;
 
 @Component({
@@ -2825,16 +2827,36 @@ export class RugDynamicFormComponent {
     this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
-    const dialogRef = this.dialog.open(OtpPopupComponent, {
-      width: "500px",
-      autoFocus: false,
-      data: {
-        fields: "this.fields"
-      }
-    });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      console.log(result);
-    })
+    // const dialogRef = this.dialog.open(OtpPopupComponent, {
+    //   width: "500px",
+    //   autoFocus: false,
+    //   data: {
+    //     fields: "this.fields"
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe((result: any) => {
+    //   console.log(result);
+    // })
+    // const dialogRef = this.dialog.open(PaymentInfoComponent, {
+    //   width: "500px",
+    //   autoFocus: false,
+    //   data: {
+    //     fields: "this.fields"
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe((result: any) => {
+    //   console.log(result);
+    // })
+    // const dialogRef = this.dialog.open(CaptchaPopupComponent, {
+    //   width: "500px",
+    //   autoFocus: false,
+    //   data: {
+    //     fields: "this.fields"
+    //   }
+    // });
+    // dialogRef.afterClosed().subscribe((result: any) => {
+    //   console.log(result);
+    // })
   }
   ond2cSubmit(){
     // if(!this.dynamicFormGroup.valid){

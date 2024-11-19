@@ -2727,6 +2727,11 @@ margin: 0;
  
   
 }
+.main-container .right-panel .next-btn:focus,
+    .main-container .right-panel .add-btn:focus,
+    .main-container .right-panel .back-btn:focus {
+        border-width: 0 !important;
+    }
 .main-container .right-panel /* Backdrop to cover the whole screen */
 .backdrop {
   position: fixed;
