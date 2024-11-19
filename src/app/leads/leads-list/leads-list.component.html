@@ -21,7 +21,7 @@
                          <li class="quickFilterHeading block-hide">Quick filter</li> 
                         <li>
                             <button type="button" id="allleads" name="allleads" value="allpolicies" class="btn_quickFilter"
-                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Leads</button>
+                                [ngClass]="{'active': activeFilter === 'all'}" (click)="filterQuotes('all')">All Leads ({{countsList.totalCount}})</button>
                         </li>
                         <li>
                             <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter" [ngClass]="{'active': activeFilter === 'assignedLead'}"  (click)="getAssignedLeads()">Assigned Leads</button>

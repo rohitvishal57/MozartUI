@@ -57,7 +57,7 @@
           <span class="badge" >{{notificationCount}}</span>
         </button>
         <!--Overlay: Notifications start-->
-        <div class="overlay_popupMain overlay_dropdown_w386 overlay_notification" *ngIf="showNotifications" >
+        <div class="overlay_popupMain overlay_dropdown_w386 overlay_notification" *ngIf="showNotifications && notificationCount" >
           
           <div class="option_policyType" (click)="onPopupClick($event)">
             <div class="overlay_body insurer_detailsMain">
