@@ -3,10 +3,10 @@
   <div class="contentBody bodyColumns-1">
       <div class="bodyColumn body_flex_column">
           <div class="body_flex_row justify-content-between" >
-            <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListClaim()"><a class="btn_backPage" title="Back To List"></a>My Claims</h2>
+            <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListClaim()"><a class="btn_backPage" title="Back To List"></a>{{"My Claims" | translate}}</h2>
           </div>
           <section class="white_container">
-              <h6 class="heading-16-red">Raise Request</h6>
+              <h6 class="heading-16-red">{{"Raise Request" | translate}}</h6>
           </section>
           <section class="white_container">
               <form [formGroup]="form">
@@ -14,16 +14,16 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                         <div class="input-block form-floating input-block-renew">
                             <input class="form-control input-textBox"  [matAutocomplete]="auto"  id="policyNumber" name="policyNumber" formControlName="policyNumber" (keydown)="filterList($event)" placeholder="Search Policy Number"/>
-                            <label for="policyNumber">Search Policy Number</label>
+                            <label for="policyNumber">{{"Search Policy Number" | translate}}</label>
                             <div *ngIf="form.get('policyNumber')?.invalid && (form.get('policyNumber')?.touched || form.get('policyNumber')?.dirty)">
                                 <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
-                                    Policy Number is required.
+                                    {{"Policy Number is required." | translate}} 
                                 </small>
                             </div>
                         </div>
                         <mat-autocomplete #auto="matAutocomplete"  (optionSelected)="handleDropdownChange($event.option.value)">
                             <mat-option *ngFor="let policy of filteredPolicyList" [value]="policy">
-                                {{ policy }}  
+                                {{ policy | translate }}  
                             </mat-option>
                          </mat-autocomplete>
                     </div>        
@@ -52,12 +52,12 @@
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
                               <select class="form-select input-selectBox" id="memberName" name="memberName" formControlName="memberName" [ngClass]="{'has-value': true}">
-                                  <option class="dropdown-options" value="" disabled selected>Select Member</option>
-                                  <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member }}</option>
+                                  <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
+                                  <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member | translate }}</option>
                               </select>
-                              <label for="member">Select Member</label>
+                              <label for="member">{{"Select Member" | translate}}</label>
                               <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
-                                Member name is required.
+                                {{"Member name is required." | translate}}
                               </small>
                                          
                           </div>
@@ -70,14 +70,14 @@
                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                           <div class="input-block form-floating input-block-renew">
                               <select class="form-select input-selectBox" id="claimType" name="claimType" formControlName="claimType" (change)="onClaimTypeChange($event)">
-                                  <option value="" disabled selected>Select Claim Type</option>
-                                  <option value="Cashless">Cashless</option>
-                                  <option value="Reimbursement">Reimbursement</option>
+                                  <option value="" disabled selected>{{"Select Claim Type" | translate}}</option>
+                                  <option value="Cashless">{{"Cashless" | translate}}</option>
+                                  <option value="Reimbursement">{{"Reimbursement" | translate}}</option>
                               </select>                          
-                              <label for="claimtype">Claim Type</label>
+                              <label for="claimtype">{{"Claim Type" | translate}}</label>
                               <!-- <span class="ui-error">Please select claim type</span> -->      
                                 <small class="ui-error block-show" *ngIf="form.get('claimType')?.hasError('required') && form.get('claimType')?.touched">
-                                    Claim type is required
+                                    {{"Claim type is required" | translate}} 
                                 </small>                                
                           </div>
                       </div>
@@ -87,18 +87,18 @@
                         <div class="row">
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
-                                  <input type="text" class="form-control input-textBox" id="coverName" name="coverName" formControlName="coverName" [value]="'Hospitalisation'" readonly />
-                                  <label for="coverName">Cover Name</label>
+                                  <input type="text" class="form-control input-textBox" id="coverName" name="coverName" formControlName="coverName" [value]="'Hospitalisation' | translate" readonly />
+                                  <label for="coverName">{{"Cover Name" | translate}}</label>
                               </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="claimedAmount" name="claimedAmount" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount"
                                 (keydown)="onInput($event)">
-                                <label for="claimamount">Claim Amount</label>
+                                <label for="claimamount">{{"Claim Amount" | translate}}</label>
                                 <!-- <span class="ui-error">Please enter claim amount</span> -->
                                 <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
-                                    Claim amount is required
+                                    {{"Claim amount is required" | translate}}
                                 </small> 
                             </div>
                         </div>
@@ -107,9 +107,9 @@
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="date" class="form-control input-textBox" id="admissionDate" name="admissionDate" formControlName="admissionDate" [(ngModel)]="fromDate"  (change)="dateFormat('fromDate')" placeholder="Date of Admission" [max]="maxDate" />
-                                  <label for="admissionDate">Date of Admission</label>
+                                  <label for="admissionDate">{{"Date of Admission" | translate}}</label>
                                   <small class="ui-error block-show" *ngIf="form.get('admissionDate')?.hasError('required') && form.get('admissionDate')?.touched" >
-                                    Date of Admission is required
+                                    {{"Date of Admission is required" | translate}}
                                 </small>
                               </div>
                           </div>
@@ -117,59 +117,59 @@
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="time" class="form-control input-textBox" id="admissionTime" name="admissionTime" formControlName="admissionTime"  placeholder="Time of Admission (Tentative)" />
-                                  <label for="admissionTime">Time of Admission (Tentative)</label>
+                                  <label for="admissionTime">{{"Time of Admission (Tentative)" | translate}}</label>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="date" class="form-control input-textBox" id="dischargeDate" name="dischargeDate" formControlName="dischargeDate" placeholder="Date of Discharge" [(ngModel)]="toDate"  (change)="dateFormat('toDate')"  [min]="fromDate"/>
-                                  <label for="dischargeDate">Date of Discharge</label>
+                                  <label for="dischargeDate">{{"Date of Discharge" | translate}}</label>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <input type="time" class="form-control input-textBox" id="dischargeTime" name="dischargeTime" formControlName="dischargeTime" placeholder="Time of Discharge (Tentative)" />
-                                  <label for="dischargeTime">Time of Discharge (Tentative)</label>
+                                  <label for="dischargeTime">{{"Time of Discharge (Tentative)" | translate}}</label>
                               </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <select class="form-select input-selectBox" id="state" name="state" formControlName="state" (change)="onStateChange($event)">
-                                      <option class="dropdown-options" value="" disabled selected>Select State</option>
-                                      <option *ngFor="let state of states" [value]="state.stateID">{{ state.stateName }}</option>
+                                      <option class="dropdown-options" value="" disabled selected>{{"Select State" | translate}}</option>
+                                      <option *ngFor="let state of states" [value]="state.stateID">{{ state.stateName | translate }}</option>
                                   </select>
-                                  <label for="state">Select State</label>
-                                  <span class="ui-error">Please select state</span>
+                                  <label for="state">{{"Select State" | translate}}</label>
+                                  <span class="ui-error">{{"Please select state" | translate}}</span>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="input-block form-floating input-block-renew">
                                   <select class="form-select input-selectBox" id="city" name="city" formControlName="city" (change)="onCityChange($event)" [disabled]="!selectedState">
-                                      <option class="dropdown-options" value="" disabled selected [selected]="!form.get('city')?.value || form.get('city')?.value === ''">Select City</option>
-                                      <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName }}</option>
+                                      <option class="dropdown-options" value="" disabled selected [selected]="!form.get('city')?.value || form.get('city')?.value === ''">{{"Select City" | translate}}</option>
+                                      <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName | translate }}</option>
                                   </select>
-                                  <label for="city">Select City</label>
-                                  <span class="ui-error">Please select city</span>
+                                  <label for="city">{{"Select City" | translate}}</label>
+                                  <span class="ui-error">{{"Please select city" | translate}}</span>
                               </div>
                           </div>
 
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                               <select class="form-select input-selectBox" id="hospitalName" name="hospitalName" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
-                                  <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
-                                  <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName }}</option>
+                                  <option class="dropdown-options" value="" disabled selected>{{"Select Hospitals" | translate}}</option>
+                                  <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName | translate }}</option>
                               </select>
-                              <label for="city">Select Hospital</label>
-                              <span class="ui-error">Please select Hospital</span>
+                              <label for="city">{{"Select Hospital" | translate}}</label>
+                              <span class="ui-error">{{"Please select Hospital" | translate}}</span>
                           </div>                      
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input type="text" class="form-control input-textBox" id="hospitalAddress" name="hospitalAddress" formControlName="hospitalAddress" placeholder="Hospital Address" readonly/>
-                                <label for="addnotes">Hospital Address</label>
+                                <label for="addnotes">{{"Hospital Address" | translate }}</label>
                             </div>
                         </div>
                         
@@ -188,10 +188,10 @@
                               <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                   <div class="input-block form-floating input-block-renew">
                                       <select class="form-select input-selectBox" id="coverName" name="coverName" formControlName="coverName" (change)="onCoverNameChange($event)">
-                                          <option value="" disabled selected>Select Cover Name</option>
-                                          <option *ngFor="let cover of coverNames" [value]="cover">{{ cover }}</option>
+                                          <option value="" disabled selected>{{"Select Cover Name" | translate}}</option>
+                                          <option *ngFor="let cover of coverNames" [value]="cover">{{ cover | translate }}</option>
                                       </select>
-                                      <label for="coverName">Cover Name</label>
+                                      <label for="coverName">{{"Cover Name" | translate}}</label>
                                   </div>
                               </div>
                               <!-- <div *ngIf="showFirstScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -350,7 +350,7 @@
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                         <div class="input-block form-floating input-block-renew">
                               <textarea class="form-control input-textBox" formControlName="ailmentDescription" id="ailmentDescription" name="ailmentDescription" placeholder="Description of the Ailment"></textarea>
-                              <label for="ailmentDescription">Description of the Ailment</label>
+                              <label for="ailmentDescription">{{"Description of the Ailment" | translate}}</label>
                           </div>
                       </div>
 
@@ -358,60 +358,60 @@
                       <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="input-block form-floating input-block-renew" >
                               <textarea class="form-control input-textBox" placeholder="Leave a comment here" id="addnotes" name="addnotes" rows="2" cols="30" formControlName="notes" pInputTextarea></textarea>
-                              <label for="addnotes">Add Notes</label>
+                              <label for="addnotes">{{"Add Notes" | translate}}</label>
                           </div>
                       </div>
 
                   </div>
                   <div class="body_flex_column gap-32">
                       <div class="uploadDocument_head body_flex_column gap-2">
-                          <h3 class="heading-20-black">Upload Documents</h3>
-                          <p>Please upload the documents mentioned below. The files should be in .png / .jpg / .pdf with less than 2 MB size per image.</p>
+                          <h3 class="heading-20-black">{{"Upload Documents" | translate}}</h3>
+                          <p>{{"Please upload the documents mentioned below. The files should be in .png / .jpg / .pdf with less than 2 MB size per image." | translate}}</p>
                       </div>
                       <div class="uploadDocument_optionsInfo row">
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <ul class="unorderList ul_withIcon">
-                                  <li><img src="assets/Img/icon_ud_kycid.svg">Any govt/KYC ID</li>
-                                  <li><img src="assets/Img/icon_ud_doctor_prescription.svg">Doctor’s Prescription</li>
-                                  <li><img src="assets/Img/icon_ud_consultation_form.svg">Consultation form</li>
+                                  <li><img src="assets/Img/icon_ud_kycid.svg">{{"Any govt/KYC ID" | translate}}</li>
+                                  <li><img src="assets/Img/icon_ud_doctor_prescription.svg">{{"Doctor’s Prescription" | translate}}</li>
+                                  <li><img src="assets/Img/icon_ud_consultation_form.svg">{{"Consultation form" | translate}}</li>
                               </ul>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <ul class="unorderList ul_withIcon">
-                                  <li><img src="assets/Img/icon_ud_hospital_bill.svg">Hospital bill invoice</li>
-                                  <li><img src="assets/Img/icon_ud_neft.svg">NEFT/ Cancelled cheque/ Passbook</li>
-                                  <li><img src="assets/Img/icon_ud_consultation_form.svg">Claim form</li>
+                                  <li><img src="assets/Img/icon_ud_hospital_bill.svg">{{"Hospital bill invoice" | translate}}</li>
+                                  <li><img src="assets/Img/icon_ud_neft.svg">{{"NEFT/ Cancelled cheque/ Passbook" | translate}}</li>
+                                  <li><img src="assets/Img/icon_ud_consultation_form.svg">{{"Claim form" | translate}}</li>
                               </ul>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <ul class="unorderList ul_withIcon">
-                                  <li><img src="assets/Img/icon_ud_consultation_form.svg">Investigation report</li>
-                                  <li><img src="assets/Img/icon_ud_consultation_form.svg">Hospital discharge form</li>
+                                  <li><img src="assets/Img/icon_ud_consultation_form.svg">{{"Investigation report" | translate}}</li>
+                                  <li><img src="assets/Img/icon_ud_consultation_form.svg">{{"Hospital discharge form" | translate}}</li>
                               </ul>
                           </div>
                       </div>
                       <div class="uploadDocument_main">
                           <div class="uploadDocument_area" (click)="fileInput.click()">
                               <div class="ud_area_left">
-                                  <h6>Upload Documents</h6>
-                                  <p>JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)</p>
+                                  <h6>{{"Upload Documents" | translate}}</h6>
+                                  <p>{{"JPG/JPEG/BMP/PNG/PDF Files (up to 10MB)" | translate}}</p>
                               </div>
                               <div class="ud_area_right">
                                   <button type="button" id="uploadfile" name="uploadfile" class="btn_uploadDocument">
-                                      <span class="upload_icon"><img src="assets/Img/icon_upload_white.svg"></span> Upload
+                                      <span class="upload_icon"><img src="assets/Img/icon_upload_white.svg"></span>{{"Upload" | translate}}
                                   </button>
                               </div>
                               <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                             
                           </div>
                           <span class="ui-error block-show" *ngIf="uploadValidFormat">
-                            File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files.
+                            {{"File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." | translate}}
                           </span>
                           <div class="uploadDocument_listMain" *ngIf="uploadedFiles.length > 0">
                               <div class="uploadDocument_filesList">
                                   <div class="filesList_head">
-                                      <div class="filesList_headLeft">Uploads:</div>
-                                      <div class="filesList_headRight">{{ uploadStatus }}</div>
+                                      <div class="filesList_headLeft">{{"Uploads:" | translate}}</div>
+                                      <div class="filesList_headRight">{{ uploadStatus | translate }}</div>
                                   </div>
                                   <div class="filesList_body">
                                       <ul class="uploadedFiles_main">
@@ -420,7 +420,7 @@
                                                   <div class="headInfo_item">
                                                       <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
                                                           <ng-container *ngIf="!file.isEditing">
-                                                              <span class="label-text">{{ file.label }}</span>
+                                                              <span class="label-text">{{ file.label | translate}}</span>
                                                               <button type="button" id="labeledit" name="labeledit" (click)="startEditing(file)" class="edit-button">
                                                                   <img src="assets/Img/icon_pencil_blue.svg">
                                                               </button>
@@ -477,7 +477,7 @@
           <div class="row">
               <div class="col-12">
                   <!-- <button type="button" class="btn_red" [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid" (click)="submitRequest()">Submit Request</button> -->
-                  <button type="button" id="submitrequest" name="submitrequest" class="btn_red" (click)="submitRequest()" [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid" >Submit Request</button>
+                  <button type="button" id="submitrequest" name="submitrequest" class="btn_red" (click)="submitRequest()" [ngClass]="{'disabled': form.invalid}" [disabled]="form.invalid" >{{"Submit Request" | translate}}</button>
               </div>
           </div>
       </div>
