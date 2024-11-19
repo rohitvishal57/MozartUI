@@ -4,11 +4,11 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" *ngIf="!isCaptchaOne">Validate OTP</h5>
-                <h5 class="modal-title" *ngIf="isCaptchaOne">Confirm Captcha</h5>
+                <h5 class="modal-title" >Validate OTP</h5>
+                <!-- <h5 class="modal-title" >Confirm Captcha</h5> -->
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
-            <div class="modal-body" *ngIf="!isCaptchaOne">
+            <div class="modal-body" >
                 <div class="OTP-subHeader">OTP has been sent successfully to your registered <b>Mobile Number</b> and
                     <b>Email ID</b>
                 </div>
@@ -67,38 +67,11 @@
                 </div>
                 <!--Captcha Field end-->
             </div>
-            <div class="modal-body" *ngIf="isCaptchaOne">
-                <!--Captcha one Field start-->
-                <div class="row " [formGroup]="captchaFormOne">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <div class="input-block m-0">
-                            <label for="">Enter Captcha Code</label>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="input-block input-otp-block m-0">
-                            <!-- <input type="text" name="otp-captcha" value="" placeholder="" class="input-textBox"> -->
-                            <input type="text" id="captchaInput" formControlName="captchaOneInput" class="input-textBox" />
-                            <span class="ui-error">Please enter valid captcha</span>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <canvas #captchaCanvas width="150" height="50" style="display: none;"></canvas>
-                        <img [src]="captchaImage" alt="CAPTCHA" height="44px" />
-                        <button type="button" (click)="reloadCaptcha()"
-                            style="height: 44px; margin-left: 5px; border-width: 0;"><mat-icon>refresh</mat-icon></button>
-                    </div>
-                </div>
-                <!--Captcha one Field end-->
-            </div>
             <div class="modal-footer">
-                <button *ngIf="!isCaptchaOne" type="button" (click)="validateOtp()" id="validateotp" name="validateotp"
+                <button  type="button" (click)="validateOtp()" id="validateotp" name="validateotp"
                     class="btn_red btn_fullWidth">Validate OTP</button>
-                <button *ngIf="!isCaptchaOne" type="button" (click)="resendOtp()" id="resendotp" name="resendotp"
+                <button  type="button" (click)="resendOtp()" id="resendotp" name="resendotp"
                     class="btn_white btn_fullWidth">Resend
-                    OTP</button>
-                <button *ngIf="isCaptchaOne" type="button" (click)="resendOtp()" id="resendotp" name="resendotp"
-                    class="btn_red btn_fullWidth">Send
                     OTP</button>
             </div>
         </div>
