@@ -59,7 +59,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
           // Handle errors here
           if (error.status === 401) {
             localStorage.clear()
-            this.router.navigate(['/login']);
+            this.router.navigate(['']);
           }
           return throwError(error);
         }),

@@ -5,11 +5,9 @@ import { AuthGuard } from 'src/app/authorize/auth.guard';
 import { StatusValidationComponent } from '../status-validation/status-validation.component';
 
 const routes: Routes = [
-  { path:'',
-    component:LoginComponent
-  },
-  {path:":status/loginstatus", component: StatusValidationComponent},
-  {path:'',redirectTo:'',pathMatch:'full'}
+  { path:'', component:LoginComponent },
+  { path:":status/loginstatus", component: StatusValidationComponent },
+  { path:'',redirectTo:'',pathMatch:'full' }
 ];
 
 @NgModule({
