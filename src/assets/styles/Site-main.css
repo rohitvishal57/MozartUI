@@ -4048,6 +4048,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 .popupModalMain .modal-footer {
   padding: 0 0 24px;
+  gap: 8px;
 }
 .popupModalMain .modal-footer button {
   margin: 0;
