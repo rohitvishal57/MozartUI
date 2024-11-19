@@ -1,13 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { CalendarEventTimesChangedEvent, CalendarView } from 'angular-calendar';
-import { addDays, addHours, addMonths, addWeeks, subDays, subMonths, subWeeks } from 'date-fns';
-import { Subject } from 'rxjs';
-import { CalendarEvent as CE } from 'angular-calendar';
-import { Router } from '@angular/router';
-import { EventsService } from '../events-new/events.service';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { CalendarEventTimesChangedEvent } from "angular-calendar";
+import {
+  addDays,
+  addHours,
+  addMonths,
+  addWeeks,
+  subDays,
+  subMonths,
+  subWeeks,
+} from "date-fns";
+import { Subject } from "rxjs";
+import { CalendarEvent as CE } from "angular-calendar";
+import { Router } from "@angular/router";
+import { EventsService } from "../events-new/events.service";
+import { MatDialog } from "@angular/material/dialog";
+
 
 export interface CalendarEvent extends CE {
   id: number;
+  note: string;
   title: string;
   start: Date;
   end: Date;
@@ -16,87 +27,144 @@ export interface CalendarEvent extends CE {
     secondary: string;
   };
   allDay?: boolean;
-  meta?: any;
 }
 
+export enum CalendarView {
+  Day = 'day',
+  Week = 'week',
+  Month = 'month',
+}
 @Component({
-  selector: 'app-events-list',
-  templateUrl: './events-list.component.html',
-  styleUrls: ['./events-list.component.scss']
+  selector: "app-events-list",
+  templateUrl: "./events-list.component.html",
+  styleUrls: ["./events-list.component.scss"],
 })
 export class EventsListComponent implements OnInit {
-  view: CalendarView = CalendarView.Day;
+  view: CalendarView = CalendarView.Day ;
   CalendarView = CalendarView;
   viewDate: Date = new Date();
   events: CalendarEvent[] = [];
   refresh = new Subject<void>();
-
-  constructor(private route: Router, private eventsService: EventsService) {}
+  notes: any;
+  dayStartHour: any;
+  dayEndHour: any;
+  selectedEvent: any = null;
+  @ViewChild('eventModal') eventModal: any;
+  constructor(private route: Router, private eventsService: EventsService,   private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadEvents();
   }
 
-  loadEvents(): void {
-    const agentCode = localStorage.getItem('agentCode')
-    let getEventReq = [
 
+  loadEvents(): void {
+    const agentCode = localStorage.getItem("agentCode");
+    let getEventReq = [
       {
-        "agentCode": agentCode,
-        "customerName": "",
-    
-        "mobileNumber": "",
-    
-        "activityTitle": "",
-    
-        "startDate": "",
-    
-        "endDate": "",
-    
-        "activityType": "",
-    
-        "note": ""
-    
-      }
-    
-    ]
-     
+        agentCode: agentCode,
+        customerName: "",
+        mobileNumber: "",
+        activityTitle: "",
+        startDate: "",
+        endDate: "",
+        activityType: "",
+        note: "",
+      },
+    ];
+  
     this.eventsService.getEvents(getEventReq, agentCode).subscribe(
-      (response:any) => {
+      (response: any) => {
         if (response.isSuccess) {
-          const data = JSON.parse(response.data.data);
-          this.events = data.map((event: any) => ({
-            id: event.id,
-            title: event.activityType,
-            start: new Date(event.startDate),
-            end: new Date(event.endDate),
-            color: {
-              primary: '#1e90ff',
-              secondary: '#D1E8FF'
-            },
-            meta: {
-              note: event.note
-            }
-          }));
+          this.events = response.data.map((event: any) => {
+            // For each event, process all scheduled times
+            return event.eventSchedule.map((schedule: any) => {
+              const startDateTime = this.parseDateTime(schedule.date, schedule.startTime);
+              const endDateTime = this.parseDateTime(schedule.date, schedule.endTime);
+  
+        
+              console.log("Processing event:", {
+                date: schedule.date,
+                startTime: schedule.startTime,
+                endTime: schedule.endTime,
+                parsedStart: startDateTime,
+                parsedEnd: endDateTime
+              });
+  
+              if (!startDateTime || !endDateTime) {
+                console.error("Invalid date/time for event:", event);
+                return null;
+              }
+  
+              return {
+                note: event.note,
+                title: `${event.customerName} </br> ${event.activityType}  </br>  ${event.note}`,
+                start: startDateTime,
+                end: endDateTime,
+                color: {
+                  primary: "#1e90ff",
+                  secondary: "#D1E8FF",
+                },
+                meta: {
+                  customerName: event.customerName,
+                  mobileNumber: event.mobileNumber,
+                  activityType: event.activityType,
+                  activityTitle: event.activityTitle
+                }
+              };
+            });
+          })
+          // Flatten the array of arrays since we mapped event schedules
+          .flat()
+          // Remove any null events from invalid dates
+          .filter((event: any) => event !== null);
+  
+          if (this.events.length > 0) {
+            const startHours = this.events.map(event => event.start.getHours());
+            const endHours = this.events.map(event => event.end.getHours());
+            
+            this.dayStartHour = Math.min(...startHours);
+            this.dayEndHour = Math.max(...endHours);
+          }
+  
           this.refresh.next();
         } else {
-          console.error('Error loading events:', response.message);
-          // Fallback to static events in case of API error
-          // this.events = this.staticEvents;
-          this.refresh.next();
+          console.error("Error loading events:", response.message);
         }
       },
-      (error) => {
-        console.error('Error loading events:', error);
-        // Fallback to static events in case of API error
-        // this.events = this.staticEvents;
+      (error: any) => {
+        console.error("Error loading events:", error);
         this.refresh.next();
       }
     );
   }
+  
+  parseDateTime(date: string, time: string): Date | null {
+    try {
+      // Remove any milliseconds from the time string if present
+      const cleanTime = time.split('.')[0];
+      
+      // Combine date and time
+      const dateTimeStr = `${date}T${cleanTime}`;
+      const dateTime = new Date(dateTimeStr);
+  
+      // Validate the parsed date
+      if (isNaN(dateTime.getTime())) {
+        console.error(`Invalid DateTime: ${dateTimeStr}`);
+        return null;
+      }
+  
+      return dateTime;
+    } catch (error) {
+      console.error("Error parsing date and time:", error);
+      return null;
+    }
+  }
 
-  setView(view: CalendarView): void {
-    this.view = view;
+  capitalizeFirstLetter(view: CalendarView): string {
+    return view.charAt(0).toUpperCase() + view.slice(1).toLowerCase();
+  }
+  setView(selectedView: CalendarView): void {
+    this.view = selectedView;
   }
 
   today(): void {
@@ -130,20 +198,38 @@ export class EventsListComponent implements OnInit {
         break;
     }
   }
+  getEventWidth(event: CalendarEvent) {
+    // const eventDuration = (event.end?.getTime() - event.start.getTime()) / (1000 * 60); // Duration in minutes
+    // const availableWidth = 100; // Adjust based on available space in cell
+    // const eventWidth = (eventDuration / 1440) * availableWidth; // 1440 minutes in a day
 
-  handleEventClick(eventClickInfo: { event: CE<any>; sourceEvent: MouseEvent | KeyboardEvent }): void {
-    console.log('Event clicked:', eventClickInfo.event);
-    console.log('Source event:', eventClickInfo.sourceEvent);
-    // Additional logic for handling event click
+    // return `${Math.min(eventWidth, 100)}%`; // Ensure the width is never more than 100%
   }
 
-  handleEventTimesChanged(changeInfo: CalendarEventTimesChangedEvent<any>): void {
+
+  handleEventClick(event: any) {
+    this.selectedEvent = event.event;
+    this.openEventModal();
+  }
+
+  openEventModal(): void {
+    this.dialog.open(this.eventModal, {
+      width: '350px',
+      position: { top: '50px' },
+      disableClose: true,
+      data: this.selectedEvent
+    });
+  }
+
+  handleEventTimesChanged(
+    changeInfo: CalendarEventTimesChangedEvent<any>
+  ): void {
     this.events = this.events.map((iEvent) => {
       if (iEvent === changeInfo.event) {
         return {
           ...iEvent,
           start: changeInfo.newStart,
-          end: changeInfo.newEnd ?? new Date()
+          end: changeInfo.newEnd ?? new Date(),
         };
       }
       return iEvent;
@@ -152,6 +238,6 @@ export class EventsListComponent implements OnInit {
   }
 
   addEvents() {
-    this.route.navigate(['events/createEvents']);
+    this.route.navigate(["events/createEvents"]);
   }
 }
