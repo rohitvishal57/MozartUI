@@ -14,7 +14,14 @@ import { UploadLeadComponent } from './upload-lead/upload-lead.component';
 import { CampaignsComponent } from './campaigns/campaigns.component';
 import { NewCampaignComponent } from './new-campaign/new-campaign.component';
 import { NewCampaignRuleComponent } from './new-campaign-rule/new-campaign-rule.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
 
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/','.json');
+}
 
 @NgModule({
   declarations: [
@@ -32,7 +39,14 @@ import { NewCampaignRuleComponent } from './new-campaign-rule/new-campaign-rule.
     LeadsRoutingModule,
     PrimeNgModule,
     MyMaterialModule,
-    FormsModule
+    FormsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [CreateLead, LeadFormListValue],
 })
