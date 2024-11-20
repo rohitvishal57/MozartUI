@@ -587,12 +587,13 @@ button {
 
 .siteHeader .logoMain .logoMainRight {
   width: 100%;
-  padding: 0 28px 0 14px;
+  /* padding: 0 28px 0 14px; */
+  padding: 0 28px 0 0;
   border-radius: 0 0 0 14px;
   background: var(--secondary-red-color);
   color: var(--white-color);
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 7px;
 }
 .siteHeader .logoMain .logoMainRight .logoLeftNav{
@@ -1018,18 +1019,20 @@ button {
     border: 1px solid #c7222a;
 }
 .btn_cardDownload {
-  width: 20px;
-    height: 20px;
+  width: 24px;
+    height: 24px;
     border-width: 0;
   background: #c7222a;
   border-radius: 5px;
   padding: 5px;
   border-radius: 5px;
   display: flex;
+  align-items: center;
+    justify-content: center;
 }
 .btn_cardDownload img {
-  width: 12px;
-  height: 12px;
+  width: 18px;
+  height: 18px;
   filter: brightness(0) invert(1);
 }
 .btn_md {
@@ -3580,7 +3583,7 @@ input[type="search"]::-webkit-search-results-decoration {
   border: 2px solid var(--white-color);
   box-shadow: 0px 12px 20px 0px #00000026;
   backdrop-filter: blur(10px);
-  z-index: 9;
+  z-index: 1;
 }
 .overlay_popupMenu_Main {
   position: absolute;
@@ -5630,6 +5633,10 @@ input[type=number]::-webkit-outer-spin-button {
 /*---Header Menu start---*/
 .top_mainNavBar, .top_mainNavBar .container-fluid {
   padding: 0 !important;
+}
+.top_mainNavBar .navbar-collapse .navbar-nav li:first-child a {
+  /* border-radius: 0 0 0 16px;
+  padding: 11px 10px 11px 20px; */
 }
 .top_mainNavBar .navbar-collapse .navbar-nav .nav-link{
   font-size: 16px;
