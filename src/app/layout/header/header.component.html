@@ -37,18 +37,29 @@
 
 
       <div class="logoRightNav">
-<!-- 
-        <ul class="nav navbar-nav menuBarHappy" style="margin: 0px 0px 0px 20px;">
-          <li class="dropdown"><a data-toggle="dropdown" class="dropdown-toggle topMenu" id="downloadBrochure"
-            data-id="brochure" style="background-color: white;">Download Brochure (AO)</a></li>
-        </ul>
-        
-      <ul class="nav navbar-nav menuBarHappy" style="margin: 0px 0px 0px 20px;">
-          <li class="dropdown open"> <a class="dropdown-toggle" data-toggle="dropdown"  aria-expanded="true" style="background-color: white;">Marketing
-                  Content <span class="caret"></span> </a>
-          </li>
-      </ul> -->
 
+        <div class="header-right-cnt" *ngIf="isLoggedIn">
+          <div class="language-selector">
+            <select id="navDropdown" (change)="routeMarketingContent($event)">
+              <option value="">marketingContent </option>
+              <option *ngFor="let opt of marketingContent" [value]="opt.redirectURL">
+                {{ opt.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="header-right-cnt" *ngIf="isLoggedIn">
+          <div class="language-selector">
+            <select id="navDropdown" (change)="routeMarketingContent($event)">
+              <option value="">Download </option>
+              <option *ngFor="let opt of downloadBrowcher" [value]="opt.redirecturl">
+                {{ opt.name }}
+              </option>
+            </select>
+          </div>
+        </div>
         <!-- <div class="headerSearchMain">
                   <button type="button" class="btn_headerSearch"><img src="assests/Img/icon_magnify_grey.svg"></button>
               </div> -->

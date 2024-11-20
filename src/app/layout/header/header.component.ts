@@ -6,8 +6,6 @@ import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 import { NotificationService } from 'src/app/notifications/notification.service';
 import { error } from 'jquery';
-import { HeaderInformation as getList} from '../headerInfo';
-
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -22,6 +20,104 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   unReadNotificaitons : any[]=[];
   showNotifications : Boolean = false;
   agentCode : any;
+  marketingContent : any[] = [
+    {
+      "name": "Content Hub Portal",
+      "redirectURL": "https://www.abhimarketingcontenthub.com/contenthub/index.php/home/api_login?code="
+    },
+    {
+      "name": "Customer Testimonials",
+      "redirectURL": "https://www.youtube.com/playlist?list=PLfHGRTdw3O3Pp0O3pJKDciMJlqHuPoS3m"
+    },
+    {
+      "name": "Application Tracker",
+      "redirectURL": "https://www.adityabirlacapital.com/healthinsurance/#!/application-tracker"
+    },
+    {
+      "name": "KMS",
+      "redirectURL": "https://abclearning.adityabirlacapital.com/login"
+    }           
+];
+downloadBrowcher : any[] =[
+	
+	{
+		"name": "Activ Health Platinum Essential",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/active-health-essential-insurance"
+	},
+	{
+		"name": "Aditya Birla Activ Assure Diamond Plan",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/activ-assure-diamond"
+	},
+
+	{
+		"name": "Global Health Secure",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/corporate-health-insurance"
+	},
+	{
+		"name": "Group Health Insurance",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/corporate-health-insurance"
+	},
+	{
+		"name": "Health Insurance Plans",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/health-insurance-plans"
+	},
+	{
+		"name": "Health Insurance for Diabetes",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/diabetes"
+	},
+	{
+		"name": "Health Insurance for High BP",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/high-blood-pressure"
+	},
+	{
+		"name": "Health Insurance for High Cholesterol",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/high-cholesterol"
+	},
+	{
+		"name": "Health Insurance for Asthma",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/health-insurance-asthma"
+	},
+	{
+		"name": "Individual Health Insurance",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/individual-health-insurance"
+	},
+	{
+		"name": "Health insurance claim",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/reimbursement-claims"
+	},
+	{
+		"name": "Employer health insurance",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/corporate-health-insurance"
+	},
+	{
+		"name": "Health care for young adults",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/activ-fit"
+	},
+	{
+		"name": "Super topup health insurance",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/activ-assure-diamond-super-health-topup"
+	},
+	{
+		"name": "Health Insurance For Family",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/family-health-insurance"
+	},
+	{
+		"name": "Hospital cash insurance",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/hospital-cash"
+	},
+	{
+		"name": "Health insurance with OPD cover",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/cashless-opd"
+	},
+	{
+		"name": "Ayush treatment",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/ayush-treatment"
+	},
+	{
+		"name": "Corona virus health insurance",
+		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/coronavirus-covid19"
+	}
+]
   
   @Input() isLoggedIn: any;
 
@@ -166,6 +262,14 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     error =>{
       console.log('Failed to Mark notifications', error)
     });
+  }
+
+  routeMarketingContent(event : any){
+    window.open(event.target.value);    
+  }
+
+  downloadPdfBrowcher(event : any){
+
   }
 
 }
