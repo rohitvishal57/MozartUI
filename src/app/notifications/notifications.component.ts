@@ -56,4 +56,13 @@ export class NotificationsComponent {
     this.showNotifications = false;
   }
 
+
+  formatDate(timestamp : any): string{
+    const date = new Date(timestamp);
+
+const formattedDate = date.toLocaleDateString('en-CA');
+
+return formattedDate;
+  }
+
 }

@@ -52,9 +52,9 @@
                                     </thead>
                                     <tbody class="table-group-divider" >
                                         <tr *ngFor="let item of notifications ; let i =index">
-                                            <td class="td-text-bold">{{item.id}}</td>
+                                            <td class="td-text-bold">{{i+1}}</td>
                                             <td><div class="body_flex_row"><img src="assets/Img/icon_notification_list_birthday.svg"> {{item.notificationType}}</div></td>
-                                            <td>{{item.createdOn}}</td>
+                                            <td>{{formatDate(item.createdOn)}}</td>
 
                                         </tr>
                                     </tbody>
@@ -66,7 +66,8 @@
                     <!--Card view start-->
                     <section id="notifications-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView === 'card'">
                         <div class="cardViewWraper">
-                            <div class="cardViewItem">
+
+                            <div class="cardViewItem" *ngFor="let item of notifications; let i">
                                 <div class="cardViewBody">
                                     <div class="cv_bodyItems cv_bodyItems_100">
                                         <div class="cardViewItem_Notifications">
@@ -74,14 +75,14 @@
                                                 <img src="assets/Img/icon_notification_card_birthday.svg">
                                             </div>
                                             <div class="info_notifications">
-                                                <div class="item_lable">Birthday Reminder</div>
-                                                <div class="item_value">2023-03-15</div>
+                                                <div class="item_lable">{{item.notificationType}}</div>
+                                                <div class="item_value">{{formatDate(item.createdOn)}}</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="cardViewItem">
+                            <!-- <div class="cardViewItem">
                                 <div class="cardViewBody">
                                     <div class="cv_bodyItems cv_bodyItems_100">
                                         <div class="cardViewItem_Notifications">
@@ -140,7 +141,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </section>
                     <!--Card view end-->
