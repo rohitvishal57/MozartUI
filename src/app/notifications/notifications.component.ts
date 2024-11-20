@@ -41,10 +41,13 @@ export class NotificationsComponent {
 
   getNotifications(){
     this.showNotifications = true;
+    this.showActivies = false;
+
   }
 
   getActivities(){
     this.showActivies = true;
+    this.showNotifications = false;
   }
 
 }

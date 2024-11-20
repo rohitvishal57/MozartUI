@@ -5081,7 +5081,8 @@ export class YatraComponent {
     this.dynamicFormGroup.patchValue({
       maritalStatus: JSON.stringify(maritalStatusPatchValue),
       proposerGender: this.quoteLeadInformation.gender,
-      educationDetails : JSON.stringify(educationDetailsPatchValue)
+      educationDetails : JSON.stringify(educationDetailsPatchValue),
+      preFix : this.quoteLeadInformation.salutation
     });
   }
 }
