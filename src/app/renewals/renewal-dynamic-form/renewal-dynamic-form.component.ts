@@ -28,7 +28,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   renewalBaseObject:any;
   formObject: any = {};
   subObject:any = {};
-  selectedSumInsured: any;
+  // selectedSumInsured: any;
   optionalCovers:any[]=[];
   healthAddOns:any;
   referenceNumber:any=null;
@@ -46,21 +46,21 @@ export class RenewalDynamicFormComponent implements OnInit {
     'COPD',
     'HighBMI'
   ];
-  sliderOptions: Options = {
-    stepsArray: [
-      { value: 500000 }, 
-      { value: 700000 }, 
-      { value: 1000000 },  
-      { value: 1500000 }, 
-      { value: 2500000 }, 
-      { value: 5000000 },
-      { value: 10000000 }, 
-      { value: 20000000 } 
-    ],
-    translate: (value: number): string => {
-      return '';
-    }
-  };
+  // sliderOptions: Options = {
+  //   stepsArray: [
+  //     { value: 500000 }, 
+  //     { value: 700000 }, 
+  //     { value: 1000000 },  
+  //     { value: 1500000 }, 
+  //     { value: 2500000 }, 
+  //     { value: 5000000 },
+  //     { value: 10000000 }, 
+  //     { value: 20000000 } 
+  //   ],
+  //   translate: (value: number): string => {
+  //     return '';
+  //   }
+  // };
   requestObject: any = {policyNumber: "string",referenceNumber: "string",};
   agentCode=localStorage.getItem('agentCode');
   productsList:any[]=[];
@@ -115,6 +115,9 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectedBankName: any;
   selectedCityName: any;
   documentId:any;
+  showAppointee: boolean = false;
+
+
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,private toast: NgToastService,
     private ac:ActivatedRoute,private yatraService:YatraService,private commonService:CommonService,private encryptionService: EncryptionService) {
@@ -139,7 +142,7 @@ export class RenewalDynamicFormComponent implements OnInit {
         }
       }
     });
-   this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
+  //  this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;
    this.bankNameControl.valueChanges.subscribe(value => this.filterBankList(value));
    this.customerFeedbackForm = this.fb.group({
     message: [''],
@@ -158,9 +161,9 @@ export class RenewalDynamicFormComponent implements OnInit {
     this.form = this.fb.group(group);
   }
 
-  onSumInsuredChange(eventValue: any) {
-   this.selectedSumInsured = eventValue;
-  }
+  // onSumInsuredChange(eventValue: any) {
+  //  this.selectedSumInsured = eventValue;
+  // }
 
   formatTickLabel(value: number, forSlider: boolean): string {
     if (value >= 10000000) {
@@ -200,7 +203,9 @@ export class RenewalDynamicFormComponent implements OnInit {
     this.form.value.Age = this.calculateAge(this.form.value.DoB).toString();
     this.form.value.ChronicManagementApplicable = this.isAnyConditionSelected() ? 'Yes' : 'No';
     this.form.value.PreExistingDiseasesApplicable = this.isAnyConditionSelected() ? 'Yes' : 'No';
-    this.form.value.SumInsured=this.selectedSumInsured.toString();
+    // this.form.value.SumInsured=this.selectedSumInsured.toString();
+    this.form.value.Zone = this.form.value.MemberproductComponents?.[0]?.productComponent?.find(
+      (component: any) => component.productComponentName === 'zone')?.productComponentValue;
   }
 
   calculateAge(dob: Date): number | string {
@@ -215,6 +220,27 @@ export class RenewalDynamicFormComponent implements OnInit {
       return `${diffInDays}days`;
     }
     return age;
+  }
+
+  checkNomineeAge() {
+    const nomineeDob = this.form.get('nominee_dob')?.value;
+    if (nomineeDob) {
+      const dob = new Date(nomineeDob);
+      const age = this.calculateAge(dob);
+      if(+age >= 18){
+        this.showAppointee = false
+      }else{ this.showAppointee = true }
+      // this.showAppointee = +age < 18;
+      // const dob = new Date(nomineeDob);
+      // const today = new Date();
+      // const diffInTime = today.getTime() - dob.getTime();
+      // const diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24));
+      //   if (diffInDays < 365) {
+      //   this.showAppointee = true;
+      // } else {
+      //   this.showAppointee = false;
+      // }
+    }
   }
 
   handleAction(event: string,item?: any) {
@@ -234,11 +260,12 @@ export class RenewalDynamicFormComponent implements OnInit {
             console.log("add",this.form.value);
             this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
               (res:any) => {
+                console.log(res);
                 if(res.data.isUpdateSuccess == true){
                   this.form.value.MemberId=res.MemberId;
                   this.renewalInfo.response.policyData[0].Members.push(this.form.value);
                   const newMemberIndex = this.renewalInfo.response.policyData[0].Members.length - 1;
-                  this.renewalInfo.response.policyData[0].Members[newMemberIndex].SumInsured = this.selectedSumInsured;
+                  // this.renewalInfo.response.policyData[0].Members[newMemberIndex].SumInsured = this.selectedSumInsured;
                   this.referenceNumber=res.data.referenceNumber;
                 }
               },
@@ -250,7 +277,7 @@ export class RenewalDynamicFormComponent implements OnInit {
          } 
          else if (this.memberRole === 'Update' && this.form.valid) {
             this.requestObject = {};
-            this.form.value.SumInsured=this.selectedSumInsured;
+            // this.form.value.SumInsured=this.selectedSumInsured;
             this.requestObject.member=JSON.stringify(this.form.value);
             this.requestObject.policyNumber= this.policyNumber;
             this.requestObject.referenceNumber=this.referenceNumber; 
@@ -264,7 +291,7 @@ export class RenewalDynamicFormComponent implements OnInit {
                   const memberIndex = this.renewalInfo.response.policyData[0].Members.findIndex((member:any) => member.FirstName === this.form.value.FirstName);
                   if (memberIndex !== -1) {
                     this.renewalInfo.response.policyData[0].Members[memberIndex] = { ...this.renewalInfo.response.policyData[0].Members[memberIndex], ...this.form.value };
-                    this.renewalInfo.response.policyData[0].Members[memberIndex].SumInsured = this.selectedSumInsured;
+                    // this.renewalInfo.response.policyData[0].Members[memberIndex].SumInsured = this.selectedSumInsured;
                   } else {console.log('Member not found for update');}
                   this.referenceNumber=res.data.referenceNumber;
                 }
@@ -393,6 +420,13 @@ export class RenewalDynamicFormComponent implements OnInit {
   isAnyPreExistingDiseasesConditionSelected(): boolean {
     return this.healthConditions.some(condition => {const controlValue = this.PreExistingDiseases.get(condition)?.value;return controlValue === 'Y';});
   }
+  checkAndDisableSumInsured(): void {
+    if (this.memberRole === 'Update') {
+      this.form.get('SumInsured')?.disable();
+    } else {
+      this.form.get('SumInsured')?.enable();
+    }
+  }
   
   selectButton(value?: any,content? : any,member?:number) {
    if (this.selectedButton === 'primary') {
@@ -413,6 +447,7 @@ export class RenewalDynamicFormComponent implements OnInit {
       if (this.renewalInfo?.response?.policyData?.length > 0 && content == 'editNominee') {
         this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Nominee_Details};
         this.formObject.nominee_dob=this.formatDate(this.formObject.nominee_dob);
+        console.log(this.formObject.nominee_dob);
       } 
       this.initializeForm();
       this.formId = value;
@@ -443,6 +478,10 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
        .reduce((acc: any, key: any) => {
       const value = this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0][key];
+      if (key === 'MemberproductComponents') {
+        acc[key] = value;
+        return acc;
+      }
       if (Array.isArray(value)) {
         acc[key] = [];
       } else if (value !== null && typeof value === 'object') {
@@ -455,29 +494,6 @@ export class RenewalDynamicFormComponent implements OnInit {
       } 
       return acc;
       }, {});
-      // this.subObject = Object.keys(this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] || {})
-      // .reduce((acc: any, key: any) => {
-      //   const value = this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0][key];
-      //   if (Array.isArray(value)) {
-      //     acc[key] = value.map(item => {
-      //       if (typeof item === 'object' && item !== null) {
-      //         return Object.keys(item).reduce((nestedAcc: any, nestedKey: any) => {
-      //           nestedAcc[nestedKey] = ''; 
-      //           return nestedAcc;
-      //         }, {});
-      //       }
-      //       return '';
-      //     });
-      //   } else if (value !== null && typeof value === 'object') {
-      //     acc[key] = Object.keys(value).reduce((nestedAcc: any, nestedKey: any) => {
-      //       nestedAcc[nestedKey] = ''; 
-      //       return nestedAcc;
-      //     }, {});
-      //   } else {
-      //     acc[key] = '';
-      //   }
-      //   return acc;
-      // }, {});
       console.log(this.subObject);
       this.formObject = {...this.subObject};
       this.chronicApplication = this.fb.group({
@@ -491,15 +507,16 @@ export class RenewalDynamicFormComponent implements OnInit {
       console.log(this.formObject);
       console.log(this.renewalInfo);
       this.formObject.DoB =this.formatDate(this.formObject.DoB);
-      if (!isNaN(this.formObject?.SumInsured)) {
-        const sumInsuredValue = Number(this.formObject.SumInsured);
-        const closestValue = this.sliderOptions?.stepsArray?.reduce((prev, curr) => {
-          return Math.abs(curr.value - sumInsuredValue) < Math.abs(prev.value - sumInsuredValue) ? curr : prev;});
-        this.selectedSumInsured = closestValue?.value ?? 0;        
-      } else {this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;}     
+      // if (!isNaN(this.formObject?.SumInsured)) {
+      //   const sumInsuredValue = Number(this.formObject.SumInsured);
+      //   const closestValue = this.sliderOptions?.stepsArray?.reduce((prev, curr) => {
+      //     return Math.abs(curr.value - sumInsuredValue) < Math.abs(prev.value - sumInsuredValue) ? curr : prev;});
+      //   this.selectedSumInsured = closestValue?.value ?? 0;        
+      // } else {this.selectedSumInsured = this.sliderOptions?.stepsArray?.[4]?.value ?? 0;}     
     }
      this.initializeForm();
-      this.formId = value;
+     this.formId = value;
+     this.checkAndDisableSumInsured();      
     }
     else {
       this.formId = 5001; 
@@ -521,7 +538,11 @@ export class RenewalDynamicFormComponent implements OnInit {
 
 private formatDate(dateString: string): string {
   if (!dateString) return '';
-  return dateString.split('T')[0]; 
+  if (/\d{2}\/\d{2}\/\d{4}/.test(dateString)) {
+    const [day, month, year] = dateString.split('/');
+    return `${year}-${month}-${day}`; // Convert to yyyy-MM-dd
+  }
+  return dateString.split('T')[0];
 }
 
  selectPaymentType(option: any) {
