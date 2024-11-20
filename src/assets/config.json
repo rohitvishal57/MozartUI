@@ -11,6 +11,7 @@
     "generatePaymentlink": "api/renewal/generatepaymentlink",
     "updatenominee": "api/renewal/updatenominee",
     "updateaddress": "api/renewal/updateaddress",
+    "updateBankDetails":"/api/renewal/savebankdetails",
     "getproductdetailsandfeatures": "api/renewal/getproductdetailsandfeatures",
     "getSubquotes": "api/renewal/getsubquotes",
     "updateMemberDetails": "api/renewal/UpdateMemberDetails",

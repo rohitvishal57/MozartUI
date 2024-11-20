@@ -1329,8 +1329,6 @@ export class YatraComponent {
       });
     }
   }
-
-
   getBankCity(event: any, otherControl: any) {
     otherControl.value = "";
     otherControl.options = [];

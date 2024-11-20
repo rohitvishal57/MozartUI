@@ -51,6 +51,12 @@ export interface RenewalList {
     ifscCode: [Validators.required, Validators.pattern('^[A-Z]{4}[0]{1}[A-Z0-9]{6}$')],
     bankNameControl: [Validators.required],
     file: [] ,
+    accountHolderName:[Validators.required],
+    accountNo:[Validators.required,Validators.pattern(/^[0-9]{9,18}$/)],
+    accountType:[Validators.required],
+    bankName:[Validators.required],
+    bankCity:[Validators.required],
+    bankBranch:[Validators.required],    
   };
   
     

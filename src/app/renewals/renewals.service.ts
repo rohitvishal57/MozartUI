@@ -83,6 +83,10 @@ export class RenewalsService {
     const updateaddress = this.configService.config.baseUrl + this.configService.config.updateaddress;
     return this.httpService.post(updateaddress, reqBody);
   }
+  updateBankDetailsApi(reqBody:any){
+    const updateBankDetails= this.configService.config.baseUrl + this.configService.config.updateBankDetails
+    return this.httpService.post(updateBankDetails,reqBody)
+  }
   getproductdetailsandfeatures(reqBody: any){
     const getproductdetailsandfeatures = this.configService.config.baseUrl + this.configService.config.getproductdetailsandfeatures;
     return this.httpService.post(getproductdetailsandfeatures, reqBody);

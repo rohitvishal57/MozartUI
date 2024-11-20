@@ -29,7 +29,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   formObject: any = {};
   subObject:any = {};
   selectedSumInsured: any;
-  optionalCovers:any;
+  optionalCovers:any[]=[];
   healthAddOns:any;
   referenceNumber:any=null;
   selectedTenure: string=''; 
@@ -77,6 +77,8 @@ export class RenewalDynamicFormComponent implements OnInit {
   activeAction:any;
   offlinePaymentForm!: FormGroup;
   bankNameList:any[]=[];
+  cityNameList:any[]=[];
+  branchNameList:any[]=[]
   bankNameControl = new FormControl('');
   filteredBankNamesList:any[]=[];
   currentDate = new Date().toISOString().split('T')[0];
@@ -98,8 +100,20 @@ export class RenewalDynamicFormComponent implements OnInit {
   tenureDetail:any;
   chronicApplication: FormGroup= this.fb.group({});
   PreExistingDiseases: FormGroup= this.fb.group({});
-
-
+  selectedBankId!:string
+  selectedCityId!:string
+  bankDetailsObject={
+    accountHolderName:"",
+    accountNo:"",
+    accountType:"",
+    bankName:"",
+    bankCity:"",
+    bankBranch:"",
+    IFSCCOde:"",
+    MICRCode:""
+  }
+  selectedBankName: any;
+  selectedCityName: any;
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,private toast: NgToastService,
     private ac:ActivatedRoute,private yatraService:YatraService,private commonService:CommonService,private encryptionService: EncryptionService) {
@@ -119,8 +133,8 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.getRenewalInfo(); 
         }
         else{
+          // this.setSection('primary')
           this.getRenewalInfo(); 
-          this.getProducts();
         }
       }
     });
@@ -328,6 +342,30 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.activeSection='primary'
           break;
         case 'editBankDetails':
+            this.requestObject = {};
+            this.requestObject.bankDetails=JSON.stringify(this.bankDetailsObject);
+            this.requestObject.policyNumber=this.policyNumber;
+            this.requestObject.referenceNumber=this.referenceNumber;  
+            this.renewalService.updateBankDetailsApi(this.requestObject).subscribe(
+             (res:any) => {
+              if(res.data.isUpdateSuccess == true  && this.form.valid){
+                this.bankDetailsObject = {
+                  accountHolderName: this.form.value.accountHolderName || "",
+                  accountNo: this.form.value.accountNo || "",
+                  accountType: this.form.value.accountType || "",
+                  bankName: this.selectedBankName || "",
+                  bankCity: this.selectedCityName || "",
+                  bankBranch: this.selectedBankName || "",
+                  IFSCCOde: this.form.value.IFSCCOde || "",
+                  MICRCode: this.form.value.MICRCode || ""
+              };
+                this.referenceNumber=res.data.referenceNumber;
+              }
+             },
+             (err) => {
+              this.toast.error({ detail: "", summary: "Failed to Update Bank Details.", duration: 1500 });
+              }
+            );
           this.formId=5001;
           break;  
         case 'cancel':
@@ -358,9 +396,8 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectButton(value?: any,content? : any,member?:number) {
    if (this.selectedButton === 'primary') {
     if (value == 5006) {
-      if (this.renewalInfo?.response?.policyData?.length > 0) {
-        this.formObject = {...this.renewalInfo?.response?.policyData[0]?.HomeAddress };
-      } 
+      this.getBankDetails();
+      this.formObject = this.bankDetailsObject
       this.initializeForm();
       this.formId = value;
     }
@@ -499,14 +536,7 @@ private formatDate(dateString: string): string {
     };
     this.initializeForm();
     this.selectedPaymentType = option;
-    this.yatraService.getAllBankDetails().subscribe({
-      next: (res: any) => {
-        console.log("bank names list",res.data);
-        this.bankNameList = res.data;
-        this.filteredBankNamesList = this.bankNameList;
-      },
-      error: (err) => {console.error(err);}
-    });
+    this.getBankDetails();
   }
   else if(option == 'online' || option == 'E-Mandate' || option == 'Auto_Debit'){
     this.selectedPaymentType = option;
@@ -536,6 +566,87 @@ private formatDate(dateString: string): string {
       });
      }  
  }
+ getBankDetails(){
+  this.yatraService.getAllBankDetails().subscribe({
+    next: (res: any) => {
+      this.bankNameList = res.data;
+      if (this.activeSection === 'payment') {
+        this.filteredBankNamesList = this.bankNameList;
+      }  
+    },
+    error: (err) => {console.error(err);}
+  });
+ }
+ onBankChange(event: any) {
+  const selectedBank = this.bankNameList.find((bank: any) => bank.id === event.target.value);
+  if (selectedBank) {
+    this.selectedBankId = selectedBank.id;
+    this.selectedBankName = selectedBank.name; 
+    this.getBankCityDetails(this.selectedBankId);
+  } else {
+    this.selectedBankId = '';
+    this.selectedBankName = '';
+    this.cityNameList = [];
+    this.branchNameList = [];
+  }
+}
+
+ getBankCityDetails(bankId:any) {
+  const reqData = {
+    "cityCode": "",
+    "bankCode": bankId
+  };
+  this.yatraService.getBankCity(reqData).subscribe({
+    next: (res: any) => {
+      this.cityNameList = res.data;
+      if (this.selectedCityId) {
+        this.getBranchDetails(this.selectedBankId, this.selectedCityId);
+      }     
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+}
+onCityChange(event: any) {
+  const selectedCity = this.cityNameList.find((city: any) => city.id === event.target.value);
+  if (selectedCity) {
+    this.selectedCityId = selectedCity.id;
+    this.selectedCityName = selectedCity.name; 
+    this.getBranchDetails(this.selectedBankId, this.selectedCityId);
+  } else {
+    this.selectedCityId = '';
+    this.selectedCityName = '';
+  }
+}
+
+getBranchDetails(bankId:any,cityId:any) {
+  const reqData = {
+    "bankCode": bankId,
+    "cityCode": cityId
+  };
+  this.yatraService.getBranchDetails(reqData).subscribe({
+    next: (res: any) => {
+       this.branchNameList=res.data       
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+}
+onBranchChange(event: any) {
+    const selectedbranch = this.branchNameList.find(branch => branch.id === this.form.get('bankBranch')?.value);    
+    if (selectedbranch) {    
+    this.form.get('IFSCCOde')?.setValue(selectedbranch.id); 
+    this.form.get('MICRCode')?.setValue(selectedbranch.value); 
+  } 
+}
+
+setIfscCode(event: any, otherControl: any) {
+  const data = JSON.parse(event.target.value);
+  // this.dynamicFormGroup.get('ifscCode')?.setValue(data.id);
+  // this.dynamicFormGroup.get('micrCode')?.setValue(data.value);
+}
  filterBankList(event: any): void {
   const input = (event.target as HTMLInputElement).value.toLowerCase();
   const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
@@ -558,6 +669,14 @@ onBankNameSelected(selectedBankName: string): void {
 
  setSection(section: string) {
    this.activeSection = section;
+   if(this.activeSection=='additional'){
+    this.getProducts();
+    this.getTenureDetails();
+    this.getproductdetailsandfeatures();
+   }
+  //  if(this.activeSection=='primary'){
+  //   this.getBankDetails();
+  //  }
  }
 
  goNext(){
@@ -574,40 +693,45 @@ onBankNameSelected(selectedBankName: string): void {
       this.form.markAllAsTouched();
       return;
     }
-    // const offlinePaymentRequestBody = {
-    //   "policyType": "Renewal",
-    //   "paymentMethod": "Offline",
-    //   "paymentOption": this.form.value.paymentOption.toString(),
-    //   "premiumAmount": this.form.value.chequeAmount.toString(),
-    //   "checkNo": this.form.value.chequeNumber.toString(),
-    //   "checkDate": this.form.value.chequeDate.toString(),
-    //   "policyNumber": this.policyNumber.toString(),
-    //   "agentCode": this.agentCode?.toString(),
-    //   "bankName": this.form.value.bankNameControl.toString(),
-    //   "ifsc": this.form.value.ifscCode.toString(),
-    //   "formFile": []
-    // };
-    // console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
-    const checkNumber= this.form.value.chequeNumber.toString()
-    const checkAmount= this.form.value.chequeAmount.toString()
-    console.log(checkAmount,checkNumber);
+    const offlinePaymentRequestBody = {
+      "PolicyType": "Renewal",
+      "PaymentMethod": "Offline",
+      "Source":"Retail",
+      "InstrumentType": this.form.value.paymentOption.toString(),
+      "PremiumAmount": this.form.value.chequeAmount.toString(),
+      "InstrumentNo": this.form.value.chequeNumber.toString(),
+      "InstrumentDate": this.form.value.chequeDate.toString(),
+      "PolicyNumber": this.policyNumber.toString(),
+      "ProposalNum":"",
+      "AgentCode": this.agentCode?.toString(),
+      "BankName": this.form.value.bankNameControl.toString(),
+      "IFSC": this.form.value.ifscCode.toString(),
+      "MicrNo":"",
+      "formFile": []
+    };
+    console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
+    // const checkNumber= this.form.value.chequeNumber.toString()
+    // const checkAmount= this.form.value.chequeAmount.toString()
+    // console.log(checkAmount,checkNumber);
     
-    const data = new FormData();
-    data.append("policyType", "Renewal");
-    data.append("paymentMethod", "Offline");
-    data.append("paymentOption", this.form.value.paymentOption);
-    data.append("premiumAmount", checkAmount);
-    data.append("checkNo", checkNumber);
-    data.append("checkDate", this.form.value.chequeDate);
-    data.append("policyNumber", this.policyNumber);
-    data.append("agentCode", this.agentCode|| "");
-    data.append("bankName", this.form.value.bankNameControl);
-    data.append("ifsc", this.form.value.ifscCode);
-    data.append('formFile', this.file);
-    console.log("uploaded file",this.file);
-    console.log("data",data);
-        // this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
-      this.renewalService.getFullQuoteApi(data).subscribe(
+    // const data = new FormData();
+    // data.append("PolicyType", "Renewal");
+    // data.append("PaymentMethod", "Offline");
+    // data.append("InstrumentType", this.form.value.paymentOption);
+    // data.append("PremiumAmount", checkAmount);
+    // data.append("InstrumentNo", checkNumber);
+    // data.append("InstrumentDate", this.form.value.chequeDate);
+    // data.append("PolicyNumber", this.policyNumber);
+    // data.append("ProposalNum","")
+    // data.append("AgentCode", this.agentCode|| "");
+    // data.append("BankName", this.form.value.bankNameControl);
+    // data.append("IFSC", this.form.value.ifscCode);
+    // data.append("MicrNo","")
+    // data.append('formFile', this.file);
+    // console.log("uploaded file",this.file);
+    // console.log("data",data);
+        this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
+      // this.renewalService.getFullQuoteApi(data).subscribe(
       (res:any)=>{
         if(res.isSuccess){
           console.log("offline payment reponse",res.data);
@@ -635,6 +759,8 @@ comeBack(){
       this.setSection('primary')
     }else if(this.activeSection == "policySummary"){
       this.setSection('additional')
+    }else if(this.activeSection == 'primary'){
+      this.router.navigate(['renewal/renewalList'])
     }
   }
   else{
@@ -657,9 +783,6 @@ getProducts() {
   this.commonService.Getproductlist(reqData).subscribe({
     next: (res) => {
       this.productsList = res.data;
-      this.getTenureDetails();
-      if(res != null){        
-      this.getproductdetailsandfeatures();}
     },
     error: (err) => {
        console.log("error coming form getproduct list API");
@@ -726,10 +849,11 @@ async getRenewalInfo() {
         this.renewalService.getproductdetailsandfeatures(request).subscribe(
           (res: any) => {
             console.log(res);
-            
             const productFeatures = res.data.productFeatures;
             this.optionalCovers = productFeatures.filter((feature: any) => feature.categoryName === 'Optional Covers');
-            this.healthAddOns = productFeatures.filter((feature: any) => feature.categoryName === 'Health Add On');           
+            this.healthAddOns = productFeatures.filter((feature: any) => feature.categoryName === 'Health Add On');
+            console.log(this.healthAddOns);
+            console.log(this.optionalCovers);
           },
           (err) => {
             console.error("Error coming from getproductdetailsandfeatures API", err);

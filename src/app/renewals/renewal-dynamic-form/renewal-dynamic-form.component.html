@@ -153,19 +153,19 @@
                                 <div class="data-row">
                                     <div class="data-item data-item-28">
                                         <label>Account No</label>
-                                        <h6></h6>
+                                        <h6>{{ bankDetailsObject?.accountNo || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-20">
                                         <label>Bank Name</label>
-                                        <h6></h6>
+                                        <h6>{{ bankDetailsObject?.bankName || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-20">
                                         <label>IFSC Code</label>
-                                        <h6></h6>
+                                        <h6>{{ bankDetailsObject?.IFSCCOde || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-20">
                                         <label>Bank Branch Name</label>
-                                        <h6></h6>
+                                        <h6>{{ bankDetailsObject?.bankBranch || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5006,'editBankDetails')">
                                         <button type="button" id="editBankDetails" name="editBankDetails" value="dataedit" class="btn_editGrey"></button>
@@ -871,71 +871,72 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="holderName" name="holderName" formControlName="" placeholder="" class="form-control input-textBox">
+                                            <input type="text" id="holderName" name="holderName" formControlName="accountHolderName" placeholder="" class="form-control input-textBox">
                                             <label for="holderName">Account Holder Name</label>
-                                            <!-- <span class="ui-error" *ngIf="form?.get('firstName')?.invalid && form?.get('firstName')?.touched">Please enter Account Holder Name</span> -->
+                                            <span class="ui-error" *ngIf="form?.get('accountHolderName')?.invalid && form?.get('accountHolderName')?.touched">Please enter Account Holder Name</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="number" id="account_Number" name="account_Number" placeholder="" class="form-control input-textBox">
+                                            <input type="number" id="account_Number" name="account_Number"formControlName="accountNo" placeholder="" class="form-control input-textBox">
                                             <label for="account_Number">Account Number</label>
-                                            <!-- <span class="ui-error">Please enter Mobile Number</span> -->
+                                            <span class="ui-error" *ngIf="form?.get('accountNo')?.invalid && form?.get('accountNo')?.touched">Please enter Account Number</span>
+                                            <small class="ui-error block-show" *ngIf="form.get('accountNo')?.hasError('pattern')">Account number allow 9 to 18 digits</small>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select id="account_type" name="account_type" formControlName="" placeholder="" class="form-control input-selectBox">
+                                            <select id="account_type" name="account_type" formControlName="accountType" placeholder="" class="form-control input-selectBox">
                                                 <option value="">Select account type</option>
                                                 <option value="saving">saving</option>
                                                 <option value="current">current</option>
                                             </select>
                                             <label for="account_type">Account Type</label>
-                                            <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                            <span class="ui-error" *ngIf="form.get('accountType')?.invalid && form.get('accountType')?.touched">Please Select Account Type</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select id="bank_Name" name="bank_Name" placeholder="" class="form-control input-selectBox">
-                                                <option value="">Select Bank Name</option>
-                                                <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
+                                            <select id="bank_Name" name="bank_Name" placeholder="" formControlName="bankName" class="form-control input-selectBox" (change)="onBankChange($event)">
+                                                <option value="" selected>Select Bank Name</option>
+                                                <option *ngFor="let bank of bankNameList" [value]="bank.id">{{ bank.name }}</option>
                                             </select>
                                             <label for="bank_Name">Bank Name</label>
-                                            <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                            <span class="ui-error" *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">Please Select Bank Name</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select id="bank_City" name="bank_City" placeholder="" class="form-control input-selectBox">
+                                            <select id="bank_City" name="bank_City"  placeholder="" formControlName="bankCity" class="form-control input-selectBox" (change)="onCityChange($event)">
                                                 <option value="">Select Bank City</option>
-                                                <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
+                                                <option *ngFor="let city of cityNameList" [value]="city.id">{{ city.name }}</option>
                                             </select>
                                             <label for="bank_City">Bank City</label>
-                                            <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                            <span class="ui-error" *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">Please Select City Name</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select id="bank_Branch" name="bank_Branch" placeholder="" class="form-control input-selectBox">
+                                            <select id="bank_Branch" name="bank_Branch" placeholder="" formControlName="bankBranch" class="form-control input-selectBox" (change)="onBranchChange($event)">
                                                 <option value="">Select Bank Branch</option>
-                                                <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
+                                                <option *ngFor="let branch of branchNameList" [value]="branch.id">{{ branch.name }}</option>
                                             </select>
                                             <label for="bank_Branch">Bank Branch</label>
-                                            <!-- <span class="ui-error" *ngIf="form.get('Relation')?.invalid && form.get('Relation')?.touched">Please Select Relation</span> -->
+                                            <span class="ui-error" *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">Please Select Branch Name</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox">
+                                            <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="IFSCCOde" >
                                             <label for="IFSC_Code">IFSC Code</label>
-                                            <!-- <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span> -->
+                                            <!-- <span class="ui-error" *ngIf="form?.get('ifsc')?.invalid && form.get('ifsc')?.touched">Please enter IFSC Code</span> -->
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="MICR_Code" name="MICR_Code" placeholder="" class="form-control input-textBox">
+                                            <input type="text" id="MICR_Code" name="MICR_Code" placeholder="" class="form-control input-textBox" formControlName="MICRCode">
                                             <label for="MICR_Code">MICR Code</label>
-                                            <!-- <span class="ui-error" *ngIf="form?.get('IdProofNumber')?.invalid && form.get('IdProofNumber')?.touched">Please enter ID</span> -->
+                                            <!-- <span class="ui-error" *ngIf="form?.get('micr')?.invalid && form.get('micr')?.touched">Please enter MICR Code</span> -->
                                         </div>
                                     </div>
                                 </div>
@@ -964,13 +965,13 @@
                                             <label class="input-radiolabel ">
                                                 <input type="radio" id="policyTenure" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" (click)="tenureUpdate('1', tenureDetail?.tenure1Premium )">
                                                 <span><em class="tenure-year">1 Year</em>
-                                                    <em class="tenure-amount">₹ {{ tenureDetail?.tenure1Premium | number:'1.0-0' }}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{ tenureDetail?.tenure1Premium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
                                                 <input type="radio" id="policyTenure" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" (click)="tenureUpdate('2',tenureDetail?.tenure2Premium )">
                                                 <span><em class="tenure-year">2 Years</em>
-                                                <em class="tenure-amount">₹ {{ tenureDetail?.tenure2Premium | number:'1.0-0'}}<em>/ yr</em></em>
+                                                    <em class="tenure-amount">₹ {{ tenureDetail?.tenure2Premium | number:'1.0-0'}}<em>/ yr</em></em>
                                                 <em class="tenure-off">₹ 7.5 off {{ tenureDetail?.t2DiscountAmount | number:'1.0-0' }}</em>
                                                 </span>
                                             </label>
@@ -1004,8 +1005,8 @@
                                                 <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" [checked]="selectedOptionalCoverages.includes(cover.featureName)" [disabled]="selectedOptionalCoverages.includes(cover.featureName)">
                                                 <label [for]="cover.featureName" [ngClass]="{'active': selectedOptionalCoverages.includes(cover.featureName)}">
                                                   <span><img src="assets/Img/icon_tick_round_red.svg" class="active"></span>
-                                                  <em class="head">{{cover.featureName}}</em>
-                                                  <em class="headInfo">{{cover.featureDescription}}</em>
+                                                  <em class="head">{{cover?.featureName}}</em>
+                                                  <em class="headInfo">{{cover?.featureDescription}}</em>
                                                 </label>
                                             </div>       
                                         </div>
@@ -1152,8 +1153,8 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode">
-                                                    <label for="IFSC_COde">IFSC Code</label>
+                                                    <input type="text" id="IFSC_Code" [(ngModel)]="bankDetailsObject.IFSCCOde" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode">
+                                                    <label for="IFSC_COde">IFSC Code</label>                                       
                                                     <span *ngIf="form.get('ifscCode')?.invalid && form.get('ifscCode')?.touched">
                                                         <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('required')">IFSC Code is required.</small>
                                                         <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('pattern')">IFSC Code must be 11 characters: first 4 uppercase letters, followed by 0, and 6 alphanumeric characters.</small>
@@ -1162,7 +1163,7 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox"  [matAutocomplete]="auto" formControlName="bankNameControl" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
+                                                    <input class="form-control input-textBox" [(ngModel)]="bankDetailsObject.bankName" [matAutocomplete]="auto" formControlName="bankNameControl" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
                                                      <label for="bankName">Search Bank Name</label>
                                                      <span *ngIf="form.get('bankNameControl')?.invalid && form.get('bankNameControl')?.touched">
                                                         <small class="ui-error block-show" *ngIf="form.get('bankNameControl')?.hasError('required')">Bank Name is required.</small>
