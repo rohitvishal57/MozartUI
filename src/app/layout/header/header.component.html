@@ -30,6 +30,14 @@
                       <span></span><span></span><span></span>
                   </button>
               </div> -->
+        </div>
+
+     
+
+
+
+      <div class="logoRightNav">
+
         <nav class="navbar navbar-expand-lg navbar-light top_mainNavBar" *ngIf="isLoggedIn">
           <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#supported_NavBar" aria-controls="supported_NavBar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +65,7 @@
                     <div class="dropdown-menuSub">
                       <div class="dropdown-menu-scroll">
                         <ul >
-                          <li *ngFor="let opt of downloadBrowcher"><a class="dropdown-item" href="{{opt.redirecturl}}" target="_blank">{{ opt.productName }}</a></li>
+                          <li *ngFor="let opt of downloadBrowcher"><a class="dropdown-item"   (click)="downloadPdfBrochure(opt.browcherURL)">{{ opt.productName }}</a></li>
                         </ul>
                       </div>
                     </div>
@@ -68,37 +76,8 @@
             </div>
           </div>
         </nav>
-      </div>
+      
 
-     
-
-
-
-      <div class="logoRightNav">
-
-        <!-- <div class="header-right-cnt" *ngIf="isLoggedIn">
-          <div class="language-selector">
-            <select id="navDropdown" (change)="routeMarketingContent($event)">
-              <option value="">Marketing Hub </option>
-              <option *ngFor="let opt of marketingContent" [value]="opt.redirectURL">
-                {{ opt.name }}
-              </option>
-            </select>
-          </div>
-        </div>
-        <div class="header-right-cnt" *ngIf="isLoggedIn">
-          <div class="language-selector">
-            <select id="navDropdown" (change)="downloadPdfBrochure($event)">
-              <option value="">Download</option>
-              <option *ngFor="let opt of downloadBrowcher" [value]="opt.browcherURL">
-                {{ opt.productName }}
-              </option>
-            </select>
-          </div>
-        </div> -->
-        <!-- <div class="headerSearchMain">
-                  <button type="button" class="btn_headerSearch"><img src="assests/Img/icon_magnify_grey.svg"></button>
-              </div> -->
         <div class="header-right-cnt">
           <div class="language-selector">
             <select (change)="setLanguage($event)" [value]="currentLanguage">

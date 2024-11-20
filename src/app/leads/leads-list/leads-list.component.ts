@@ -77,6 +77,7 @@ export class LeadsListComponent {
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
+  proposalNumber : string ='';
 
   constructor(
     private leadsService: LeadsService,
@@ -500,9 +501,7 @@ export class LeadsListComponent {
       }
       this.productService.Getproductlist(reqData).subscribe({
         next: async (res: any) => {
-           const ProductList = res.data;
-          console.log('this.ProductList',ProductList)
-       
+          const ProductList = res.data;
           const interestedProductItem  = ProductList.find((product: any) => product.productName == lead.interestedProductName); 
        
           try {
@@ -512,28 +511,33 @@ export class LeadsListComponent {
               "productId": interestedProductItem.productId
       
             }
-            console.log(reqData);
             const res = await firstValueFrom(this.common.Getformsequence(reqData));
-            console.log(res);
             this.formSequence = JSON.parse(res.data.formSequence);
-            console.log(this.formSequence);
-      
             if (this.formSequence != null && this.formSequence.length > 0) {
               this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
               sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
             }
-            console.log(this.allJsonFormData);
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
             localStorage.setItem("formIndex", "0");
           } catch (err) {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }
+
+          try{
+            const response = await firstValueFrom(this.common.getProposalNumber());
+            this.proposalNumber = response.data?.proposalNumber;
+          }catch(err){
+            this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+          }
+        
           const productData = {
             partnerId: interestedProductItem.partnerId,
             productId: interestedProductItem.productId,
             quickQuoteRedirect : true,
-            leadId :  lead.leadNumber
+            leadId :  lead.leadNumber,
+            proposalNum: this.proposalNumber
           }
+        
 
             this.router.navigate(['yatra'], {
               state: { productData: productData, formSequence: this.formSequence }

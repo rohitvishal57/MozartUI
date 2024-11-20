@@ -5059,7 +5059,8 @@ export class YatraComponent {
           mobileNumber: this.quoteLeadInformation.phoneNumber,
           educationDetails: this.quoteLeadInformation.education,
           memberPolicyType : this.quoteLeadInformation.policyType,
-          occupation : this.quoteLeadInformation.occupation
+          occupation : this.quoteLeadInformation.occupation,
+         proposalNumber : this.proposalNum
         });
         this.patchDropDownValues();
       }

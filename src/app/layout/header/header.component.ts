@@ -208,9 +208,8 @@ downloadBrowcher : any[] =[
     window.open(event.target.value);    
   }
 
-  downloadPdfBrochure(event: any) {
-    const URL = event.target.value;  
-    if (URL ) {
+  downloadPdfBrochure(URL: any) {
+    if (URL) {
       const link = document.createElement('a');
       link.href = URL;
       link.download = URL.split('/').pop() || 'download.pdf';  // Use the filename from the URL or default to 'download.pdf'      
