@@ -6,12 +6,16 @@ import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 import { NotificationService } from 'src/app/notifications/notification.service';
 import { error } from 'jquery';
+import HeaderInformation from '../headerInfo';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  providers:[HeaderInformation]
 })
 export class HeaderComponent implements OnInit ,OnDestroy {
+  
   currentLanguage: string = 'en';
   isSidenavOpen: boolean = false;
   isDesktopView: boolean = window.innerWidth >= 768;
@@ -20,49 +24,11 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   unReadNotificaitons : any[]=[];
   showNotifications : Boolean = false;
   agentCode : any;
-  marketingContent : any[] = [
-    {
-      "name": "Content Hub Portal",
-      "redirectURL": "https://www.abhimarketingcontenthub.com/contenthub/index.php/home/api_login?code="
-    },
-    {
-      "name": "Customer Testimonials",
-      "redirectURL": "https://www.youtube.com/playlist?list=PLfHGRTdw3O3Pp0O3pJKDciMJlqHuPoS3m"
-    },
-    {
-      "name": "Application Tracker",
-      "redirectURL": "https://www.adityabirlacapital.com/healthinsurance/#!/application-tracker"
-    },
-    {
-      "name": "KMS",
-      "redirectURL": "https://abclearning.adityabirlacapital.com/login"
-    }           
-];
-
-downloadBrowcher : any[] =[
-  { "productName": "Activ One Max", "browcherURL": "" },
-  { "productName": "Activ One Max Plus", "browcherURL": "" },
-  { "productName": "Activ One VIP", "browcherURL": "" },
-  { "productName": "Activ One VIP Plus", "browcherURL": "" },
-  { "productName": "Activ One VYTL", "browcherURL": "" },
-  { "productName": "Activ One SAVR", "browcherURL": "" },
-  { "productName": "Activ Health Platinum Essential", "browcherURL": "https://www.adityabirlacapital.com/healthinsurance/assets/pdf/planpdf/Activ-Health-Platinum-Essential-Brochure.pdf" },
-  { "productName": "Activ Health Platinum Enhanced", "browcherURL": "https://www.adityabirlacapital.com/healthinsurance/assets/pdf/planpdf/Activ-Health-Platinum-Enhanced-Brochure.pdf" },
-  { "productName": "Activ Health Platinum Premiere", "browcherURL": "" },
-  { "productName": "Activ Care Standard", "browcherURL": "" },
-  { "productName": "Activ Care Classic", "browcherURL": "https://www.adityabirlacapital.com/healthinsurance/assets/PDF/20201021T132337.pdf" },
-  { "productName": "Activ Care Premiere", "browcherURL": "" },
-  { "productName": "Activ Fit Plus", "browcherURL": "" },
-  { "productName": "Activ Fit Preferred", "browcherURL": "" },
-  { "productName": "Global Health Secure", "browcherURL": "" },
-  { "productName": "Super Health Top Up Plan B", "browcherURL": "" },
-  { "productName": "Arogya Sanjeevani", "browcherURL": "" }
-];
-
   @Input() isLoggedIn: any;
 
   constructor(private router: Router,
     private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
+    ,public headerInformation : HeaderInformation
   ) {
       this.languageService.language$.subscribe(language => {
         this.currentLanguage = language;

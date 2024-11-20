@@ -52,7 +52,7 @@
                   <div class="dropdown-menu" aria-labelledby="supported_navbarDropdown">
                     <div class="dropdown-menuSub">
                       <ul >
-                        <li *ngFor="let opt of marketingContent"><a class="dropdown-item" href="{{opt.redirectURL}}" target="_blank">{{ opt.name }}</a></li>
+                        <li *ngFor="let opt of headerInformation.marketingContent"><a class="dropdown-item" href="{{opt.redirectURL}}" target="_blank">{{ opt.name }}</a></li>
                       </ul>
                     </div>
                   </div>
@@ -65,7 +65,7 @@
                     <div class="dropdown-menuSub">
                       <div class="dropdown-menu-scroll">
                         <ul >
-                          <li *ngFor="let opt of downloadBrowcher"><a class="dropdown-item"   (click)="downloadPdfBrochure(opt.browcherURL)">{{ opt.productName }}</a></li>
+                          <li *ngFor="let opt of headerInformation.downloadBrowcher"><a class="dropdown-item"   (click)="downloadPdfBrochure(opt.browcherURL)">{{ opt.productName }}</a></li>
                         </ul>
                       </div>
                     </div>
