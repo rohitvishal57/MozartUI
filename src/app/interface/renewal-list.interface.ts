@@ -41,6 +41,7 @@ export interface RenewalList {
     DoB: [Validators.required],
     Mobile_Number: [Validators.required],
     Email: [Validators.required],
+    SumInsured: [Validators.required],
     occupation: [Validators.required],
     Designation: [],
     AnnualIncome: [Validators.required],

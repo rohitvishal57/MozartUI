@@ -92,7 +92,7 @@ export class RenewalsService {
     return this.httpService.post(getproductdetailsandfeatures, reqBody);
   }
   updateMemberDetailsApi(reqBody: any){
-    const updateMemberDetails = this.configService.config.baseUrl + this.configService.config.updateMemberDetails;
+    const updateMemberDetails = this.configService.config.baseUrl1 + this.configService.config.updateMemberDetails;
     return this.httpService.post(updateMemberDetails, reqBody);
   }
   paymentGatewayApi(reqBody:any){
