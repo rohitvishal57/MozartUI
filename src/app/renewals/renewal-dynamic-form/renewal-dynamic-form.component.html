@@ -1147,7 +1147,7 @@
                                                     <input type="date" id="cheque_Date" name="cheque_Date" placeholder="" [max]="currentDate" class="form-control input-textBox" formControlName="chequeDate">
                                                     <label for="cheque_Date">Cheque Date</label>
                                                     <span *ngIf="form.get('chequeDate')?.invalid && form.get('chequeDate')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="form.get('chequeDate')?.hasError('required')">Cheque date is required.</small>
+                                                    <small class="ui-error block-show" *ngIf="form.get('chequeDate')?.hasError('required')">Cheque date is required.</small>
                                                     </span>                                                
                                                 </div>
                                             </div>
@@ -1180,9 +1180,10 @@
                                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                         <div class="ovd_uploadMain">
                                                             <h6>Upload CHQ/DD/NEFT Copy</h6>
-                                                            <div class="ovdUpload">Click here to upload<input type="file" id="file" name="file" class="input-upload" (change)="onFileSelected($event)"/></div>
+                                                            <div class="ovdUpload">Click here to upload<input type="file" id="file" name="file" class="input-upload" (change)="onFileSelected($event)" formControlName="file"/></div>
                                                             <div class="upload-required-info">File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed</div>
                                                             <div *ngIf="fileName" class="mt-2"><strong>Uploaded File:</strong> {{ fileName }}</div>
+                                                            <span class="ui-error" *ngIf="form?.get('file')?.invalid && form?.get('file')?.touched">Please Upload File</span>
                                                         </div>
                                                     </div>
                                                 </div>

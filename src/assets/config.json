@@ -117,6 +117,7 @@
     "getRenewalStatusCount":"GetRenewalStatusCount",
     "getNotification":"api/quote/notificationlist?agentcode=",
     "markAllReadNotifications":"api/quote/readall?agentCode=",
-    "markNotification":"api/quote/notificationbyid?id="
+    "markNotification":"api/quote/notificationbyid?id=",
+    "uploadDocument":"api/yatra/uploaddocument"
 
 }

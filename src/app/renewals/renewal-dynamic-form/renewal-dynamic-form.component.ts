@@ -114,6 +114,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   }
   selectedBankName: any;
   selectedCityName: any;
+  documentId:any;
   constructor(
     private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,private toast: NgToastService,
     private ac:ActivatedRoute,private yatraService:YatraService,private commonService:CommonService,private encryptionService: EncryptionService) {
@@ -707,13 +708,13 @@ onBankNameSelected(selectedBankName: string): void {
       "BankName": this.form.value.bankNameControl.toString(),
       "IFSC": this.form.value.ifscCode.toString(),
       "MicrNo":"",
-      "formFile": []
+      "documentId": this.documentId
     };
     console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
+
     // const checkNumber= this.form.value.chequeNumber.toString()
     // const checkAmount= this.form.value.chequeAmount.toString()
     // console.log(checkAmount,checkNumber);
-    
     // const data = new FormData();
     // data.append("PolicyType", "Renewal");
     // data.append("PaymentMethod", "Offline");
@@ -961,11 +962,27 @@ async getRenewalInfo() {
 
     onFileSelected(event: any) {
       this.file = event.target.files[0];
-      const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+      const maxSizeInBytes = 3 * 1024 * 1024; 
       const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
       if (this.file) {
         this.fileName = this.file.name;
       }
-      console.log("file",this.file);
+      const policyNum = this.policyNumber.replace(/-/g, "");      
+      const formData = new FormData();
+      formData.append('Files', this.file);
+      formData.append('UniqueNumber', policyNum);      
+      this.commonService.uploaDocument(formData).subscribe(
+        (res:any)=>{
+          if(res.isSuccess){
+            console.log(res.data.uploadResponse[0].globalId);
+            this.documentId = res.data.uploadResponse[0].globalId
+          }          
+        },
+        (err)=>{
+          this.toast.error({ detail: "", summary: err.message, duration: 1500 });
+        }
+      )
+
+      
     }
 }
