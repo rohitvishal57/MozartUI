@@ -41,7 +41,7 @@
         <div class="header-right-cnt" *ngIf="isLoggedIn">
           <div class="language-selector">
             <select id="navDropdown" (change)="routeMarketingContent($event)">
-              <option value="">marketingContent </option>
+              <option value="">Marketing Hub </option>
               <option *ngFor="let opt of marketingContent" [value]="opt.redirectURL">
                 {{ opt.name }}
               </option>
@@ -52,10 +52,10 @@
 
         <div class="header-right-cnt" *ngIf="isLoggedIn">
           <div class="language-selector">
-            <select id="navDropdown" (change)="routeMarketingContent($event)">
-              <option value="">Download </option>
-              <option *ngFor="let opt of downloadBrowcher" [value]="opt.redirecturl">
-                {{ opt.name }}
+            <select id="navDropdown" (change)="downloadPdfBrochure($event)">
+              <option value="">Download</option>
+              <option *ngFor="let opt of downloadBrowcher" [value]="opt.browcherURL">
+                {{ opt.productName }}
               </option>
             </select>
           </div>

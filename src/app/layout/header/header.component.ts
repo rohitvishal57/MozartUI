@@ -38,87 +38,27 @@ export class HeaderComponent implements OnInit ,OnDestroy {
       "redirectURL": "https://abclearning.adityabirlacapital.com/login"
     }           
 ];
-downloadBrowcher : any[] =[
-	
-	{
-		"name": "Activ Health Platinum Essential",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/active-health-essential-insurance"
-	},
-	{
-		"name": "Aditya Birla Activ Assure Diamond Plan",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/activ-assure-diamond"
-	},
 
-	{
-		"name": "Global Health Secure",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/corporate-health-insurance"
-	},
-	{
-		"name": "Group Health Insurance",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/corporate-health-insurance"
-	},
-	{
-		"name": "Health Insurance Plans",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/health-insurance-plans"
-	},
-	{
-		"name": "Health Insurance for Diabetes",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/diabetes"
-	},
-	{
-		"name": "Health Insurance for High BP",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/high-blood-pressure"
-	},
-	{
-		"name": "Health Insurance for High Cholesterol",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/high-cholesterol"
-	},
-	{
-		"name": "Health Insurance for Asthma",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/health-insurance-asthma"
-	},
-	{
-		"name": "Individual Health Insurance",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/individual-health-insurance"
-	},
-	{
-		"name": "Health insurance claim",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/reimbursement-claims"
-	},
-	{
-		"name": "Employer health insurance",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/corporate-health-insurance"
-	},
-	{
-		"name": "Health care for young adults",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/activ-fit"
-	},
-	{
-		"name": "Super topup health insurance",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/activ-assure-diamond-super-health-topup"
-	},
-	{
-		"name": "Health Insurance For Family",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/family-health-insurance"
-	},
-	{
-		"name": "Hospital cash insurance",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/hospital-cash"
-	},
-	{
-		"name": "Health insurance with OPD cover",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/cashless-opd"
-	},
-	{
-		"name": "Ayush treatment",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/ayush-treatment"
-	},
-	{
-		"name": "Corona virus health insurance",
-		"redirectURL": "https://www.adityabirlacapital.com/healthinsurance/coronavirus-covid19"
-	}
-]
-  
+downloadBrowcher : any[] =[
+  { "productName": "Activ One Max", "browcherURL": "" },
+  { "productName": "Activ One Max Plus", "browcherURL": "" },
+  { "productName": "Activ One VIP", "browcherURL": "" },
+  { "productName": "Activ One VIP Plus", "browcherURL": "" },
+  { "productName": "Activ One VYTL", "browcherURL": "" },
+  { "productName": "Activ One SAVR", "browcherURL": "" },
+  { "productName": "Activ Health Platinum Essential", "browcherURL": "https://www.adityabirlacapital.com/healthinsurance/assets/pdf/planpdf/Activ-Health-Platinum-Essential-Brochure.pdf" },
+  { "productName": "Activ Health Platinum Enhanced", "browcherURL": "https://www.adityabirlacapital.com/healthinsurance/assets/pdf/planpdf/Activ-Health-Platinum-Enhanced-Brochure.pdf" },
+  { "productName": "Activ Health Platinum Premiere", "browcherURL": "" },
+  { "productName": "Activ Care Standard", "browcherURL": "" },
+  { "productName": "Activ Care Classic", "browcherURL": "https://www.adityabirlacapital.com/healthinsurance/assets/PDF/20201021T132337.pdf" },
+  { "productName": "Activ Care Premiere", "browcherURL": "" },
+  { "productName": "Activ Fit Plus", "browcherURL": "" },
+  { "productName": "Activ Fit Preferred", "browcherURL": "" },
+  { "productName": "Global Health Secure", "browcherURL": "" },
+  { "productName": "Super Health Top Up Plan B", "browcherURL": "" },
+  { "productName": "Arogya Sanjeevani", "browcherURL": "" }
+];
+
   @Input() isLoggedIn: any;
 
   constructor(private router: Router,
@@ -268,8 +208,19 @@ downloadBrowcher : any[] =[
     window.open(event.target.value);    
   }
 
-  downloadPdfBrowcher(event : any){
-
+  downloadPdfBrochure(event: any) {
+    const URL = event.target.value;  
+    if (URL ) {
+      const link = document.createElement('a');
+      link.href = URL;
+      link.download = URL.split('/').pop() || 'download.pdf';  // Use the filename from the URL or default to 'download.pdf'      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      console.error('Invalid or missing URL.');
+    }
   }
 
 }
+
