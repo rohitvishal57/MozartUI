@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   isDesktopView: boolean = window.innerWidth >= 768;
   notificationCount : number = 0;
   notifications :any[]=[];
+  unReadNotificaitons : any[]=[];
   showNotifications : Boolean = false;
   agentCode : any;
   
@@ -128,7 +129,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     (response) => {
       if (response?.isSuccess) {
         this.notifications = response?.data;
-        this.notificationCount =  this.notifications.filter(notification => notification?.isRead === false).length;
+        this.unReadNotificaitons =  this.notifications.filter(notification => notification?.isRead === false);
+        this.notificationCount = this.unReadNotificaitons.length;
         console.log('notifications',this.notifications)
 
       }
@@ -156,7 +158,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   this.notificationService.markNotification(notification.id).subscribe(
     (response)=>{
       if (response?.isSuccess) {
-        this.closePopup();
+      //  this.closePopup();
         this.router.navigate([notification.redirectionURL]);
         this.notificationInfo();
       }

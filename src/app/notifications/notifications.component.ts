@@ -11,7 +11,11 @@ export class NotificationsComponent {
 
   agentCode:any;
   notifications :any;
-  
+  selectedView: any =''; 
+  showNotifications : boolean = true;
+  showActivies : boolean = false;
+
+
   constructor(private notificationService: NotificationService ,private route : ActivatedRoute) { }
 
   ngOnInit(): void {
@@ -34,6 +38,13 @@ export class NotificationsComponent {
         console.log('Failed to fetch notifications',error)
       });
   }
-  
+
+  getNotifications(){
+    this.showNotifications = true;
+  }
+
+  getActivities(){
+    this.showActivies = true;
+  }
 
 }

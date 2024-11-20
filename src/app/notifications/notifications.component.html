@@ -7,61 +7,84 @@
                 </h4>
             </div>
 
-            <section class="body_flex_column common_btn_matTabsMain">
-                <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="common_btn_matTabs body_flex_column">
-                    <mat-tab label="Notifications">
-                        <section id="quotes-list" class="tableMain quoteView block-show ">
-                            <div class="tableSubMain">
-                                <div class="table-responsive">
-                                    <table class="table table-borderless table-search" >
-                                        <thead>
-                                            <tr>
-                                                <th width="10%">Sr. No.</th>
-                                                <th width="70%">Notification</th>
-                                                <th width="20%">TimeSheet</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider" >
-                                            <tr *ngFor="let item of notifications ; let i =index">
-                                                <td class="td-text-bold">{{item.id}}</td>
-                                                <td>{{item.notificationType}}</td>
-                                                <td>{{item.createdOn}}</td>
 
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </section>
+            <section class="quickFilterMain">
+                <div class="quickFilterLeft">
+                    <ul class="quickFilter">
+                        <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
+                        <li>
+                            <button type="button" id="assignedlead" name="assignedlead" class="btn_quickFilter"  (click)="getNotifications()">{{"Notifications" | translate}}</button>
+                        </li>
+                        <li>
+                            <button type="button" id="unassignedlead" name="unassignedlead" class="btn_quickFilter"   (click)="getActivities()">{{"Activities " | translate}}</button>
+                        </li>
+                    </ul>
+                </div>
+            
+            
 
-                    </mat-tab>
-
-                    <mat-tab label="Activities">
-                        <section id="quotes-list" class="tableMain quoteView block-show ">
-                            <div class="tableSubMain">
-                                <div class="table-responsive">
-                                    <table class="table table-borderless table-search">
-                                        <thead>
-                                            <tr>
-                                                <th>Sr No</th>
-                                                <th>Notification</th>
-                                                <th>TimeSheet</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table-group-divider">
-                                            <tr>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </section>
-                    </mat-tab>
-                
-                </mat-tab-group> 
+                <div class="quickFilterRight">
+                    <button type="button" id="leadgridlist" name="leadgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"
+                                    [ngClass]="{'active': selectedView === 'list'}" aria-label="quotes-list"
+                                   ><img src="assets/Img/icon_grid_list_grey.svg"
+                                        alt="Grid List"></button>
+                    <button type="button" id="leadgridcard" name="leadgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"
+                                    [ngClass]="{'active': selectedView === 'grid'}" aria-label="quotes-card"
+                                 ><img src="assets/Img/icon_grid_box_grey.svg"
+                                        alt="Grid Card"></button>
+                </div>
             </section>
 
+            <section id="quotes-list" class="tableMain quoteView block-show" *ngIf="showNotifications" >
+                <div class="tableSubMain">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th>Sr No</th>
+                                    <th>Notification</th>
+                                    <th>TimeSheet</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider"
+                                *ngFor="let item of notifications ; let i =index">
+                                <tr>
+                                    <td>{{item.id}}</td>
+                                    <td>{{item.notificationType}}</td>
+                                    <td>{{item.createdOn}}</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="quotes-list" class="tableMain quoteView block-show" *ngIf="showActivies" >
+                <div class="tableSubMain">
+                    <div class="table-responsive">
+                        <table class="table table-borderless table-search">
+                            <thead>
+                                <tr>
+                                    <th>Sr No</th>
+                                    <th>Notification</th>
+                                    <th>TimeSheet</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider"
+                                *ngFor="let item of notifications ; let i =index">
+                                <tr>
+                                    <td>{{item.id}}</td>
+                                    <td>{{item.notificationType}}</td>
+                                    <td>{{item.createdOn}}</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+       
         </div>
     </div>
 
