@@ -541,7 +541,7 @@
                                               <!-- <span class="ui-error">Please select Relation</span> -->
                                           </div>
                                       </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                      <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="pp-benefit" name="pp-benefit" class="form-control input-selectBox">
                                                   <option value="">Select Benefit type</option>
@@ -549,9 +549,8 @@
                                                   <option value="2"></option>
                                               </select>
                                               <label for="pp-benefit">Benefit type</label>
-                                              <!-- <span class="ui-error">Please select Benefit type</span> -->
                                           </div>
-                                      </div>
+                                      </div> -->
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="pp-policynumber" name="pp-policynumber" placeholder="" class="form-control input-textBox">
@@ -596,11 +595,9 @@
                                                 <option value="Dependent Son">Dependent Son</option>
                                                 <option value="Daughter">Daughter</option>
                                             </select>
-                                              <!--<label for="citizenship-son">Gender</label>-->
-                                              <!-- <span class="ui-error">Please select Relation</span> -->
                                           </div>
                                       </div>
-                                      <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
+                                      <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="citizenship-benefit" name="citizenship-benefit" class="form-control input-selectBox">
                                                   <option value="">Select Benefit type</option>
@@ -608,9 +605,8 @@
                                                   <option value="2"></option>
                                               </select>
                                               <label for="citizenship-benefit">Benefit type</label>
-                                              <!-- <span class="ui-error">Please select Benefit type</span> -->
                                           </div>
-                                      </div>
+                                      </div> -->
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="citizenship-policynumber" name="citizenship-policynumber" value="" placeholder="" class="form-control input-textBox">
@@ -626,8 +622,8 @@
                                           </div>
                                       </div>
                                   </div>
-                                  <div class="detailsHeading-12">Extraneous conditions</div>
-                                  <div class="row align-items-center mb-1">
+                                  <!-- <div class="detailsHeading-12">Extraneous conditions</div> -->
+                                  <!-- <div class="row align-items-center mb-1">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
                                           <span class="para-grey-12">Are any of the Insured Members or the Proposer not an Indian citizen?  </span>
                                       </div>
@@ -643,8 +639,8 @@
                                               </label>
                                           </div>
                                       </div>
-                                  </div>
-                                  <div class="row">
+                                  </div> -->
+                                  <!-- <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
                                           <div class="input-block form-floating input-block-renew">
                                             <select id="pp-son" name="pp-son" placeholder="" class="form-control input-selectBox" >
@@ -655,8 +651,6 @@
                                                 <option value="Dependent Son">Dependent Son</option>
                                                 <option value="Daughter">Daughter</option>
                                             </select>
-                                              <!--<label for="extraneous-son">Gender</label>-->
-                                              <!-- <span class="ui-error">Please select Relation</span> -->
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
@@ -670,10 +664,9 @@
                                                   <option value="Self Employed">Self Employed</option>
                                               </select>
                                               <label for="extraneous-occupation">Occupation</label>
-                                              <!-- <span class="ui-error">Please select Occupation</span> -->
                                           </div>
                                       </div>
-                                  </div>
+                                  </div> -->
                                   <div class="detailsHeading-12">Pre-existing conditions</div>
                                   <div class="row align-items-center mb-1">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-9 col-xl-9">
@@ -776,12 +769,8 @@
                     </div>
                   </div>
                   <footer>
-                    <button type="button" id="cancel3" name="cancel3" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">
-                      Cancel
-                    </button>
-                    <button type="button" id="saveupdate" name="saveupdate" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">
-                      Save
-                    </button>
+                    <button type="button" id="cancel3" name="cancel3" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
+                    <button type="button" id="saveupdate" name="saveupdate" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save</button>
                   </footer>
                 </div>
               </div>
@@ -1547,7 +1536,7 @@
           </div>
       </div>
   </div>
-  <div class="bottomInfoMain" *ngIf="hideSection">
+  <div class="bottomInfoMain bottomCnt" *ngIf="hideSection">
       <div class="bottomInfoSubMain">
           <div class="bi_left">
               <div class="planProductInfo">
