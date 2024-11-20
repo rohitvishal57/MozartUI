@@ -791,7 +791,8 @@ export class GetQuoteComponent {
     this.availableZones = [];
     this.service.getPinCodeByCity(reqdata).subscribe({
       next: (res) => {
-        console.log(res)
+        if(res.isSuccess){
+console.log(res)
         this.currentZone = res.data.zone;
         this.upgradedZone =res.data.zone;
         this.proposerZone = res.data.zone;
@@ -809,6 +810,10 @@ export class GetQuoteComponent {
             this.availableZones.push(res.data.zone);
           }
           this.quoteFormGroup.get('proposerZone')?.setValue(this.upgradedZone);
+        }
+        }
+        else{
+          this.toast.error({ detail: "WARNING", summary: res.message, duration: 3000 });
         }
       },
       error: (err) => {
