@@ -782,37 +782,43 @@ export class GetQuoteComponent {
   }
 
   getProposerPincode(event: any) {
-
-    console.log(event.target.value, typeof event)
-    const reqdata = {
-      "pincode": event.target.value
+    const pincode = event.target.value;
+  
+    // Regex to check for 6 digits and ensure not all digits are the same
+    const isValidPincode = /^[0-9]{6}$/.test(pincode) && !/^(\d)\1{5}$/.test(pincode);
+  
+    if (!isValidPincode) {
+      this.toast.error({ detail: "WARNING", summary: "Invalid pincode. Please enter a valid 6-digit pincode.", duration: 3000 });
+      return;
     }
-
+  
+    const reqdata = {
+      pincode: pincode
+    };
+  
     this.availableZones = [];
     this.service.getPinCodeByCity(reqdata).subscribe({
       next: (res) => {
-        if(res.isSuccess){
-console.log(res)
-        this.currentZone = res.data.zone;
-        this.upgradedZone =res.data.zone;
-        this.proposerZone = res.data.zone;
-        this.proposerCity = res.data.city;
-        this.proposerState = res.data.state;
-        this.proposerZoneValue = res.data.zoneCode;
-
-        console.log(this.currentZone);
-
-
-        this.calculateUpgradeableZones();
-
-        if (res.data.zone) {
-          if (!this.availableZones.includes(res.data.zone)) {
-            this.availableZones.push(res.data.zone);
+        if (res.isSuccess) {
+          console.log(res);
+          this.currentZone = res.data.zone;
+          this.upgradedZone = res.data.zone;
+          this.proposerZone = res.data.zone;
+          this.proposerCity = res.data.city;
+          this.proposerState = res.data.state;
+          this.proposerZoneValue = res.data.zoneCode;
+  
+          console.log(this.currentZone);
+  
+          this.calculateUpgradeableZones();
+  
+          if (res.data.zone) {
+            if (!this.availableZones.includes(res.data.zone)) {
+              this.availableZones.push(res.data.zone);
+            }
+            this.quoteFormGroup.get('proposerZone')?.setValue(this.upgradedZone);
           }
-          this.quoteFormGroup.get('proposerZone')?.setValue(this.upgradedZone);
-        }
-        }
-        else{
+        } else {
           this.toast.error({ detail: "WARNING", summary: res.message, duration: 3000 });
         }
       },
@@ -822,7 +828,6 @@ console.log(res)
         this.toast.error({ detail: "WARNING", summary: errorMessage, duration: 3000 });
       }
     });
-
-  }
+  }  
 
 }
