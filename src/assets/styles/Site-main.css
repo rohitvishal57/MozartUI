@@ -449,6 +449,63 @@ button {
   border-right: 5px solid transparent;
   border-top: 5px solid var(--primary-red-color);
 }
+
+.icon_arrowDown {
+  margin: 0;
+  position: relative;
+  display: inline-block;
+}
+.icon_arrowDown:before {
+  background: #fff;
+  width: 6px;
+  height: 1px;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  position: absolute;
+  transform: rotate(-45deg);
+  content: "";
+  display: block;
+  right: 0;
+  transition: all .3s;
+}
+.icon_arrowDown:after {
+  background: #fff;
+  width: 6px;
+  height: 1px;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  position: absolute;
+  transform: rotate(45deg);
+  content: "";
+  display: block;
+  right: 4px;
+  transition: all .3s;
+}
+.icon_rightDropArrow {
+  /* position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%); */
+  margin: 0;
+  position: relative;
+  display: inline-block;
+}
+.icon_rightDropArrow:before {
+  content: "";
+    position: absolute;
+    top: -3px;
+    right: 10px;
+    width: 6px;
+    height: 6px;
+    border: 1px solid #353941;
+    transform: rotate(45deg);
+    border-left: 0;
+    border-bottom: 0;
+}
 /*Common end*/
 
 /*Header start*/
@@ -538,7 +595,10 @@ button {
   justify-content: space-between;
   gap: 7px;
 }
-
+.siteHeader .logoMain .logoMainRight .logoLeftNav{
+  height: 100%;
+  display: flex;
+}
 .siteHeader .logoMain .logoMainRight .logoRightNav {
   display: flex;
   gap: 7px;
@@ -956,6 +1016,21 @@ button {
 }
 .btn_newRequest:hover {
     border: 1px solid #c7222a;
+}
+.btn_cardDownload {
+  width: 20px;
+    height: 20px;
+    border-width: 0;
+  background: #c7222a;
+  border-radius: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+}
+.btn_cardDownload img {
+  width: 12px;
+  height: 12px;
+  filter: brightness(0) invert(1);
 }
 .btn_md {
   font-size: 14px;
@@ -5370,6 +5445,7 @@ height: 0;
  line-height: 24px;
  color: #000;
 }
+
 .main_productTabs .nav-pills .nav-link.active {
  color: #fff;
  background: #c7222a;
@@ -5551,6 +5627,72 @@ input[type=number]::-webkit-outer-spin-button {
   background: inherit;
 }
 /*---Common: Mat button tabs end---*/
+/*---Header Menu start---*/
+.top_mainNavBar, .top_mainNavBar .container-fluid {
+  padding: 0 !important;
+}
+.top_mainNavBar .navbar-collapse .navbar-nav .nav-link{
+  font-size: 16px;
+  padding: 11px 10px;
+  display: flex;
+  gap:20px;
+  line-height: initial;
+  align-items: center;
+  color: #fff;
+}
+.top_mainNavBar .navbar-collapse .navbar-nav .nav-link:hover,
+.top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show {
+  background-color: #b51023;
+}
+.top_mainNavBar .navbar-collapse .navbar-nav .nav-link:after {
+  display: none;
+}
+.top_mainNavBar .navbar-nav .dropdown-menu {
+  min-width: 270px;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+}
+.top_mainNavBar .navbar-nav .dropdown-menuSub {
+  background: #fff;
+  padding: 10px 10px 10px 0;
+  border: 1px solid #D7D7D9;
+  border-radius: 15px;
+}
+.top_mainNavBar .navbar-nav .dropdown-menu ul {
+  
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style-type: none;
+}
+.top_mainNavBar .navbar-nav .dropdown-menu ul li {
+  padding: 0 10px;
+}
+.top_mainNavBar .navbar-nav .dropdown-menu .dropdown-item {
+  display: block;
+    width: 100%;
+    clear: both;
+    font-weight: 400;
+    font-size: 14px;
+    color: #282828;
+    padding: 10px 15px;
+    line-height: 16px;
+}
+.top_mainNavBar .navbar-nav .dropdown-menu .dropdown-item:hover {
+  background: rgba(201, 20, 41, .1);
+  border-radius: 10px;
+  color: #c91429 !important;
+}
+.dropdown-menu-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.dropdown-menu-scroll::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0;
+}
+/*---Header Menu end---*/
 
 /*----New styles added 13-nov-24 start----*/
 .note_remarkText_width {
