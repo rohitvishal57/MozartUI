@@ -5062,6 +5062,15 @@ export class YatraComponent {
           occupation : this.quoteLeadInformation.occupation,
          proposalNumber : this.proposalNum
         });
+
+        Object.keys(this.dynamicFormGroup.controls).forEach(controlName => {
+          const control = this.dynamicFormGroup.get(controlName);
+          if (control?.value !== '') {
+            control?.disable();
+          }
+        });
+
+
         this.patchDropDownValues();
       }
         else { console.error("API request was not successful."); }
