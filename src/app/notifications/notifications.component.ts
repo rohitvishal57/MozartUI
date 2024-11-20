@@ -11,7 +11,7 @@ export class NotificationsComponent {
 
   agentCode:any;
   notifications :any;
-  selectedView: any =''; 
+  selectedView: any ='list'; 
   showNotifications : boolean = true;
   showActivies : boolean = false;
 
@@ -38,6 +38,12 @@ export class NotificationsComponent {
         console.log('Failed to fetch notifications',error)
       });
   }
+
+  
+  renderView(view: string) {
+    this.selectedView = view;
+  }
+
 
   getNotifications(){
     this.showNotifications = true;

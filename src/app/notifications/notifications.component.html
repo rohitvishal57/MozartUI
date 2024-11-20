@@ -23,12 +23,13 @@
                     </div>
                 </div>
                 <div class="quickFilterRight">
-                    <button type="button" id="renewalgridcard" name="renewalgridcard" value="gridcard"
-                        class="btn_grid mobile-hide jsBtnClickQuote" ><img src="assets/Img/icon_grid_box_grey.svg"
-                            alt="Grid Card"></button>
                     <button type="button" id="renewalgridlist" name="renewalgridlist" value="gridlist"
-                        class="btn_grid mobile-hide jsBtnClickQuote active" ><img src="assets/Img/icon_grid_list_grey.svg"
+                        class="btn_grid mobile-hide jsBtnClickQuote active"   [ngClass]="{'active': selectedView === 'list'}" (click)="renderView('list')"><img src="assets/Img/icon_grid_list_grey.svg"
                             alt="Grid List"></button>
+                    <button type="button" id="renewalgridcard" name="renewalgridcard" value="gridcard"
+                        class="btn_grid mobile-hide jsBtnClickQuote"  [ngClass]="{'active': selectedView === 'card'}" (click)="renderView('card')" ><img src="assets/Img/icon_grid_box_grey.svg"
+                            alt="Grid Card"></button>
+                    
                 </div>
             </section>
             <!--Tabs: Notifications end-->
@@ -36,9 +37,9 @@
             <!--Tab Content start-->
             <div class="tab-content" id="pills-tabContent">
                 <!--Tab Content: Notifications start-->
-                <div class="tab-pane fade show active" id="tab-notifications" role="tabpanel" aria-labelledby="tab-notifications-tab">
+                <div class="tab-pane fade show active" id="tab-notifications" role="tabpanel" aria-labelledby="tab-notifications-tab" *ngIf="showNotifications">
                     <!--List view start-->
-                    <section id="notifications-list" class="tableMain quoteView block-show " *ngIf="showNotifications">
+                    <section id="notifications-list" class="tableMain quoteView block-show " *ngIf="selectedView === 'list'">
                         <div class="tableSubMain">
                             <div class="table-responsive">
                                 <table class="table table-borderless table-search" >
@@ -63,7 +64,7 @@
                     </section>
                     <!--List view end-->
                     <!--Card view start-->
-                    <section id="notifications-card" class="cardViewMain quoteView mobile-block">
+                    <section id="notifications-card" class="cardViewMain quoteView mobile-block" *ngIf="selectedView === 'card'">
                         <div class="cardViewWraper">
                             <div class="cardViewItem">
                                 <div class="cardViewBody">
