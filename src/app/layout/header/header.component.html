@@ -31,7 +31,24 @@
                   </button>
               </div> -->
       </div>
+
+     
+
+
+
       <div class="logoRightNav">
+<!-- 
+        <ul class="nav navbar-nav menuBarHappy" style="margin: 0px 0px 0px 20px;">
+          <li class="dropdown"><a data-toggle="dropdown" class="dropdown-toggle topMenu" id="downloadBrochure"
+            data-id="brochure" style="background-color: white;">Download Brochure (AO)</a></li>
+        </ul>
+        
+      <ul class="nav navbar-nav menuBarHappy" style="margin: 0px 0px 0px 20px;">
+          <li class="dropdown open"> <a class="dropdown-toggle" data-toggle="dropdown"  aria-expanded="true" style="background-color: white;">Marketing
+                  Content <span class="caret"></span> </a>
+          </li>
+      </ul> -->
+
         <!-- <div class="headerSearchMain">
                   <button type="button" class="btn_headerSearch"><img src="assests/Img/icon_magnify_grey.svg"></button>
               </div> -->
@@ -64,6 +81,12 @@
               <div class="body_flex_row justify-content-between">
                 <h3>Notifications ({{notificationCount}})</h3>
               </div>
+              <div class="overlay_footer">
+                <div class="btn_groupAction btn_groupNotification">
+                  <button id="markAll" name="markAll" type="button" class="btn_white btn_markAsRead" (click)="markAllReadNotification()">Mark As Read All</button>
+                  <button id="showAll" name="showAll" type="button" class="btn_red btn_markAsRead"  (click)="showAllNotifications()">Show All </button>
+                </div> 
+              </div>
               <div class="checkbox_disease_scroll">           
                 <div class="row">
                   <div class="col-12">
@@ -85,12 +108,7 @@
               </div>  
           </div>
 
-            <div class="overlay_footer">
-              <div class="btn_groupAction btn_groupNotification">
-                <button id="markAll" name="markAll" type="button" class="btn_white btn_markAsRead" (click)="markAllReadNotification()">Mark As Read All</button>
-                <button id="showAll" name="showAll" type="button" class="btn_red btn_markAsRead"  (click)="showAllNotifications()">Show All </button>
-              </div> 
-            </div>
+          
           </div>
         </div>
         <!--Overlay: Notifications end-->

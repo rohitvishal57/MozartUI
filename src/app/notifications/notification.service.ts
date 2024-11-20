@@ -19,4 +19,10 @@ export class NotificationService {
     const url = `${this.configService.config.baseUrl}${this.configService.config.markAllReadNotifications}${agentCode}`;
     return this.http.post<any>(url, agentCode);
   }
+
+  
+  markNotification(notificationId: string) {
+    const url = `${this.configService.config.baseUrl}${this.configService.config.markNotification}${notificationId}`;
+    return this.http.post<any>(url, notificationId);
+  }
 }

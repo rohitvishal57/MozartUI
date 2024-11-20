@@ -304,7 +304,6 @@ export class LeadsListComponent {
   }
 
   onSelectChanges(event: any): void {
-    debugger;
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
     const selectedValidators = searchValidationConfig[this.selected] || [];

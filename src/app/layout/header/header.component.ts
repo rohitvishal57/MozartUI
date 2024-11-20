@@ -6,6 +6,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
 import { NotificationService } from 'src/app/notifications/notification.service';
 import { error } from 'jquery';
+import { HeaderInformation as getList} from '../headerInfo';
 
 @Component({
   selector: 'app-header',
@@ -24,7 +25,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   @Input() isLoggedIn: any;
 
   constructor(private router: Router,
-    private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService) {
+    private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
+  ) {
       this.languageService.language$.subscribe(language => {
         this.currentLanguage = language;
       });
@@ -43,6 +45,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.currentLanguage = this.getLanguage();
     this.agentCode = localStorage.getItem('agentCode') 
     this.notificationInfo();
+
   }
 
   
@@ -126,6 +129,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
       if (response?.isSuccess) {
         this.notifications = response?.data;
         this.notificationCount =  this.notifications.filter(notification => notification?.isRead === false).length;
+        console.log('notifications',this.notifications)
+
       }
     },
     error => {
@@ -148,8 +153,17 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   routeNotification(notification: any) {
-    this.closePopup();
-    this.router.navigate([notification.redirectionURL]);
+  this.notificationService.markNotification(notification.id).subscribe(
+    (response)=>{
+      if (response?.isSuccess) {
+        this.closePopup();
+        this.router.navigate([notification.redirectionURL]);
+        this.notificationInfo();
+      }
+    },
+    error =>{
+      console.log('Failed to Mark notifications', error)
+    });
   }
 
 }
