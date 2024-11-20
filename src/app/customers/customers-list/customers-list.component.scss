@@ -288,9 +288,11 @@ h6 {
     width: 30%;
 }
 .modifiedBadge.userPolicyBadge {
-	font-size: 13px;
+	font-size: 12px;
 	font-weight: 600;
-	color:#4d72bb;
+	/* color:#4d72bb; */
+	color: #c91429;
+	text-transform: uppercase;
 }
 .quoteView .table .tbody-quoteView tr{
 	background: transparent !important;
@@ -302,12 +304,18 @@ h6 {
 	background: #f3e7e7 !important;
 }
 .btn_moreActionCard {
-	background: #ffe7e5;
+	background: #d9dfe9;
 	&:hover {
 		background: #c7222a;
 	}
 }
-.policyAlign{
-	gap: 0px;
-	padding: 0px;
+.cv_bodyItems_policyInfo{
+	border-top: #f1f3f6 1px solid;
+	padding: 10px 0 0;
+	border-radius: 0;
+	.btn_quickFilter {
+		font-size: 11px;
+    	font-weight: 500;
+		padding: 4px 9px 4px;
+	}
 }

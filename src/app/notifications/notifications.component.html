@@ -2,70 +2,64 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"> <a class="btn_backPage" title="Back To Previous Page" (click)="backToPreviousPage()"></a>
+                <h4 class="icon_withHeading m-0"> <a class="btn_backPage" title="Back To Previous Page" (click)="backToPreviousPage()"></a>
                     Back To Previous Page
-                </h2>
+                </h4>
             </div>
 
-            <section class="white_container white_container_shadow">
-                <div class="row">
-                    <div class="col-12 ">
-                        <div class="claims_matTabs_container">
-                            <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="claims_matTabs">
-                                <mat-tab label="Notifications">
-                                    <section id="quotes-list" class="tableMain quoteView block-show ">
-                                        <div class="tableSubMain">
-                                            <div class="table-responsive">
-                                                <table class="table table-borderless table-search" >
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Sr No</th>
-                                                            <th>Notification</th>
-                                                            <th>TimeSheet</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="table-group-divider" *ngFor="let item of notifications ; let i =index">
-                                                        <tr>
-                                                            <td>{{item.id}}</td>
-                                                            <td>{{item.notificationType}}</td>
-                                                            <td>{{item.createdOn}}</td>
+            <section class="body_flex_column common_btn_matTabsMain">
+                <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="common_btn_matTabs body_flex_column">
+                    <mat-tab label="Notifications">
+                        <section id="quotes-list" class="tableMain quoteView block-show ">
+                            <div class="tableSubMain">
+                                <div class="table-responsive">
+                                    <table class="table table-borderless table-search" >
+                                        <thead>
+                                            <tr>
+                                                <th width="10%">Sr. No.</th>
+                                                <th width="70%">Notification</th>
+                                                <th width="20%">TimeSheet</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider" >
+                                            <tr *ngFor="let item of notifications ; let i =index">
+                                                <td class="td-text-bold">{{item.id}}</td>
+                                                <td>{{item.notificationType}}</td>
+                                                <td>{{item.createdOn}}</td>
 
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </section>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
 
-                                </mat-tab>
+                    </mat-tab>
 
-                                <mat-tab label="Activities">
-                                    <section id="quotes-list" class="tableMain quoteView block-show ">
-                                        <div class="tableSubMain">
-                                            <div class="table-responsive">
-                                                <table class="table table-borderless table-search">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Sr No</th>
-                                                            <th>Notification</th>
-                                                            <th>TimeSheet</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="table-group-divider">
-                                                        <tr>
+                    <mat-tab label="Activities">
+                        <section id="quotes-list" class="tableMain quoteView block-show ">
+                            <div class="tableSubMain">
+                                <div class="table-responsive">
+                                    <table class="table table-borderless table-search">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr No</th>
+                                                <th>Notification</th>
+                                                <th>TimeSheet</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider">
+                                            <tr>
 
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </mat-tab>
-                            
-                            </mat-tab-group>
-                        </div>
-                    </div>
-                </div>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </mat-tab>
+                
+                </mat-tab-group> 
             </section>
 
         </div>
