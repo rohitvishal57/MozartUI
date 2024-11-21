@@ -155,8 +155,7 @@ else{
        this.toggeleSearchdropdown=false;
     }
     this.toggeledropdown = !this.toggeledropdown;   
-    this.maxDate = new Date().toISOString().split('T')[0];  
- 
+    this.maxDate = new Date().toISOString().split('T')[0];
   }
 
   getProducts() {

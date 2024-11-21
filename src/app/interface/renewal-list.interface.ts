@@ -41,6 +41,7 @@ export interface RenewalList {
     DoB: [Validators.required],
     Mobile_Number: [Validators.required],
     Email: [Validators.required],
+    SumInsured: [Validators.required],
     occupation: [Validators.required],
     Designation: [],
     AnnualIncome: [Validators.required],
@@ -50,13 +51,14 @@ export interface RenewalList {
     chequeDate: [Validators.required],
     ifscCode: [Validators.required, Validators.pattern('^[A-Z]{4}[0]{1}[A-Z0-9]{6}$')],
     bankNameControl: [Validators.required],
-    file: [] ,
+    file: [Validators.required] ,
     accountHolderName:[Validators.required],
     accountNo:[Validators.required,Validators.pattern(/^[0-9]{9,18}$/)],
     accountType:[Validators.required],
     bankName:[Validators.required],
     bankCity:[Validators.required],
-    bankBranch:[Validators.required],    
+    bankBranch:[Validators.required], 
+
   };
   
     

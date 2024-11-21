@@ -182,7 +182,7 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
-                        <select id="zoneValue" name="zoneValue" formControlName="proposerZone" class="input-textBox">
+                        <select id="zoneValue" name="zoneValue" formControlName="proposerZone" class="input-textBox" (change)="onZoneChange($event)">
                           <option value="" disabled selected>Select Zone</option>
                           <option *ngFor="let zone of availableZones" [value]="zone">{{ zone }}</option>
                         </select>

@@ -27,7 +27,8 @@ export class GetQuoteComponent {
   showCustomDiv = false;
   selectedDropdown = '';
   availableZones: string[] = [];
-  currentZone: string = ''; // Example current zone
+  upgradedZone:string='';
+  currentZone: string = '';
   zoneHierarchy: string[] = ["Zone IV", "Zone III", "Zone II", "Zone I"];
   relationCountMap: Map<string, number> = new Map([
     ["R003", 0],
@@ -195,17 +196,23 @@ export class GetQuoteComponent {
     console.log(this.relationCountMap,this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
-    let formData:any;
-    if(sessionStorage.getItem('formData')){
-      formData= this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
+    let formData: any;
+    if (sessionStorage.getItem('formData')) {
+      formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
     }
-    console.log(formData,this.relations);
+    console.log(formData);
+    if (formData && formData.currentZone) {
+      this.currentZone = formData.currentZone;
+    }
     this.quoteFormGroup = this.fb.group({
       proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
       proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
       mobileNumber: [null, [Validators.required, Validators.pattern('^[6-9][0-9]{9}$'), Validators.maxLength(10)]],
       typeOfBusiness: ["NB"],
-      proposerZone: [''],
+      proposerZone: [this.upgradedZone],
+      currentZone: [this.currentZone],
+      availableZones: [this.availableZones],
+      zone: [this.proposerZone],
       isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
       numberOfInsuredMembers: [null],
@@ -214,16 +221,16 @@ export class GetQuoteComponent {
       memberDobProposer: [''],
       memberAgeProposer: [''],
       insuredMembers: this.fb.group({}),
-      insuredMemberDetails: this.fb.array([]) // This will be initialized with dynamic members
+      insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
     });
     this.calculateUpgradeableZones();
     if (formData) {
       this.quoteFormGroup.patchValue(formData);
       console.log(formData);
-      if(formData.memberPolicyType){
+      if (formData.memberPolicyType) {
         this.onPlanTypeChange(formData.memberPolicyType);
       }
-      if(formData.sumInsured){
+      if (formData.sumInsured) {
         this.selectedSumInsured = formData.sumInsured;
       }
       if(formData.insuredMembers && formData.insuredMemberDetails.length > 0){
@@ -304,42 +311,43 @@ export class GetQuoteComponent {
         });
         // this.addInsuredMemberDetails();
         const insuredMembersGroup = this.fb.group({});
-      this.quoteFormGroup.setControl('insuredMembers', insuredMembersGroup);
+        this.quoteFormGroup.setControl('insuredMembers', insuredMembersGroup);
 
-      // Reset the insuredMemberDetails array
-      const insuredMemberDetailsArray = this.fb.array([]) as FormArray;
-      this.quoteFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
+        // Reset the insuredMemberDetails array
+        const insuredMemberDetailsArray = this.fb.array([]) as FormArray;
+        this.quoteFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
 
-      // Add controls for the currently selected relationships
-      this.selectedRelationships.forEach((relation: any) => {
-        insuredMembersGroup.addControl(relation.value, this.fb.control(true));
+        // Add controls for the currently selected relationships
+        this.selectedRelationships.forEach((relation: any) => {
+          insuredMembersGroup.addControl(relation.value, this.fb.control(true));
 
-        const memberGroup = this.fb.group({
-          relation: [relation.value],
-          roomCategory: [""],
-          memberAge: [relation.age, [Validators.required]],
-          sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
-          isChronic: ["No"],
-          chronicDiseases: [this.diseaseNames],
-          zone: [this.proposerZone],
-          memberGender: [relation.gender, [Validators.required]],
-          memberdob: [relation.dob, [Validators.required]],
-          memberRelationCode: [24, [Validators.required]],
-          pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
-          city: [this.proposerCity],
-          zoneValue: [this.proposerZone],
-          state: [this.proposerState]
+          const memberGroup = this.fb.group({
+            relation: [relation.value],
+            roomCategory: [""],
+            memberAge: [relation.age, [Validators.required]],
+            sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
+            isChronic: ["No"],
+            chronicDiseases: [this.diseaseNames],
+            zone: [this.proposerZone],
+            availableZones: [this.availableZones],
+            memberGender: [relation.gender, [Validators.required]],
+            memberdob: [relation.dob, [Validators.required]],
+            memberRelationCode: [24, [Validators.required]],
+            pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
+            city: [this.proposerCity],
+            zoneValue: [this.proposerZone],
+            state: [this.proposerState]
+          });
+          this.DateCheck.push(true);
+          insuredMemberDetailsArray.push(memberGroup);
         });
 
-        insuredMemberDetailsArray.push(memberGroup);
-      });
+        // Update selectedRelation string for display
+        this.selectedRelation = this.selectedRelationships.length > 0
+          ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
+          : 'Please select members';
 
-      // Update selectedRelation string for display
-      this.selectedRelation = this.selectedRelationships.length > 0
-        ? this.selectedRelationships.map((relation: any) => relation.value).join(', ')
-        : 'Please select members';
-
-      console.log(this.selectedRelation);
+        console.log(this.selectedRelation);
       }
     }
   console.log(this.quoteFormGroup.value,this.DateCheck);
@@ -440,8 +448,8 @@ export class GetQuoteComponent {
         }
       })
     }
-    console.log(dob,dob.length,new Date(dob).getFullYear(),new Date(this.currentDate).getFullYear());
-    if(dob.length == 10 && dobArray[0].length == 4 && new Date(dob).getFullYear() > new Date(this.currentDate).getFullYear()){
+    console.log(dob, dob.length, new Date(dob).getFullYear(), new Date(this.currentDate).getFullYear());
+    if (dob.length == 10 && dobArray[0].length == 4 && new Date(dob).getFullYear() > new Date(this.currentDate).getFullYear()) {
       this.toast.error({
         detail: "Error",
         summary: "Please fill valid Date.",
@@ -505,7 +513,7 @@ export class GetQuoteComponent {
       this.selectedDropdown = label;
       this.activeDropdown = index;
     }
-    console.log(this.selectedRelation,this.selectedPlan);
+    console.log(this.selectedRelation, this.selectedPlan);
   }
 
   showDropdowns() {
@@ -571,16 +579,17 @@ export class GetQuoteComponent {
     })
     this.quoteFormGroup.get('numberOfInsuredMembers')?.setValue(this.selectedRelationships.length);
     this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length + "A");
+    this.quoteFormGroup.get('currentZone')?.setValue(this.currentZone);
     console.log(this.quoteFormGroup.value);
     sessionStorage.setItem("formData", this.encryptionService.encrypt(this.quoteFormGroup.value));
 
     if (this.quoteFormGroup.valid) {
       console.log(this.quoteFormGroup.value);
       // this.saveDataToStorage();
-      if(this.route.url.includes('quoteProducts')){
+      if (this.route.url.includes('quoteProducts')) {
         location.reload();
       }
-      else{
+      else {
         this.route.navigate(['quote/quoteProducts']);
       }
     } else {
@@ -828,7 +837,8 @@ export class GetQuoteComponent {
           sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
           isChronic: ["No"],
           chronicDiseases: [this.diseaseNames],
-          zone: [this.proposerZone],
+          zone: [this.upgradedZone],
+          availableZones: [this.availableZones],
           memberGender: [relation.gender, [Validators.required]],
           memberdob: [relation.dob, [Validators.required]],
           memberRelationCode: [24, [Validators.required]],
@@ -837,6 +847,8 @@ export class GetQuoteComponent {
           zoneValue: [this.proposerZone],
           state: [this.proposerState]
         });
+
+        console.log(memberGroup.value);
 
         insuredMemberDetailsArray.push(memberGroup);
       });
@@ -876,46 +888,67 @@ export class GetQuoteComponent {
   calculateUpgradeableZones(): void {
     const currentIndex = this.zoneHierarchy.indexOf(this.currentZone);
     console.log(currentIndex);
-
+    
     if (currentIndex === -1) {
-      console.error('Invalid current zone:', this.currentZone);
       return;
     }
 
-    if (this.currentZone === 'Zone I') {
-      this.availableZones = ['Zone I'];
-    } else {
-      this.availableZones = this.zoneHierarchy.slice(currentIndex).reverse();
-    }
+    this.availableZones = this.zoneHierarchy.slice(currentIndex).reverse();
+    console.log(this.availableZones);
+
+    // if (!this.availableZones.includes(this.currentZone)) {
+    //   this.availableZones.unshift(this.currentZone);
+    // }
+
+    this.quoteFormGroup.get('availableZones')?.setValue(this.availableZones);
+    console.log(this.quoteFormGroup.get('availableZones')?.setValue(this.availableZones))
+  }
+
+  onZoneChange(event: any) {
+    this.upgradedZone = event.target.value
+    this.proposerZone = event.target.value
+    console.log(event.target.value);
   }
 
   getProposerPincode(event: any) {
-
-    console.log(event.target.value, typeof event)
-    const reqdata = {
-      "pincode": event.target.value
+    const pincode = event.target.value;
+  
+    // Regex to check for 6 digits and ensure not all digits are the same
+    const isValidPincode = /^[0-9]{6}$/.test(pincode) && !/^(\d)\1{5}$/.test(pincode);
+  
+    if (!isValidPincode) {
+      this.toast.error({ detail: "WARNING", summary: "Invalid pincode. Please enter a valid 6-digit pincode.", duration: 3000 });
+      return;
     }
-
+  
+    const reqdata = {
+      pincode: pincode
+    };
+  
     this.availableZones = [];
     this.service.getPinCodeByCity(reqdata).subscribe({
       next: (res) => {
-        console.log(res)
-        this.currentZone=res.data.zone;
-        this.proposerZone = res.data.zone;
-        this.proposerCity = res.data.city;
-        this.proposerState = res.data.state;
-        this.proposerZoneValue = res.data.zoneCode;
-
-        console.log(this.currentZone);
-        
-
-        this.calculateUpgradeableZones();
-
-        if (res.data.zone) {
-          if (!this.availableZones.includes(res.data.zone)) {
-            this.availableZones.push(res.data.zone);
+        if (res.isSuccess) {
+          console.log(res);
+          this.currentZone = res.data.zone;
+          this.upgradedZone = res.data.zone;
+          this.proposerZone = res.data.zone;
+          this.proposerCity = res.data.city;
+          this.proposerState = res.data.state;
+          this.proposerZoneValue = res.data.zoneCode;
+  
+          console.log(this.currentZone);
+  
+          this.calculateUpgradeableZones();
+  
+          if (res.data.zone) {
+            if (!this.availableZones.includes(res.data.zone)) {
+              this.availableZones.push(res.data.zone);
+            }
+            this.quoteFormGroup.get('proposerZone')?.setValue(this.upgradedZone);
           }
-          this.quoteFormGroup.get('proposerZone')?.setValue(this.currentZone);
+        } else {
+          this.toast.error({ detail: "WARNING", summary: res.message, duration: 3000 });
         }
       },
       error: (err) => {
@@ -924,7 +957,6 @@ export class GetQuoteComponent {
         this.toast.error({ detail: "WARNING", summary: errorMessage, duration: 3000 });
       }
     });
-
-  }
+  }  
 
 }

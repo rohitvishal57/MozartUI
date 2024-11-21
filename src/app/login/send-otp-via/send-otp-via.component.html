@@ -11,15 +11,10 @@
         </div>
 
         <div class="send-otp-form-section">
-            <!-- <div class="input-item row">
-                <div class="input-with-icon d-flex justify-content-center">
-                    <input type="text" class="search-box" placeholder="Search your mobile number/email" [(ngModel)]="searchQuery" (input)="onSearch()" >
-                </div>
-            </div> -->
             <div class="row pt-3 pb-4" *ngIf="filteredContacts.length > 0">
-                <div class="col-6" *ngFor="let contact of filteredContacts">
+                <div class="col-6" *ngFor="let contact of filteredContacts; let i = index">
                     <div class="contact-card-wrap" (click)="onSelect(contact)">
-                        <div class="contact-card-wrap-info">
+                        <div class="contact-card-wrap-info" [tabindex]="i+1" (keydown.enter)="onSelect(contact)">
                             <label>{{maskUserCode(contact)}}</label>
                         </div>
                     </div>

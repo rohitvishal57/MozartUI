@@ -62,15 +62,6 @@ export class EventsListComponent implements OnInit {
               const startDateTime = this.parseDateTime(schedule.date, schedule.startTime);
               const endDateTime = this.parseDateTime(schedule.date, schedule.endTime);
   
-        
-              console.log("Processing event:", {
-                date: schedule.date,
-                startTime: schedule.startTime,
-                endTime: schedule.endTime,
-                parsedStart: startDateTime,
-                parsedEnd: endDateTime
-              });
-  
               if (!startDateTime || !endDateTime) {
                 console.error("Invalid date/time for event:", event);
                 return null;
