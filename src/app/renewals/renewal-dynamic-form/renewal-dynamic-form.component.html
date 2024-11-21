@@ -935,8 +935,8 @@
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="bank_Name" name="bank_Name" placeholder="" formControlName="bankName" class="form-control input-selectBox" (change)="onBankChange($event)">
-                                                <option value="" selected>{{"Select Bank Name" | translate}}</option>
-                                                <option *ngFor="let bank of bankNameList" [value]="bank.id">{{ bank.name | translate }}</option>
+                                                <option value="">{{"Select Bank Name" | translate}}</option>
+                                                <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name | translate }}</option>
                                             </select>
                                             <label for="bank_Name">{{"Bank Name" | translate}}</label>
                                             <span class="ui-error" *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">{{"Please Select Bank Name" | translate}}</span>
@@ -946,7 +946,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="bank_City" name="bank_City"  placeholder="" formControlName="bankCity" class="form-control input-selectBox" (change)="onCityChange($event)">
                                                 <option value="">{{"Select Bank City" | translate}}</option>
-                                                <option *ngFor="let city of cityNameList" [value]="city.id">{{ city.name | translate }}</option>
+                                                <option *ngFor="let city of cityNameList" [value]="city.name">{{ city.name | translate }}</option>
                                             </select>
                                             <label for="bank_City">{{"Bank City" | translate}}</label>
                                             <span class="ui-error" *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">{{"Please Select City Name" | translate}}</span>
@@ -956,7 +956,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="bank_Branch" name="bank_Branch" placeholder="" formControlName="bankBranch" class="form-control input-selectBox" (change)="onBranchChange($event)">
                                                 <option value="">{{"Select Bank Branch" | translate}}</option>
-                                                <option *ngFor="let branch of branchNameList" [value]="branch.id">{{ branch.name | translate }}</option>
+                                                <option *ngFor="let branch of branchNameList" [value]="branch.name">{{ branch.name | translate }}</option>
                                             </select>
                                             <label for="bank_Branch">{{"Bank Branch" | translate}}</label>
                                             <span class="ui-error" *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">{{"Please Select Branch Name" | translate}}</span>
@@ -1201,30 +1201,30 @@
                                             </div>               
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="number" id="cheque_Amount" name="cheque_Amount" [(ngModel)]="renewalInfo.response.policyData[0].premium.Renewal_Gross_Premium" class="form-control input-textBox" formControlName="chequeAmount">
-                                                    <label for="cheque_Amount">{{"Check Amount" | translate}}</label>
+                                                    <input type="number" id="premium_Amount" name="premium_Amount" [(ngModel)]="renewalInfo.response.policyData[0].premium.Renewal_Gross_Premium" class="form-control input-textBox" formControlName="premiumAmount">
+                                                    <label for="premium_Amount">{{"Premium Amount" | translate}}</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="number" id="cheque_Number" name="cheque_Number" placeholder="" class="form-control input-textBox" formControlName="chequeNumber">
-                                                    <label for="cheque_Number">{{"Cheque Number" | translate}}</label>
-                                                    <span *ngIf="form.get('chequeNumber')?.invalid && form.get('chequeNumber')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="form.get('chequeNumber')?.hasError('required')">{{"Cheque number is required." | translate}}</small>
-                                                        <small class="ui-error block-show" *ngIf="form.get('chequeNumber')?.hasError('pattern')">{{"Cheque number must be exactly 6 digits." | translate}}</small>
+                                                    <input type="number" id="instrument_Number" name="cheque_Number" placeholder="" class="form-control input-textBox" formControlName="instrumentNumber">
+                                                    <label for="instrument_Number">{{"Instrument Number" | translate}}</label>
+                                                    <span *ngIf="form.get('instrumentNumber')?.invalid && form.get('instrumentNumber')?.touched">
+                                                        <small class="ui-error block-show" *ngIf="form.get('instrumentNumber')?.hasError('required')">{{"Instrument number is required." | translate}}</small>
+                                                        <small class="ui-error block-show" *ngIf="form.get('instrumentNumber')?.hasError('pattern')">{{"Instrument number must be exactly 6 digits." | translate}}</small>
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="date" id="cheque_Date" name="cheque_Date" placeholder="" [max]="currentDate" class="form-control input-textBox" formControlName="chequeDate">
-                                                    <label for="cheque_Date">{{"Cheque Date" | translate}}</label>
-                                                    <span *ngIf="form.get('chequeDate')?.invalid && form.get('chequeDate')?.touched">
-                                                    <small class="ui-error block-show" *ngIf="form.get('chequeDate')?.hasError('required')">{{"Cheque date is required." | translate}}</small>
+                                                    <input type="date" id="instrument_Date" name="instrument_Date" placeholder="" [max]="currentDate" class="form-control input-textBox" formControlName="instrumentDate">
+                                                    <label for="instrument_Date">{{"Instrument Date" | translate}}</label>
+                                                    <span *ngIf="form.get('instrumentDate')?.invalid && form.get('instrumentDate')?.touched">
+                                                    <small class="ui-error block-show" *ngIf="form.get('instrumentDate')?.hasError('required')">{{"Instrument date is required." | translate}}</small>
                                                     </span>                                                
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                            <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input type="text" id="IFSC_Code" [(ngModel)]="bankDetailsObject.IFSCCOde" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode">
                                                     <label for="IFSC_COde">{{"IFSC Code" | translate}}</label>                                       
@@ -1247,6 +1247,48 @@
                                                         {{ bank.name | translate }}  
                                                     </mat-option>
                                                  </mat-autocomplete>
+                                            </div> -->
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <select id="bank_Name" name="bank_Name" placeholder=""  [(ngModel)]="bankDetailsObject.bankName" formControlName="bankName" class="form-control input-selectBox" (change)="onBankChange($event)">
+                                                        <option value="">Select Bank Name</option>
+                                                        <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
+                                                    </select>
+                                                    <label for="bank_Name">Bank Name</label>
+                                                    <span class="ui-error" *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">Please Select Bank Name</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <select id="bank_City" name="bank_City"  placeholder="" [(ngModel)]="bankDetailsObject.bankCity" formControlName="bankCity" class="form-control input-selectBox" (change)="onCityChange($event)">
+                                                        <option value="">Select Bank City</option>
+                                                        <option *ngFor="let city of cityNameList" [value]="city.name">{{ city.name }}</option>
+                                                    </select>
+                                                    <label for="bank_City">Bank City</label>
+                                                    <span class="ui-error" *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">Please Select City Name</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <select id="bank_Branch" name="bank_Branch" placeholder="" [(ngModel)]="bankDetailsObject.bankBranch" formControlName="bankBranch" class="form-control input-selectBox" (change)="onBranchChange($event)">
+                                                        <option value="">Select Bank Branch</option>
+                                                        <option *ngFor="let branch of branchNameList" [value]="branch.name">{{ branch.name }}</option>
+                                                    </select>
+                                                    <label for="bank_Branch">Bank Branch</label>
+                                                    <span class="ui-error" *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">Please Select Branch Name</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input type="text" id="IFSC_Code" name="IFSC_Code" [(ngModel)]="bankDetailsObject.IFSCCOde" placeholder="" class="form-control input-textBox" formControlName="ifscCode" >
+                                                    <label for="IFSC_Code">IFSC Code</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                                <div class="input-block form-floating input-block-renew">
+                                                    <input type="text" id="MICR_Code" name="MICR_Code" [(ngModel)]="bankDetailsObject.MICRCode" placeholder="" class="form-control input-textBox" formControlName="micrCode">
+                                                    <label for="MICR_Code">MICR Code</label>
+                                                </div>
                                             </div>
                                             <div id="ovdUpload" class="col-12">
                                                 <div class="row align-items-center mt-2">
