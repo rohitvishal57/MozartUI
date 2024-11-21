@@ -1036,6 +1036,24 @@
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
                                 <div class="row mb-2">
+                                    <div class="col-12">
+                                        <div class="renew_optionalCoverages">
+                                            <div class="input-checkbox-block checkbox_renew_optionalCoverages" *ngFor="let cover of optionalCovers; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" [checked]="selectedOptionalCoverages.includes(cover.featureName)" [disabled]="selectedOptionalCoverages.includes(cover.featureName)">
+                                                    <label [for]="cover.featureName" [ngClass]="{'active': selectedOptionalCoverages.includes(cover.featureName)}"></label>
+                                                </div>
+                                                <div class="input-checkbox-feildInfo">
+                                                    <em class="head">{{cover?.featureName}}</em>
+                                                </div>
+                                                <div class="input-checkbox-feildButton">
+                                                    <button type="button" id="btn-changeMember-cover{{i}}" name="btn-changeMember-cover{{i}}" class="btn_pink btn_sm">Change Member</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="row mb-2">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages">
                                             <div class="input-checkbox-feild" *ngFor="let cover of optionalCovers">
@@ -1048,7 +1066,7 @@
                                             </div>       
                                         </div>
                                     </div>
-                                </div>                                
+                                </div> -->                                
                             </div>                           
                         </div>
                     </div>
@@ -1059,6 +1077,24 @@
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
                                 <div class="row mb-2">
+                                    <div class="col-12">
+                                        <div class="renew_optionalCoverages">
+                                            <div class="input-checkbox-block checkbox_renew_optionalCoverages" *ngFor="let cover of healthAddOns; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" [checked]="selectedHealthAddons.includes(cover.featureName)" [disabled]="selectedHealthAddons.includes(cover.featureName)">
+                                                    <label [for]="cover.featureName" [ngClass]="{'active': selectedHealthAddons.includes(cover.featureName)}"></label>
+                                                </div>
+                                                <div class="input-checkbox-feildInfo">
+                                                    <em class="head">{{cover?.featureName}}</em>
+                                                </div>
+                                                <div class="input-checkbox-feildButton">
+                                                    <button type="button" id="btn-changeMember-addons{{i}}" name="btn-changeMember-addons{{i}}" class="btn_pink btn_sm">Change Member</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="row mb-2">
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <div class="input-checkbox-block checkbox_optionalCoverages checkbox_healthAddOns">
                                             <div class="input-checkbox-feild" *ngFor="let cover of healthAddOns">
@@ -1071,7 +1107,7 @@
                                               </div>                                          
                                         </div>
                                     </div>
-                                </div>                               
+                                </div> -->                               
                             </div>                           
                         </div>
                     </div>
