@@ -730,64 +730,48 @@ export class RenewalDynamicFormComponent implements OnInit {
     } else if(this.activeSection== 'policySummary'){
       this.setSection('payment')
     } else if(this.activeSection == 'payment'){
-        if(this.selectedPaymentType == 'offline' && !this.form.valid){
-          this.form.markAllAsTouched();
-          return;
-        }
-        const offlinePaymentRequestBody = {
-          "PolicyType": "Renewal",
-          "PaymentMethod": "Offline",
-          "Source":"Retail",
-          "InstrumentType": this.form.value.paymentOption.toString(),
-          "PremiumAmount": this.form.value.chequeAmount.toString(),
-          "InstrumentNo": this.form.value.chequeNumber.toString(),
-          "InstrumentDate": this.form.value.chequeDate.toString(),
-          "PolicyNumber": this.policyNumber.toString(),
-          "ProposalNum":"",
-          "AgentCode": this.agentCode?.toString(),
-          "BankName": this.form.value.bankNameControl.toString(),
-          "IFSC": this.form.value.ifscCode.toString(),
-          "MicrNo":"",
-          "documentId": this.documentId
-        };
-        console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
-        // const checkNumber= this.form.value.chequeNumber.toString()
-        // const checkAmount= this.form.value.chequeAmount.toString()
-        // console.log(checkAmount,checkNumber);
-        // const data = new FormData();
-        // data.append("PolicyType", "Renewal");
-        // data.append("PaymentMethod", "Offline");
-        // data.append("InstrumentType", this.form.value.paymentOption);
-        // data.append("PremiumAmount", checkAmount);
-        // data.append("InstrumentNo", checkNumber);
-        // data.append("InstrumentDate", this.form.value.chequeDate);
-        // data.append("PolicyNumber", this.policyNumber);
-        // data.append("ProposalNum","")
-        // data.append("AgentCode", this.agentCode|| "");
-        // data.append("BankName", this.form.value.bankNameControl);
-        // data.append("IFSC", this.form.value.ifscCode);
-        // data.append("MicrNo","")
-        // data.append('formFile', this.file);
-        // console.log("uploaded file",this.file);
-        // console.log("data",data);
-            this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
-          // this.renewalService.getFullQuoteApi(data).subscribe(
-          (res:any)=>{
-            if(res.isSuccess){
-              console.log("offline payment reponse",res.data);
-              this.fullQuoteResponse=res.data;          
-              this.setSection('thankyou')
-              this.hideSection=false
-              this.isFeedBackModalVisible = true;
-            }
-            else{
-              this.toast.error({ detail: '',summary:res.message,duration: 3000});
-            }
-          },
-          (err)=>{
-            this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
-            console.log("error is coming from fullquote api");
-        })
+          this.setSection('thankyou')
+           this.hideSection=false
+            this.isFeedBackModalVisible = true;
+        // if(this.selectedPaymentType == 'offline' && !this.form.valid){
+        //   this.form.markAllAsTouched();
+        //   return;
+        // }
+        // const offlinePaymentRequestBody = {
+        //   "PolicyType": "Renewal",
+        //   "PaymentMethod": "Offline",
+        //   "Source":"Retail",
+        //   "InstrumentType": this.form.value.paymentOption.toString(),
+        //   "PremiumAmount": this.form.value.chequeAmount.toString(),
+        //   "InstrumentNo": this.form.value.chequeNumber.toString(),
+        //   "InstrumentDate": this.form.value.chequeDate.toString(),
+        //   "PolicyNumber": this.policyNumber.toString(),
+        //   "ProposalNum":"",
+        //   "AgentCode": this.agentCode?.toString(),
+        //   "BankName": this.form.value.bankNameControl.toString(),
+        //   "IFSC": this.form.value.ifscCode.toString(),
+        //   "MicrNo":"",
+        //   "documentId": this.documentId
+        // };
+        // console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
+        //     this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
+        //   // this.renewalService.getFullQuoteApi(data).subscribe(
+        //   (res:any)=>{
+        //     if(res.isSuccess){
+        //       console.log("offline payment reponse",res.data);
+        //       this.fullQuoteResponse=res.data;          
+        //       this.setSection('thankyou')
+        //       this.hideSection=false
+        //       this.isFeedBackModalVisible = true;
+        //     }
+        //     else{
+        //       this.toast.error({ detail: '',summary:res.message,duration: 3000});
+        //     }
+        //   },
+        //   (err)=>{
+        //     this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
+        //     console.log("error is coming from fullquote api");
+        // })
       }
   }
 

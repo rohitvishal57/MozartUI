@@ -1156,7 +1156,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2" *ngIf="link != ''">
-                                        <button  type="button" id="copy" name="copy" class="btn_red btn_redRenew"  [cdkCopyToClipboard]="link"><i class="fa-regular fa-copy"></i></button>                        
+                                        <button  type="button" id="copy" name="copy" class="btn_red btn_redRenew btn_redCopy"  [cdkCopyToClipboard]="link" title="Copy"><!-- <i class="fa-regular fa-copy"></i> --><img src="assets/Img/icon_content_copy.svg" ></button>                        
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
                                         <div class="block_or_line"><span>OR</span></div>
@@ -1591,7 +1591,7 @@
               </div>
           </div>
           <div class="bi_right">
-              <button type="button" id="back" name="back" value="back" class="btn_pink btn_pinkNext btn_w_120" (click)="comeBack()">Back</button>
+              <button type="button" id="back" name="back" value="back" class="btn_pink btn_pinkNext" (click)="comeBack()">Back</button>
               <button type="button" id="next" name="next" value="next" class="btn_red btn_redRenew" (click)="goNext()" *ngIf="(activeSection!=='payment' || selectedPaymentType == 'offline')  ">Next</button>
          </div>
       </div>
@@ -1599,6 +1599,13 @@
   <div class="contentBody bodyColumns-3 justify-content-center mobile-flex-column" *ngIf="activeSection === 'thankyou'">
     <div class="bodyColumns bodyColumnsCenter PB_policyNumber">
         <div class="bcc_main" style="gap: 24px;">
+            <section class="white_container success_container">
+                <div>
+                    <img src="assets/Img/icon_success_green_tick.gif" width="80" height="80">
+                </div>
+                <h6>Congratulations! Policy Application Renewed Successfully.</h6>
+                <p>Thank you for choosing Aditya Birla Health Insurance as your Insurance destination</p>
+            </section>
             <section class="white_container">
                 <h2>Details Of Your Proposal</h2>
                 <div class="row mt-3">
