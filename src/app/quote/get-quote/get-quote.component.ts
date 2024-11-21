@@ -97,7 +97,9 @@ export class GetQuoteComponent {
 
   value: number = 5;
   currentDate = new Date().toISOString().split('T')[0];
-  DateCheck:boolean = false;
+  DateCheck:boolean[] = [];
+  addHide:boolean = false;
+  numberOfChild :any = 0;
   relations: any[] = [
     {
       "id": "R001",
@@ -180,19 +182,24 @@ export class GetQuoteComponent {
       "gender": "F"
     }
   ]
-
+  anotherRelations = JSON.stringify(this.relations);
+  anotherRelationCountMap: [string, number][] = [
+    ["R003", 0],
+    ["R004", 0],
+  ];
   constructor(private fb: FormBuilder,private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService) { }
 
   ngOnInit() {
     console.log(this.currentDate);
+    console.log(this.relationCountMap,this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     let formData:any;
     if(sessionStorage.getItem('formData')){
       formData= this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
     }
-    console.log(formData);
+    console.log(formData,this.relations);
     this.quoteFormGroup = this.fb.group({
       proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
       proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
@@ -219,15 +226,81 @@ export class GetQuoteComponent {
       if(formData.sumInsured){
         this.selectedSumInsured = formData.sumInsured;
       }
-      if(formData.insuredMembers){
-        Object.entries(formData.insuredMembers).forEach(([memberName, isIncluded],index) => {
-          console.log(`${memberName}: ${isIncluded}`);
+      if(formData.insuredMembers && formData.insuredMemberDetails.length > 0){
+        const currentMember:any = {};
+
+// Add members from `this.relations` in the exact sequence
+        this.relations.forEach(relation => {
+          currentMember[relation.value] = formData.insuredMembers[relation.value] ?? false;
+          if (relation.value.startsWith('Son') || relation.value.startsWith('Daughter')) {
+            Object.keys(formData.insuredMembers).forEach(key => {
+              if (key.startsWith('Son') || key.startsWith('Daughter')) {
+                currentMember[key] = formData.insuredMembers[key] ?? false;
+              }
+            });
+          }
+        });
+
+        // Check for any "Son" or "Daughter" keys in formData.insuredMembers dynamically
+
+        // Log the final result
+        console.log(JSON.stringify(currentMember, null, 2));
+        console.log(currentMember,JSON.stringify(currentMember),this.relations);
+        console.log(this.relationCountMap,this.anotherRelationCountMap);
+        Object.entries(currentMember).forEach(([memberName, isIncluded],index) => {
+          console.log(`${memberName}: ${isIncluded}`,this.selectedRelationships);
+          console.log(memberName.includes("Son"),memberName.includes("Daughter"));
           const mockEvent = { target: { checked: isIncluded } };
-          const member = this.relations.find(relation => relation.name === memberName);
-          member.dob = formData.insuredMemberDetails[index].memberdob;
-          member.age  = formData.insuredMemberDetails[index].memberAge;
-          console.log(member);
-          this.onRelationChange(mockEvent, member);
+          if (memberName.includes("Son") || memberName.includes("Daughter")) {
+            const basename = memberName.replace(/\d+/g, '1');
+            const newIndex = parseInt(memberName.replace(/\D/g, ''), 10) + 1;
+            const newitem = memberName.replace(/\d+/g, `${newIndex}`);
+            console.log(newIndex);
+            console.log(basename, memberName);
+            const basemember = this.relations.find(relation => relation.name === basename);
+            if(basename){
+              const newMember = { ...basemember };
+              newMember.name = memberName;
+              newMember.value = memberName;
+              const matchingDetailIndex = formData.insuredMemberDetails.findIndex(
+                (detail: any) => detail.relation === memberName
+              );
+              if(newMember.name in formData.insuredMembers && formData.insuredMemberDetails[matchingDetailIndex] && formData.insuredMemberDetails[matchingDetailIndex].memberdob){
+                const aindex = this.relations.findIndex(relation => relation.name === memberName);
+                this.relations[aindex].name = newitem;
+                this.relations[aindex].value = newitem;
+                newMember.dob = formData.insuredMemberDetails[matchingDetailIndex].memberdob;
+                newMember.age = formData.insuredMemberDetails[matchingDetailIndex].memberAge;
+                newMember.isIncrement = false;
+                console.log(newMember);
+                this.relations.splice(index, 0, newMember); // Insert after the current relation
+                // this.incrementMember(newMember);
+                this.onRelationChange(mockEvent, newMember);
+                let currentCount:any = this.relationCountMap.get(newMember.id) || 1;
+                currentCount += 1;
+  
+                // Update the count in the map
+                this.relationCountMap.set(newMember.id, currentCount);
+              }
+            }
+          }
+          else {
+            const member = this.relations.find(relation => relation.name === memberName);
+            if(member){
+              if(member.name in formData.insuredMembers && formData.insuredMemberDetails[index] && formData.insuredMemberDetails[index].memberdob){
+                member.dob = formData.insuredMemberDetails[index].memberdob;
+                member.age = formData.insuredMemberDetails[index].memberAge;
+                console.log(member);
+                // this.incrementMember(member);
+                this.onRelationChange(mockEvent, member);
+                let currentCount:any = this.relationCountMap.get(member.id) || 1;
+                // Update the count in the map
+                this.relationCountMap.set(member.id, currentCount);
+              }
+            }
+          }
+          // this.DateCheck.push(true);
+          console.log(this.selectedRelationships,this.relations,this.relationCountMap);
         });
         // this.addInsuredMemberDetails();
         const insuredMembersGroup = this.fb.group({});
@@ -269,7 +342,7 @@ export class GetQuoteComponent {
       console.log(this.selectedRelation);
       }
     }
-  console.log(this.quoteFormGroup.value);
+  console.log(this.quoteFormGroup.value,this.DateCheck);
     // Object.keys(this.multiIndiReqData).forEach((key: string)=>{
     //   if(Array.isArray(this.multiIndiReqData[key])){
 
@@ -284,21 +357,69 @@ export class GetQuoteComponent {
   }
 
   onRelationChange(event: any, relation: any) {
-    console.log(relation);
     const isChecked = event.target.checked;
     const selectedValue = relation.value;
+    console.log(this.relationCountMap,this.selectedPlan,this.relations,relation,isChecked,selectedValue,this.selectedRelationships);
 
     if (isChecked) {
-      if (!this.selectedRelationships.some(
+       if (!this.selectedRelationships.some(
         (existingRelation: any) => existingRelation.name === relation.name
       )) {
-        this.selectedRelationships.push(relation);
+        if(this.relationCountMap.has(relation.id)){
+          if (this.selectedPlan === 'Family Floater') {
+            if (this.numberOfChild == 3) {
+              this.addHide = true;
+              this.numberOfChild += 1;
+              this.selectedRelationships.push(relation);
+            }
+            else if (this.numberOfChild == 4) {
+              relation.value = false;
+              event.target.checked = false; // Uncheck the checkbox in the DOM
+              this.toast.warning({ detail: "Error", summary: "Already 4 Child are Added.", duration: 2000 });
+            }
+            else {
+              this.numberOfChild += 1;
+              this.selectedRelationships.push(relation);
+              this.addHide = false;
+            }
+            // else {
+            //   relation.value = false;
+            //   event.target.checked = false; // Uncheck the checkbox in the DOM
+            //   this.toast.warning({detail: "Error",summary: "Already 4 Child are Added.",duration: 2000});
+            // }
+          }
+          else{
+            this.selectedRelationships.push(relation);
+            this.addHide = false;
+          }
+        }
+        // else if (this.relationCountMap.has(relation.id)) {
+        //   this.numberOfChild += 1;
+        //   this.selectedRelationships.push(relation);
+        //   this.addHide = false;
+        // }
+        else{
+          this.selectedRelationships.push(relation);
+          // this.addHide = false;
+        }
       }
     } else {
       this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
+      if (this.relationCountMap.has(relation.id)){
+        if (this.selectedPlan === 'Family Floater'){
+          if(!relation.dob){
+            this.numberOfChild -= 1;
+          }
+          this.addHide = false;
+        }
+        else{
+          this.addHide = false;
+        }
+      }
     }
-    console.log(this.selectedRelationships,selectedValue,isChecked);
+    console.log(this.selectedRelationships,selectedValue,isChecked,this.numberOfChild);
+    console.log(this.selectedRelationships,this.relations,this.relationCountMap);
     // this.saveDataToStorage();
   }
 
@@ -326,10 +447,10 @@ export class GetQuoteComponent {
         summary: "Please fill valid Date.",
         duration: 1000
       });
-      this.DateCheck = false;
+      this.DateCheck.push(false);
     }
     else{
-      this.DateCheck = true;
+      this.DateCheck.push(true);
     }
     // this.saveDataToStorage(); // Save after updating the age
   }
@@ -376,6 +497,7 @@ export class GetQuoteComponent {
   }
 
   openCustomDiv(label: string, index: number) {
+    console.log(label,index);
     if (this.activeDropdown === index) {
       this.activeDropdown = null;
     } else {
@@ -506,15 +628,15 @@ export class GetQuoteComponent {
     // baseRelation.value = `${relation.name} ${currentCount}`;
     // this.relations.splice(index, 0, baseRelation);
     // this.relationCountMap.set(relation.id, currentCount);
-
+    relation.isIncrement = false;
     let baseName = relation.name.replace(/\d+/g, ''); // No trim needed, as we don't want a space
 
     // Get the current count for the relation type (Son, Daughter, etc.)
     let currentCount = this.relationCountMap.get(relation.id) || 1; // Start count at 1 if not set
-
+    console.log(relation,baseName,currentCount,this.relations,this.relationCountMap);
     let baseRelation = { ...relation }; // Deep copy the relation
-    baseRelation.isIncrement = false; // Mark the cloned relation as a regular relation
-    baseRelation['deletable'] = true; // Mark it as deletable
+    baseRelation.isIncrement = true; // Mark the cloned relation as a regular relation
+    // baseRelation['deletable'] = true; // Mark it as deletable
 
     currentCount += 1; // Increment the count
     baseRelation.name = `${baseName}${currentCount}`; // Set new name (e.g., Son2, Daughter2)
@@ -532,6 +654,8 @@ export class GetQuoteComponent {
   removeMember(relation: any) {
     console.log(relation);
     console.log(this.relations);
+    let currentCount = this.relationCountMap.get(relation.id) || 1;
+    currentCount -= 1;
     this.relations = this.relations.filter((element: any) => element.name !== relation.name);
     console.log(this.relations);
     this.selectedRelationships = this.selectedRelationships.filter((element: any) => element.name !== relation.name);
@@ -632,7 +756,14 @@ export class GetQuoteComponent {
 
   onPlanTypeChange(planType: string) {
     this.selectedPlan = planType;
+    this.selectedRelation = "";
+    this.selectedRelationships = [];
     this.quoteFormGroup.get('memberPolicyType')?.setValue(planType);
+    this.relations = JSON.parse(this.anotherRelations);
+    console.log(this.anotherRelationCountMap);
+    this.relationCountMap = new Map(this.anotherRelationCountMap);
+    this.numberOfChild = 0;
+    this.addHide = false;
     this.activeDropdown = null;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -658,7 +789,7 @@ export class GetQuoteComponent {
 
   // Add new member details
   addInsuredMemberDetails(): void {
-    console.log(this.selectedRelationships);
+    console.log(this.selectedRelationships,this.quoteFormGroup,this.DateCheck);
     if (this.selectedRelationships.length < 2 && this.selectedPlan === 'Family Floater') {
       this.toast.error({
         detail: "Error",
@@ -668,7 +799,7 @@ export class GetQuoteComponent {
       return; // Prevent proceeding if fewer than 2 members are selected
     }
 
-    if(this.DateCheck == false){
+    if(this.DateCheck.includes(false) && this.DateCheck.length > 0){
       this.toast.error({
         detail: "Error",
         summary: "Please fill valid Date.",

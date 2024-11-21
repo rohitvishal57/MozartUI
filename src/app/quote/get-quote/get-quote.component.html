@@ -26,13 +26,13 @@
 
     <div class="insurance_optionHUB" [formGroup]="quoteFormGroup">
       <div class="dropdown-container ">
-        <div class="dropdown_backdrop block-hide"></div>
+        <div class="dropdown_backdrop" [ngClass]="activeDropdown ? 'block-show' : 'block-hide'"></div>
         <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
           <!-- Label -->
           <label class="field_label">{{ dropdown.label }}</label>
           <!-- Button for each dropdown -->
           <button class="dropdown-button" type="button" id="dropdownlabel-custom-{{i}}"
-            name="dropdownlabel-custom-{{i}}" (click)="openCustomDiv(dropdown.label, i)">
+            name="dropdownlabel-custom-{{i}}" (click)="openCustomDiv(dropdown.label, i+1)">
             <div class="selected-value">
               <span>
                 <ng-container *ngIf="dropdown.label === 'Policy Type'">
@@ -58,7 +58,7 @@
           </button>
 
           <!-- Dropdown content for each item, displayed only when the activeDropdown matches the index -->
-          <div class="dropdownContent" *ngIf="activeDropdown === i">
+          <div class="dropdownContent" *ngIf="activeDropdown === i+1">
 
 
             <!-- Custom dropdown content for "Policy Type" -->
@@ -206,31 +206,34 @@
                                   </div>
                                 </div>
                               </div> -->
-                      <ng-container *ngFor="let relation of relations">
-                        <div *ngIf="relation.isIncrement == false" class="input-checkbox-feild">
-                          <input type="checkbox" id="{{relation.value}}" name="{{relation.value}}"
-                            [checked]="selectedRelation.includes(relation.value)"
-                            (change)="onRelationChange($event, relation)" value="{{relation.id}}" class="input-check">
-                          <!-- [disabled]="selectedPlan !== 'Family Floater' && selectedRelation.length >= 1"> -->
-                          <label for="{{relation.value}}"><img src="{{relation.imagePath}}">{{relation.name}}</label>
-                          <div class="member_extraInfo">
-                            <div class="member_extraInfoSub">
-                              <input type="date" placeholder="Enter DOB" class="member_textbox" [value]="relation.dob"
-                                [max]="currentDate" (input)="onAgeChange($event, relation)">
-                              <span *ngIf="relation.deletable" class="delete_member"
-                                (click)="removeMember(relation)"><img src="assets/Img/icon_delete_red2.svg"></span>
-                            </div>
-                          </div>
-                        </div>
-                        <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
-                          <button type="button" id="addchildrens" name="addchildrens" class="btn_white btn_addChildren"
-                            (click)="incrementMember(relation)">
-                            <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
-                            <img src="assets/Img/icon_round_plus_red.svg">
-                          </button>
-                        </div>
-                      </ng-container>
-                      <!-- <div class="input-checkbox-feild">
+                            <ng-container *ngFor="let relation of relations">
+                              <div *ngIf="relation.isIncrement == false" class="input-checkbox-feild">
+                                <input type="checkbox" id="{{relation.value}}" name="{{relation.value}}"
+                                  [checked]="selectedRelation.includes(relation.value)"
+                                  (change)="onRelationChange($event, relation)" value="{{relation.id}}"
+                                  class="input-check">
+                                  <!-- [disabled]="selectedPlan !== 'Family Floater' && selectedRelation.length >= 1"> -->
+                                <label for="{{relation.value}}"><img
+                                    src="{{relation.imagePath}}">{{relation.name}}</label>
+                                <div class="member_extraInfo">
+                                  <div class="member_extraInfoSub">
+                                    <input type="date" placeholder="Enter DOB" id="DOB" name="DOB" class="member_textbox"
+                                      [value]="relation.dob"  [max]="currentDate"
+                                      (input)="onAgeChange($event, relation)">
+                                      <!-- <span *ngIf="relation.deletable" class="delete_member" (click)="removeMember(relation)"><img
+                                        src="assets/Img/icon_delete_red2.svg"></span> -->
+                                    </div>
+                                  </div>
+                                </div>
+                                <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
+                                <button type="button" id="addchildrens" name="addchildrens" class="btn_white btn_addChildren" (click)="incrementMember(relation)"
+                                [disabled]="addHide">
+                                  <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
+                                  <img src="assets/Img/icon_round_plus_red.svg">
+                                </button>
+                              </div>
+                            </ng-container>
+                            <!-- <div class="input-checkbox-feild">
                                 <input type="checkbox" id="member-spouse" value="spouse" class="input-check">
                                 <label for="member-spouse"><img
                                     src="assets/Img/icon_member_spouse.png">Spouse</label>
