@@ -2,20 +2,20 @@
   <div class="contentBody bodyColumns-3">
       <div class="bodyColumns bodyColumnsLeft" *ngIf="hideSection">
           <div class="bcl_main">
-              <h3>Select from any customisation below</h3>
+              <h3>{{"Select from any customisation below" | translate}}</h3>
               <div class="processBtnGroup">
                 <button type="button" id="customisation-primary" name="customisation-primary" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('primary')">
                     <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
-                    <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">Primary
+                    <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Primary" | translate}}
                 </button>
                 <button type="button" id="customisation-additional" name="customisation-additional" value="additional" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('additional')">
                     <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['payment', 'policySummary', 'kyc','additional'].includes(activeSection)}">
                     <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'additional', 'block-hide': activeSection !== 'additional'}">
-                    <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Additional
+                    <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Additional" | translate}}
                 </button>            
                 <button type="button" id="customisation-payment" name="customisation-payment" value="payment" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}"(click)="setSection('policySummary')">
                     <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': !['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
-                    <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">Payment
+                    <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Payment" | translate}}
                 </button>
             </div>
           </div>
@@ -24,46 +24,46 @@
           <div class="bcc_main">
               <div class="accordionMain" *ngIf="formId == 5001">
                   <div class="accordionItem">
-                      <header>Proposer</header>
+                      <header>{{"Proposer" | translate}}</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="data-row" *ngIf="renewalInfo?.response?.policyData?.length > 0">
                                   <div class="data-item">
-                                      <label>Name</label>
+                                      <label>{{"Name" | translate}}</label>
                                       <h6>{{ renewalInfo?.response?.policyData[0]?.PolicyOwnerName }}</h6>
                                   </div>
                                   <div class="data-item">
-                                      <label>ID No.</label>
+                                      <label>{{"ID No." | translate}}</label>
                                       <h6>{{ renewalInfo?.response?.policyData[0]?.panNo }}</h6>
                                   </div>
                                   <div class="data-item">
-                                      <label>D.O.B</label>
+                                      <label>{{"D.O.B" | translate}}</label>
                                       <h6>{{ renewalInfo?.response?.policyData[0]?.DateOfBirth }}</h6>
                                   </div>
                               </div>
                               <div class="detailsRow">
-                                  <div class="detailsHeading">Address</div>
+                                  <div class="detailsHeading">{{"Address" | translate}}</div>
                                   <div class="data-rowEdit">
                                       <div class="data-item">
                                           <div class="data-row">
                                               <div class="data-item">
-                                                  <label>Address Line 1</label>
+                                                  <label>{{"Address Line 1" | translate}}</label>
                                                   <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_1 }}</h6>
                                               </div>
                                               <div class="data-item">
-                                                  <label>Address Line 2</label>
+                                                  <label>{{"Address Line 2" | translate}}</label>
                                                   <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_2 }}</h6>
                                               </div>
                                               <div class="data-item">
-                                                  <label>State</label>
+                                                  <label>{{"State" | translate}}</label>
                                                   <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_State }}</h6>
                                               </div>
                                               <div class="data-item">
-                                                  <label>City</label>
+                                                  <label>{{"City" | translate}}</label>
                                                   <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City }}</h6>
                                               </div>
                                               <div class="data-item">
-                                                  <label>Pincode</label>
+                                                  <label>{{"Pincode" | translate}}</label>
                                                   <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Pincode }}</h6>
                                               </div>
                                           </div>
@@ -77,29 +77,29 @@
                       </div>
                   </div>
                   <div class="accordionItem">
-                      <header>Member Details
-                          <button type="button" id="addMember" name="addMember" value="another" class="btn_iconText" (click)="selectButton(5002,'addMember')"><img src="assets/Img/icon_plus_red.svg"> Add another member</button>
+                      <header>{{"Member Details" | translate}}
+                          <button type="button" id="addMember" name="addMember" value="another" class="btn_iconText" (click)="selectButton(5002,'addMember')"><img src="assets/Img/icon_plus_red.svg"> {{"Add another member" | translate}}</button>
                       </header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <ng-container *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index">
                                   <div class="detailsRow">
-                                      <div class="detailsHeading">{{ member.Relation | titlecase }}</div>
+                                      <div class="detailsHeading">{{ member.Relation | titlecase | translate}}</div>
                                       <div class="data-row">
                                           <div class="data-item data-item-28">
-                                              <label>Name</label>
+                                              <label>{{"Name" | translate}}</label>
                                               <h6>{{ member.FirstName }} {{ member.MiddleNameme }} {{ member.LastName }}</h6>
                                           </div>
                                           <div class="data-item data-item-20">
-                                              <label>ID No.</label>
+                                              <label>{{"ID No." | translate}}</label>
                                               <h6>{{ member.PanNo || 'N/A' }}</h6>
                                           </div>
                                           <div class="data-item data-item-20">
-                                              <label>D.O.B</label>
+                                              <label>{{"D.O.B" | translate}}</label>
                                               <h6>{{ member.DoB | date: 'dd/MM/yyyy' }}</h6>
                                           </div>
                                           <div class="data-item data-item-20">
-                                              <label>Cover</label>
+                                              <label>{{"Cover" | translate}}</label>
                                               <h6>₹ {{ member.SumInsured | number:'1.0-0' }}</h6>
                                           </div>
                                           <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5002,'editMember',i)">
@@ -113,26 +113,26 @@
                       </div>
                   </div>
                   <div class="accordionItem">
-                      <header>Nominee Details</header>
+                      <header>{{"Nominee Details" | translate }}</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="detailsRow">
-                                  <div class="detailsHeading">{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code | titlecase }}</div>
+                                  <div class="detailsHeading">{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code | titlecase | translate}}</div>
                                   <div class="data-row">
                                       <div class="data-item data-item-28">
-                                          <label>Name</label>
+                                          <label>{{"Name" | translate}}</label>
                                           <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_first_name }}</h6>
                                       </div>
                                       <div class="data-item data-item-20">
-                                          <label>ID No.</label>
+                                          <label>{{"ID No." | translate}}</label>
                                           <h6>{{ 'N/A' }}</h6>
                                       </div>
                                       <div class="data-item data-item-20">
-                                          <label>D.O.B</label>
+                                          <label>{{"D.O.B" | translate}}</label>
                                           <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_dob || 'N/A' }}</h6>
                                       </div>
                                       <div class="data-item data-item-20">
-                                          <label>Relation to Nominee</label>
+                                          <label>{{"Relation to Nominee" | translate}}</label>
                                           <h6>{{ renewalInfo?.response?.policyData[0]?.Nominee_Details.nominee_relationship_code || 'N/A' }}</h6>
                                       </div>
                                       <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5004,'editNominee')">
@@ -145,26 +145,26 @@
                       </div>
                   </div>
                   <div class="accordionItem">
-                    <header>Bank Account Details</header>
+                    <header>{{"Bank Account Details" | translate}}</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
                                 <div class="detailsHeading"></div>
                                 <div class="data-row">
                                     <div class="data-item data-item-28">
-                                        <label>Account No</label>
+                                        <label>{{"Account No" | translate}}</label>
                                         <h6>{{ bankDetailsObject.accountNo || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-20">
-                                        <label>Bank Name</label>
+                                        <label>{{"Bank Name" | translate}}</label>
                                         <h6>{{ bankDetailsObject.bankName || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-20">
-                                        <label>IFSC Code</label>
+                                        <label>{{"IFSC Code" | translate}}</label>
                                         <h6>{{ bankDetailsObject.IFSCCOde || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-20">
-                                        <label>Bank Branch Name</label>
+                                        <label>{{"Bank Branch Name" | translate}}</label>
                                         <h6>{{ bankDetailsObject.bankBranch || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5006,'editBankDetails')">
@@ -179,29 +179,29 @@
               </div>
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5002">
-                      <header>{{memberRole}} Member</header>
+                      <header>{{memberRole | translate}} {{"Member" | translate}}</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="breadcrumbNav">
-                                  <a href="#" class="active">Member Details</a><img src="assets/Img/icon_right_arrow_red.svg"><a href="#" class="">Additional Information</a>
+                                  <a href="#" class="active">{{"Member Details" | translate}}</a><img src="assets/Img/icon_right_arrow_red.svg"><a href="#" class="">{{"Additional Information" | translate}}</a>
                               </div>
                               <div class="detailsRow">
-                                  <div class="detailsHeading-12">Personal Details</div>
+                                  <div class="detailsHeading-12">{{"Personal Details" | translate}}</div>
                                   <div class="row">
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="Relation" name="Relation" formControlName="Relation" placeholder="" class="form-control input-selectBox">
-                                                <option value="">Select Relation</option>
-                                                <option value="Son">Son</option>
-                                                <option value="Self">Self</option>
-                                                <option value="Dependent Son">Dependent Son</option>
-                                                <option value="Spouse">Spouse</option>
-                                                <option value="Father">Father</option>
-                                                <option value="Mother">Mother</option>
-                                                <option value="Daughter">Daughter</option>
+                                                <option value="">{{"Select Relation" | translate}}</option>
+                                                <option value="Son">{{"Son" | translate}}</option>
+                                                <option value="Self">{{"Self" | translate}}</option>
+                                                <option value="Dependent Son">{{"Dependent Son" | translate}}</option>
+                                                <option value="Spouse">{{"Spouse" | translate}}</option>
+                                                <option value="Father">{{"Father" | translate}}</option>
+                                                <option value="Mother">{{"Mother" | translate}}</option>
+                                                <option value="Daughter">{{"Daughter" | translate}}</option>
                                             </select>
-                                            <label for="Relation">Relation *</label>
-                                            <span class="ui-error" *ngIf="form.get('Relation')?.invalid && (form?.get('Relation')?.touched || memberDetails)">Relation is required field</span>
+                                            <label for="Relation">{{"Relation" | translate}} *</label>
+                                            <span class="ui-error" *ngIf="form.get('Relation')?.invalid && (form?.get('Relation')?.touched || memberDetails)">{{"Relation is required field" | translate}}</span>
                                         </div>
                                     </div>
                                   </div>
@@ -209,85 +209,85 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="FirstName" name="FirstName" formControlName="FirstName" placeholder="" class="form-control input-textBox">
-                                            <label for="FirstName">First Name *</label>
+                                            <label for="FirstName">{{"First Name" | translate}} *</label>
                                             <span class="ui-error" *ngIf="form?.get('FirstName')?.invalid && (form?.get('FirstName')?.touched || memberDetails)">
-                                             First Name is required field
+                                             {{"First Name is required field" | translate}}
                                         </span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="MiddleName" name="MiddleName" formControlName="MiddleName" placeholder="" class="form-control input-textBox">
-                                              <label for="MiddleName">Middle Name</label>
+                                              <label for="MiddleName">{{"Middle Name" | translate}}</label>
                                               <span class="ui-error" *ngIf="form?.get('MiddleName')?.invalid && form?.get('MiddleName')?.touched">
-                                              Middle Name is required field
+                                              {{"Middle Name is required field" | translate}}
                                           </span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="LastName" name="LastName" formControlName="LastName" placeholder="" class="form-control input-textBox">
-                                            <label for="LastName">Last Name *</label>
+                                            <label for="LastName">{{"Last Name" | translate}} *</label>
                                             <span class="ui-error" *ngIf="form?.get('LastName')?.invalid && (form?.get('LastName')?.touched || memberDetails)">
-                                            Last Name is required field
+                                            {{"Last Name is required field" | translate}}
                                         </span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="height" name="height" formControlName="height" placeholder="" class="form-control input-textBox">
-                                            <label for="height">Height *</label>
-                                            <span class="ui-error" *ngIf="form.get('height')?.invalid && (form.get('height')?.touched || memberDetails)">height is required field</span>
-                                            <span class="ui-prefix">cms</span>
+                                            <label for="height">{{"Height" | translate}} *</label>
+                                            <span class="ui-error" *ngIf="form.get('height')?.invalid && (form.get('height')?.touched || memberDetails)">{{"height is required field" | translate}}</span>
+                                            <span class="ui-prefix">{{"cms" | translate}}</span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="weight" name="weight" formControlName="weight" placeholder="" class="form-control input-textBox">
-                                              <label for="weight">Weight *</label>
-                                              <span class="ui-error" *ngIf="form.get('weight')?.invalid && (form.get('weight')?.touched   || memberDetails)">weight is required field</span>
-                                              <span class="ui-prefix">kg</span>
+                                              <label for="weight">{{"Weight" | translate}} *</label>
+                                              <span class="ui-error" *ngIf="form.get('weight')?.invalid && (form.get('weight')?.touched   || memberDetails)">{{"weight is required field" | translate}}</span>
+                                              <span class="ui-prefix">{{"kg" | translate}}</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="gender" name="gender" formControlName="Gender" placeholder="" class="form-control input-selectBox">
-                                                  <option value="">Select gender</option>
-                                                  <option value="M">Male</option>
-                                                  <option value="F">Female</option>
-                                                  <option value="O">Other</option>
+                                                  <option value="">{{"Select gender" | translate}}</option>
+                                                  <option value="M">{{"Male" | translate}}</option>
+                                                  <option value="F">{{"Female" | translate}}</option>
+                                                  <option value="O">{{"Other" | translate}}</option>
                                               </select>
-                                              <label for="gender">Gender *</label>
-                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">Gender is required field</span>
+                                              <label for="gender">{{"Gender" | translate}} *</label>
+                                              <span class="ui-error" *ngIf="form.get('Gender')?.invalid && (form.get('Gender')?.touched || memberDetails)">{{"Gender is required field" | translate}}</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="date" id="dob" name="dob" formControlName="DoB" placeholder="" class="form-control input-textBox" [value]="form.get('DoB')?.value | date: 'yyyy-MM-dd'"/>
-                                            <label for="dob">Date of birth *</label>
-                                            <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">date of birth is required field</span>
+                                            <label for="dob">{{"Date of birth" | translate}} *</label>
+                                            <span class="ui-error" *ngIf="form.get('DoB')?.invalid && (form.get('DoB')?.touched || memberDetails)">{{"Date of birth is required field" | translate}}</span>
                                         </div>
                                     </div>
                                     
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="number" id="mobilenumber" name="mobilenumber" formControlName="Mobile_Number" placeholder="" class="form-control input-textBox">
-                                            <label for="mobilenumber">Mobile Number *</label>
-                                            <span class="ui-error" *ngIf="form.get('Mobile_Number')?.invalid && (form.get('Mobile_Number')?.touched || memberDetails)">Mobile Number is required field</span>
+                                            <label for="mobilenumber">{{"Mobile Number" | translate}} *</label>
+                                            <span class="ui-error" *ngIf="form.get('Mobile_Number')?.invalid && (form.get('Mobile_Number')?.touched || memberDetails)">{{"Mobile Number is required field" | translate}}</span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="email" id="email" name="email" formControlName="Email" placeholder="" class="form-control input-textBox">
-                                            <label for="email">Email Address *</label>
-                                            <span class="ui-error" *ngIf="form.get('Email')?.invalid && (form.get('Email')?.touched || memberDetails)">Email is required field</span>
+                                            <label for="email">{{"Email Address" | translate}} *</label>
+                                            <span class="ui-error" *ngIf="form.get('Email')?.invalid && (form.get('Email')?.touched || memberDetails)">{{"Email is required field" | translate}}</span>
                                         </div>
                                       </div>
                                   </div>
                                   <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
                                         <select id="gender" name="gender" formControlName="SumInsured" placeholder="" class="form-control input-selectBox">
-                                            <option value="">Select Sum Insured</option>
+                                            <option value="">{{"Select Sum Insured" | translate}}</option>
                                             <option value="500000">500000</option>
                                             <option value="700000">700000</option>
                                             <option value="1000000">1000000</option>
@@ -299,8 +299,8 @@
                                             <option value="10000000">10000000</option>
                                             <option value="20000000">20000000</option>
                                         </select>
-                                        <label for="gender">Sum Insured *</label>
-                                        <span class="ui-error" *ngIf="form.get('SumInsured')?.invalid && (form.get('SumInsured')?.touched || memberDetails)">Sum Insured is required field</span>
+                                        <label for="gender">{{"Sum Insured" | translate}} *</label>
+                                        <span class="ui-error" *ngIf="form.get('SumInsured')?.invalid && (form.get('SumInsured')?.touched || memberDetails)">{{"Sum Insured is required field" | translate}}</span>
                                     </div>
                                 </div>
                                 
@@ -319,103 +319,103 @@
                                         <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">Proposer can have increased cover of 15L with only ₹200 addition to the previous premium</div>
                                     </div>
                                 </div> -->
-                                  <div class="detailsHeading-12">Professional Details</div>
+                                  <div class="detailsHeading-12">{{"Professional Details" | translate}}</div>
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="annualincomerange" name="annualincomerange" formControlName="AnnualIncome" placeholder="" class="form-select input-selectBox">
-                                                  <option value="">Select Annual income range</option>
-                                                  <option value="500000">upto 5L</option>
-                                                  <option value="1000000">5L to 10L</option>
-                                                  <option value="1500000">10L to 15L</option>
-                                                  <option value="2000000">15L to 10L</option>
-                                                  <option value="2500000"> >20L</option>
+                                                  <option value="">{{"Select Annual income range" | translate}}</option>
+                                                  <option value="500000">{{"upto 5L" | translate}}</option>
+                                                  <option value="1000000">{{"5L to 10L" | translate}}</option>
+                                                  <option value="1500000">{{"10L to 15L" | translate}}</option>
+                                                  <option value="2000000">{{"15L to 10L" | translate}}</option>
+                                                  <option value="2500000"> {{">20L" | translate}}</option>
                                               </select>
-                                              <label for="air">Annual income range *</label>
-                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && (form.get('AnnualIncome')?.touched || memberDetails)">Annual income range is required field</span>
+                                              <label for="air">{{"Annual income range" | translate}} *</label>
+                                              <span class="ui-error" *ngIf="form.get('AnnualIncome')?.invalid && (form.get('AnnualIncome')?.touched || memberDetails)">{{"Annual income range is required field" | translate}}</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="occupation" name="occupation" formControlName="occupation" placeholder="" class="form-select input-selectBox">
-                                                  <option value="">Select occupation</option>
-                                                  <option value="Architects">Architects</option>
-                                                  <option value="Business">Business</option>
-                                                  <option value="CA">CA</option>
-                                                  <option value="Doctors">Doctors</option>
-                                                  <option value="Employee">Employee</option>
-                                                  <option value="Government Employee">Government Employee</option>
-                                                  <option value="House wife/husband">House wife/husband</option>
-                                                  <option value="Lawyers">Lawyers</option>
-                                                  <option value="Private Service">Private Service</option>
-                                                  <option value="Self Employed">Self Employed</option>
-                                                  <option value="Student">Student</option>
+                                                  <option value="">{{"Select occupation" | translate}}</option>
+                                                  <option value="Architects">{{"Architects" | translate}}</option>
+                                                  <option value="Business">{{"Business" | translate}}</option>
+                                                  <option value="CA">{{"CA" | translate}}</option>
+                                                  <option value="Doctors">{{"Doctors" | translate}}</option>
+                                                  <option value="Employee">{{"Employee" | translate}}</option>
+                                                  <option value="Government Employee">{{"Government Employee" | translate}}</option>
+                                                  <option value="House wife/husband">{{"House wife/husband" | translate}}</option>
+                                                  <option value="Lawyers">{{"Lawyers" | translate}}</option>
+                                                  <option value="Private Service">{{"Private Service" | translate}}</option>
+                                                  <option value="Self Employed">{{"Self Employed" | translate}}</option>
+                                                  <option value="Student">{{"Student" | translate}}</option>
                                               </select>
-                                              <label for="occupation">Occupation *</label>
-                                              <span class="ui-error" *ngIf="form.get('occupation')?.invalid && (form.get('occupation')?.touched || memberDetails)">occupation is required field</span>
+                                              <label for="occupation">{{"Occupation" | translate}} *</label>
+                                              <span class="ui-error" *ngIf="form.get('occupation')?.invalid && (form.get('occupation')?.touched || memberDetails)">{{"occupation is required field" | translate}}</span>
                                           </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="education" name="education" formControlName="Designation" placeholder="" class="form-select input-selectBox">
-                                                  <option value="">Select Designation</option>
-                                                  <option value="Manager">Manager</option>
-                                                  <option value="Team Lead">Team Lead</option>
-                                                  <option value="Software Engineer">Software Engineer</option>
-                                                  <option value="Senior Engineer">Senior Engineer</option>
-                                                  <option value="Analyst">Analyst</option>
-                                                  <option value="Consultant">Consultant</option>
-                                                  <option value="Intern">Intern</option>
-                                                  <option value="Other">Other</option>
+                                                  <option value="">{{"Select Designation" | translate}}</option>
+                                                  <option value="Manager">{{"Manager" | translate}}</option>
+                                                  <option value="Team Lead">{{"Team Lead" | translate}}</option>
+                                                  <option value="Software Engineer">{{"Software Engineer" | translate}}</option>
+                                                  <option value="Senior Engineer">{{"Senior Engineer" | translate}}</option>
+                                                  <option value="Analyst">{{"Analyst" | translate}}</option>
+                                                  <option value="Consultant">{{"Consultant" | translate}}</option>
+                                                  <option value="Intern">{{"Intern" | translate}}</option>
+                                                  <option value="Other">{{"Other" | translate}}</option>
                                               </select>
-                                              <label for="education">Designation</label>
-                                              <span class="ui-error" *ngIf="form.get('Designation')?.invalid && form.get('Designation')?.touched">Designation is required field</span>
+                                              <label for="education">{{"Designation" | translate}}</label>
+                                              <span class="ui-error" *ngIf="form.get('Designation')?.invalid && form.get('Designation')?.touched">{{"Designation is required field" | translate}}</span>
                                           </div>
                                       </div>
                                   </div>
-                                  <div class="detailsHeading-12">Please select any conditions that apply</div>
+                                  <div class="detailsHeading-12">{{"Please select any conditions that apply" | translate}}</div>
                                   <div class="row">
                                       <div class="col-12">
                                           <div class="input-checkbox-condition">
                                               <div class="input-checkbox-block input-checkbox-withIcon">
                                                   <div class="input-checkbox-feild">
                                                       <input type="checkbox" id="condition-alcohol" name="condition-alcohol" class="input-check" />
-                                                      <label for="condition-alcohol"><img src="assets/Img/icon_alcohol.svg">Alcohol</label>
+                                                      <label for="condition-alcohol"><img src="assets/Img/icon_alcohol.svg">{{"Alcohol" | translate}}</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
                                                       <input type="checkbox" id="condition-tobacco" name="condition-tobacco" class="input-check" />
-                                                      <label for="condition-tobacco"><img src="assets/Img/icon_tabacco.svg">Tobacco</label>
+                                                      <label for="condition-tobacco"><img src="assets/Img/icon_tabacco.svg">{{"Tobacco" | translate}}</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
                                                       <input type="checkbox" id="condition-panmasala" name="condition-panmasala" class="input-check" />
-                                                      <label for="condition-panmasala"><img src="assets/Img/icon_alcohol.svg">Pan Masala/Guthka</label>
+                                                      <label for="condition-panmasala"><img src="assets/Img/icon_alcohol.svg">{{"Pan Masala/Guthka" | translate}}</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
                                                       <input type="checkbox" id="condition-smoking" name="condition-smoking" class="input-check" />
-                                                      <label for="condition-smoking"><img src="assets/Img/icon_smoking.svg">Smoking</label>
+                                                      <label for="condition-smoking"><img src="assets/Img/icon_smoking.svg">{{"Smoking" | translate}}</label>
                                                   </div>
                                                   <div class="input-checkbox-feild">
                                                       <input type="checkbox" id="condition-other" name="condition-other" class="input-check" />
-                                                      <label for="condition-other"><img src="assets/Img/icon_other.svg">Other</label>
+                                                      <label for="condition-other"><img src="assets/Img/icon_other.svg">{{"Other" | translate}}</label>
                                                   </div>
                                               </div>
                                           </div>
                                       </div>
                                   </div>
                                   <div class="searchConditionWraper">
-                                      <h6>Do you have any health conditions?</h6>
-                                      <p>We require to know this data to provide you with the best solution possible.</p>
+                                      <h6>{{"Do you have any health conditions?" | translate}}</h6>
+                                      <p>{{"We require to know this data to provide you with the best solution possible." | translate}}</p>
                                       <div class="searchConditionMain">
                                           <input type="search" id="search" name="search" placeholder="Search conditions">
-                                          <button type="button" id="searchnow" name="searchnow" class="btn_text">Search now</button>
+                                          <button type="button" id="searchnow" name="searchnow" class="btn_text">{{"Search now" | translate}}</button>
                                       </div>
                                   </div>
                                   <div class="tabsMain" [formGroup]="chronicApplication">
                                       <div class="tabsNavMain">
                                           <ul class="nav_mainTabs">
-                                              <li><a [ngClass]="{'active': activeTab === 'chronicCondition'}" (click)="setActiveTab('chronicCondition')" aria-label="chronicCondition">Chronic conditions</a></li><!--<span class="count-badge">1</span>-->
-                                              <li><a [ngClass]="{'active': activeTab === 'organCondition'}" (click)="setActiveTab('organCondition')" aria-label="organCondition">Organ Related Condition</a></li>
-                                              <li><a [ngClass]="{'active': activeTab === 'otherCondition'}" (click)="setActiveTab('otherCondition')" aria-label="otherCondition">Other Conditions</a></li>
+                                              <li><a [ngClass]="{'active': activeTab === 'chronicCondition'}" (click)="setActiveTab('chronicCondition')" aria-label="chronicCondition">{{"Chronic conditions" | translate}}</a></li><!--<span class="count-badge">1</span>-->
+                                              <li><a [ngClass]="{'active': activeTab === 'organCondition'}" (click)="setActiveTab('organCondition')" aria-label="organCondition">{{"Organ Related Condition" | translate}}</a></li>
+                                              <li><a [ngClass]="{'active': activeTab === 'otherCondition'}" (click)="setActiveTab('otherCondition')" aria-label="otherCondition">{{"Other Conditions" | translate}}</a></li>
                                             </ul>
                                       </div>
                                       <div class="tabsMainContent">
@@ -424,15 +424,15 @@
                                                   <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                       <div class="input-checkbox-feild">
                                                           <input type="checkbox" formControlName="highBlood" id="condition-highblood" name="condition-highblood" class="input-check" />
-                                                          <label for="condition-highblood"><img src="assets/Img/icon_alcohol.svg">High Blood Pressure (Hypertension)</label>
+                                                          <label for="condition-highblood"><img src="assets/Img/icon_alcohol.svg">{{"High Blood Pressure (Hypertension)" | translate}}</label>
                                                       </div>
                                                       <div class="input-checkbox-feild">
                                                           <input type="checkbox" formControlName="asthma" id="condition-asthma" name="condition-asthma" class="input-check" />
-                                                          <label for="condition-asthma"><img src="assets/Img/icon_tabacco.svg">Asthma/Chronic Pulmonary Obstructive Disease</label>
+                                                          <label for="condition-asthma"><img src="assets/Img/icon_tabacco.svg">{{"Asthma/Chronic Pulmonary Obstructive Disease" | translate}}</label>
                                                       </div>
                                                       <div class="input-checkbox-feild">
                                                           <input type="checkbox" formControlName="diabetes" id="condition-diabetes" name="condition-diabetes" class="input-check" />
-                                                          <label for="condition-diabetes"><img src="assets/Img/icon_alcohol.svg">Diabetes</label>
+                                                          <label for="condition-diabetes"><img src="assets/Img/icon_alcohol.svg">{{"Diabetes" | translate}}</label>
                                                       </div>
                                                   </div>
                                               </div>
@@ -442,23 +442,23 @@
                                                 <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="heart" id="condition-Heart" name="condition-Heart" class="input-check" />
-                                                        <label for="condition-Heart"><img src="assets/Img/icon_alcohol.svg">Heart related</label>
+                                                        <label for="condition-Heart"><img src="assets/Img/icon_alcohol.svg">{{"Heart related" | translate}}</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="lung" id="condition-lung" name="condition-lung" class="input-check" />
-                                                        <label for="condition-lung"><img src="assets/Img/icon_alcohol.svg">Lung/respiratory</label>
+                                                        <label for="condition-lung"><img src="assets/Img/icon_alcohol.svg">{{"Lung/respiratory" | translate}}</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="ent" id="condition-ENT" name="condition-ENT" class="input-check" />
-                                                        <label for="condition-ENT"><img src="assets/Img/icon_alcohol.svg">ENT Disease/optical</label>
+                                                        <label for="condition-ENT"><img src="assets/Img/icon_alcohol.svg">{{"ENT Disease/optical" | translate}}</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="kidney" id="condition-Kidney" name="condition-Kidney" class="input-check" />
-                                                        <label for="condition-Kidney"><img src="assets/Img/icon_alcohol.svg">Kidney/urinary</label>
+                                                        <label for="condition-Kidney"><img src="assets/Img/icon_alcohol.svg">{{"Kidney/urinary" | translate}}</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="brain" id="condition-Brain" name="condition-Brain" class="input-check" />
-                                                        <label for="condition-Brain"><img src="assets/Img/icon_alcohol.svg">Brain/nervous</label>
+                                                        <label for="condition-Brain"><img src="assets/Img/icon_alcohol.svg">{{"Brain/nervous" | translate}}</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -468,19 +468,19 @@
                                                 <div class="input-checkbox-block input-checkbox-withIcon input-checkbox-withIconLeft">
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="cancer" id="condition-Cancer" name="condition-Cancer" class="input-check" />
-                                                        <label for="condition-Cancer"><img src="assets/Img/icon_alcohol.svg">Cancer/turnour</label>
+                                                        <label for="condition-Cancer"><img src="assets/Img/icon_alcohol.svg">{{"Cancer/turnour" | translate}}</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="sexuallyTransmitted" id="condition-Sexually" name="condition-Sexually" class="input-check" />
-                                                        <label for="condition-Sexually"><img src="assets/Img/icon_alcohol.svg">Sexually Transmitted Disease</label>
+                                                        <label for="condition-Sexually"><img src="assets/Img/icon_alcohol.svg">{{"Sexually Transmitted Disease" | translate}}</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="anemia" id="condition-Anemia" name="condition-Anemia" class="input-check" />
-                                                        <label for="condition-Anemia"><img src="assets/Img/icon_alcohol.svg">Anemia</label>
+                                                        <label for="condition-Anemia"><img src="assets/Img/icon_alcohol.svg">{{"Anemia" | translate}}</label>
                                                     </div>
                                                     <div class="input-checkbox-feild">
                                                         <input type="checkbox" formControlName="accidental" id="condition-Accidental" name="condition-Accidental" class="input-check" />
-                                                        <label for="condition-Accidental"><img src="assets/Img/icon_alcohol.svg">Accidental injury</label>
+                                                        <label for="condition-Accidental"><img src="assets/Img/icon_alcohol.svg">{{"Accidental injury" | translate}}</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -491,8 +491,8 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" id="cancel" name="cancel" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" id="next1" name="next1" value="next1" class="btn_pink btn_pinkNext" (click)="selectButton(5003)">Next</button>
+                        <button type="button" id="cancel" name="cancel" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">{{"Cancel" | translate}}</button>
+                        <button type="button" id="next1" name="next1" value="next1" class="btn_pink btn_pinkNext" (click)="selectButton(5003)">{{"Next" | translate}}</button>
                       </footer>
                   </div>
               </div>
@@ -505,7 +505,7 @@
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="breadcrumbNav">
-                                  <a href="#" class="complete">Member Details</a><img src="assets/Img/icon_right_arrow_red.svg"><a href="#" class="active">Additional Information</a>
+                                  <a href="#" class="complete">{{"Member Details" | translate}}</a><img src="assets/Img/icon_right_arrow_red.svg"><a href="#" class="active">Additional Information</a>
                               </div>
                               <div class="detailsRow">
                                   <div class="detailsHeading-12">Prior Policies</div>
@@ -717,7 +717,7 @@
               </div>
               <div class="accordionMain">
                 <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5005">
-                  <header>Edit Address</header>
+                  <header>{{"Edit Address" | translate}}</header>
                   <div class="accordionBody">
                     <div class="accordionBodyRow">
                       <div class="detailsRow">
@@ -725,43 +725,43 @@
                           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="address1" name="address1" formControlName="Home_Address_1" placeholder="" class="form-control input-textBox" />
-                              <label for="address1">Address Line 1 *</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_Address_1')?.invalid">Address Line 1 is required field</span>
+                              <label for="address1">{{"Address Line 1" | translate}} *</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_1')?.invalid">{{"Address Line 1 is required field" | translate}}</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="address2" name="address2" placeholder="" class="form-control input-textBox" formControlName="Home_Address_2" />
-                              <label for="address2">Address Line 2</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_Address_2')?.invalid && form?.get('Home_Address_2')?.touched">Address Line 2 is required field</span>
+                              <label for="address2">{{"Address Line 2" | translate}}</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_2')?.invalid && form?.get('Home_Address_2')?.touched">{{"Address Line 2 is required field" | translate}}</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="city" name="city" placeholder="" class="form-control input-textBox" formControlName="Home_City" />
-                              <label for="city">City *</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_City')?.invalid && form?.get('Home_City')?.touched">City is required field</span>
+                              <label for="city">{{"City" | translate}} *</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_City')?.invalid && form?.get('Home_City')?.touched">{{"City is required field" | translate}}</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="state" name="state" placeholder="" class="form-control input-textBox" formControlName="Home_State" />
-                              <label for="state">State *</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_State')?.invalid && form?.get('Home_State')?.touched">State is required field</span>
+                              <label for="state">{{"State" | translate}} *</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_State')?.invalid && form?.get('Home_State')?.touched">{{"State is required field" | translate}}</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="pincode" name="pincode" placeholder="" class="form-control input-textBox" formControlName="Home_Pincode" />
-                              <label for="pincode">Pin Code *</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_Pincode')?.invalid && form?.get('Home_Pincode')?.touched">Pin Code is required field</span>
+                              <label for="pincode">{{"Pin Code" | translate}} *</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_Pincode')?.invalid && form?.get('Home_Pincode')?.touched">{{"Pin Code is required field" | translate}}</span>
                             </div>
                           </div>
                           <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block form-floating input-block-renew">
                               <input type="text" id="address3" name="address3" placeholder="" class="form-control input-textBox" formControlName="Home_Address_3" />
-                              <label for="address3">Landmark</label>
-                              <span class="ui-error" *ngIf="form?.get('Home_Address_3')?.invalid && form?.get('Home_Address_3')?.touched">Landmark is required field</span>
+                              <label for="address3">{{"Landmark" | translate}}</label>
+                              <span class="ui-error" *ngIf="form?.get('Home_Address_3')?.invalid && form?.get('Home_Address_3')?.touched">{{"Landmark is required field" | translate}}</span>
                             </div>
                           </div>
                         </div>
@@ -769,14 +769,14 @@
                     </div>
                   </div>
                   <footer>
-                    <button type="button" id="cancel3" name="cancel3" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                    <button type="button" id="saveupdate" name="saveupdate" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">Save</button>
+                    <button type="button" id="cancel3" name="cancel3" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">{{"Cancel" | translate}}</button>
+                    <button type="button" id="saveupdate" name="saveupdate" value="next" class="btn_red btn_redRenew" (click)="handleAction('editAddress')">{{"Save" | translate}}</button>
                   </footer>
                 </div>
               </div>
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5004">
-                      <header>Edit Nominee Details</header>
+                      <header>{{"Edit Nominee Details" | translate}}</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="detailsRow">
@@ -785,18 +785,18 @@
                                           <div class="input-checkbox-block">
                                               <div class="input-checkbox-feild no-radius-checkbox">
                                                   <input type="checkbox" id="nominee-spouse" name="nominee-spouse" value="" class="input-check">
-                                                  <label for="nominee-spouse">Make your spouse a nominee</label>
+                                                  <label for="nominee-spouse">{{"Make your spouse a nominee" | translate}}</label>
                                               </div>
                                           </div>
                                       </div>
                                   </div>
-                                  <div class="detailsHeading-12">Nominee Personal Details</div>
+                                  <div class="detailsHeading-12">{{"Nominee Personal Details" | translate}}</div>
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-fname" name="nomine-fname" formControlName="nominee_first_name" placeholder="" class="form-control input-textBox">
-                                              <label for="nomine-fname">First Name *</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">First Name is required field</span>
+                                              <label for="nomine-fname">{{"First Name" | translate}} *</label>
+                                              <span class="ui-error" *ngIf="form?.get('nominee_first_name')?.invalid && form?.get('nominee_first_name')?.touched">{{"First Name is required field" | translate}}</span>
                                           </div>
                                       </div>
                                       <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -808,8 +808,8 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-lname" name="nomine-lname" formControlName="nominee_last_name" placeholder="" class="form-control input-textBox">
-                                              <label for="nomine-lname">Last Name *</label>
-                                              <span class="ui-error" *ngIf="form?.get('nominee_last_name')?.invalid && form?.get('nominee_last_name')?.touched">Last Name is required field</span>
+                                              <label for="nomine-lname">{{"Last Name" | translate}} *</label>
+                                              <span class="ui-error" *ngIf="form?.get('nominee_last_name')?.invalid && form?.get('nominee_last_name')?.touched">{{"Last Name is required field" | translate}}</span>
                                           </div>
                                       </div>
                                       <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -823,39 +823,39 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="date" id="nomine-dob" name="nomine-dob" formControlName="nominee_dob" placeholder="" class="form-control input-textBox"
                                              [value]="form.get('nominee_dob')?.value | date: 'yyyy-MM-dd'" (change)="checkNomineeAge()"/>
-                                            <label for="nomine-dob">DOB *</label>
-                                            <span class="ui-error" *ngIf="form.get('nominee_dob')?.invalid && (form.get('nominee_dob')?.touched)">DOB is required field</span>
+                                            <label for="nomine-dob">{{"DOB" | translate}} *</label>
+                                            <span class="ui-error" *ngIf="form.get('nominee_dob')?.invalid && (form.get('nominee_dob')?.touched)">{{"DOB is required field" | translate}}</span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="showAppointee">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="appointee_name" name="appointee_name" formControlName="" placeholder="" class="form-control input-textBox">
-                                            <label for="appointee_name">Appointee Name *</label>
-                                            <span class="ui-error" *ngIf="form?.get('appointee_name')?.invalid && form?.get('appointee_name')?.touched">Appointee Name is required field</span>
+                                            <label for="appointee_name">{{"Appointee Name" | translate}} *</label>
+                                            <span class="ui-error" *ngIf="form?.get('appointee_name')?.invalid && form?.get('appointee_name')?.touched">{{"Appointee Name is required field" | translate}}</span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="showAppointee">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="appointee_age" name="appointee_age" formControlName="" placeholder="" class="form-control input-textBox">
-                                            <label for="appointee_age">Appointee Age *</label>
-                                            <span class="ui-error" *ngIf="form?.get('appointee_age')?.invalid && form?.get('appointee_age')?.touched">Appointee Age is required field</span>
+                                            <label for="appointee_age">{{"Appointee Age" | translate}} *</label>
+                                            <span class="ui-error" *ngIf="form?.get('appointee_age')?.invalid && form?.get('appointee_age')?.touched">{{"Appointee Age is required field" | translate}}</span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <select id="nomine-relation" name="nomine-relation" formControlName="Relationship" placeholder="" class="form-control input-selectBox">
-                                                  <option value="">Select Relation</option>
-                                                  <option value="Son">Son</option>
-                                                  <option value="Spouse">Spouse</option>
-                                                  <option value="Father">Father</option>
-                                                  <option value="Mother">Mother</option>
-                                                  <option value="Daughter">Daughter</option>
-                                                  <option value="Uncle">Uncle</option>
-                                                  <option value="Brother">Brother</option>
+                                                  <option value="">{{"Select Relation" | translate}}</option>
+                                                  <option value="Son">{{"Son" | translate}}</option>
+                                                  <option value="Spouse">{{"Spouse" | translate}}</option>
+                                                  <option value="Father">{{"Father" | translate}}</option>
+                                                  <option value="Mother">{{"Mother" | translate}}</option>
+                                                  <option value="Daughter">{{"Daughter" | translate}}</option>
+                                                  <option value="Uncle">{{"Uncle" | translate}}</option>
+                                                  <option value="Brother">{{"Brother" | translate}}</option>
                                               </select>
-                                              <label for="nomine-relation">Relation with Proposer *</label>
+                                              <label for="nomine-relation">{{"Relation with Proposer" | translate}} *</label>
                                               <span class="ui-error" *ngIf="form?.get('Relationship')?.invalid && form?.get('Relationship')?.touched">
-                                              Relation with Proposer is required field
+                                              {{"Relation with Proposer is required field" | translate}}
                                           </span>
                                           </div>
                                       </div>
@@ -873,14 +873,14 @@
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="nomine-address" name="nomine-address" formControlName="Nominee_Address" placeholder="" class="form-control input-textBox">
-                                            <label for="nomine-address">Nominee Address</label>
+                                            <label for="nomine-address">{{"Nominee Address" | translate}}</label>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                           <div class="input-block form-floating input-block-renew">
                                               <input type="text" id="nomine-contactno" name="nomine-contactno" formControlName="Nominee_Contact_No" placeholder="" class="form-control input-textBox">
-                                              <label for="nomine-contactno">Nominee Contact No *</label>
-                                              <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">Nominee contact no is required field</span>
+                                              <label for="nomine-contactno">{{"Nominee Contact No" | translate}} *</label>
+                                              <span class="ui-error" *ngIf="form?.get('Nominee_Contact_No')?.invalid && form?.get('Nominee_Contact_No')?.touched">{{"Nominee contact no is required field" | translate}}</span>
                                           </div>
                                       </div>
                                       <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -894,14 +894,14 @@
                           </div>
                       </div>
                       <footer>
-                        <button type="button" id="cancel4" name="cancel4" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" id="saveupdate2" name="saveupdate2" value="next" class="btn_red btn_redRenew" (click)="handleAction('editNominee')">Save</button>
+                        <button type="button" id="cancel4" name="cancel4" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">{{"Cancel" | translate}}</button>
+                        <button type="button" id="saveupdate2" name="saveupdate2" value="next" class="btn_red btn_redRenew" (click)="handleAction('editNominee')">{{"Save" | translate}}</button>
                       </footer>
                   </div>
               </div>
               <div class="accordionMain">
                 <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5006">
-                    <header>Edit Bank Details</header>
+                    <header>{{"Edit Bank Details" | translate}}</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
@@ -909,70 +909,70 @@
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="holderName" name="holderName" formControlName="accountHolderName" placeholder="" class="form-control input-textBox">
-                                            <label for="holderName">Account Holder Name</label>
-                                            <span class="ui-error" *ngIf="form?.get('accountHolderName')?.invalid && form?.get('accountHolderName')?.touched">Please enter Account Holder Name</span>
+                                            <label for="holderName">{{"Account Holder Name" | translate}}</label>
+                                            <span class="ui-error" *ngIf="form?.get('accountHolderName')?.invalid && form?.get('accountHolderName')?.touched">{{"Please enter Account Holder Name" | translate}}</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="number" id="account_Number" name="account_Number"formControlName="accountNo" placeholder="" class="form-control input-textBox">
-                                            <label for="account_Number">Account Number</label>
-                                            <span class="ui-error" *ngIf="form?.get('accountNo')?.invalid && form?.get('accountNo')?.touched">Please enter Account Number</span>
-                                            <small class="ui-error block-show" *ngIf="form.get('accountNo')?.hasError('pattern')">Account number allow 9 to 18 digits</small>
+                                            <label for="account_Number">{{"Account Number" | translate}}</label>
+                                            <span class="ui-error" *ngIf="form?.get('accountNo')?.invalid && form?.get('accountNo')?.touched">{{"Please enter Account Number" | translate}}</span>
+                                            <small class="ui-error block-show" *ngIf="form.get('accountNo')?.hasError('pattern')">{{"Account number allow 9 to 18 digits" | translate}}</small>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="account_type" name="account_type" formControlName="accountType" placeholder="" class="form-control input-selectBox">
-                                                <option value="">Select account type</option>
-                                                <option value="saving">saving</option>
-                                                <option value="current">current</option>
+                                                <option value="">{{"Select account type" | translate}}</option>
+                                                <option value="saving">{{"saving" | translate}}</option>
+                                                <option value="current">{{"current" | translate}}</option>
                                             </select>
-                                            <label for="account_type">Account Type</label>
-                                            <span class="ui-error" *ngIf="form.get('accountType')?.invalid && form.get('accountType')?.touched">Please Select Account Type</span>
+                                            <label for="account_type">{{"Account Type" | translate}}</label>
+                                            <span class="ui-error" *ngIf="form.get('accountType')?.invalid && form.get('accountType')?.touched">{{"Please Select Account Type" | translate}}</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="bank_Name" name="bank_Name" placeholder="" formControlName="bankName" class="form-control input-selectBox" (change)="onBankChange($event)">
-                                                <option value="" selected>Select Bank Name</option>
-                                                <option *ngFor="let bank of bankNameList" [value]="bank.id">{{ bank.name }}</option>
+                                                <option value="" selected>{{"Select Bank Name" | translate}}</option>
+                                                <option *ngFor="let bank of bankNameList" [value]="bank.id">{{ bank.name | translate }}</option>
                                             </select>
-                                            <label for="bank_Name">Bank Name</label>
-                                            <span class="ui-error" *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">Please Select Bank Name</span>
+                                            <label for="bank_Name">{{"Bank Name" | translate}}</label>
+                                            <span class="ui-error" *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">{{"Please Select Bank Name" | translate}}</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="bank_City" name="bank_City"  placeholder="" formControlName="bankCity" class="form-control input-selectBox" (change)="onCityChange($event)">
-                                                <option value="">Select Bank City</option>
-                                                <option *ngFor="let city of cityNameList" [value]="city.id">{{ city.name }}</option>
+                                                <option value="">{{"Select Bank City" | translate}}</option>
+                                                <option *ngFor="let city of cityNameList" [value]="city.id">{{ city.name | translate }}</option>
                                             </select>
-                                            <label for="bank_City">Bank City</label>
-                                            <span class="ui-error" *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">Please Select City Name</span>
+                                            <label for="bank_City">{{"Bank City" | translate}}</label>
+                                            <span class="ui-error" *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">{{"Please Select City Name" | translate}}</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <select id="bank_Branch" name="bank_Branch" placeholder="" formControlName="bankBranch" class="form-control input-selectBox" (change)="onBranchChange($event)">
-                                                <option value="">Select Bank Branch</option>
-                                                <option *ngFor="let branch of branchNameList" [value]="branch.id">{{ branch.name }}</option>
+                                                <option value="">{{"Select Bank Branch" | translate}}</option>
+                                                <option *ngFor="let branch of branchNameList" [value]="branch.id">{{ branch.name | translate }}</option>
                                             </select>
-                                            <label for="bank_Branch">Bank Branch</label>
-                                            <span class="ui-error" *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">Please Select Branch Name</span>
+                                            <label for="bank_Branch">{{"Bank Branch" | translate}}</label>
+                                            <span class="ui-error" *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">{{"Please Select Branch Name" | translate}}</span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="IFSCCOde" >
-                                            <label for="IFSC_Code">IFSC Code</label>
+                                            <label for="IFSC_Code">{{"IFSC Code" | translate}}</label>
                                             <!-- <span class="ui-error" *ngIf="form?.get('ifsc')?.invalid && form.get('ifsc')?.touched">Please enter IFSC Code</span> -->
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="MICR_Code" name="MICR_Code" placeholder="" class="form-control input-textBox" formControlName="MICRCode">
-                                            <label for="MICR_Code">MICR Code</label>
+                                            <label for="MICR_Code">{{"MICR Code" | translate}}</label>
                                             <!-- <span class="ui-error" *ngIf="form?.get('micr')?.invalid && form.get('micr')?.touched">Please enter MICR Code</span> -->
                                         </div>
                                     </div>
@@ -981,8 +981,8 @@
                         </div>
                     </div>
                     <footer>
-                      <button type="button" id="cancel4" name="cancel4" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                      <button type="button" id="saveupdate3" name="saveupdate3" value="next" class="btn_red btn_redRenew" (click)="handleAction('editBankDetails')">Save</button>
+                      <button type="button" id="cancel4" name="cancel4" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">{{"Cancel" | translate}}</button>
+                      <button type="button" id="saveupdate3" name="saveupdate3" value="next" class="btn_red btn_redRenew" (click)="handleAction('editBankDetails')">{{"Save" | translate}}</button>
                     </footer>
                 </div>
             </div>
@@ -992,7 +992,7 @@
         <div class="bcc_main">
             <div class="accordionMain">                
                 <div class="accordionItem">
-                    <header>Tenure details</header>
+                    <header>{{"Tenure details" | translate}}</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
@@ -1001,29 +1001,29 @@
                                         <div class="input-radio-block raido_policyTenure ">
                                             <label class="input-radiolabel ">
                                                 <input type="radio" id="policyTenure" name="policyTenure" [value]="'1year'" [checked]="selectedTenure == '1'" (click)="tenureUpdate('1', tenureDetail?.tenure1Premium )">
-                                                <span><em class="tenure-year">1 Year</em>
-                                                    <em class="tenure-amount">₹ {{ tenureDetail?.tenure1Premium | number:'1.0-0'}}<em>/ yr</em></em>
+                                                <span><em class="tenure-year">1 {{"Year" | translate}}</em>
+                                                    <em class="tenure-amount">₹ {{ tenureDetail?.tenure1Premium | number:'1.0-0'}}<em>{{"/ yr" | translate}}</em></em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel ">
                                                 <input type="radio" id="policyTenure" name="policyTenure" [value]="'2years'" [checked]="selectedTenure == '2'" (click)="tenureUpdate('2',tenureDetail?.tenure2Premium )">
-                                                <span><em class="tenure-year">2 Years</em>
-                                                    <em class="tenure-amount">₹ {{ tenureDetail?.tenure2Premium | number:'1.0-0'}}<em>/ yr</em></em>
+                                                <span><em class="tenure-year">2 {{"Years" | translate}}</em>
+                                                    <em class="tenure-amount">₹ {{ tenureDetail?.tenure2Premium | number:'1.0-0'}}<em>{{"/ yr" | translate}}</em></em>
                                                 <em class="tenure-off">₹ 7.5 off {{ tenureDetail?.t2DiscountAmount | number:'1.0-0' }}</em>
                                                 </span>
                                             </label>
                                             <label class="input-radiolabel input-radioRecommended">
                                                 <input type="radio" id="policyTenure" name="policyTenure" [value]="'3years'" [checked]="selectedTenure == '3'" (click)="tenureUpdate('3',tenureDetail?.tenure3Premium)">
-                                                <span><em class="tenure-year">3 Years</em>
-                                                <em class="tenure-amount">₹ {{ tenureDetail?.tenure3Premium | number:'1.0-0'}}<em>/ yr</em></em>
+                                                <span><em class="tenure-year">3 {{"Years" | translate}}</em>
+                                                <em class="tenure-amount">₹ {{ tenureDetail?.tenure3Premium | number:'1.0-0'}}<em>{{"/ yr" | translate}}</em></em>
                                                 <em class="tenure-off">₹ 10 off {{ tenureDetail?.t3DiscountAmount | number:'1.0-0' }}</em>
                                             </span>
-                                                <em class="badge-recommended">Recommended</em>
+                                                <em class="badge-recommended">{{"Recommended" | translate}}</em>
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
-                                        <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">You can potentially earn 10,000 more with just 2 more years</div>
+                                        <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">{{"You can potentially earn 10,000 more with just 2 more years" | translate}}</div>
                                     </div>
                                 </div>   
                             </div>                           
@@ -1031,7 +1031,7 @@
                     </div>
                 </div>
                 <div class="accordionItem">
-                    <header>Optional coverages</header>
+                    <header>{{"Optional coverages" | translate}}</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
@@ -1072,7 +1072,7 @@
                     </div>
                 </div>
                 <div class="accordionItem">
-                    <header>Health add-ons</header>
+                    <header>{{"Health add-ons" | translate}}</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
@@ -1119,7 +1119,7 @@
         <div class="bcc_main">
             <div class="accordionMain">
                 <div class="accordionItem">
-                    <header>Share payment link
+                    <header>{{"Share payment link" | translate}}
                         <!-- <button type="button" value="sectionedit" class="btn_iconText accordionArrow"><img src="assets/Img/icon_arrow_back_mobile.svg"></button> -->
                     </header>
                     <div class="accordionBody">
@@ -1131,7 +1131,7 @@
                                             <div class="sharePyment_phoneInfo">
                                                 <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
                                                     <span class="info_img"><img src="assets/Img/icon_phone_call.svg"></span>
-                                                    <span class="info_text">Customer Mobile Number : <span>91 {{renewalInfo?.response?.policyData[0]?.Mobile}}</span></span>
+                                                    <span class="info_text">{{"Customer Mobile Number" | translate}} : <span>91 {{renewalInfo?.response?.policyData[0]?.Mobile}}</span></span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1141,14 +1141,14 @@
                                             <div class="sharePyment_mobileNumber">
                                                 <div class="d-flex flex-row align-items-center sharePyment_mobileNumber_info">
                                                     <span class="info_img"><img src="assets/Img/icon_email.svg"></span>
-                                                    <span class="info_text">Email Address : <span>{{ renewalInfo?.response?.policyData[0]?.Email }}</span></span>
+                                                    <span class="info_text">{{"Email Address" | translate}} : <span>{{ renewalInfo?.response?.policyData[0]?.Email }}</span></span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <button type="button" id="sendlink" name="sendlink" class="btn_red btn_redRenew" (click)="sendLink()">Send Link</button>
+                                        <button type="button" id="sendlink" name="sendlink" class="btn_red btn_redRenew" (click)="sendLink()">{{"Send Link" | translate}}</button>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="link != ''">
                                         <div class="input-block form-floating input-block-renew">
@@ -1159,15 +1159,15 @@
                                         <button  type="button" id="copy" name="copy" class="btn_red btn_redRenew btn_redCopy"  [cdkCopyToClipboard]="link" title="Copy"><!-- <i class="fa-regular fa-copy"></i> --><img src="assets/Img/icon_content_copy.svg" ></button>                        
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
-                                        <div class="block_or_line"><span>OR</span></div>
+                                        <div class="block_or_line"><span>{{"OR" | translate}}</span></div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
-                                        <div class="detailsHeading mb-3">Make payment online</div>
+                                        <div class="detailsHeading mb-3">{{"Make payment online" | translate}}</div>
                                         <div class="row">
                                             <div class="raido_policyTenure raido_paymentType radio_format">
                                              <div class="input-radiolabel  col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('online')" [ngClass]="{'active': selectedPaymentType == 'online'}">
                                                  <input type="radio" id="paymentType-enach" name="paymentType" value="E - Nach">
-                                                 <span><em class="label">Online</em><img src="assets/Img/icon_faster_process.svg"></span>
+                                                 <span><em class="label">{{"Online" | translate}}</em><img src="assets/Img/icon_faster_process.svg"></span>
                                              </div>
                                              <div class="input-radiolabel col-12 col-sm-12 col-md-6 col-xl-4 col-xl-4" (click)="selectPaymentType('E-Mandate')" [ngClass]="{'active': selectedPaymentType == 'E-Mandate'}">
                                                  <input type="radio" id="paymentType-emandate" name="paymentType" value="E - Mandate" >
@@ -1190,61 +1190,61 @@
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <select id="paymentoption" name="paymentoption" placeholder="" class="form-control input-selectBox" formControlName="paymentOption">
-                                                        <option value="">Select Payment Option</option>
-                                                        <option value="Cheque">Cheque</option>
-                                                        <option value="Demand Draft">Demand Draft</option>
-                                                        <option value="NEFT">NEFT</option>
+                                                        <option value="">{{"Select Payment Option" | translate}}</option>
+                                                        <option value="Cheque">{{"Cheque" | translate}}</option>
+                                                        <option value="Demand Draft">{{"Demand Draft" | translate}}</option>
+                                                        <option value="NEFT">{{"NEFT" | translate}}</option>
                                                     </select>
-                                                    <label for="Relation">Payment Option *</label>
-                                                    <span class="ui-error" *ngIf="form?.get('paymentOption')?.invalid && form.get('paymentOption')?.touched">payment option is required field.</span>                                               
+                                                    <label for="Relation">{{"Payment Option" | translate}} *</label>
+                                                    <span class="ui-error" *ngIf="form?.get('paymentOption')?.invalid && form.get('paymentOption')?.touched">{{"payment option is required field." | translate}}</span>                                               
                                                 </div>
                                             </div>               
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input type="number" id="cheque_Amount" name="cheque_Amount" [(ngModel)]="renewalInfo.response.policyData[0].premium.Renewal_Gross_Premium" class="form-control input-textBox" formControlName="chequeAmount">
-                                                    <label for="cheque_Amount">Check Amount</label>
+                                                    <label for="cheque_Amount">{{"Check Amount" | translate}}</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input type="number" id="cheque_Number" name="cheque_Number" placeholder="" class="form-control input-textBox" formControlName="chequeNumber">
-                                                    <label for="cheque_Number">Cheque Number</label>
+                                                    <label for="cheque_Number">{{"Cheque Number" | translate}}</label>
                                                     <span *ngIf="form.get('chequeNumber')?.invalid && form.get('chequeNumber')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="form.get('chequeNumber')?.hasError('required')">Cheque number is required.</small>
-                                                        <small class="ui-error block-show" *ngIf="form.get('chequeNumber')?.hasError('pattern')">Cheque number must be exactly 6 digits.</small>
+                                                        <small class="ui-error block-show" *ngIf="form.get('chequeNumber')?.hasError('required')">{{"Cheque number is required." | translate}}</small>
+                                                        <small class="ui-error block-show" *ngIf="form.get('chequeNumber')?.hasError('pattern')">{{"Cheque number must be exactly 6 digits." | translate}}</small>
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input type="date" id="cheque_Date" name="cheque_Date" placeholder="" [max]="currentDate" class="form-control input-textBox" formControlName="chequeDate">
-                                                    <label for="cheque_Date">Cheque Date</label>
+                                                    <label for="cheque_Date">{{"Cheque Date" | translate}}</label>
                                                     <span *ngIf="form.get('chequeDate')?.invalid && form.get('chequeDate')?.touched">
-                                                    <small class="ui-error block-show" *ngIf="form.get('chequeDate')?.hasError('required')">Cheque date is required.</small>
+                                                    <small class="ui-error block-show" *ngIf="form.get('chequeDate')?.hasError('required')">{{"Cheque date is required." | translate}}</small>
                                                     </span>                                                
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input type="text" id="IFSC_Code" [(ngModel)]="bankDetailsObject.IFSCCOde" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode">
-                                                    <label for="IFSC_COde">IFSC Code</label>                                       
+                                                    <label for="IFSC_COde">{{"IFSC Code" | translate}}</label>                                       
                                                     <span *ngIf="form.get('ifscCode')?.invalid && form.get('ifscCode')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('required')">IFSC Code is required.</small>
-                                                        <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('pattern')">IFSC Code must be 11 characters: first 4 uppercase letters, followed by 0, and 6 alphanumeric characters.</small>
+                                                        <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('required')">{{"IFSC Code is required." | translate}}</small>
+                                                        <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('pattern')">{{"IFSC Code must be 11 characters: first 4 uppercase letters, followed by 0, and 6 alphanumeric characters." | translate}}</small>
                                                     </span>                                               
                                                  </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
                                                     <input class="form-control input-textBox" [(ngModel)]="bankDetailsObject.bankName" [matAutocomplete]="auto" formControlName="bankNameControl" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
-                                                     <label for="bankName">Search Bank Name</label>
+                                                     <label for="bankName">{{"Search Bank Name" | translate}}</label>
                                                      <span *ngIf="form.get('bankNameControl')?.invalid && form.get('bankNameControl')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="form.get('bankNameControl')?.hasError('required')">Bank Name is required.</small>
+                                                        <small class="ui-error block-show" *ngIf="form.get('bankNameControl')?.hasError('required')">{{"Bank Name is required." | translate}}</small>
                                                       </span>
                                                 </div>
                                                 <mat-autocomplete #auto="matAutocomplete" class="mat_selectBankName" (optionSelected)="onBankNameSelected($event.option.value)">
                                                     <mat-option *ngFor="let bank of filteredBankNamesList" [value]="bank.name">
-                                                        {{ bank.name }}  
+                                                        {{ bank.name | translate }}  
                                                     </mat-option>
                                                  </mat-autocomplete>
                                             </div>
@@ -1252,11 +1252,11 @@
                                                 <div class="row align-items-center mt-2">
                                                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                         <div class="ovd_uploadMain">
-                                                            <h6>Upload CHQ/DD/NEFT Copy</h6>
-                                                            <div class="ovdUpload">Click here to upload<input type="file" id="file" name="file" class="input-upload" (change)="onFileSelected($event)" formControlName="file"/></div>
-                                                            <div class="upload-required-info">File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed</div>
-                                                            <div *ngIf="fileName" class="mt-2"><strong>Uploaded File:</strong> {{ fileName }}</div>
-                                                            <span class="ui-error" *ngIf="form?.get('file')?.invalid && form?.get('file')?.touched">Please Upload File</span>
+                                                            <h6>{{"Upload CHQ/DD/NEFT Copy" | translate}}</h6>
+                                                            <div class="ovdUpload">{{"Click here to upload" | translate}}<input type="file" id="file" name="file" class="input-upload" (change)="onFileSelected($event)" formControlName="file"/></div>
+                                                            <div class="upload-required-info">{{"File size: max 3mb. Only PNG, JPG, JPEG, PDF are allowed" | translate}}</div>
+                                                            <div *ngIf="fileName" class="mt-2"><strong>{{"Uploaded File:" | translate}}</strong> {{ fileName | translate }}</div>
+                                                            <span class="ui-error" *ngIf="form?.get('file')?.invalid && form?.get('file')?.touched">{{"Please Upload File" | translate}}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1276,78 +1276,78 @@
         <div class="bcc_main">
             <div class="accordionMain">
                 <div class="accordionItem">
-                    <header>Policy Summary
+                    <header>{{"Policy Summary" | translate}}
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="detailsRow">
                                 <section class="block_bg_lightGrey memberPoliySummary">
-                                    <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-grey">Original</span>
+                                    <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-grey">{{"Original" | translate}}</span>
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
-                                            <label>Members</label>
+                                            <label>{{"Members" | translate}}</label>
                                             <div><ng-container *ngFor="let member of renewalBaseObject?.response?.policyData[0]?.Members; let i = index; let last = last">
                                                     {{ member.Relation | titlecase }}<span *ngIf="!last">, </span>
                                                 </ng-container>
                                             </div>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
-                                            <label>Policy</label>
+                                            <label>{{"Policy" | translate}}</label>
                                             <h6>{{renewalBaseObject?.response?.policyData[0]?.Name_of_product}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Premium</label>
+                                            <label>{{"Premium" | translate}}</label>
                                             <h6>₹{{renewalBaseObject?.response?.policyData[0]?.premium.Renewal_Gross_Premium | number:'1.0-0'}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Cover</label>
+                                            <label>{{"Cover" | translate}}</label>
                                             <h6>₹{{ renewalBaseObject?.response?.policyData[0]?.Members[0].SumInsuredPerUnit | number:'1.0-0' }}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Tenure</label>
+                                            <label>{{"Tenure" | translate}}</label>
                                             <h6>{{ renewalBaseObject?.response?.policyData[0]?.Tenure }} Year</h6>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
-                                            <label>Add ons</label>
+                                            <label>{{"Add ons" | translate}}</label>
                                             <div class="list_addons">
-                                                <span class="item_addon">Personal accident cover</span>
-                                                <span class="item_addon">Vaccine cover</span>
+                                                <span class="item_addon">{{"Personal accident cover" | translate}}</span>
+                                                <span class="item_addon">{{"Vaccine cover" | translate}}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </section>
                                 <section class="block_bg_lightgreen memberPoliySummary mt-2" *ngIf="referenceNumber != null">
-                                    <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-blue">Modified</span>
+                                    <span class="common-badge common-badge-rounded common-badge-align-top bg-dark-blue">{{"Modified" | translate}}</span>
                                     <div class="row mt-2">
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
-                                            <label>Members</label>
+                                            <label>{{"Members" | translate}}</label>
                                             <div><ng-container *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index; let last = last">
                                                     {{ member.Relation | titlecase }}<span *ngIf="!last">, </span>
                                                 </ng-container>
                                             </div>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
-                                            <label>Policy</label>
+                                            <label>{{"Policy" | translate}}</label>
                                             <h6>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Premium</label>
+                                            <label>{{"Premium" | translate}}</label>
                                             <h6>₹{{renewalInfo?.response?.policyData[0]?.premium.Renewal_Gross_Premium | number:'1.0-0'}}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Cover</label>
+                                            <label>{{"Cover" | translate}}</label>
                                             <h6>₹{{ renewalInfo?.response?.policyData[0]?.Members[0].SumInsuredPerUnit | number:'1.0-0' }}</h6>
                                         </div>
                                         <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                                            <label>Tenure</label>
+                                            <label>{{"Tenure" | translate}}</label>
                                             <h6>{{ renewalInfo?.response?.policyData[0]?.Tenure }} Year</h6>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 data-item m-0">
-                                            <label>Add ons</label>
+                                            <label>{{"Add ons" | translate}}</label>
                                             <div class="list_addons">
                                                 <!-- <span class="item_addon">Cancer secure cover</span> -->
-                                                <span class="item_addon">Personal accident cover</span>
-                                                <span class="item_addon">Vaccine cover</span>
+                                                <span class="item_addon">{{"Personal accident cover" | translate}}</span>
+                                                <span class="item_addon">{{"Vaccine cover" | translate}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1384,33 +1384,33 @@
                     </div>
                 </div>
                 <div class="accordionItem">
-                    <header>Member Details
+                    <header>{{"Member Details" | translate}}
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow" >
                             <div class="detailsRow" >
                                 <div class="owl-carousel owl-theme memberDetails-carousel member-cards" >
                                     <div class="item member-card" *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index">
-                                        <header>{{ member.FirstName }} {{ member.MiddleNameme }} {{ member.LastName }} <span *ngIf="i === 0" class="common-badge common-badge-rounded  bg-dark-org">Proposer</span></header>
+                                        <header>{{ member.FirstName }} {{ member.MiddleNameme }} {{ member.LastName }} <span *ngIf="i === 0" class="common-badge common-badge-rounded  bg-dark-org">{{"Proposer" | translate}}</span></header>
                                         <div class="row">
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item">
-                                                <label>Height </label>
-                                                <h6>{{ member.height }} cm</h6>
+                                                <label>{{"Height" | translate}} </label>
+                                                <h6>{{ member.height }} {{"cm" | translate}}</h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item">
-                                                <label>Weight </label>
-                                                <h6>{{ member.weight }} kgs</h6>
+                                                <label>{{"Weight" | translate}} </label>
+                                                <h6>{{ member.weight }} {{"kgs" | translate}}</h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-4 col-xl-4 data-item pl-0">
-                                                <label>DOB</label>
+                                                <label>{{"DOB" | translate}}</label>
                                                 <h6>{{ member.DoB | date: 'dd/MM/yyyy' }}</h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
-                                                <label>Pan card</label>
+                                                <label>{{"Pan card" | translate}}</label>
                                                 <h6>{{ member.PanNo }}</h6>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6 data-item">
-                                                <label>Health Conditions</label>
+                                                <label>{{"Health Conditions" | translate}}</label>
                                                 <h6>{{ member.HealthAssessment }}</h6>
                                             </div>
                                         </div>
@@ -1421,13 +1421,13 @@
                     </div>
                 </div>                       
                 <div class="accordionItem">
-                    <header>Contact Details
+                    <header>{{"Contact Details" | translate}}
                     </header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
                             <div class="data-row">
                                 <div class="data-item data-item-100">
-                                    <label>Address</label>
+                                    <label>{{"Address" | translate}}</label>
                                     <h6>{{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_1 }}
                                         <span *ngIf="renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_Address_1 && renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City">, </span>
                                         {{ renewalInfo?.response?.policyData[0]?.HomeAddress?.Home_City }}
@@ -1440,11 +1440,11 @@
                             </div>
                             <div class="data-row mb-3">
                                 <div class="data-item">
-                                    <label>Contact</label>
+                                    <label>{{"Contact" | translate}}</label>
                                     <h6>{{ renewalInfo?.response?.policyData[0]?.Mobile }}</h6>
                                 </div>
                                 <div class="data-item">
-                                    <label>Emergency Contact</label>
+                                    <label>{{"Emergency Contact" | translate}}</label>
                                     <h6>{{ renewalInfo?.response?.policyData[0]?.EmergencyContactNo }}</h6>
                                 </div>
                             </div>
@@ -1517,24 +1517,24 @@
       <div class="bodyColumns bodyColumnsRight" *ngIf="activeSection != 'payment' && formId != 5002 && formId != 5003 && hideSection && activeSection != 'kyc'">
           <div class="bcr_main planDetails">
               <header>
-                  <h6>Plan details</h6>
+                  <h6>{{"Plan details" | translate}}</h6>
                   <div class="planProductInfo">
                       <div class="ppi_img">
                           <img src="assets/Img/icon_activeone.svg">
                       </div>
                       <div class="ppi_info">
                           <h4>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h4>
-                          <h5>Aditya Birla Health Insurance</h5>
+                          <h5>{{"Aditya Birla Health Insurance" | translate}}</h5>
                           <!-- <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6> -->
                       </div>
                   </div>
                   <div class="planProductQuote">
-                      <div class="label">Base Quote/ incl tax</div>
+                      <div class="label">{{"Base Quote/ incl tax" | translate}}</div>
                       <div class="value">₹{{renewalInfo?.response?.policyData[0]?.premium.Renewal_Gross_Premium | number:'1.0-0'}}</div>
                   </div>
                   <div class="planProductQuote">
-                      <div class="label">Term</div>
-                      <div class="value">{{ renewalInfo?.response?.policyData[0]?.Tenure }} Year</div>
+                      <div class="label">{{"Term" | translate}}</div>
+                      <div class="value">{{ renewalInfo?.response?.policyData[0]?.Tenure }} {{"Year" | translate}}</div>
                   </div>
               </header>
               <hr>
@@ -1556,18 +1556,18 @@
                               <label for="health-return"></label>
                           </div>
                       </div>
-                      <span>Use my Health Returns</span>
+                      <span>{{"Use my Health Returns" | translate}}</span>
                       </span>
                       <label class="value">₹{{renewalInfo?.response?.policyData[0]?.healthReturn}}</label>
                   </div>
               </div>
               <footer *ngIf="activeAction !=='withoutmodify' ">
                   <div class="workingQuote">
-                      <span>Working Quote/ incl tax</span>
+                      <span>{{"Working Quote/ incl tax" | translate}}</span>
                       <label>₹{{(renewalInfo?.response?.policyData[0]?.premium.Renewal_Gross_Premium)-(renewalInfo?.response?.policyData[0]?.healthReturn ) | number:'1.0-0'}}</label>
                   </div>
-                  <button type="button" id="savenew" name="savenew" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">Save New Sub Quote</button>
-                  <button type="button" id="viewall" name="viewall" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">View All <img src="assets/Img/icon_right_arrow_red.svg"></button>
+                  <button type="button" id="savenew" name="savenew" value="savenew" class="btn_pink btn_saveNewSubQuote"><img src="assets/Img/icon_savenew_subquote.svg">{{"Save New Sub Quote" | translate}}</button>
+                  <button type="button" id="viewall" name="viewall" value="viewall" class="btn_iconText btn_viewAll" [routerLink]="['/renewal/quote']">{{"View All" | translate}} <img src="assets/Img/icon_right_arrow_red.svg"></button>
               </footer>
           </div>
       </div>
@@ -1581,18 +1581,18 @@
                   </div>
                   <div class="ppi_info">
                       <h4>{{renewalInfo?.response?.policyData[0]?.Name_of_product}}</h4>
-                      <h5>Aditya Birla Health Insurance</h5>
+                      <h5>{{"Aditya Birla Health Insurance" | translate}}</h5>
                       <!-- <h6>{{renewalInfo?.response?.policyData[0]?.Policy_number}}</h6> -->
                   </div>
               </div>
               <div class="planProductQuote">
-                  <div class="label">Total Premium/ incl tax</div>
+                  <div class="label">{{"Total Premium/ incl tax" | translate}}</div>
                   <div class="value">₹{{ renewalInfo?.response?.policyData[0]?.premium.Renewal_Gross_Premium | number:'1.0-0' }}</div>
               </div>
           </div>
           <div class="bi_right">
-              <button type="button" id="back" name="back" value="back" class="btn_pink btn_pinkNext" (click)="comeBack()">Back</button>
-              <button type="button" id="next" name="next" value="next" class="btn_red btn_redRenew" (click)="goNext()" *ngIf="(activeSection!=='payment' || selectedPaymentType == 'offline')  ">Next</button>
+              <button type="button" id="back" name="back" value="back" class="btn_pink btn_pinkNext" (click)="comeBack()">{{"Back" | translate}}</button>
+              <button type="button" id="next" name="next" value="next" class="btn_red btn_redRenew" (click)="goNext()" *ngIf="(activeSection!=='payment' || selectedPaymentType == 'offline')  ">{{"Next" | translate}}</button>
          </div>
       </div>
   </div> 

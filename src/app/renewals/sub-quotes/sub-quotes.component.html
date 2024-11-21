@@ -6,8 +6,8 @@
                     <h2>{{ subQuotesList[0].policyOwnerName }} ({{ subQuotesList[0].policyNumber }})</h2>
                 </div>
                 <div class="UQ_optionsWraper">
-                    <button type="button" value="gridcard" id="cardView" name="cardView" class="btn_grid btn_grid_text jsBtnClickQuote mobile-hide" aria-label="userquotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)=" quotesView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card">Grid View</button>
-                    <button type="button" value="gridlist" id="gridView" name="gridView" class="btn_grid btn_grid_text active jsBtnClickQuote mobile-hide" aria-label="userquotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)=" quotesView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List">List View</button>
+                    <button type="button" value="gridcard" id="cardView" name="cardView" class="btn_grid btn_grid_text jsBtnClickQuote mobile-hide" aria-label="userquotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)=" quotesView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card">{{"Grid View" | translate}}</button>
+                    <button type="button" value="gridlist" id="gridView" name="gridView" class="btn_grid btn_grid_text active jsBtnClickQuote mobile-hide" aria-label="userquotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)=" quotesView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List">{{"List View" | translate}}</button>
                 </div>
             </section>
             <section id="userquotes-list" class="tableMain user-quoteView mobile-hide" *ngIf="selectedView == 'list'">
@@ -16,13 +16,13 @@
                         <table class="table table-borderless table-search quote-table-bodyScroll-1">
                             <thead>
                                 <tr>
-                                    <th scope="col" class="head_quoteType">Quote Type</th>
-                                    <th scope="col">Product</th>
-                                    <th scope="col">Renewal Premium </th>
-                                    <th scope="col">Mobile No.</th>
-                                    <th scope="col">Date of Renewal</th>
-                                    <th scope="col">Modification</th>
-                                    <th scope="col">Notice</th>
+                                    <th scope="col" class="head_quoteType">{{"Quote Type" | translate}}</th>
+                                    <th scope="col">{{"Product" | translate}}</th>
+                                    <th scope="col">{{"Renewal Premium" | translate}} </th>
+                                    <th scope="col">{{"Mobile No." | translate}}</th>
+                                    <th scope="col">{{"Date of Renewal" | translate}}</th>
+                                    <th scope="col">{{"Modification" | translate}}</th>
+                                    <th scope="col">{{"Notice" | translate}}</th>
                                 </tr>
                             </thead>
                             <tbody class="table-group-divider">
@@ -35,15 +35,15 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><span class="productName">{{ quote.productCode }}</span></td>
+                                    <td><span class="productName">{{ quote.productCode | translate }}</span></td>
                                     <td>₹{{quote.annualPremium}}
                                         <div class="text-green">
-                                            HR benefits of ₹796 added
+                                            {{"HR benefits of ₹796 added" | translate}}
                                         </div>
                                     </td>
                                     <td>{{quote.mobile}}</td>
                                     <td>{{ quote.policyRenewalDate | date: 'yyyy-MM-dd' }}</td>
-                                    <td><span class="table-modification">{{quote.comment}}, Tenure {{quote.tenure}} Year</span></td>
+                                    <td><span class="table-modification">{{quote.comment}}, {{"Tenure" | translate}} {{quote.tenure}} {{"Year" | translate}}</span></td>
                                     <td>
                                         <div class="btn_groupAction">
                                             <button type="button" id="editBtn" name="editBtn" value="edit" title="Edit" class="btn_action btn_editAction" (click)="handleAction(quote, 'withmodify')"><img src="assets/Img/icon_edit_grey.svg"></button>
@@ -56,7 +56,7 @@
                             <tfoot>
                                 <tr>
                                     <td colspan="9" align="right">
-                                        <button type="button" id="compareBtn" name="compareBtn" value="compareselected" class="btn_compareSelected" (click)="compareQuotes()">Compare Selected</button>
+                                        <button type="button" id="compareBtn" name="compareBtn" value="compareselected" class="btn_compareSelected" (click)="compareQuotes()">{{"Compare Selected" | translate}}</button>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -83,30 +83,30 @@
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems">
-                                <div class="item_lable">Product</div>
+                                <div class="item_lable">{{"Product" | translate}}</div>
                                 <div class="item_value">{{ quote.productCode }}</div>
                             </div>
                             <div class="cv_bodyItems">
-                                <div class="item_lable">Renewal Premium</div>
+                                <div class="item_lable">{{"Renewal Premium" | translate}}</div>
                                 <div class="item_value">₹{{quote.annualPremium}}</div>
-                                <div class="item_value2 text-green">HR benefits of ₹786 added</div>
+                                <div class="item_value2 text-green">{{"HR benefits of ₹786 added" | translate}}</div>
                             </div>
                             <div class="cv_bodyItems">
-                                <div class="item_lable">Mobile No.</div>
+                                <div class="item_lable">{{"Mobile No." | translate}}</div>
                                 <div class="item_value">{{quote.mobile}}</div>
                             </div>
                             <div class="cv_bodyItems ">
-                                <div class="item_lable">Date of Renewal</div>
+                                <div class="item_lable">{{"Date of Renewal" | translate}}</div>
                                 <div class="item_value">{{ quote.policyRenewalDate | date: 'yyyy-MM-dd' }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_100 userInfo">
-                                <span class="modifiedBadge">Modified</span>
+                                <span class="modifiedBadge">{{"Modified" | translate}}</span>
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Members</div>
+                                    <div class="item_lable">{{"Members" | translate}}</div>
                                     <div class="item_value">{{quote.comment}}</div>
                                 </div>
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Tenure</div>
+                                    <div class="item_lable">{{"Tenure" | translate}}</div>
                                     <div class="item_value">{{quote.tenure}} Year</div>
                                 </div>
                             </div>
@@ -116,20 +116,20 @@
             </section>
         </div>
         <div class="bodyColumn body_flex_column quoteComparison" *ngIf="subQuotes == true">
-            <h3 class="icon_withHeading"><a class="btn_backPage" (click)="backSubquotes()"></a>Quote Comparison</h3>
+            <h3 class="icon_withHeading"><a class="btn_backPage" (click)="backSubquotes()"></a>{{"Quote Comparison" | translate}}</h3>
             <section class="quoteComparisonWraper">
                 <div class="qc_item qc_item1">
-                    <header>Quote
-                        <br>Comparison</header>
-                    <div class="upgradeInfo">Upgrade Recommendations</div>
-                    <div class="qc_info">Members</div>
-                    <div class="qc_info qc_info_grey">Nominee</div>
+                    <header>{{"Quote" | translate}}
+                        <br>{{"Comparison" | translate}}</header>
+                    <div class="upgradeInfo">{{"Upgrade Recommendations" | translate}}</div>
+                    <div class="qc_info">{{"Members" | translate}}</div>
+                    <div class="qc_info qc_info_grey">{{"Nominee" | translate}}</div>
                     <div class="qc_info qc_infoCover">
                         <ul>
-                            <li>Optional Covers</li>
+                            <li>{{"Optional Covers" | translate}}</li>
                         </ul>
                     </div>
-                    <div class="qc_info qc_info_grey">Room</div>
+                    <div class="qc_info qc_info_grey">{{"Room" | translate}}</div>
                     <div class="qc_empty"></div>
                 </div>
                 <div class="qc_item qc_item2">
@@ -138,20 +138,20 @@
                             <header>
                                 <div class="heading">
                                     <h5>{{ quote.isBaseQuote ? 'Base Quote' : 'Sub Quote' }}</h5>
-                                    <h6>₹{{ quote.annualPremium }}<span>{{quote.tenure}}/year</span></h6>
+                                    <h6>₹{{ quote.annualPremium }}<span>{{quote.tenure}}{{"/year" | translate}}</span></h6>
                                 </div>
-                                <button type="button" id="buyPlan" name="buyPlan" value="buyplan" class="btn_red btn_buyPlan" (click)="handleAction(quote, 'withoutmodify')">Buy Plan</button>
+                                <button type="button" id="buyPlan" name="buyPlan" value="buyplan" class="btn_red btn_buyPlan" (click)="handleAction(quote, 'withoutmodify')">{{"Buy Plan" | translate}}</button>
                             </header>
-                            <div class="upgradeInfo">{{ quote.discountPercentage }} Off on {{ quote.tenure }} years tenure</div>
+                            <div class="upgradeInfo">{{ quote.discountPercentage }} Off on {{ quote.tenure }} {{"years" | translate}} {{"tenure" | translate}}</div>
                             <div class="qc_info">
                                 <span *ngFor="let member of quote.members; let i = index">
-                                    {{ member.Relation }}<span *ngIf="i < quote.members.length - 1">, </span>
+                                    {{ member.Relation | translate }}<span *ngIf="i < quote.members.length - 1">, </span>
                                 </span>
                             </div>
                             <div class="qc_info qc_info_grey">{{ quote.nomineeDetails?.nominee_first_name }} {{ quote.nomineeDetails?.nominee_last_name }}</div>
                             <div class="qc_info qc_infoCover">
                                 <ul>
-                                    <li>Cancer secure cover</li>
+                                    <li>{{"Cancer secure cover" | translate}}</li>
                                 </ul>
                             </div>
                             <div class="qc_info qc_info_grey">

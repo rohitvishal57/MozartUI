@@ -7,6 +7,8 @@ import { YatraService } from "src/app/yatra/yatra/yatra.service";
 import { CommonService } from "src/app/services/common.service";
 import { validationConfig } from "src/app/interface/renewal-list.interface";
 import { EncryptionService } from "src/app/services/encryption.service";
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: "app-renewal-dynamic-form",
@@ -85,10 +87,18 @@ export class RenewalDynamicFormComponent implements OnInit {
 
   constructor( private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,
     private toast: NgToastService,private ac: ActivatedRoute,private yatraService: YatraService,
-    private commonService: CommonService,private encryptionService: EncryptionService) {
+    private commonService: CommonService,private encryptionService: EncryptionService, private languageService: LanguageService,
+    private translateService: TranslateService) {
   }
 
   ngOnInit() {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.kycFormGroup = this.fb.group({
       panNumber: ["",[Validators.required, Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")],],
       dateOfBirth: ["",[Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)],],
