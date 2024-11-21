@@ -502,7 +502,7 @@ export class YatraComponent {
                       tempInnerControl.name = tempRelationshipType.value;
                       if (subControl.conditionCheck) {
                         tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
-                          if (corecontrol.dependentControls) {
+                          if (corecontrol.dependentControls && this.formData[control.name]) {
                             const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
                             corecontrol.dependentControls.forEach((question: any) => {
                               let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
