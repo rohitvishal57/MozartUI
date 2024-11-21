@@ -31,34 +31,32 @@
 
           <div class="row pt-4">
             <div class="col-6 pad-0">
-              <button id="loginwithusercode" name="loginwithusercode" (click)="onSubmit('SSO')" class="login-button borderlt">{{"Login with SSO" | translate}}</button>
+              <button id="loginwithsso" name="loginwithsso" (click)="onSubmit('SSO')">{{"Login with SSO" | translate}}</button>
             </div>
             <div class="col-6 pad-0">
-              <button id="loginwithotp" name="loginwithotp" (click)="onSubmit('OTP')" class="login-button borderlt">{{"Login with OTP" | translate}}</button>
+              <button id="loginwithotp" name="loginwithotp" (click)="onSubmit('OTP')">{{"Login with OTP" | translate}}</button>
             </div>
-            <div class="text-danger" (click)="onSubmit('RESET')" style="text-align: center; text-decoration: underline; cursor: pointer;" formControlName="userName">{{"Reset password" | translate}}</div>
+            <div class="text-danger" name="resetpassword" id="resetpassword" (keydown.enter)="onSubmit('RESET')" (click)="onSubmit('RESET')" style="text-align: center; text-decoration: underline; cursor: pointer;"><span class="p-2" [tabindex]="0">{{"Reset password" | translate}}</span></div>
           </div>
         </form>
 
         <div class="verify-e-p-otp-wrap" *ngIf="verifyOtpEnable">
           <label class="otp-text-wrap">The OTP has been to {{ maskedUserCode }}</label>
           <div class="otp-container">
-            <input type="password" #otp0 class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
-            <input type="password" #otp1 class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
-            <input type="password" #otp2 class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
-            <input type="password" #otp3 class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
-            <input type="password" #otp4 class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
-            <input type="password" #otp5 class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
+            <input type="password" id="otp0" class="otp-input" maxlength="1" [(ngModel)]="otp[0]" (keydown)="onKey($event, 0)">
+            <input type="password" id="otp1" class="otp-input" maxlength="1" [(ngModel)]="otp[1]" (keydown)="onKey($event, 1)">
+            <input type="password" id="otp2" class="otp-input" maxlength="1" [(ngModel)]="otp[2]" (keydown)="onKey($event, 2)">
+            <input type="password" id="otp3" class="otp-input" maxlength="1" [(ngModel)]="otp[3]" (keydown)="onKey($event, 3)">
+            <input type="password" id="otp4" class="otp-input" maxlength="1" [(ngModel)]="otp[4]" (keydown)="onKey($event, 4)">
+            <input type="password" id="otp5" class="otp-input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
           </div>
-          <div class="submit-button margin-btn-wrap">
-            <button type="submit" id="verifylogin" name="verifylogin" class="login-button" (click)="onVerifyOTP()">
-              <span>{{"Verify & Login" | translate}}</span>
-            </button>
-          </div>
+          <button type="submit" id="verifylogin" name="verifylogin" (click)="onVerifyOTP()">
+            <span>{{"Verify & Login" | translate}}</span>
+          </button>
           <p class="text-danger text-center">{{errorMessage | translate}}</p>
           <div class="d-flex justify-content-center" *ngIf="timerOn">
             <label *ngIf="timeLeft > 0" class="send_otp_again_wrap">{{"Send OTP again in" | translate}} <span class="timeLeft_color">{{timeLeft}}</span> seconds </label>
-            <label *ngIf="timeLeft == 0" class="send_otp_again_wrap" (click)="resendOTP()">{{"Resend OTP" | translate}}</label>
+            <label *ngIf="timeLeft == 0" class="send_otp_again_wrap p-2" (click)="resendOTP()" (keydown.enter)="resendOTP()" [tabindex]="0">{{"Resend OTP" | translate}}</label>
           </div>
         </div>
         

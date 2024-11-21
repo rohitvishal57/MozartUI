@@ -4,11 +4,11 @@
   <!--ABC Links start-->
   <div class="abcLinksMain">
     <div class="abcTopLinks">
-      <div class="abcHome">
+      <div class="abcHome" tabindex="0">
         <a target="_blank"><img src="assets/Img/icon_home_white.svg">ABC Home<img
             src="assets/Img/icon_arrow_up_right_white.svg" class="homeArrow"></a>
       </div>
-      <div class="abcSolution">
+      <div class="abcSolution" tabindex="0">
         <a>ABC Solutions <img src="assets/Img/icon_arrow_down_red.svg"></a>
       </div>
       <div class="abcHelpLine">
@@ -79,7 +79,7 @@
       
 
         <div class="header-right-cnt">
-          <div class="language-selector">
+          <div class="language-selector" tabindex="0">
             <select (change)="setLanguage($event)" [value]="currentLanguage">
               <option value="en">English</option>
               <option value="hi">Hindi</option>

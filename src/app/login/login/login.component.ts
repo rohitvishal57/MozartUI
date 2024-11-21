@@ -107,6 +107,9 @@ export class LoginComponent implements OnInit {
   }
 
   resendOTP() {
+    const inputEle = document.getElementById('otp0') as HTMLInputElement;
+    inputEle.focus();
+
     const data = localStorage.getItem('sendOTP');
     this.sendOtpReqBody.agentCode = localStorage.getItem("agentCode");
     this.isMobile(data) ? this.sendOtpReqBody.mobileNumber = data : this.sendOtpReqBody.eMailId = data;
@@ -256,7 +259,6 @@ export class LoginComponent implements OnInit {
   onVerifyOTP() {
     const otpCode = this.otp.join('');
     this.errorMessage = '';
-    debugger;
     if (otpCode.length === 6 && /^[0-9]+$/.test(otpCode)) {
       this.validateOtpReqBody.agentCode = localStorage.getItem("agentCode");
       this.validateOtpReqBody.requestId = localStorage.getItem("requestId");
@@ -285,19 +287,41 @@ export class LoginComponent implements OnInit {
 
   onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
-    const target = event.target as HTMLInputElement;
-
     if (event.key >= '0' && event.key <= '9') {
       this.otp[index] = event.key;
+  
       if (index < 5) {
         const nextInput = document.getElementsByTagName('input')[index + 1] as HTMLInputElement;
         nextInput.focus();
+      } else {
+        const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
+        btnElement.focus();
       }
+  
+    // Handle backspace key
     } else if (event.key === 'Backspace') {
       this.otp[index] = '';
+      
       if (index > 0) {
         const previousInput = document.getElementsByTagName('input')[index - 1] as HTMLInputElement;
         previousInput.focus();
+      }
+  
+    // Handle Tab key for navigation
+    } else if (event.key === 'Tab') {
+      if (event.shiftKey) {
+        if (index > 0) {
+          const previousInput = document.getElementsByTagName('input')[index - 1] as HTMLInputElement;
+          previousInput.focus();
+        }
+      } else {
+        if (index < 5) {
+          const nextInput = document.getElementsByTagName('input')[index + 1] as HTMLInputElement;
+          nextInput.focus();
+        } else {
+          const btnElement = document.getElementById('verifylogin') as HTMLButtonElement;
+          btnElement.focus();
+        }
       }
     }
   }
