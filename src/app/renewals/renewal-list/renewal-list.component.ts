@@ -9,6 +9,8 @@ import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-renewal-list',
@@ -45,7 +47,8 @@ export class RenewalListComponent {
 
   constructor(
     private renewalService: RenewalsService,private router: Router,private datePipe: DatePipe,
-    private commonService:CommonService,private toast: NgToastService,private encryptionService: EncryptionService
+    private commonService:CommonService,private toast: NgToastService,private encryptionService: EncryptionService, private languageService: LanguageService,
+    private translateService: TranslateService
   ) {}
 
   renewalListRequestBody={
@@ -63,6 +66,13 @@ export class RenewalListComponent {
   }
 
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.getRenewalsList();
     this.getProducts();
   }

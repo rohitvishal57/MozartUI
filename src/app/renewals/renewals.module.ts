@@ -11,8 +11,14 @@ import { MyMaterialModule } from 'src/app/material.module';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { PaymentstatusComponent } from './paymentstatus/paymentstatus.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
 
 
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/','.json');
+}
 @NgModule({
   declarations: [
     RenewalListComponent,
@@ -28,6 +34,13 @@ import { PaymentstatusComponent } from './paymentstatus/paymentstatus.component'
     RenewalsRoutingModule,
     NgxSliderModule,
     ClipboardModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ]
 })
 export class RenewalsModule { }
