@@ -27,6 +27,7 @@ import { EncryptionInterceptor } from './intercepter/aesEncryptToken.interceptor
 import { LoadingService } from './services/loading.service';
 import { EventsModule } from './events/events-new/events.module';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { SharedModule } from './shared/shared.module';
 
 export function loadConfig(configService: ConfigService) {
   return () => configService.loadConfig().toPromise();
@@ -59,6 +60,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     LeadsModule,
     ProductsModule,
     ProfileModule,
+    SharedModule,
     NgxPaginationModule,
     EventsModule,
     TranslateModule.forRoot({
