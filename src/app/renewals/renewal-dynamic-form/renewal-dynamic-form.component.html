@@ -1242,7 +1242,7 @@
                                                         <small class="ui-error block-show" *ngIf="form.get('bankNameControl')?.hasError('required')">Bank Name is required.</small>
                                                       </span>
                                                 </div>
-                                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onBankNameSelected($event.option.value)">
+                                                <mat-autocomplete #auto="matAutocomplete" class="mat_selectBankName" (optionSelected)="onBankNameSelected($event.option.value)">
                                                     <mat-option *ngFor="let bank of filteredBankNamesList" [value]="bank.name">
                                                         {{ bank.name }}  
                                                     </mat-option>
