@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { LoadingService } from './services/loading.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'BancaassuranceFrontend';
+
+  showNavbar: boolean = true;
+  isLoading$: Observable<boolean>;
+
+  constructor(private router:Router, private loadingService: LoadingService){
+    this.isLoading$ = this.loadingService.isLoading;
+  }
+  ngOnInit(){
+    this.router.events.subscribe(() => {
+      if(this.router.url !== '/'){
+        this.showNavbar = true
+      }else{
+        this.showNavbar = false;
+      }
+    });
+  }
 }

@@ -1,0 +1,260 @@
+.filterWraperForm .fw_form .fw_checkboxWraper {
+	gap: 5px;
+}
+
+.filterWraperForm .fw_form .fw_checkboxWraper .input-checkbox-block {
+	width: 48%;
+}
+
+.searchWraperForm {
+	padding: 10px 20px;
+}
+
+.searchWraperForm header {
+	padding-top: 5px;
+	font-weight: 600;
+	font-size: 22px;
+}
+.searchWraperForm .searchHeader,
+.fw_form .searchHeader {
+	display: flex;
+	justify-content: space-between;
+	height: 40px;
+	padding-bottom: 5px;
+}
+
+.fw_form .filterHeader {
+	display: flex;
+	justify-content: space-between;
+	// height: 40px;
+	// padding-bottom: 5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0 !important;
+}
+
+.table>:not(caption)>*>* {
+	background-color: inherit;
+}
+
+.tableSubMain .table th,
+.tableSubMain .table td {
+	padding: 8px 12px;
+}
+
+.quickFilterMain {
+	padding: 12px 18px;
+	align-items: center;
+}
+
+.tableSubMain .table td {
+	/*line-height: 10px;*/
+}
+
+.btn_quickFilter {
+	padding: 9px 9px 7px;
+}
+
+.starRating {
+	margin-top: 5px;
+}
+
+.cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 {
+	line-height: 16px;
+	min-height: initial;
+}
+
+
+//pagination css start
+.tableNav .pagination {
+	flex-direction: column;
+
+	::ng-deep .p-paginator {
+		background-color: transparent;
+	}
+
+	::ng-deep .p-paginator .p-paginator-page {
+		border-radius: 8px !important;
+		font-family: Anek Latin;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 16.8px;
+		text-align: center;
+		color: black !important;
+		border: 1px solid var(--Neutral-Additional-BGGrey, #F1F3F6) !important;
+		background: var(--Neutral-Additional-White100, #FFFFFF) !important;
+		padding: 8px 12px;
+		margin: 0 5px;
+	}
+
+	::ng-deep .p-paginator .p-paginator-first,
+	::ng-deep .p-paginator .p-paginator-prev,
+	::ng-deep .p-paginator .p-paginator-next,
+	::ng-deep .p-paginator .p-paginator-last {
+		border-radius: 8px !important;
+		font-family: Anek Latin;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 16.8px;
+		text-align: center;
+		color: black !important;
+		border: 1px solid var(--Neutral-Additional-BGGrey, #F1F3F6) !important;
+		background-color: white;
+		padding: 8px 12px;
+		margin: 0 5px;
+	}
+
+	::ng-deep .p-paginator .p-paginator-page:hover,
+	::ng-deep .p-paginator .p-highlight:not(.p-highlight),
+	::ng-deep .p-paginator .p-paginator-first:hover,
+	::ng-deep .p-paginator .p-paginator-prev:hover,
+	::ng-deep .p-paginator .p-paginator-next:hover,
+	::ng-deep .p-paginator .p-paginator-last:hover {
+		background-color: #C7222A !important;
+		border-color: #C7222A !important;
+		color: #fff !important;
+	}
+
+	::ng-deep .my-paginator .p-highlight {
+		background: var(--Brand-Primary-CapitalRed, #C7222A) !important;
+		color: white !important;
+		border-radius: 8px !important;
+		font-family: Anek Latin;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 16.8px;
+		text-align: center;
+	}
+
+	::ng-deep .my-paginator .p-dropdown {
+		display: flex;
+		align-items: center !important;
+		justify-content: center !important;
+	}
+
+	// ::ng-deep .my-paginator .p-dropdown-label {
+	//   text-align: center !important;
+	// }
+	::ng-deep .p-paginator .p-paginator-pages .p-paginator-page,
+	::ng-deep .p-paginator .p-paginator-first,
+	::ng-deep .p-paginator .p-paginator-prev,
+	::ng-deep .p-paginator .p-paginator-next,
+	::ng-deep .p-paginator .p-paginator-last {
+		min-width: initial;
+		padding: 4px;
+		width: 32px;
+		height: 32px;
+	}
+
+	::ng-deep .p-paginator .p-dropdown {
+		height: 32px;
+		width: fit-content;
+	}
+
+	::ng-deep .p-dropdown .p-dropdown-trigger {
+		width: 2rem;
+	}
+
+	::ng-deep .p-dropdown-label {
+		padding: 0 0 0 10px !important;
+	}
+
+	::ng-deep .p-icon {
+		width: 0.85rem;
+		height: 0.85rem;
+	}
+
+	::ng-deep .mat-mdc-menu-panel {
+		overflow: hidden !important;
+	}
+}
+
+//pagination css end
+
+
+.form-floating>.form-control,
+.form-floating>.form-control-plaintext,
+.form-floating>.form-select {
+	min-height: auto;
+}
+
+.btn_iconGrey {
+	padding: 6px;
+}
+
+.btn_iconGrey img {
+	float: left;
+}
+
+.filterWraperForm {
+	padding: 15px 24px;
+	@media(max-width:767px) {
+		padding: 0px;
+	}
+}
+
+.filterWraperForm .fw_form header {
+	font-size: 21px;
+}
+
+.filterWraperForm .fw_form .fw_formRow h6 {
+	font-size: 16px;
+}
+
+.filterWraperForm .fw_form {
+	gap: 10px;
+}
+
+.filterWraperForm .fw_form .fw_formBody {
+	gap: 18px;
+}
+
+.input-block {
+	margin-bottom: 5px;
+}
+
+::ng-deep .mat-mdc-menu-content {
+	padding: 0 !important;
+}
+
+.moreActionItems ul a {
+	font-size: 13px;
+	letter-spacing: normal;
+}
+
+.btn_search_white {
+	padding: 10px 16px;
+	border-radius: 12px;
+	background: #F1F3F6;
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 24px;
+	color: var(--text-black-4c);
+	border: 1px solid var(--white-color);
+	width: 100%;
+}
+.jsFilterBtnClick.active ,.jsFilterBtnClick.active {
+	background: var(--primary-red-color) !important;
+	color: white;
+	img{
+		filter: brightness(0) invert(1);
+	}
+  }
+  .btn_quickFilter {
+	font-size: 11px;
+}   
+.filterSearch{
+	font-size: 11px;
+}
+.common_searchWraper .field_searchMain .filterSearch {
+	padding: 9px 37px 9px 16px;
+}
+.common_searchWraper .field_searchMain button{
+	right:5px
+}

@@ -1,0 +1,24 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ConfigService {
+  public config: any;
+
+  constructor(private http: HttpClient) {}
+
+  loadConfig(): Observable<any> {
+    return this.http.get('assets/config.json').pipe(
+      tap((config) => {
+        this.config = config;
+      })
+    );
+  }
+  get timeout(): number {
+    return this.config?.timeout;
+  }
+}

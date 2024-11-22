@@ -86,6 +86,7 @@ export interface IFormControl {
   details?: any;
   button?:any;
   icon?:string;
+  imageUrl?:string;
 }
 export interface ISubControl {
   name: string;
@@ -101,11 +102,16 @@ export interface ISubControl {
   visible?: boolean;
   disabled?: boolean;
   method?: string;
+  innerControls?: ISubControl[];
   innerSubControls?: ISubControl[];
   displayOnly?: boolean;
   coreControls?: ISubControl[];
   bigFont?: boolean;
+  dependentControls?: string[];
   getAllOption?: string;
+  isButton?:boolean;
+  innerArrayControl?:IDynamicControl[][];
+  conditionCheck?:boolean;
 }
 
 export interface ITab {
@@ -139,7 +145,7 @@ export interface ISelectCheckboxOption {
   imagePath?: string;
   isIncrement?: boolean;
   name?:string;
-  
+  dependentControls?: any;
 }
 
 export interface IImage {
@@ -192,8 +198,8 @@ export interface IDynamicControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   bigFont?: boolean;
   subControls?: ISubControl[][];
-  image:IImage;
-  tabs:ITab[];
+  image?:IImage;
+  tabs?:ITab[];
   getAllOption?: string;
 }
 export interface IValidator {
@@ -212,4 +218,5 @@ export interface IOptions {
   value?: any;
   class?: string;
   selected?: boolean;
+  dependentControls?: string[];
 }

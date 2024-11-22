@@ -1,0 +1,113 @@
+<main class="siteBody">
+  <div class="contentBody bodyColumns-1">
+    <div class="bodyColumn body_flex_column">
+<div class="container my-4 p-4 shadow-sm rounded bg-white">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="icon_withHeading" aria-hidden="true" (click)="navigateToListEvent()"><a class="btn_backPage" title="Back To List"></a>Create Event</h2>
+  </div>
+
+  <form [formGroup]="saveEvent" (ngSubmit)="onSubmit()">
+    <div class="row mb-3">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+          <input type="text" class="form-control input-textBox" id="customerName" formControlName="customerName" placeholder="">
+        <label for="customerName">Customer Name</label>
+        <div *ngIf="saveEvent.get('customerName')?.invalid && (saveEvent.get('customerName')?.dirty || saveEvent.get('customerName')?.touched)">
+          <div class="text-danger" *ngIf="saveEvent.get('customerName')?.errors?.['required']">Customer name is required</div>
+        </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+        <input type="text" class="form-control input-textBox" id="mobileNumber" formControlName="mobileNumber" placeholder="">
+        <label for="mobileNumber" >Mobile No.<span class="text-danger">*</span></label>
+        <div *ngIf="saveEvent.get('mobileNumber')?.invalid && (saveEvent.get('mobileNumber')?.dirty || saveEvent.get('mobileNumber')?.touched)">
+          <div class="text-danger" *ngIf="saveEvent.get('mobileNumber')?.errors?.['required']">Mobile number is required</div>
+          <div class="text-danger" *ngIf="saveEvent.get('mobileNumber')?.errors?.['pattern']">Invalid mobile number</div>
+        </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+        <input type="text" class="form-control input-textBox" id="activityTitle" formControlName="activityTitle" placeholder="">
+        <label for="activityTitle" >Activity Title<span class="text-danger">*</span></label>
+        <div *ngIf="saveEvent.get('activityTitle')?.invalid && (saveEvent.get('activityTitle')?.dirty || saveEvent.get('activityTitle')?.touched)">
+          <div class="text-danger" *ngIf="saveEvent.get('activityTitle')?.errors?.['required']">Activity title is required</div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+        <select class="form-select input-selectBox" id="activityType" formControlName="activityType">
+          <option value="" disabled selected>Choose option</option>
+          <option *ngFor="let type of activityTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+        <label for="activityType" >Select Activity Type<span class="text-danger">*</span></label>
+        <div *ngIf="saveEvent.get('activityType')?.invalid && (saveEvent.get('activityType')?.dirty || saveEvent.get('activityType')?.touched)">
+          <div class="text-danger" *ngIf="saveEvent.get('activityType')?.errors?.['required']">Activity type is required</div>
+        </div>
+      </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+          <input type="date" class="form-control input-textBox" id="startDate" formControlName="startDate">
+          <label for="startDate" >Activity Start Date<span class="text-danger">*</span></label>
+        <div *ngIf="saveEvent.get('startDate')?.invalid && (saveEvent.get('startDate')?.dirty || saveEvent.get('startDate')?.touched)">
+          <div class="text-danger" *ngIf="saveEvent.get('startDate')?.errors?.['required']">Start date is required</div>
+        </div>
+      </div>
+</div>
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+          <input type="time" class="form-control input-textBox" id="startTime" formControlName="startTime">
+          <label for="startTime" >Activity Start Time<span class="text-danger">*</span></label>
+        <div *ngIf="saveEvent.get('startTime')?.invalid && (saveEvent.get('startTime')?.dirty || saveEvent.get('startTime')?.touched)">
+          <div class="text-danger" *ngIf="saveEvent.get('startTime')?.errors?.['required']">Start time is required</div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+          <input type="time" class="form-control input-textBox" id="startTime" formControlName="endTime">
+          <label for="endTime" >Activity End Time<span class="text-danger">*</span></label>
+        <div *ngIf="saveEvent.get('endTime')?.invalid && (saveEvent.get('endTime')?.dirty || saveEvent.get('endTime')?.touched)">
+          <div class="text-danger" *ngIf="saveEvent.get('endTime')?.errors?.['required']">End time is required</div>
+        </div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+          <input type="date" class="form-control input-textBox" id="endDate" formControlName="endDate">
+          <label for="endDate" >Activity End Date<span class="text-danger">*</span></label>
+        <div *ngIf="saveEvent.get('endDate')?.invalid && (saveEvent.get('endDate')?.dirty || saveEvent.get('endDate')?.touched)">
+          <div class="text-danger" *ngIf="saveEvent.get('endDate')?.errors?.['required']">End date is required</div>
+        </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+        <div class="input-block form-floating input-block-renew">
+        <input type="text" class="form-control input-textBox" id="note" formControlName="note" placeholder="">
+        <label for="note" class="form-label">Note</label>
+      </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn_red" [disabled]="isSubmitting">
+        Save
+      </button>
+      <!-- <button type="button" class="btn btn-secondary ms-2">Cancel</button> -->
+    </div>
+  </form>
+</div>
+</div>
+</div>
+</main>

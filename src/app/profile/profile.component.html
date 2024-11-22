@@ -1,0 +1,53 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2>Profile Info</h2>
+            </div>
+            <section class="white_container">
+                <div class="row mb-5 qrCode_mr_0">
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                    <div class="userProfilePic">
+                        <img src="../../assets/images/img_profile.png" />
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="userProfile_qrCode">
+                            <!--<img src="../../assets/Img/QR_Code_Section.png" />-->
+                            <div class="img_qrCode">
+                                <img src="../../assets/Img/img_QR_code.png" />
+                            </div>
+                            <div class="qrCode_agentInfo">
+                                <h5>Your Agent Code</h5>
+                                <h6>Copy or scan your Agent Code/QR here.</h6>
+                                <div class="copy_qrCode">
+                                    <div class="copy_qrCode_url">https://www.adityabirlacapital.com/euv456b</div>
+                                    <div class="btn_group_qrCode">
+                                        <button type="button" id="btn-copy-content" name="btn-copy-content" title="Copy"><img src="../../assets/Img/icon_content_copy.svg"></button>
+                                        <button type="button" id="btn-link-content" name="btn-link-content" title="Link"><img src="../../assets/Img/icon_link_share.svg"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item data-item-mb-15 " *ngFor="let pr of profileDetails">
+                        <div class="main_userDetails">
+                            <div class="info_userDetails">
+                                <div class="img_userProfile">
+                                    <img src="../../assets/images/{{pr.icon}}.png" />
+                                </div>
+                                <div class="details_userProfile">
+                                    <label>{{pr.heading}}</label>
+                                    <h6><span title={{pr.value}}>{{pr.value}}</span></h6>
+                                </div>
+                            </div>
+                            <div class="edit_userDetails"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>

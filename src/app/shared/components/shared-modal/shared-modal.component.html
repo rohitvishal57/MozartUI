@@ -1,0 +1,104 @@
+<div class="container">
+    <div style="display: flex; justify-content: end;">
+        <button type="button" class="btn-close" (click)="dialogRef.close()"></button>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 mb-2 confirm-title">{{ data?.header}} </div>
+    </div>
+    <div class="row" *ngIf="data?.description" style="max-height: 500px; overflow-y: auto;">
+        <div class="col-lg-12 mb-2 confirm-text">
+            <div [ngSwitch]="data.type">
+                <div *ngSwitchCase="'default'">
+                    <pre>{{ data?.description}}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="data?.table">
+        <app-appshared-table [tableData]="data.tableData" [showCheckAll]="data.showCheckAll"
+            [isAddEnabled]="data.isAddEnabled" [isSearch]="data.isSearch"
+            (onCheckboxClickEmit)="checkboxClicked($event)" [isSearchFilter]="data.isSearchFilter"
+            [filterCategoryList]="data.filterCategory" [isRemoveEnabled]="data.isRemoveEnabled"
+            [selectedFilterCategory]="data.selectedFilterCategory"
+            [rowsInTable]="[5,10,15, 25, 50, 100, 200, 300, 400, 500]">
+        </app-appshared-table>
+    </div>
+    <div class="row" *ngIf="data?.formModal">
+        <form [formGroup]="data.formName">
+            <ng-container *ngFor="let inpVal of data.inputsList">
+                <ng-container *ngIf="inpVal.type == 'select'">
+                    <div class="inp_container select">
+                        <label>
+                            <p class="inp_name">{{inpVal.label}}</p>
+                            <div class="inps">
+                                <select [ngClass]="{'err_inp' : isSubmited && f[inpVal.key]?.errors}" name="" id=""
+                                    [formControlName]="inpVal.key">
+                                    <ng-container *ngFor="let optVal of inpVal.objArr">
+                                        <option [value]="optVal">{{optVal}}</option>
+                                    </ng-container>
+                                </select>
+
+                            </div>
+                        </label>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="inpVal.type == 'radio'">
+                    <div class="inp_container radio">
+                        <div class="radio_inp">
+                            <p class="inp_name">{{inpVal.label}}</p>
+                            <div class="radio_btns">
+                                <div class="radio_content" *ngFor="let radioInps of inpVal.objName">
+                                    <label class="custom_radio_btn">
+                                        <input type="radio" [value]="radioInps" [name]="'status'"
+                                            [formControlName]="inpVal.key" id="">
+                                        <p></p>
+                                        <span>{{radioInps}}</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <span class="err_mesg" *ngIf="isSubmited && f[inpVal.key]?.errors">Select
+                                status</span>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="inpVal.type !== 'radio' && inpVal.type !== 'select' && inpVal.type !== 'textarea'">
+                    <div class="inp_container">
+                        <label>
+                            <p class="inp_name">{{inpVal.label}}</p>
+                            <div class="inps">
+                                <input [ngClass]="{'err_inp' : isSubmited && f[inpVal.key]?.errors}"
+                                    [type]="inpVal.type" [formControlName]="inpVal.key">
+                            </div>
+                        </label>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="inpVal.type == 'textarea'">
+                    <div class="inp_container">
+                        <label>
+                            <p class="inp_name">{{inpVal.label}}</p>
+                            <div class="inps">
+                                <textarea class="inp_text_box"
+                                    [ngClass]="{'err_inp' : isSubmited && f[inpVal.key]?.errors}"
+                                    [formControlName]="inpVal.key"></textarea>
+                            </div>
+                        </label>
+                    </div>
+                </ng-container>
+
+            </ng-container>
+        </form>
+    </div>
+    <div class="action-btns text-center mt-3">
+        <button class="btn cancel-btn" (click)="dialogRef.close(false)">{{
+            data?.no ? data.no
+            : 'Cancel' }}</button>
+        <button *ngIf="data.copy" (click)="copyMessage(data?.description)" class="btn save-btn">{{
+            data?.copy ? data.copy
+            : 'Copy' }}</button>
+        <button *ngIf="data.yes" (click)="yes()" class="btn save-btn">{{
+            data?.yes }}</button>
+    </div>
+</div>
