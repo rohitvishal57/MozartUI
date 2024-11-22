@@ -10,11 +10,13 @@ import { QuoteService } from 'src/app/quote/quote.service';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
+import HeaderInformation from 'src/app/layout/headerInfo';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  styleUrls: ['./products.component.scss'],
+  providers :[HeaderInformation]
 })
 export class ProductsComponent implements OnInit {
 
@@ -47,8 +49,7 @@ export class ProductsComponent implements OnInit {
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
    private quoteservices: QuoteService,private aesEncryptService: AesEncryptionService,
    private route: ActivatedRoute, private languageService: LanguageService,
-   private translateService: TranslateService
-  ) {
+   private translateService: TranslateService,public headerInformation : HeaderInformation) {
 
   }
 
@@ -285,6 +286,24 @@ navigateToProductComparison(){
 
 closeComparison(){
   this.compareItems = [];
+}
+
+donwloadBrowcher(productName : any){
+  const downloadBrowcherProduct = this.headerInformation.downloadBrowcher.find((element: any) =>
+    element.productName.includes(productName));
+  
+    if (downloadBrowcherProduct) {
+      const URL = downloadBrowcherProduct.browcherURL;
+      const link = document.createElement('a');
+      link.href = URL;
+      link.download = URL.split('/').pop() || 'download.pdf';     
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      console.error('Invalid or missing URL.');
+    }
+ 
 }
 
 
