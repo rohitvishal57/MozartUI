@@ -200,7 +200,6 @@
       border: none;
       border-radius: 20px;
       cursor: pointer;
-      margin-top: 4%;
       width: auto; /* Adjust width as needed */
       appearance: none; /* Remove default styling in some browsers */
       display: flex;
@@ -229,15 +228,6 @@
     color: #fff;
     font-size: 16px;
     cursor: pointer;
-  }
-}
-.headerProfile {
-  a {
-    display: flex;
-    img {
-      width: 25px;
-      height: 25px;
-    }
   }
 }
 .badge {
@@ -294,14 +284,6 @@
   position: relative;
   .btn_headerSearch {
     padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    img{
-      width: 20px;
-      height: 20px;
-    }
     .badge {
       background: #f7a500;
       color: #000000;

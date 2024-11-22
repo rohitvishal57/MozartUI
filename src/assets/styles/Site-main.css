@@ -577,7 +577,7 @@ button {
 
 .siteHeader .logoMain .logoMainLeft {
   width: 109px;
-  padding: 0 13px 0 21px;
+  padding: 7px 13px 7px 21px;
 }
 
 .siteHeader .logoMain .logoMainLeft img {
@@ -627,7 +627,7 @@ button {
   background: var(--white-color);
   position: fixed;
   left: 0;
-  top: 88px;
+  top: 100px;
   z-index: 2;
 }
 
@@ -725,7 +725,7 @@ button {
   position: relative;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_links{
-  max-height: 440px;
+  max-height: 400px;
   overflow-y: auto;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_logout {
@@ -748,9 +748,17 @@ button {
   padding: 8px 10px;
   border-radius: 17px;
   border-width: 0;
-  background: rgba(255, 255, 255, 0.1);
+  /* background: #BF1327; */
+  background: rgba(255, 255, 255, .1);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
+.btn_headerSearch:hover{
+  background:#b51023;
+}
 .btn_headerSearch img {
   width: 14px;
   height: 14px;
@@ -1934,7 +1942,7 @@ input[type="search"]::-webkit-search-results-decoration {
   width: 100%;
   padding: 23px;
   padding-bottom: 12rem;
-  padding-top: 11rem;
+  padding-top: 13rem;
   background: var(--bg-verylight-grey);
     min-height: 100vh;
 }
@@ -5708,19 +5716,37 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .top_mainNavBar .navbar-collapse .navbar-nav .nav-link{
   font-size: 16px;
-  padding: 11px 10px;
+  padding: 18px 10px;
   display: flex;
   gap:20px;
   line-height: initial;
   align-items: center;
   color: #fff;
+  transition: all .5s ease-in-out;
 }
 .top_mainNavBar .navbar-collapse .navbar-nav .nav-link:hover,
 .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show {
   background-color: #b51023;
+  transition: all .5s ease-in-out;
 }
 .top_mainNavBar .navbar-collapse .navbar-nav .nav-link:after {
   display: none;
+}
+.top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:after {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  position: absolute;
+  transform: rotate(-45deg);
+}
+.top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:before {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  position: absolute;
+  transform: rotate(45deg);
 }
 .top_mainNavBar .navbar-nav .dropdown-menu {
   min-width: 270px;
@@ -5766,6 +5792,13 @@ input[type=number]::-webkit-outer-spin-button {
 .dropdown-menu-scroll::-webkit-scrollbar-button {
   width: 0px;
   height: 0;
+}
+.top_mainNavBar .navbar-toggler {
+  font-size: 14px;
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #BF1327;
 }
 /*---Header Menu end---*/
 

@@ -20,8 +20,9 @@
 @media (max-width:1280px) {
     
 }
-@media (max-width:1222px) {
-    .siteSidenav .siteSidenavMain.siteSidenavMain_scroll {
+@media (max-height:631px) {
+    .siteSidenav .siteSidenavMain.siteSidenavMain_scroll,
+    .siteSidenav .sidenavMenu.sidenavMenu_links {
         max-height: 350px;
     }
 }
@@ -162,6 +163,102 @@
     .bottomInfoMain.bottomInfoMain_comparePolices {
         width: 100%;
         left: 0;
+    }
+    .siteHeader .logoMain .logoMainLeft {
+        padding:3px 13px 3px 21px ;
+    }
+}
+@media (max-width:991px) {
+    /* .top_mainNavBar .navbar-collapse{
+        min-width: 230px;
+        position: absolute;
+        top: 39px;
+        background: #c91429;
+        left: auto;
+        border-radius: 0 0 16px 16px;
+        
+   }
+   .top_mainNavBar .navbar-collapse .navbar-nav .nav-link {
+        justify-content: space-between;
+   } */
+   .top_mainNavBar .navbar-collapse {
+        width: 100%;
+        height: 100vh;
+        background: #ffffff;
+        position: fixed;
+        top: 0;
+        left: 100%;
+        padding: 106px 0px 0px !important;
+        z-index: -1;
+        /* overflow-y: auto; */
+        align-items: flex-start;
+        transition: all .5s ease-in-out;
+    }
+    .top_mainNavBar .navbar-collapse.show {
+        left: 0;
+        transition: all .5s ease-in-out;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav {
+        gap:8px;
+        background: #F9F9FB;
+        height: 100%;
+        padding: 20px 20px 100px;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link{
+        font-weight: 500;
+        color: #353941;
+        padding: 16px 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #EBEBEC;
+        border-radius: 10px;
+        background: #fff;
+        transition: all .5s ease-in-out;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link:hover, 
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show {
+        background-color: #b51023;
+        border-color: #b51023;
+        color: #fff;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show {
+        border-radius: 10px 10px 0 0;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show + .dropdown-menu {
+        padding: 0;
+        margin: 0;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show + .dropdown-menu .dropdown-menuSub {
+        border-top-width: 0;
+        border-radius: 0 0 10px 10px;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link .icon_arrowDown:after,
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link .icon_arrowDown:before {
+        background: #353941;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link:hover .icon_arrowDown:after,
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link:hover .icon_arrowDown:before,
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:after,
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:before {
+        background: #fff;
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:after {
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        position: absolute;
+        transform: rotate(-45deg);
+    }
+    .top_mainNavBar .navbar-collapse .navbar-nav .nav-link.show .icon_arrowDown:before {
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        position: absolute;
+        transform: rotate(45deg);
     }
 }
 @media (max-width:912px){
@@ -380,6 +477,14 @@
     .common_searchWraper_proposals .filterFieldGroup {
         width: 100%;
    }
+   .siteHeader .logoMain .logoMainRight {
+        padding: 0 10px 0 0;
+   }
+   .siteHeader .logoMain .logoMainRight .btn_headerSearch {
+        width: 30px;
+        height: 30px;
+   }
+   
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
