@@ -284,6 +284,14 @@ h2 {
     width: 100%;
 }
 .commonSection {
+
+    h2 {
+        font-weight: 600;
+        font-size: 28px;
+        line-height: 34px;
+        margin: 0;
+        color: #000000;
+    }
     h6 {
         font-weight: 600;
         font-size: 22px;
@@ -291,10 +299,10 @@ h2 {
         margin: 0;
         color: #000000;
     }
-    h2 {
+    h5 {
         font-weight: 600;
-        font-size: 28px;
-        line-height: 34px;
+        font-size: 20px;
+        line-height: 22px;
         margin: 0;
         color: #000000;
     }
@@ -1043,15 +1051,5 @@ h2 {
 .overlay_searchResults .tableSubMain .table thead th:last-child {
     border-radius: 0 0 0 0;
 }
-/* .dashboard_leadsMain {
-    padding-bottom: 16px;
-    .leads_content {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        .leads_item {
-            width: 100%;
-        }
-    }
-} */
+
 /*---dahboard new sections styles end---*/
