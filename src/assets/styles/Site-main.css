@@ -627,8 +627,9 @@ button {
   background: var(--white-color);
   position: fixed;
   left: 0;
-  top: 100px;
+  /* top: 100px; */
   z-index: 2;
+  padding-top: 100px;
 }
 
 .siteSidenav .siteSidenavMain {
@@ -660,7 +661,7 @@ button {
   align-items: center;
   padding: 4px;
   border-radius: 5px;
-  background: var(--white-color);
+  /* background: var(--white-color); */
   width: 26px;
   height: 26px;
 }
@@ -731,6 +732,8 @@ button {
 .siteSidenav .sidenavMenu.sidenavMenu_logout {
     position: absolute;
     top: 110%;
+    top: auto;
+    bottom: 20px;
     height: auto;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_logout a.linkLogout{
