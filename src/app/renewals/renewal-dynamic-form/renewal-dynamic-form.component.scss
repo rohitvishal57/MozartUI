@@ -205,7 +205,7 @@
 		display: none;
 	}
 }
-.row .raido_paymentType .active{
+.row .raido_paymentType .active span{
 	border: 1px solid var(--primary-red-color);
 	border-radius: 16px;
 }
@@ -337,9 +337,9 @@
   .input-textBox {
 	width: 100%;
 	padding: 15px;
-	border: 1px solid #ddd;
 	border-radius: 10px;
-	/* margin-top: 10px; */
+	/* margin-top: 10px;
+	border: 1px solid #ddd; */
 	font-size: 14px;
   }
   

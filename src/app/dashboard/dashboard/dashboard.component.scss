@@ -284,6 +284,14 @@ h2 {
     width: 100%;
 }
 .commonSection {
+
+    h2 {
+        font-weight: 600;
+        font-size: 28px;
+        line-height: 34px;
+        margin: 0;
+        color: #000000;
+    }
     h6 {
         font-weight: 600;
         font-size: 22px;
@@ -291,10 +299,10 @@ h2 {
         margin: 0;
         color: #000000;
     }
-    h2 {
+    h5 {
         font-weight: 600;
-        font-size: 28px;
-        line-height: 34px;
+        font-size: 20px;
+        line-height: 22px;
         margin: 0;
         color: #000000;
     }
@@ -1027,4 +1035,21 @@ h2 {
         }
     }
 }
+.overlay_searchResults {
+    padding: 4px;
+    border-radius: 16px 0 16px  16px;
+    background: #ffffff;
+    border: 0px solid var(--white-color);
+}
+.overlay_searchResults .tableSubMain {
+    border-radius: 0;
+    padding: 0;
+}
+.overlay_searchResults .tableSubMain .tableSubMain .table {
+    font-size: 13px;
+}
+.overlay_searchResults .tableSubMain .table thead th:last-child {
+    border-radius: 0 0 0 0;
+}
+
 /*---dahboard new sections styles end---*/

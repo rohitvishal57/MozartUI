@@ -3,6 +3,8 @@ import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { EncryptionService } from 'src/app/services/encryption.service';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-sub-quotes',
@@ -20,12 +22,19 @@ export class SubQuotesComponent {
   selected: any = [];
 
   constructor(private renewalService:RenewalsService,
-    private router:Router,private toast: NgToastService,private encryptionService: EncryptionService
+    private router:Router,private toast: NgToastService,private encryptionService: EncryptionService, private languageService: LanguageService,
+    private translateService: TranslateService
 
   ){}
 
-  ngOnInit()
-  {
+  ngOnInit(){
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.renewalService.policy$.subscribe(policy => {
       if(policy.policyNo){
       this.policyNumber=policy.policyNo;

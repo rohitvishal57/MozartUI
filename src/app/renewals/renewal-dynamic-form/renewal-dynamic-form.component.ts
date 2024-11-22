@@ -7,6 +7,8 @@ import { YatraService } from "src/app/yatra/yatra/yatra.service";
 import { CommonService } from "src/app/services/common.service";
 import { validationConfig } from "src/app/interface/renewal-list.interface";
 import { EncryptionService } from "src/app/services/encryption.service";
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: "app-renewal-dynamic-form",
@@ -78,17 +80,23 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectedBankId!: string;
   selectedCityId!: string;
   bankDetailsObject = { accountHolderName: "",accountNo: "",accountType: "",bankName: "",bankCity: "",bankBranch: "",IFSCCOde: "",MICRCode: ""};
-  selectedBankName: any;
-  selectedCityName: any;
   documentId: any;
   showAppointee: boolean = false;
 
   constructor( private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,
     private toast: NgToastService,private ac: ActivatedRoute,private yatraService: YatraService,
-    private commonService: CommonService,private encryptionService: EncryptionService) {
+    private commonService: CommonService,private encryptionService: EncryptionService, private languageService: LanguageService,
+    private translateService: TranslateService) {
   }
 
   ngOnInit() {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.kycFormGroup = this.fb.group({
       panNumber: ["",[Validators.required, Validators.pattern("[A-Z]{5}[0-9]{4}[A-Z]{1}")],],
       dateOfBirth: ["",[Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)],],
@@ -126,6 +134,11 @@ export class RenewalDynamicFormComponent implements OnInit {
       console.warn("formObject is empty or undefined.");
     }
     this.form = this.fb.group(group);
+
+    console.log("form",this.form);
+    console.log("form object",this.formObject);
+    
+    
   }
 
   async getRenewalInfo() {
@@ -139,10 +152,10 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectButton(value?: any, content?: any, member?: number) {
     if (this.selectedButton === "primary") {
       if (value == 5006) {
+        this.formId =value;
         this.getBankDetails();
         this.formObject = this.bankDetailsObject;
         this.initializeForm();
-        this.formId = value;
       } else if (value == 5005) {
         if (this.renewalInfo?.response?.policyData?.length > 0) {
           this.formObject = { ...this.renewalInfo?.response?.policyData[0]?.HomeAddress,};
@@ -369,9 +382,9 @@ export class RenewalDynamicFormComponent implements OnInit {
                 accountHolderName: this.form.value.accountHolderName || "",
                 accountNo: this.form.value.accountNo || "",
                 accountType: this.form.value.accountType || "",
-                bankName: this.selectedBankName || "",
-                bankCity: this.selectedCityName || "",
-                bankBranch: this.selectedBankName || "",
+                bankName:  this.form.value.bankName || "",
+                bankCity: this.form.value.bankCity || "",
+                bankBranch: this.form.value.bankBranch|| "",
                 IFSCCOde: this.form.value.IFSCCOde || "",
                 MICRCode: this.form.value.MICRCode || "",
               };
@@ -394,9 +407,8 @@ export class RenewalDynamicFormComponent implements OnInit {
         break;
       default:
         console.warn("Unknown action:", event);
+      }
     }
-  }
-
   getTenureDetails() {
     const productName =this.renewalInfo?.response?.policyData[0]?.Name_of_product;
     if (productName) {
@@ -575,8 +587,17 @@ export class RenewalDynamicFormComponent implements OnInit {
 
   selectPaymentType(option: any) {
     if (option == "offline") {
-      this.formObject = { paymentOption: "", chequeAmount:this.renewalInfo?.response?.policyData[0]?.NetPremium || "",
-        chequeNumber: "", chequeDate: "", ifscCode: "", bankNameControl: "", file: null, };
+      this.formObject = 
+      { paymentOption: "", 
+        premiumAmount:this.renewalInfo?.response?.policyData[0]?.NetPremium || "",
+        instrumentNumber: "", 
+        instrumentDate: "", 
+        bankName:"",
+        bankCity:"",
+        bankBranch:"",
+        ifscCode: "", 
+        micrCode:"",
+        file: null, };
       this.initializeForm();
       this.selectedPaymentType = option;
       this.getBankDetails();
@@ -624,15 +645,13 @@ export class RenewalDynamicFormComponent implements OnInit {
 
   onBankChange(event: any) {
     const selectedBank = this.bankNameList.find(
-      (bank: any) => bank.id === event.target.value
+      (bank: any) => bank.name === event.target.value
     );
     if (selectedBank) {
       this.selectedBankId = selectedBank.id;
-      this.selectedBankName = selectedBank.name;
       this.getBankCityDetails(this.selectedBankId);
     } else {
       this.selectedBankId = "";
-      this.selectedBankName = "";
       this.cityNameList = [];
       this.branchNameList = [];
     }
@@ -655,15 +674,13 @@ export class RenewalDynamicFormComponent implements OnInit {
 
   onCityChange(event: any) {
     const selectedCity = this.cityNameList.find(
-      (city: any) => city.id === event.target.value
+      (city: any) => city.name === event.target.value
     );
     if (selectedCity) {
       this.selectedCityId = selectedCity.id;
-      this.selectedCityName = selectedCity.name;
       this.getBranchDetails(this.selectedBankId, this.selectedCityId);
     } else {
       this.selectedCityId = "";
-      this.selectedCityName = "";
     }
   }
 
@@ -681,7 +698,7 @@ export class RenewalDynamicFormComponent implements OnInit {
 
   onBranchChange(event: any) {
     const selectedbranch = this.branchNameList.find(
-      (branch) => branch.id === this.form.get("bankBranch")?.value
+      (branch) => branch.name ===  event.target.value
     );
     if (selectedbranch) {
       this.form.get("IFSCCOde")?.setValue(selectedbranch.id);
@@ -689,11 +706,6 @@ export class RenewalDynamicFormComponent implements OnInit {
     }
   }
 
-  setIfscCode(event: any, otherControl: any) {
-    const data = JSON.parse(event.target.value);
-    // this.dynamicFormGroup.get('ifscCode')?.setValue(data.id);
-    // this.dynamicFormGroup.get('micrCode')?.setValue(data.value);
-  }
 
   filterBankList(event: any): void {
     const input = (event.target as HTMLInputElement).value.toLowerCase();
@@ -725,72 +737,53 @@ export class RenewalDynamicFormComponent implements OnInit {
   goNext(){
     if(this.activeSection== 'primary'){
       this.setSection('additional')
-    } else if(this.activeSection == 'additional'){
+    }
+    else if(this.activeSection == 'additional'){
       this.setSection('policySummary')
-    } else if(this.activeSection== 'policySummary'){
+    } 
+    else if(this.activeSection== 'policySummary'){
       this.setSection('payment')
-    } else if(this.activeSection == 'payment'){
-        if(this.selectedPaymentType == 'offline' && !this.form.valid){
-          this.form.markAllAsTouched();
-          return;
-        }
-        const offlinePaymentRequestBody = {
-          "PolicyType": "Renewal",
-          "PaymentMethod": "Offline",
-          "Source":"Retail",
-          "InstrumentType": this.form.value.paymentOption.toString(),
-          "PremiumAmount": this.form.value.chequeAmount.toString(),
-          "InstrumentNo": this.form.value.chequeNumber.toString(),
-          "InstrumentDate": this.form.value.chequeDate.toString(),
-          "PolicyNumber": this.policyNumber.toString(),
-          "ProposalNum":"",
-          "AgentCode": this.agentCode?.toString(),
-          "BankName": this.form.value.bankNameControl.toString(),
-          "IFSC": this.form.value.ifscCode.toString(),
-          "MicrNo":"",
-          "documentId": this.documentId
-        };
-        console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
-        // const checkNumber= this.form.value.chequeNumber.toString()
-        // const checkAmount= this.form.value.chequeAmount.toString()
-        // console.log(checkAmount,checkNumber);
-        // const data = new FormData();
-        // data.append("PolicyType", "Renewal");
-        // data.append("PaymentMethod", "Offline");
-        // data.append("InstrumentType", this.form.value.paymentOption);
-        // data.append("PremiumAmount", checkAmount);
-        // data.append("InstrumentNo", checkNumber);
-        // data.append("InstrumentDate", this.form.value.chequeDate);
-        // data.append("PolicyNumber", this.policyNumber);
-        // data.append("ProposalNum","")
-        // data.append("AgentCode", this.agentCode|| "");
-        // data.append("BankName", this.form.value.bankNameControl);
-        // data.append("IFSC", this.form.value.ifscCode);
-        // data.append("MicrNo","")
-        // data.append('formFile', this.file);
-        // console.log("uploaded file",this.file);
-        // console.log("data",data);
-            this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
-          // this.renewalService.getFullQuoteApi(data).subscribe(
-          (res:any)=>{
-            if(res.isSuccess){
-              console.log("offline payment reponse",res.data);
-              this.fullQuoteResponse=res.data;          
-              this.setSection('thankyou')
-              this.hideSection=false
-              this.isFeedBackModalVisible = true;
-            }
-            else{
-              this.toast.error({ detail: '',summary:res.message,duration: 3000});
-            }
-          },
-          (err)=>{
-            this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
-            console.log("error is coming from fullquote api");
-        })
+    }else if(this.activeSection == 'payment'){
+      if(this.selectedPaymentType == 'offline' && !this.form.valid){
+        this.form.markAllAsTouched();
+        return;
       }
+      const offlinePaymentRequestBody = {
+        "policyType": "Renewal",
+        "paymentMethod": "Offline",
+        "source":"Retail",
+        "instrumentType": this.form.value.paymentOption,
+        "premiumAmount": this.form.value.premiumAmount.toString(),
+        "instrumentNo": this.form.value.instrumentNumber.toString(),
+        "instrumentDate": this.form.value.instrumentDate.toString(),
+        "policyNumber": this.policyNumber,
+        "proposalNum":"",
+        "agentCode": this.agentCode,
+        "bankName": this.form.value.bankName,
+        "ifsc": this.form.value.ifscCode,
+        "micrNo":"",
+        "documentId": this.documentId
+      };
+      console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
+      this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
+        (res:any)=>{
+          if(res.isSuccess){
+            console.log("offline payment reponse",res.data);
+            this.fullQuoteResponse=res.data;          
+            this.setSection('thankyou')
+            this.hideSection=false
+            this.isFeedBackModalVisible = true;
+          }
+          else{
+            this.toast.error({ detail: '',summary:res.message,duration: 3000});
+          }
+        },
+        (err)=>{
+          this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
+          console.log("error is coming from fullquote api");
+      })
+    }
   }
-
   getProducts() {
     const reqData = {agentCode: this.agentCode,};
     this.commonService.Getproductlist(reqData).subscribe({
