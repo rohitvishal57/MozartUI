@@ -30,7 +30,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { SharedModule } from './shared/shared.module';
 
 export function loadConfig(configService: ConfigService) {
-  return () => configService.loadConfig().toPromise();
+  return () => configService.loadConfig();
 }
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
