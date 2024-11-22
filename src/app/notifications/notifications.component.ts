@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { NotificationService } from './notification.service';
 import { ActivatedRoute } from '@angular/router';
+import HeaderInformation from '../layout/headerInfo';
 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
-  styleUrls: ['./notifications.component.scss']
+  styleUrls: ['./notifications.component.scss'],
+  providers:[HeaderInformation]
 })
 export class NotificationsComponent {
 
@@ -16,7 +18,7 @@ export class NotificationsComponent {
   showActivies : boolean = false;
 
 
-  constructor(private notificationService: NotificationService ,private route : ActivatedRoute) { }
+  constructor(private notificationService: NotificationService ,private route : ActivatedRoute,public headerInformation : HeaderInformation) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -48,7 +50,6 @@ export class NotificationsComponent {
   getNotifications(){
     this.showNotifications = true;
     this.showActivies = false;
-
   }
 
   getActivities(){
@@ -57,12 +58,22 @@ export class NotificationsComponent {
   }
 
 
-  formatDate(timestamp : any): string{
+  formatDate(timestamp: any): string {
     const date = new Date(timestamp);
+    const formattedDate = date.toLocaleDateString('en-CA');
+    return formattedDate;
+  }
 
-const formattedDate = date.toLocaleDateString('en-CA');
-
-return formattedDate;
+  getNotificationIcon(notification: any) {
+    const headerNotfication = this.headerInformation.notificationType.find((element: any) =>
+      element.notificationType.includes(notification.notificationType)
+    );
+    if (headerNotfication) {
+      return headerNotfication.icon;
+    }
+    else {
+      return;
+    }
   }
 
 }

@@ -5078,6 +5078,7 @@ export class YatraComponent {
         if (response?.data?.leadList) {
          this.quoteLeadInformation = response.data.leadList[0];
          this.dynamicFormGroup.patchValue({
+          proposalNumber :  this.proposalNum,
           productName: this.quoteLeadInformation.interestedProductName,
           memberDobProposer : this.datepipe.transform(this.quoteLeadInformation.dob, 'yyyy-MM-dd'),
           firstName: this.quoteLeadInformation.firstName,
@@ -5096,7 +5097,14 @@ export class YatraComponent {
           occupation : this.quoteLeadInformation.occupation
         });
         this.patchDropDownValues();
-      }
+
+        Object.keys(this.dynamicFormGroup.controls).forEach(controlName => {
+          const control = this.dynamicFormGroup.get(controlName);
+            if (control?.value) {
+              control.disable();
+            }
+          });
+        }
         else { console.error("API request was not successful."); }
       },
       (error) => {

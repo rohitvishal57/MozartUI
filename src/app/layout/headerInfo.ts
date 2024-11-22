@@ -41,4 +41,29 @@ downloadBrowcher : any[] =[
   { "productName": "Arogya Sanjeevani", "browcherURL": "" }
 ];
 
+notificationType : any[]=
+[
+  {
+    "notificationType": "Policy",
+    "icon": "assets/Img/icon_notification_card_products.svg"
+  },
+  {
+    "notificationType": "Leads",
+    "icon": "assets/Img/icon_notification_card_lead.svg"
+  },
+  {
+    "notificationType": "Profile",
+    "icon": "assets/Img/icon_notification_card_user.svg"
+  },
+  {
+    "notificationType": "Claims",
+    "icon": "assets/Img/icon_notification_card_claims.svg"
+  },
+  {
+    "notificationType": "Renewal",
+    "icon": "assets/Img/icon_notification_card_renewal.svg"
+  }
+]
+
+
 }
