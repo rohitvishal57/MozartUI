@@ -1027,4 +1027,31 @@ h2 {
         }
     }
 }
+.overlay_searchResults {
+    padding: 4px;
+    border-radius: 16px 0 16px  16px;
+    background: #ffffff;
+    border: 0px solid var(--white-color);
+}
+.overlay_searchResults .tableSubMain {
+    border-radius: 0;
+    padding: 0;
+}
+.overlay_searchResults .tableSubMain .tableSubMain .table {
+    font-size: 13px;
+}
+.overlay_searchResults .tableSubMain .table thead th:last-child {
+    border-radius: 0 0 0 0;
+}
+/* .dashboard_leadsMain {
+    padding-bottom: 16px;
+    .leads_content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .leads_item {
+            width: 100%;
+        }
+    }
+} */
 /*---dahboard new sections styles end---*/
