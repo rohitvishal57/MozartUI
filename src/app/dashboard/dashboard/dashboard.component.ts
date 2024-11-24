@@ -347,4 +347,9 @@ export class DashboardComponent {
       this.renewalDetail = res.data;
     });
   }
+
+  ngOnDestroy(): void {
+    this.renewalChart.destroy();
+    this.customerChart.destroy();
+  }
 }
