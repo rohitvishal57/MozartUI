@@ -73,7 +73,7 @@
             </div>
           </div>
         </div>
-        <section class="body_flex_column dashboard_improtantTasks suggested_styles commonSection" *ngIf="taskList">
+        <section class="body_flex_column dashboard_improtantTasks suggested_styles commonSection">
           <h2>{{"Important Tasks" | translate}}</h2>
           <div class="card_wraper improtantTasks">
             <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
@@ -173,7 +173,7 @@
           </div>
         </section>
 
-        <div class="contentBody dashboard_contentContainer" *ngIf="performanceCard">
+        <div class="contentBody dashboard_contentContainer">
           <div class="performance-overview">
             <header>
               <h2>{{"Performance Overview" | translate}}</h2>
@@ -227,7 +227,7 @@
           </div>
         </div>
 
-        <div class="contentBody dashboard_contentContainer" *ngIf="customerInfo">
+        <div class="contentBody dashboard_contentContainer">
           <div class="performance-overview">
             <header>
               <h2>My Customers</h2>
@@ -240,7 +240,7 @@
           </div>
         </div>
 
-        <section class="body_flex_row commonSection dashboard_LPR_main" *ngIf="tabsInfo">
+        <section class="body_flex_row commonSection dashboard_LPR_main">
           
           <ng-container *ngFor="let tab of tabsInfo">
             
@@ -280,7 +280,7 @@
         </section>
 
         
-          <div class="performance-overview" *ngIf="renewalDetail">
+          <div class="performance-overview">
             <header>
               <h2>My Renewals</h2>
             </header>

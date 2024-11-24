@@ -50,7 +50,7 @@ export class EncryptionInterceptor implements HttpInterceptor {
               const modifiedUrl = decryptedData?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
               window.open(modifiedUrl, "_blank");
             }
-            res.body.data = decryptedData.Data;
+            res.body.data = decryptedData.data;
             res.body && localStorage.setItem('token', res?.body.token);
           }
         }),

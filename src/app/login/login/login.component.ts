@@ -267,7 +267,7 @@ export class LoginComponent implements OnInit {
 
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody).subscribe({
         next: (res: any) => {
-          if (res.data && res.statusCode == '200' && res.isSuccess && res.token !== null) {
+          if (res.data && res.token !== null) {
             localStorage.setItem('userData', JSON.stringify(res.data));
             this.router.navigate(['dashboard']);
           } else {
