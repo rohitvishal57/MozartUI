@@ -15,6 +15,7 @@ import { LanguageService } from 'src/app/services/language.service';
 declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LeadsService } from 'src/app/leads/leads.service';
+import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 
 @Component({
   selector: 'app-yatra',
@@ -73,7 +74,7 @@ export class YatraComponent {
   formSequence: any[] = [];
   agentCode: any;
   productName: any;
-  applicableZone: any;
+  avaibleZone: any;
   productStartDate: any;
   productEndDate: any;
   parentControl: any;
@@ -122,7 +123,7 @@ export class YatraComponent {
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
-    private route: ActivatedRoute, private languageService: LanguageService,
+    private route: ActivatedRoute, private languageService: LanguageService,private aesEncryptService: AesEncryptionService,
     private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe) { }
 
   ngOnInit() {
@@ -142,8 +143,6 @@ export class YatraComponent {
     if (localStorage.getItem('code'))
       this.Code = localStorage.getItem('code');
 
-    this.applicableZone = history.state.productData.applicableZones
-    console.log(this.applicableZone);
 
     if (localStorage.getItem('agentCode'))
       this.agentCode = localStorage.getItem('agentCode');
@@ -1194,7 +1193,7 @@ export class YatraComponent {
     this.yatraService.getInsuredOccupation().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = res.data;
+        control.options = this.aesEncryptService.decrypt(res.data).data;
       },
       error: (err: any) => {
         console.error(err);
@@ -1206,7 +1205,7 @@ export class YatraComponent {
     this.yatraService.getProposerOccupation().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = res.data;
+        control.options = this.aesEncryptService.decrypt(res.data).data;
       },
       error: (err: any) => {
         console.error(err);
@@ -1217,8 +1216,8 @@ export class YatraComponent {
   getNatureOfDuty(control: any) {
     this.yatraService.getNatureOfDuty().subscribe({
       next: (res: any) => {
-        console.log(res);
-        control.options = res.data;
+        console.log(res);      
+        control.options = this.aesEncryptService.decrypt(res.data).data;
       },
       error: (err: any) => {
         console.error(err);
@@ -1305,7 +1304,7 @@ export class YatraComponent {
     this.yatraService.getNomineeRelationship().subscribe({
       next: (res: any) => {
         console.log(res);
-        control.options = res.data;
+        control.options = this.aesEncryptService.decrypt(res.data).data;
       },
       error: (err) => {
         console.error(err);
@@ -1321,7 +1320,7 @@ export class YatraComponent {
 
       this.yatraService.getAllBankDetails().subscribe({
         next: (res: any) => {
-          control.options = res.data;
+          control.options = this.aesEncryptService.decrypt(res.data).data;
         },
         error: (err) => {
           console.error(err);
@@ -2973,6 +2972,13 @@ export class YatraComponent {
                     if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
                   });
                   this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
+                  console.log(control);
+                  if(control.name == 'zone' && control.type == 'select'){
+                    control.options = this.formData.availableZones.map((zone:any) => ({
+                      name: zone,
+                      value: zone
+                    }));
+                  }
                 } else {
                   this.dynamicFormGroup.get(control.name)?.clearValidators();
                   this.dynamicFormGroup.get(control.name)?.reset();
