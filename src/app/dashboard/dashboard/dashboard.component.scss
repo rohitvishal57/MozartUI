@@ -1051,5 +1051,15 @@ h2 {
 .overlay_searchResults .tableSubMain .table thead th:last-child {
     border-radius: 0 0 0 0;
 }
-
+.dashboard_leadsMain {
+    padding-bottom: 16px;
+    .leads_content {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .leads_item {
+            width: 100%;
+        }
+    }
+}
 /*---dahboard new sections styles end---*/

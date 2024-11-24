@@ -14,7 +14,6 @@ import { DatePipe } from '@angular/common';
 import { TokenInterceptor } from './intercepter/token.interceptor';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { HeaderComponent } from './layout/header/header.component';
 import { SideNavbarComponent } from './layout/side-navbar/side-navbar.component';
 import { LoginModule } from './login/login/login.module';
@@ -61,7 +60,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProductsModule,
     ProfileModule,
     SharedModule,
-    NgxPaginationModule,
     EventsModule,
     TranslateModule.forRoot({
       loader: {

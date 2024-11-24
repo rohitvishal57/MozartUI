@@ -1,14 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
-import { forkJoin } from 'rxjs';
 import { DashboardService } from './dashboard.service';
-import { AgGauge } from "ag-charts-angular";
-import { AgRadialGaugeOptions } from "ag-charts-enterprise";
-import "ag-charts-enterprise";
+import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,32 +16,13 @@ export class DashboardComponent {
   showCard: boolean = false;
   showDropdownsFlag: boolean = false;
   profileDetails: any;
-
-  public options: AgRadialGaugeOptions;
-
-  taskDetailsList = [
-    {
-      title: 'Rohini Pandey',
-      desc: 'Your customers payment had failed! get them to retry payment.',
-      redirectLink: 'Resend payment link to rohini',
-    },
-    {
-      title: 'Alok Shah',
-      desc: 'Document requested from Mr. Alos is yet to be received. ',
-      redirectLink: 'Send a reminder to Alok',
-    },
-    {
-      title: 'Rohini Pandey',
-      desc: 'Your customers payment had failed! get them to retry payment.',
-      redirectLink: 'Resend payment link to rohini',
-    },
-    {
-      title: 'Alok Shah',
-      desc: 'Document requested from Mr. Alos is yet to be received. ',
-      redirectLink: 'Send a reminder to Alok',
-    }
-  ]
-
+  searchedData: any;
+  taskDetailsList: any = [];
+  customerInfo: any;
+  businessInfo: any;
+  public customerChart: any;
+  public renewalChart: any;
+  showSearchedResults = false;
   taskList = [
     {
       taskHeader: 'Task 1',
@@ -62,416 +40,15 @@ export class DashboardComponent {
       taskStatus: 'Do this to achieve 75% of your target'
     }
   ]
-
-  performanceCard = [
-    {
-      title: 'Policies Sold',
-      value: '1295',
-      description: 'You seem to be selling a majority of Activ Fit plans',
-      icon: 'assets/Img/icon_dashboard_policysold.svg',
-      subIcon: 'assets/Img/icon_price_tag.svg',
-      type: 'text',
-      class: ''
-    },
-    {
-      title: 'Premium',
-      value: '₹ 369.96 L',
-      description: '78% of monthly goal achieved',
-      icon: 'assets/Img/icon_dashboard_premium.svg',
-      type: 'progress',
-      progress: 78,
-      class: 'premium'
-
-    },
-    {
-      title: 'Commission Earned',
-      value: '₹ 50,000',
-      description: 'You can potentially earn 10,000 more with just 2 more policies',
-      icon: 'assets/Img/icon_dashboard_healthreturn.svg',
-      type: 'action',
-      class: 'commission-earned'
-
-    },
-    {
-      title: 'My Goals',
-      value: '',
-      description: 'Achievement',
-      icon: 'assets/Img/icon_dashboard_myperformance.svg',
-      type: 'gauge',
-      progress: '25%',
-      class: 'my-goals'
-
-    }
-  ];
-
-  baseQuotes = [
-    {
-      quoteName: 'Base Quote 1',
-      subQuoteName: 'Sub Quote 1',
-      actionButtons: [
-        'edit-pen', 'renew', 'detail'
-      ],
-      renewInfo: {
-        product: 'Active User',
-        policyNo: 'Active User',
-        proposer: 'sukhadev',
-        renewalPremium: 'Active User',
-        mobileNo: 'Active User',
-        dateofRenewal: 'Active User',
-
-        modifiedDetails: {
-          members: '1',
-          tenure: '1 year'
-        }
-
-      }
-    },
-    {
-      quoteName: 'Base Quote 2',
-      subQuoteName: 'Sub Quote 2',
-      actionButtons: [
-        'edit-pen', 'renew', 'detail'
-      ],
-      renewInfo: {
-        product: 'Active User',
-        policyNo: 'Active User',
-        proposer: 'sukhadev',
-        renewalPremium: 'Active User',
-        mobileNo: 'Active User',
-        dateofRenewal: 'Active User',
-
-        modifiedDetails: {
-          members: '1',
-          tenure: '1 year'
-        }
-
-      }
-    },
-    {
-      quoteName: 'Base Quote 3',
-      subQuoteName: 'Sub Quote 3',
-      actionButtons: [
-        'edit-pen', 'renew', 'detail'
-      ],
-      renewInfo: {
-        product: 'Active User',
-        policyNo: 'Active User',
-        proposer: 'sukhadev',
-        renewalPremium: 'Active User',
-        mobileNo: 'Active User',
-        dateofRenewal: 'Active User',
-
-        modifiedDetails: {
-          members: '1',
-          tenure: '1 year'
-        }
-
-      }
-    }
-  ]
-
-  tabsInfo = [
-    {
-      tabName: 'Leads',
-      category: [
-        {
-          name: 'open',
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        },
-        {
-          name: 'Inprogress',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentredirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        },
-        {
-          name: 'won',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        },
-        {
-          name: 'lost',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      tabName: 'Proposal',
-      category: [
-        {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        },
-        {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        },
-        {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      tabName: 'Renewals',
-      category: [
-        {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        },
-        {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        },
-        {
-          name: 'open',
-
-          catInfoList: [
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            },
-            {
-              name: 'Amit Kumar',
-              status: 'Member Detailing Pending',
-              desc: 'Lead Created',
-              noteInfo: 'Your customers payment had failed! get them to retry payment.',
-              redirentlink: 'Resend payment link to Rohini'
-            }
-          ]
-        }
-      ]
-    }
-
-  ];
-
+  performanceCard: any = [];
+  tabsInfo: any = [];
+  renewalDetail: any;
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
-    private translateService: TranslateService, private dashboardService : DashboardService) {
-      this.options = {
-        type: "radial-gauge",
-        value: 80,
-        scale: {
-          min: 0,
-          max: 100,
-        },
-    };
+    private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
+
   }
+
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
@@ -480,7 +57,6 @@ export class DashboardComponent {
         }
       });
     });
-    // this.combineCalls()
     const reqData = {
       "agentCode": localStorage.getItem('agentCode')
     }
@@ -488,25 +64,9 @@ export class DashboardComponent {
       if (res.isSuccess) {
         this.profileDetails = res.data;
       }
-    })
-  }
-
-  combineCalls(){
-    const reqData = {
-      "agentCode": localStorage.getItem('agentCode')
-    }
-    const payload = {
-      "filterType": "Last7Days"
-    }
-    forkJoin({
-        profileDetails : this.profileService.getProfileDetails(reqData),
-        leadDetails : this.dashboardService.fetchLeadStatusCount(payload),
-        renewalDetails : this.dashboardService.fetchRenewalStatusCount(payload),
-        proposalDetails : this.dashboardService.fetchProposalStatusCount(payload),
-
-    }).subscribe((data : any) =>{
-        console.log(data)
-    })
+    });
+    this.fetchWidgets();
+    this.createRenewChart();
   }
 
   getTimeOfDay() {
@@ -532,11 +92,13 @@ export class DashboardComponent {
     moveItemInArray(this.performanceCard, event.previousIndex, event.currentIndex);
   }
 
+  dropTabs(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
+  }
+
   dropTaskDetail(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.taskDetailsList, event.previousIndex, event.currentIndex);
   }
-
-
 
   getQuote() {
     this.showCard = true;
@@ -559,5 +121,230 @@ export class DashboardComponent {
       contentBlock.style.display = 'none';
     }
   }
-}
 
+  getData() {
+    return [
+      { asset: "Stocks", amount: 60000 },
+      { asset: "Bonds", amount: 40000 },
+      { asset: "Cash", amount: 7000 },
+      { asset: "Real Estate", amount: 5000 },
+      { asset: "Commodities", amount: 3000 },
+    ];
+  }
+
+  onSearch(ev?: any) {
+    const obj = {
+      "agentCode": localStorage.getItem('agentCode'),
+      "searchValue": ev.target.value
+    }
+    this.dashboardService.searchByPrefix(obj).subscribe(res => {
+      this.searchedData = res?.data;
+      this.showSearchedResults = true;
+    })
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent): void {
+    if (this.el.nativeElement.contains(event.target)) {
+      this.showSearchedResults = false;
+    }
+  }
+
+  onRedirectBasedonSource(data: any) {
+    if (data?.searchValue.includes('UPL')) {
+      alert('redirect to lead')
+    }
+  }
+
+  fetchWidgets() {
+    const arr = [
+      {
+        name: 'QuickAction', isFilter: false
+      },
+      {
+        name: 'Performance', isFilter: true, filterType: 'Monthly'
+      },
+      {
+        name: 'Business', isFilter: true, filterType: 'LastMonth'
+      },
+      {
+        name: 'Customer', isFilter: false
+      }
+    ];
+
+    arr.forEach(element => {
+
+      const obj = {
+        "WidgetName": element.name,
+        "FilterType": element.isFilter ? element.filterType : '',
+        "AgentCode": localStorage.getItem('agentCode')
+      }
+
+      switch (element.name) {
+        case 'Performance':
+
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
+            console.log('performance', res.data)
+            res.data.length && Object.keys(res.data[0]).forEach(el => {
+              switch (el) {
+                case 'nops':
+                  const nops = {
+                    title: 'Policies Sold',
+                    value: res.data[0][el],
+                    // description: 'You seem to be selling a majority of Activ Fit plans',
+                    icon: 'assets/Img/icon_dashboard_policysold.svg',
+                    // subIcon: 'assets/Img/icon_price_tag.svg',
+                    type: 'text',
+                    class: ''
+                  }
+                  this.performanceCard.push(nops)
+                  break;
+
+                case 'premiumEarned':
+                  const premiumEarned = {
+                    title: 'Premium',
+                    value: res.data[0][el],
+                    // description: '78% of monthly goal achieved',
+                    icon: 'assets/Img/icon_dashboard_premium.svg',
+                    type: 'progress',
+                    progress: res.data[0][el],
+                    class: 'premium'
+                  }
+                  this.performanceCard.push(premiumEarned)
+                  break;
+
+                case 'commissionEarned':
+                  const commissionEarned = {
+                    title: 'Commission Earned',
+                    value: res.data[0][el],
+                    // description: 'You can potentially earn 10,000 more with just 2 more policies',
+                    icon: 'assets/Img/icon_dashboard_healthreturn.svg',
+                    type: 'action',
+                    class: 'commission-earned'
+                  }
+                  this.performanceCard.push(commissionEarned)
+                  break;
+
+                case 'achievementsPercentage':
+                  const achievementsPercentage = {
+                    title: 'My Goals',
+                    value: res.data[0][el],
+                    // description: 'Achievement',
+                    icon: 'assets/Img/icon_dashboard_myperformance.svg',
+                    type: 'gauge',
+                    progress: res.data[0][el],
+                    class: 'my-goals'
+                  }
+                  this.performanceCard.push(achievementsPercentage)
+                  break;
+
+                default:
+                  break;
+              }
+            })
+          })
+          break;
+
+        case 'Customer':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
+            console.log('customer', res.data)
+            this.customerInfo = res.data;
+            this.createChart();
+          })
+          break;
+
+        case 'Business':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
+            console.log('Business', res.data);
+            this.tabsInfo = [
+              {
+                tabName: 'Leads',
+                category: res.data.filter((item: any) => item.dataType === "Lead").map((item: any) => ({
+
+                  name: item.status,
+                  count: item.count
+                }))
+              },
+              {
+                tabName: 'Proposals',
+                category: res.data.filter((item: any) => item.dataType === "Proposal").map((item: any) => ({
+
+                  name: item.status,
+                  count: item.count
+                }))
+              },
+              // {
+              //   tabName: 'Renewals',
+              //   category: res.data.filter((item: any) => item.dataType === "Renewal").map((item: any) => ({
+              //     name: item.status,
+              //     count: item.count
+              //   }))
+              // }
+            ];
+            return this.tabsInfo
+          })
+          break;
+
+        default:
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
+            console.log('Quick action', res.data);
+
+
+          })
+          break;
+      }
+    });
+  }
+
+  createChart(): void {
+    this.customerChart = new Chart("MyChart", {
+      type: 'doughnut',
+      data: {
+        labels: [
+          'Total Customers ',
+          'Active Customers',
+          'InActive Customers'
+        ],
+        datasets: [{
+          label: 'My First Dataset',
+          data: [this.customerInfo.totalCustomerCount, this.customerInfo.activeCustomerCount, this.customerInfo.totalCustomerCount - this.customerInfo.activeCustomerCount],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+          ],
+          hoverOffset: 4
+        }]
+      }
+    });
+  }
+
+  createRenewChart() {
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    this.renewalChart = this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(data => {
+      console.log('renew', data)
+      this.renewalChart = new Chart("renew", {
+        type: 'doughnut',
+        data: {
+          labels: [
+            'Persistency Percentage'
+          ],
+          datasets: [{
+            // label: 'My First Dataset',
+            data: [data.data[0].persistencyPercentage],
+            backgroundColor: [
+              'rgb(255, 99, 132)'
+            ],
+            hoverOffset: 4
+          }]
+        }
+      });
+    });
+
+    this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
+      this.renewalDetail = res.data;
+    });
+  }
+}

@@ -118,5 +118,9 @@ export const environment = {
     getNotification: "api/quote/notificationlist?agentcode=",
     markAllReadNotifications: "api/quote/readall?agentCode=",
     markNotification: "api/quote/notificationbyid?id=",
-    uploadDocument: "api/yatra/uploaddocument"
+    uploadDocument: "api/yatra/uploaddocument",
+    searchDeytailsByPrfix:"api/quote/SearchLeadPolicyClaim",
+    fetchPermoranceDetails:"api/quote/GetWidgetData",
+    fetchPersistencyPercentage:"api/quote/GetPersistencyPercentage",
+    GetDueRenewals:"api/quote/GetDueRenewals"
   }

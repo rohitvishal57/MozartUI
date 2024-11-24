@@ -1,0 +1,42 @@
+<div class="gauge-container">
+    <ng-container [ngSwitch]="guageType">
+        <div *ngSwitchCase="'circular'">
+            <svg viewBox="0 0 36 36" class="circular-chart">
+                <!-- Background circle -->
+                <path class="circle-bg" d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831" />
+
+                <!-- Gauge progress -->
+                <path class="circle" [attr.stroke-dasharray]="progress + ', 100'" d="M18 2.0845
+               a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831" />
+
+                <!-- Text in the center -->
+                <text x="18" y="20.35" class="percentage">{{ progress }}%</text>
+            </svg>
+        </div>
+        <div *ngSwitchCase="'half-moon'">
+            <div class="gauge-container">
+                <svg class="half-moon-gauge" viewBox="0 0 100 50">
+                    <!-- Background Half Circle -->
+                    <path class="half-circle-bg" d="M 0 50 A 50 50 0 0 1 100 50" fill="none" stroke="#e0e0e0"
+                        stroke-width="10" />
+                    <!-- Progress Half Circle -->
+                    <path class="half-circle-progress" [attr.d]="getProgressPath()" fill="none" stroke="#4caf50"
+                        stroke-width="10" />
+                    <!-- Progress Text -->
+                    <text x="50" y="35" text-anchor="middle" class="gauge-text">{{ progress }}%</text>
+                </svg>
+            </div>
+        </div>
+        <div *ngSwitchDefault>
+            <div class="gauge-container">
+                <mat-progress-bar mode="determinate" [value]="progress" [color]="'primary'"
+                    class="linear-gauge"></mat-progress-bar>
+                <!-- <div class="gauge-label">{{ progress }}%</div> -->
+            </div>
+        </div>
+    </ng-container>
+
+</div>
