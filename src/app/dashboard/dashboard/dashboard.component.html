@@ -260,12 +260,7 @@
           <div class="body_flex_row mt-3">
             <ng-container *ngFor="let tab of tabsInfo">
               <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-<<<<<<< Updated upstream
-                <!-- <h6>Total {{tab.tabName}}</h6> -->
-                <header class="leads_itemHeader" ><span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>262</label></header>
-=======
                 <header class="leads_itemHeader" ><span>Total {{tab.tabName}}</span><label>{{tab.totalCount}}</label></header>
->>>>>>> Stashed changes
                 <div class="leads_content leads_contentDashboard">
                   <ng-container *ngFor="let buz of tab.category">
                     <div class="leads_item_contentDashboard" [ngSwitch]="tab.tabName">
