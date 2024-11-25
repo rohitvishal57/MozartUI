@@ -318,7 +318,7 @@ export class DashboardComponent {
             // label: 'My First Dataset',
             data: [data.data[0].persistencyPercentage],
             backgroundColor: [
-              'rgb(255, 99, 132)'
+              '#D0F1E5'
             ],
             hoverOffset: 4
           }]

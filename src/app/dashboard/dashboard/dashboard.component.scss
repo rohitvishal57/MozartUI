@@ -1089,12 +1089,13 @@ h2 {
             header {
                 /* flex-direction: column;
                 align-items: flex-start; */
-                border-radius: 13px; 
+                border-radius: 13px;
                 font-size: 13px;
                 background:transparent;
                 padding: 0 10px;
                 label {
-                    font-size: 18px;   
+                    font-size: 18px; 
+                    font-weight: 500;   
                 }
             }
         }
@@ -1103,7 +1104,7 @@ h2 {
 .leads_itemHeader {
     display: flex;
     justify-content: space-between;
-    background: #E1E4E8;
+    background: #F0E7F6;
     font-weight: 600;
     font-size: 16px;
     padding: 4px 10px;
@@ -1112,10 +1113,10 @@ h2 {
         font-size: 18px;
     }
     &.leads_itemHeaderProposal{
-        background: #F0E7F6;
+        background: #FFDCE0;
     }
     &.leads_itemHeaderRenewal{
-        background: #FFDCE0;
+        background: #D0F1E5;
     }
 }
 .dashboard_mycustomers_main {
