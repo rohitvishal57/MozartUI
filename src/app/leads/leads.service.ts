@@ -88,9 +88,9 @@ export class LeadsService {
     return this.http.post<any>(url, requestBody);
   }
 
-  getOccupationInfo(requestBody:any):Observable<any>{
+  getOccupationInfo():Observable<any>{
     const getOccupationRequestURL = this.configService.config.baseUrl + this.configService.config.getProposerOccupation;
-    return this.http.get<any>(getOccupationRequestURL, requestBody);
+    return this.http.get<any>(getOccupationRequestURL);
   }
 
   

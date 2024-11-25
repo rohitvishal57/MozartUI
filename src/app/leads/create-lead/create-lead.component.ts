@@ -508,7 +508,7 @@ export class CreateLeadComponent implements OnInit {
 
   fetchOccupationInfo() {
     console.log('this.submittedUser fetchOccupationInfo',this.submittedUser?.occupation);
-    this.leadsService.getOccupationInfo('').subscribe(
+    this.leadsService.getOccupationInfo().subscribe(
       (response) => {
         if(response?.isSuccess){
           this.occupationInfo =  response?.data;

@@ -68,8 +68,9 @@ export class EncryptionInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       tap((res: any) => {
-        if (res.body && res?.body?.isSuccess) {
-          res.body.data = this.aesEncryptService.decrypt(res?.body?.data);
+        if (res.body && res?.body?.data) {
+          res.body && localStorage.setItem('token', res?.body.token);
+          res.body = this.aesEncryptService.decrypt(res?.body?.data);
         }
       }),
       finalize(() => this.loadingService.hide())
