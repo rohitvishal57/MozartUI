@@ -23,26 +23,10 @@ export class DashboardComponent {
   public customerChart: any;
   public renewalChart: any;
   showSearchedResults = false;
-  taskList = [
-    {
-      taskHeader: 'Task 1',
-      subtaskHeaderDesc: 'Sub Task 1',
-      taskStatus: 'Do this to achieve 75% of your target'
-    },
-    {
-      taskHeader: 'Task 2',
-      subtaskHeaderDesc: 'Sub Task 2',
-      taskStatus: 'Do this to achieve 75% of your target'
-    },
-    {
-      taskHeader: 'Task 3',
-      subtaskHeaderDesc: 'Sub Task 3',
-      taskStatus: 'Do this to achieve 75% of your target'
-    }
-  ]
   performanceCard: any = [];
   tabsInfo: any = [];
   renewalDetail: any;
+  quickActionDetails : any;
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
@@ -85,7 +69,7 @@ export class DashboardComponent {
   }
 
   dropTasks(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.taskList, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.quickActionDetails?.eventDetails, event.previousIndex, event.currentIndex);
   }
 
   dropPerformance(event: CdkDragDrop<any[]>) {
@@ -191,9 +175,9 @@ export class DashboardComponent {
                   const nops = {
                     title: 'Policies Sold',
                     value: res.data[0][el],
-                    // description: 'You seem to be selling a majority of Activ Fit plans',
+                    description: `Policies sold as per selected range ${res.data[0][el]}` ,
                     icon: 'assets/Img/icon_dashboard_policysold.svg',
-                    // subIcon: 'assets/Img/icon_price_tag.svg',
+                    subIcon: 'assets/Img/icon_price_tag.svg',
                     type: 'text',
                     class: ''
                   }
@@ -204,7 +188,7 @@ export class DashboardComponent {
                   const premiumEarned = {
                     title: 'Premium',
                     value: res.data[0][el],
-                    // description: '78% of monthly goal achieved',
+                    description: `78% of monthly goal achieved`,
                     icon: 'assets/Img/icon_dashboard_premium.svg',
                     type: 'progress',
                     progress: res.data[0][el],
@@ -217,7 +201,7 @@ export class DashboardComponent {
                   const commissionEarned = {
                     title: 'Commission Earned',
                     value: res.data[0][el],
-                    // description: 'You can potentially earn 10,000 more with just 2 more policies',
+                    description: `You can potentially earned ${ res.data[0][el]}`,
                     icon: 'assets/Img/icon_dashboard_healthreturn.svg',
                     type: 'action',
                     class: 'commission-earned'
@@ -229,7 +213,7 @@ export class DashboardComponent {
                   const achievementsPercentage = {
                     title: 'My Goals',
                     value: res.data[0][el],
-                    // description: 'Achievement',
+                    description: 'Achievement',
                     icon: 'assets/Img/icon_dashboard_myperformance.svg',
                     type: 'gauge',
                     progress: res.data[0][el],
@@ -288,8 +272,7 @@ export class DashboardComponent {
         default:
           this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
             console.log('Quick action', res.data);
-
-
+            this.quickActionDetails = res.data;
           })
           break;
       }
@@ -346,6 +329,13 @@ export class DashboardComponent {
     this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
       this.renewalDetail = res.data;
     });
+  }
+
+  ngAfterViewInit(): void {
+    const chartCanvas = document.getElementById('myChart') as HTMLCanvasElement;
+    const chartCanvasRenew = document.getElementById('renew') as HTMLCanvasElement;
+    chartCanvas.width  = 300;
+    chartCanvas.height = 200;
   }
 
   ngOnDestroy(): void {

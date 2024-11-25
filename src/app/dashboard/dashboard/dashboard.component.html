@@ -78,12 +78,10 @@
           <div class="card_wraper improtantTasks">
             <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
               (cdkDropListDropped)="dropTasks($event)">
-              <ng-container *ngFor="let tasks of taskList">
+              <ng-container *ngFor="let tasks of quickActionDetails?.eventDetails">
                 <div class="card_item" cdkDrag>
-                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.taskStatus |
-                    translate}}<img src="assets/Img/icon_star_four_points.svg"></div>
-                  <h5>{{tasks.taskHeader | translate}}</h5>
-                  <p>{{tasks.subtaskHeaderDesc | translate}}</p>
+                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">Meet this target today<img src="assets/Img/icon_star_four_points.svg"></div>
+                  <h5>{{tasks?.event | translate}}</h5>
                 </div>
               </ng-container>
             </div>
