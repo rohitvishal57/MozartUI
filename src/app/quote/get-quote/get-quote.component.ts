@@ -176,7 +176,7 @@ export class GetQuoteComponent {
   ];
   constructor(private fb: FormBuilder,private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,private router: Router) { }
 
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
@@ -191,7 +191,7 @@ export class GetQuoteComponent {
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     let formData: any;
-    if (sessionStorage.getItem('formData') && sessionStorage.getItem('relations')) {
+    if (sessionStorage.getItem('formData') && sessionStorage.getItem('relations') && !this.router.url.includes('dashboard')) {
       formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
       this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
     }
@@ -465,7 +465,7 @@ export class GetQuoteComponent {
             this.toast.error({
               detail: "Error",
               summary: "Please fill valid Date.",
-              duration: 1000
+              duration: 3000
             });
           }
           else{
@@ -494,7 +494,7 @@ export class GetQuoteComponent {
       this.toast.error({
         detail: "Error",
         summary: "Please fill valid Date.",
-        duration: 1000
+        duration: 3000
       });
     }
     // this.saveDataToStorage(); // Save after updating the age
@@ -854,7 +854,7 @@ export class GetQuoteComponent {
         this.toast.error({
           detail: 'Error',
           summary: 'Please fill valid Date.',
-          duration: 1000,
+          duration: 3000,
         });
         isValid = true;
         return; // Stop further execution if validation fails
