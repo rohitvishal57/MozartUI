@@ -9,7 +9,7 @@
         <form [formGroup]="loginForm" *ngIf="loginWithUsername">
           <div class="input-block form-floating input-block-renew">
             <input class="form-control input-textBox" type="text" id="userName" name="userName" placeholder="" formControlName="userName" (keydown)="onKeyDownEvent()">
-            <label for="userName">AgentCode/Email/IRDA License Number<span class="text-danger">*</span></label>
+            <label for="userName">{{"AgentCode/Email/IRDA License Number" | translate}}<span class="text-danger">*</span></label>
             <small *ngIf="loginForm.controls['userName'].touched && !loginForm.controls['userName'].hasError('maxlength') && loginForm.controls['userName'].hasError('required')" class="text-danger">{{"AgentCode/Email/IRDA License Number is required" | translate}}</small>
             <small *ngIf="isSubmitted" class="text-danger">{{userErrorMsg | translate}}</small>
           </div>
@@ -17,7 +17,7 @@
           <div class="d-flex flex-row justify-content-between captcha-container">
             <div class="col-6 input-block form-floating input-block-renew">
                 <input class="form-control input-textBox" id="captcha" name="captcha" placeholder="" (keydown)="onKeyDownEvent()" type="text" formControlName="captcha" />
-                <label for="captcha">Enter CAPTCHA<span class="text-danger">*</span></label>
+                <label for="captcha">{{"Enter CAPTCHA" | translate}}<span class="text-danger">*</span></label>
                 <small *ngIf="loginForm.controls['captcha'].touched && loginForm.controls['captcha'].hasError('required') && !isSubmitted" class="text-danger">{{"Captcha is required" | translate}}</small>
                 <small *ngIf="isSubmitted" class="text-danger">{{captchaErrorMsg | translate}}</small>
             </div>

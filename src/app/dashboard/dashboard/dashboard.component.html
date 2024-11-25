@@ -80,7 +80,7 @@
               (cdkDropListDropped)="dropTasks($event)">
               <ng-container *ngFor="let tasks of quickActionDetails?.eventDetails">
                 <div class="card_item" cdkDrag>
-                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">Meet this target today<img src="assets/Img/icon_star_four_points.svg"></div>
+                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{"Meet this target today" | translate}}<img src="assets/Img/icon_star_four_points.svg"></div>
                   <h5>{{tasks?.event | translate}}</h5>
                 </div>
               </ng-container>
@@ -227,13 +227,13 @@
 
 
         <section class="commonSection dashboard_LPR_main">
-          <h3>Business Summary</h3>
+          <h3>{{"Business Summary" | translate}}</h3>
           <div class="body_flex_row mt-3">
             <ng-container *ngFor="let tab of tabsInfo">
               
               <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                 <!-- <h6>Total {{tab.tabName}}</h6> -->
-                <header class="leads_itemHeader" ><span>Total {{tab.tabName}}</span><label>262</label></header>
+                <header class="leads_itemHeader" ><span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>262</label></header>
                 <div class="leads_content leads_contentDashboard">
                   <ng-container *ngFor="let buz of tab.category">
                     <div class="leads_item_contentDashboard" [ngSwitch]="tab.tabName">
@@ -266,7 +266,7 @@
             </ng-container>
             <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <!-- <h6>My Renewals</h6> -->
-              <header class="leads_itemHeader leads_itemHeaderRenewal" ><span>Total Renewals</span><label>262</label></header>
+              <header class="leads_itemHeader leads_itemHeaderRenewal" ><span>{{"Total Renewals" | translate}}</span><label>262</label></header>
               <div class="leads_content leads_contentDashboard">
                 <ng-container *ngFor="let buz of renewalDetail">
                   <div class="leads_item_contentDashboard">
@@ -289,7 +289,7 @@
         </section>
         <section class="body_flex_row commonSection dashboard_LPR_main dashboard_mycustomers_main">
           <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-            <h6>My Customers</h6>
+            <h6>{{"My Customers" | translate}}</h6>
             <div class="leads_content">
               <div class="chart-container" style="position: relative; height:30vh; width:100%">
                 <canvas id="MyChart" style="margin: auto;">{{ customerChart }}</canvas>
