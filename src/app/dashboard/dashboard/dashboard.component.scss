@@ -266,6 +266,13 @@ h2 {
         justify-content: space-around;
         font-weight: bold;
     }
+    
+}
+::ng-deep .gauge-label {
+    span {
+        position: relative;
+        top: -38px;
+    }
 }
 .badge {
     display: flex;
@@ -279,7 +286,24 @@ h2 {
         color:#a83abb;
     }
 }
-
+.progress-barMain {
+    ::ng-deep {
+        .mat-mdc-progress-bar .mdc-linear-progress__buffer-bar {
+            background-color: #E7FCF4;
+            border-radius: 20px;
+        }
+        .mdc-linear-progress__bar-inner {
+            border-color: #1F874C;
+        }
+        .mat-mdc-progress-bar {
+            --mdc-linear-progress-active-indicator-height: 6px;
+            --mdc-linear-progress-track-height: 13px;
+        }
+        .mdc-linear-progress__bar {
+            padding: 0 20px;
+        }
+    }
+}
 /*---dahboard new sections styles start---*/
 .section_fullWidth {
     width: 100%;
@@ -1122,6 +1146,35 @@ h2 {
 .dashboard_mycustomers_main {
     .dashboard_productTabs {
         width: 50%;
+    }
+}
+.allItems_improtantTasks {
+    .item_improtantTasks {
+        max-width: 33%;
+        flex: auto;
+        .card_wraper {
+            max-height: 150px;
+            overflow-y: auto;
+            &::-webkit-scrollbar-button {
+                width: 0px;
+                height: 0;
+              }
+            &::-webkit-scrollbar-thumb {
+                background: #e9d6a7;
+                border: 1px #e9d6a7 solid;
+                border-radius: 20px;
+              }
+            &::-webkit-scrollbar-track-piece {
+                background: #fff4d9;
+                border-radius: 20px;
+              }
+            .cardsub_wraper{
+                flex-direction: column;
+                .card_item {
+                    flex: auto;
+                }
+            }
+        } 
     }
 }
 /*---dahboard new sections styles end---*/

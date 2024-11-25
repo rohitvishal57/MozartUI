@@ -74,45 +74,51 @@
           </div>
         </div>
 
-        <h2>{{"Important Tasks" | translate}}</h2>
-        <section class="body_flex_column dashboard_improtantTasks suggested_styles commonSection">
-          <h2>Events</h2>
-          <div class="card_wraper improtantTasks">
-            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
-              (cdkDropListDropped)="dropTasks($event)">
-              <ng-container *ngFor="let tasks of quickActionDetails?.eventDetails">
-                <div class="card_item" cdkDrag>
-                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{"Meet this target today" | translate}}<img src="assets/Img/icon_star_four_points.svg"></div>
-                  <h5>{{tasks?.event | translate}}</h5>
+        <section class="commonSection">
+          <h3>{{"Important Tasks" | translate}}</h3>
+          <div class="body_flex_row dashboard_improtantTasks suggested_styles allItems_improtantTasks commonSection mt-3">
+            <div class="item_improtantTasks">
+              <h5>Events</h5>
+              <div class="card_wraper improtantTasks mt-3">
+                <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
+                  (cdkDropListDropped)="dropTasks($event)">
+                  <ng-container *ngFor="let tasks of quickActionDetails?.eventDetails">
+                    <div class="card_item" cdkDrag>
+                      <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{"Meet this target today" | translate}}<img src="assets/Img/icon_star_four_points.svg"></div>
+                      <h5>{{tasks?.event | translate}}</h5>
+                    </div>
+                  </ng-container>
                 </div>
-              </ng-container>
+              </div>
             </div>
-          </div>
-
-          <h2>Birthdays</h2>
-          <div class="card_wraper improtantTasks">
-            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
-              (cdkDropListDropped)="dropTasks($event)">
-              <ng-container *ngFor="let tasks of quickActionDetails?.birthdayDetails">
-                <div class="card_item" cdkDrag>
-                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.name}}<img src="assets/Img/icon_star_four_points.svg"></div>
-                  <h5>{{tasks?.dob}}</h5>
-                  <p>{{tasks.mobile}}</p>
+            <div class="item_improtantTasks">
+              <h5>Birthdays</h5>
+              <div class="card_wraper improtantTasks mt-3">
+                <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
+                  (cdkDropListDropped)="dropTasks($event)">
+                  <ng-container *ngFor="let tasks of quickActionDetails?.birthdayDetails">
+                    <div class="card_item" cdkDrag>
+                      <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.name}}<img src="assets/Img/icon_star_four_points.svg"></div>
+                      <h5>{{tasks?.dob}}</h5>
+                      <p>{{tasks.mobile}}</p>
+                    </div>
+                  </ng-container>
                 </div>
-              </ng-container>
+              </div>
             </div>
-          </div>
-
-          <h2>Notifications</h2>
-          <div class="card_wraper improtantTasks">
-            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
-              (cdkDropListDropped)="dropTasks($event)">
-              <ng-container *ngFor="let tasks of quickActionDetails?.notifications">
-                <div class="card_item" cdkDrag>
-                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">Meet this target today<img src="assets/Img/icon_star_four_points.svg"></div>
-                  <h5>{{tasks?.description}}</h5>
+            <div class="item_improtantTasks">
+              <h5>Notifications</h5>
+              <div class="card_wraper improtantTasks mt-3">
+                <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
+                  (cdkDropListDropped)="dropTasks($event)">
+                  <ng-container *ngFor="let tasks of quickActionDetails?.notifications">
+                    <div class="card_item" cdkDrag>
+                      <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">Meet this target today<img src="assets/Img/icon_star_four_points.svg"></div>
+                      <h5>{{tasks?.description}}</h5>
+                    </div>
+                  </ng-container>
                 </div>
-              </ng-container>
+              </div>
             </div>
           </div>
         </section>
@@ -260,7 +266,7 @@
           <div class="body_flex_row mt-3">
             <ng-container *ngFor="let tab of tabsInfo">
               <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-                <header class="leads_itemHeader" ><span>Total {{tab.tabName}}</span><label>{{tab.totalCount}}</label></header>
+                <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }"><span>Total {{tab.tabName}}</span><label>{{tab.totalCount}}</label></header>
                 <div class="leads_content leads_contentDashboard">
                   <ng-container *ngFor="let buz of tab.category">
                     <div class="leads_item_contentDashboard" [ngSwitch]="tab.tabName">
