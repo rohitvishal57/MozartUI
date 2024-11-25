@@ -102,9 +102,9 @@
                                               <label>{{"Cover" | translate}}</label>
                                               <h6>₹ {{ member.SumInsured | number:'1.0-0' }}</h6>
                                           </div>
-                                          <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5002,'editMember',i)">
+                                          <!-- <div class="data-item data-item-10 data-itemEdit" (click)="selectButton(5002,'editMember',i)">
                                               <button type="button" id="editMember" name="editMember" value="dataedit" class="btn_editGrey"></button>
-                                          </div>
+                                          </div> -->
                                       </div>
                                   </div>
                                   <div class="detailsBorder detailsBorder-w104"></div>
@@ -183,7 +183,7 @@
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="breadcrumbNav">
-                                  <a href="#" class="active">{{"Member Details" | translate}}</a><img src="assets/Img/icon_right_arrow_red.svg"><a href="#" class="">{{"Additional Information" | translate}}</a>
+                                  <a class="active" (click)="selectButton(5002)">{{"Member Details" | translate}}</a><img src="assets/Img/icon_right_arrow_red.svg"><a class="" (click)="selectButton(5003)">{{"Additional Information" | translate}}</a>
                               </div>
                               <div class="detailsRow">
                                   <div class="detailsHeading-12">{{"Personal Details" | translate}}</div>
@@ -302,23 +302,7 @@
                                         <label for="gender">{{"Sum Insured" | translate}} *</label>
                                         <span class="ui-error" *ngIf="form.get('SumInsured')?.invalid && (form.get('SumInsured')?.touched || memberDetails)">{{"Sum Insured is required field" | translate}}</span>
                                     </div>
-                                </div>
-                                
-                                  <!-- <div class="detailsHeading-12">Sum Insured</div>
-                                  <div class="row">
-                                    <div class="slider">
-                                        <div class="slider-container">
-                                            <ngx-slider [(value)]="selectedSumInsured" [options]="sliderOptions"(valueChange)="onSumInsuredChange($event)"></ngx-slider>
-                                            <div class="tick-labels">
-                                              <span *ngFor="let tick of sliderOptions.stepsArray">{{ formatTickLabel(tick.value, true) }}</span>
-                                            </div>
-                                          </div>
-                                          <span class="selected-value">{{ formatTickLabel(selectedSumInsured,false) }}</span>
-                                      </div>
-                                    <div class="col-12">
-                                        <div class="tipInfo_org"><img src="assets/Img/icon_lightbulb.svg">Proposer can have increased cover of 15L with only ₹200 addition to the previous premium</div>
-                                    </div>
-                                </div> -->
+                                  </div>
                                   <div class="detailsHeading-12">{{"Professional Details" | translate}}</div>
                                   <div class="row">
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -829,14 +813,14 @@
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="showAppointee">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="appointee_name" name="appointee_name" formControlName="" placeholder="" class="form-control input-textBox">
+                                            <input type="text" id="appointee_name" name="appointee_name" formControlName="appointee_name" placeholder="" class="form-control input-textBox">
                                             <label for="appointee_name">{{"Appointee Name" | translate}} *</label>
                                             <span class="ui-error" *ngIf="form?.get('appointee_name')?.invalid && form?.get('appointee_name')?.touched">{{"Appointee Name is required field" | translate}}</span>
                                         </div>
                                       </div>
                                       <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="showAppointee">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="appointee_age" name="appointee_age" formControlName="" placeholder="" class="form-control input-textBox">
+                                            <input type="text" id="appointee_age" name="appointee_age" formControlName="appointee_age" placeholder="" class="form-control input-textBox">
                                             <label for="appointee_age">{{"Appointee Age" | translate}} *</label>
                                             <span class="ui-error" *ngIf="form?.get('appointee_age')?.invalid && form?.get('appointee_age')?.touched">{{"Appointee Age is required field" | translate}}</span>
                                         </div>
@@ -917,8 +901,10 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="number" id="account_Number" name="account_Number"formControlName="accountNo" placeholder="" class="form-control input-textBox">
                                             <label for="account_Number">{{"Account Number" | translate}}</label>
-                                            <span class="ui-error" *ngIf="form?.get('accountNo')?.invalid && form?.get('accountNo')?.touched">{{"Please enter Account Number" | translate}}</span>
-                                            <small class="ui-error block-show" *ngIf="form.get('accountNo')?.hasError('pattern')">{{"Account number allow 9 to 18 digits" | translate}}</small>
+                                            <span *ngIf="form?.get('accountNo')?.invalid && (form?.get('accountNo')?.touched || form?.get('accountNo')?.dirty)">
+                                                <small class="ui-error" *ngIf="form?.get('accountNo')?.hasError('required')">{{ "Please enter Account Number" | translate }}</small>
+                                                <small class="ui-error" *ngIf="form?.get('accountNo')?.hasError('pattern')">{{ "Account number allow 9 to 18 digits" | translate }}</small>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -978,14 +964,12 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode" >
                                             <label for="IFSC_Code">{{"IFSC Code" | translate}}</label>
-                                            <!-- <span class="ui-error" *ngIf="form?.get('ifsc')?.invalid && form.get('ifsc')?.touched">Please enter IFSC Code</span> -->
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="MICR_Code" name="MICR_Code" placeholder="" class="form-control input-textBox" formControlName="micrCode">
                                             <label for="MICR_Code">{{"MICR Code" | translate}}</label>
-                                            <!-- <span class="ui-error" *ngIf="form?.get('micr')?.invalid && form.get('micr')?.touched">Please enter MICR Code</span> -->
                                         </div>
                                     </div>
                                 </div>
@@ -1051,14 +1035,14 @@
                                     <div class="col-12">
                                         <div class="renew_optionalCoverages">
                                             <div class="input-checkbox-block checkbox_renew_optionalCoverages" *ngFor="let cover of optionalCovers; let i = index">
-                                                <div class="input-checkbox-feild">
+                                                <div class="input-checkbox-feild" data-bs-toggle="modal" data-bs-target="#roomModal">
                                                     <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" [checked]="selectedOptionalCoverages.includes(cover.featureName)" [disabled]="selectedOptionalCoverages.includes(cover.featureName)">
                                                     <label [for]="cover.featureName" [ngClass]="{'active': selectedOptionalCoverages.includes(cover.featureName)}"></label>
                                                 </div>
                                                 <div class="input-checkbox-feildInfo">
                                                     <em class="head">{{cover?.featureName}}</em>
                                                 </div>
-                                                <div class="input-checkbox-feildButton">
+                                                <div class="input-checkbox-feildButton" data-bs-toggle="modal" data-bs-target="#roomModal">
                                                     <button type="button" id="btn-changeMember-cover{{i}}" name="btn-changeMember-cover{{i}}" class="btn_pink btn_sm">Change Member</button>
                                                 </div>
                                             </div>
@@ -1092,14 +1076,14 @@
                                     <div class="col-12">
                                         <div class="renew_optionalCoverages">
                                             <div class="input-checkbox-block checkbox_renew_optionalCoverages" *ngFor="let cover of healthAddOns; let i = index">
-                                                <div class="input-checkbox-feild">
+                                                <div class="input-checkbox-feild" data-bs-toggle="modal" data-bs-target="#roomModal">
                                                     <input type="checkbox" [id]="cover.featureName" [value]="cover.featureName" class="input-check" [checked]="selectedHealthAddons.includes(cover.featureName)" [disabled]="selectedHealthAddons.includes(cover.featureName)">
                                                     <label [for]="cover.featureName" [ngClass]="{'active': selectedHealthAddons.includes(cover.featureName)}"></label>
                                                 </div>
                                                 <div class="input-checkbox-feildInfo">
                                                     <em class="head">{{cover?.featureName}}</em>
                                                 </div>
-                                                <div class="input-checkbox-feildButton">
+                                                <div class="input-checkbox-feildButton" data-bs-toggle="modal" data-bs-target="#roomModal">
                                                     <button type="button" id="btn-changeMember-addons{{i}}" name="btn-changeMember-addons{{i}}" class="btn_pink btn_sm">Change Member</button>
                                                 </div>
                                             </div>
@@ -1127,6 +1111,52 @@
             </div>
         </div>
       </div>
+      <!-- Modal Start-->
+   <div class="modal popupModalMain fade" id="roomModal" tabindex="-1" aria-labelledby="roomModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content modal-bg-clr">
+        <div class="modal-header">
+          <h5 class="modal-title" id="roomModalLabel">Select Member</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+              <div class="col-12" *ngFor="let member of renewalInfo?.response?.policyData[0]?.Members; let i = index">
+                  <div class="input-radio-block radio_roomInfo">
+                      <div class="input-checkbox-block checkbox_renew_optionalCoverages">
+                        <div class="input-checkbox-feild" >
+                            <input type="checkbox" id="memberCover{{ i }}" name="roomtype" value="" class="input-check" (change)="onCheckboxChange(i, $event)"/>
+                            <label for="memberCover{{ i }}"></label>
+                        </div>
+                        <div class="input-checkbox-feildInfo">
+                            <em class="head">{{ member.Relation | titlecase }}</em>
+                        </div>
+                    </div>
+                      <div class="row" >
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" >
+                            <div class="input-block form-floating input-block-renew">
+                                <select id="annualincomerange" name="annualincomerange" placeholder="" class="form-select input-selectBox">
+                                    <option value="">Choose..</option>
+                                    <option value="1000000">1000000</option>
+                                    <option value="1500000">1500000</option>
+                                    <option value="2000000">2000000</option>
+                                    <option value="2500000">2500000</option>
+                                    <option value="5000000">5000000</option>
+                                </select>
+                            </div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn_red btn_fullWidth" [disabled]="!isMemberRadioSelected">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal End-->
       <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'payment'" [ngClass]="{'m-auto': !hideSection}">
         <div class="bcc_main">
             <div class="accordionMain">
@@ -1213,7 +1243,7 @@
                                             </div>               
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="number" id="premium_Amount" name="premium_Amount" [(ngModel)]="renewalInfo.response.policyData[0].premium.Renewal_Gross_Premium" class="form-control input-textBox" formControlName="premiumAmount">
+                                                    <input type="number" id="premium_Amount" name="premium_Amount" [(ngModel)]="renewalInfo.response.policyData[0].premium.Renewal_Gross_Premium" class="form-control input-textBox" formControlName="premiumAmount" >
                                                     <label for="premium_Amount">{{"Premium Amount" | translate}}</label>
                                                 </div>
                                             </div>
@@ -1238,7 +1268,7 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" [matAutocomplete]="auto" [(ngModel)]="bankDetailsObject.bankName" formControlName="bankName" (focus)="openBankDropdown()" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
+                                                    <input class="form-control input-textBox" [matAutocomplete]="auto" formControlName="bankName" (focus)="openBankDropdown()" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
                                                      <label for="bankName">{{"Search Bank Name" | translate}}</label>
                                                      <span *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">
                                                         <small class="ui-error block-show" *ngIf="form.get('bankName')?.hasError('required')">{{"Bank Name is required." | translate}}</small>
@@ -1252,7 +1282,7 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" [matAutocomplete]="city" [(ngModel)]="bankDetailsObject.bankCity" formControlName="bankCity" (focus)="openCityDropdown()" (keydown)="filterCityList($event)"  placeholder="Search City Name"/>
+                                                    <input class="form-control input-textBox" [matAutocomplete]="city" formControlName="bankCity" (focus)="openCityDropdown()" (keydown)="filterCityList($event)"  placeholder="Search City Name"/>
                                                     <label for="bank_City">{{"Search Bank City" | translate}}</label>
                                                     <span *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">
                                                         <small class="ui-error block-show" *ngIf="form.get('bankCity')?.hasError('required')">{{"Bank City is required." | translate}}</small>
@@ -1266,7 +1296,7 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" [matAutocomplete]="branch" [(ngModel)]="bankDetailsObject.bankBranch" formControlName="bankBranch" (focus)="openBranchDropdown()" (keydown)="filterBranchList($event)" id="bank_Branch" name="bank_Branch" placeholder="Search Branch Name"/>
+                                                    <input class="form-control input-textBox" [matAutocomplete]="branch" formControlName="bankBranch" (focus)="openBranchDropdown()" (keydown)="filterBranchList($event)" id="bank_Branch" name="bank_Branch" placeholder="Search Branch Name"/>
                                                     <label for="bank_Branch">{{"Search Bank Branch" | translate}}</label>
                                                     <span *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">
                                                         <small class="ui-error block-show" *ngIf="form.get('bankBranch')?.hasError('required')">{{"Bank Branch is required." | translate}}</small>
@@ -1280,13 +1310,13 @@
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="text" id="IFSC_Code" name="IFSC_Code" [(ngModel)]="bankDetailsObject.ifscCode" placeholder="" class="form-control input-textBox" formControlName="ifscCode" >
+                                                    <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode" >
                                                     <label for="IFSC_Code">IFSC Code</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="text" id="MICR_Code" name="MICR_Code" [(ngModel)]="bankDetailsObject.micrCode" placeholder="" class="form-control input-textBox" formControlName="micrCode">
+                                                    <input type="text" id="MICR_Code" name="MICR_Code" placeholder="" class="form-control input-textBox" formControlName="micrCode">
                                                     <label for="MICR_Code">MICR Code</label>
                                                 </div>
                                             </div>

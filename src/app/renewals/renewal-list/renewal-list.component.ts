@@ -86,7 +86,7 @@ export class RenewalListComponent {
     this.renewalListRequestBody.pageNumber = this.page;
     this.renewalListRequestBody.pageSize = this.rows;    
     this.renewalService.getRenewalListApi(this.renewalListRequestBody).subscribe(
-      (response:any) => { 
+      (response:any) => {
         if (response.isSuccess) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
@@ -286,7 +286,7 @@ export class RenewalListComponent {
         const emailRequestBody = {
           agentCode: this.agentCode,
           emailId: "sona@gmail.com",
-          mobile: item.proposerMobileNumber,
+          mobile: item.proposerMobileNumber || "",
           eventName: "sending payment link to email",
           policyHolderFullName: item.proposerFirstName,
           renewedPolicyNumber: item.policyNumber,
@@ -345,7 +345,7 @@ export class RenewalListComponent {
           agentCode: this.agentCode,
           type: "DUE",
           customerName: item.proposerFirstName,
-          customerMobileNo: item.proposerMobileNumber,
+          customerMobileNo: item.proposerMobileNumber || "",
           agentMobileNo: "9177035634",
           eventName: "sending payment link to sms",
           dueDate: "",

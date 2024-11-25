@@ -222,11 +222,14 @@
 .pl-0 {
 	padding-left: 0;
 }
-// .bottomInfoMain{
-// 	z-index: 10;
-// }
+.bottomInfoMain{
+	z-index: 10;
+}
 .bottomCnt{
 	padding: 16px;
+}
+.modal-bg-clr{
+	background-color: var(--white-color);
 }
 
 
