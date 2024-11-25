@@ -71,7 +71,6 @@ export class LeadsListComponent {
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
-  formSequence: any[] = [];
   private allJsonFormData: any[] = [];
   formData: any = {};
   interestedProductName : string ='';
@@ -494,6 +493,7 @@ export class LeadsListComponent {
   }
 
   redirectProducts(lead: any) {
+    let formSequence :any;
     if (lead.interestedProductName ) {
    
       const reqData = {
@@ -512,9 +512,9 @@ export class LeadsListComponent {
       
             }
             const res = await firstValueFrom(this.common.Getformsequence(reqData));
-            this.formSequence = JSON.parse(res.data.formSequence);
-            if (this.formSequence != null && this.formSequence.length > 0) {
-              this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+            formSequence = JSON.parse(res.data.formSequence);
+            if (formSequence != null && formSequence.length > 0) {
+              formSequence.forEach(() => { this.allJsonFormData.push({}) });
               sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
             }
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
@@ -540,7 +540,7 @@ export class LeadsListComponent {
         
 
             this.router.navigate(['yatra'], {
-              state: { productData: productData, formSequence: this.formSequence }
+              state: { productData: productData, formSequence: formSequence }
            });
           
         },
