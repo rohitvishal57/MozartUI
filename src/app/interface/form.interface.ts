@@ -21,6 +21,9 @@ export interface IFormSections {
   sectionButton?: ISectionButton;
   class?: string;
   toolTipText?: string;
+  urlDependentControls?:any;
+  urlPath?:any;
+  productFeaturesUrl?:any
 }
 export interface ISectionButton {
   label?: string;
@@ -66,7 +69,7 @@ export interface IFormControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   images?: IImage[];
   otherControlName?: any;
-  subControls?: ISubControl[][];
+  subControls?: ISubControl[];
   methodName?: any;
   getAllOption?: any;
   onChangeMethod?: any;
@@ -83,6 +86,7 @@ export interface IFormControl {
   details?: any;
   button?:any;
   icon?:string;
+  imageUrl?:string;
 }
 export interface ISubControl {
   name: string;
@@ -98,9 +102,16 @@ export interface ISubControl {
   visible?: boolean;
   disabled?: boolean;
   method?: string;
+  innerControls?: ISubControl[];
   innerSubControls?: ISubControl[];
+  displayOnly?: boolean;
+  coreControls?: ISubControl[];
   bigFont?: boolean;
+  dependentControls?: string[];
   getAllOption?: string;
+  isButton?:boolean;
+  innerArrayControl?:IDynamicControl[][];
+  conditionCheck?:boolean;
 }
 
 export interface ITab {
@@ -121,7 +132,7 @@ export interface IConditionalVisibility {
 export interface IRadioOption {
   name: string;
   label: string;
-  value: string;
+  value: any;
   selected?: boolean;
   year?: string;
   discount?: string;
@@ -134,7 +145,7 @@ export interface ISelectCheckboxOption {
   imagePath?: string;
   isIncrement?: boolean;
   name?:string;
-  
+  dependentControls?: any;
 }
 
 export interface IImage {
@@ -187,8 +198,8 @@ export interface IDynamicControl {
   selectCheckboxOptions?: ISelectCheckboxOption[];
   bigFont?: boolean;
   subControls?: ISubControl[][];
-  image:IImage;
-  tabs:ITab[];
+  image?:IImage;
+  tabs?:ITab[];
   getAllOption?: string;
 }
 export interface IValidator {
@@ -207,4 +218,5 @@ export interface IOptions {
   value?: any;
   class?: string;
   selected?: boolean;
+  dependentControls?: string[];
 }

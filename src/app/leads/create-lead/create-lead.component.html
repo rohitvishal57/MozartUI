@@ -1,0 +1,769 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row justify-content-between">
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a> {{"Create/Update Lead" | translate}}
+                </h2>
+            </div>
+            <div *ngIf="isAUuser && !this.dataToDisplay">
+                <!-- <h2 class="sub-title mb-30 font-weight-bold"> AU User Details</h2> -->
+                <section class="white_container mb-3">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">{{"AU User Details" | translate}}</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" [(value)]='AUSearchCategory' id="AUSearchCategory" name="AUSearchCategory">
+                                    <!-- <option value="" disabled selected>Search Policy Number</option> -->
+                                    <option *ngFor="let opt of AUSearchby" [value]="opt">
+                                        {{ opt | translate }}
+                                    </option>
+                                </select>
+                                <label for="AUSearchCategory">{{"Search By" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="AUSearchValue" name="AUSearchValue" placeholder=""
+                                    [(ngModel)]="AUSearchValue" type="text">
+                                <label for="AUSearchValue">{{"Identification Number" | translate}}</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-lg-3 col-md-3 mb-30">
+                            <button id="leadsearch" name="leadsearch" class="au-search btn_red" type="button"
+                                (click)="SETAUDATA()">{{"Search" | translate}}</button>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+            <div *ngIf="isIDFCUser &&  !this.dataToDisplay">
+                <!-- <h2 class="sub-title mb-30 font-weight-bold" > IDFC User Details</h2> -->
+
+                <section class="white_container mb-3">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">{{"IDFC User Details" | translate}}</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" [(ngModel)]="AUSearchCategory" id="AUSearchCategory" name="AUSearchCategory">
+                                    <!-- <option value="" disabled selected>Search Policy Number</option> -->
+                                    <option *ngFor="let opt of AUSearchby" [value]="opt">
+                                        {{ opt | translate }}
+                                    </option>
+                                </select>
+                                <label for="AUSearchCategory">{{"Search By" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="IDFCSearchValue" name="IDFCSearchValue" placeholder=""
+                                    [(ngModel)]="IDFCSearchValue" type="text">
+                                <label for="IDFCSearchValue">{{"Identification Number" | translate}}</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 col-lg-3 col-md-3 mb-30">
+                            <button id="leadsearch2" name="leadsearch2" class="au-search btn_red" type="button"
+                                (click)="SETIDFCDATA()">{{"Search" | translate}}</button>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+
+            <div *ngIf="isYESuser && !this.dataToDisplay">
+                <section class="white_container mb-3">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">{{"Yes Bank User Details" | translate}}</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" [(ngModel)]="YESSearchCategory" id="YESSearchCategory" name="YESSearchCategory">
+                                    <!-- <option value="" disabled selected>Search Policy Number</option> -->
+                                    <option *ngFor="let opt of YESSearchby" [value]="opt">
+                                        {{ opt | translate }}
+                                    </option>
+                                </select>
+                                <label for="YESSearchCategory">{{"Search By" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="YESSearchValue" name="YESSearchValue" placeholder=""
+                                    [(ngModel)]="YESSearchValue" type="text" (input)="checkEnableSendOTP()">
+                                <label for="YESSearchValue">{{"Identification Number" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-lg-2 col-md-2 mb-30">
+                            <label class="label label-height label-form-builder">&nbsp;</label>
+                            <button id="sendotp" name="sendotp" class="au-search yes-search btn_red" type="button"
+                                [disabled]="!sendOTPEnabled" (click)="sendOTP()">{{"Send OTP" | translate}}
+                            </button>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" *ngIf="otpEntered">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="enteredOTP" name="enteredOTP" placeholder=""
+                                    [(ngModel)]="enteredOTP" type="text" (input)="checkEnableSendOTP()">
+                                <label for="enteredOTP">{{"Enter OTP" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-lg-1 col-md-1 mb-30" *ngIf="otpEntered">
+                            <label class="label label-height label-form-builder">&nbsp;</label>
+                            <button id="validateotp" name="validateotp" class="au-search yes-search btn_red"
+                                type="button" (click)="validate()">{{"Validate" | translate}}
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <form (ngSubmit)="onSubmit()" [formGroup]="userValidations">
+                <!-- <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="campaignname"
+                                    (selectionChange)="campnoSelected()">
+                                    <option *ngFor="let opt of CreateLeadList.CampaignName" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="campaignname">Campaign Name *</label>
+                                <span *ngIf="submitted && userValidations.get('campaignname')?.invalid"
+                                    class="ui-error block-show">Please select campaign name</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="leadType"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of CreateLeadList.LeadType" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="leadType">Lead Type</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="leadVintage"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of CreateLeadList.LeadVintage" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="leadVintage">Lead Vintage</label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="white_container">
+                    <h6 class="heading-16-red">Source Details</h6>
+                </section>
+                <section class="white_container">
+                    <div class="row mb-3">
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="source"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of CreateLeadList.Source" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="source">Source</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="nomineeName" placeholder=""
+                                    formControlName="subSource" type="text" OnlyCharacter>
+                                <label for="subSource">Sub Source</label>
+                                <span class="ui-error block-show"
+                                *ngIf="submitted && userValidations.get('subSource')?.errors?.['pattern']">Please
+                                enter proper value
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="white_container">
+                    <h6 class="heading-16-red">Personal Details</h6>
+                </section> -->
+                <section class="white_container mb-3">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">{{"Lead Details" | translate}}</h6>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="salutation" name="salutation" formControlName="salutation"
+                                (selectionChange)="campnoSelected()">
+                                <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                <option *ngFor="let opt of CreateLeadList.salutations" [value]="opt">
+                                    {{ opt | translate }}
+                                </option>
+                            </select>
+                                <label for="salutation">{{"Salutation" | translate}}</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="firstname" name="firstname" placeholder=""
+                                    formControlName="firstname" type="text" maxlength="15"  (keypress)="isCharacter($event)" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('firstname')?.errors }">
+                                <label for="firstname">{{"First Name" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="submitted && userValidations.get('firstname')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('firstname')?.invalid && !userValidations.get('firstname')?.errors?.['pattern']">{{"First name cannot be blank." | translate}}</span>
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('firstname')?.errors?.['pattern']">{{"First name should only contain alphabets." | translate}}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="MiddleName" name="MiddleName" placeholder=""
+                                    formControlName="MiddleName" type="text" maxlength="15" (keypress)="isCharacter($event)" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('MiddleName')?.errors }">
+                                <label for="MiddleName">{{"Middle Name" | translate}}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('MiddleName')?.errors?.['pattern']">{{"Middle name should only contain alphabets." | translate}}</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="lastname" name="lastname" placeholder=""
+                                    formControlName="lastname" type="text" maxlength="15" (keypress)="isCharacter($event)" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('lastname')?.errors }">
+                                <label for="lastname">{{"Last Name" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="submitted && userValidations.get('lastname')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('lastname')?.invalid && !userValidations.get('lastname')?.errors?.['pattern']">{{"Last name cannot be blank." | translate}}</span>
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('lastname')?.errors?.['pattern']">{{"Last name should only contain alphabets." | translate}}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="mobilenumber" name="mobilenumber" placeholder=""
+                                    formControlName="mobilenumber" type="text" (keypress)="isNumber($event)" maxlength="10"
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('mobilenumber')?.errors }">
+                                <label for="mobilenumber">{{"Mobile Number" | translate}} *</label>
+                                <span class="invalid-feedback" *ngIf="submitted && userValidations.get('mobilenumber')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('mobilenumber')?.invalid && !userValidations.get('mobilenumber')?.errors?.['pattern']">{{"Mobile number cannot be blank." | translate}}</span>
+                                </span>
+                                <span class="ui-error block-show"
+                                    *ngIf="userValidations.get('mobilenumber')?.invalid && userValidations.get('mobilenumber')?.errors?.['pattern']">{{"Enter a valid 10-digit mobile number." | translate}}
+                                </span>
+                            </div>
+                        </div> <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="isWhatsapp" name="isWhatsapp" formControlName="isWhatsapp"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option *ngFor="let opt of whatsappOptions" [ngValue]="opt.value">
+                                        {{ opt.display | translate }}
+                                    </option>
+                                </select>
+                                <label for="isWhatsapp">{{"Is whatsapp available for mobile number?" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="email" name="email" placeholder=""
+                                    formControlName="email" type="text" OnlyCharacter
+                                    [ngClass]="{ 'is-invalid': submitted && userValidations.get('email')?.errors }">
+                                <label for="email">{{"Email" | translate}} *</label>
+                                <span class="invalid-feedback"
+                                    *ngIf="submitted && userValidations.get('email')?.errors">
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('email')?.invalid && !userValidations.get('email')?.errors?.['pattern']">{{"Email cannot be blank." | translate}}</span>
+                                    <span class="ui-error block-show"
+                                        *ngIf="submitted && userValidations.get('email')?.errors?.['pattern']">{{"Please enter valid email id." | translate}}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="gender" name="gender" formControlName="gender"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option *ngFor="let opt of CreateLeadList.Gender" [value]="opt">
+                                        {{ opt | translate }}
+                                    </option>
+                                </select>
+                                <label for="gender">{{"Gender" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="dob" name="dob" placeholder="" formControlName="dob"
+                                    type="date" [max]="today" (change)="changeDob($event)">
+                                <label for="nomineeName">{{"DOB" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="age" name="age" placeholder="" formControlName="age"
+                                    type="text">
+                                <label for="age">{{"Age" | translate}}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('age')?.errors?.['pattern']">{{"Please enter proper age in digits." | translate}}</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="maritalStatus" name="maritalStatus" formControlName="maritalStatus"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option *ngFor="let opt of CreateLeadList.MaritalStatus" [value]="opt">
+                                        {{ opt | translate}}
+                                    </option>
+                                </select>
+                                <label for="maritalStatus">{{"Marital Status" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="numberOfKids" name="numberOfKids" placeholder=""
+                                    formControlName="numberOfKids" type="text" (keypress)="isNumber($event)" maxlength="2">
+                                <label for="numberOfKids">{{"No Of Kids" | translate}}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('numberOfKids')?.errors?.['pattern']">{{"Please enter proper value in digits." | translate}}</span>
+                            </div>
+                        </div>
+                    
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="occupation" name="occupation" formControlName="occupation"
+                                (selectionChange)="campnoSelected()">
+                                <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                <option *ngFor="let opt of occupationInfo" [value]="stringifyJson(opt)">
+                                    {{ opt.name | translate }}
+                                </option>
+                            </select>
+                                <label for="occupation">{{"Occupation" | translate}}</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="education" name="education" formControlName="education"
+                                (selectionChange)="campnoSelected()">
+                                <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                <option *ngFor="let opt of CreateLeadList.educationLevels" [value]="opt">
+                                    {{ opt | translate }}
+                                </option>
+                            </select>
+                                <label for="education">{{"Education" | translate}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="white_container mb-3" *ngIf="action!='addNotes'">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">{{"Address" | translate}}</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="address1" name="address1" placeholder=""
+                                    formControlName="address1" type="text" maxlength="50" OnlyCharacter>
+                                <label for="address1">{{"Address 1" | translate }}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('address1')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="address2" name="address2" placeholder=""
+                                    formControlName="address2" type="text" maxlength="50" OnlyCharacter>
+                                <label for="address2">{{"Address 2" | translate}}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('address2')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="address3" name="address3" placeholder=""
+                                    formControlName="address3" type="text" maxlength="50" OnlyCharacter>
+                                <label for="address3">{{"Address 3" | translate}}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('address3')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="city" name="city" placeholder=""
+                                    formControlName="city" type="text" maxlength="20"  (keypress)="isCharacter($event)" OnlyCharacter>
+                                <label for="city">{{"City" | translate}}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('city')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="state" name="state" placeholder=""
+                                    formControlName="state" type="text" maxlength="20" (keypress)="isCharacter($event)" OnlyCharacter>
+                                <label for="state">{{"State" | translate}}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('state')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="pincode" name="pincode" placeholder=""
+                                    formControlName="pincode" type="text" maxlength="6" (keypress)="isNumber($event)">
+                                <label for="pincode">{{"Pincode" | translate}}</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="white_container mb-3" *ngIf="action!='addNotes'">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">{{"Product Details" | translate}}</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="interestedProductName" name="interestedProductName" formControlName="interestedProductName"
+                                    (change)="changeSumInsured($event)">
+                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option *ngFor="let opt of productsList" [value]="opt.productName">
+                                        {{ opt.productName | translate}}
+                                    </option>
+                                </select>
+                                <label for="interestedProductName">{{"Interested Product Name" | translate}}</label>
+                            </div>
+                        </div>
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="planType"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of CreateLeadList.PlanName" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="planType">Interested Plan Name</label>
+                            </div>
+                        </div> -->
+                        
+                     
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="sumInsured" name="sumInsured" formControlName="sumInsured" (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option *ngFor="let opt of productSumInsured" [value]="opt">
+                                        {{ opt | translate }}
+                                    </option>
+                                </select>
+                                <label for="interestedProductName">{{"Interested Sum Insured" | translate}}</label>
+                            </div>
+                        </div>
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="premium" placeholder=""
+                                    formControlName="premium" (keypress)="isNumber($event)" maxlength="7" >
+                                <label for="premium">Interested Premium</label>
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('premium')?.errors?.['pattern']">Please
+                                    enter proper value</span>
+                            </div>
+                        </div> -->
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" formControlName="familyConstruct"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>Choose Option</option>
+                                    <option *ngFor="let opt of CreateLeadList.FamilyConstruct" [value]="opt">
+                                        {{ opt }}
+                                    </option>
+                                </select>
+                                <label for="familyConstruct">Family Construct</label>
+                            </div>
+                        </div> -->
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="policyType" name="policyType" formControlName="policyType"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option *ngFor="let opt of CreateLeadList.PolicyType" [value]="opt">
+                                        {{ opt | translate }}
+                                    </option>
+                                </select>
+                                <label for="policyType">{{"Policy Type" | translate}}</label>
+                            </div>
+                        </div>
+                        <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="policyNumber" placeholder=""
+                                    formControlName="policyNumber" type="text">
+                                <label for="policyNumber">Policy Number</label>
+                                <span class="ui-error block-show"
+                                *ngIf="submitted && userValidations.get('policyNumber')?.errors?.['pattern']">Please
+                                enter proper value</span>
+                            </div>
+                        </div> -->
+                    </div>
+
+                </section>
+                <section class="white_container mb-3" *ngIf="action=='updateStatus'">
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <h6 class="heading-16-red">{{"Update Lead Status" | translate}}</h6>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="leadStatus" name="leadStatus" formControlName="leadStatus"
+                                    (change)="changeReferStatus($event)">
+                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option *ngFor="let item of referenceStatus" [value]="item.name">
+                                        {{ item.name | translate }}
+                                    </option>
+                                </select>
+                                <label for="interestedProductName">{{"Enter Lead Status" | translate}}</label>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <select class="form-select input-selectBox" id="leadSubStatus" name="leadSubStatus" formControlName="leadSubStatus"
+                                    (selectionChange)="campnoSelected()">
+                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
+                                        {{ item.name | translate }}
+                                    </option>
+                                </select>
+                                <label for="familyConstruct">{{"Enter Lead Sub-Status" | translate}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-0">
+                        <h4 class="mrg-btm-0 impText font-weight-bold"><span class="heading-16-red">{{"Important" | translate}} :</span>
+                            {{"Kindly ensure that Proposer's full name, address, gender and date of birth is strictly as per his/her CKYC1 registry, Aadhaar records or OVD2" | translate}}</h4>
+                    </div>
+                    <div class="row impTextList sub-title mb-0 font-weight-bold">
+                        <p>{{"1. Central KYC Registry" | translate}}</p>
+                    </div>
+                    <div class="row impTextList sub-title mb-3 font-weight-bold">
+                        <p>{{"2. Officially Valid Documents, namely one of Aadhaar/Passport/Driving License/Voter ID" | translate}}</p>
+                    </div>
+                </section>
+
+                <div class="row mt-4" *ngIf="action!='addNotes'">
+                    <div class="col-12">
+                        <button type="submit" id="save" name="save" class="btn_red">{{"Save" | translate}}</button>
+                    </div>
+                </div>
+
+            </form>
+            <section class="accordion accordionMain mb-3 accordion-noborder" *ngIf="action=='addNotes'">
+                <div class="accordion-item accordionItem">
+                    <header class="text-red">
+                        {{"Add Notes" | translate}}
+                        <button type="button" id="addnote" name="addnote" value="addnote" class="btn_iconText accordionArrow" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                        aria-expanded="true" aria-controls="collapseOne"><img src="assets/Img/icon_arrow_back_mobile.svg"></button>
+                    </header>
+                    <div id="collapseOne" class="accordion-collapse collapse show accordionBody" aria-labelledby="headingOne"
+                    data-bs-parent="#accordionExample">
+                        <div class="accordionBodyRow">
+                            <form (ngSubmit)="addNotesSubmit()" [formGroup]="addNoteForm">
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input class="form-control input-textBox" id="activityTitle" name="activityTitle" placeholder=""
+                                                formControlName="activityTitle" type="text" maxlength="50"
+                                                [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
+                                            <label for="activityTitle">{{"Activity Title" | translate}}*</label>
+                                            <span class="invalid-feedback"
+                                                *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors">
+                                                <span class="ui-error block-show"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.hasError('required')">
+                                                    {{"Activity title cannot be blank." | translate }}</span>
+                                                <span class="ui-error block-show"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityTitle')?.errors?.['pattern']">{{"ActivityTitle should contain alphanumeric." | translate}}</span>
+                                                    
+                                            </span>
+        
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input class="form-control input-textBox" id="activityStartDate" name="activityStartDate" placeholder=""
+                                                formControlName="activityStartDate" type="date" [min]="today" [max]="maxDate"
+                                                [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityTitle')?.errors }">
+                                            <label for="activityStartDate">{{"Activity Start Date" | translate}}*</label>
+                                            <span class="invalid-feedback"
+                                                *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.errors">
+                                                <span class="ui-error block-show"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityStartDate')?.invalid">
+                                                    {{"Activity start date cannot be blank." | translate}}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input class="form-control input-textBox" id="activityStartTime" name="activityStartTime" placeholder=""
+                                                formControlName="activityStartTime" type="time"
+                                                [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityStartTime')?.errors }">
+                                            <label for="activityStartTime">{{"Activity Start Time" | translate}}*</label>
+                                            <span class="invalid-feedback"
+                                                *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.errors">
+                                                <span class="ui-error block-show"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityStartTime')?.invalid">
+                                                    {{"Activity start time cannot be blank." | translate }}</span>
+                                            </span>
+        
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input class="form-control input-textBox" id="activityEndDate" name="activityEndDate" placeholder=""
+                                                formControlName="activityEndDate" type="date"
+                                                [min]="today" [max]="maxDate"
+                                                (change)="onEndDateChange()"
+                                                [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndDate')?.errors }">
+                                            <label for="activityEndDate">{{"Activity End Date" | translate}}*</label>
+                                            <span class="invalid-feedback"
+                                                *ngIf="notesSubmitted && addNoteForm.get('activityEndDate')?.errors">
+                                                <span class="ui-error block-show"
+                                                    *ngIf="addNoteForm.get('activityEndDate')?.invalid">
+                                                    {{"Activity end date cannot be blank." | translate}}</span>
+                                            </span>
+                                            <span class="ui-error block-show"
+                                                *ngIf="addNoteForm.get('activityEndDate')?.errors?.['incorrect']">
+                                                {{"Activity end date must be after activity startdate." | translate}}</span>
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <input class="form-control input-textBox" id="activityEndTime" name="activityEndTime" placeholder=""
+                                                formControlName="activityEndTime" type="time" (change)="validateEndTime()"
+                                                [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityEndTime')?.errors }">
+                                            <label for="activityEndTime">{{"Activity End Time" | translate}}*</label>
+                                            <span class="invalid-feedback"
+                                                *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.errors">
+                                                <span class="ui-error block-show"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityEndTime')?.invalid">
+                                                    {{"Activity end time cannot be blank." | translate}}</span>
+                                            </span>
+                                            <span class="ui-error block-show"
+                                                *ngIf="addNoteForm.get('activityEndTime')?.errors?.['incorrect']">
+                                                {{"Activity end time must be after activity starttime." | translate}}</span>
+                                       
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <select class="form-select input-selectBox" formControlName="activityType" id="activityType" name="activityType"
+                                                [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('activityType')?.errors }">
+                                                <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                                <option *ngFor="let item of activityTypes" [value]="item">
+                                                    {{ item | translate }}
+                                                </option>
+                                            </select>
+                                            <label for="interestedProductName">{{"Select Activity Type" | translate}}*</label>
+                                            <span class="invalid-feedback"
+                                                *ngIf="notesSubmitted && addNoteForm.get('activityType')?.errors">
+                                                <span class="ui-error block-show"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('activityType')?.invalid">
+                                                    {{"Activity type cannot be blank." | translate}}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <div class="input-block form-floating input-block-renew">
+                                            <textarea class="form-control input-textBox" id="notes" name="notes"
+                                                placeholder="Type your note..." formControlName="notes" maxlength="250"
+                                                [ngClass]="{ 'is-invalid': notesSubmitted && addNoteForm.get('notes')?.errors }"></textarea>
+                                            <label for="notes">{{"Note" | translate}}*</label>
+                                            <span class="invalid-feedback"
+                                                *ngIf="notesSubmitted && addNoteForm.get('notes')?.errors">
+                                                <span class="ui-error block-show"
+                                                    *ngIf="notesSubmitted && addNoteForm.get('notes')?.invalid">
+                                                    {{"Note cannot be blank." | translate}}</span>
+                                            </span>
+        
+                                        </div>
+                                    </div>
+        
+                                </div>
+            
+                                <div class="row mt-4" *ngIf="action=='addNotes'">
+                                    <div class="col-12">
+                                        <button type="submit" id="saveaddnotes" name="saveaddnotes" class="btn_red">{{"Add Notes" | translate}}</button>
+                                    </div>
+                                </div>
+            
+                            </form>
+                            <!--ADD NOTES: Data start-->
+                            <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="action=='addNotes' && notes.length>0"> 
+                                <div class="tableSubMain">
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless table-search">
+                                            <thead>
+                                                <tr>
+                                
+                                                    <th>{{"Note ID" | translate}}</th>
+                                                    <th>{{"Note Title" | translate}}</th>
+                                                    <th>{{"Note Type" | translate}}</th>
+                                                    <th>{{"Note StartDate" | translate}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
+                                                    <!-- <th>Activity StartTime</th> -->
+                                                    <th>{{"Note EndDate" | translate}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
+                                                    <!-- <th>Activity EndTime</th> -->
+                                                    <th>{{"Notes" | translate}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-group-divider">
+                                                <tr *ngFor="let row of notes;let i = index">
+                                                  
+                                                    <td>{{row.id}}</td>
+                                                    <td>{{row.title}}</td>
+                                                    <td>{{row.type}}</td> 
+                                                    <td>{{formatCreatedOn(row.startDate)}}</td>
+                                                    <!-- <td>{{row.startDate}}</td> -->
+                                                    <td>{{formatCreatedOn(row.endDate)}}</td>
+                                                    <!-- <td>{{row.startDate}}</td> -->
+                                                    <td class="note_remarkText_width"><div class="note_remarkText_scroll"><div class="note_remarkText">{{row.remarks}}</div></div></td>
+                
+                                                    
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                            </section>
+                            <!--ADD NOTES: Data end-->
+                        </div>
+                    </div>  
+                </div>
+            </section>
+            
+
+            
+        </div>
+    </div>
+</main>

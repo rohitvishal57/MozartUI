@@ -1,0 +1,179 @@
+<!--Header start-->
+<header class="siteHeader" *ngIf="agentCode != '467898'">
+
+  <!--ABC Links start-->
+  <div class="abcLinksMain">
+    <div class="abcTopLinks">
+      <div class="abcHome" tabindex="0">
+        <a target="_blank"><img src="assets/Img/icon_home_white.svg">ABC Home<img
+            src="assets/Img/icon_arrow_up_right_white.svg" class="homeArrow"></a>
+      </div>
+      <div class="abcSolution" tabindex="0">
+        <a>ABC Solutions <img src="assets/Img/icon_arrow_down_red.svg"></a>
+      </div>
+      <div class="abcHelpLine">
+        <a href="tel:+1800-270-7000"><img src="assets/Img/icon_phone_red.svg"> 1800-270-7000</a>
+      </div>
+    </div>
+  </div>
+  <!--ABC Links end-->
+
+  <!--Logo Main start-->
+  <div class="logoMain">
+    <div class="logoMainLeft">
+      <a><img src="assets/Img/abhi_logo.svg" alt="ABHI" routerLink="/dashboard"></a>
+    </div>
+    <div class="logoMainRight">
+      <div class="logoLeftNav">
+        <!-- <div class="icon_menuMobile">
+                  <button type="button" class="btn_menuMobile" aria-label="siteSidenav">
+                      <span></span><span></span><span></span>
+                  </button>
+              </div> -->
+        </div>
+
+     
+
+
+
+      <div class="logoRightNav">
+
+        <nav class="navbar navbar-expand-lg navbar-light top_mainNavBar" *ngIf="isLoggedIn">
+          <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#supported_NavBar" aria-controls="supported_NavBar" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>Top Menu
+            </button>
+            <div class="collapse navbar-collapse" id="supported_NavBar">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="supported_navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Service Request
+                  </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="supported_navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Marketing Hub <span class="icon_arrowDown"></span>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="supported_navbarDropdown">
+                    <div class="dropdown-menuSub">
+                      <ul >
+                        <li *ngFor="let opt of headerInformation.marketingContent"><a class="dropdown-item" href="{{opt.redirectURL}}" target="_blank">{{ opt.name }}</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="supported_navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Downloads <span class="icon_arrowDown"></span>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="supported_navbarDropdown">
+                    <div class="dropdown-menuSub">
+                      <div class="dropdown-menu-scroll">
+                        <ul >
+                          <li *ngFor="let opt of headerInformation.downloadBrowcher"><a class="dropdown-item"   (click)="downloadPdfBrochure(opt.browcherURL)">{{ opt.productName }}</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      
+
+        <div class="header-right-cnt">
+          <div class="language-selector" tabindex="0">
+            <select (change)="setLanguage($event)" [value]="currentLanguage">
+              <option value="en">English</option>
+              <option value="hi">Hindi</option>
+              <option value="te">Telugu</option>
+            </select>
+          </div>
+          
+        </div>
+        <div class="headerProfile" >
+          <a [routerLink]="['/profile']" *ngIf="isLoggedIn">
+            <img  src="../../../assets/images/name.png" >
+          </a>
+        </div>
+        <div class="header_notification"> 
+
+        <button type="button" id="count-notification" name="count-notification" class="btn_headerSearch" *ngIf="isLoggedIn;" (click)="openNotifications()">
+          <img  src="../../../assets/Img/icon_notifications.svg" >
+          <span class="badge" >{{notificationCount}}</span>
+        </button>
+        <!--Overlay: Notifications start-->
+        <div class="overlay_popupMain overlay_dropdown_w386 overlay_notification" *ngIf="showNotifications && notificationCount" >
+          
+          <div class="option_policyType" (click)="onPopupClick($event)">
+            <div class="overlay_body insurer_detailsMain">
+              <div class="body_flex_row justify-content-between">
+                <h3>Notifications ({{notificationCount}})</h3>
+              </div>
+              <div class="overlay_footer">
+                <div class="btn_groupAction btn_groupNotification">
+                  <button id="markAll" name="markAll" type="button" class="btn_white btn_markAsRead" (click)="markAllReadNotification()">Mark As Read All</button>
+                  <button id="showAll" name="showAll" type="button" class="btn_red btn_markAsRead"  (click)="showAllNotifications()">Show All </button>
+                </div> 
+              </div>
+              <div class="checkbox_disease_scroll">           
+                <div class="row">
+                  <div class="col-12">
+                    <div class="input-block input-block-renew input-filed-white">
+                      <ul class="notificationList" >
+                        <li  *ngFor="let item of unReadNotificaitons; let i =index">
+                          <div class="tipInfo_org" *ngIf="item.isRead ==false" (click)="routeNotification(item)"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
+                        </li>
+                        <!-- <li class="read_notification">
+                          <div class="tipInfo_org" *ngIf="item.isRead"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
+                        </li> -->
+                      </ul>
+                      <!--<mat-list-item *ngFor="let notification of notifications ; let i =index">
+                        <span style="color: black;">{{i+1}}: {{notification.message}}</span>
+                      </mat-list-item>-->
+                    </div>
+                  </div>
+                </div>
+              </div>  
+          </div>
+
+          
+          </div>
+        </div>
+        <!--Overlay: Notifications end-->
+  
+       </div> 
+      </div>
+    </div>
+  </div>
+  <!--Logo Main end-->
+
+  <!--Logo Tag start-->
+  <div class="logoTagMain">
+    <div class="logoTagText">{{"Aditya Birla Health Insurance" | translate}}</div>
+  </div>
+  <!--Logo Tag end-->
+</header>
+<!--Header end-->
+<!--Axis Header start-->  
+<header class="pageHeader" *ngIf="agentCode == '467898'">
+  <div class="pageHeaderContainer">
+          <div class="ph_Left">
+              <img src="assets/axis_assets/images/logo_axis.svg" alt="Axis insurance" class="logo_desktop">
+              <img src="assets/axis_assets/images/logo_axis_a.svg" alt="Axis insurance" class="logo_mobile">
+          </div>
+      <div class="ph_Right">
+          <div class="ph_RightCurve">
+              <span class="ph_RightCurveSmall"></span>
+              <div class="logo_openInsurance"></div>
+          </div>
+      </div>
+  </div>
+</header>
+<!--Axis Header end-->
+
+  
+
+

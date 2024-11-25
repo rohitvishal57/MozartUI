@@ -3,6 +3,7 @@ body {
 }
 
 .main-container {
+    padding-top: 11rem;
     display: flex;
     flex-direction: row;
     /*background-color: #F1F3F6;*/
@@ -147,6 +148,14 @@ body {
     font-size: 15px;
 }
 
+.disable{
+
+    background-color: #c7222a !important;
+    color: #fff !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
 /* .main-container .right-panel .inputField_Text,
 .main-container .right-panel .inputField_Select {
     font-weight: 400;
@@ -253,9 +262,9 @@ body {
     left: 12px;
     font-size: 12px;
     color: #666;
-    /* background-color: #fff; */
+    background-color: #fff;
     background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(242, 243, 246, 1) 100%);
-    z-index: 1;
+    /* z-index: 1; */
     padding: 0 3px;
     border-radius: 2px;
 }
@@ -269,7 +278,7 @@ body {
     font-size: 12px;
     color: #666;
     background-color: #fff;
-    z-index: 1;
+    /* z-index: 1; */
     padding: 0 3px;
     border-radius: 2px;
 }
@@ -338,17 +347,21 @@ body {
     color: #ffe2dc;
 }
 
-.abhaLabel1{
+.abhaLabel1, .abhaLabel1 p{
     font-family: "Anek Latin", sans-serif;
     color: #c72229;
     padding-left: 15px;
 }
 
-.abhaLabel2{
+.abhaLabel2, .abhaLabel2 p{
     font-size: x-large;
     font-weight: 600;
     padding-left: 15px;
     font-family: "Anek Latin", sans-serif;
+}
+.abhaLabel1 p, .abhaLabel2 p {
+    padding: 0;
+    line-height: 24px;
 }
 .autoDebitLabel1{
     font-size: large;
@@ -567,17 +580,20 @@ body {
     margin-top: 2px;
     margin-bottom: 28px;
     margin-left: 4px;
+    max-width: 216px;
 }
 
 .main-container .right-panel .acceptTermsCheck {
     border: 0px solid #ccc;
     cursor: pointer;
-    margin-top: 19px;
-    margin-bottom: 38px;
+    /*margin-top: 19px;*/
+    margin-bottom: 18px;
     background-color: #f2f3f6;
     border-radius: 20px;
     /* height: 102px; */
-    padding: 4px;
+    padding: 5px 15px;
+    display: flex;
+    gap: 10px;
 }
 
 .main-container .right-panel .acceptTermsCheck .checkboxes {
@@ -596,7 +612,56 @@ body {
     display: block;
     height: auto;
     width: 17px;
+    /*position: absolute;
+  opacity: 0;*/
 }
+/*.acceptTermsCheck input[type="checkbox"] + label {
+    position: relative;
+    cursor: pointer;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--black-color);
+    line-height: 17px;
+    display: inline-block;
+  }
+  
+  .acceptTermsCheck input[type="checkbox"] + label:before {
+    content: "";
+    margin-right: 1rem;
+    display: inline-block;
+    vertical-align: text-top;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--text-grey-79);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+  }
+  
+  .acceptTermsCheck input[type="checkbox"]:checked + label:before {
+    border: 1px solid var(--primary-red-color);
+    background: var(--primary-red-color);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+  }
+  .acceptTermsCheck input[type="checkbox"]:checked + label:after {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 10px;
+    border: solid var(--white-color);
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(38deg);
+    -ms-transform: rotate(38deg);
+    transform: rotate(38deg);
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+  }*/
 
 .main-container .right-panel .checkboxes {
     width: auto;
@@ -749,7 +814,8 @@ body {
 .main-container .right-panel .radio-button {
     display: flex;
     flex-direction: row;
-    padding: 6px 30px 20px 4px;
+    /*padding: 6px 30px 20px 4px;*/
+    padding: 6px 30px 10px 4px;
 }
 
 .main-container .right-panel .radio-option-label {
@@ -824,7 +890,46 @@ body {
     margin-top: 8%;
 }
 
-.main-container .right-panel .section-paragraph1 {
+.main-container .right-panel .declaration-paragraph{
+    font-size: 14px;
+    color: #292929;
+    font-family: "Anek Latin", sans-serif;
+}
+
+.main-container .right-panel .sendEmail{
+    background-color: #c72229;
+    color: #ffe2dc;
+    border: none;
+    border-radius: 12px;
+    width: 18%;
+    height: 46px;
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-right: 5px;
+}
+
+.main-container .right-panel .sendOTPLabel{
+    background-color: #c72229;
+    color: #ffe2dc;
+    border: none;
+    border-radius: 14px;
+    width: 18%;
+    height: 37px;
+}
+
+.main-container .right-panel .sendOTPBtn{
+    background-color: #c72229;
+    color: #ffe2dc;
+    border: none;
+    border-radius: 12px;
+    width: 18%;
+    height: 46px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.main-container .right-panel .section-paragraph1,
+.main-container .right-panel .section-paragraph1 p {
     font-weight: 600;
     font-size: 20px;
     color: #292929;
@@ -847,7 +952,9 @@ body {
 .main-container .right-panel .section-paragraph2 p {
     margin: 0;
 }
-
+.section-paragraph p{
+    line-height: 18px;
+}
 .main-container .right-panel .name {
     font-size: 30px;
     margin-left: 7%;
@@ -914,10 +1021,6 @@ body {
     margin-left: 211px;
 }
 
-.main-container .right-panel .img1Popup {
-    /* margin-left: 42%;
-    margin-top: -38%; */
-}
 
 .main-container .right-panel .boldtext-label {
     font-size: 12px;
@@ -956,7 +1059,25 @@ body {
     color: #ffe2dc;
     float: right;
 }
-
+.main-container .right-panel .add-btn {
+    background-color: #c72229;
+    padding: 1%;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+    margin: 0 2%;
+    color: #ffe2dc;
+    /* float: right; */
+}
+.main-container .right-panel .field-btn {
+    background-color: #c72229;
+    padding: 10px 31px;
+    border: none;
+    border-radius: 14px;
+    width: auto;
+    margin: 0px 24px;
+    color: #ffe2dc;
+}
 .main-container .right-panel .send-btn {
     background-color: #c72229;
     padding: 10px 31px;
@@ -1077,7 +1198,9 @@ body {
 
 .main-container .right-panel .ah-opcovers {
     padding: 30px 0px 5px !important;
+    margin-top: 28px;
     min-height: 100px;
+    min-width: 380px;
 }
 
 .main-container .right-panel .boldtext-label {
@@ -1103,7 +1226,8 @@ body {
 .main-container .right-panel .radio-button {
     display: flex;
     flex-direction: row;
-    padding: 6px 30px 20px 4px;
+    /*padding: 6px 30px 20px 4px;*/
+    padding: 6px 30px 10px 4px;
 }
 
 .main-container .right-panel .select-button {
@@ -1251,9 +1375,9 @@ body {
     background-color: #F9FAFB;
 }
 
-.main-container .right-panel .edit-icon {
+/* .main-container .right-panel .edit-icon {
     padding: 2% 1%;
-}
+} */
 
 /* .main-container .right-panel .col-md-6 {
     width: 47%;
@@ -1409,7 +1533,9 @@ body {
 }
 
 .main-container .right-panel .next-btn,
-.main-container .right-panel .back-btn {
+.main-container .right-panel .add-btn,
+.main-container .right-panel .back-btn,
+.main-container .right-panel .field-btn {
     padding: 10px 21px;
 }
 
@@ -1437,7 +1563,7 @@ body {
 .main-container .main-subContainer .left-nav .left-navInner {
     background-color: #fff;
     border-radius: 12px;
-    padding: 12px 14px 16px 14px;
+    padding: 12px 14px 38px 14px;
     font-family: Anek Latin;
     font-size: 12px;
     font-weight: 400;
@@ -1652,7 +1778,7 @@ body {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: #F1F3F6 url(../../../assets/images/icon_select_downarrow.svg) no-repeat right;
+    background: #F1F3F6 url(../../../assets/Img/icon_select_downarrow.svg) no-repeat right;
     background-position-x: 95%;
 }
 
@@ -1688,13 +1814,14 @@ body {
     display: inline-block;
     width: 24px;
     height: 24px;
-    background: url(../../../assets/images/icon_select_downarrow.svg) no-repeat center;
+    background: url(../../../assets/Img/icon_select_downarrow.svg) no-repeat center;
     background-size: 12px;
     cursor: pointer;
 }
 
 .accordionCard .accordionCardBody {
     padding: 16px 16px 25px !important;
+    position: relative;
 }
 
 .accordionCard.collapsed .accordionCardBody {
@@ -1943,11 +2070,14 @@ a:not([href]) {
     border-radius: 12px;
     padding: 9px 46px;
     font-family: Anek Latin;
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 400;
     line-height: 19.8px;
     color: #fff;
-    margin: 0 24px 0 0;
+    margin: 0 14px 0 10px;
+    height: 46px;
+    position: relative;
+    top: -8px;
 }
 .main-container .right-panel .custom-line {
     position: relative;
@@ -1971,14 +2101,12 @@ a:not([href]) {
     background-color: #fff;
     border: 1px solid #d5d7de;
     border-radius: 16px;
-    min-width: 230px;
-    margin: 0px 24px 0 0;
-    padding: 16px 20px;
-    color: #902a38;
-    font-size: 16px;
+    min-width: 24%;
+    margin: 0px 1% 3% 0;
+    padding: 16px 11px 16px 10px;
     box-shadow: 0px 6px 16px 0px #00000014;
     font-family: Anek Latin;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     line-height: 24px;
     text-align: left;
@@ -1986,15 +2114,22 @@ a:not([href]) {
     position: relative;
 }
 .main-container .right-panel .paymentBtn.btn-ENach,
-.main-container .right-panel .paymentBtn.btn-EMandate {
-    background: #fff url(../../../assets/images/img_faster_process.svg) no-repeat 90%;
+.main-container .right-panel .paymentBtn.btn-EMandate,
+.main-container .right-panel .paymentBtn.btn-AutoDebit {
+    background: #fff url(../../../assets/Img/img_faster_process.svg) no-repeat 90%;
+    background-size: 50%;
 }
 .main-container .right-panel .paymentBtn.active-button {
     color: #000;
     border-color: #C7222A;
 }
+.main-container .right-panel .paymentBtn:focus {
+    border-color: #C7222A !important;
+}
 .main-container .right-panel .send-btn.send-link-btn:hover, 
-.main-container .right-panel .next-btn:hover {
+.main-container .right-panel .next-btn:hover,
+.main-container .right-panel .add-btn:hover,
+.main-container .right-panel .field-btn:hover {
     background-color: #FFE7E5;
     color: #C7222A;
 }
@@ -2120,6 +2255,12 @@ input[type=checkbox]:checked {
 .bottom-section .accordionCardBody > .typecss {
     padding: 0;
 }
+.bottom-section .accordionCardBody > .typecss:first-child {
+    display: none;
+}
+.accordionCard.bottom-section .accordionCardBody{
+    padding: 6px 16px 5px !important;
+}
 .bottom-section .label-value-container {
     display: flex;
     flex-direction: column;
@@ -2133,6 +2274,7 @@ input[type=checkbox]:checked {
     text-align: center;
     color: #2e2e2e;
     position: relative;
+    display: none;
 }
 .bottom-section .label-value-container .label-text {
     text-transform: uppercase;
@@ -2143,10 +2285,11 @@ input[type=checkbox]:checked {
 .bottom-section .label-value-container .value-text {
     width: 32px;
     height: 5px;
-    background: url(../../../assets/images/icon_plan_details_arrow.svg) no-repeat;
+    background: url(../../../assets/Img/icon_plan_details_arrow.svg) no-repeat;
     position: absolute;
     top: -20px;
     left: 48%;
+    display: none;
 }
 .main-container .right-panel .bottom-product .boldtext_input {
     font-family: Anek Latin;
@@ -2209,16 +2352,68 @@ input[type=checkbox]:checked {
     color: #000;
 }
 .advertisementSection .mobileScreen {
-    width: 100%;
-    padding: 0;
+    width: 210px;
+    padding: 20px;
 }
 .advertisementSection .mobileScreen  .img1Popup {
-    width: 100% !important;
-    height: 100% !important;
+    height: 112% !important;
     margin: 0 !important;
 }
 .autoDebitSection.accordionCard .accordionCardBody {
     padding:25px 25px 25px !important ;
+}
+
+.select-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .image-button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  .image-button img {
+    max-width: 100%;  
+    height: auto;    
+    display: block;
+  }
+
+.QR-scanner{
+    display: flex;
+    position: absolute;
+    top: 50px;
+    left: 250px;
+  }
+
+.image-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.app-store-button {
+    text-align: center;
+    margin-bottom: 15px;
+    position: absolute;
+    top: 80px;
+    left: 450px;
+  }
+  
+  .google-play-button {
+    text-align: center;
+    margin-bottom: 15px;
+    position: absolute;
+    top: 140px;
+    left: 450px;
+  }
+  @media (min-width: 768px) {
+    .app-store-button, .google-play-button {
+      max-width: 200px; 
+    }
 }
 .autoDebitLabel1 p {
     font-family: Anek Latin;
@@ -2277,11 +2472,11 @@ color: #fff;
 }
 .abhaquestion p {
     font-family: Anek Latin;
-font-size: 12px;
-font-weight: 500;
+font-size: 14px;
+font-weight: 400;
 line-height: 18px;
 text-align: left;
-color: #000;
+color: #4c4c4c;
 }
 .abhaLabel2 {
     width: 30%;
@@ -2423,7 +2618,9 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
-    .main-container .right-panel .back-btn {
+    .main-container .right-panel .add-btn,
+    .main-container .right-panel .back-btn,
+    .main-container .right-panel .field-btn {
         margin: 6px 8px;
     }
 }
@@ -2431,7 +2628,9 @@ margin: 0;
 @media (max-width:768px) {
 
     .main-container .right-panel .next-btn,
-    .main-container .right-panel .back-btn {
+    .main-container .right-panel .add-btn,
+    .main-container .right-panel .back-btn,
+    .main-container .right-panel .field-btn {
         margin: 6px 3px;
     }
 
@@ -2507,16 +2706,96 @@ margin: 0;
     }
 
     .main-container .right-panel .next-btn,
-    .main-container .right-panel .back-btn {
+    .main-container .right-panel .add-btn,
+    .main-container .right-panel .back-btn,
+    .main-container .right-panel .field-btn {
         float: none;
         position: relative;
     }
 
-    .main-container .right-panel .next-btn {
+    .main-container .right-panel .next-btn,
+    .main-container .right-panel .add-btn,
+    .main-container .right-panel .field-btn {
         left: 115px;
     }
 
     .main-container .right-panel .back-btn {
         left: -97px;
     }
+
+    /*Overlay CSS*/
+ 
+  
 }
+.main-container .right-panel .next-btn:focus,
+    .main-container .right-panel .add-btn:focus,
+    .main-container .right-panel .back-btn:focus {
+        border-width: 0 !important;
+    }
+.main-container .right-panel /* Backdrop to cover the whole screen */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent gray */
+  z-index: 10; /* Ensure it's behind the popup */
+  pointer-events: all;
+  backdrop-filter: blur(5px);
+}
+
+/* Popup overlay styling */
+.main-container .right-panel .popup-overlay {
+  width: 500px;
+  height: 500px;
+  position: fixed; /* Fixed positioning to overlay over the backdrop */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the overlay */
+  background-color: #e9e9e9;
+  border-radius: 20px;
+  text-align: center;
+  z-index: 11; /* Ensure it's above the backdrop */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.text-right {
+    text-align: right;
+}
+.subButton{
+    background-color: #c72229;
+    padding: 4px 7px;
+    border: none;
+    border-radius: 12px;
+    width: auto;
+    margin: 0px 0 0 14px;
+    font-family: Anek Latin;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    color: #fff;
+}
+  
+.custom-copy-button {
+    background-color: #c72229; /* Set button background color */
+    color: white;              /* Set text/icon color */
+    border: none;              /* Remove border */
+    border-radius: 12px;
+    margin-left: 10px;
+    padding: 10px 20px;
+    i {
+      color: white;            /* Set icon color */
+    }
+  
+    &:hover {
+      background-color: #ffe2dc; /* Change background color on hover */
+      color: #c72229;            /* Change text/icon color on hover */
+      
+      i {
+        color: #c72229;          /* Change icon color on hover */
+      }
+    }
+  }
+  

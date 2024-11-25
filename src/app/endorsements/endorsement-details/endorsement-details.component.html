@@ -1,0 +1,110 @@
+<main class="siteBody">
+    <div class="contentBody bodyColumns-1">
+        <div class="bodyColumn body_flex_column">
+            <div class="body_flex_row endorsement-title" >
+                <h2 class="icon_withHeading"><a class="btn_backPage" (click)="backToEndorsments()" title="Back To List"></a>My Endorsement</h2>
+            </div>
+            <div class="accordionMain">
+                <div class="accordionItem">
+                    <header>Endorsement Details</header>
+                    <div class="accordionBody">
+                        <div class="accordionBodyRow">
+                            <div class="detailsRow">
+                                <div class="row mt-3">
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                        <label>Request ID</label>
+                                        <h6>{{policyData?.caseId ? policyData?.caseId : 'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                        <label>Member Name</label>
+                                        <h6>{{policyData?.memberName ? policyData?.memberName : 'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                        <label>Member Relation</label>
+                                        <h6>{{policyData?.memberRelation ? policyData?.memberRelation : 'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                        <label>Mobile Number</label>
+                                        <h6>{{policyData?.mobileNumber ? policyData?.mobileNumber: 'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                        <label>Endorsement Type</label>
+                                        <h6>{{policyData?.caseSubSubType ? policyData?.caseSubSubType: 'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change of Nominee'">
+                                        <label>Nominee Name</label>
+                                        <h6>{{ policyData?.nomineeName ? policyData?.nomineeName:'NA' }}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change of Nominee'">
+                                        <label>Nominee Relationship</label>
+                                        <h6>{{ policyData?.nomineeRelationship ? policyData?.nomineeRelationship:'NA' }}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change of Nominee'">
+                                        <label>Nominee Contact</label>
+                                        <h6>{{ policyData?.nomineeContact ? policyData?.nomineeContact:'NA' }}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                        <label>Member ID</label>
+                                        <h6>{{ policyData?.customer ? policyData?.customer:'NA' }}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                        <label>Category</label>
+                                        <h6>{{ policyData?.category ? policyData?.category:'NA' }}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item">
+                                        <label>Status</label>
+                                        <h6 style="font-weight: bold;">{{ policyData?.status ? policyData?.status:'NA' }}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change my Primary Registered Number'">
+                                        <label>Primary Contact Number</label>
+                                        <h6>{{policyData?.primaryContactNumber? policyData?.primaryContactNumber:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change my Primary Registered Number- Member'">
+                                        <label>Member Primary Contact Number</label>
+                                        <h6>{{policyData?.memberPrimaryContactNumber? policyData?.memberPrimaryContactNumber:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change my Alternate number'">
+                                        <label>Alternate Contact Number</label>
+                                        <h6>{{policyData?.alternateContactNumber? policyData?.alternateContactNumber:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change my Alternate number- member'">
+                                        <label>Member Alternate Contact Number</label>
+                                        <h6>{{policyData?.memberAlternateContactNumber? policyData?.memberAlternateContactNumber:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change in International Contact Number'">
+                                        <label>International Contact Number</label>
+                                        <h6>{{policyData?.internationalContactNumber? policyData?.internationalContactNumber:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change in my Email ID- member'">
+                                        <label>Member Email</label>
+                                        <h6>{{policyData?.memberEmail? policyData?.memberEmail:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change in my Email ID'">
+                                        <label>Email</label>
+                                        <h6>{{policyData?.c? policyData?.email:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change my Alternate Email ID'">
+                                        <label>Alternate Email</label>
+                                        <h6>{{policyData?.alternateEmail? policyData?.alternateEmail:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Change my Alternate Email ID - member'">
+                                        <label>Member Alternate Email</label>
+                                        <h6>{{policyData?.memberAlternateEmail? policyData?.memberAlternateEmail:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Aadhar Card Update'">
+                                        <label>Aadhar No</label>
+                                        <h6>{{policyData?.aadharCardNo? policyData?.aadharCardNo:'NA'}}</h6>
+                                    </div>
+                                    <div class="col-6 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item" *ngIf="policyData?.caseSubSubType == 'Pancard Update'">
+                                        <label>PAN No</label>
+                                        <h6>{{policyData?.panCardNo? policyData?.panCardNo:'NA'}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

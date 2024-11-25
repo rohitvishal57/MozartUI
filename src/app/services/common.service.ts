@@ -1,231 +1,132 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-import { Observable } from 'rxjs';
-
+import { Observable, of } from 'rxjs';
+import { ConfigService } from './config.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
-  private baseUrl: string = 'https://usp.monocept.ai/api/';
+  private yatraUrl: string = 'https://usp.monocept.ai/yatra/';
+  dialogRef: any;
+
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
-  public baseCssUrl= 	'https://usp.monocept.ai/ABHI/' 
+  constructor(private http: HttpClient, private configService: ConfigService, public dialog: MatDialog,
+    private router: Router
+  ) { }
 
-  private apiUrl = './assets/health-plans.json';
-  private apiUrl1 = './assets/occupations.json';
-
-  constructor(private http: HttpClient) { }
-
-  getFormConfig(bankCode: number, insuranceTypeCode: number, productId: any) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetFormConfig?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}`);
-  }
-  getJSONForm(bankCode: any, insuranceTypeCode: number, productId: any, formId: number) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetJSONForm?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}`);
-  }
-  insertFormConfig(formConfig: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertFormConfigViaVerticalCode`, formConfig);
-  }
-  insertJSONForm(jsonForm: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertJSONFormViaVerticalCode`, jsonForm);
-  }
-  insertOrUpdateFormData(formData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateFormData`, formData);
-  }
-  getFormData(bankCode: any, insuranceTypeCode: number, productId: any, formId: number, proposalNumber: any) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetFormData?bankCode=${bankCode}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}&proposalNumber=${proposalNumber}`);
-  }
-  getAllFormData(bankCode: any) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetAllFormData?bankCode=${bankCode}`);
-  }
-  //Agents
-
-  getFormConfigViaVerticalCode(verticalCode: number, Code: number, insuranceTypeCode: number, productId: string) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetFormConfigViaVerticalCode?verticalCode=${verticalCode}&Code=${Code}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}`);
-  }
-
-  getJSONFormViaVerticalCode(verticalCode: any, Code: number, insuranceTypeCode: number, productId: string, formId: number) {
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetJSONFormViaVerticalCode?verticalCode=${verticalCode}&Code=${Code}&insuranceTypeCode=${insuranceTypeCode}&productId=${productId}&formId=${formId}`);
-  }
-
-  insertOrUpdateFormDataViaVertical(formData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateFormDataViaVerticalCode`, formData);
-  }
-
-  getAllFormDataViaVerticalCode(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/GetAllFormDataViaVerticalCode`, reqData);
-  }
-
-  insertOrUpdateJourneyDetailsViaVerticalCode(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/InsertOrUpdateJourneyDetailsViaVerticalCode`, reqData);
-  }
-  getJourneyDetailsByProposalNum(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/GetJourneyDetailsByProposalNum`, reqData);
-  }
-  getJourneyDetailsViaVerticalCode(verticalCode:any,code:any,agentCode:any){
-    return this.http.get<any>(`${this.baseUrl}Banca/Forms/GetJourneyDetailsViaVerticalCode?verticalCode=${verticalCode}&Code=${code}&AgentCode=${agentCode}`);
-  }
-  resumeJourneyViaFormName(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Banca/Forms/ResumeJourneyViaFormName`,reqData);
-  }
-
-  //For ABHI
-
-  //Agent Forms Api's
 
   // For All PartnerApi
-   getQoute(reqData: any) {
-    console.log(reqData);
 
-    return this.http.post<any>(`${this.baseUrl}getHealthQuote`, reqData);
-  }
-
-  getActiveFitQoute(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}getHealthQuoteForAF`, reqData);
-  }
-  getAllStates() {
-    return this.http.post<any>(`${this.baseUrl}getStates`, {});
-  }
-  getAllRelationship(){
-    return this.http.post<any>(`${this.baseUrl}getRelationShip`,{});
-  }
-  getCityByPinCode(pinCode: any) {
-    const headers = { 'content-type': 'application/json' };
-    return this.http.post<any>(`${this.baseUrl}getPinCode`, pinCode, { 'headers': headers });
-  }
-  getPinCodeByCity(pincode: any) {
-    return this.http.get<any>(`${this.baseUrl}Agent/Agency/GetPincodeDetails?pincode=${pincode}`);
+  getPinCodeByCity(reqdata: any) {
+    const PinCodeByCity = this.configService.config.baseUrl + this.configService.config.pinCodeDetails;
+    return this.http.post<any>(PinCodeByCity, reqdata);
   }
 
-  getHealthPlans(year: any, adultCount: any, childCount: any) {
-    return this.http.get<any>(`${this.apiUrl}`);
-  }
+  // getHealthPlans(year: any, adultCount: any, childCount: any) {
+  //   return this.http.get<any>(`${this.apiUrl}`);
+  // }
 
-  CreateProposal(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Banca/PartnerApi/CreateProposal`, reqData);
-  }
-  convertToRDBMS(data: any) {
-    const data1 = JSON.stringify(data);
-    const headers = { 'content-type': 'application/json' }
-    return this.http.post(`${this.baseUrl}Banca/Forms/ConvertToRDBMS`, data1, { 'headers': headers });
-  }
+  // CreateProposal(reqData: any) {
+  //   return this.http.post<any>(`${this.baseUrl}Banca/PartnerApi/CreateProposal`, reqData);
+  // }
+  // convertToRDBMS(data: any) {
+  //   const data1 = JSON.stringify(data);
+  //   const headers = { 'content-type': 'application/json' }
+  //   return this.http.post(`${this.baseUrl}Banca/Forms/ConvertToRDBMS`, data1, { 'headers': headers });
+  // }
   //For ICICI
-  getOccupations() {
-    return this.http.get<any>(`${this.apiUrl1}`);
-  }
+  // getOccupations() {
+  //   return this.http.get<any>(`${this.apiUrl1}`);
+  // }
 
   //For ABHI
-  getAllOccupation(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getOccupation`);
+
+
+
+
+
+
+
+
+
+
+
+  //yatra
+
+
+
+
+
+
+  getProposalNumber() {
+    const proposalnumber = this.configService.config.baseUrl + this.configService.config.proposalNumber;
+    return this.http.get<any>(proposalnumber);
   }
 
-  getAllOccupationRisk(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getRiskOccupation`);
+  Getproductlist(reqData: any) {
+    const productList = this.configService.config.baseUrl + this.configService.config.productList;
+    return this.http.post<any>(productList, reqData)
   }
 
-  getAllBankDetails(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getAllBankDetails`);
+  Getformsequence(reqData: any) {
+    const formSequence = this.configService.config.baseUrl + this.configService.config.formSequence;
+    return this.http.post<any>(formSequence, reqData)
   }
 
-  getBankCity(reqBody:any){
-    return this.http.post<any>(`${this.baseUrl}getBankCity`,reqBody);
+  GetSingleProductQuote(reqData: any) {
+    // const singleProductQuote=this.configService.config.baseUrl + this.configService.config.getSingleProductQuote;
+    const singleProductQuote = this.configService.config.baseUrl1 + this.configService.config.getSingleProductQuote;
+    return this.http.post<any>(singleProductQuote, reqData);
   }
 
-  getBranchDetails(reqBody:any){
-    return this.http.post<any>(`${this.baseUrl}getBranchDetails`,reqBody);
+
+  // storeToken(token: string) {
+  //   localStorage.setItem('token', token);
+  // }
+  // isLoggedIn(): boolean {
+  //   if (!!localStorage.getItem('token')) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+  signOut() {
+    localStorage.clear();
+    sessionStorage.clear();
+    this.router.navigate(['']);
   }
 
-  convertData(reqData: any,reqType: number){
-    return this.http.post<any>(`${this.baseUrl}Agent/ConvertData?dataType=${reqType}`,reqData);
 
+  checkNullOrUndefined(val: any) {
+    if (val === null || val === undefined || val === "null") {
+      return true;
+    } else {
+      return false;
+    }
   }
+  openDialog(obj: any, callBack: any) {
+    this.dialogRef = this.dialog.open(obj?.template, {
+      disableClose: true,
+      width: obj?.width ? obj?.width : '',
+      height: '',
+      data: obj.data ? obj.data : null,
+      panelClass: obj.customClass ? obj.customClass : 'rounded-dialog'
+    });
 
-  draftSave(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}draftSave`,reqData);
-  }
-
-  saveLeadDetails(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}saveLeadDetails`,reqData);
-  }
-  insertLeadDetails(reqData: any) {
-    return this.http.post<any>(`${this.baseUrl}Agent/Agency/InsertLeadDetails`, reqData);
-  }
-
-  commonDraftSave(reqData:any){
-    return this.http.post<any>(`${this.baseUrl}commonDraftSave`,reqData);
-  }
-
-  getTotalPremiumEncrypted(reqData: number){
-    console.log(reqData);
-    let res = this.http.post<any>(`${this.baseUrl}encrypt`,reqData,{responseType: 'text' as 'json'});
-    console.log(res);
-    
-    return res;
-    
+    this.dialogRef.afterClosed().subscribe((result: any) => {
+      callBack(result)
+    });
   }
 
-  getAddOnPremium(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Agent/CalculateAddonValue`,reqData);
+  hideDialog() {
+    if (this.dialogRef) {
+      this.dialogRef.close()
+    }
   }
-
-  getIdentification(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getId`);
+  uploaDocument(reqData:FormData){
+    const uploadDocument= this.configService.config.baseUrl1+this.configService.config.uploadDocument;
+    return this.http.post(uploadDocument,reqData);
   }
-
-  getProposerOccupation(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getProposerOccupation`);
-  }
-
-  getProposerRelationships(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Agent/getProposerRelationships`,reqData);
-  }
-  
-  getNatureOfOccupation(){
-    return this.http.get<any>(`${this.baseUrl}Agent/GetNatureOfWork`);
-  }
-
-  getNationality(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getNationality`);
-  }
-
-  getGstRegistrationStatus(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getGstRegistrationStatus`);
-  }
-
-  getSalutation(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getSalutation`);
-  }
-
-  getMaritalStatus(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getMaritalStatus`);
-  }
-
-  getEducationType(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getEducationType`);
-  }
-
-  getNomineeRelationship(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getNomineeRelationShip`);
-  }
-
-  getRelationship(){
-    return this.http.get<any>(`${this.baseUrl}Agent/getRelationship`);
-  }
-
-  getHalfQuotation(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}getHalfQuote`,reqData);
-  }
-  getHalfQuote(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Agent/Agency/GetHalfQuote`,reqData);
-  }
-  getFullQuote(reqData: any){
-    return this.http.post<any>(`${this.baseUrl}Agent/Agency/GetHalfQuote`,reqData);
-  }
-  getInsurerData(){
-    return this.http.get<any>(`${this.baseUrl}Agent/GetInsurerData`);
-  }
-  
-    //claims
-    getClaimsList(data: any): Observable<any>{
-      return this.http.post('https://usp.monocept.ai/ClaimsEndorsement/api/claim/getclaimlist',data);
-     }
 }

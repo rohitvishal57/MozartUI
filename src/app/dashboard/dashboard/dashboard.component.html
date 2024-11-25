@@ -1,0 +1,555 @@
+<main class="siteBody">
+  <div class="contentBody bodyColumns-1 bodyColumns-dashboard">
+    <div class="bodyColumn body_flex_column">
+      <div class="contentBody dashboard_contentContainer body_flex_column">
+        <!--Goodmorning, Raise ticket start-->
+        <section class="section_fullWidth white_container dashboard_topSection commonSection ">
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+              <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}}</h6>
+            </div>
+            <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+              <div class="topSection_notifyUserInfo">
+                <div class="item_notifyUserInfo">
+                  <button type="button" class="btn_iconText" id="btn-raiseaTicket" name="btn-raiseaTicket"><img
+                      src="assets/Img/icon_raise_ticket.svg"> Raise a Ticket</button>
+                </div>
+                <div class="item_notifyUserInfo">
+                  <button type="button" id="as-user" name="as-user" class="btn_asUser"><img
+                      src="assets/Img/icon_red_user.svg">AS<img src="assets/Img/icon_red_downarrow.svg"></button>
+                </div>
+                <div class="item_notifyUserInfo">
+                  <button type="button" id="count-notification2" name="count-notification2"
+                    class="btn_notification"><img src="../../../assets/Img/icon_notifications.svg"><span
+                      class="badge">3</span></button>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </section>
+        <!--Goodmorning, Raise ticket end-->
+        <!--Search, Get Quote start-->
+        <div class="section_fullWidth">
+          <div class="cardWraper">
+            <div class="cardItem">
+              <div class="cardItem_header">
+                <div class="cardItem_headerSearch">
+                  <div class="field_searchMain">
+                    <input type="text" class="filterSearch"
+                      placeholder="Search Your Customer, Leads, Claims No and more" />
+                    <img src="assets/Img/icon_magnify_grey.svg">
+                    <!--Search Results section start-->
+                    <div class="overlay_popupMain overlay_dropdown_w518 overlay_searchResults block-hide">
+                        <div class="option_policyType">
+                            <div class="overlay_body insurer_detailsMain">
+                                <div class="data_searchResults">
+                                  <section class="tableMain quoteView block-show">
+                                    <div class="tableSubMain">
+                                      <div class="table-responsive">
+                                        <table class="table table-borderless table-search">
+                                          <thead>
+                                            <tr>
+                                              <th scope="col">Lead ID</th>
+                                              <th scope="col">Customer ID</th>
+                                              <th scope="col">Policy Number</th>
+                                              <th scope="col">Mobile Number</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody class="table-group-divider tbody-quoteView">
+                                            <tr >
+                                              <td>UPL112115843794</td>
+                                              <td>PT91433680</td>
+                                              <td>40-23-0003453-00</td>
+                                              <td>9849780969</td>
+                                            </tr> 
+                                            <tr >
+                                              <td>UPL112115843794</td>
+                                              <td>PT91433680</td>
+                                              <td>40-23-0003453-00</td>
+                                              <td>9849780969</td>
+                                            </tr> 
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Search Results section end-->
+                  </div>
+                </div>
+                <div class="cardItem_headerButtons">
+                  <button class="get-quote-btn" type="button" id="getquote" name="getquote" (click)="getQuote()">
+                    <img src="assets/Img/plus_icon.svg"> {{"Get Quote" | translate}}
+                  </button>
+                  <button class="get-quote-btn" type="button" id="createlead" name="createlead" (click)="createLead()">
+                    <img src="assets/Img/plus_icon.svg"> {{"Create Lead" | translate}}
+                  </button>
+
+                </div>
+              </div>
+              <div *ngIf="showCard">
+                <app-get-quote></app-get-quote>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Search, Get Quote end-->
+        <!--Important tasks start-->
+        <section class="body_flex_column dashboard_improtantTasks suggested_styles commonSection ">
+          <h2>{{"Important Tasks" | translate}}</h2>
+          <div class="card_wraper improtantTasks">
+            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropTasks($event)">
+              <ng-container *ngFor="let tasks of taskList">
+                <div class="card_item" cdkDrag>
+                  <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.taskStatus | translate}}<img
+                      src="assets/Img/icon_star_four_points.svg"></div>
+                  <h5>{{tasks.taskHeader | translate}}</h5>
+                  <p>{{tasks.subtaskHeaderDesc | translate}}</p>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </section>
+        <!--Important tasks end-->
+        <!--Latest from ABHI start-->
+        <section class="body_flex_column dashboard_latestABHI commonSection ">
+          <div class="body_flex_row justify-content-between">
+            <h6>{{"Latest from ABHI" | translate}}</h6>
+            <button type="button" id="btn-exploreMore" name="btn-exploreMore"
+              class="btn_iconText btn_exploreMore">{{"Explore More" | translate}} <img src="assets/Img/icon_red_downarrow.svg"> </button>
+          </div>
+
+          <div class="card_wraper latestFromABHI">
+            <div class="cardsub_wraper">
+
+              <div class="card_item ">
+                <div class="card_subitem">
+                  <div class="card_subitem_img">
+                    <img src="assets/Img/img_latest_abhi.png">
+                  </div>
+                  <div class="card_subitem_content">
+                    <header>
+                      <div class="card_item_icon"><img src="assets/Img/icon_noise_partnership.png"></div>
+                      <h5>Noise partnership</h5>
+                      <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
+                        class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
+                    </header>
+                    <h5>Noise partnership</h5>
+                    <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card_item ">
+                <div class="card_subitem">
+                  <div class="card_subitem_img">
+                    <img src="assets/Img/img_latest_abhi.png">
+                  </div>
+                  <div class="card_subitem_content">
+                    <header>
+                      <div class="card_item_icon"><img src="assets/Img/icon_pharmacy_partnership.png"></div>
+                      <h5>Pharmacy partnership</h5>
+                      <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
+                        class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
+                    </header>
+                    <h5>Pharmacy partnership</h5>
+                    <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card_item ">
+                <div class="card_subitem">
+                  <div class="card_subitem_img">
+                    <img src="assets/Img/img_latest_abhi.png">
+                  </div>
+                  <div class="card_subitem_content">
+                    <header>
+                      <div class="card_item_icon"><img src="assets/Img/icon_new_plan.png"></div>
+                      <h5>New plan</h5>
+                      <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
+                        class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
+                    </header>
+                    <h5>New plan</h5>
+                    <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="card_item active">
+                <div class="card_subitem">
+                  <div class="card_subitem_img">
+                    <img src="assets/Img/img_latest_abhi.png">
+                  </div>
+                  <div class="card_subitem_content">
+                    <header>
+                      <div class="card_item_icon"><img src="assets/Img/icon_new_plan.png"></div>
+                      <h5>Key Insights from Mayank Bathwal</h5>
+                      <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
+                        class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
+                    </header>
+                    <h5>Key Insights from Mayank Bathwal</h5>
+                    <p>Mayank has been responsible for setting up the latest venture of Aditya Birla Capital Limited in
+                      the health insurance space. With his expertise and </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!--Latest from ABHI end-->
+
+        <!--Performance Overview start-->
+        <div class="contentBody dashboard_contentContainer">
+          <div class="performance-overview">
+            <header>
+              <h2>{{"Performance Overview" | translate}}</h2>
+            </header>
+            <div class="subHeader">
+              <div class="notification">
+                <img src="assets/Img/icon_tips.svg">{{"You've converted 10% more people this month compared to last month" | translate}}
+              </div>
+              <div class="badge badge-purple">
+                <img src="assets/Img/icon_badge.svg">{{"Top Seller" | translate}}
+              </div>
+            </div>
+            <div>
+              <div class="cardWraper-container" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropPerformance($event)">
+                <ng-container *ngFor="let perform of performanceCard">
+                  <ng-container [ngSwitch]="perform.type">
+                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'" cdkDrag>
+                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}</header>
+                      <div class="value">{{perform.value}}</div>
+                      <div class="card-tip"><img [src]="perform.subIcon">{{perform.description | translate}}</div>
+                    </div>
+                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'progress'" cdkDrag>
+                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}</header>
+                      <div class="value">{{perform.value}}</div>
+                      <div class="progress-barMain">
+                        <p>{{perform.description | translate}}</p>
+                        <div class="progress-bar">
+                          <div class="progress" [ngStyle]="{ 'width': perform.progress + 'px' }"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag>
+                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}</header>
+                      <div class="value">{{perform.value}}</div>
+                      <div class="card-tip"><img src="assets/Img/icon_rupee.svg">{{perform.description | translate}}</div>
+                    </div>
+                    <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'" cdkDrag>
+                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}</header>
+                      <div class="gauge">
+                        <!-- <ag-gauge [options]="options"></ag-gauge> -->
+                        <div class="gauge-body">
+                          <div class="gauge-fill"></div>
+                          <div class="sub-text">{{"Policies" | translate}}</div>
+                          <div class="gauge-cover">{{perform.progress}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Performance Overview end-->
+        <!--All Tasks start-->
+        <section class="body_flex_column dashboard_allTasks white_container commonSection">
+          <div class="body_flex_row justify-content-between">
+            <h6>{{"All Tasks" | translate}}</h6>
+            <span
+              class="common-badge common-badge-rounded tasks-badge tasks-badge-blue"><em></em>{{taskDetailsList.length}}
+             {{" Tasks Pending" | translate}}</span>
+          </div>
+          <div class="card_wraper">
+            <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList (cdkDropListDropped)="dropTaskDetail($event)">
+              <ng-container *ngFor="let taskDetails of taskDetailsList">
+                <div class="card_item" cdkDrag>
+                  <div class="head_tasks">
+                    <span class="profile_pic"><img src="assets/Img/img_avatar.png"></span>{{taskDetails.title}}
+                  </div>
+                  <div class="card-tip">
+                    <img src="assets/Img/icon_currency.svg">
+                    {{taskDetails.desc}}
+                  </div>
+                  <button type="button" id="btn-resend-paymentlink" name="btn-resend-paymentlink"
+                    class="btn_iconText btn_exploreMore">{{taskDetails.redirectLink}}<img
+                      src="assets/Img/icon_red_downarrow.svg"></button>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </section>
+        <!--All Tasks end-->
+        
+
+        <!--Dashboard: Other sections start-->
+        <section class="dashboard_otherSections commonSection">
+          <div class="board_otherSections">
+              <!--Knowledge Centre start-->
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"Knowledge Centre" | translate}}</h2>
+                      <button type="button" id="btn-view-all-courses" name="btn-view-all-courses" class="btn_iconText btn_exploreMore">
+                        {{"View All Courses" | translate}} <img src="assets/Img/icon_red_downarrow.svg"></button>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <ul class="inlineFilter">
+                      <li><button type="button" id="kc-completed" name="kc-completed" class="btn_quickFilter btn_quickFilterClaim active">{{"Completed" | translate}} </button></li>
+                      <li><button type="button" id="kc-inprogress" name="kc-inprogress" class="btn_quickFilter btn_quickFilterClaim ">{{"In Progress" | translate}} </button></li>
+                      <li><button type="button" id="kc-pending" name="kc-pending" class="btn_quickFilter btn_quickFilterClaim ">{{"Pending" | translate}} </button></li>
+                    </ul>
+                    <div class="card_wraper">
+                      <div class="cardsub_wraper">
+
+                        <div class="card_item body_flex_column knowledgeInfo">
+                            <div class="video_knowledgeInfo">
+                              <img src="assets/Img/img_knowledge.png">
+                            </div>
+                            <div class="content_knowledgeInfo body_flex_row">
+                              <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                              <button type="button" id="btn-resume" name="btn-resume"
+                                class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
+                        </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
+                        </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+              <!--Knowledge Centre end-->
+              <!--DHA & HR Portfolio start-->
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"DHA & HR Portfolio" | translate}}</h2>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper">
+                      <div class="cardsub_wraper">
+                        <div class="cardItem">
+                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_dha.svg"></span>{{"Digital Health Assessments" | translate}}</header>
+                          <!--<div class="row">
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-8">
+                              <div class="value">241</div>
+                              <div class="label">{{"Total Assessments" | translate}}</div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                              <div class="value">199</div>
+                              <div class="label">{{"Users" | translate}}</div>
+                            </div>
+                          </div>-->
+                          <div class="info_assessments body_flex_row justify-content-between">
+                              <div class="item_assessments">
+                                <div class="value">241</div>
+                                <div class="label">{{"Total Assessments" | translate}}</div>
+                              </div>
+                              <div class="item_assessments">
+                                <div class="value">199</div>
+                                <div class="label">{{"Users" | translate}}</div>
+                              </div>
+                          </div>
+                          <div class="card-tip">
+                            <img src="assets/Img/icon_lightbulb.svg">
+                            {{"Dummy placeholder text" | translate}}
+                          </div>
+                        </div>
+                        <div class="cardItem">
+                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Returns" | translate}}</header>
+                          <div class="value">₹ 50,000</div>
+                          <div class="card-tip">
+                            <img src="assets/Img/icon_currency.svg">
+                            {{"Nudge your users to actively participate to save more" | translate}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--DHA & HR Portfolio end-->
+              <!--Top Selling Products start-->
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"Top Selling Products" | translate}}</h2>
+                      <div class="filterfields_input">
+                        <div class="input-block input-block-renew compare_inputblock">
+                          <select id="filter-topselling" name="filter-topselling" class="form-select input-selectBox">
+                            <option value="" >{{"Select" | translate}}</option>
+                            <option value="seniorcitizens" selected>{{"For Senior Citizens" | translate}}</option>
+                            <option value="seniorcitizens">{{"For Senior Citizens" | translate}}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper topSellingProducts">
+                      <div class="cardsub_wraper">
+
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <header class="body_flex_row head_tsp">
+                              <div class="common_ProductInfo">
+                                  <div class="common_ppi_img">
+                                    <img src="assets/Img/icon_activeone.svg">
+                                  </div>
+                                  <div class="common_ppi_info">
+                                    <h4>{{"Activ One NXT" | translate}}</h4>
+                                  </div>
+                              </div>
+                              <div class="common_ProductPrice">
+                                <span class="text-red">₹6,863*</span>{{"/ 1 year" | translate}}
+                              </div>
+                          </header>
+                          <ul class="tick_round">
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"5X Coverage of Base Sum" | translate}} </div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"Health Assessment" | translate}}</div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"Cover Home-based Treatments" | translate}}</div></li>
+                          </ul>
+                          <footer>
+                            <button type="button" id="btn-sellingTips" name="btn-sellingTips"
+                              class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span class="body_flex_row"><img
+                              src="assets/Img/icon_lightbulb2.svg">{{"Show selling tips for me" | translate}}</span> <em><img
+                                src="assets/Img/icon_right_arrow_black.svg"></em></button>
+                          </footer>
+                        </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <header class="body_flex_row head_tsp">
+                              <div class="common_ProductInfo">
+                                  <div class="common_ppi_img">
+                                    <img src="assets/Img/icon_activeone.svg">
+                                  </div>
+                                  <div class="common_ppi_info">
+                                    <h4>{{"Activ One NXT" | translate}}</h4>
+                                  </div>
+                              </div>
+                              <div class="common_ProductPrice">
+                                <span class="text-red">₹6,863*</span>{{"/ 1 year" | translate}}
+                              </div>
+                          </header>
+                          <ul class="tick_round">
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"5X Coverage of Base Sum" | translate}}</div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"Health Assessment" | translate}} </div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"Cover Home-based Treatments" | translate}}</div></li>
+                          </ul>
+                          <footer>
+                            <button type="button" id="btn-sellingTips" name="btn-sellingTips"
+                              class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span class="body_flex_row"><img
+                              src="assets/Img/icon_lightbulb2.svg">{{"Show selling tips for me" | translate}}</span> <em><img
+                                src="assets/Img/icon_right_arrow_black.svg"></em></button>
+                          </footer>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Top Selling Products end-->
+              <!--Participate in challenge to start-->
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head otherSections_head_column">
+                      <h2>{{"Participate in challenge to" | translate}}</h2>
+                      <div class="body_flex_row">
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_hityourdailygoal.svg">{{"Hit your daily goal" | translate}}</span>
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_competewithpeer.svg">{{"Compete with peers" | translate}}</span>
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_earnbadge.svg">{{"Earn badges" | translate}}</span>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper topSellingProducts participateChallenge">
+                      <div class="cardsub_wraper">
+
+                        <div class="card_item body_flex_row knowledgeInfo">
+                          <div class="left_PC block_bg_blue">
+                            {{"#95k Steps in 15 Days" | translate}}
+                          </div>
+                          <div class="right_PC">
+                              <div class="body_flex_column">
+                                <div class="PC_information">
+                                  <div class="PC_head">
+                                    <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}                                  </div>
+                                  <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
+                                  <div class="PC_dateInfo">
+                                    <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" | translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
+                                  </div>
+                                </div>
+                                <button type="button" id="btn-knowmore" name="btn-knowmore" class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="card_item body_flex_row knowledgeInfo">
+                          <div class="left_PC block_bg_green">
+                            {{"#1200 Calorie Burn" | translate}}
+                          </div>
+                          <div class="right_PC">
+                              <div class="body_flex_column">
+                                <div class="PC_information">
+                                  <div class="PC_head">
+                                    <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}
+                                  </div>
+                                  <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
+                                  <div class="PC_dateInfo">
+                                    <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" | translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
+                                  </div>
+                                </div>
+                                <button type="button" id="btn-knowmore" name="btn-knowmore" class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
+                              </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Participate in challenge to end-->
+          </div>
+        </section>
+        <!--Dashboard: Other sections end-->
+
+        <!--Top Widgets and Other start-->
+        <!--Top Widgets and Other end-->
+      </div>
+      <!-- <app-get-quote></app-get-quote> -->
+    </div>
+  </div>
+</main>
