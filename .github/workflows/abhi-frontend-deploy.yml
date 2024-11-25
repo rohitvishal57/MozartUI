@@ -178,8 +178,8 @@ jobs:
     - name: Debug:List files after downloading artifacts
       run: ls -l ./my-artifacts
 
-    - name: Remove existing files in IIS web root
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Test-Path '${{ env.WEB_ROOT }}\\bancaassurance-frontend') { Remove-Item '${{ env.WEB_ROOT }}\\bancaassurance-frontend\\*' -Recurse -Force } else { Write-Output 'Frontend directory not found' }\""
+    #- name: Remove existing files in IIS web root
+    #  run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Test-Path '${{ env.WEB_ROOT }}\\bancaassurance-frontend') { Remove-Item '${{ env.WEB_ROOT }}\\bancaassurance-frontend\\*' -Recurse -Force } else { Write-Output 'Frontend directory not found' }\""
 
     - name: Upload artifact to VM with versioning
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
@@ -197,8 +197,8 @@ jobs:
     #- name: Ensure abhi_frontend Directory Exists in IIS Web Root
     #  run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
   
-    - name: Clean up the abhi_frontend Directory
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
+    #- name: Clean up the abhi_frontend Directory
+    #  run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
   
     - name: Copy Latest Build to IIS web root directory
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}/*' -Destination '$WEB_ROOT' -Recurse -Force\""
