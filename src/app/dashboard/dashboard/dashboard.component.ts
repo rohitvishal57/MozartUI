@@ -6,6 +6,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { DashboardService } from './dashboard.service';
 import Chart from 'chart.js/auto';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,7 +27,7 @@ export class DashboardComponent {
   performanceCard: any = [];
   tabsInfo: any = [];
   renewalDetail: any;
-  quickActionDetails : any;
+  quickActionDetails: any;
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
@@ -140,6 +141,31 @@ export class DashboardComponent {
     }
   }
 
+  // combineCalls() {
+
+  //   forkJoin({
+  //     quickActionWidget: this.dashboardService.fetchPerformanceDetails({
+  //       "WidgetName": 'QuickAction',
+  //       "AgentCode": localStorage.getItem('agentCode')
+  //     }),
+  //     performanceWidget: this.dashboardService.fetchPerformanceDetails({
+  //       "WidgetName": 'Performance',
+  //       "AgentCode": localStorage.getItem('agentCode')
+  //     }),
+  //     businessWidget: this.dashboardService.fetchPerformanceDetails({
+  //       "WidgetName": 'Business',
+  //       "AgentCode": localStorage.getItem('agentCode')
+  //     }),
+  //     customerwidget: this.dashboardService.fetchPerformanceDetails({
+  //       "WidgetName": 'Customer',
+  //       "AgentCode": localStorage.getItem('agentCode')
+  //     })
+  //   }).subscribe(data => {
+  //     console.log(data)
+  //   })
+  // }
+
+
   fetchWidgets() {
     const arr = [
       {
@@ -175,7 +201,7 @@ export class DashboardComponent {
                   const nops = {
                     title: 'Policies Sold',
                     value: res.data[0][el],
-                    description: `Policies sold as per selected range ${res.data[0][el]}` ,
+                    description: `Policies sold as per selected range ${res.data[0][el]}`,
                     icon: 'assets/Img/icon_dashboard_policysold.svg',
                     subIcon: 'assets/Img/icon_price_tag.svg',
                     type: 'text',
@@ -201,7 +227,7 @@ export class DashboardComponent {
                   const commissionEarned = {
                     title: 'Commission Earned',
                     value: res.data[0][el],
-                    description: `You can potentially earned ${ res.data[0][el]}`,
+                    description: `You can potentially earned ${res.data[0][el]}`,
                     icon: 'assets/Img/icon_dashboard_healthreturn.svg',
                     type: 'action',
                     class: 'commission-earned'
@@ -240,9 +266,11 @@ export class DashboardComponent {
         case 'Business':
           this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
             console.log('Business', res.data);
+
             this.tabsInfo = [
               {
                 tabName: 'Leads',
+                totalCount: res.data.filter((item: any) => item.dataType === "Lead").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Lead").map((item: any) => ({
 
                   name: item.status,
@@ -251,8 +279,8 @@ export class DashboardComponent {
               },
               {
                 tabName: 'Proposals',
+                totalCount: res.data.filter((item: any) => item.dataType === "Proposal").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Proposal").map((item: any) => ({
-
                   name: item.status,
                   count: item.count
                 }))
@@ -265,7 +293,7 @@ export class DashboardComponent {
               //   }))
               // }
             ];
-            return this.tabsInfo
+            return this.tabsInfo;
           })
           break;
 
@@ -327,16 +355,14 @@ export class DashboardComponent {
     });
 
     this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
-      this.renewalDetail = res.data;
+      this.renewalDetail = res.data.map((item: any) => ({
+        totalCount: res.data.reduce((sum: any, item: any) => sum + item.customerCount, 0),
+        name: item.dueStatus,
+        count: item.customerCount
+      }))
     });
   }
 
-  ngAfterViewInit(): void {
-    const chartCanvas = document.getElementById('myChart') as HTMLCanvasElement;
-    const chartCanvasRenew = document.getElementById('renew') as HTMLCanvasElement;
-    chartCanvas.width  = 300;
-    chartCanvas.height = 200;
-  }
 
   ngOnDestroy(): void {
     this.renewalChart.destroy();
