@@ -1,0 +1,193 @@
+{
+    "formTitle": "EDIT NOMINEE DETAILS",
+    "addNomineeBtnTitle": "Add another Nominee",
+    "formSections": [
+      {
+        "sectionTitle": "",
+        "visible": true,
+        "class": "nominee-details",
+        "formControls": [
+          {
+            "name": "makeSpouseNominee",
+            "label": "Make your spouse a nominee",
+            "visible": true,
+            "visibleLabel": true,
+            "type": "checkbox",
+            "value": false,
+            "class": "form-group"
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Nominee Personal Details",
+        "visible": true,
+        "class": "nominee-section",
+        "formControls": [
+          {
+            "name": "firstName",
+            "label": "First Name",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "class": "col-md-3",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "First Name is required"
+              },
+              {
+                "validatorName": "pattern",
+                "pattern": "^[a-zA-Z ]*$",
+                "message": "First Name should contain only alphabets"
+              }
+            ]
+          },
+          {
+            "name": "middleName",
+            "label": "Middle Name",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "class": "col-md-3"
+          },
+          {
+            "name": "lastName",
+            "label": "Last Name",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "class": "col-md-3",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "Last Name is required"
+              },
+              {
+                "validatorName": "pattern",
+                "pattern": "^[a-zA-Z ]*$",
+                "message": "Last Name should contain only alphabets"
+              }
+            ]
+          },
+          {
+            "name": "dob",
+            "label": "DOB",
+            "visibleLabel": true,
+            "type": "date",
+            "value": "",
+            "class": "col-md-3",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "Date of Birth is required"
+              }
+            ]
+          },
+          {
+            "name": "relationWithNominee",
+            "label": "Relation with Nominee",
+            "visibleLabel": true,
+            "type": "select",
+            "value": "",
+            "options": [
+              { "name": "Spouse", "value": "spouse" },
+              { "name": "Child", "value": "child" },
+              { "name": "Parent", "value": "parent" },
+              { "name": "Other", "value": "other" }
+            ],
+            "class": "col-md-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "Relation with Nominee is required"
+              }
+            ]
+          },
+          {
+            "name": "nomineeContactNo",
+            "label": "Nominee Contact No.",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "class": "col-md-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "Nominee Contact No. is required"
+              },
+              {
+                "validatorName": "pattern",
+                "pattern": "^[0-9]{10}$",
+                "message": "Nominee Contact No. should be a valid 10-digit number"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Nominee Contact Details",
+        "visible": true,
+        "class": "nominee-section",
+        "formControls": [
+          {
+            "name": "mobileNumber",
+            "label": "Mobile Number",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "class": "col-md-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "Mobile Number is required"
+              },
+              {
+                "validatorName": "pattern",
+                "pattern": "^[0-9]{10}$",
+                "message": "Mobile Number should be a valid 10-digit number"
+              }
+            ]
+          },
+          {
+            "name": "emergencyPhoneNumber",
+            "label": "Emergency phone number",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "class": "col-md-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "Emergency phone number is required"
+              },
+              {
+                "validatorName": "pattern",
+                "pattern": "^[0-9]{10}$",
+                "message": "Emergency phone number should be a valid 10-digit number"
+              }
+            ]
+          },
+          {
+            "name": "emailAddress",
+            "label": "Email Address",
+            "visibleLabel": true,
+            "type": "email",
+            "value": "",
+            "class": "col-md-4",
+            "validators": [
+              {
+                "validatorName": "required",
+                "message": "Email Address is required"
+              },
+              {
+                "validatorName": "pattern",
+                "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
+                "message": "Email Address is not valid"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  

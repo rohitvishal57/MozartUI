@@ -1,0 +1,435 @@
+{
+    "formTitle": "Edit Details of your Son",
+    "addNomineeBtnTitle": "Delete Member",
+    "buttonTitle": "Add Member",
+    "formSections": [
+      {
+        "sectionTitle": "",
+        "visible": true,
+        "class": "Member_dtl_add_inf",
+        "formControls": [
+            {
+                "name": "Member details",
+                "label": "Member details",
+                "visible": true,
+                "visibleLabel": true,
+                "type": "detail",
+                "value": false,
+                "class": "col-1 detail-header"
+            },
+            {
+                "name": "arrow",
+                "label": "arrow",
+                "visible": true,
+                "visibleLabel": true,
+                "type": "icon",
+                "value": false,
+                "class": "col-1"
+
+            },
+            {
+                "name": "Additional Information",
+                "label": "Additional Information",
+                "visible": true,
+                "visibleLabel": true,
+                "type": "detail",
+                "value": false,
+                "class": "col-1 add-info"
+
+            }
+        ]
+      },
+    
+      {
+        "sectionTitle": "Prior Policies",
+        "visible": true,
+        "class": "prior-policies",
+        "formControls": [
+          {
+            "name": "priorPolicies",
+            "label": "Do any of the Insured members or the proposer have previously owned Insurance policies?",
+            "type": "radio",
+            "options": [
+              {"label": "Yes", "value": "yes"},
+              {"label": "No", "value": "no"}
+            ],
+            "class": "col-md-12",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "insuredMember1",
+            "label": "Son",
+            "visibleLabel": true,
+            "type": "select",
+            "value": "",
+            "options": [
+              {"name": "Son", "value": "son"},
+              {"name": "Daughter", "value": "daughter"},
+              {"name": "Spouse", "value": "spouse"}
+            ],
+            "class": "col-md-3"
+          },
+          {
+            "name": "benefitType1",
+            "label": "Benefit type",
+            "type": "select",
+            "visibleLabel": true,
+            "value": "",
+            "options": [
+              {"name": "Health", "value": "health"},
+              {"name": "Life", "value": "life"},
+              {"name": "Accident", "value": "accident"}
+            ],
+            "class": "col-md-3"
+          },
+          {
+            "name": "policyNumber1",
+            "label": "Policy Number",
+            "type": "text",
+            "class": "col-md-3",
+            "value":"",
+            "visibleLabel": true
+          },
+          {
+            "name": "sumAssured1",
+            "label": "Sum assured",
+            "type": "text",
+            "class": "col-md-3",
+            "value":"",
+            "visibleLabel": true
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Citizenship",
+        "visible": true,
+        "class": "citizenship",
+        "formControls": [
+          {
+            "name": "citizenship",
+            "label": "Are any of the Insured Members or the Proposer not an Indian citizen?",
+            "type": "radio",
+            "options": [
+              {"label": "Yes", "value": "yes"},
+              {"label": "No", "value": "no"}
+            ],
+            "class": "col-md-12",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "insuredMember1",
+            "label": "Son",
+            "type": "select",
+            "visibleLabel": true,
+            "value": "",
+            "options": [
+              {"name": "Son", "value": "son"},
+              {"name": "Daughter", "value": "daughter"},
+              {"name": "Spouse", "value": "spouse"}
+            ],
+            "class": "col-md-3"
+          },
+          {
+            "name": "benefitType1",
+            "label": "Benefit type",
+            "type": "select",
+            "visibleLabel": true,
+            "options": [
+              {"name": "Health", "value": "health"},
+              {"name": "Life", "value": "life"},
+              {"name": "Accident", "value": "accident"}
+            ],
+            "class": "col-md-3",
+            "value":""
+          },
+          {
+            "name": "policyNumber1",
+            "label": "Policy Number",
+            "type": "text",
+            "class": "col-md-3",
+            "value":"",
+            "visibleLabel": true
+          },
+          {
+            "name": "sumAssured1",
+            "label": "Sum assured",
+            "type": "text",
+            "class": "col-md-3",
+            "value":"",
+            "visibleLabel": true
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Extraneous Conditions",
+        "visible": true,
+        "class": "extraneous-conditions",
+        "formControls": [
+          {
+            "name": "extraneousConditions",
+            "label": "Are any of the Insured Members or the Proposer not an Indian citizen?",
+            "type": "radio",
+            "options": [
+              {"label": "Yes", "value": "yes"},
+              {"label": "No", "value": "no"}
+            ],
+            "class": "col-md-12",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "insuredMember2",
+            "label": "Son",
+            "type": "select",
+            "visibleLabel": true,
+            "value": "",
+            "options": [
+              {"name": "Son", "value": "son"},
+              {"name": "Daughter", "value": "daughter"},
+              {"name": "Spouse", "value": "spouse"}
+            ],
+            "class": "col-md-3"
+          },
+          {
+            "name": "occupation",
+            "label": "Occupation",
+            "type": "select",
+            "visibleLabel": true,
+            "value": "",
+            "options": [
+              {"name": "Engineer", "value": "engineer"},
+              {"name": "Doctor", "value": "doctor"},
+              {"name": "Teacher", "value": "teacher"}
+            ],
+            "class": "col-md-3"
+          }
+        ]
+      },
+      {
+        "sectionTitle": "Pre-existing conditions",
+        "visible": true,
+        "class": "pre-existing-conditions",
+        "formControls": [
+         {
+             "name": "consulted_a_doctor",
+             "label": "Are any of the Insured Members or the Proposerever been diagnosed with or consulted a doctor or advised surgery for any of the following: Paralysis, Epilepsy/Fits, Physical disability / defects, Psychiatric disorder, defect in sight/hearing/speech?",
+             "type": "radio",
+             "options": [
+               {"label": "Yes", "value": "yes"},
+               {"label": "No", "value": "no"}
+             ],
+             "class": "col-md-12",
+             "visibleLabel": true,
+            "value":""
+           },
+          {
+            "name": "diabetes",
+            "label": "Diabetes",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "asthma",
+            "label": "Asthma/Chronic Pulmonary Obstructive Disease",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "hypertension",
+            "label": "High blood pressure (Hypertension)",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "highCholesterol",
+            "label": "High cholesterol/High triglycerides (Hyperlipidemia)",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "heartRelated",
+            "label": "Heart related",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "lunchRespiratory",
+            "label": "Lunch / respiratory",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "entRelated",
+            "label": "ENT related/optical",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "brainNervous",
+            "label": "Brain/nervous",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "kidneyUrinary",
+            "label": "Kidney/urinary",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "cancerTumor",
+            "label": "Cancer turmoil",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "std",
+            "label": "Sexually transmitted disease",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "disability",
+            "label": "Disability/mental illness",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "anemia",
+            "label": "Anemia or blood disorder (treated or untreated)",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "polio",
+            "label": "Polio/genetic disorder/Obstructed sleep apnea/Varicose veins",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "birthDefect",
+            "label": "Congenital/birth defect, Genetic disease/physical deformity/disability",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "paralysis",
+            "label": "Paralysis, Polio, Joints/Arthritis/prolonged back pain",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          },
+          {
+            "name": "accidentalInjury",
+            "label": "Accidental injury or implant in body",
+            "type": "radio",
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ],
+            "class": "col-md-6",
+            "visibleLabel": true,
+            "value":""
+          }
+        ]
+      }
+    ]
+  }
+  

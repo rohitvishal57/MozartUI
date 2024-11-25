@@ -1,0 +1,203 @@
+/* Required Css Start */
+::ng-deep .table>:not(caption)>*>* {
+  background: hidden;
+}
+::ng-deep .table .p-element {
+  padding: 0; // Set padding to 0 for p-element
+}
+::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #f1f3f67a !important;
+  display: contents;
+}
+
+
+::ng-deep .p-paginator{
+  background-color: transparent;
+}
+
+::ng-deep .p-paginator .p-paginator-page {
+  border-radius: 8px !important;
+  font-family: Anek Latin;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.8px;
+  text-align: center;
+  color: black !important;
+  border: 1px solid var(--Neutral-Additional-BGGrey, #F1F3F6) !important;
+  background: var(--Neutral-Additional-White100, #FFFFFF) !important;
+  padding: 8px 12px; 
+  margin: 0 5px; 
+}
+  
+::ng-deep .p-paginator .p-paginator-first,
+::ng-deep .p-paginator .p-paginator-prev,
+::ng-deep .p-paginator .p-paginator-next,
+::ng-deep .p-paginator .p-paginator-last {
+  border-radius: 8px !important;
+  font-family: Anek Latin;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.8px;
+  text-align: center;
+  color: black !important;
+  border: 1px solid var(--Neutral-Additional-BGGrey, #F1F3F6) !important;
+  background-color: white;
+  padding: 8px 12px; 
+  margin: 0 5px;
+}
+  
+::ng-deep .p-paginator .p-paginator-page:hover,
+::ng-deep .p-paginator .p-highlight:not(.p-highlight),
+::ng-deep .p-paginator .p-paginator-first:hover,
+::ng-deep .p-paginator .p-paginator-prev:hover,
+::ng-deep .p-paginator .p-paginator-next:hover,
+::ng-deep .p-paginator .p-paginator-last:hover {
+  background-color: #C7222A !important;
+  border-color: #C7222A !important;
+  color: #fff !important;
+}
+  
+::ng-deep .my-paginator .p-highlight {
+  background: var(--Brand-Primary-CapitalRed, #C7222A) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-family: Anek Latin;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.8px;
+  text-align: center;
+
+}
+  
+::ng-deep .my-paginator .p-dropdown {
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+}
+::ng-deep .my-paginator .p-dropdown-label {
+  text-align: center !important;
+}
+
+::ng-deep .p-paginator .p-paginator-pages .p-paginator-page,
+::ng-deep .p-paginator .p-paginator-first, 
+::ng-deep .p-paginator .p-paginator-prev, 
+::ng-deep .p-paginator .p-paginator-next, 
+::ng-deep .p-paginator .p-paginator-last {
+  min-width: initial;
+  padding: 4px;
+  width: 32px;
+  height: 32px;
+}
+::ng-deep .p-paginator .p-dropdown {
+  height: 32px;
+}
+::ng-deep .p-dropdown .p-dropdown-trigger {
+width:2rem;
+}
+::ng-deep .p-dropdown-label {
+padding:0 0 0 10px !important;
+}
+.pagination-info{
+  padding-left: 27rem;
+  color:#999494;
+}
+.additional-info{
+  display: flex;
+  align-items: center;
+  gap:15px;
+  p {
+    margin: 0 !important;
+    font-size: 12px;
+  }
+}
+.filterWraperForm .fw_form .fw_formRow {
+  gap:0px;
+}
+.claimDetails_btn{
+  padding: 3px 14px;
+  background: var(--primary-red-color);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 19px;
+  color: var(--white-color);
+  border: 1px solid var(--primary-red-color);
+  border-radius: 17px;
+}
+
+/*---Common css start---*/
+.filterHeader{
+  display: flex;
+  justify-content: space-between;
+}
+.btn_quickFilter {
+  &.btn_quickFilterClaim {
+    height: auto !important;
+    min-width: 50px !important;
+    padding: 9px 12px 7px !important;
+  }
+}
+.claims_searchWraper {
+  .field_searchMain {
+    display: flex;
+    gap:6px;
+    margin-right: 5px;
+    @media(max-width:767px) {
+      flex-direction: column;
+    }
+    .filterSearch {
+      height: auto;
+      padding: 9px 15px 9px 16px;
+      &:focus {
+        border-width: 0 !important;
+      }
+    }
+    input.filterSearch {
+      padding: 9px 32px 9px 16px;
+    }
+    button {
+      position: absolute;
+      right: 10px;
+      top: 6px;
+      padding: 0;
+      @media (max-width:767px) {
+        top: 43px;
+      }
+      img {
+        position: initial;
+      }
+    }
+    .field_searchMain {
+      @media (max-width:767px) {
+        flex-direction: row;
+      }
+    }
+  }
+}
+.tableSubMain .table thead tr, .tableSubMain .table thead tr th,
+.tableSubMain .table tbody td {
+  background: transparent;
+}
+.tableSubMain .table td.card_insureInfo{
+  vertical-align: top;
+  color: #2e2e2e;
+}
+.tableNav .pagination {
+  flex-direction: column;
+}
+.cardViewMain .cardViewWraper .cardViewItem header .card_insureInfo h6 {
+  font-family: "Anek Latin", sans-serif !important;
+}
+.btn_cardDownload {
+  background: #c7222a;
+  border-radius: 5px;
+  img {
+    width: 12px;
+    height: 12px;
+    filter: brightness(0) invert(1);
+  }
+}
+.field_searchMain .field_searchMain .input-block-renew .input-textBox {
+  padding: 8px 16px !important;
+}
+/*---Common css end---*/
+/* Required Css End */

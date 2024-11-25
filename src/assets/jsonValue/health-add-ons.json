@@ -1,0 +1,37 @@
+[
+    {
+      "id": "addon-1",
+      "name": "Future Secure",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      "image": "assets/renewalLogos/Lightbulb Icon.jpg",
+      "premium":2500
+    },
+    {
+      "id": "addon-2",
+      "name": "Future Secure",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      "image": "assets/renewalLogos/Lightbulb Icon.jpg",
+      "premium":1200
+    },
+    {
+      "id": "addon-3",
+      "name": "Future Secure",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      "image": "assets/renewalLogos/Lightbulb Icon.jpg",
+      "premium":300
+    },
+    {
+      "id": "addon-4",
+      "name": "Future Secure",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      "image": "assets/renewalLogos/Lightbulb Icon.jpg",
+      "premium":1800
+    },
+    {
+      "id": "addon-5",
+      "name": "Future Secure",
+      "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
+      "image": "assets/renewalLogos/Lightbulb Icon.jpg",
+      "premium":800
+    }
+  ]

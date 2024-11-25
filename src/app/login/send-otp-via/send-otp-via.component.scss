@@ -1,0 +1,80 @@
+.send-otp-formMain{
+    width: 500px;
+    .send-otp-form{
+        .cursor{
+            cursor: pointer;
+        }
+        padding: 20px;
+        .send-otp-form-section{
+            .search-box{
+            font-weight: 500;
+            font-family: Anek latin, sans-serif;
+            height: 40px;
+            font-size: medium;
+            border-radius: 12px;
+            border: 1.5px solid #f1f3f6;
+            width: 60%;
+            background-color: #FFFFFF;
+            padding: 8px 6px 8px 16px;
+            box-sizing: border-box;
+            position: relative;
+            font-size: 12px;
+            color: #000;
+            position: relative;
+            bottom: 10px;
+            }
+            .contact-card-wrap{
+                cursor: pointer;
+                border: 1.5px solid #f1f3f6;
+                border-radius: 5px;
+                margin-bottom: 10px;
+                  .contact-card-wrap-info{
+                    padding: 10px;
+                    label {
+                        display: block;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                  }
+            }
+            .contact-card-wrap:hover {
+                background-color: lightpink; /* Change to desired background color on hover */
+                color:#C7222A; /* Change to desired text color on hover */
+                font-weight: bold;
+              }
+        }
+        .otp-header-wrap{
+            font-family: Anek Latin;
+            font-size: 19px;
+            font-weight: 600;
+            line-height: 28px;
+            text-align: left;
+            margin-bottom: 0;
+            position: relative;
+            bottom: 35px;
+            }
+            .otp-header-wrap-x{
+                font-family: Anek Latin;
+                font-size: 19px;
+                font-weight: 600;
+                line-height: 28px;
+                text-align: left;
+                margin-bottom: 0;
+               
+                }
+            .otp-sub-wrap{
+                font-family: Anek Latin;
+                font-size: 13px;
+                font-weight: 500;
+                opacity: 0.8;
+                line-height: 28px;
+                text-align: left;
+                margin-bottom: 0;
+                position: relative;
+                bottom: 25px;
+            }
+    }
+ 
+
+}
