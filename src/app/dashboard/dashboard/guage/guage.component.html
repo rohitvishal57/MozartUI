@@ -18,17 +18,29 @@
         </div>
         <div *ngSwitchCase="'half-moon'">
             <div class="gauge-container">
-                <svg class="half-moon-gauge" viewBox="0 0 100 50">
-                    <!-- Background Half Circle -->
-                    <path class="half-circle-bg" d="M 0 50 A 50 50 0 0 1 100 50" fill="none" stroke="#e0e0e0"
-                        stroke-width="10" />
-                    <!-- Progress Half Circle -->
-                    <path class="half-circle-progress" [attr.d]="getProgressPath()" fill="none" stroke="#4caf50"
-                        stroke-width="10" />
-                    <!-- Progress Text -->
-                    <text x="50" y="35" text-anchor="middle" class="gauge-text">{{ progress }}%</text>
+                <svg class="gauge" viewBox="0 0 100 50" preserveAspectRatio="xMidYMid meet">
+                  <!-- Background arc -->
+                  <path
+                    d="M10,50 A40,40 0 0,1 90,50"
+                    stroke="#ddd"
+                    fill="none"
+                    stroke-width="8"
+                  ></path>
+              
+                  <!-- Dynamic arc (foreground) -->
+                  <path
+                    [attr.d]="arcPath"
+                    stroke="#0078d4"
+                    fill="none"
+                    stroke-width="8"
+                    stroke-linecap="round"
+                  ></path>
                 </svg>
-            </div>
+                <div class="gauge-label">
+                  <span>{{ halfProgress }}%</span>
+                </div>
+              </div>
+              
         </div>
         <div *ngSwitchDefault>
             <div class="gauge-container">

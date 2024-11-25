@@ -202,7 +202,7 @@
                       <div class="value">₹ {{perform.value}}</div>
                       <div class="progress-barMain">
                         <p>{{perform.description | translate}}</p>
-                        <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
+                        <app-guage [progress]="20" [guageType]="'linear'"></app-guage>
                       </div>
                     </div>
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag>
@@ -217,7 +217,7 @@
                       <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
                       </header>
                       <div class="gauge">
-                        <app-guage [progress]="perform.value" [guageType]="'circular'"></app-guage>
+                        <app-guage [halfProgress]="75" [guageType]="'half-moon'"></app-guage>
                       </div>
                     </div>
                   </ng-container>
