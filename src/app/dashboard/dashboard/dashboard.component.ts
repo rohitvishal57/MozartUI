@@ -292,9 +292,9 @@ export class DashboardComponent {
           label: 'My First Dataset',
           data: [this.customerInfo.totalCustomerCount, this.customerInfo.activeCustomerCount, this.customerInfo.totalCustomerCount - this.customerInfo.activeCustomerCount],
           backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
+            '#be9bd5',
+            '#d39299',
+            '#5cbd9a'
           ],
           hoverOffset: 4
         }]
@@ -318,7 +318,7 @@ export class DashboardComponent {
             // label: 'My First Dataset',
             data: [data.data[0].persistencyPercentage],
             backgroundColor: [
-              '#D0F1E5'
+              'rgba(208, 241, 229, 1)'
             ],
             hoverOffset: 4
           }]
