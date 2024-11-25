@@ -293,6 +293,13 @@ h2 {
         margin: 0;
         color: #000000;
     }
+    h3 {
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 24px;
+        margin: 0;
+        color: #000000;
+    }
     h6 {
         font-weight: 600;
         font-size: 22px;
@@ -662,6 +669,7 @@ h2 {
 }
 .dashboard_productTabs{
     box-shadow: 0px 4px 4px 0px #00000040;
+    box-shadow: 0px 2px 4px 0px rgba(213, 215, 222, 0.2), 0px 1px 10px 0px rgba(213, 215, 222, 0.1215686275), 0px 4px 5px 0px rgba(213, 215, 222, 0.1411764706);
     overflow-x: auto;
     padding-bottom: 10px;
 }
@@ -1053,6 +1061,7 @@ h2 {
     border-radius: 0 0 0 0;
 }
 .dashboard_leadsMain {
+    gap: 10px;
     padding-bottom: 16px;
     .leads_content {
         display: flex;
@@ -1061,6 +1070,57 @@ h2 {
         .leads_item {
             width: 100%;
         }
+    }
+}
+.dashboard_leadsMain {
+    h6 {
+        font-size: 18px !important;
+    }
+}
+.leads_contentDashboard {
+    /* flex-direction: row !important;
+    flex-wrap: wrap; */
+    gap: 0px !important;
+    .leads_item_contentDashboard{
+        /* width: 49%; */
+        border-bottom: 1px solid #f5f5f5;
+        padding: 3px 0;
+        .leads_item {
+            header {
+                /* flex-direction: column;
+                align-items: flex-start; */
+                border-radius: 13px; 
+                font-size: 13px;
+                background:transparent;
+                padding: 0 10px;
+                label {
+                    font-size: 18px;   
+                }
+            }
+        }
+    }
+}
+.leads_itemHeader {
+    display: flex;
+    justify-content: space-between;
+    background: #E1E4E8;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    label{
+        font-size: 18px;
+    }
+    &.leads_itemHeaderProposal{
+        background: #F0E7F6;
+    }
+    &.leads_itemHeaderRenewal{
+        background: #FFDCE0;
+    }
+}
+.dashboard_mycustomers_main {
+    .dashboard_productTabs {
+        width: 50%;
     }
 }
 /*---dahboard new sections styles end---*/

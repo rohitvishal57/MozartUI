@@ -225,83 +225,82 @@
           </div>
         </div>
 
-        <div class="contentBody dashboard_contentContainer">
-          <div class="performance-overview">
-            <header>
-              <h2>My Customers</h2>
-            </header>
-            <div class="cardWraper-container" style="width : 50%">
-              <div class="chart-container">
-                <canvas id="MyChart">{{ customerChart }}</canvas>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <section class="body_flex_row commonSection dashboard_LPR_main">
-          
-          <ng-container *ngFor="let tab of tabsInfo">
-            
-            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-              <h2>{{tab.tabName}}</h2>
-              <div class="leads_content">
-                <ng-container *ngFor="let buz of tab.category">
-                  <div [ngSwitch]="tab.tabName">
-                  <div *ngSwitchCase="'Leads'">
-                    <div class="leads_item leads_open">
-                      <header>
-                        <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                        <label>{{buz.count}}</label>
-                      </header>
-                    </div>
-                  </div>
-                  <div *ngSwitchCase="'Proposals'">
-                    <div class="leads_item leads_open">
-                      <header>
-                        <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                        <label>{{buz.count}}</label>
-                      </header>
-                    </div>
-                  </div>
-                  <!-- <div *ngSwitchDefault>
-                    <div class="chart-container">
-                      <canvas id="renew">{{createrenew(buz)}}</canvas>
-                    </div>
-                  </div> -->
-                  
-                </div>
-                </ng-container>
-              </div>
-          </div>
-          </ng-container>
-
-        </section>
-
-        
-          <div class="performance-overview">
-            <header>
-              <h2>My Renewals</h2>
-            </header>
-            <div class="contentBody dashboard_contentContainer">
+        <section class="commonSection dashboard_LPR_main">
+          <h3>Business Summary</h3>
+          <div class="body_flex_row mt-3">
+            <ng-container *ngFor="let tab of tabsInfo">
+              
               <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-                <div class="leads_content">
-                  <ng-container *ngFor="let buz of renewalDetail">
+                <!-- <h6>Total {{tab.tabName}}</h6> -->
+                <header class="leads_itemHeader" ><span>Total {{tab.tabName}}</span><label>262</label></header>
+                <div class="leads_content leads_contentDashboard">
+                  <ng-container *ngFor="let buz of tab.category">
+                    <div class="leads_item_contentDashboard" [ngSwitch]="tab.tabName">
+                    <div  *ngSwitchCase="'Leads'">
                       <div class="leads_item leads_open">
                         <header>
-                          <span>{{(buz.dueStatus == '' || buz.dueStatus == null) ? 'Anonymous' : buz.dueStatus }}</span>
-                          <label>{{buz.customerCount}}</label>
+                          <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                          <label>{{buz.count}}</label>
                         </header>
                       </div>
-                  </ng-container>
+                    </div>
+                    <div *ngSwitchCase="'Proposals'">
+                      <div class="leads_item leads_open">
+                        <header>
+                          <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                          <label>{{buz.count}}</label>
+                        </header>
+                      </div>
+                    </div>
+                    <!-- <div *ngSwitchDefault>
+                      <div class="chart-container">
+                        <canvas id="renew">{{createrenew(buz)}}</canvas>
+                      </div>
+                    </div> -->
+                    
                   </div>
+                  </ng-container>
                 </div>
-            </div>
-            <div class="cardWraper-container" style="width : 50%">
-              <div class="chart-container">
-                <canvas id="renew">{{renewalChart}}</canvas>
+              </div>
+            </ng-container>
+            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+              <!-- <h6>My Renewals</h6> -->
+              <header class="leads_itemHeader leads_itemHeaderRenewal" ><span>Total Renewals</span><label>262</label></header>
+              <div class="leads_content leads_contentDashboard">
+                <ng-container *ngFor="let buz of renewalDetail">
+                  <div class="leads_item_contentDashboard">
+                    <div class="leads_item leads_open">
+                      <header>
+                        <span>{{(buz.dueStatus == '' || buz.dueStatus == null) ? 'Anonymous' : buz.dueStatus }}</span>
+                        <label>{{buz.customerCount}}</label>
+                      </header>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="cardWraper-container">
+                <div class="chart-container" style="position: relative; height:25vh; width:100%">
+                  <canvas id="renew" style="margin: auto;">{{renewalChart}}</canvas>
+                </div>
               </div>
             </div>
           </div>
+        </section>
+        <section class="body_flex_row commonSection dashboard_LPR_main dashboard_mycustomers_main">
+          <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+            <h6>My Customers</h6>
+            <div class="leads_content">
+              <div class="chart-container" style="position: relative; height:30vh; width:100%">
+                <canvas id="MyChart" style="margin: auto;">{{ customerChart }}</canvas>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+            Sample
+          </div> -->
+        </section>
+
       </div>
     </div>
   </div>
