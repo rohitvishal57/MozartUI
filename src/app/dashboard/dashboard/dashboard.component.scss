@@ -272,6 +272,7 @@ h2 {
     span {
         position: relative;
         top: -38px;
+        font-weight: 600;
     }
 }
 .badge {
@@ -1145,7 +1146,8 @@ h2 {
 }
 .dashboard_mycustomers_main {
     .dashboard_productTabs {
-        width: 50%;
+        width: 100%;
+        max-width: 350px;
     }
 }
 .allItems_improtantTasks {
