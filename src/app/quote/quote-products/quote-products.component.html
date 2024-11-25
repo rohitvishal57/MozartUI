@@ -4,8 +4,8 @@
         <div class="bodyColumn body_flex_column">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="mb-2">Products</h2>
-                    <p>Discover our products to insure your health</p>
+                    <h2 class="mb-2">{{"Products" | translate}}</h2>
+                    <p>{{"Discover our products to insure your health" | translate}}</p>
                 </div>
             </div>
             <section class="white_container mb-3 getQuoteMain">
@@ -32,8 +32,8 @@
 
 <div class="main-class">
     <div class="r-p-header">
-        <div class="product-heading">Products</div>
-        <div class="prod-head-desc">Discover our products to insure your health
+        <div class="product-heading">{{"Products" | translate}}</div>
+        <div class="prod-head-desc">{{"Discover our products to insure your health" | translate}}
         </div>
     </div>
     <app-get-quote></app-get-quote>
@@ -49,7 +49,7 @@
                                     <!-- {{ item | json}}  -->
                                     <div class="product-item">
                                         <img src="assets/logo/activeOne.svg">
-                                        {{item.productName}}
+                                        {{item.productName | translate}}
                                     </div>
                                     <!-- <p>{{item.productDescription}}</p> -->
                                     <div class="key">
@@ -66,7 +66,7 @@
                                         <div class="plan1" [ngClass]="{ 'highlight': selectedPlans[i] === 1 }"
                                             (click)="selectPlan(i, 1)">
                                             <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 1}">
-                                                ₹{{ item.tenure1Premium }}*/ 1year
+                                                ₹{{ item.tenure1Premium }}*/ {{"1year" | translate}}
                                             </div>
                                             <div *ngIf="item.t1DiscountPercentage" class="plan-discount">
                                                 /{{ item.t1DiscountPercentage }}%
@@ -81,7 +81,7 @@
                                         <div class="plan2" [ngClass]="{ 'highlight': selectedPlans[i] === 2 }"
                                             (click)="selectPlan(i, 2)">
                                             <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 2}">
-                                                ₹{{ item.tenure2Premium }}*/ 2 year
+                                                ₹{{ item.tenure2Premium }}*/ {{"2 year" | translate}}
                                             </div>
                                             <div *ngIf="item.t2DiscountPercentage" class="plan-discount">
                                                  {{ item.t2DiscountPercentage }}%
@@ -96,7 +96,7 @@
                                         <div class="plan3" [ngClass]="{ 'highlight': selectedPlans[i] === 3 }"
                                             (click)="selectPlan(i, 3)">
                                             <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 3}">
-                                                ₹{{ item.tenure3Premium }}*/ 3 year
+                                                ₹{{ item.tenure3Premium }}*/ {{"3 year" | translate}}
                                             </div>
                                             <div *ngIf="item.t3DiscountPercentage" class="plan-discount">
                                                 {{ item.t3DiscountPercentage }}%
@@ -129,7 +129,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="big-text">Recommended Add-Ons</div>
+                                            <div class="big-text">{{"Recommended Add-Ons" | translate}}</div>
                                             <!-- <div class="col-md-12 add-container">
                                                 <div *ngFor="let addon of ProductList[popIndex].productFeatures"
                                                 class="add-wrapper col-6 col-md-6 col-lg-3"> -->
@@ -153,7 +153,7 @@
                                                         <input type="checkbox" [value]="addon.featureName"
                                                             id="{{addon.featureName}}" name="{{addon.featureName}}" [checked]="addon.isSelected"
                                                             (change)="onCheckboxChange($event, addon,i)" />
-                                                        <span>{{addon.featureName}}</span>
+                                                        <span>{{addon.featureName | translate}}</span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -162,7 +162,7 @@
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                                 <button id="Continue" name="Continue"
-                                                 class="get" (click)="closeOverlay()">Continue</button>
+                                                 class="get" (click)="closeOverlay()">{{"Continue" | translate}}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -175,13 +175,13 @@
                                         <button class="get" id="Add to Cart" name="Add to Cart"
                                          (click)="addToCart(item)">
                                             <img src="assets/Img/trolley1.svg" alt="">
-                                            Add to Cart
+                                            {{"Add to Cart" | translate}}
                                         </button>
                                         <button class="get1" id="View Recommended Add-Ons" name="View Recommended Add-Ons"
-                                         (click)="showOverlay(i)">View Recommended Add-Ons</button>
+                                         (click)="showOverlay(i)">{{"View Recommended Add-Ons" | translate}}</button>
                                         <button class="get2" id="Add to Compare" name="Add to Compare" (click)="addToCompareProducts(item)">
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
-                                            Add to Compare
+                                            {{"Add to Compare" | translate}}
                                         </button>
                                     </div>
                                 </div>
@@ -191,44 +191,43 @@
                 </div>
             </div>
             <ng-template #noProducts>
-                <div class="no-products-message" *ngIf="displayNoProductsMessage">No products available for the selected
-                    type.</div>
+                <div class="no-products-message" *ngIf="displayNoProductsMessage">{{"No products available for the selected type."}}</div>
             </ng-template>
         </div>
     
         <div class="right-panel-cart">
             <div class="r-p-header">
-                <div class="cart-heading">Cart</div>
+                <div class="cart-heading">{{"Cart" | translate}}</div>
             </div>
             <div class="cardItem box " [ngClass]="{'center-elements': cartProductList.length === 0}">
                 <div *ngIf="cartProductList.length == 0" class="no-product">
                     <!-- <div> -->
                     <img src="assets/Img/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
-                    <p class="no-prod-para">No product added in the cart</p>
+                    <p class="no-prod-para">{{"No product added in the cart" | translate}}</p>
                     <!-- </div> -->
                 </div>
                 <div *ngIf="cartProductList.length >0">
                     <div class="allitem">
                         <input type="button" class="product-remove-btn" id="Remove All"
-                        name="Remove All" value="Remove All"
+                        name="Remove All" [value]="'Remove All' | translate"
                                     (click)="deleteallcartitems()">
                     </div>
                     <div *ngFor="let item of cartProductList; let i = index">
                         <div class="cart-cardItem">
                             <div class="cart-info-container">
                                 <div class="proposer-info">
-                                    <h5>Proposer Name:</h5>
-                                    <p>{{item.proposerName}}</p>
+                                    <h5>{{"Proposer Name:" | translate}}</h5>
+                                    <p>{{item.proposerName | translate}}</p>
                                 </div>
                                 <div class="mobile-info">
-                                    <h5>Mobile Number:</h5>
+                                    <h5>{{"Mobile Number:" | translate}}</h5>
                                     <p>{{item.mobileNumber}}</p>
                                 </div>
                             </div>
                             <div class="product-header">
                                 <div class="cart-productText"><img src="assets/logo/activeOne.svg"
-                                        class="cart-productImage"> {{item.productName}}</div>
-                                <input type="button" class="product-remove-btn" value="Remove"
+                                        class="cart-productImage"> {{item.productName | translate}}</div>
+                                <input type="button" class="product-remove-btn" [value]="'Remove' | translate"
                                 id="Remove" name="Remove" (click)="deleteagentcartitems([item.id])">
                             </div>
                             <div class="product-features">
@@ -243,7 +242,7 @@
                             <div class="plan-container">
     
                                 <div class="plan-label">
-                                    Premium
+                                    {{"Premium" | translate}}
                                 </div>
                                 <div class="plan1">
                                     <div class="plan-price">
@@ -262,7 +261,7 @@
                                             <div class="add-box">
                                                 <img src="assets/logo/greenpoint.svg" alt="">
                                                 <div class="add-text">
-                                                    {{addon}}
+                                                    {{addon | translate}}
                                                 </div>
                                             </div>
                                         </ng-container>
@@ -271,11 +270,11 @@
                             </div>
                             <div class="quick-tip">
                                 <img src="assets/Img/lightbulb.svg" alt="">
-                                Premium might increase based on the addOns.
+                               {{"Premium might increase based on the addOns." | translate}}
                             </div>
                             <!-- <div class=""> -->
                             <input type="button" class="buy-btn" (click)="insurenow(item)"
-                            id="Buy now" name="Buy now" value="Buy now">
+                            id="Buy now" name="Buy now" [value]="'Buy now' | translate">
                             <!-- </div> -->
                         </div>
                         <div class="line">

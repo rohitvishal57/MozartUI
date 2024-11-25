@@ -3,7 +3,7 @@
     <div class="bodyColumn body_flex_column">
 
       <div class="body_flex_row justify-content-between">
-          <h2 class="icon_withHeading" >Product Details</h2>
+          <h2 class="icon_withHeading" >{{"Product Details" | translate}}</h2>
       </div>
 
       <section class="white_container">
@@ -16,8 +16,8 @@
                     <img src="assets/Img/icon_activeone.svg">
                   </div>
                   <div class="ppi_info">
-                    <h4>{{state.productName}}</h4>
-                    <h5>Aditya Birla Health Insurance</h5>
+                    <h4>{{state.productName | translate}}</h4>
+                    <h5>{{"Aditya Birla Health Insurance" | translate}}</h5>
                   </div>
                 </div>
               </div>
@@ -25,7 +25,7 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <p>{{state.productDescription}}</p>
+              <p>{{state.productDescription | translate}}</p>
             </div>
           </div>
           <div class="row">
@@ -56,7 +56,7 @@
                                 <div  class="tabview_cardItem"  >
                                   <ul class="tick_round">
                                       <li *ngFor="let feature of section.value"><img src="assets/Img/icon_tick_green_bg.svg"><div class="feature-text">
-                                        {{ feature.featureName }}
+                                        {{ feature.featureName | translate}}
                                       </div></li>
                                   </ul>
                                 </div>
@@ -75,7 +75,7 @@
         <div class="col-12">
           <button type="button" id="buynow-details" name="buynow-details" class="btn_red btn_products btn_buy" (click)="buyNow(state)">
             <img src="assets/Img/trolley1.svg" alt="">
-            Buy Now
+            {{"Buy Now" | translate}}
         </button>
         </div>
       </div>

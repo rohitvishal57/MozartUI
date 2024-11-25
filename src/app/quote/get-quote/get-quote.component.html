@@ -29,28 +29,28 @@
         <div class="dropdown_backdrop" [ngClass]="activeDropdown ? 'block-show' : 'block-hide'"></div>
         <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">
           <!-- Label -->
-          <label class="field_label">{{ dropdown.label }}</label>
+          <label class="field_label">{{ dropdown.label | translate }}</label>
           <!-- Button for each dropdown -->
           <button class="dropdown-button" type="button" id="dropdownlabel-custom-{{i}}"
             name="dropdownlabel-custom-{{i}}" (click)="openCustomDiv(dropdown.label, i+1)">
             <div class="selected-value">
               <span>
                 <ng-container *ngIf="dropdown.label === 'Policy Type'">
-                  {{ quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater' ? 'Family Floater' :
-                  (quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual' ? 'Multi Individual' :
-                  'Please select a policy') }}
+                  {{ quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater' ? ('Family Floater' | translate) :
+                  (quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual' ? ('Multi Individual' | translate) :
+                  ('Please select a policy' | translate)) }}
                 </ng-container>
 
                 <ng-container *ngIf="dropdown.label === 'Relationship'">
-                  {{ selectedRelation != "" ? selectedRelation : 'Please select a relationship' }}
+                  {{ selectedRelation != "" ? (selectedRelation | translate) : ('Please select a relationship' | translate) }}
                 </ng-container>
 
                 <ng-container *ngIf="dropdown.label === 'Sum Insured'">
-                  {{ formatTickLabel(selectedSumInsured,false) || 'Please select sum insured' }}
+                  {{ formatTickLabel(selectedSumInsured,false) || ('Please select sum insured' | translate) }}
                 </ng-container>
 
                 <ng-container *ngIf="dropdown.label === 'Diseases'">
-                  {{ diseaseNames != null ? diseaseNames : 'No Diseases Selected' }}
+                  {{ diseaseNames != null ? diseaseNames : ('No Diseases Selected' | translate) }}
                 </ng-container>
 
               </span><img src="assets/Img/down_arrow.svg">
@@ -70,10 +70,8 @@
                       (click)="onPlanTypeChange('Family Floater')"
                       [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Family Floater'">
                     <span>
-                      <em class="pt-head"><img src="assets/Img/icon_familyfloater.svg">Family Floater
-                        Policy</em>
-                      <em class="para-12">A family floater health insurance is a type of policy where you and your
-                        family share the same cover amount.</em>
+                      <em class="pt-head"><img src="assets/Img/icon_familyfloater.svg">{{"Family Floater Policy" | translate}}</em>
+                      <em class="para-12">{{"A family floater health insurance is a type of policy where you and your family share the same cover amount." | translate}}</em>
                     </span>
                     <img src="assets/Img/img_selected_policytype.svg" class="selected_policy">
                   </label>
@@ -83,16 +81,14 @@
                       (click)="onPlanTypeChange('Multi Individual')"
                       [checked]="quoteFormGroup.get('memberPolicyType')?.value === 'Multi Individual'">
                     <span>
-                      <em class="pt-head"><img src="assets/Img/icon_multiindividual.svg">Multi-individual Policy</em>
-                      <em class="para-12">A multi-individual health insurance is a type of policy wherein each member
-                        has their own cover amount.</em>
+                      <em class="pt-head"><img src="assets/Img/icon_multiindividual.svg">{{"Multi-individual Policy" | translate}}</em>
+                      <em class="para-12">{{"A multi-individual health insurance is a type of policy wherein each member has their own cover amount." | translate}}</em>
                     </span>
                     <img src="assets/Img/img_selected_policytype.svg" class="selected_policy2">
                   </label>
                 </div>
 
-                <div class="tipInfo_org"><img src="assets/Img/Lightbulb Icon.png">You can edit members
-                  to change back to family floater policy.</div>
+                <div class="tipInfo_org"><img src="assets/Img/Lightbulb Icon.png">{{"You can edit members to change back to family floater policy." | translate}}</div>
                 <!-- <button type="button" class="btn_red btn_fullWidth" (click)="updatePlanType()">Continue</button> -->
               </div>
             </div>
@@ -104,7 +100,7 @@
                 <div class="overlay_body sumInsured_selectMain">
                   <div class="sumInsured_select">
                     <header>
-                      <h3>Sum Insured</h3>
+                      <h3>{{"Sum Insured" | translate}}</h3>
                       <div class="sumInsured_value">{{ formatTickLabel(selectedSumInsured,false) }}</div>
                     </header>
                   </div>
@@ -135,7 +131,7 @@
                 </div>
                 <button type="button" id="continue" name="continue" class="suminsured-button"
                   (click)="updateSumInsured()">
-                  Continue
+                  {{"Continue" | translate}}
                 </button>
               </div>
             </div>
@@ -146,7 +142,7 @@
               <!--Overlay: Personal details start-->
               <div class="option_policyType">
                 <div class="overlay_body insurer_detailsMain">
-                  <h3>Personal details</h3>
+                  <h3>{{"Personal details" | translate}}</h3>
                   <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
@@ -154,7 +150,7 @@
                           placeholder="Enter name of proposer" class="input-textBox" maxlength="30">
                         <span class="ui-error"
                           *ngIf="quoteFormGroup.get('proposerName')?.invalid && (quoteFormGroup.get('proposerName')?.touched || quoteFormGroup.get('proposerName')?.dirty)">
-                          Please enter a valid name (only alphabets, max 30 characters)</span>
+                          {{"Please enter a valid name (only alphabets, max 30 characters)" | translate}}</span>
                       </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -164,7 +160,7 @@
                           (input)="enforceMaxLength($event, 10)">
                         <span class="ui-error"
                           *ngIf="quoteFormGroup.get('mobileNumber')?.invalid && (quoteFormGroup.get('mobileNumber')?.touched || quoteFormGroup.get('mobileNumber')?.dirty)">
-                          Please enter a valid 10-digit mobile number
+                         {{" Please enter a valid 10-digit mobile number" | translate}}
                         </span>
                       </div>
                     </div>
@@ -176,24 +172,24 @@
                           (change)="getProposerPincode($event)">
                         <span class="ui-error"
                           *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && (quoteFormGroup.get('proposerPincode')?.touched || quoteFormGroup.get('proposerPincode')?.dirty)">
-                          Please enter a valid 6-digit pincode
+                        {{"Please enter a valid 6-digit pincode" | translate}}
                         </span>
                       </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
                         <select id="zoneValue" name="zoneValue" formControlName="proposerZone" class="input-textBox" (change)="onZoneChange($event)">
-                          <option value="" disabled selected>Select Zone</option>
-                          <option *ngFor="let zone of availableZones" [value]="zone">{{ zone }}</option>
+                          <option value="" disabled selected>{{"Select Zone" | translate}}</option>
+                          <option *ngFor="let zone of availableZones" [value]="zone">{{ zone | translate }}</option>
                         </select>
                         <span class="ui-error"
                           *ngIf="quoteFormGroup.get('proposerZone')?.invalid && (quoteFormGroup.get('proposerZone')?.touched || quoteFormGroup.get('proposerZone')?.dirty)">
-                          Select Zone
+                          {{"Select Zone" | translate}}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <h3>Member details</h3>
+                  <h3>{{"Member details" | translate}}</h3>
                   <div class="insurer_memberDetails">
                     <div class="input-checkbox-block input-checkbox-withIcon">
                       <!-- <div class="input-checkbox-feild">
@@ -214,7 +210,7 @@
                                   class="input-check">
                                   <!-- [disabled]="selectedPlan !== 'Family Floater' && selectedRelation.length >= 1"> -->
                                 <label for="{{relation.value}}"><img
-                                    src="{{relation.imagePath}}">{{relation.name}}</label>
+                                    src="{{relation.imagePath}}">{{relation.name | translate}}</label>
                                 <div class="member_extraInfo">
                                   <div class="member_extraInfoSub">
                                     <input type="date" placeholder="Enter DOB" id="DOB" name="DOB" class="member_textbox"
@@ -228,7 +224,7 @@
                                 <div *ngIf="relation.isIncrement == true" class="input-checkbox-feild">
                                 <button type="button" id="addchildrens" name="addchildrens" class="btn_white btn_addChildren" (click)="incrementMember(relation)"
                                 [disabled]="addHide">
-                                  <span><img src="{{relation.imagePath}}">{{relation.name}}</span>
+                                  <span><img src="{{relation.imagePath}}">{{relation.name | translate}}</span>
                                   <img src="assets/Img/icon_round_plus_red.svg">
                                 </button>
                               </div>
@@ -310,7 +306,7 @@
                           </button> -->
                 </div>
                 <button type="button" id="next" name="next" class="btn_red btn_fullWidth"
-                  (click)="addInsuredMemberDetails()">Next</button>
+                  (click)="addInsuredMemberDetails()">{{"Next" | translate}}</button>
               </div>
             </div>
 
@@ -364,12 +360,12 @@
                       <input type="checkbox" [id]="disease.id" name="{{disease.id}}" [value]="disease.value"
                         (change)="onDiseaseChange($event)" [checked]="isDiseaseSelected(disease.value)"
                         class="input-check">
-                      <label [for]="disease.id">{{ disease.label }}</label>
+                      <label [for]="disease.id">{{ disease.label | translate }}</label>
                     </div>
                   </div>
                 </div>
                 <button type="button" id="diseaseContinue" name="diseaseContinue" class="btn_red btn_fullWidth"
-                  (click)="diseaseSelection()">Continue</button>
+                  (click)="diseaseSelection()">{{"Continue" | translate}}</button>
               </div>
             </div>
 
@@ -381,7 +377,7 @@
 
       <div class="continue-btn-container">
         <button type="button" id="mainContinue" name="mainContinue" class="continue-btn-0 btn_grey"
-          (click)="continue()">Continue</button>
+          (click)="continue()">{{"Continue" | translate}}</button>
       </div>
     </div>
     <!-- </div>

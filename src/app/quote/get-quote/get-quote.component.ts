@@ -7,6 +7,8 @@ import { NgToastService } from 'ng-angular-popup';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { QuoteService } from '../quote.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-get-quote',
@@ -173,9 +175,17 @@ export class GetQuoteComponent {
     ["R004", 0],
   ];
   constructor(private fb: FormBuilder,private encryptionService: EncryptionService,
-    private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService) { }
+    private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     console.log(this.currentDate);
     console.log(this.relationCountMap,this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);

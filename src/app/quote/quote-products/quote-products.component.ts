@@ -8,6 +8,8 @@ import { firstValueFrom } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { AesEncryptionService } from "src/app/services/AESEncrypt.service";
 import { LoadingService } from "src/app/services/loading.service";
+import { LanguageService } from "src/app/services/language.service";
+import { TranslateService } from "@ngx-translate/core";
 import { ProductsService } from "src/app/product/products/products.service";
 
 
@@ -58,10 +60,18 @@ export class QuoteProductsComponent implements OnInit {
 
   constructor(private quoteService: QuoteService, private router: Router, private toast: NgToastService,
     private service: CommonService, private encryptionService: EncryptionService, private spinner: LoadingService,
-    private confirmationService: ConfirmationService, private aesEncryptService: AesEncryptionService,
+    private confirmationService: ConfirmationService, private aesEncryptService: AesEncryptionService, private languageService: LanguageService,
+    private translateService: TranslateService,
     private productService: ProductsService, private quoteservices: QuoteService
   ) { }
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     // sessionStorage.clear()
     this.formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
     localStorage.setItem("formIndex", "0")
