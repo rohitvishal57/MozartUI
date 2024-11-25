@@ -141,7 +141,7 @@ export class ProductsComponent implements OnInit {
   async getProposalNum() {
     try {
       const res = await firstValueFrom(this.common.getProposalNumber());
-      res.data = this.aesEncryptService.decrypt(res.data).data;
+      console.log(res);
       this.proposalNum = res.data.proposalNumber;
       console.log(this.proposalNum);
       

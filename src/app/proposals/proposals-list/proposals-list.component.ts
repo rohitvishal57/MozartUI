@@ -291,15 +291,27 @@ export class ProposalsListComponent {
     
     try {
       const reqData = {
-        partnerId : 0,
-        agentCode : this.agentCode
+        partnerId : proposalDetails.partnerId,
+        productId : proposalDetails.productId,
+        formId : proposalDetails.formId,
+        proposalNum : proposalDetails.proposalNumber,
+        agentCode : this.agentCode,
+        currentFormSequence : proposalDetails.formSequence
       }
+      localStorage.setItem("formIndex", proposalDetails.formSequence.toString());
+      const encodedEncryptedData = this.encryptionService.encrypt(reqData);
+
+      this.router.navigate(['yatra'], {
+        queryParams: { data: encodedEncryptedData }
+      });
       // await this.getProposalNum();
       // const productData = {
-      //   partnerId : 1,
-      //   productId : 1,
-      //   proposalNum: this.proposalNum
-
+      //  "partnerId": 1,
+  // "productId": 1,
+  // "formId": 1,
+  // "proposalNum": "UPP110611475112",
+  // "agentCode": "4620973",
+  // "currentFormSequence": "0
       // }
       // await this.getFormSequence(productData);
       // if (this.formSequence != null && this.formSequence.length > 0) {

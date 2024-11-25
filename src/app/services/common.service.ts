@@ -76,9 +76,9 @@ export class CommonService {
     return this.http.post<any>(formSequence, reqData)
   }
 
-  GetSingleProductQuote(reqData: any) {
-    // const singleProductQuote=this.configService.config.baseUrl + this.configService.config.getSingleProductQuote;
-    const singleProductQuote = this.configService.config.baseUrl1 + this.configService.config.getSingleProductQuote;
+  GetSingleProductQuote(reqData: any) {;
+    // const singleProductQuote = this.configService.config.baseUrl1 + this.configService.config.getSingleProductQuote;
+    const singleProductQuote = 'https://localhost:7188/getquoteforsingleproduct';
     return this.http.post<any>(singleProductQuote, reqData);
   }
 
