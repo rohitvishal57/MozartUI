@@ -27,6 +27,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
     - name: Checkout code
@@ -70,6 +71,10 @@ jobs:
     - name: Install dependencies
       run: |
         npm install --legacy-peer-deps
+
+    - name: Clean previous build artifacts
+      run: |
+        rm -rf ./dist/*
       
     - name: Build the project
       run: |
@@ -118,13 +123,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment: ${{ github.event.inputs.environment }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
         fetch-depth: 10
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up SSH
       run: |
@@ -135,16 +140,29 @@ jobs:
     - name: Add VM to known hosts
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+<<<<<<< HEAD
     # Increment and Read Version
+=======
+>>>>>>> 1b1012f90a7f0f799561eaf7644b62a9ca26786a
     - name: Read and Increment Version
       id: version
       run: |
         if [ ! -f version.txt ]; then
           echo "v1" > version.txt
+<<<<<<< HEAD
         fi
         VERSION=$(cat version.txt)
         NEXT_VERSION=v$(( ${VERSION#v} + 1 ))
         echo "$NEXT_VERSION" > version.txt
+=======
+          NEXT_VERSION="v1"  # Set to v1 on first run
+        else
+          VERSION=$(cat version.txt)
+          echo "Current version before increment: $VERSION"  # Debugging line
+          NEXT_VERSION="v$(( ${VERSION#v} + 1 ))"
+          echo "$NEXT_VERSION" > version.txt
+        fi
+>>>>>>> 1b1012f90a7f0f799561eaf7644b62a9ca26786a
         echo "VERSION=${NEXT_VERSION}" >> $GITHUB_ENV
         echo "New version is: $NEXT_VERSION"
       shell: bash
@@ -153,6 +171,19 @@ jobs:
       run: |
         echo "Generated version: ${{ env.VERSION }}"
 
+<<<<<<< HEAD
+=======
+    # - name: Commit updated version.txt back to repository
+    #   run: |
+    #     git config --global user.name "github-actions[bot]"
+    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    #     git add version.txt
+    #     git commit -m "Update version to ${{ env.VERSION }}"
+    #     git push
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+>>>>>>> 1b1012f90a7f0f799561eaf7644b62a9ca26786a
     - name: Create deployment directory on VM with version
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}')) { New-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}' -ItemType Directory }\""
 
@@ -174,6 +205,12 @@ jobs:
     - name: Debug:List files after downloading artifacts
       run: ls -l ./my-artifacts
 
+<<<<<<< HEAD
+=======
+    - name: Remove existing files in IIS web root
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT/*' -Recurse -Force\""
+
+>>>>>>> 1b1012f90a7f0f799561eaf7644b62a9ca26786a
     - name: Upload artifact to VM with versioning
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
 
@@ -182,24 +219,8 @@ jobs:
     
     - name: Create or Update Application Pool
       run: |
-        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "
-          \$AppPoolName = 'FrontendAppPool';
-          try {
-            if (Test-Path 'IIS:\\AppPools\\\$AppPoolName') {
-              Write-Output 'Application Pool ''\$AppPoolName'' already exists. Skipping creation.';
-            } else {
-              Write-Output 'Creating Application Pool: \$AppPoolName';
-              New-WebAppPool -Name \$AppPoolName;
-              Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name managedRuntimeVersion -Value 'v4.0';
-              Set-ItemProperty IIS:\\AppPools\\\$AppPoolName -Name processModel.identityType -Value ApplicationPoolIdentity;
-            }
-          } catch {
-            Write-Output 'Error while creating Application Pool: \$AppPoolName';
-            Write-Output \$_.Exception.Message;
-            exit 1;
-          }
-        "
-
+        ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "if (-not (Test-Path 'IIS:\\AppPools\\FrontendAppPool')) { New-WebAppPool -Name 'FrontendAppPool'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name managedRuntimeVersion -Value 'v4.0'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name processModel.identityType -Value ApplicationPoolIdentity; Write-Output 'Created Application Pool: FrontendAppPool'; } else { Write-Output 'Application Pool already exists: FrontendAppPool'; }"
+    
     - name: Stop IIS Website if Exists
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Stop-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
     
@@ -220,6 +241,58 @@ jobs:
   
     - name: Deploy application on IIS
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\bancaassurance-frontend' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
+    
+    - name: Start IIS Website
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
+      
+      # After successful deployment, update version.txt and commit it
+    - name: Commit and push updated version.txt after successful deployment
+      if: ${{ success() }}
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Update the version in version.txt
+        echo "${{ env.VERSION }}" > version.txt
+        
+        # Commit and push the changes
+        git add version.txt
+        git commit -m "Update version to ${{ env.VERSION }}"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure GITHUB_TOKEN is available
+
+    - name: Set environment variable based on branch
+      run: |
+        branch_name="${GITHUB_REF#refs/heads/}" # Strip out 'refs/heads/' from branch name
+        environment=${branch_name}
+        if [ "$environment" == "main" ]; then
+          environment="prod"
+        fi
+        echo "ENVIRONMENT=$environment" >> $GITHUB_ENV
+
+    - name: Tag the commit
+      if: ${{ success() }}  # Only tag if the workflow is successful
+      run: |
+        TAG="${{ env.ENVIRONMENT }}-v${{ env.VERSION }}"
+        git tag $TAG
+        git push origin $TAG
+
+    # Tag the commit with the environment and version after successful deployment
+    # - name: Tag the release
+    #   if: ${{ success() }}
+    #   run: |
+    #     ENVIRONMENT="dev"  # Change this value dynamically for each environment (dev, uat, prod)
+    #     TAG_NAME="${ENVIRONMENT}-${{ env.VERSION }}"
+        
+    #     # Create a new tag
+    #     git tag -a "$TAG_NAME" -m "Deployed $TAG_NAME"
+        
+    #     # Push the tag to the repository
+    #     git push origin "$TAG_NAME"
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
     # - name: Convert slashes in WEB_ROOT path
     #   id: convert-path
     #   run: |
