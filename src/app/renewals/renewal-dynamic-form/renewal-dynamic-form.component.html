@@ -161,7 +161,7 @@
                                     </div>
                                     <div class="data-item data-item-20">
                                         <label>{{"IFSC Code" | translate}}</label>
-                                        <h6>{{ bankDetailsObject.IFSCCOde || '-' }}</h6>
+                                        <h6>{{ bankDetailsObject.ifscCode || '-' }}</h6>
                                     </div>
                                     <div class="data-item data-item-20">
                                         <label>{{"Bank Branch Name" | translate}}</label>
@@ -934,44 +934,56 @@
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select id="bank_Name" name="bank_Name" placeholder="" formControlName="bankName" class="form-control input-selectBox" (change)="onBankChange($event)">
-                                                <option value="">{{"Select Bank Name" | translate}}</option>
-                                                <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name | translate }}</option>
-                                            </select>
-                                            <label for="bank_Name">{{"Bank Name" | translate}}</label>
-                                            <span class="ui-error" *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">{{"Please Select Bank Name" | translate}}</span>
+                                            <input class="form-control input-textBox" [matAutocomplete]="auto" formControlName="bankName" (focus)="openBankDropdown()" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
+                                             <label for="bankName">{{"Search Bank Name" | translate}}</label>
+                                             <span *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">
+                                                <small class="ui-error block-show" *ngIf="form.get('bankName')?.hasError('required')">{{"Bank Name is required." | translate}}</small>
+                                              </span>
                                         </div>
+                                        <mat-autocomplete #auto="matAutocomplete" class="mat_selectBankName" (optionSelected)="onBankSelected($event.option.value)">
+                                            <mat-option *ngFor="let bank of filteredBankNamesList" [value]="bank.name">
+                                                {{ bank.name | translate }}  
+                                            </mat-option>
+                                         </mat-autocomplete>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select id="bank_City" name="bank_City"  placeholder="" formControlName="bankCity" class="form-control input-selectBox" (change)="onCityChange($event)">
-                                                <option value="">{{"Select Bank City" | translate}}</option>
-                                                <option *ngFor="let city of cityNameList" [value]="city.name">{{ city.name | translate }}</option>
-                                            </select>
-                                            <label for="bank_City">{{"Bank City" | translate}}</label>
-                                            <span class="ui-error" *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">{{"Please Select City Name" | translate}}</span>
+                                            <input class="form-control input-textBox" [matAutocomplete]="city" formControlName="bankCity" (focus)="openCityDropdown()" (keydown)="filterCityList($event)"  placeholder="Search City Name"/>
+                                            <label for="bank_City">{{"Search Bank City" | translate}}</label>
+                                            <span *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">
+                                                <small class="ui-error block-show" *ngIf="form.get('bankCity')?.hasError('required')">{{"Bank City is required." | translate}}</small>
+                                            </span>                                        
                                         </div>
+                                        <mat-autocomplete #city="matAutocomplete" class="mat_selectBankName" (optionSelected)="onCitySelected($event.option.value)">
+                                            <mat-option *ngFor="let city of filteredCitiesList" [value]="city.name">
+                                                {{ city.name | translate }}  
+                                            </mat-option>
+                                         </mat-autocomplete>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <select id="bank_Branch" name="bank_Branch" placeholder="" formControlName="bankBranch" class="form-control input-selectBox" (change)="onBranchChange($event)">
-                                                <option value="">{{"Select Bank Branch" | translate}}</option>
-                                                <option *ngFor="let branch of branchNameList" [value]="branch.name">{{ branch.name | translate }}</option>
-                                            </select>
-                                            <label for="bank_Branch">{{"Bank Branch" | translate}}</label>
-                                            <span class="ui-error" *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">{{"Please Select Branch Name" | translate}}</span>
+                                            <input class="form-control input-textBox" [matAutocomplete]="branch" formControlName="bankBranch" (focus)="openBranchDropdown()" (keydown)="filterBranchList($event)" id="bank_Branch" name="bank_Branch" placeholder="Search Branch Name"/>
+                                            <label for="bank_Branch">{{"Search Bank Branch" | translate}}</label>
+                                            <span *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">
+                                                <small class="ui-error block-show" *ngIf="form.get('bankBranch')?.hasError('required')">{{"Bank Branch is required." | translate}}</small>
+                                            </span>                                        
                                         </div>
+                                        <mat-autocomplete #branch="matAutocomplete" class="mat_selectBankName" (optionSelected)="onBranchSelected($event.option.value)">
+                                            <mat-option *ngFor="let branch of filteredBranchList" [value]="branch.name">
+                                                {{ branch.name | translate }}  
+                                            </mat-option>
+                                         </mat-autocomplete>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="IFSCCOde" >
+                                            <input type="text" id="IFSC_Code" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode" >
                                             <label for="IFSC_Code">{{"IFSC Code" | translate}}</label>
                                             <!-- <span class="ui-error" *ngIf="form?.get('ifsc')?.invalid && form.get('ifsc')?.touched">Please enter IFSC Code</span> -->
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" id="MICR_Code" name="MICR_Code" placeholder="" class="form-control input-textBox" formControlName="MICRCode">
+                                            <input type="text" id="MICR_Code" name="MICR_Code" placeholder="" class="form-control input-textBox" formControlName="micrCode">
                                             <label for="MICR_Code">{{"MICR Code" | translate}}</label>
                                             <!-- <span class="ui-error" *ngIf="form?.get('micr')?.invalid && form.get('micr')?.touched">Please enter MICR Code</span> -->
                                         </div>
@@ -1224,69 +1236,57 @@
                                                     </span>                                                
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <input type="text" id="IFSC_Code" [(ngModel)]="bankDetailsObject.IFSCCOde" name="IFSC_Code" placeholder="" class="form-control input-textBox" formControlName="ifscCode">
-                                                    <label for="IFSC_COde">{{"IFSC Code" | translate}}</label>                                       
-                                                    <span *ngIf="form.get('ifscCode')?.invalid && form.get('ifscCode')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('required')">{{"IFSC Code is required." | translate}}</small>
-                                                        <small class="ui-error block-show" *ngIf="form.get('ifscCode')?.hasError('pattern')">{{"IFSC Code must be 11 characters: first 4 uppercase letters, followed by 0, and 6 alphanumeric characters." | translate}}</small>
-                                                    </span>                                               
-                                                 </div>
-                                            </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input class="form-control input-textBox" [(ngModel)]="bankDetailsObject.bankName" [matAutocomplete]="auto" formControlName="bankNameControl" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
+                                                    <input class="form-control input-textBox" [matAutocomplete]="auto" [(ngModel)]="bankDetailsObject.bankName" formControlName="bankName" (focus)="openBankDropdown()" (keydown)="filterBankList($event)" id="bankName" name="bankName" placeholder="Search Bank Name"/>
                                                      <label for="bankName">{{"Search Bank Name" | translate}}</label>
-                                                     <span *ngIf="form.get('bankNameControl')?.invalid && form.get('bankNameControl')?.touched">
-                                                        <small class="ui-error block-show" *ngIf="form.get('bankNameControl')?.hasError('required')">{{"Bank Name is required." | translate}}</small>
+                                                     <span *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">
+                                                        <small class="ui-error block-show" *ngIf="form.get('bankName')?.hasError('required')">{{"Bank Name is required." | translate}}</small>
                                                       </span>
                                                 </div>
-                                                <mat-autocomplete #auto="matAutocomplete" class="mat_selectBankName" (optionSelected)="onBankNameSelected($event.option.value)">
+                                                <mat-autocomplete #auto="matAutocomplete" class="mat_selectBankName" (optionSelected)="onBankSelected($event.option.value)">
                                                     <mat-option *ngFor="let bank of filteredBankNamesList" [value]="bank.name">
                                                         {{ bank.name | translate }}  
                                                     </mat-option>
                                                  </mat-autocomplete>
-                                            </div> -->
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                                <div class="input-block form-floating input-block-renew">
-                                                    <select id="bank_Name" name="bank_Name" placeholder=""  [(ngModel)]="bankDetailsObject.bankName" formControlName="bankName" class="form-control input-selectBox" (change)="onBankChange($event)">
-                                                        <option value="">Select Bank Name</option>
-                                                        <option *ngFor="let bank of bankNameList" [value]="bank.name">{{ bank.name }}</option>
-                                                    </select>
-                                                    <label for="bank_Name">Bank Name</label>
-                                                    <span class="ui-error" *ngIf="form.get('bankName')?.invalid && form.get('bankName')?.touched">Please Select Bank Name</span>
-                                                </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <select id="bank_City" name="bank_City"  placeholder="" [(ngModel)]="bankDetailsObject.bankCity" formControlName="bankCity" class="form-control input-selectBox" (change)="onCityChange($event)">
-                                                        <option value="">Select Bank City</option>
-                                                        <option *ngFor="let city of cityNameList" [value]="city.name">{{ city.name }}</option>
-                                                    </select>
-                                                    <label for="bank_City">Bank City</label>
-                                                    <span class="ui-error" *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">Please Select City Name</span>
+                                                    <input class="form-control input-textBox" [matAutocomplete]="city" [(ngModel)]="bankDetailsObject.bankCity" formControlName="bankCity" (focus)="openCityDropdown()" (keydown)="filterCityList($event)"  placeholder="Search City Name"/>
+                                                    <label for="bank_City">{{"Search Bank City" | translate}}</label>
+                                                    <span *ngIf="form.get('bankCity')?.invalid && form.get('bankCity')?.touched">
+                                                        <small class="ui-error block-show" *ngIf="form.get('bankCity')?.hasError('required')">{{"Bank City is required." | translate}}</small>
+                                                    </span>                                        
                                                 </div>
+                                                <mat-autocomplete #city="matAutocomplete" class="mat_selectBankName" (optionSelected)="onCitySelected($event.option.value)">
+                                                    <mat-option *ngFor="let city of filteredCitiesList" [value]="city.name">
+                                                        {{ city.name | translate }}  
+                                                    </mat-option>
+                                                 </mat-autocomplete>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <select id="bank_Branch" name="bank_Branch" placeholder="" [(ngModel)]="bankDetailsObject.bankBranch" formControlName="bankBranch" class="form-control input-selectBox" (change)="onBranchChange($event)">
-                                                        <option value="">Select Bank Branch</option>
-                                                        <option *ngFor="let branch of branchNameList" [value]="branch.name">{{ branch.name }}</option>
-                                                    </select>
-                                                    <label for="bank_Branch">Bank Branch</label>
-                                                    <span class="ui-error" *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">Please Select Branch Name</span>
+                                                    <input class="form-control input-textBox" [matAutocomplete]="branch" [(ngModel)]="bankDetailsObject.bankBranch" formControlName="bankBranch" (focus)="openBranchDropdown()" (keydown)="filterBranchList($event)" id="bank_Branch" name="bank_Branch" placeholder="Search Branch Name"/>
+                                                    <label for="bank_Branch">{{"Search Bank Branch" | translate}}</label>
+                                                    <span *ngIf="form.get('bankBranch')?.invalid && form.get('bankBranch')?.touched">
+                                                        <small class="ui-error block-show" *ngIf="form.get('bankBranch')?.hasError('required')">{{"Bank Branch is required." | translate}}</small>
+                                                    </span>                                        
                                                 </div>
+                                                <mat-autocomplete #branch="matAutocomplete" class="mat_selectBankName" (optionSelected)="onBranchSelected($event.option.value)">
+                                                    <mat-option *ngFor="let branch of filteredBranchList" [value]="branch.name">
+                                                        {{ branch.name | translate }}  
+                                                    </mat-option>
+                                                 </mat-autocomplete>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="text" id="IFSC_Code" name="IFSC_Code" [(ngModel)]="bankDetailsObject.IFSCCOde" placeholder="" class="form-control input-textBox" formControlName="ifscCode" >
+                                                    <input type="text" id="IFSC_Code" name="IFSC_Code" [(ngModel)]="bankDetailsObject.ifscCode" placeholder="" class="form-control input-textBox" formControlName="ifscCode" >
                                                     <label for="IFSC_Code">IFSC Code</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                 <div class="input-block form-floating input-block-renew">
-                                                    <input type="text" id="MICR_Code" name="MICR_Code" [(ngModel)]="bankDetailsObject.MICRCode" placeholder="" class="form-control input-textBox" formControlName="micrCode">
+                                                    <input type="text" id="MICR_Code" name="MICR_Code" [(ngModel)]="bankDetailsObject.micrCode" placeholder="" class="form-control input-textBox" formControlName="micrCode">
                                                     <label for="MICR_Code">MICR Code</label>
                                                 </div>
                                             </div>

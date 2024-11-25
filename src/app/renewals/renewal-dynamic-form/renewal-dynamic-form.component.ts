@@ -9,6 +9,7 @@ import { validationConfig } from "src/app/interface/renewal-list.interface";
 import { EncryptionService } from "src/app/services/encryption.service";
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { AesEncryptionService } from "src/app/services/AESEncrypt.service";
 
 @Component({
   selector: "app-renewal-dynamic-form",
@@ -56,8 +57,9 @@ export class RenewalDynamicFormComponent implements OnInit {
   bankNameList: any[] = [];
   cityNameList: any[] = [];
   branchNameList: any[] = [];
-  bankNameControl = new FormControl("");
   filteredBankNamesList: any[] = [];
+  filteredCitiesList: any[] = [];
+  filteredBranchList: any[] = [];
   currentDate = new Date().toISOString().split("T")[0];
   isFeedBackModalVisible: Boolean = false;
   customerFeedbackForm!: FormGroup;
@@ -79,21 +81,21 @@ export class RenewalDynamicFormComponent implements OnInit {
   PreExistingDiseases: FormGroup = this.fb.group({});
   selectedBankId!: string;
   selectedCityId!: string;
-  bankDetailsObject = { accountHolderName: "",accountNo: "",accountType: "",bankName: "",bankCity: "",bankBranch: "",IFSCCOde: "",MICRCode: ""};
+  bankDetailsObject = { accountHolderName: "",accountNo: "",accountType: "",bankName: "",bankCity: "",bankBranch: "",ifscCode: "",micrCode: ""};
   documentId: any;
   showAppointee: boolean = false;
 
   constructor( private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,
     private toast: NgToastService,private ac: ActivatedRoute,private yatraService: YatraService,
     private commonService: CommonService,private encryptionService: EncryptionService, private languageService: LanguageService,
-    private translateService: TranslateService) {
+    private translateService: TranslateService,private aesEncryptionService: AesEncryptionService) {
   }
 
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
-          this.translateService.use('en'); // Fallback to English if translation file is missing
+          this.translateService.use('en'); 
         }
       });
     });
@@ -113,9 +115,6 @@ export class RenewalDynamicFormComponent implements OnInit {
         }
       }
     });
-    this.bankNameControl.valueChanges.subscribe((value) =>
-      this.filterBankList(value)
-    );
     this.customerFeedbackForm = this.fb.group({
       message: [""],
       rating: [null, Validators.required],
@@ -152,8 +151,10 @@ export class RenewalDynamicFormComponent implements OnInit {
   selectButton(value?: any, content?: any, member?: number) {
     if (this.selectedButton === "primary") {
       if (value == 5006) {
-        this.formId =value;
-        this.getBankDetails();
+        this.formId =value;        
+        if(this.bankDetailsObject.bankName==""){
+          this.getBankDetails();
+        }
         this.formObject = this.bankDetailsObject;
         this.initializeForm();
       } else if (value == 5005) {
@@ -378,16 +379,12 @@ export class RenewalDynamicFormComponent implements OnInit {
         this.renewalService.updateBankDetailsApi(this.requestObject).subscribe(
           (res: any) => {
             if (res.data.isUpdateSuccess == true && this.form.valid) {
-              this.bankDetailsObject = {
-                accountHolderName: this.form.value.accountHolderName || "",
-                accountNo: this.form.value.accountNo || "",
-                accountType: this.form.value.accountType || "",
-                bankName:  this.form.value.bankName || "",
-                bankCity: this.form.value.bankCity || "",
-                bankBranch: this.form.value.bankBranch|| "",
-                IFSCCOde: this.form.value.IFSCCOde || "",
-                MICRCode: this.form.value.MICRCode || "",
-              };
+              Object.keys(this.form.value).forEach((key) => {
+                const formValue = this.form.value[key];
+                if (formValue !== null && formValue !== undefined && formValue !== "" && key in this.bankDetailsObject) {
+                  (this.bankDetailsObject as any)[key] = this.form.value[key];;
+                }
+              });
               this.referenceNumber = res.data.referenceNumber;
             }
           },
@@ -600,7 +597,10 @@ export class RenewalDynamicFormComponent implements OnInit {
         file: null, };
       this.initializeForm();
       this.selectedPaymentType = option;
-      this.getBankDetails();
+      if(this.bankDetailsObject.bankName=="")
+      {
+        this.getBankDetails();
+      }
     } else if ( option == "online" || option == "E-Mandate" || option == "Auto_Debit" ) {
       this.selectedPaymentType = option;
       const paymentRequestBody = {
@@ -632,56 +632,26 @@ export class RenewalDynamicFormComponent implements OnInit {
   getBankDetails() {
     this.yatraService.getAllBankDetails().subscribe({
       next: (res: any) => {
-        this.bankNameList = res.data;
-        if (this.activeSection === "payment") {
-          this.filteredBankNamesList = this.bankNameList;
-        }
+        this.bankNameList = this.aesEncryptionService.decrypt(res.data).data;
+        console.log(this.bankNameList);
+        
       },
       error: (err) => {
         console.error(err);
       },
     });
-  }
-
-  onBankChange(event: any) {
-    const selectedBank = this.bankNameList.find(
-      (bank: any) => bank.name === event.target.value
-    );
-    if (selectedBank) {
-      this.selectedBankId = selectedBank.id;
-      this.getBankCityDetails(this.selectedBankId);
-    } else {
-      this.selectedBankId = "";
-      this.cityNameList = [];
-      this.branchNameList = [];
-    }
   }
 
   getBankCityDetails(bankId: any) {
-    const reqData = {cityCode: "",bankCode: bankId,};
+    const reqData = {cityCode: "",bankCode: bankId,};    
     this.yatraService.getBankCity(reqData).subscribe({
       next: (res: any) => {
         this.cityNameList = res.data;
-        if (this.selectedCityId) {
-          this.getBranchDetails(this.selectedBankId, this.selectedCityId);
-        }
       },
       error: (err) => {
         console.error(err);
       },
     });
-  }
-
-  onCityChange(event: any) {
-    const selectedCity = this.cityNameList.find(
-      (city: any) => city.name === event.target.value
-    );
-    if (selectedCity) {
-      this.selectedCityId = selectedCity.id;
-      this.getBranchDetails(this.selectedBankId, this.selectedCityId);
-    } else {
-      this.selectedCityId = "";
-    }
   }
 
   getBranchDetails(bankId: any, cityId: any) {
@@ -696,18 +666,79 @@ export class RenewalDynamicFormComponent implements OnInit {
     });
   }
 
-  onBranchChange(event: any) {
+  onBankSelected(selectedBankName: string): void {   
+   this.form.get("bankCity")?.setValue("");
+   this.form.get("bankBranch")?.setValue("");
+    if(this.bankDetailsObject.bankName=""){
+      this.bankDetailsObject.bankCity=""
+    }
+    const selectedBank = this.bankNameList.find(
+      (bank: any) => bank.name === selectedBankName
+    );
+    if (selectedBank) {
+      this.selectedBankId = selectedBank.id;
+      this.getBankCityDetails(this.selectedBankId);
+    } else {
+      this.selectedBankId = "";
+      this.cityNameList = [];
+      this.branchNameList = [];
+      this.filteredCitiesList = [];
+    }
+  }
+  onCitySelected(selectedCityName: string): void {
+    this.form.get("bankBranch")?.setValue("");
+    const selectedCity = this.cityNameList.find(
+      (city: any) => city.name === selectedCityName
+    );
+    if (selectedCity) {
+      this.selectedCityId = selectedCity.id;
+      this.getBranchDetails(this.selectedBankId, this.selectedCityId);
+    } else {
+      this.selectedCityId = "";
+    }
+  }
+  onBranchSelected(selectedBranchName: string): void {
     const selectedbranch = this.branchNameList.find(
-      (branch) => branch.name ===  event.target.value
+      (branch) => branch.name ===  selectedBranchName
     );
     if (selectedbranch) {
-      this.form.get("IFSCCOde")?.setValue(selectedbranch.id);
-      this.form.get("MICRCode")?.setValue(selectedbranch.value);
+      this.form.get("ifscCode")?.setValue(selectedbranch.id);
+      this.form.get("micrCode")?.setValue(selectedbranch.value);
     }
   }
 
-
   filterBankList(event: any): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase();
+    this.form.get('bankCity')?.reset()
+    this.form.get('bankBranch')?.reset()
+    this.form.get('ifscCode')?.reset()
+    this.form.get('micrCode')?.reset()
+    const allowedKeys = ["Backspace","Tab","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown" ];
+    const regex = /^[a-zA-Z\s]$/;
+    if (!allowedKeys.includes(event.key) && !regex.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
+    
+    this.filteredBankNamesList = this.bankNameList.filter((bank: any) =>
+      bank.name.toLowerCase().includes(input)
+    );
+  }
+  filterCityList(event: any): void {
+    const input = (event.target as HTMLInputElement).value.toLowerCase();
+    this.form.get('bankBranch')?.reset()
+    const allowedKeys = ["Backspace","Tab","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown"];
+    const regex = /^[a-zA-Z]$/;
+    if (!allowedKeys.includes(event.key) && !regex.test(event.key)) {
+      event.preventDefault();
+      return;
+    }
+
+    this.filteredCitiesList = this.cityNameList.filter((city: any) =>
+      city.name.toLowerCase().includes(input)
+    );
+  }
+  filterBranchList(event: any): void {
     const input = (event.target as HTMLInputElement).value.toLowerCase();
     const allowedKeys = ["Backspace","Tab","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown" ];
     const regex = /^[a-zA-Z]$/;
@@ -715,13 +746,19 @@ export class RenewalDynamicFormComponent implements OnInit {
       event.preventDefault();
       return;
     }
-    this.filteredBankNamesList = this.bankNameList.filter((bank: any) =>
-      bank.name.toLowerCase().includes(input)
+    this.filteredBranchList = this.branchNameList.filter((branch: any) =>
+      branch.name.toLowerCase().includes(input)
     );
   }
 
-  onBankNameSelected(selectedBankName: string): void {
-    this.form.get("bankNameControl")?.setValue(selectedBankName);
+  openBankDropdown(): void {
+    this.filteredBankNamesList = [...this.bankNameList];
+  }
+  openCityDropdown(): void {
+    this.filteredCitiesList = [...this.cityNameList];
+  }
+  openBranchDropdown(): void {
+    this.filteredBranchList = [...this.branchNameList];
   }
 
   setSection(section: string) {
@@ -764,12 +801,16 @@ export class RenewalDynamicFormComponent implements OnInit {
         "micrNo":"",
         "documentId": this.documentId
       };
+    
       console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res:any)=>{
-          if(res.isSuccess){
-            console.log("offline payment reponse",res.data);
-            this.fullQuoteResponse=res.data;          
+          console.log("response before successs",res);
+          const decryptResponse=this.aesEncryptionService.decrypt(res.data)
+          console.log(decryptResponse);
+          if(decryptResponse.isSuccess){
+            console.log("offline payment reponse",decryptResponse.data);
+            this.fullQuoteResponse=decryptResponse.data;          
             this.setSection('thankyou')
             this.hideSection=false
             this.isFeedBackModalVisible = true;
@@ -897,11 +938,18 @@ export class RenewalDynamicFormComponent implements OnInit {
     const formData = new FormData();
     formData.append("Files", this.file);
     formData.append("UniqueNumber", policyNum);
+    console.log("form data",formData);
+    
     this.commonService.uploaDocument(formData).subscribe(
       (res: any) => {
-        if (res.isSuccess) {
-          console.log(res.data.uploadResponse[0].globalId);
-          this.documentId = res.data.uploadResponse[0].globalId;
+        console.log("response before successs",res);
+        const decryptResponse=this.aesEncryptionService.decrypt(res.data)
+        console.log(decryptResponse);
+        
+        if (decryptResponse.isSuccess) {
+          console.log("response aftes successs",decryptResponse);
+          console.log("unique id",decryptResponse.data.uploadResponse[0].globalId);
+          this.documentId = decryptResponse.data.uploadResponse[0].globalId;
         }
       },
       (err) => {
@@ -909,7 +957,6 @@ export class RenewalDynamicFormComponent implements OnInit {
       }
     );
   }
-
   comeBack() {
     if (this.activeAction == "withoutmodify") {
       if (this.activeSection == "payment") {
