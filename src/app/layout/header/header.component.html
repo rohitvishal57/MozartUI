@@ -52,25 +52,25 @@
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="supported_navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Marketing Hub <span class="icon_arrowDown"></span>
+                    {{"Marketing Hub" | translate}} <span class="icon_arrowDown"></span>
                   </a>
                   <div class="dropdown-menu" aria-labelledby="supported_navbarDropdown">
                     <div class="dropdown-menuSub">
                       <ul >
-                        <li *ngFor="let opt of headerInformation.marketingContent"><a class="dropdown-item" href="{{opt.redirectURL}}" target="_blank">{{ opt.name }}</a></li>
+                        <li *ngFor="let opt of headerInformation.marketingContent"><a class="dropdown-item" href="{{opt.redirectURL}}" target="_blank">{{ opt.name | translate }}</a></li>
                       </ul>
                     </div>
                   </div>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="supported_navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Downloads <span class="icon_arrowDown"></span>
+                    {{"Downloads" | translate}} <span class="icon_arrowDown"></span>
                   </a>
                   <div class="dropdown-menu" aria-labelledby="supported_navbarDropdown">
                     <div class="dropdown-menuSub">
                       <div class="dropdown-menu-scroll">
                         <ul >
-                          <li *ngFor="let opt of headerInformation.downloadBrowcher"><a class="dropdown-item"   (click)="downloadPdfBrochure(opt.browcherURL)">{{ opt.productName }}</a></li>
+                          <li *ngFor="let opt of headerInformation.downloadBrowcher"><a class="dropdown-item"   (click)="downloadPdfBrochure(opt.browcherURL)">{{ opt.productName | translate }}</a></li>
                         </ul>
                       </div>
                     </div>
@@ -86,9 +86,9 @@
         <div class="header-right-cnt">
           <div class="language-selector" tabindex="0">
             <select (change)="setLanguage($event)" [value]="currentLanguage">
-              <option value="en">English</option>
-              <option value="hi">Hindi</option>
-              <option value="te">Telugu</option>
+              <option value="en">{{"English" | translate}}</option>
+              <option value="hi">{{"Hindi" | translate}}</option>
+              <option value="te">{{"Telugu" | translate}}</option>
             </select>
           </div>
           
@@ -114,8 +114,8 @@
               </div>
               <div class="overlay_footer">
                 <div class="btn_groupAction btn_groupNotification">
-                  <button id="markAll" name="markAll" type="button" class="btn_white btn_markAsRead" (click)="markAllReadNotification()">Mark As Read All</button>
-                  <button id="showAll" name="showAll" type="button" class="btn_red btn_markAsRead"  (click)="showAllNotifications()">Show All </button>
+                  <button id="markAll" name="markAll" type="button" class="btn_white btn_markAsRead" (click)="markAllReadNotification()">{{"Mark As Read All" | translate}}</button>
+                  <button id="showAll" name="showAll" type="button" class="btn_red btn_markAsRead"  (click)="showAllNotifications()">{{"Show All" | translate}} </button>
                 </div> 
               </div>
               <div class="checkbox_disease_scroll">           

@@ -2,7 +2,7 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"><!--<a class="btn_backPage"></a>-->My Performance</h2>
+                <h2 class="icon_withHeading"><!--<a class="btn_backPage"></a>-->{{"My Performance" | translate}}</h2>
             </div>
             <section class="white_container white_container_shadow">
                 <div class="row">
@@ -10,48 +10,48 @@
                         <div class="claims_matTabs_container">
                             <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="claims_matTabs"
                                 (selectedTabChange)="onTabChanged($event)">
-                                <mat-tab label="Performance">
+                                <mat-tab [label]="'Performance' | translate">
                                     <div class="row">
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="claims_member_info">
-                                                <h4>Annual Club Performance</h4>
+                                                <h4>{{"Annual Club Performance" | translate}}</h4>
                                                 <ul class="list-detailsInfo">
                                                     <li>
-                                                        <span class="label">Code :</span>
+                                                        <span class="label">{{"Code" | translate}} :</span>
                                                         <span class="value membername">{{ agentPerformanceData?.annualClubPermormance?.agentCode || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Name:</span>
+                                                        <span class="label">{{"Name" | translate}}:</span>
                                                         <span class="value">{{ agentPerformanceData?.annualClubPermormance?.agentName || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY1}} Annual Club Status :</span>
+                                                        <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY1}} {{"Annual Club Status" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubStatus1 || 'N/A' }}</span>
                                                     </li>
                                                     <li>
                                                         <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubGWPFY}} 
-                                                            Annual Club GWP (Weighted) as on {{ agentPerformanceData?.annualClubPermormance?.annualClubGWPWeightedAsOn
+                                                            {{"Annual Club GWP (Weighted) as on" | translate}} {{ agentPerformanceData?.annualClubPermormance?.annualClubGWPWeightedAsOn
                                                                 | date:'d MMM\'yy'}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubGWP || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">NOP Persistency % :</span>
+                                                        <span class="label">{{"NOP Persistency" | translate}} % :</span>
                                                         <span class="value">{{ agentPerformanceData?.annualClubPermormance?.nopPersistency || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY2}} Annual Club Status :</span>
+                                                        <span class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY2}} {{"Annual Club Status" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.annualClubPermormance?.annualClubStatus2 || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Next Club :</span>
+                                                        <span class="label">{{"Next Club" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.annualClubPermormance?.nextClub || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Shortall for Next level :</span>
+                                                        <span class="label">{{"Shortall for Next level" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.annualClubPermormance?.shortallForNextLevel || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Loss Ratio :</span>
+                                                        <span class="label">{{"Loss Ratio" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.annualClubPermormance?.lossRatio || 'N/A' }}</span>
                                                     </li>
                                                 </ul>
@@ -61,69 +61,69 @@
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                             <div class="claims_member_info">
                                                 <div class="body_flex_row justify-content-between">
-                                                    <h4>Campaign Performance</h4>
+                                                    <h4>{{"Campaign Performance" | translate}}</h4>
                                                     <div class="btn_groupAction btn_campaignPerformance">
                                                         <button type="button" id="monthly" name="monthly" value="monthly"
                                                             class="btn_grid mobile-hide jsBtnClickQuote"
                                                             [ngClass]="{'active': docType === 'Monthly'}"
-                                                            aria-label="quotes-list" (click)="toggleView('Monthly')">Monthly</button>
+                                                            aria-label="quotes-list" (click)="toggleView('Monthly')">{{"Monthly" | translate}}</button>
                                                         <button type="button" id="quaterly" name="quaterly" value="quaterly"
                                                             class="btn_grid mobile-hide jsBtnClickQuote"
                                                             [ngClass]="{'active': docType === 'Quaterly'}"
-                                                            aria-label="quotes-card" (click)="toggleView('Quaterly')">Quarterly</button>
+                                                            aria-label="quotes-card" (click)="toggleView('Quaterly')">{{"Quarterly" | translate}}</button>
                                                     </div>
                                                 </div>
                                                 <ul class="list-detailsInfo">
                                                     <li *ngIf="docType == 'Monthly'">
-                                                        <span class="label">GWP(Weighted) as on {{ (agentPerformanceData?.campaignPermormance?.weightedAsOn | date:'d MMM\'yy') || 'N/A' }}:</span>
+                                                        <span class="label">{{"GWP(Weighted) as on" | translate}} {{ (agentPerformanceData?.campaignPermormance?.weightedAsOn | date:'d MMM\'yy') || 'N/A' }}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.monthlyClubGWP || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">GWP(Weighted) as on {{ (agentPerformanceData?.campaignPermormance?.quaterlyClubGWPDate | date:'d MMM\'yy') || 'N/A' }}:</span>
+                                                        <span class="label">{{"GWP(Weighted) as on" | translate}} {{ (agentPerformanceData?.campaignPermormance?.quaterlyClubGWPDate | date:'d MMM\'yy') || 'N/A' }}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyClubGWP || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Monthly'">
-                                                        <span class="label">Status :</span>
+                                                        <span class="label">{{"Status" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.monthlyClubStatus || 'N/A'}}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Monthly'">
-                                                        <span class="label">Next level :</span>
+                                                        <span class="label">{{"Next level" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.nextLevel || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Monthly'">
-                                                        <span class="label">Shortall for Next level:</span>
+                                                        <span class="label">{{"Shortall for Next level" | translate}}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.shortallForNextLevel || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">Status :</span>
+                                                        <span class="label">{{"Status" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.status || 'N/A'}}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">Next level :</span>
+                                                        <span class="label">{{"Next level" | translate}} :</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyNextLevel || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">Shortall for Next level:</span>
+                                                        <span class="label">{{"Shortall for Next level" | translate}}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.quaterlyShortForNextLevel || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">RFB Business:</span>
+                                                        <span class="label">{{"RFB Business" | translate}}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfBbusiness || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">RFB Payout:</span>
+                                                        <span class="label">{{"RFB Payout" | translate}}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfbPayout || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">RFB Next Level:</span>
+                                                        <span class="label">{{"RFB Next Level" | translate}}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.rfbNextlevel || 'N/A' }}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">Next Level Earning:</span>
+                                                        <span class="label">{{"Next Level Earning" | translate}}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.nextlevelearning || 'N/A'}}</span>
                                                     </li>
                                                     <li *ngIf="docType == 'Quaterly'">
-                                                        <span class="label">Loss Ratio:</span>
+                                                        <span class="label">{{"Loss Ratio" | translate}}:</span>
                                                         <span class="value">{{ agentPerformanceData?.campaignPermormance?.lossRatio || 'N/A' }}</span>
                                                     </li>
                                                 </ul>
@@ -133,103 +133,103 @@
                                     </div>
                                 </mat-tab>
 
-                                <mat-tab label="Detailed View">
+                                <mat-tab [label]="'Detailed View' | translate">
                                     <div class="row">
                                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngFor="let row of detailedList; let i = index">
                                             <div class="claims_member_info">
-                                                <h4>Performance Detailed View</h4>
+                                                <h4>{{"Performance Detailed View" | translate}}</h4>
                                                 <ul class="list-detailsInfo">
                                                     <li>
-                                                        <span class="label">Agent Code:</span>
+                                                        <span class="label">{{"Agent Code" | translate}}:</span>
                                                         <span class="value membername">{{ row.agentCode || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Proposal ID:</span>
+                                                        <span class="label">{{"Proposal ID" | translate}}:</span>
                                                         <span class="value">{{ row.proposalID || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Proposal Sub-status:</span>
+                                                        <span class="label">{{"Proposal Sub-status" | translate}}:</span>
                                                         <span class="value">{{ row.proposalSubStatus || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Client ID:</span>
+                                                        <span class="label">{{"Client ID" | translate}}:</span>
                                                         <span class="value">{{ row.clientID || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Insured Name:</span>
+                                                        <span class="label">{{"Insured Name" | translate}}:</span>
                                                         <span class="value">{{ row.insuredName || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Business Type:</span>
+                                                        <span class="label">{{"Business Type" | translate}}:</span>
                                                         <span class="value">{{ row.businessType || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Policy Start Date:</span>
+                                                        <span class="label">{{"Policy Start Date" | translate}}:</span>
                                                         <span class="value">{{ row.policyStartDate || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Policy End Date:</span>
+                                                        <span class="label">{{"Policy End Date" | translate}}:</span>
                                                         <span class="value">{{ row.policyEndDate || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Policy Number:</span>
+                                                        <span class="label">{{"Policy Number" | translate}}:</span>
                                                         <span class="value">{{ row.policyNumber || 'N/A' }}</span>
                                                     </li>
 													   <li>
-                                                        <span class="label">Product Name:</span>
+                                                        <span class="label">{{"Product Name" | translate}}:</span>
                                                         <span class="value">{{ row.productName || 'N/A' }}</span>
                                                     </li>   <li>
-                                                        <span class="label">Policy Variant:</span>
+                                                        <span class="label">{{"Policy Variant" | translate}}:</span>
                                                         <span class="value">{{ row.policyVariant || 'N/A' }}</span>
                                                     </li>   <li>
-                                                        <span class="label">Plan Type:</span>
+                                                        <span class="label">{{"Plan Type" | translate}}:</span>
                                                         <span class="value">{{ row.planType || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">Plan Variant:</span>
+                                                        <span class="label">{{"Plan Variant" | translate}}:</span>
                                                         <span class="value">{{ row.planVariant || 'N/A' }}</span>
                                                     </li>                                                                    
 													<li>
-                                                        <span class="label">Portability:</span>
+                                                        <span class="label">{{"Portability" | translate}}:</span>
                                                         <span class="value">{{ row.planVariant || 'N/A' }}</span>
                                                     </li>
 													  <li>
-                                                        <span class="label">Net Premium:</span>
+                                                        <span class="label">{{"Net Premium" | translate}}:</span>
                                                         <span class="value">{{ row.netPremium|| 'N/A' }}</span>
                                                     </li>
 													  <li>
-                                                        <span class="label">Sum Insured:</span>
+                                                        <span class="label">{{"Sum Insured" | translate}}:</span>
                                                         <span class="value">{{ row.sumInsured|| 'N/A' }}</span>
                                                     </li>
 													  <li>
-                                                        <span class="label">Inwarded Date:</span>
+                                                        <span class="label">{{"Inwarded Date" | translate}}:</span>
                                                         <span class="value">{{ row.inwardedDate || 'N/A' }}</span>
                                                     </li>
 													  <li>
-                                                        <span class="label">Issue Date:</span>
+                                                        <span class="label">{{"Issue Date" | translate}}:</span>
                                                         <span class="value">{{ row.issueDate || 'N/A' }}</span>
                                                     </li>  <li>
-                                                        <span class="label">PR Date:</span>
+                                                        <span class="label">{{"PR Date" | translate}}:</span>
                                                         <span class="value">{{ row.prDate || 'N/A' }}</span>
                                                     </li>
 													 <li>
-                                                        <span class="label">Port%:</span>
+                                                        <span class="label">{{"Port" | translate}}%:</span>
                                                         <span class="value">{{ row.portPercent || 'N/A' }}</span>
                                                     </li>
 													 <li>
-                                                        <span class="label">Super%:</span>
+                                                        <span class="label">{{"Super" | translate}}%:</span>
                                                         <span class="value">{{ row.superPercent || 'N/A' }}</span>
                                                     </li>
 													<li>
-                                                        <span class="label">CI/CS/PA/ASP/Credit%:</span>
+                                                        <span class="label">{{"CI/CS/PA/ASP/Credit" | translate}}%:</span>
                                                         <span class="value">{{ row.cI_CS_PA_ASPCreditPercent || 'N/A' }}</span>
                                                     </li>
                                                     <li>
-                                                        <span class="label">SI Credit%:</span>
+                                                        <span class="label">{{"SI Credit" | translate}}%:</span>
                                                         <span class="value">{{ row.siCreditPercent || 'N/A' }}</span>
                                                     </li>
 													<li>
-                                                        <span class="label">Weighted Net Premium of Annual Club Apr 16 2024 6:17PM:</span>
+                                                        <span class="label">{{"Weighted Net Premium of Annual Club Apr 16 2024 6:17PM" | translate}}:</span>
                                                         <span class="value">{{ row.weightedNetPremium || 'N/A' }}</span>
                                                     </li>
                                                 </ul>

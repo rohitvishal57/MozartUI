@@ -61,8 +61,6 @@ export class ProductsComponent implements OnInit {
         }
       });
     });
-
-
     console.log(this.agentCode);
     // sessionStorage.clear()
     if (sessionStorage.getItem("cardListProducts"))

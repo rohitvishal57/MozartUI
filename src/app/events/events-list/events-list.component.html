@@ -3,9 +3,9 @@
       <div class="bodyColumn body_flex_column">
 
           <div class="body_flex_row justify-content-between">
-              <h2>Events</h2>
+              <h2>{{"Events" | translate}}</h2>
               <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest" (click)="addEvents()">
-                  <img src="assets/Img/icon_plus_red.svg">Add Event
+                  <img src="assets/Img/icon_plus_red.svg">{{"Add Event" | translate}}
               </button>
           </div>
           <div class="calendar-wrapper">
@@ -19,7 +19,7 @@
                               <line x1="8" y1="2" x2="8" y2="6"></line>
                               <line x1="3" y1="10" x2="21" y2="10"></line>
                           </svg>
-                          Today
+                          {{"Today" | translate}}
                       </button>
                       <button class="nav-arrow" (click)="previousDate()">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -36,12 +36,12 @@
                   <div class="nav-right">
                       <div class="dropdown">
                           <button class="btn btn-outline-primary dropdown-toggle" type="button" id="viewDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                              {{  capitalizeFirstLetter(view)  }}
+                              {{  capitalizeFirstLetter(view) | translate  }}
                           </button>
                           <ul class="dropdown-menu" aria-labelledby="viewDropdown">
-                              <li><a class="dropdown-item" value="Day" (click)="setView(CalendarView.Day)">Day</a></li>
-                              <li><a class="dropdown-item" value="Week" (click)="setView(CalendarView.Week)">Week</a></li>
-                              <li><a class="dropdown-item" value="Month" (click)="setView(CalendarView.Month)">Month</a></li>
+                              <li><a class="dropdown-item" value="Day" (click)="setView(CalendarView.Day)">{{"Day" | translate}}</a></li>
+                              <li><a class="dropdown-item" value="Week" (click)="setView(CalendarView.Week)">{{"Week" | translate}}</a></li>
+                              <li><a class="dropdown-item" value="Month" (click)="setView(CalendarView.Month)">{{"Month" | translate}}</a></li>
                           </ul>
                       </div>
                   </div>
@@ -82,44 +82,44 @@
                   </mwl-calendar-month-view>
                
                   <ng-template #eventModal>
-                    <h2 mat-dialog-title>Event Details</h2>
+                    <h2 mat-dialog-title>{{"Event Details" | translate}}</h2>
                     <mat-dialog-content>
                       <mat-card>
                         <mat-card-content>
-                          <h3 class="card-title mb-3">{{ selectedEvent?.meta?.activityTitle }}</h3>
+                          <h3 class="card-title mb-3">{{ selectedEvent?.meta?.activityTitle | translate }}</h3>
                           <div class="row mb-2">
                             <div class="col-md-6">
-                              <p class="mb-1"><strong>Customer Name:</strong></p>
-                              <p>{{ selectedEvent?.meta?.customerName }}</p>
+                              <p class="mb-1"><strong>{{"Customer Name" | translate}}:</strong></p>
+                              <p>{{ selectedEvent?.meta?.customerName | translate }}</p>
                             </div>
                             <div class="col-md-6">
-                              <p class="mb-1"><strong>Mobile Number:</strong></p>
+                              <p class="mb-1"><strong>{{"Mobile Number" | translate}}:</strong></p>
                               <p>{{ selectedEvent?.meta?.mobileNumber }}</p>
                             </div>
                           </div>
                           <div class="row mb-2">
                             <div class="col-md-6">
-                              <p class="mb-1"><strong>Activity Type:</strong></p>
+                              <p class="mb-1"><strong>{{"Activity Type" | translate}}:</strong></p>
                               <p>{{ selectedEvent?.meta?.activityType }}</p>
                             </div>
                             <div class="col-md-6">
-                              <p class="mb-1"><strong>Date:</strong></p>
+                              <p class="mb-1"><strong>{{"Date" | translate}}:</strong></p>
                               <p>{{ selectedEvent?.start | date:'mediumDate' }}</p>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col-md-6">
-                              <p class="mb-1"><strong>Start Time:</strong></p>
+                              <p class="mb-1"><strong>{{"Start Time" | translate}}:</strong></p>
                               <p>{{ selectedEvent?.start | date:'shortTime' }}</p>
                             </div>
                             <div class="col-md-6">
-                              <p class="mb-1"><strong>End Time:</strong></p>
+                              <p class="mb-1"><strong>{{"End Time" | translate}}:</strong></p>
                               <p>{{ selectedEvent?.end | date:'shortTime' }}</p>
                             </div>
                             <div class="row mb-2">
                               <div class="col-12">
-                                <p class="mb-1"><strong>Notes:</strong></p>
-                                <p>{{ selectedEvent?.note }}</p>
+                                <p class="mb-1"><strong>{{"Notes" | translate}}:</strong></p>
+                                <p>{{ selectedEvent?.note | translate }}</p>
                               </div>
                             </div>
                           </div>
@@ -127,7 +127,7 @@
                       </mat-card>
                     </mat-dialog-content>
                     <mat-dialog-actions align="end">
-                      <button mat-button mat-dialog-close>Close</button>
+                      <button mat-button mat-dialog-close>{{"Close" | translate}}</button>
                     </mat-dialog-actions>
                   </ng-template>           
               </div>

@@ -9,6 +9,8 @@ import { firstValueFrom } from 'rxjs';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-proposals-list',
@@ -66,10 +68,19 @@ export class ProposalsListComponent {
     private datePipe: DatePipe,
     private commonService:CommonService, private router: Router,
     private toast: NgToastService,
-    private encryptionService: EncryptionService
+    private encryptionService: EncryptionService,
+    private languageService: LanguageService,
+   private translateService: TranslateService
   ) {}
   
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.getProposalList();
     this.getProducts();
   }
