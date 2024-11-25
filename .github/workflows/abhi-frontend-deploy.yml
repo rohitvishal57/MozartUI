@@ -160,21 +160,8 @@ jobs:
       run: |
         echo "Generated version: ${{ env.VERSION }}"
 
-    # - name: Commit updated version.txt back to repository
-    #   run: |
-    #     git config --global user.name "github-actions[bot]"
-    #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
-    #     git add version.txt
-    #     git commit -m "Update version to ${{ env.VERSION }}"
-    #     git push
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - name: Create deployment directory on VM with version
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}')) { New-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}' -ItemType Directory }\""
-
-    # - name: Create deployment directory on VM
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA')) { New-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA' -ItemType Directory }\""
 
     - name: Manage Previous Deployments (Keep Last 3)
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"\$deploymentDir = '$DEPLOY_BASE_DIR'; \$deployments = Get-ChildItem -Path \$deploymentDir | Sort-Object LastWriteTime -Descending; if (\$deployments.Count -gt 3) { \$deployments | Select-Object -Skip 3 | Remove-Item -Recurse -Force }\""
@@ -192,14 +179,11 @@ jobs:
       run: ls -l ./my-artifacts
 
     - name: Remove existing files in IIS web root
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT/*' -Recurse -Force\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Test-Path '${{ env.WEB_ROOT }}\\bancaassurance-frontend') { Remove-Item '${{ env.WEB_ROOT }}\\bancaassurance-frontend\\*' -Recurse -Force } else { Write-Output 'Frontend directory not found' }\""
 
     - name: Upload artifact to VM with versioning
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
 
-    # - name: Upload artifact to VM
-    #   run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/$GITHUB_SHA/
-    
     - name: Create or Update Application Pool
       run: |
         ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} powershell -Command "if (-not (Test-Path 'IIS:\\AppPools\\FrontendAppPool')) { New-WebAppPool -Name 'FrontendAppPool'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name managedRuntimeVersion -Value 'v4.0'; Set-ItemProperty IIS:\\AppPools\\FrontendAppPool -Name processModel.identityType -Value ApplicationPoolIdentity; Write-Output 'Created Application Pool: FrontendAppPool'; } else { Write-Output 'Application Pool already exists: FrontendAppPool'; }"
@@ -210,17 +194,14 @@ jobs:
     - name: Remove Existing Website if Exists
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Remove-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
   
-    - name: Ensure abhi_frontend Directory Exists in IIS Web Root
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
+    #- name: Ensure abhi_frontend Directory Exists in IIS Web Root
+    #  run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$WEB_ROOT')) { New-Item -Path '$WEB_ROOT' -ItemType Directory }\""
   
     - name: Clean up the abhi_frontend Directory
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT\\*' -Recurse -Force\""
   
     - name: Copy Latest Build to IIS web root directory
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}/*' -Destination '$WEB_ROOT' -Recurse -Force\""
-    
-    # - name: Copy Latest Build to IIS web root directory
-    #   run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Copy-Item -Path '$DEPLOY_BASE_DIR/$GITHUB_SHA/*' -Destination '$WEB_ROOT' -Recurse -Force\""
   
     - name: Deploy application on IIS
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\bancaassurance-frontend' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
