@@ -259,15 +259,15 @@ export class LoginComponent implements OnInit {
   onVerifyOTP() {
     const otpCode = this.otp.join('');
     this.errorMessage = '';
+    this.otp = ['', '', '', '', '', ''];
     if (otpCode.length === 6 && /^[0-9]+$/.test(otpCode)) {
       this.validateOtpReqBody.agentCode = localStorage.getItem("agentCode");
       this.validateOtpReqBody.requestId = localStorage.getItem("requestId");
       this.validateOtpReqBody.otpNumber = otpCode;
-      this.otp = ['', '', '', '', '', ''];
 
       this.loginService.validateOtpRequestApi(this.validateOtpReqBody).subscribe({
         next: (res: any) => {
-          if (res.data && res.token !== null) {
+          if (res.data && res.isSuccess && res.statusCode == '200' && res.token !== null) {
             localStorage.setItem('userData', JSON.stringify(res.data));
             this.router.navigate(['dashboard']);
           } else {
