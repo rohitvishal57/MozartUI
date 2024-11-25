@@ -126,7 +126,7 @@ export class YatraComponent {
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
-    private route: ActivatedRoute, private languageService: LanguageService,private aesEncryptService: AesEncryptionService,
+    private route: ActivatedRoute, private languageService: LanguageService, private aesEncryptService: AesEncryptionService,
     private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe) { }
 
   ngOnInit() {
@@ -803,7 +803,7 @@ console.log(reqData);
       //dynamic css
       // this.showHtmlContent = true;
       console.log(this.form);
-      console.log(this.dynamicFormGroup, this.formData);
+      console.log(this.dynamicFormGroup.value, this.formData);
 
 
 
@@ -2281,15 +2281,15 @@ console.log(reqData);
           console.log(res, "API Response Received");
 
           // Prepare form group
-          const controlGroup = this.fb.group({});
+          // const controlGroup = this.fb.group({});
 
-          // For each relationship option, add a control
-          res.data.relationShip.forEach((option: any) => {
-            controlGroup.addControl(option.value, new FormControl(false));
-          });
+          // // For each relationship option, add a control
+          // res.data.relationShip.forEach((option: any) => {
+          //   controlGroup.addControl(option.value, new FormControl(false));
+          // });
 
           // Remove previous insuredMembers control
-          this.dynamicFormGroup.removeControl('insuredMembers');
+          // this.dynamicFormGroup.removeControl('insuredMembers');
 
           // Add validators
           let controlValidators: any = [];
@@ -2306,13 +2306,91 @@ console.log(reqData);
           // controlGroup.updateValueAndValidity();
 
           // Add the new insuredMembers control
-          this.dynamicFormGroup.addControl(control.name, controlGroup);
+          // this.dynamicFormGroup.addControl(control.name, controlGroup);
 
           // Update control with the fetched options
-          control.selectCheckboxOptions = res.data.relationShip;
-          console.log(this.isQuote, this.isPolicyDetailsFetch);
+          // control.selectCheckboxOptions = res.data.relationShip;
+          console.log(this.isQuote, this.isPolicyDetailsFetch, control);
 
           if (this.isQuote || this.isPolicyDetailsFetch) {
+
+            // Process formData.insuredMembers for additional relations
+            const formDataRelations = Object.keys(this.formData.insuredMembers)
+              .filter(
+                (relation) =>
+                  !res.data.relationShip.some((option: any) => option.value === relation)
+              )
+              .map((relation) => {
+                const baseName = relation.replace(/\d+$/, '');
+                const imagePath = res.data.relationShip.find(
+                  (option: any) => option.value.startsWith(baseName)
+                )?.imagePath || ''; // Get the imagePath if available
+
+                const id = res.data.relationShip.find(
+                  (option: any) => option.value.startsWith(baseName)
+                )?.id || '';
+                return {
+                  id,
+                  value: relation,
+                  name: relation,
+                  isIncrement: false, // Default; will update dynamically
+                  imagePath,
+
+                };
+              });
+
+            console.log(formDataRelations);
+
+            // Merge API and formData relations
+            const mergedOptions = [...res.data.relationShip, ...formDataRelations];
+
+            console.log(mergedOptions)
+
+            const groupedRelations: Record<string, any[]> = mergedOptions.reduce((acc: Record<string, any[]>, option: any) => {
+              const baseName = option.value.replace(/\d+$/, ''); // Remove numeric suffix
+              const isNumericSuffix = /\d$/.test(option.value); // Check if last character is a number
+
+              // Only include relations with numeric suffix (e.g., Son1, Son2, Daughter1, etc.)
+              if (isNumericSuffix) {
+                if (!acc[baseName]) acc[baseName] = [];
+                acc[baseName].push(option);
+              }
+              return acc;
+            }, {});
+
+            console.log(groupedRelations);
+
+
+            // Ensure each option has a unique `id` and update `isIncrement` logic
+            Object.values(groupedRelations).forEach((group) => {
+              group.forEach((relation, idx) => {
+                // Only the last member in the group gets the increment button
+                relation.isIncrement = idx === group.length - 1;
+              });
+            });
+
+            console.log(mergedOptions);
+
+
+            // Update control options with merged and processed options
+            control.selectCheckboxOptions = mergedOptions;
+
+            // Prepare form group
+            const controlGroup = this.fb.group({});
+
+            // For each relationship option, add a control
+            control.selectCheckboxOptions.forEach((option: any) => {
+              controlGroup.addControl(option.value, new FormControl(false));
+            });
+
+            // Remove previous insuredMembers control
+            this.dynamicFormGroup.removeControl('insuredMembers');
+
+            // Add the new insuredMembers control
+            this.dynamicFormGroup.addControl(control.name, controlGroup);
+
+            console.log(control);
+
             this.form.formSections.forEach((section: any) => {
               section.formControls.forEach((control: any) => {
                 if (control.name === 'insuredMembers') {
@@ -2326,6 +2404,25 @@ console.log(reqData);
                 }
               });
             });
+          }
+          else {
+
+            // Update control with the fetched options
+            control.selectCheckboxOptions = res.data.relationShip;
+
+            // Prepare form group
+            const controlGroup = this.fb.group({});
+
+            // For each relationship option, add a control
+            control.selectCheckboxOptions?.forEach((option: any) => {
+              controlGroup.addControl(option.value, new FormControl(false));
+            });
+
+            // Remove previous insuredMembers control
+            this.dynamicFormGroup.removeControl('insuredMembers');
+
+            // Add the new insuredMembers control
+            this.dynamicFormGroup.addControl(control.name, controlGroup);
           }
 
           // if (this.isPolicyDetailsFetch) {
@@ -3146,8 +3243,8 @@ console.log(reqData);
                   });
                   this.dynamicFormGroup.get(control.name)?.setValidators(controlValidators);
                   console.log(control);
-                  if(control.name == 'zone' && control.type == 'select'){
-                    control.options = this.formData.availableZones.map((zone:any) => ({
+                  if (control.name == 'zone' && control.type == 'select') {
+                    control.options = this.formData.availableZones.map((zone: any) => ({
                       name: zone,
                       value: zone
                     }));
