@@ -179,7 +179,7 @@
                                         </button>
                                         <button class="get1" id="View Recommended Add-Ons" name="View Recommended Add-Ons"
                                          (click)="showOverlay(i)">View Recommended Add-Ons</button>
-                                        <button class="get2" id="Add to Compare" name="Add to Compare">
+                                        <button class="get2" id="Add to Compare" name="Add to Compare" (click)="addToCompareProducts(item)">
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                             Add to Compare
                                         </button>
@@ -304,3 +304,73 @@
     <p>Loading...</p>
   </div>
 </ngx-spinner> -->
+
+
+<!--Bottom: ADD TO CAMPARE PRODUCTS START-->
+<div class="bottomInfoMain bottomInfoMain_comparePolices" *ngIf="compareItems.length > 0">
+    <div class="bottomInfoSubMain mb-4">
+        <div class="bi_left">
+            <h5>Compare Plans</h5>
+        </div>
+        <div class="bi_right">
+            <button type="button" id="checkcomparison" name="checkcomparison" value="savenew" class="btn_pink btn_checkComparison" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Check Comparison</button>
+            <!--<button type="button" value="proceed" class="btn_pink btn_pinkNext btn_checkComparison_close" (click)="closeComparison()">Close</button>-->
+        </div>
+    </div>
+    <div class="bottomInfoSubMain">
+        <div class="bi_left bi_left_fullWidth">
+            <div class="policePlans">
+                <!--Police Info start-->
+                <div class="planProductInfo" *ngIf="compareItems[0]"> 
+                    <div class="ppi_img">
+                        <img src="assets/Img/icon_activeone.svg">
+                    </div>
+                    <div class="ppi_info">
+                        <h4>{{compareItems[0].productName}}</h4>
+                        <h6>Aditya Birla Health Insurance</h6>
+                    </div>
+                    <span class="removePlan"><button type="button" id="compareproduct-1" name="compareproduct-1" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[0])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                </div>
+                <!--Police Info end-->
+            </div>
+            
+            <div class="planSeparator block-hide">vs</div>
+            <div class="policePlans">
+                <!--Police Info start-->
+                <div class="planProductInfo" *ngIf="compareItems[1]"> 
+                    <div class="ppi_img">
+                        <img src="assets/Img/icon_activeone.svg">
+                    </div>
+                    <div class="ppi_info">
+                        <h4>{{compareItems[1].productName}}</h4>
+                        <h6>Aditya Birla Health Insurance</h6>
+                    </div>
+                    <span class="removePlan"><button type="button"  id="compareproduct-2" name="compareproduct-2" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[1])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                </div>
+                <!--Police Info end-->
+            </div>
+            <div class="planSeparator block-hide">vs</div>
+            <div class="policePlans" >
+                <!--Police Info start-->
+                <div class="planProductInfo" *ngIf="compareItems[2]"> 
+                    <div class="ppi_img">
+                        <img src="assets/Img/icon_activeone.svg">
+                    </div>
+                    <div class="ppi_info">
+                        <h4>{{compareItems[2].productName}}</h4>
+                        <h6>Aditya Birla Health Insurance</h6>
+                    </div>
+                    <span class="removePlan"><button type="button" id="compareproduct-3" name="compareproduct-3" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[2])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                </div>
+                <!--Police Info end-->
+            </div>
+
+        </div>
+        <div class="bi_right block-hide">
+            <button type="button" id="comparenow" name="comparenow" value="comparenow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Compare now</button>
+            <button type="button" id="compareclose" name="compareclose" value="compareclose" class="btn_pink btn_pinkNext" (click)="closeProductComparison()">Close</button>
+        </div>
+    </div>
+  </div>
+<!--Bottom: ADD TO CAMPARE PRODUCTS END-->
+

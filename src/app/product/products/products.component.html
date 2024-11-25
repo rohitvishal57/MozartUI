@@ -29,7 +29,7 @@
                                             {{"Buy Now" | translate}}
                                         </button>
                                         <button type="button" id="viewdetails" name="viewdetails" value="viewdetails" class="btn_pink btn_products" (click)="productsDetail(item)">{{"View details" | translate}}</button>
-                                        <button type="button" id="addtocompare" name="addtocompare" value="addtocompare" class="btn_grey btn_products btn_addtocompare"  (click)="addToCompare(item)">
+                                        <button type="button" id="addtocompare" name="addtocompare" value="addtocompare" class="btn_grey btn_products btn_addtocompare"  (click)="addToCompareProducts(item)">
                                             <img src="assets/Img/left-and-right-arrows1.svg" alt="">
                                            {{"Add to Compare" | translate}}
                                         </button>
@@ -66,7 +66,7 @@
                         <h4>{{compareItems[0].productName}}</h4>
                         <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button" id="compareproduct-1" name="compareproduct-1" class="btn-closeCompare" (click)="removeCompareItem(compareItems[0])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                    <span class="removePlan"><button type="button" id="compareproduct-1" name="compareproduct-1" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[0])"><img src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
@@ -82,7 +82,7 @@
                         <h4>{{compareItems[1].productName}}</h4>
                         <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button"  id="compareproduct-2" name="compareproduct-2" class="btn-closeCompare" (click)="removeCompareItem(compareItems[1])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                    <span class="removePlan"><button type="button"  id="compareproduct-2" name="compareproduct-2" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[1])"><img src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
@@ -97,7 +97,7 @@
                         <h4>{{compareItems[2].productName}}</h4>
                         <h6>Aditya Birla Health Insurance</h6>
                     </div>
-                    <span class="removePlan"><button type="button" id="compareproduct-3" name="compareproduct-3" class="btn-closeCompare" (click)="removeCompareItem(compareItems[2])"><img src="assets/Img/icon_close_grey.svg"></button></span>
+                    <span class="removePlan"><button type="button" id="compareproduct-3" name="compareproduct-3" class="btn-closeCompare" (click)="removeCompareItemProduct(compareItems[2])"><img src="assets/Img/icon_close_grey.svg"></button></span>
                 </div>
                 <!--Police Info end-->
             </div>
@@ -105,7 +105,7 @@
         </div>
         <div class="bi_right block-hide">
             <button type="button" id="comparenow" name="comparenow" value="comparenow" class="btn_red btn_redRenew" (click)="navigateToProductComparison()" [disabled]="compareItems.length === 1">Compare now</button>
-            <button type="button" id="compareclose" name="compareclose" value="compareclose" class="btn_pink btn_pinkNext" (click)="closeComparison()">Close</button>
+            <button type="button" id="compareclose" name="compareclose" value="compareclose" class="btn_pink btn_pinkNext" (click)="closeProductComparison()">Close</button>
         </div>
     </div>
   </div>
