@@ -20,7 +20,7 @@ on:
 
 env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
-  DEPLOY_BASE_DIR: "D:/abhi_deployments/frontend_deployments"
+  DEPLOY_BASE_DIR: "C:/ABHI_DATA/abhi_deployments/frontend_deployments"
   WEB_ROOT: "C:/inetpub/wwwroot"
   PORT: 4800
 
@@ -140,21 +140,11 @@ jobs:
     - name: Add VM to known hosts
       run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-<<<<<<< HEAD
-    # Increment and Read Version
-=======
->>>>>>> 1b1012f90a7f0f799561eaf7644b62a9ca26786a
     - name: Read and Increment Version
       id: version
       run: |
         if [ ! -f version.txt ]; then
           echo "v1" > version.txt
-<<<<<<< HEAD
-        fi
-        VERSION=$(cat version.txt)
-        NEXT_VERSION=v$(( ${VERSION#v} + 1 ))
-        echo "$NEXT_VERSION" > version.txt
-=======
           NEXT_VERSION="v1"  # Set to v1 on first run
         else
           VERSION=$(cat version.txt)
@@ -162,7 +152,6 @@ jobs:
           NEXT_VERSION="v$(( ${VERSION#v} + 1 ))"
           echo "$NEXT_VERSION" > version.txt
         fi
->>>>>>> 1b1012f90a7f0f799561eaf7644b62a9ca26786a
         echo "VERSION=${NEXT_VERSION}" >> $GITHUB_ENV
         echo "New version is: $NEXT_VERSION"
       shell: bash
@@ -171,8 +160,6 @@ jobs:
       run: |
         echo "Generated version: ${{ env.VERSION }}"
 
-<<<<<<< HEAD
-=======
     # - name: Commit updated version.txt back to repository
     #   run: |
     #     git config --global user.name "github-actions[bot]"
@@ -183,7 +170,6 @@ jobs:
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
->>>>>>> 1b1012f90a7f0f799561eaf7644b62a9ca26786a
     - name: Create deployment directory on VM with version
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (-Not (Test-Path -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}')) { New-Item -Path '$DEPLOY_BASE_DIR/${{ env.VERSION }}' -ItemType Directory }\""
 
@@ -205,12 +191,9 @@ jobs:
     - name: Debug:List files after downloading artifacts
       run: ls -l ./my-artifacts
 
-<<<<<<< HEAD
-=======
     - name: Remove existing files in IIS web root
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"Remove-Item -Path '$WEB_ROOT/*' -Recurse -Force\""
 
->>>>>>> 1b1012f90a7f0f799561eaf7644b62a9ca26786a
     - name: Upload artifact to VM with versioning
       run: scp -i ~/.ssh/id_rsa -P 22 -r ./my-artifacts/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:$DEPLOY_BASE_DIR/${{ env.VERSION }}/
 
