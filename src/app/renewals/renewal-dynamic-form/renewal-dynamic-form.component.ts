@@ -9,6 +9,7 @@ import { validationConfig } from "src/app/interface/renewal-list.interface";
 import { EncryptionService } from "src/app/services/encryption.service";
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { coverageDetails } from "src/app/interface/renewal-list.interface";
 import { AesEncryptionService } from "src/app/services/AESEncrypt.service";
 
 @Component({
@@ -84,6 +85,10 @@ export class RenewalDynamicFormComponent implements OnInit {
   bankDetailsObject = { accountHolderName: "",accountNo: "",accountType: "",bankName: "",bankCity: "",bankBranch: "",ifscCode: "",micrCode: ""};
   documentId: any;
   showAppointee: boolean = false;
+  isMemberRadioSelected: boolean = false;
+  selectedCheckboxes: Set<number> = new Set<number>();
+  listOfProductFeatures:any= coverageDetails;
+
 
   constructor( private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,
     private toast: NgToastService,private ac: ActivatedRoute,private yatraService: YatraService,
@@ -136,8 +141,6 @@ export class RenewalDynamicFormComponent implements OnInit {
 
     console.log("form",this.form);
     console.log("form object",this.formObject);
-    
-    
   }
 
   async getRenewalInfo() {
@@ -156,6 +159,8 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.getBankDetails();
         }
         this.formObject = this.bankDetailsObject;
+        console.log(this.formObject);
+        
         this.initializeForm();
       } else if (value == 5005) {
         if (this.renewalInfo?.response?.policyData?.length > 0) {
@@ -169,6 +174,7 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.formObject.nominee_dob = this.formatDate(this.formObject.nominee_dob);
         }
         this.initializeForm();
+        this.checkNomineeAge()
         this.formId = value;
       } else if (value == 5003) {
         if (this.form.valid) {
@@ -211,17 +217,11 @@ export class RenewalDynamicFormComponent implements OnInit {
             highBlood: [false],asthma: [false],diabetes: [false],heart: [false],lung: [false],ent: [false],
             kidney: [false],brain: [false],cancer: [false],sexuallyTransmitted: [false],anemia: [false],accidental: [false],
           });
-        } else if (
-          this.renewalInfo?.response?.policyData?.length > 0 &&
-          content == "editMember"
-        ) {
-          this.memberRole = "Update";
-          this.formObject = {...this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0],};
-          this.formObject.DoB = this.formatDate(this.formObject.DoB);
+        } else if ( this.renewalInfo?.response?.policyData?.length > 0 && content == "deleteMember" ) {
+
         }
         this.initializeForm();
         this.formId = value;
-        this.checkAndDisableSumInsured();
       } else {
         this.formId = 5001;
       }
@@ -266,39 +266,7 @@ export class RenewalDynamicFormComponent implements OnInit {
               }
             );
           this.formId = 5001;
-        } else if (this.memberRole === "Update" && this.form.valid) {
-          this.requestObject = {};
-          this.requestObject.member = JSON.stringify(this.form.value);
-          this.requestObject.policyNumber = this.policyNumber;
-          this.requestObject.referenceNumber = this.referenceNumber;
-          this.requestObject.memberId = this.form.value.MemberId;
-          this.requestObject.agentCode = this.agentCode;
-          this.requestObject.productId = 2;
-          this.requestObject.quoteData = "";
-          this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
-              (res: any) => {
-                if (res.data.isUpdateSuccess == true) {
-                  const memberIndex =this.renewalInfo.response.policyData[0].Members.findIndex(
-                      (member: any) =>member.FirstName === this.form.value.FirstName);
-                  if (memberIndex !== -1) {
-                    this.renewalInfo.response.policyData[0].Members[memberIndex] = {
-                      ...this.renewalInfo.response.policyData[0].Members[memberIndex],...this.form.value,
-                    };
-                  } else {
-                    console.log("Member not found for update");
-                  }
-                  this.referenceNumber = res.data.referenceNumber;
-                }
-              },
-              (err) => {
-                this.toast.error({detail: "",summary: "Failed to Update Member.",duration: 1500,});
-              }
-            );
-          this.formId = 5001;
-        } else {
-          console.log("Form is invalid");
-          return;
-        }
+        } 
         break;
       case "editMember":
         if (this.form.valid) {
@@ -364,6 +332,7 @@ export class RenewalDynamicFormComponent implements OnInit {
           );
           this.formId = 5001;
         } else {
+          this.form.markAllAsTouched();
           console.log("Form is invalid");
           return;
         }
@@ -372,6 +341,7 @@ export class RenewalDynamicFormComponent implements OnInit {
         this.activeSection = "primary";
         break;
       case "editBankDetails":
+        if(this.form.valid){
         this.requestObject = {};
         this.requestObject.bankDetails = JSON.stringify(this.bankDetailsObject);
         this.requestObject.policyNumber = this.policyNumber;
@@ -395,7 +365,10 @@ export class RenewalDynamicFormComponent implements OnInit {
               duration: 1500,
             });
           }
-        );
+        );} else {
+          this.form.markAllAsTouched();
+          return;
+        }
         this.formId = 5001;
         break;
       case "cancel":
@@ -438,36 +411,62 @@ export class RenewalDynamicFormComponent implements OnInit {
     }
   }
 
-  getproductdetailsandfeatures() {
-    const productName =this.renewalInfo?.response?.policyData?.[0]?.Name_of_product;
-    if (productName) {
-      const matchingProduct = this.productsList.find(
-        (product: any) => product.productName === productName
+getproductdetailsandfeatures() {
+  const productName =this.renewalInfo?.response?.policyData?.[0]?.Name_of_product;
+  if (productName) {
+    const matchingProduct = this.productsList.find(
+      (product: any) => product.productName === productName
+    );
+    // if (matchingProduct) {
+    if (true) {
+      const request = {
+        // productId: matchingProduct.productId,
+        productId: 2,
+        agentCode: this.agentCode,
+      };
+
+      this.renewalService.getproductdetailsandfeatures(request).subscribe(
+        (res: any) => {
+          console.log(res.data);
+          const productFeatures = res.data.productFeatures;
+          const listOfMembers = this.renewalInfo?.response?.policyData?.[0]?.Members;
+          productFeatures.forEach((feature: any) => {
+           const matchingFeature = this.listOfProductFeatures.find(
+              (existingFeature: any) => existingFeature.featureName === feature.featureName
+            );
+            feature.member = listOfMembers.map((member: any) => ({
+              memberType: member.Relation || "",
+              isSelected: false,
+              fields: matchingFeature
+                ? matchingFeature.member[0].fields.map((field: any) => ({
+                    ...field,
+                    // coverAmount: field.coverAmount || null,
+                    // occupationValue: field.occupationValue || null, 
+                  }))
+                : [],
+            }));
+          });
+          this.optionalCovers = productFeatures.filter(
+            (feature: any) => feature.categoryName === 'Optional Covers'
+          );
+          this.healthAddOns = productFeatures.filter(
+            (feature: any) => feature.categoryName === 'Health Add On'
+          );
+          console.log(this.optionalCovers);
+          console.log(this.healthAddOns);
+          
+          
+          console.log('Updated Product Features:', productFeatures);
+          // this.listOfProductFeatures = productFeatures; // Assign updated productFeatures back to the main list
+        },
+        (error: any) => {
+          console.error('Error fetching product details and features:', error);
+        }
+      
       );
-      // if (matchingProduct) {
-      if (true) {
-        const request = {
-          // productId: matchingProduct.productId,
-          productId: 1,
-          agentCode: this.agentCode,
-        };
-        this.renewalService.getproductdetailsandfeatures(request).subscribe(
-          (res: any) => {
-            const productFeatures = res.data.productFeatures;
-            this.optionalCovers = productFeatures.filter((feature: any) => feature.categoryName === "Optional Covers");
-            this.healthAddOns = productFeatures.filter((feature: any) => feature.categoryName === "Health Add On");
-          },
-          (err) => {
-            console.error("Error coming from getproductdetailsandfeatures API",err);
-          }
-        );
-      } else {
-        console.error(`No matching product found for the product name: ${productName}`);
-      }
-    } else {
-      console.error("Product name is not available in renewalInfo.");
     }
   }
+}
 
   formatTickLabel(value: number, forSlider: boolean): string {
     if (value >= 10000000) {
@@ -531,8 +530,16 @@ export class RenewalDynamicFormComponent implements OnInit {
       const age = this.calculateAge(dob);
       if (+age >= 18) {
         this.showAppointee = false;
+        this.form.removeControl('appointee_name');
+        this.form.removeControl('appointee_age');
       } else {
         this.showAppointee = true;
+        if (!this.form.contains('appointee_name')) {
+          this.form.addControl('appointee_name', new FormControl('', Validators.required));
+        }
+        if (!this.form.contains('appointee_age')) {
+            this.form.addControl('appointee_age', new FormControl('', Validators.required));
+        }
       }
     }
   }
@@ -565,14 +572,6 @@ export class RenewalDynamicFormComponent implements OnInit {
     });
   }
 
-  checkAndDisableSumInsured(): void {
-    if (this.memberRole === "Update") {
-      this.form.get("SumInsured")?.disable();
-    } else {
-      this.form.get("SumInsured")?.enable();
-    }
-  }
-
   private formatDate(dateString: string): string {
     if (!dateString) return "";
     if (/\d{2}\/\d{2}\/\d{4}/.test(dateString)) {
@@ -584,17 +583,16 @@ export class RenewalDynamicFormComponent implements OnInit {
 
   selectPaymentType(option: any) {
     if (option == "offline") {
-      this.formObject = 
-      { paymentOption: "", 
-        premiumAmount:this.renewalInfo?.response?.policyData[0]?.NetPremium || "",
+      this.formObject = { paymentOption: "", 
+        premiumAmount:this.renewalBaseObject?.response?.policyData[0]?.premium.Renewal_Gross_Premium || "",
         instrumentNumber: "", 
         instrumentDate: "", 
-        bankName:"",
-        bankCity:"",
-        bankBranch:"",
-        ifscCode: "", 
-        micrCode:"",
-        file: null, };
+        bankName:this.bankDetailsObject.bankName || "",
+        bankCity:this.bankDetailsObject.bankCity || "",
+        bankBranch:this.bankDetailsObject.bankBranch || "",
+        ifscCode: this.bankDetailsObject.ifscCode || "", 
+        micrCode:this.bankDetailsObject.micrCode || "",
+        file: null };
       this.initializeForm();
       this.selectedPaymentType = option;
       if(this.bankDetailsObject.bankName=="")
@@ -781,6 +779,8 @@ export class RenewalDynamicFormComponent implements OnInit {
     else if(this.activeSection== 'policySummary'){
       this.setSection('payment')
     }else if(this.activeSection == 'payment'){
+      console.log("form",this.form);
+      
       if(this.selectedPaymentType == 'offline' && !this.form.valid){
         this.form.markAllAsTouched();
         return;
@@ -825,6 +825,7 @@ export class RenewalDynamicFormComponent implements OnInit {
       })
     }
   }
+
   getProducts() {
     const reqData = {agentCode: this.agentCode,};
     this.commonService.Getproductlist(reqData).subscribe({
@@ -957,6 +958,17 @@ export class RenewalDynamicFormComponent implements OnInit {
       }
     );
   }
+
+  onCheckboxChange(index: number, event: Event): void {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.selectedCheckboxes.add(index);
+    } else {
+      this.selectedCheckboxes.delete(index);
+    }
+    this.isMemberRadioSelected = this.selectedCheckboxes.size > 0; // Update button state
+  }
+
   comeBack() {
     if (this.activeAction == "withoutmodify") {
       if (this.activeSection == "payment") {
@@ -979,6 +991,27 @@ export class RenewalDynamicFormComponent implements OnInit {
         this.setSection("policySummary");
       }
     }
+  }
+
+  selectedMembers: { [memberIndex: number]: { [featureName: string]: any } } = {};
+
+  onMemberFeatureSelect(memberIndex: number, featureIndex: number, event: any): void {
+    const featureName = this.productsList[featureIndex].featureName;
+    if (event.target.checked) {
+      if (!this.selectedMembers[memberIndex]) {
+        this.selectedMembers[memberIndex] = {};
+      }
+      this.selectedMembers[memberIndex][featureName] = {};
+    } else {
+      delete this.selectedMembers[memberIndex]?.[featureName];
+    }
+  }
+
+  onMemberFieldChange(memberIndex: number, featureName: string, fieldName: string, event: any): void {
+    if (!this.selectedMembers[memberIndex]?.[featureName]) {
+      this.selectedMembers[memberIndex][featureName] = {};
+    }
+    this.selectedMembers[memberIndex][featureName][fieldName] = event.target.value;
   }
   
 }
