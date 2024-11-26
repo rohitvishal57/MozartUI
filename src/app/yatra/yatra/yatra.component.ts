@@ -261,10 +261,6 @@ export class YatraComponent {
       rating: [null, Validators.required], // Add rating to the form
     });
 
-    if (this.quickQuoteRedirect) {
-      this.getLeadInformation();
-    }
-
   }
 
   initializeRequiredData() {
