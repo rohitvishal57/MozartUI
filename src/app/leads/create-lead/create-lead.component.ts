@@ -6,12 +6,11 @@ import { DatePipe } from '@angular/common';
 import { LeadsService } from '../leads.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CommonService } from 'src/app/services/common.service';
-import { error } from 'jquery';
 import { firstValueFrom } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-create-lead',
@@ -55,6 +54,7 @@ export class CreateLeadComponent implements OnInit {
   productsList: any = [];
   productSumInsured: any = [];
   occupationInfo : any;
+  zoneCode :any;
     
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
@@ -68,7 +68,8 @@ export class CreateLeadComponent implements OnInit {
     private datepipe: DatePipe,
     private commonService: CommonService,
     private languageService: LanguageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private common: CommonService
   ) {
 
   }
@@ -211,7 +212,7 @@ export class CreateLeadComponent implements OnInit {
   }
   sendOTP() {
   }
-  onSubmit() {
+  async onSubmit() {
     this.submitted = true;
 
     if (this.userValidations.invalid) {
@@ -223,6 +224,14 @@ export class CreateLeadComponent implements OnInit {
       // Continue with form submission if it's valid
       this.CreateLead = this.userValidations.getRawValue();
     }
+    let proposalNumber :any  ;
+    try{
+      const response = await firstValueFrom(this.common.getProposalNumber());
+      proposalNumber = response.data?.proposalNumber;
+    }catch(err){
+      this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+    }
+    this.CreateLead.proposalNumber = proposalNumber;
     this.CreateLead.AgentCode = this.agentCode;
     this.CreateLead.PhoneNumber = this.userValidations.get('mobilenumber')?.value;
     this.CreateLead.campaignname = 'Self'
@@ -234,8 +243,10 @@ export class CreateLeadComponent implements OnInit {
       age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     }
     this.CreateLead.age = age.toString();
-   
 
+   
+  
+    
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
         console.log(response);
@@ -524,12 +535,34 @@ export class CreateLeadComponent implements OnInit {
     );
   }
 
-  validateActivityEndTime(){
+  // validateActivityEndTime(){
   
-  }
+  // }
 
   stringifyJson(opt: any): string {
     return JSON.stringify(opt); 
   }
+
+  getZoneByPinCode(pincode: any) {
+    this.zoneCode ='';
+    const reqData = {
+      "pincode": pincode
+    }
+    this.common.getPinCodeByCity(reqData).subscribe(
+      (response) => {
+        if(response?.isSuccess){
+         this.zoneCode = response?.data?.zone;
+        }else{
+          this.userValidations.get('pincode')?.setErrors({ incorrect: true  ,message : response?.message});
+        }
+      },
+      (error) => {
+        console.log('Failed to fetch pincode Information.',error);
+        this.userValidations.get('pincode')?.setErrors({ incorrect: true , message : 'Please re-enter pincode again.'});
+      }
+    )
+  }
+
+
 }
 

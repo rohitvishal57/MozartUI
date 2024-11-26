@@ -76,7 +76,6 @@ export class LeadsListComponent {
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
-  proposalNumber : string ='';
 
   constructor(
     private leadsService: LeadsService,
@@ -523,19 +522,19 @@ export class LeadsListComponent {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }
 
-          try{
-            const response = await firstValueFrom(this.common.getProposalNumber());
-            this.proposalNumber = response.data?.proposalNumber;
-          }catch(err){
-            this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-          }
+          // try{
+          //   const response = await firstValueFrom(this.common.getProposalNumber());
+          //   this.proposalNumber = response.data?.proposalNumber;
+          // }catch(err){
+          //   this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+          // }
         
           const productData = {
             partnerId: interestedProductItem.partnerId,
             productId: interestedProductItem.productId,
             quickQuoteRedirect : true,
             leadId :  lead.leadNumber,
-            proposalNum: this.proposalNumber
+            proposalNum: lead.proposalNumber
           }
         
 

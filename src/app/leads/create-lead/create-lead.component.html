@@ -427,11 +427,23 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <input class="form-control input-textBox" id="pincode" name="pincode" placeholder=""
-                                    formControlName="pincode" type="text" maxlength="6" (keypress)="isNumber($event)">
+                                    formControlName="pincode" type="text" maxlength="6" (blur)="getZoneByPinCode(userValidations.get('pincode')?.value)" (keypress)="isNumber($event)">
                                 <label for="pincode">{{"Pincode" | translate}}</label>
                                 <span class="ui-error block-show"
                                     *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
+
+                                <span class="ui-error block-show"
+                                    *ngIf="userValidations.get('pincode')?.errors?.['incorrect']">
+                                    {{ userValidations.get('pincode')?.errors?.['message'] }}</span>
                             </div>
+                        </div>
+                        
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="Zone" name="Zone"  placeholder="" value="{{zoneCode}}"  type="text" >
+                                <label for="Zone">{{"Zone" | translate}}</label>
+                              </div>
                         </div>
                     </div>
                 </section>
