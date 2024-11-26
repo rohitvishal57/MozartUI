@@ -5,7 +5,7 @@
         <section class="section_fullWidth white_container dashboard_topSection commonSection ">
           <div class="row">
             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-              <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}}</h6>
+              <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}} ({{profileDetails?.agentCode}})</h6>
             </div>
 
           </div>
@@ -325,7 +325,7 @@
           <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
             <h6>{{"My Customers" | translate}}</h6>
             <div class="leads_content">
-              <div class="chart-container" style="position: relative; height:30vh; width:100%">
+              <div class="chart-container" style="position: relative; height:50vh; width:100%">
                 <canvas id="MyChart" style="margin: auto;">{{ customerChart }}</canvas>
               </div>
             </div>

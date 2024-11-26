@@ -159,8 +159,6 @@ export class QuoteProductsComponent implements OnInit {
     try {
       const res = await firstValueFrom(this.service.getProposalNumber());
       console.log(res);
-      res.data = this.aesEncryptService.decrypt(res.data).data;
-      console.log(res);
       this.proposalNum = res.data.proposalNumber;
       console.log(this.proposalNum)
     } catch (error) {
