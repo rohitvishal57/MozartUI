@@ -126,6 +126,7 @@ table {
 ::-webkit-scrollbar-button {
   background: #E6E6E6;
   width: 0;
+  height: 0;
 }
 
 ::-webkit-scrollbar-track-piece {
@@ -1163,7 +1164,14 @@ input[type="checkbox"]:focus + label:before {
 .mandatory {
   color: var(--black-28-color);
 }
-
+.text-danger {
+  font-family: "Anek Latin", sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  color: #EB0000;
+  line-height: 12px;
+  text-align: left;
+}
 .ui-error {
   font-family: "Anek Latin", sans-serif;
   font-weight: 400;
@@ -5854,6 +5862,74 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 20px;
 }
 /*---Common: Success Container styles end---*/
+
+/*----Calendar styles  start----*/
+.calendar-wrapper .dropdown-menu{
+  border-radius: 10px;
+}
+.calendar-wrapper .dropdown-menu li{
+  padding: 0 5px;
+}
+.calendar-wrapper .dropdown-item {
+  font-family: "Anek Latin", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+}
+.calendar-wrapper .dropdown-item:hover{
+  background: rgba(201, 20, 41, .1);
+  border-radius: 10px;
+  color: #c91429 !important;
+}
+.cal-month-view .cal-day-badge {
+  background-color: #FFE7E5 !important;
+  color: #C7222A !important;
+}
+.cal-month-view .cal-event {
+  background-color: #bfbfbf !important;
+  border-color: #c7222a;
+  color: #fff;
+}
+.cal-month-view .cal-day-number {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+.cal-month-view .cal-day-cell.cal-weekend .cal-day-number {
+  color: #FFE7E5;
+}
+.cal-month-view .cal-day-cell.cal-today,
+.cal-week-view .cal-header.cal-today {
+  background-color: #c91429 !important;
+  color: #fff;
+}
+.cal-month-view .cal-cell-row .cal-cell:hover, .cal-month-view .cal-cell.cal-has-events.cal-open {
+  background-color: #FFE7E5 !important;
+  color: #c91429;
+}
+.cal-month-view .cal-cell-row .cal-cell:hover .cal-day-badge {
+  background-color: #ffffff !important;
+}
+.cal-month-view .cal-day-cell.cal-weekend .cal-day-number,
+.cal-week-view .cal-header.cal-weekend span {
+  color: #c91429 !important;
+  opacity: 0.5 !important;
+}
+.cal-week-view .cal-event {
+  background-color: #FFE7E5 !important;
+  border-color: #C7222A !important;
+  color: #C7222A !important;
+}
+.cal-week-view .cal-time-events .cal-event {
+  line-height: normal !important;
+}
+.cal-week-view .cal-hour-odd {
+  background-color: #fff6f6 !important;
+}
+.cal-week-view .cal-time-events .cal-day-columns:not(.cal-resize-active) .cal-hour-segment:hover {
+  background-color: #c91429 !important;
+  color: #fff;
+}
+/*----Calendar styles  end----*/
 
 /*----New styles added 13-nov-24 start----*/
 .note_remarkText_width {

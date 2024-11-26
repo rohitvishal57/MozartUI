@@ -1,8 +1,9 @@
 .calendar-navigation {
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
-    border-bottom: 1px solid #e0e0e0;
+    background: #FFFFFF;
+    padding: 16px 18px;
+    border-radius: 16px;
   }
   .Addbtn{
     background: #f1c9c9;
@@ -42,8 +43,8 @@
   
   .current-month {
     margin: 0;
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-weight: 300;
+    font-size: 16px;
   }
   
   /* Custom Day View Header */
@@ -62,13 +63,14 @@
   .date-number {
     font-size: 2rem;
     font-weight: 500;
-    color: #1a73e8;
+    color: #c91429;
     line-height: 1;
   }
   
   .date-day {
-    font-size: 1rem;
-    color: #5f6368;
+    font-size: 1.5rem;
+    color: #282828;
+    font-weight: 300;
     margin-top: 0.25rem;
   }
   
@@ -112,16 +114,39 @@
   }
 
 .dropdown-toggle{
-  width: 8rem;
-  font-size: 17px;
-  background-color: white;
-  color: black;
-  border: 1px solid #e0e0e0;
+  font-size: 14px;
+  background-color: #C7222A;
+  color: #ffffff;
+  border: 1px solid #C7222A;
+  display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    gap: 15px;
+    min-width: 90px;
 }
-.dropdown-toggle:focus{
-  background-color: white;
-  color: black;
-  border: 1px solid #e0e0e0;
+.dropdown-toggle:focus,.dropdown-toggle:hover{
+  background-color: #ffffff;
+  color: #C7222A;
+  border: 1px solid #C7222A;
+}
+.btn_today {
+  background: #FFE7E5;
+  color: #C7222A;
+  border: 1px solid #FFE7E5;
+}
+.btn_next {
+  background: transparent;
+  color: #C7222A;
+  border: 0px solid #C7222A;
+  display: flex;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+  &:hover {
+    background: transparent;
+    color: #C7222A;
+  }
 }
   .event-template {
     padding: 5px !important;

@@ -1,13 +1,26 @@
 <main class="siteBody">
   <div class="contentBody bodyColumns-1">
-      <div class="bodyColumn body_flex_column">
+    <div class="bodyColumn body_flex_column">
 
           <div class="body_flex_row justify-content-between">
-              <h2>{{"Events" | translate}}</h2>
+            <h2>{{"
+              Events" | translate}} &gt; <a  (click)="navigateToBirthdays()" class="breadcrumb-link">Birthdays</a>
+            </h2>
               <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest" (click)="addEvents()">
                   <img src="assets/Img/icon_plus_red.svg">{{"Add Event" | translate}}
               </button>
           </div>
+          <!-- <div class="body_flex_row justify-content-between align-items-center">
+            <h2 class="events-title">Events</h2>
+          
+            <div class="breadcrumb">
+              <a routerLink="events/birthdaysList">Birthdays</a> &gt;
+            </div>
+          
+=            <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest" (click)="addEvents()">
+              <img src="assets/Img/icon_plus_red.svg">Add Event
+            </button>
+          </div> -->
           <div class="calendar-wrapper">
               <!-- Header Section -->
               <div class="calendar-navigation">
@@ -54,25 +67,13 @@
                       </div>
                   </div>
 
-                  <mwl-calendar-day-view 
-                    *ngIf="view === CalendarView.Day" 
-                    [viewDate]="viewDate" 
-                    [events]="events" 
-                    [hourSegments]="2" 
-                    [dayStartHour]="0" 
-                    [dayEndHour]="24" 
-                    (eventClicked)="handleEventClick($event)">
-                  </mwl-calendar-day-view>
+            <mwl-calendar-day-view *ngIf="view === CalendarView.Day" [viewDate]="viewDate" [events]="events"
+              [hourSegments]="2" [dayStartHour]="0" [dayEndHour]="24" (eventClicked)="handleEventClick($event)">
+            </mwl-calendar-day-view>
 
-                  <mwl-calendar-week-view 
-                    *ngIf="view === CalendarView.Week" 
-                    [viewDate]="viewDate" 
-                    [events]="events" 
-                    [hourSegments]="2" 
-                    [dayStartHour]="0" 
-                    [dayEndHour]="24" 
-                    (eventClicked)="handleEventClick($event)">
-                  </mwl-calendar-week-view>
+            <mwl-calendar-week-view *ngIf="view === CalendarView.Week" [viewDate]="viewDate" [events]="events"
+              [hourSegments]="2" [dayStartHour]="0" [dayEndHour]="24" (eventClicked)="handleEventClick($event)">
+            </mwl-calendar-week-view>
 
                   <mwl-calendar-month-view 
                     *ngIf="view === CalendarView.Month" 
@@ -127,7 +128,7 @@
                       </mat-card>
                     </mat-dialog-content>
                     <mat-dialog-actions align="end">
-                      <button mat-button mat-dialog-close>{{"Close" | translate}}</button>
+                      <button mat-button mat-dialog-close  >{{"Close" | translate}}</button>
                     </mat-dialog-actions>
                   </ng-template>           
               </div>
