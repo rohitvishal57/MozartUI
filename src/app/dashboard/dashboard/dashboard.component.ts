@@ -365,7 +365,7 @@ export class DashboardComponent {
 
 
   ngOnDestroy(): void {
-   // this.renewalChart.destroy();
+   // this.renewalChart.destroy(); //kept comment for temporary fix ,We are getting issue with destroy function please check.
    // this.customerChart.destroy();
   }
 }
