@@ -17,8 +17,9 @@ import { HttpClient } from '@angular/common/http';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
+import { BirthdayWishesComponent } from '../birthday-wishes/birthday-wishes.component';
 @NgModule({
-  declarations: [EventsListComponent, EventsNewComponent],
+  declarations: [EventsListComponent, EventsNewComponent, BirthdayWishesComponent],
   imports: [
     CommonModule,
     MyMaterialModule,

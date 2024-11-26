@@ -1,0 +1,84 @@
+<main class="siteBody">
+  <div class="contentBody bodyColumns-1">
+      <div class="bodyColumn body_flex_column">
+          <div class="container">
+              <div class="view-switcher">
+                <button class="continue-btn-0 " (click)="setView('day')" [class.active]="currentView === 'day'">Day View</button>
+                <button class="continue-btn-0" (click)="setView('week')" [class.active]="currentView === 'week'">Week View</button>
+              </div>
+
+
+
+            <div class="birthday-card" *ngIf="currentView === 'day'">
+                <div class="birthday-header">
+                    <div class="header-icons">
+                        <span class="balloon-icon">❤️</span>
+                        <span class="balloon-icon">🎈</span>
+                    </div>
+                    <div class="header-content">
+                        <h3 class="header-title">Birthdays <span class="todayDate">{{todayDate}}</span></h3>
+                        <p class="header-subtitle">
+                            Email or SMS birthday wishes to your customers
+                            <span class="sparkle">✨</span>
+                        </p>
+                    </div>
+                    <button class="send-all-btn" (click)="sendWishesToAll()" [disabled]="isSendingAllWishes">
+                        {{ isSendingAllWishes ? 'Sending...' : 'Send All' }}
+                    </button>
+                </div>
+            
+                <div class="birthday-list-container body_flex_row">
+                    <ng-container *ngFor="let birthday of birthdays; let i = index">
+                        <div class="birthday-item">
+                            <span class="name">{{ birthday.name }}</span>
+                            <button class="send-wish-btn" (click)="sendWishes(birthday)" [disabled]="isSendingWishes">
+                                <img src="assets/bdayWish.png" alt="" style="width: 20px; height: 20px;">
+                                {{ isSendingWishes ? 'Sending...' : '' }}
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+            
+            
+            <div *ngIf="currentView === 'week'" class="week-view">
+                <h3>Birthday Wishes for This Week</h3>
+                <div class="week-grid">
+                    <div *ngFor="let day of weekData" class="day-box">
+                        <h4 class="day-title">
+                            {{ day.date | date: 'EEEE, MMM d' }}
+                            <button class="nav-btn">
+                                <img src="assets/bdayWish.png" alt="" style="width: 20px; height: 20px;">
+                            </button>
+                        </h4>
+                        <ul *ngIf="day.birthdays.length > 0" class="birthday-list">
+                            <li *ngFor="let birthday of day.birthdays" class="birthday-itemWeek">
+                                <strong>{{ birthday.name }}</strong>
+                            </li>
+                        </ul>
+                        <p *ngIf="day.birthdays.length === 0" class="no-birthdays">
+                            No birthdays
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+              
+              
+              <div *ngIf="currentView === 'month'" class="month-view">
+                  <h3>Birthday Wishes for This Month</h3>
+                  <div class="month-grid">
+                      <div *ngFor="let day of getMonthDays()" class="day">
+                          <strong>{{ day.date | date: 'dd MMM yyyy' }}</strong>
+                          <ul>
+                              <li *ngFor="let birthday of day.birthdays">
+                                  🎉 Happy birthday, <strong>{{ birthday.name }}</strong>!
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</main>

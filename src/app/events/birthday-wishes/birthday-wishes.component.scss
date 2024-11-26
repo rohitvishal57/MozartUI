@@ -1,0 +1,217 @@
+.container {
+  display: flex;
+  flex-wrap: wrap; /* Allows the boxes to wrap to the next line if they don't fit */
+  gap: 20px; /* Adjust the value to control the space between the boxes */
+}
+/* View Switcher */
+.view-switcher {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.view-switcher button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  background-color: #bb070799;
+  transition: background-color 0.3s ease;
+  color: white;
+}
+
+/* Week View */
+.week-view {
+  padding: 20px;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+
+
+.day-box {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-height: 40vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 10px;
+}
+
+.day-title {
+  margin: 0 0 10px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Birthday Card */
+.birthday-card {
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;  /* Adjust this value based on your needs */
+  margin: 0 auto;
+}
+
+.birthday-header {
+  grid-column: 1 / -1;  /* Spans across all columns */
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.todayDate{
+  border-radius: 0px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 7px 6px 4px 6px;
+  margin-left: 10px;
+}
+
+.header-icons {
+  display: flex;
+  gap: 4px;
+}
+
+.balloon-icon {
+  font-size: 1.5rem;
+}
+
+.header-content {
+  flex-grow: 1;
+}
+
+.header-title {
+  font-size: 2.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.header-subtitle {
+  font-size: 1.5rem;
+  color: #666;
+  margin: 10px 0 0 0;
+}
+
+.birthday-itemWeek{
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+/* Birthday List */
+.birthday-list-container {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 8px;
+  flex-wrap: wrap;
+}
+
+.send-all-btn{
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(225 49 49 / 60%);
+  color: white;
+}
+.send-wish-btn{
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+ 
+}
+.nav-btn{
+  border: none;
+}
+.name {
+  font-size: 1.5rem;
+  color: #333;
+  flex: 1;
+  margin-right: 1rem;
+}
+
+
+.birthday-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: #555;
+  margin-bottom: 0.5rem;
+  width: 32%;
+  border:1px solid #e6e6e6;
+}
+
+.birthday-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+.mail-icon {
+  opacity: 1;
+  transform: rotate(-45deg);
+}
+
+/* Common Styles */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.birthday-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.no-birthdays {
+  font-size: 14px;
+  color: #aaa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .week-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .week-grid {
+    grid-template-columns: 1fr;
+  }
+}

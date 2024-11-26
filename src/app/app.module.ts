@@ -24,7 +24,6 @@ import { LeadsModule } from './leads/leads.module';
 import { ProfileModule } from './profile/profile.module';
 import { EncryptionInterceptor } from './intercepter/aesEncryptToken.interceptor';
 import { LoadingService } from './services/loading.service';
-import { EventsModule } from './events/events-new/events.module';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SharedModule } from './shared/shared.module';
 
@@ -60,7 +59,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProductsModule,
     ProfileModule,
     SharedModule,
-    EventsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
