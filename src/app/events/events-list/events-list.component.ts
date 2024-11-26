@@ -185,7 +185,7 @@ export class EventsListComponent implements OnInit {
   openEventModal(): void {
     this.dialog.open(this.eventModal, {
       width: '350px',
-      position: { top: '50px' },
+      position: { top: '150px' },
       disableClose: true,
       data: this.selectedEvent
     });
@@ -209,5 +209,9 @@ export class EventsListComponent implements OnInit {
 
   addEvents() {
     this.route.navigate(["events/createEvents"]);
+  }
+
+  navigateToBirthdays(){
+    this.route.navigate(["events/birthdaysList"]);
   }
 }
