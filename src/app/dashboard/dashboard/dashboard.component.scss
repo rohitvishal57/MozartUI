@@ -1173,11 +1173,50 @@ h2 {
             .cardsub_wraper{
                 flex-direction: column;
                 padding: 0 5px 15px;
+                gap:10px;
                 .card_item {
                     flex: auto;
                 }
             }
         } 
+    }
+}
+.birthday_cardItem{
+    padding-top: 12px;
+    align-items: center;
+    justify-content: center;
+    gap:10px !important;
+    .icon_birthday {
+        min-width: 20px;
+        height: 20px;
+        img {
+            width: 100%;
+        }
+    }
+    .name_birthday {
+        width: 100%;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: normal;
+        color: #2e2e2e;
+        span {
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 120px;
+        }
+    }
+    .details_birthday {
+        min-width: 121px;
+        p {
+            padding: 0;
+            margin: 0;
+            font-size: 12px !important;
+        }
+        .details_phone {
+            color: #838383 !important;
+        }
     }
 }
 /*---dahboard new sections styles end---*/

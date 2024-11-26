@@ -98,9 +98,19 @@
                   (cdkDropListDropped)="dropTasks($event)">
                   <ng-container *ngFor="let tasks of quickActionDetails?.birthdayDetails">
                     <div class="card_item" cdkDrag>
-                      <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{tasks.name}}<img src="assets/Img/icon_star_four_points.svg"></div>
-                      <h5>{{tasks?.dob}}</h5>
-                      <p>{{tasks.mobile}}</p>
+                      <!-- <div class="block-hide">
+                        <div class="card_item_badge "><img src="assets/Img/icon_star_four_points.svg">{{tasks.name}}<img src="assets/Img/icon_star_four_points.svg"></div>
+                        <h5>{{tasks?.dob}}</h5>
+                        <p>{{tasks.mobile}}</p>
+                      </div> -->
+                      <div class="body_flex_row birthday_cardItem">
+                          <div class="icon_birthday"><img src="assets/Img/icon_notification_list_birthday.svg"></div>
+                          <div class="name_birthday"><span title="{{tasks.name}}">{{tasks.name}}</span></div>
+                          <div class="details_birthday">
+                            <p>{{tasks?.dob}}</p>
+                            <p class="details_phone">{{tasks.mobile}}</p>
+                          </div>
+                      </div>
                     </div>
                   </ng-container>
                 </div>
