@@ -331,7 +331,25 @@
             </div>
           </div>
         </section>
-        <section class="body_flex_row commonSection dashboard_LPR_main dashboard_mycustomers_main">
+        <section class="dashboard_otherSections commonSection ">
+          <div class="board_otherSections">
+            <div class="item_otherSections">
+              <div class="otherSections_wraper">
+                <header>
+                  <div class="otherSections_head">
+                    <h2>{{"My Customers" | translate}}</h2>
+                  </div>
+                </header>
+                <div class="otherSections_body">
+                  <div class="chart-container" style="position: relative; height:50vh; width:100%">
+                    <canvas id="MyChart" style="margin: auto;">{{ customerChart }}</canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="body_flex_row commonSection dashboard_LPR_main dashboard_mycustomers_main block-hide">
           <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
             <h6>{{"My Customers" | translate}}</h6>
             <div class="leads_content">
