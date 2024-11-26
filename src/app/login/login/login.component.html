@@ -36,7 +36,7 @@
             <div class="col-6 pad-0">
               <button id="loginwithotp" name="loginwithotp" (click)="onSubmit('OTP')">{{"Login with OTP" | translate}}</button>
             </div>
-            <div class="text-danger" name="resetpassword" id="resetpassword" (keydown.enter)="onSubmit('RESET')" (click)="onSubmit('RESET')" style="text-align: center; text-decoration: underline; cursor: pointer;"><span class="p-2" [tabindex]="0">{{"Reset password" | translate}}</span></div>
+            <div name="resetpassword" id="resetpassword" (keydown.enter)="onSubmit('RESET')" (click)="onSubmit('RESET')" style="text-align: center; text-decoration: underline; cursor: pointer; color: #EB0000;"><span class="p-2" [tabindex]="0">{{"Reset password" | translate}}</span></div>
           </div>
         </form>
 

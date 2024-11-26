@@ -282,6 +282,7 @@ export class LoginComponent implements OnInit {
           if (res.data && res.isSuccess && res.statusCode == '200' && res.token !== null) {
             localStorage.setItem('userData', JSON.stringify(res.data));
             this.items = this.authService.getUserInfo()?.repotingMembers;
+            this.updatePreferredLanguage();
             res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate(['dashboard']);
           } else {
             this.errorMessage = res.message;
@@ -376,6 +377,19 @@ export class LoginComponent implements OnInit {
     this.dialog.closeAll();
     this.enableLoginForm = true;
     this.verifyOtpEnable = false;
+  }
+
+  updatePreferredLanguage() {
+    const language = this.authService.getUserInfo()?.preferredLanguage;
+    let languageCode = "";
+    if(language == 'Hindi') {
+      languageCode = 'hi';
+    } else if(language == 'Telugu'){
+      languageCode = 'te';
+    }else{
+      languageCode = 'en';
+    }
+    this.languageService.setLanguage(languageCode);
   }
 
 }

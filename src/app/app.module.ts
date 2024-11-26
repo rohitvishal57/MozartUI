@@ -26,6 +26,7 @@ import { EncryptionInterceptor } from './intercepter/aesEncryptToken.interceptor
 import { LoadingService } from './services/loading.service';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SharedModule } from './shared/shared.module';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 export function loadConfig(configService: ConfigService) {
   return () => configService.loadConfig();
@@ -40,7 +41,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     HeaderComponent,
     SideNavbarComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
