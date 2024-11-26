@@ -2563,6 +2563,15 @@ console.log(reqData);
                           if (control.name == 'memberdob' || control.name == 'memberAge' || control.name == 'memberGender' || control.name == 'emailId' || control.name == 'firstName' || control.name == 'lastName' || control.name == 'sumInsured') {
                             control.disabled = true
                           }
+                          if(control.name == 'zone'){
+                            this.form.formSections.forEach(formSection => {
+                              formSection.formControls.forEach(formcontrol => {
+                                if(formcontrol.name == control.name){
+                                  control.options = formcontrol.options;
+                                }
+                              });
+                            });
+                          }
                         })
                         index = i;
                         break;
