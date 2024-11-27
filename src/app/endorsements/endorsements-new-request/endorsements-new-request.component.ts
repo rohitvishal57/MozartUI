@@ -19,7 +19,6 @@ import { LanguageService } from 'src/app/services/language.service';
 export class EndorsementsNewRequestComponent implements OnInit {
   otpModal: any;
   caseCreationForm: FormGroup | any;
-  userData: any;
   otp: string[] = ['', '', '', '', '', ''];  // Initialize OTP array
   timeLeft: number = 30;
   isTimerRunning: boolean = false;
@@ -35,8 +34,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
   isFilenotSelected: boolean | any;
   selectedFile: any;
   showNote: boolean = false;
-  formCntrlVal: any;
-  policies: any;
   namesVariable: any;
   documentType: any;
   showDocInfo: boolean = false;
@@ -115,21 +112,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
     "Son in-law"
   ];
   filteredActivity: Observable<any[]> | any;
-  MemberfilteredActivity: Observable<any[]> | undefined;
   selectedPolicyNumber: any;
   MemberIdList: any;
   activityList: any = [];
-  memberActivityList: any = [];
   submitted = false;
   validatedMobileNumber: any;
   CaseSubSubTypeValue: any;
   agentCode: any = '';
   // otpValue = new FormControl;
   showOtpSection: boolean = false;
-  enteredOtp: any
   requestId: any;
   otpObj: any;
-  controlOfInput: any;
   selectedMember: any;
   policyInfoDetails: any;
   externalPolicyData: any;
@@ -138,13 +131,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
   sendOtptDisabled: boolean = true;
   otpInfoObject: any = null;
   timerCounter: { min: number; sec: number; } | any;
-  selectedFormControlVal: any;
   screenSize: number | any;
   isDesktop: boolean = false;
   documentSize: any;
   uploadDoc: boolean = true;
   otpErrorMsge: boolean = false;
   errorMessage: string | undefined;
+  policyMembersList: [] = [];
 
   constructor(private formBuilder: FormBuilder,
     private endorsement_service: EndorsementsRequestsService,
@@ -215,11 +208,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.endorsement_service.getactivepolicynumbersApi(data).subscribe(
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
-          this.policies = resp.data.getPolicyDetails;
-          console.log(this.policies);
-          this.policiesListData = this.removeDuplicates(this.policies, "policynumber");
+          this.policiesListData = this.removeDuplicates(resp?.data?.getPolicyDetails, "policyNumber");
           this.getActivityType();
-          // this.getMemberActivityType();
         }
       },
       (err) => {
@@ -264,7 +254,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   }
 
   onChange(value: string) {
-    // this.caseCreationForm.get('endorsementType').reset();
+    this.selectedPolicyNumber = value;
     this.caseCreationForm.get('asignedTeam').reset();
     this.caseCreationForm.get('member').reset();
     this.caseCreationForm.get('member').setValue('');
@@ -278,6 +268,28 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == "") {
       this.caseCreationForm.get('policyNumber').reset();
     }
+    this.getPolicyMembers(value);
+  }
+
+  getPolicyMembers(value: string) {
+    const policyMembersReq = {
+      "policyNumber": value
+    }
+
+    this.endorsement_service.getPolicyMembersApi(policyMembersReq).subscribe(
+      (resp: any) => {
+        if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
+          this.policyMembersList = resp?.data?.policyMembersList
+          this.getMemberIdList(this.policyMembersList)
+        }
+      },
+      (err) => {
+        console.log(err);
+    });
+  }
+
+  getMemberIdList(membersList: Array<any>) {
+    this.MemberIdList = membersList;
   }
 
   getActivityType(content = null) {
@@ -285,38 +297,18 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.filteredActivity = this.caseCreationForm.controls['policyNumber'].valueChanges.pipe(
       startWith(''),
       map((value: any) => value ? this._filter(value) : this.activityList?.slice()));
-    console.log(this.filteredActivity);
   }
   _filter(value: string) {
     console.log(value);
     const filterValue = this._normalizeValue(this._removealphabets(value));
-    const filteredValue = this.activityList.filter((x: any) => this._normalizeValue(x.policynumber).includes(filterValue));
-    this.selectedPolicyNumber = filteredValue;
-    if (this.selectedPolicyNumber.length > 0) {
-      this.getMemberIdList(this.selectedPolicyNumber);
-    } else {
-      this.MemberIdList = [];
-    }
-    return filteredValue;
-  }
-  getMemberIdList(policyNumber: any) {
-    let selectedValue = policyNumber[0].policynumber;
-    const result = this.policies.filter((x: any) => selectedValue === x.policynumber);
-    this.MemberIdList = result;
-  }
-  getMemberActivityType(content = null) {
-    this.memberActivityList = this.policiesListData.filter(value => value.memberid != null);
-    this.MemberfilteredActivity = this.caseCreationForm.controls['member'].valueChanges.pipe(
-      startWith(''),
-      map((value: any) => value ? this._memberfilter(value) : this.memberActivityList.slice()));
-  }
-  _memberfilter(value: string) {
-    const filterValue = this._normalizeValue(value);
-    const filteredValue = this.memberActivityList.filter((x: any) => this._normalizeValue(x.memberid).includes(filterValue));
+    const filteredValue = this.activityList?.filter((x: any) => {
+      const normalizedValue = this._normalizeValue(x.policyNumber);
+      return normalizedValue ? normalizedValue.includes(filterValue) : false;
+    });  
     return filteredValue;
   }
   _normalizeValue(value: string): string {
-    return value.toLowerCase().replace(/\s/g, '');
+    return value?.toLowerCase().replace(/\s/g, '');
   }
   _removealphabets(value: any) {
     return value.replace(/[^\d.-]/g, '');
@@ -484,8 +476,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.caseCreationForm.get("endorsementDetails").get('memberAlternateEmail').updateValueAndValidity();
     this.caseCreationForm.get("endorsementDetails").get('panNumber').clearValidators();
     this.caseCreationForm.get("endorsementDetails").get('panNumber').updateValueAndValidity();
-    // this.caseCreationForm.get("endorsementDetails").get('otpValue').clearValidators();
-    // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
   }
   onSubmit() {
     this.submitted = true;
@@ -496,13 +486,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (selectedType == 'alternateContactNumber' || selectedType == 'internationalContactNumber' || selectedType == 'primaryContactNumber' || selectedType == 'memberPrimaryContactNumber' || selectedType == 'memberAlternateContactNumber') {
       this.validatedMobileNumber = this.caseCreationForm.get("endorsementDetails").get(selectedType).value;
       if (this.validatedMobileNumber != this.otpObj.MobileNumber) {
-        //this.confirmationDialogService.confirm("Confirm Text", "Mobile number is not validated please do otp validation");
         return;
       }
     }
     if (this.caseCreationForm.get("endorsementType").value === 'panNumber' || this.caseCreationForm.get("endorsementType").value === 'aadharNumber') {
       if (this.selctedFileName === "") {
-        // this.showNote = true;
         this.isFilenotSelected = true;
         return;
       }
@@ -518,9 +506,9 @@ export class EndorsementsNewRequestComponent implements OnInit {
     }
     let payloadObj: any = {
       AgentCode: this.agentCode,
-      MemberName: this.selectedMember.membername,
+      MemberName: this.selectedMember.memberName,
       MobileNumber: this.policyInfoDetails.policyDetails.primaryMobile,
-      MemberRelation: this.selectedMember.relationwithproposer,
+      MemberRelation: this.selectedMember.relationWithProposer,
       EndorsementRequest: {
         ActivityDescription: null,
         ActivitySubject: null,
@@ -650,12 +638,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
   backToEndorsment() {
     this._router.navigate(["endorsements"]);
   }
-  initiateKyc() {
-    console.log(this.caseCreationForm.value);
-  }
-  shareKycLink() {
-    console.log(this.caseCreationForm.value);
-  }
   newfile(e: any) {
     let files;
     let file;
@@ -769,17 +751,14 @@ export class EndorsementsNewRequestComponent implements OnInit {
               this.errorMessage = "Something went wrong, please try again";
               this.isDisabled = false;
               this.sendOtptDisabled = false;
-              // this.toast.error({detail: "Something went wrong, please try again"})
             }
           }
           else {
             if (resp && resp.message) {
               this.otpErrorMsge = true;
               this.errorMessage = resp.message;
-              // this.toast.error({ detail: resp.errorMessage});
             } else {
               this.errorMessage = "Something went wrong, please try again";
-              // this.toast.error({detail: "Something went wrong, please try again"})
             }
             this.sendOtptDisabled = false;
           }
@@ -789,8 +768,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
           this.sendOtptDisabled = false;
           this.otpErrorMsge = true;
           this.errorMessage = err;
-          // this.closeOtpPopup();
-          // this.toast.error({detail: "Something went wrong, please try again"});
         }
       );
       this.otpErrorMsge = false;
@@ -803,13 +780,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
   memberIdChange(event: any) {
     const member = event.target.value;
-    this.selectedMember = this.policies.find((obj: any) => {
-      return obj.memberid === member;
+    this.selectedMember = this.policyMembersList.find((obj: any) => {
+      return obj.memberId === member;
     });
     if (this.selectedMember != "") {
       let policyObj = {
-        policyNumber: this.selectedMember.policynumber,
-        MemberId: this.selectedMember.memberid
+        policyNumber: this.selectedPolicyNumber,
+        MemberId: this.selectedMember.memberId
       }
       this.endorsement_service.getEndorsementPolicyInfoApi(policyObj).subscribe(
         (resp: any) => {
@@ -859,25 +836,23 @@ export class EndorsementsNewRequestComponent implements OnInit {
 
     this.isTimerRunning = true;
 
-    // RxJS interval emits every second (1000ms)
     const timer$ = interval(1000).pipe(
       take(this.timeLeft) // Complete the observable after 'timeLeft' seconds
     );
 
-    // Subscribe to the interval only once
     timer$.subscribe({
       next: () => {
-        this.timeLeft--; // Decrease the time left by 1 every second
+        this.timeLeft--;
       },
       complete: () => {
-        this.isTimerRunning = false; // Reset the flag once the timer completes
+        this.isTimerRunning = false;
       }
     });
   }
 
   omit_special_char(event: any) {
     var k;
-    k = event.charCode;  //         k = event.keyCode;  (Both can be used)
+    k = event.charCode;
     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
   }
 
@@ -887,26 +862,43 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.showDocInfo = false;
   }
 
-  // Handle key events for OTP input
   onKey(event: KeyboardEvent, index: number) {
     event.preventDefault();
     const target = event.target as HTMLInputElement;
 
-    // Move to the next box when a number is entered
     if (event.key >= '0' && event.key <= '9') {
       this.otp[index] = event.key;  // Store digit
       if (index < 5) {
         const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
         nextInput.focus();
+      } else {
+        const btnElement = document.getElementById('verify') as HTMLButtonElement;
+        btnElement.focus();
       }
     }
 
-    // Handle backspace
     else if (event.key === 'Backspace') {
       this.otp[index] = '';  // Clear current box
       if (index > 0) {
         const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
         previousInput.focus();
+      }
+    }
+
+    else if (event.key === 'Tab') {
+      if (event.shiftKey) {
+        if (index > 0) {
+          const previousInput = document.getElementsByClassName('otp-input')[index - 1] as HTMLInputElement;
+          previousInput.focus();
+        }
+      } else {
+        if (index < 5) {
+          const nextInput = document.getElementsByClassName('otp-input')[index + 1] as HTMLInputElement;
+          nextInput.focus();
+        } else {
+          const btnElement = document.getElementById('verify') as HTMLButtonElement;
+          btnElement.focus();
+        }
       }
     }
   }
