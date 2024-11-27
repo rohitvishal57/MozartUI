@@ -179,7 +179,7 @@
               </div>
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5002">
-                      <header>{{memberRole | translate}} {{"Member" | translate}}</header>
+                      <header>{{"Add" | translate}} {{"Member" | translate}}</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="breadcrumbNav">
@@ -312,7 +312,7 @@
                                                   <option value="500000">{{"upto 5L" | translate}}</option>
                                                   <option value="1000000">{{"5L to 10L" | translate}}</option>
                                                   <option value="1500000">{{"10L to 15L" | translate}}</option>
-                                                  <option value="2000000">{{"15L to 10L" | translate}}</option>
+                                                  <option value="2000000">{{"15L to 20L" | translate}}</option>
                                                   <option value="2500000"> {{">20L" | translate}}</option>
                                               </select>
                                               <label for="air">{{"Annual income range" | translate}} *</label>
@@ -483,7 +483,7 @@
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5003">
                       <header>
-                          {{memberRole}} Details of your {{ form.get('Relation')?.value || '' }}
+                          {{"Add" | translate}} Details of your {{ form.get('Relation')?.value || '' }}
                           <button type="button" id="deletemember" name="deletemember" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
                       </header>
                       <div class="accordionBody">
@@ -695,7 +695,7 @@
                       </div>
                       <footer>
                         <button type="button" id="cancel2" name="cancel2" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" id="next2" name="next2" value="next" class="btn_red btn_redRenew" (click)="handleAction('Member')">{{memberRole}} Member</button>
+                        <button type="button" id="next2" name="next2" value="next" class="btn_red btn_redRenew" (click)="handleAction('Member')">{{"Add" | translate}} Member</button>
                       </footer>
                   </div>
               </div>
@@ -1777,54 +1777,53 @@
     </div>    
   </div>
 </div>
-    <div class="modal-background" *ngIf="isFeedBackModalVisible">
-        <div class="modal-container">
-          <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
-            <div class="modal-header">
-              <h5 class="modal-title">Rate Your Experience</h5>
-            </div>
-            <div class="modal-body">
-              <p class="para-rate-18">Please rate your online renewal experience with us.</p>
-      
-              <!-- Star Rating -->
-              <div class="star-rating">
-                <span class="star" 
-                      *ngFor="let star of stars; let i = index"
-                      [ngClass]="{'selected': i < rating}"
-                      (click)="setRating(i + 1)">
-                  ★
-                </span>
-              </div>
-      
-              <div class="feedback-impressed" *ngIf="impressedValues">
-                <div class="impressed-label">
-                  <p class="para-rate-16">{{impressedLable}}</p>
+    <div class="modal fade show popupModalMain modal-bgWhite modal-customerFeedback" *ngIf="isFeedBackModalVisible">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
+                <div class="modal-header">
+                <h5 class="modal-title">Rate Your Experience</h5>
                 </div>
-                <div class="feedback-buttons">
-                  <button type="button" class="feedback-btn" 
-                          (click)="onSelectValue(value)" 
-                          [ngClass]="{'selected': feedbackImpressedValue === value}" 
-                          *ngFor="let value of feedbackImpressedValues;">
-                    {{value}}
-                  </button>
+                <div class="modal-body">
+                <p class="para-rate-18">Please rate your online renewal experience with us.</p>
+        
+                <!-- Star Rating -->
+                <div class="star-rating">
+                    <span class="star" 
+                        *ngFor="let star of stars; let i = index"
+                        [ngClass]="{'selected': i < rating}"
+                        (click)="setRating(i + 1)">
+                    ★
+                    </span>
                 </div>
-              </div>
-      
-              <div class="feedback-message" *ngIf="feedBackMessage">
-                <div class="message-label">
-                  <p class="para-rate-lable">What can we do to improve your experience?</p>
+        
+                <div class="feedback-impressed" *ngIf="impressedValues">
+                    <div class="impressed-label">{{impressedLable}}</div>
+                    <div class="feedback-buttons">
+                    <button type="button" class="feedback-btn" 
+                            (click)="onSelectValue(value)" 
+                            [ngClass]="{'selected': feedbackImpressedValue === value}" 
+                            *ngFor="let value of feedbackImpressedValues;">
+                        {{value}}
+                    </button>
+                    </div>
                 </div>
-                <div class="textarea-wrapper">
-                  <textarea class="input-textBox" id="notes" placeholder="Enter your message" formControlName="message"></textarea>
+        
+                <div class="feedback-message" *ngIf="feedBackMessage">
+                    <div class="message-label">
+                        <p class="para-rate-lable">What can we do to improve your experience?</p>
+                    </div>
+                    <div class="textarea-wrapper">
+                    <textarea class="input-textBox" id="notes" placeholder="Enter your message" formControlName="message"></textarea>
+                    </div>
                 </div>
-              </div>
-            </div>
-      
-            <div class="modal-footer">
-              <button *ngIf="feedbackSubmit" type="submit" class="btn-submit">Submit</button>
-              <button type="button" class="btn-skip" (click)="closeIsFeedBackModalVisible()">Skip for now</button>
-            </div>
-          </form>
+                </div>
+        
+                <div class="modal-footer">
+                <button *ngIf="feedbackSubmit" type="submit" class="btn-submit">Submit</button>
+                <button type="button" class="btn-skip" (click)="closeIsFeedBackModalVisible()">Skip for now</button>
+                </div>
+            </form>
         </div>
-    
+    </div>
 </div>

@@ -1073,9 +1073,7 @@
                                           class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
                                           <hr>
                                           <input type="button" class="add-btn"
-                                            (click)="removeDisease(subControl,control,k)" value="Remove" />
-                                          {{ k-1 }}
-                                        </div>
+                                            (click)="removeDisease(subControl,control,k)" value="Remove" />                                        </div>
                                         <ng-container *ngFor="let innerControl of allSubForm">
                                           <!-- <ng-container *ngIf="innerControl.visible"> -->
                                           <!-- {{ innerControl | json }} {{ question }} -->
@@ -1165,7 +1163,7 @@
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
 
                                   <input *ngIf="subControl.disabled == false" type="button" class="next-btn"
-                                    (click)="closePopUp()" [value]="'Done' | translate" />
+                                    (click)="closePopUp(control)" [value]="'Done' | translate" />
                                   <!-- <input *ngIf="innerSubForm.disabled == false" type="button" class="next-btn"
                                     (click)="addOnMemberAdded(subControl,control)" value="Done" /> -->
                                   <input *ngIf="subControl.disabled == true" type="button" class="next-btn disable"
@@ -1219,7 +1217,7 @@
 
 
 <!-- Customer Feedback module  -->
-<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" id="customerFeedbackModule" tabindex="-1"
+<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback block-hide" id="customerFeedbackModule" tabindex="-1"
   aria-labelledby="otpModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -1276,8 +1274,9 @@
   </div>
 </div>
 
-<div class="modal-background" *ngIf="isFeedBackModalVisible">
-  <div class="modal-container">
+<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" *ngIf="isFeedBackModalVisible">
+  <div class="modal-dialog">
+    <div class="modal-content">
     <form (ngSubmit)="submitFeedback()" [formGroup]="customerFeedbackForm" novalidate autocomplete="false">
       <div class="modal-header">
         <h5 class="modal-title">Rate Your Experience</h5>
@@ -1296,9 +1295,7 @@
         </div>
 
         <div class="feedback-impressed" *ngIf="impressedValues">
-          <div class="impressed-label">
-            <p class="para-rate-16">{{impressedLable}}</p>
-          </div>
+          <div class="impressed-label">{{impressedLable}}</div>
           <div class="feedback-buttons">
             <button type="button" class="feedback-btn" 
                     (click)="onSelectValue(value)" 
@@ -1325,4 +1322,5 @@
       </div>
     </form>
   </div>
+</div>
 </div>
