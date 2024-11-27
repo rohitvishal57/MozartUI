@@ -211,8 +211,8 @@ jobs:
       run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"New-WebSite -Name 'AngularApp' -Port $PORT -PhysicalPath ('${{ env.WEB_ROOT }}\\angular-dev' -replace '/', '\\') -ApplicationPool 'FrontendAppPool'\""
     
     - name: Start IIS Website
-      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
-      
+      #run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website not found' }\""
+      run: ssh -i ~/.ssh/id_rsa -p 22 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "powershell -Command \"if (Get-WebSite -Name 'AngularApp' -ErrorAction SilentlyContinue) { if ((Get-WebSite -Name 'AngularApp').state -ne 'Started') { Start-WebSite -Name 'AngularApp' } else { Write-Output 'Website is already running' } } else { Write-Output 'Website not found' }\""
       # After successful deployment, update version.txt and commit it
     - name: Commit and push updated version.txt after successful deployment
       if: ${{ success() }}
