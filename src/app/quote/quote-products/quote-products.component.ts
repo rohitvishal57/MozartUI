@@ -8,6 +8,9 @@ import { firstValueFrom } from "rxjs";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { AesEncryptionService } from "src/app/services/AESEncrypt.service";
 import { LoadingService } from "src/app/services/loading.service";
+import { LanguageService } from "src/app/services/language.service";
+import { TranslateService } from "@ngx-translate/core";
+import { ProductsService } from "src/app/product/products/products.service";
 
 
 @Component({
@@ -53,12 +56,22 @@ export class QuoteProductsComponent implements OnInit {
   popIndex: any
   selectedAddons: string[] = [];
   selectedPlanIndex: any;
+  compareItems: any[] = [];
 
   constructor(private quoteService: QuoteService, private router: Router, private toast: NgToastService,
     private service: CommonService, private encryptionService: EncryptionService, private spinner: LoadingService,
-    private confirmationService: ConfirmationService,private aesEncryptService: AesEncryptionService
+    private confirmationService: ConfirmationService, private aesEncryptService: AesEncryptionService, private languageService: LanguageService,
+    private translateService: TranslateService,
+    private productService: ProductsService, private quoteservices: QuoteService
   ) { }
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     // sessionStorage.clear()
     this.formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
     localStorage.setItem("formIndex", "0")
@@ -66,66 +79,66 @@ export class QuoteProductsComponent implements OnInit {
     this.getPoductList();
   }
 
-  getPoductList(){
+  getPoductList() {
     // this.selectedToggle = item.insuranceType
-      const reqData = {
-        agentCode: this.agentCode,
-        sumInsured: String(this.formData.sumInsured),
-        quoteData: JSON.stringify(this.formData)
-      }
-      // this.loginService.Getproductlist(reqData).subscribe({
-      //   next: (res) => {
-      //     this.ProductList = res.data;
-      //     console.log(this.ProductList)
-      //     this.ProductList.forEach((item:any)=>{
-      //       item.keyFeatures = JSON.parse(item.keyFeatures)
-      //       console.log(typeof(item.keyFeatures));
-      //       this.plans[1].discount = item.t2DiscPercentage;
-      //       this.plans[2].discount = item.t3DiscPercentage;
-      //     })
-      //   },
-      //   error: (err) => {
-      //     console.error(err);
-      //     if (err.status === 404) {
-      //       this.displayNoProductsMessage = true;
-      //     }
-      //   }
-      // })
-      console.log(reqData);
-      // this.spinner.show();
-      // this.service.Getproductlist3({}).subscribe({
-      this.quoteService.Getproductlist2(reqData).subscribe({
-        next: (res: any) => {
-          console.log(res)
-          this.Getagentcartdetails();
-          this.partnerId = res.data.partnerId
-          this.ProductList = res.data.products
-          console.log(this.ProductList);
-          this.ProductList.forEach((prod: any) => {
-            // Parse keyFeatures and initialize selectedAddon
-            prod.keyFeatures = JSON.parse(prod.keyFeatures);
-            prod.selectedAddon = [];
+    const reqData = {
+      agentCode: this.agentCode,
+      sumInsured: String(this.formData.sumInsured),
+      quoteData: JSON.stringify(this.formData)
+    }
+    // this.loginService.Getproductlist(reqData).subscribe({
+    //   next: (res) => {
+    //     this.ProductList = res.data;
+    //     console.log(this.ProductList)
+    //     this.ProductList.forEach((item:any)=>{
+    //       item.keyFeatures = JSON.parse(item.keyFeatures)
+    //       console.log(typeof(item.keyFeatures));
+    //       this.plans[1].discount = item.t2DiscPercentage;
+    //       this.plans[2].discount = item.t3DiscPercentage;
+    //     })
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //     if (err.status === 404) {
+    //       this.displayNoProductsMessage = true;
+    //     }
+    //   }
+    // })
+    console.log(reqData);
+    // this.spinner.show();
+    // this.service.Getproductlist3({}).subscribe({
+    this.quoteService.Getproductlist2(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res)
+        this.Getagentcartdetails();
+        this.partnerId = res.data.partnerId
+        this.ProductList = res.data.products
+        console.log(this.ProductList);
+        this.ProductList.forEach((prod: any) => {
+          // Parse keyFeatures and initialize selectedAddon
+          prod.keyFeatures = JSON.parse(prod.keyFeatures);
+          prod.selectedAddon = [];
 
-            // Round tenure premiums
-            prod.tenure1Premium = Math.round(prod.tenure1Premium);
-            prod.tenure2Premium = Math.round(prod.tenure2Premium);
-            prod.tenure3Premium = Math.round(prod.tenure3Premium);
+          // Round tenure premiums
+          prod.tenure1Premium = Math.round(prod.tenure1Premium);
+          prod.tenure2Premium = Math.round(prod.tenure2Premium);
+          prod.tenure3Premium = Math.round(prod.tenure3Premium);
 
-            // Optionally, log the updated product
-            console.log(prod);
-          });
+          // Optionally, log the updated product
+          console.log(prod);
+        });
 
-          this.selectedPlans = Array(this.ProductList.length).fill(3);
-          this.addonView = Array(this.ProductList.length).fill(false);
-        },
-        error: (err) => {
-          // this.spinner.hide();
-          console.error(err);
-          if (err.status === 404) {
-            this.displayNoProductsMessage = true;
-          }
+        this.selectedPlans = Array(this.ProductList.length).fill(3);
+        this.addonView = Array(this.ProductList.length).fill(false);
+      },
+      error: (err) => {
+        // this.spinner.hide();
+        console.error(err);
+        if (err.status === 404) {
+          this.displayNoProductsMessage = true;
         }
-      });
+      }
+    });
   }
   // getProducts() {
   //   this.loginService.getAllProducts().subscribe({
@@ -146,7 +159,6 @@ export class QuoteProductsComponent implements OnInit {
     try {
       const res = await firstValueFrom(this.service.getProposalNumber());
       console.log(res);
-      // res.data = this.aesEncryptService.decrypt(res.data);
       this.proposalNum = res.data.proposalNumber;
       console.log(this.proposalNum)
     } catch (error) {
@@ -194,7 +206,7 @@ export class QuoteProductsComponent implements OnInit {
     item.tenureAmounts = [];
     this.formData = {
       ...this.formData, productName: item.productName, totalPremium: item.selectedPremiumAmount,
-      firstName: this.formData.proposerName, quoteId:item.quoteNumber,proposalNumber:item.proposalNum
+      firstName: this.formData.proposerName, quoteId: item.quoteNumber, proposalNumber: item.proposalNum
     }
     console.log(this.formData);
     try {
@@ -203,21 +215,21 @@ export class QuoteProductsComponent implements OnInit {
       for (let i = 1; i <= 3; i++) {
         const premiumKey = `t${i}PremiumAmount`;
         console.log(item[premiumKey]);
-        if(item.selectedPremiumAmount == item[premiumKey]){
+        if (item.selectedPremiumAmount == item[premiumKey]) {
           item.tenure = i;
         }
         item.tenureAmounts[i - 1] = item[premiumKey]
       }
       this.formData = {
-        ...this.formData, tenure : item.tenure + ' years'
+        ...this.formData, tenure: item.tenure + ' years'
       }
-      console.log(item,this.formData)
+      console.log(item, this.formData)
       const productData = {
         partnerId: this.partnerId,
         productId: item.productId,
         tenureAmounts: item.tenureAmounts,
         selectedAddons: item.selectedAddons,
-        proposalNum:item.proposalNum,
+        proposalNum: item.proposalNum,
         tenure: item.tenure
       }
       sessionStorage.setItem("isQuote", true.toString());
@@ -237,7 +249,7 @@ export class QuoteProductsComponent implements OnInit {
     console.log(item);
     this.selectedPlanIndex = this.selectedPlans[this.ProductList.indexOf(item)];
     console.log(this.selectedPlanIndex);
-    
+
     const selectedPremiumKey = `tenure${this.selectedPlanIndex}Premium`;
     const QuoteNumber = `tenure${this.selectedPlanIndex}QuoteNumber`
     for (let i = 1; i <= 3; i++) {
@@ -252,7 +264,7 @@ export class QuoteProductsComponent implements OnInit {
 
     await this.getProposalNum();
     // setTimeout(() => {
-    await  this.insertorupdateagentcartdetails(item);
+    await this.insertorupdateagentcartdetails(item);
     // }, 2000);
     console.log(this.cartProductList);
   }
@@ -287,8 +299,8 @@ export class QuoteProductsComponent implements OnInit {
       this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
     }
   }
-  async  insertorupdateagentcartdetails(item: any) {
-    console.log(item,this.formData);
+  async insertorupdateagentcartdetails(item: any) {
+    console.log(item, this.formData);
     let reqdata = {
       "id": "",
       "proposalNum": this.proposalNum,
@@ -311,7 +323,7 @@ export class QuoteProductsComponent implements OnInit {
       "isFullQouteComplete": false,
       "createdBy": this.agentCode,
       "modifiedBy": this.agentCode,
-      "quoteNumber":item.QuoteNumber,
+      "quoteNumber": item.QuoteNumber,
       "mobileNumber": this.formData.mobileNumber
     }
     console.log(reqdata);
@@ -332,10 +344,10 @@ export class QuoteProductsComponent implements OnInit {
       "agentCode": this.agentCode
     }
     await this.quoteService.Getagentcartdetails(reqdata).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         console.log(res);
         this.cartProductList = res.data;
-        this.cartProductList.forEach((item:any)=>{
+        this.cartProductList.forEach((item: any) => {
           item.productFeatures = JSON.parse(item.productFeatures);
           item.selectedAddons = JSON.parse(item.selectedAddons);
         })
@@ -394,11 +406,11 @@ export class QuoteProductsComponent implements OnInit {
     }
     console.log(addon, this.ProductList, i, this.popIndex);
   }
-  deleteagentcartitems(cartId:any[]) {
-    
+  deleteagentcartitems(cartId: any[]) {
+
     let reqdata = {
       "agentCode": this.agentCode,
-      "id":cartId
+      "id": cartId
     }
     console.log(reqdata);
     this.confirmationService.confirm({
@@ -407,7 +419,7 @@ export class QuoteProductsComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         console.log(reqdata);
-        
+
         // Proceed with deletion if confirmed
         this.quoteService.deleteagentcartitems(reqdata).subscribe({
           next: (res) => {
@@ -424,11 +436,48 @@ export class QuoteProductsComponent implements OnInit {
       }
     });
   }
-  async deleteallcartitems(){
-    const list:any=[];
-    await this.cartProductList.forEach((item:any)=>{
+  async deleteallcartitems() {
+    const list: any = [];
+    await this.cartProductList.forEach((item: any) => {
       list.push(item.id)
     })
     this.deleteagentcartitems(list);
+  }
+
+  addToCompareProducts(item: any) {
+    let productId = this.productService.addToCompare(item, this.compareItems);
+    if(productId!=0){
+      this.getProductInformation(productId);
+    }
+  }
+
+  removeCompareItemProduct(item: any) {
+    this.compareItems = this.productService.removeCompareItem(item, this.compareItems);
+
+  }
+  navigateToProductComparison() {
+    this.productService.navigateToProductComparison(this.compareItems);
+  }
+
+  closeProductComparison() {
+    this.productService.closeComparison(this.compareItems);
+  }
+
+  getProductInformation(productId: String) {
+    const reqData = {
+      "productId": productId,
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    console.log(reqData);
+    this.quoteservices.Getproductdetailsandfeatures(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res.data);
+        this.compareItems.push(res.data);
+      },
+      error: (err) => {
+        this.toast.error({ detail: 'Failed to Add Product for Comparison ' });
+        console.error(err);
+      }
+    });
   }
 }

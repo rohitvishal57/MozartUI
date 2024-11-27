@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { EventsService } from './events.service';
 import { Router } from '@angular/router';
 import { NgToastService } from "ng-angular-popup";
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-events-new',
@@ -34,9 +36,17 @@ export class EventsNewComponent implements OnInit {
     { value: 'Consultation', label: 'Consultation' },
   ];
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private eventsService: EventsService, private route: Router, private toast: NgToastService) {}
+  constructor(private fb: FormBuilder, private http: HttpClient, private eventsService: EventsService, private route: Router, private toast: NgToastService, private languageService: LanguageService,
+    private translateService: TranslateService) {}
 
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.saveForm();
   }
 

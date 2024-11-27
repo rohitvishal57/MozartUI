@@ -71,13 +71,11 @@ export class LeadsListComponent {
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
-  formSequence: any[] = [];
   private allJsonFormData: any[] = [];
   formData: any = {};
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
-  proposalNumber : string ='';
 
   constructor(
     private leadsService: LeadsService,
@@ -494,6 +492,7 @@ export class LeadsListComponent {
   }
 
   redirectProducts(lead: any) {
+    let formSequence :any;
     if (lead.interestedProductName ) {
    
       const reqData = {
@@ -512,9 +511,9 @@ export class LeadsListComponent {
       
             }
             const res = await firstValueFrom(this.common.Getformsequence(reqData));
-            this.formSequence = JSON.parse(res.data.formSequence);
-            if (this.formSequence != null && this.formSequence.length > 0) {
-              this.formSequence.forEach(() => { this.allJsonFormData.push({}) });
+            formSequence = JSON.parse(res.data.formSequence);
+            if (formSequence != null && formSequence.length > 0) {
+              formSequence.forEach(() => { this.allJsonFormData.push({}) });
               sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
             }
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
@@ -523,24 +522,24 @@ export class LeadsListComponent {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }
 
-          try{
-            const response = await firstValueFrom(this.common.getProposalNumber());
-            this.proposalNumber = response.data?.proposalNumber;
-          }catch(err){
-            this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-          }
+          // try{
+          //   const response = await firstValueFrom(this.common.getProposalNumber());
+          //   this.proposalNumber = response.data?.proposalNumber;
+          // }catch(err){
+          //   this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+          // }
         
           const productData = {
             partnerId: interestedProductItem.partnerId,
             productId: interestedProductItem.productId,
             quickQuoteRedirect : true,
             leadId :  lead.leadNumber,
-            proposalNum: this.proposalNumber
+            proposalNum: lead.proposalNumber
           }
         
 
             this.router.navigate(['yatra'], {
-              state: { productData: productData, formSequence: this.formSequence }
+              state: { productData: productData, formSequence: formSequence }
            });
           
         },

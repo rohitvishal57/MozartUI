@@ -6,7 +6,6 @@ import { EndorsementsNewRequestComponent } from '../endorsements-new-request/end
 import { EndorsementsRequestsComponent } from './endorsements-requests.component';
 import { PrimeNgModule } from 'src/app/prime-ng.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { EndorsementDetailsComponent } from '../endorsement-details/endorsement-details.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -24,7 +23,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     CommonModule,
     PrimeNgModule,
     ReactiveFormsModule,
-    NgxPaginationModule,
     FormsModule,
     EndorsementsRoutingModule,
     MatAutocompleteModule,

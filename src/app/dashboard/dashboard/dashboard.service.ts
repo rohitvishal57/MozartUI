@@ -29,4 +29,24 @@ export class DashboardService {
     const url = this.configService.config.baseUrl + this.configService.config.getRenewalStatusCount;
     return this.httpService.post(url, payload);
   }
+
+  searchByPrefix(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.searchDeytailsByPrfix;
+    return this.httpService.post(url, payload);
+  }
+
+  fetchPerformanceDetails(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.fetchPermoranceDetails;
+    return this.httpService.post(url, payload);
+  }
+
+  fetchPersistencyPercentage(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.fetchPersistencyPercentage;
+    return this.httpService.post(url, payload);
+  }
+
+  fetchDueRenewals(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.GetDueRenewals;
+    return this.httpService.post(url, payload);
+  }
 }

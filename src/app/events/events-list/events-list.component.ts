@@ -14,6 +14,8 @@ import { Router } from "@angular/router";
 import { EventsService } from "../events-new/events.service";
 import { MatDialog } from "@angular/material/dialog";
 import { CalendarEvent, CalendarView } from "src/app/interface/events.interface";
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: "app-events-list",
@@ -31,9 +33,17 @@ export class EventsListComponent implements OnInit {
   dayEndHour: any;
   selectedEvent: any = null;
   @ViewChild('eventModal') eventModal: any;
-  constructor(private route: Router, private eventsService: EventsService,   private dialog: MatDialog) {}
+  constructor(private route: Router, private eventsService: EventsService,   private dialog: MatDialog, private languageService: LanguageService,
+    private translateService: TranslateService) {}
 
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.loadEvents();
   }
 
@@ -175,7 +185,7 @@ export class EventsListComponent implements OnInit {
   openEventModal(): void {
     this.dialog.open(this.eventModal, {
       width: '350px',
-      position: { top: '50px' },
+      position: { top: '150px' },
       disableClose: true,
       data: this.selectedEvent
     });
@@ -199,5 +209,9 @@ export class EventsListComponent implements OnInit {
 
   addEvents() {
     this.route.navigate(["events/createEvents"]);
+  }
+
+  navigateToBirthdays(){
+    this.route.navigate(["events/birthdaysList"]);
   }
 }

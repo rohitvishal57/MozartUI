@@ -61,8 +61,6 @@ export class ProductsComponent implements OnInit {
         }
       });
     });
-
-
     console.log(this.agentCode);
     // sessionStorage.clear()
     if (sessionStorage.getItem("cardListProducts"))
@@ -143,7 +141,7 @@ export class ProductsComponent implements OnInit {
   async getProposalNum() {
     try {
       const res = await firstValueFrom(this.common.getProposalNumber());
-      // res.data = this.aesEncryptService.decrypt(res.data);
+      console.log(res);
       this.proposalNum = res.data.proposalNumber;
       console.log(this.proposalNum);
       
@@ -232,27 +230,26 @@ export class ProductsComponent implements OnInit {
   }
 
 
-  addToCompare(item: any) {
-
-    const MAX_COMPARE_ITEMS = 3; // Define a constant for the max compare limit
-    // Check if the limit has been reached
-    if (this.compareItems.length >= MAX_COMPARE_ITEMS) {
-      this.toast.error({ detail:"",summary: 'Only three products can be added to compare!' ,duration:5000});
-      return;
-    }
-    // Check if the item already exists in the array
-    const isAlreadyPresent = this.compareItems.some(existingItem => existingItem.productName === item.productName);
-    if (isAlreadyPresent) {
-      this.toast.warning({ detail: "", summary: 'This product has already been added for comparison. Please choose another product. ', duration: 5000 });
-
-      return; // Skip adding the item
-    }
-    this.getProductInformation(item.productId);
+addToCompareProducts(item: any){
+let productId = this.productService.addToCompare(item,this.compareItems);
+if(productId!=0){
+  this.getProductInformation(productId);
+}
 }
 
+removeCompareItemProduct(item: any){
+ this.compareItems = this.productService.removeCompareItem(item,this.compareItems);
+  
+}
+navigateToProductComparison(){
+  this.productService.navigateToProductComparison(this.compareItems);
+}
+
+closeProductComparison(){
+  this.productService.closeComparison(this.compareItems);
+}
 
 getProductInformation(productId: String ){
-  let features: any
   const reqData = {
     "productId": productId,
     "agentCode": localStorage.getItem('agentCode')
@@ -268,24 +265,6 @@ getProductInformation(productId: String ){
       console.error(err);
     }
   });
-}
-
-removeCompareItem(item: any){
-  this.compareItems = this.compareItems.filter(existingItem => existingItem !== item);
-  console.log('Item removed from comparison.');
-}
-navigateToProductComparison(){
-  this.compareItems = this.compareItems.map((product:any) =>{
-    product.keyFeatures = JSON.parse(product.keyFeatures.split(",")); // Convert string to array
-    return product;
-  });
-  sessionStorage.setItem('compareItems', JSON.stringify(this.compareItems));
-  this.router.navigate(['/products/comparison'], {
-  });
-}
-
-closeComparison(){
-  this.compareItems = [];
 }
 
 donwloadBrowcher(productName : any){

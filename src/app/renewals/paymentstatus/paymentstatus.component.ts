@@ -32,26 +32,26 @@ export class PaymentstatusComponent {
     this.renewalService.getPaymentStatusApi(this.orderId,{}).subscribe(
       (res:any)=>{
         console.log("payment response",res);
-        if(res.isSuccess==true){
-          this.paymentStatus=res.paymentStatus
+        if(res.isSuccess){
+          this.paymentStatus=res.data.paymentStatus
           if(this.paymentStatus=="SUCCESS")
             {
               console.log("payment status",this.paymentStatus);
-              this.renewalService.setPaymentStatus('1');
-              this.router.navigate([`renewal/payment`]);
+              // this.renewalService.setPaymentStatus('1');
+              // this.router.navigate([`renewal/payment`]);
               this.toast.success({ detail: "success", summary: "policy renewed uccessfully", duration: 1500 });
 
             }
           else if(this.paymentStatus=="INTIATED"){
             console.log("payment status",this.paymentStatus);
-            this.renewalService.setPaymentStatus('2');
-            this.router.navigate([`renewal/payment`]);
+            // this.renewalService.setPaymentStatus('2');
+            // this.router.navigate([`renewal/payment`]);
             this.toast.error({ detail: "Error", summary: "Your payment is in processing", duration: 1500 });
           }
           else {
             console.log("payment status",this.paymentStatus);
-            this.renewalService.setPaymentStatus('2');
-            this.router.navigate([`renewal/payment`]);
+            // this.renewalService.setPaymentStatus('2');
+            // this.router.navigate([`renewal/payment`]);
             this.toast.error({ detail: "Error", summary: "Your payment is Failed try again once", duration: 1500 });
           }
         }

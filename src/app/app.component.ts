@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent {
 
-  showNavbar: boolean = true;
+  showNavbar: boolean = false;
   isLoading$: Observable<boolean>;
 
   constructor(private router:Router, private loadingService: LoadingService){
@@ -18,11 +18,34 @@ export class AppComponent {
   }
   ngOnInit(){
     this.router.events.subscribe(() => {
-      if(this.router.url !== '/'){
-        this.showNavbar = true
-      }else{
+      const currentUrl = this.router.url;
+      if (currentUrl === '/' || this.isInvalidPath(currentUrl)) {
         this.showNavbar = false;
+      } else {
+        this.showNavbar = true;
       }
     });
+  }
+
+  private isInvalidPath(url: string): boolean {
+    const validPaths = [
+      '/notifications',
+      '/dashboard',
+      '/leads',
+      '/claims',
+      '/events',
+      '/endorsements',
+      '/products',
+      '/quote',
+      '/yatra',
+      '/rug',
+      '/renewal',
+      '/customers',
+      '/proposals',
+      '/profile',
+      '/declaration',
+      '/performance',
+    ];
+    return !validPaths.some((path) => url.startsWith(path));
   }
 }

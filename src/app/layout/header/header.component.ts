@@ -127,7 +127,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
  }
 
  notificationInfo() {
-  this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
+  this.agentCode && this.notificationService.fetchNotificationInfo(this.agentCode).subscribe(
     (response) => {
       if (response?.isSuccess) {
         this.notifications = response?.data;

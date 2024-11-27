@@ -6,6 +6,8 @@ import { CustomersService } from '../customers.service';
 import { CommonService } from 'src/app/services/common.service';
 import { NgToastService } from 'ng-angular-popup';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { LanguageService } from 'src/app/services/language.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customers-list',
@@ -42,7 +44,9 @@ export class CustomersListComponent {
   
   constructor(
     private customerService: CustomersService ,private datePipe: DatePipe,
-    private commonService:CommonService,private toast: NgToastService
+    private commonService:CommonService,private toast: NgToastService,
+    private languageService: LanguageService,
+    private translateService: TranslateService
   ) {}
 
   customerListRequestBody={
@@ -63,6 +67,13 @@ export class CustomersListComponent {
     "filterType": ""
   }
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.getCustomerList();
     this.getProducts();
   }

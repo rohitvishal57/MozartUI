@@ -20,11 +20,11 @@ export class EncryptionInterceptor implements HttpInterceptor {
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProposerRelations'
   ];
 
-  constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService ) { }
+  constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const isExcluded = this.excludedUrls.some(url => req.url.includes(url));
-    
+
     if (isExcluded) {
       return next.handle(req);
     }
@@ -41,19 +41,18 @@ export class EncryptionInterceptor implements HttpInterceptor {
           'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization'
         }
       });
-      
+
       return next.handle(clonedRequest).pipe(
         tap((res: any) => {
-          if (res.body && res?.body?.isSuccess) {
-            const url = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
-            if (url?.redirectUrl) {
-              const modifiedUrl = url?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
+          if (res?.body && res?.body?.data) {
+            const decryptedData = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
+            if (decryptedData.hasOwnProperty('redirectUrl')) {
+              const modifiedUrl = decryptedData?.redirectUrl.replace('https://upuat.adityabirlahealth.com/', 'http://localhost:4200/#/');
               window.open(modifiedUrl, "_blank");
-            } else {
-              res.body.data = this.isEncrypt ? this.aesEncryptService.decrypt(res?.body?.data) : res?.body?.data;
             }
+            res.body && localStorage.setItem('token', res?.body.token);
+            res.body = decryptedData;
           }
-          res.body && localStorage.setItem('token', res?.body?.token);
         }),
         catchError((error: HttpErrorResponse) => {
           // Handle errors here
@@ -69,8 +68,9 @@ export class EncryptionInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       tap((res: any) => {
-        if (res.body && res?.body?.isSuccess) {
-          res.body.data = this.aesEncryptService.decrypt(res?.body?.data);
+        if (res.body && res?.body?.data) {
+          res.body && localStorage.setItem('token', res?.body.token);
+          res.body = this.aesEncryptService.decrypt(res?.body?.data);
         }
       }),
       finalize(() => this.loadingService.hide())

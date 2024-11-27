@@ -5,7 +5,6 @@ import { ClaimsViewComponent } from './claims-view.component';
 import { ClaimsListViewComponent } from '../claims-list-view/claims-list-view.component';
 import { PrimeNgModule } from 'src/app/prime-ng.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { DatepipePipe } from 'src/app/utilities/pipe/datepipe.pipe';
 import { ClaimsRoutingModule } from './claims-view-routing.module';
 import { ClaimsDetailsComponent } from '../claims-details/claims-details.component';
@@ -25,7 +24,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     CommonModule,
     PrimeNgModule,
     ReactiveFormsModule,
-    NgxPaginationModule,
     ClaimsRoutingModule,
     MyMaterialModule,
     TranslateModule.forRoot({

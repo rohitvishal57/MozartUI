@@ -86,12 +86,11 @@ export class RenewalListComponent {
     this.renewalListRequestBody.pageNumber = this.page;
     this.renewalListRequestBody.pageSize = this.rows;    
     this.renewalService.getRenewalListApi(this.renewalListRequestBody).subscribe(
-      (response:any) => { 
+      (response:any) => {
         if (response.isSuccess) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
             ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
           })); 
-          console.log("Renewal List",this.renewalsList);
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType];  
         }else {
@@ -128,7 +127,6 @@ export class RenewalListComponent {
     this.commonService.Getproductlist(productsRequestBody).subscribe({
       next: (res) => {
         this.productsList = res.data;
-        console.log("product list",this.productsList)
       },
       error: (err) => {
         this.toast.error({ detail: "", summary: "Failed to get products list.", duration: 2000 });
@@ -155,20 +153,15 @@ export class RenewalListComponent {
     this.formatDate("startDate");
     this.formatDate("endDate");
     this.renewalListRequestBody.startDate=this.startDate;
-    console.log("start date taken by request body",this.renewalListRequestBody.startDate);
     this.renewalListRequestBody.endDate=this.endDate;
-    console.log("end date taken by request body",this.renewalListRequestBody.endDate);
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
-      console.log("selectedProducts",selectedProducts);     
     this.renewalListRequestBody.productName = selectedProducts.join(", ");
-     console.log("product names which are taking by request body",this.renewalListRequestBody.productName);    
     const selectedPolicyTypes = this.StaticPolicyTypes
     .filter((policyType) => policyType.selected)
     .map((policyType) => policyType.name);
     this.renewalListRequestBody.policyType = selectedPolicyTypes.join(", ");
-    console.log("policy types which are taking by request body",this.renewalListRequestBody.policyType); 
     this.first = 0;
     this.page = 1;
     this.getRenewalsList();
@@ -286,7 +279,7 @@ export class RenewalListComponent {
         const emailRequestBody = {
           agentCode: this.agentCode,
           emailId: "sona@gmail.com",
-          mobile: item.proposerMobileNumber,
+          mobile: item.proposerMobileNumber || "",
           eventName: "sending payment link to email",
           policyHolderFullName: item.proposerFirstName,
           renewedPolicyNumber: item.policyNumber,
@@ -305,9 +298,7 @@ export class RenewalListComponent {
               ]
             }
           }
-        };
-        console.log("email",emailRequestBody);
-        
+        };        
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -345,7 +336,7 @@ export class RenewalListComponent {
           agentCode: this.agentCode,
           type: "DUE",
           customerName: item.proposerFirstName,
-          customerMobileNo: item.proposerMobileNumber,
+          customerMobileNo: item.proposerMobileNumber || "",
           agentMobileNo: "9177035634",
           eventName: "sending payment link to sms",
           dueDate: "",
@@ -356,9 +347,7 @@ export class RenewalListComponent {
           grossRenewalAmount: item.renewalPremiumAmount.toString(),
           isAutoSMS: true,
           sessionId: ""
-        };
-        console.log("sms",smsRequestBody);
-        
+        };        
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -376,9 +365,7 @@ export class RenewalListComponent {
         const whatsAppRequestBody = {
           templateCode: "DUE-CSTMR",
           policyNumbers: [item.policyNumber]
-        };
-        console.log("whatsApp",whatsAppRequestBody);
-        
+        };        
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -397,7 +384,6 @@ export class RenewalListComponent {
     }
   }
   renewalJourney(proposerDetail : RenewalList, action:string) {
-    console.log("proposer PolicyNumber",proposerDetail.policyNumber);
     sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
     const renewalInfoRequestBody = {
       policy_Number: proposerDetail.policyNumber,
@@ -406,12 +392,11 @@ export class RenewalListComponent {
       (res: any) => {
         if (res.isSuccess) {          
           sessionStorage.setItem("renewalData", this.encryptionService.encrypt(res));
-          console.log("active action",action);
           sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
           this.router.navigate(['renewal/payment']);
         }
          else {
-          this.toast.error({ detail: "", summary: res.message, duration: 3000 });
+          this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
         }
       },
       (err) => {

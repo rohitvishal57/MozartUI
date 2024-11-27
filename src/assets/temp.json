@@ -1,0 +1,1015 @@
+My changes for resume journey
+async getPremiumAmount() {
+    console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
+  
+    if (this.changesMade) {
+      this.changeRecalculate(false);
+    }
+  console.log(this.isQuote);
+  
+    if (this.isQuote === false) {
+      if (Object.keys(this.formData).length > 0) {
+  
+        // this.formData.insuredMemberDetails.forEach((member: any) => {
+        //   member['covers'] = member['covers'] ?? [];
+        //   member['isChronic'] = member['isChronic'] ?? "No";
+        //   member['chronicDiseases'] = member['chronicDiseases'] ?? null;
+        //   member['roomCategory'] = member['roomCategory'] ?? "";
+  
+        //   if (!member.hasOwnProperty('memberRelationCode')) {
+        //     const relationCodeMap: { [key: string]: number } = {
+        //       'Self': 24,
+        //       'Spouse': 22,
+        //       'Son': 23,
+        //       'Daughter': 19
+        //     };
+        //     member['memberRelationCode'] = relationCodeMap[member.relation] ?? null;
+        //   }
+        // });
+
+        this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
+          // Initialize member's properties with default values if undefined
+          member['covers'] = this.covers[index] ?? [];
+          member['isChronic'] = member['isChronic'] ?? "No";
+          member['chronicDiseases'] = member['chronicDiseases'] ?? null;
+          member['roomCategory'] = member['roomCategory'] ?? "";
+      
+          // Set memberRelationCode based on a predefined mapping, if it doesn't already exist
+          if (!member.hasOwnProperty('memberRelationCode')) {
+              const relationCodeMap: { [key: string]: number } = {
+                  'Self': 24,
+                  'Spouse': 22,
+                  'Son': 23,
+                  'Daughter': 19
+              };
+              member['memberRelationCode'] = relationCodeMap[member.relation] ?? null;
+          }
+      });
+      
+  
+        this.formData['sumInsured'] = this.formData['sumInsured'] ?? this.formData.insuredMemberDetails[0].sumInsured;
+        this.formData['familySize'] = this.formData.insuredMemberDetails.length + 'A';
+        this.formData['proposerName'] = this.formData['firstName'] + this.formData['lastName'];
+  
+        const pincode = this.formData.memberPolicyType === 'Family Floater'
+          ? this.formData['proposerPincode']
+          : this.formData.insuredMemberDetails[0].pincode;
+  
+        this.formData.insuredMemberDetails.forEach((member: any) => member.pincode = pincode);
+  
+        console.log(this.formData);
+        
+        let reqData = {
+          "agentCode": this.agentCode,
+          "productId": this.productId,
+          "quoteData": JSON.stringify(this.formData)
+        };
+  
+        try {
+          const res: any = await new Promise((resolve, reject) => {
+            this.commonService.GetSingleProductQuote(reqData).subscribe({
+              next: (response) => resolve(response),
+              error: (error) => reject(error)
+            });
+          });
+  
+          // Update tenureAmount and discountList after receiving the response
+          this.QuoteNumber = [];
+          for (let i = 1; i <= 3; i++) {
+            const premiumKey = `tenure${i}Premium`;
+            const discountKey = `t${i}DiscountPercentage`;
+            const Quote = `tenure${i}QuoteNumber`;
+            this.QuoteNumber.push(res.data[Quote]);
+  
+            this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
+            this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
+          }
+  
+          this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+          if (this.form.formTitle === 'Leads') {
+            // this.formData.tenureAmount = this.tenureAmount;
+            // this.formData.displayTaxList = this.displayTaxList;
+            this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+            this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+          }
+  
+          console.log(this.formData,this.form,this.dynamicFormGroup.value);
+          
+          sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+  
+          // After setting tenureAmount and discountList, call setPremiumAmount()
+          this.setPremiumAmount();
+  
+        } catch (error) {
+          console.error("Error while fetching product tenure", error);
+        } finally {
+          this.spinner.hide();
+        }
+      }
+    }
+  }
+  
+  async onSubmit() {
+    this.changesMade = false;
+    console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
+
+    if (this.dynamicFormGroup.get('numberOfInsuredMembers')?.value < 2 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') {
+      this.toast.warning({ detail: "WARNING", summary: "Minimum of two members are required for Family Family Floater policy", duration: 3000 });
+      return;
+    }
+    else {
+      if (this.dynamicFormGroup.valid &&
+        (!this.dynamicFormGroup.get('nationality') || JSON.parse(this.dynamicFormGroup.get('nationality')?.value as any).value === 'Indian')) {
+
+        //   // Flatten the form data
+        if (this.dynamicFormGroup.get('insuredMemberDetails')) {
+          this.dynamicFormGroup.get('numberOfInsuredMembers')?.setValue(this.dynamicFormGroup.get('insuredMemberDetails')?.value.length);
+          this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((element: any, index: any) => {
+            element.memberIndex = index + 1;
+          });
+          this.dynamicFormGroup.get('insuredMemberDetails')?.value.forEach((member: any, index: any) => {
+            if (member.relation == 'Self' && (this.dynamicFormGroup.get('memberDobProposer') || this.dynamicFormGroup.get('memberAgeProposer') || this.dynamicFormGroup.get('proposerGender')
+              || this.dynamicFormGroup.get('emailId') || this.dynamicFormGroup.get('firstName') || this.dynamicFormGroup.get('middleName') || this.dynamicFormGroup.get('lastName') || this.dynamicFormGroup.get('preFix'))) {
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('preFix')?.setValue(this.dynamicFormGroup.get('preFix')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberdob')?.setValue(this.dynamicFormGroup.get('memberDobProposer')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberAge')?.setValue(this.dynamicFormGroup.get('memberAgeProposer')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('memberGender')?.setValue(this.dynamicFormGroup.get('proposerGender')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('emailId')?.setValue(this.dynamicFormGroup.get('emailId')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('firstName')?.setValue(this.dynamicFormGroup.get('firstName')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('middleName')?.setValue(this.dynamicFormGroup.get('middleName')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('lastName')?.setValue(this.dynamicFormGroup.get('lastName')?.value);
+              (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray)?.controls[index].get('mobileNumber')?.setValue(this.dynamicFormGroup.get('mobileNumber')?.value);
+            }
+          })
+        }
+        console.log(this.dynamicFormGroup.value);
+
+        const proposalRequiredDetails = {
+          totalPremium: this.dynamicFormGroup.value.totalPremium,
+          proposalNumber: this.proposalNum,
+          covers : this.covers
+        };
+
+        console.log(proposalRequiredDetails,this.dynamicFormGroup.value);
+        
+        sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
+        const tempPremiumAmount = this.dynamicFormGroup.value.totalPremium;
+        console.log(tempPremiumAmount);
+        
+        this.dynamicFormGroup.get('totalPremium')?.setValue(tempPremiumAmount);
+        this.dynamicFormGroup.get('covers')?.setValue(this.covers);
+        this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+        this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+        // if(this.dynamicFormGroup.value.tenureAmount){
+        //   this.dynamicFormGroup.value.tenureAmount = this.tenureAmount;
+        // }
+        // if(this.dynamicFormGroup.value.displayTaxList){
+        //   this.dynamicFormGroup.value.displayTaxList = this.displayTaxList;
+        // }
+        this.flattenObjectInsert(this.dynamicFormGroup.value);
+        console.log(this.dynamicFormGroup.value);
+        
+        this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+        console.log(this.formData);
+        if (
+          this.formData &&
+          (this.formData['sumInsured'] == null || this.formData['sumInsured'] === undefined) &&
+          Array.isArray(this.formData.insuredMemberDetails) &&
+          this.formData.insuredMemberDetails.length > 0 &&
+          this.formData.insuredMemberDetails[0].sumInsured != null
+      ) {
+          this.formData['sumInsured'] = this.formData.insuredMemberDetails[0].sumInsured;
+          this.dynamicFormGroup.get('sumInsured')?.setValue(this.formData.insuredMemberDetails[0].sumInsured);
+      }
+        if (this.form.formTitle.includes("Health & Lifestyle")) {
+          this.mappingForQuestionnaire(this.form);
+        }
+
+        if (this.form.formTitle.includes("Leads")) {
+          this.formData.noOfChildrens = this.kidCount;
+        }
+        this.allJsonForm[this.getFormIndexValue()] = this.form;
+
+        // if (this.form.saveBtnFunction) {
+        //   await this.resolveMethod(this.form.saveBtnFunction);
+        // }
+        if (this.form.saveBtnFunction) {
+          if (this.form.saveBtnFunction === 'fullQuotation') {
+            console.log('Waiting for fullQuote API response before proceeding...');
+            await this.fullQuotation(); // Call the fullQuotation method and wait for it to complete
+          } else {
+            console.log('Proceeding without waiting for fullQuote API');
+            await this.resolveMethod(this.form.saveBtnFunction); // Handle other functions
+            // if(this.form.saveBtnFunction === 'getPremiumAmount'){
+              
+            // }
+          }
+        }
+        console.log(this.formData);
+        sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+        sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonForm));
+
+        if (this.form.formTitle.includes("Total Premium")) {
+          sessionStorage.setItem("addOnList", this.encryptionService.encrypt(this.addOnList));
+          sessionStorage.setItem("addOnDetails", this.encryptionService.encrypt(this.addOnDetails));
+          sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount));
+
+          console.log(this.QuoteNumber, this.selectedIndex);
+          if(this.QuoteNumber.length > 0){
+            this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+          }
+          
+        }
+
+
+        if (this.dynamicFormGroup.get('leadFirstName') && this.dynamicFormGroup.get('leadMiddleName') &&
+          this.dynamicFormGroup.get('leadLastName') && this.dynamicFormGroup.get('leadMobileNo') &&
+          this.dynamicFormGroup.get('leadEmailId') && this.dynamicFormGroup.get('generateLead')) {
+          for (let i = 0; i < this.formData.insuredMemberDetails.length; i++) {
+            let relation = JSON.parse(this.formData.insuredMemberDetails[i].relationshipType);
+            if (relation.value == 'Self') {
+              this.formData.insuredMemberDetails[i].memberType = this.formData.insuredMemberDetails[i].relationshipType;
+              this.formData.insuredMemberDetails[i].firstName = this.dynamicFormGroup.get('leadFirstName')?.value;
+              this.formData.insuredMemberDetails[i].middleName = this.dynamicFormGroup.get('leadMiddleName')?.value;
+              this.formData.insuredMemberDetails[i].lastName = this.dynamicFormGroup.get('leadLastName')?.value;
+              this.formData.insuredMemberDetails[i].mobileNumber = this.dynamicFormGroup.get('leadMobileNo')?.value;
+              this.formData.insuredMemberDetails[i].emailId = this.dynamicFormGroup.get('leadEmailId')?.value;
+              console.log(this.form, this.formData);
+
+
+            }
+          }
+        }
+        //   // for Store Form Data in Database
+        let reqData = {
+          "proposalNum": this.formData.proposalNumber,
+          "partnerId": this.partnerId,
+          "agentCode": this.agentCode,
+          "formData": JSON.stringify(this.dynamicFormGroup.value),
+          "formName": this.formSequence[this.getFormIndexValue()].formName,
+          "formConfig": JSON.stringify(this.formSequence),
+          "productId": this.productId.toString(),
+          "formId": this.formSequence[this.getFormIndexValue()].formId,
+          "jsonForm": JSON.stringify(this.form),
+          "formSequence": this.getFormIndexValue(),
+          "leadNumber": this.leadnumber,
+          "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+        };
+        console.log(reqData,this.dynamicFormGroup.value);
+        this.yatraService.Insertorupdateformdata(reqData).subscribe({
+          next: (res: any) => {
+            // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
+            console.log(res);
+            this.leadnumber = res.data;
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+        // const reqdata = {
+        //   "verticalCode": this.verticalCode,
+        //   "partnerId": this.partnerId,
+        //   "proposalNum": this.proposalNum,
+        //   "code": this.Code,
+        //   "agentCode": this.agentCode,
+        //   "insuranceTypeCode": this.insurancetypecode,
+        //   "productId": this.productId,
+        //   "formName": this.formSequence[this.getFormIndexValue()].formName,
+        //   "formData": JSON.stringify(this.formData),
+        //   "formId": this.formSequence[this.getFormIndexValue()].formId,
+        //   "formSequence": this.getFormIndexValue()
+        // }
+        // this.yatraService.Insertorupdatejourneydetails(reqdata).subscribe({
+        //   next: (response) => {
+        //     console.log(response);
+        //   },
+        //   error: (error) => {
+        //     console.log(error);
+        //   }
+        // });
+
+        if (this.getFormIndexValue() < this.formSequence.length - 1) {
+          this.incrementIndex();
+          this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+        }
+
+        if (this.isQuote) {
+          this.isQuote = false;
+          sessionStorage.setItem("isQuote", this.isQuote);
+        }
+        console.log(this.isQuote);
+      }
+      else {
+        console.log('Form is invalid', this.dynamicFormGroup);
+        Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+          const control = this.dynamicFormGroup.get(field);
+          if (control instanceof FormArray) {
+            control.controls.forEach(arrayControl => {
+              if (arrayControl instanceof FormGroup) {
+                Object.keys(arrayControl.controls).forEach(nestedField => {
+                  const nestedControl = arrayControl.get(nestedField);
+                  nestedControl?.markAsTouched({ onlySelf: true });
+                });
+              } else {
+                arrayControl?.markAsTouched({ onlySelf: true });
+              }
+            });
+          }
+          else if (control instanceof FormGroup) {
+            control?.markAsDirty({ onlySelf: true });
+          }
+          else {
+            control?.markAsTouched({ onlySelf: true });
+          }
+        });
+        if (this.dynamicFormGroup.invalid)
+          this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+        else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
+          this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
+      }
+
+    }
+  }
+  
+  
+  initializeRequiredData() {
+    if (sessionStorage.getItem('allFormData') != null)
+      this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
+    console.log(this.formData)
+
+    if (sessionStorage.getItem('insuredMemberDetails') != null)
+      this.insuredMemberDetails = this.encryptionService.decrypt(sessionStorage.getItem('insuredMemberDetails') as string)
+
+    if (sessionStorage.getItem('leadId') != null) {
+      this.leadId = this.encryptionService.decrypt(sessionStorage.getItem('leadId') as string);
+    }
+    else {
+      this.leadId = "";
+    }
+    if (sessionStorage.getItem("isQuote")) {
+      this.isQuote = sessionStorage.getItem("isQuote") == 'true'
+    }
+    else {
+      this.isQuote = false;
+    }
+
+    if (sessionStorage.getItem('proposalId') != null) {
+      this.proposalId = this.encryptionService.decrypt(sessionStorage.getItem('proposalId') as string);
+    }
+    else {
+      this.proposalId = "";
+    }
+
+    // if (sessionStorage.getItem('quoteId') != null) {
+    //   this.quoteId = this.encryptionService.decrypt(sessionStorage.getItem('quoteId') as string);
+    // }
+    // else {
+    //   this.quoteId = "";
+    // }
+
+
+    if (this.formData.noOfChildrens) {
+      this.kidCount = this.formData.noOfChildrens;
+    }
+    if (sessionStorage.getItem('quoteNo') != null) {
+      this.quoteNo = this.encryptionService.decrypt(sessionStorage.getItem('quoteNo') as string);
+    }
+
+    // if (sessionStorage.getItem('displayTaxList') != null) {
+    //   this.displayTaxList = this.encryptionService.decrypt(sessionStorage.getItem('displayTaxList') as string);
+    // }
+
+    // if (sessionStorage.getItem('tenureAmount')) {
+    //   this.tenureAmount = this.encryptionService.decrypt(sessionStorage.getItem('tenureAmount') as string)
+    //   console.log(this.tenureAmount);
+
+    // }
+
+    if (sessionStorage.getItem('premiumAmountDetails')) {
+      this.premiumAmountDetails = this.encryptionService.decrypt(sessionStorage.getItem('premiumAmountDetails') as string)
+      console.log(this.premiumAmountDetails);
+
+    }
+
+    if (sessionStorage.getItem('addOnList')) {
+      this.addOnList = this.encryptionService.decrypt(sessionStorage.getItem('addOnList') as string);
+    }
+    else {
+      this.addOnList = [];
+    }
+    if (sessionStorage.getItem('proposalRequiredDetails')) {
+      const proposalRequiredDetails = this.encryptionService.decrypt(sessionStorage.getItem('proposalRequiredDetails') as string);
+      console.log(proposalRequiredDetails);
+      
+      // Check if proposalNumber matches
+      if (proposalRequiredDetails.proposalNumber === this.formData.proposalNumber) {
+        this.totalPremium = proposalRequiredDetails.totalPremium;
+        this.covers = proposalRequiredDetails.covers;
+      }
+      else{
+        this.totalPremium = 0;
+        this.covers = [];
+      }
+    }
+  }
+  
+  async getFormDataFromFormSequence(formId: any) {
+    this.initializeRequiredData();
+    this.showHtmlContent = false;
+    if (this.dynamicStyle) {
+      this.renderer.removeChild(this.document.head, this.dynamicStyle)
+      this.showHtmlContent = false;
+    }
+    // if (Object.keys(this.allJsonForm[this.getFormIndexValue()]).length > 0) {
+    //   this.form = this.allJsonForm[this.getFormIndexValue()];
+    //   let reqdata = {
+    //     "verticalCode": this.verticalCode,
+    //     "proposalNum": this.proposalNum,
+    //     "code": this.agencyCode,
+    //     "agentCode": this.agentCode,
+    //     "productId": this.productId,
+    //     "partnerId": this.partnerId,
+    //     "formData": "string",
+    //     "formWithFormData": "string",
+    //     "formName": "string",
+    //     "formId": formId,
+    //     "formConfig": "string"
+    //   }
+    //   this.yatraService.getAllFormDataViaVerticalCode(reqdata).subscribe({
+    //     next: (res) => {
+    //       this.form = JSON.parse(res.jsonForm);
+    //       // this.form = totalpremium;
+    //       this.initializeForm();
+    //     },
+    //     error: (err) => {
+    //       console.error(err)
+    //     }
+    //   })
+
+    // }\
+    // if (Object.keys(this.allJsonForm[this.getFormIndexValue()]).length > 0) {
+    //   this.form = this.allJsonForm[this.getFormIndexValue()];
+    //   console.log(this.form);
+    //   this.initializeForm();
+    // }
+    // else {
+    //   let reqData = {
+    //     "partnerId": this.partnerId,
+    //     "productId": this.productId,
+    //     "formId": formId
+    //   }
+    //   console.log(reqData);
+    //   this.yatraService.Getform(reqData).subscribe({
+    //     next: (res: any) => {
+    //       console.log(res);
+    //       this.form = JSON.parse(res.data.jsonFormData);
+    //       // this.form = totalpremium;
+    //       this.initializeForm();
+    //     },
+    //     error: (err) => {
+    //       console.error(err);
+    //     }
+    //   })
+
+    // }
+    console.log(this.formData);
+    console.log(this.partnerId,this.productId, this.formSequence);
+    const reqData = {
+      partnerId: this.partnerId.toString(),
+      productId: this.productId.toString(),
+      formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
+      proposalNum: this.proposalNum,
+      agentCode: this.agentCode,
+      currentFormSequence: this.getFormIndexValue().toString()
+    }
+
+
+
+    await this.yatraService.getForm1(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.formSequence = JSON.parse(res.data.formConfig) || [];
+        this.form = JSON.parse(res.data.jsonFormData);
+        this.formData = {
+          ...this.formData,  // existing form data
+          ...JSON.parse(res.data.formData)  // parsed response data
+        };
+
+        console.log(this.form, this.formSequence, this.formData);
+
+        this.initializeForm();
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+  
+  
+  async initializeForm() {
+    console.log(this.form, this.formData);
+    this.showHtmlContent = false;
+    this.dynamciallyLoadCSS(this.form);
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((control: any) => {
+        // const policyindex = control.dynamicControls[0].findIndex((item:any) => item.value === this.formData.planType);
+        // console.log(policyindex);
+        if (control.dynamicControls) {
+          console.log(control.name, control, this.formData);
+
+          if (this.formData[control.name] && control.visible == true) {
+            console.log(control.dynamicControls[0], this.formData.planType);
+            if (this.formData[control.name]) {
+              control.value = this.formData[control.name].length;
+            }
+            console.log(control.value);
+            control.dynamicControls = control.dynamicControls.slice(0, 1)
+            this.formData[control.name].forEach((member: any, index: number) => {
+              let tempDynamicControl = control.dynamicControls[0].map((element: any) => ({ ...element }));
+              console.log(tempDynamicControl);
+              control.dynamicControls.push(tempDynamicControl)
+              control.dynamicControls[index + 1].forEach((innerControl: any) => {
+                if (innerControl.name == 'relation') {
+                  innerControl.value = member.relation
+                }
+                if (innerControl.name == 'covers') {
+                  innerControl.value = this.covers[index];
+                }
+              })
+            })
+          }
+        }
+        // else if (control.subControls && this.formData[control.name]) {
+        //   console.log(this.formData[control.name], control);
+        //   control.subControls.forEach((subControl: ISubControl) => {
+        //     if (subControl.name == 'addOnDetails') {
+        //       subControl.innerSubControls = subControl.innerSubControls?.slice(0, 1)
+        //       this.formData['insuredMemberDetails'].forEach((member: any) => {
+        //         if (subControl.innerSubControls) {
+        //           let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
+        //           console.log(tempInnerControl, member);
+        //           const tempRelationshipType = JSON.parse(member.relationshipType);
+        //           tempInnerControl.label = tempRelationshipType.value;
+        //           tempInnerControl.name = tempRelationshipType.value;
+        //           subControl.innerSubControls.push(tempInnerControl)
+        //         }
+        //       })
+        //     }
+        //   })
+
+        // }
+        else {
+          if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
+            control.value = this.formData[control.name];
+            if (control.name == 'accident') {
+              console.log(control.value);
+            }
+          }
+        }
+      });
+    });
+
+    console.log(this.form, this.formData);
+    if (this.form?.formSections) {
+      this.dynamicFormGroup = this.fb.group({});
+      this.form.formSections.forEach((section) => {
+        section.formControls.forEach(async (control: IFormControl) => {
+          if (control.dynamicControls) {
+            if (control.visible == true) {
+              let tempFormArray = this.fb.array([]);
+              for (let i = 1; i < control.dynamicControls.length; i++) {
+                tempFormArray.push(this.initializeDynamicFormControls(control.dynamicControls[i], i));
+              }
+              this.dynamicFormGroup.addControl(control.name, tempFormArray);
+            }
+          }
+          else if (control.subControls) {
+            // control.subControls.forEach((subControl: ISubControl) => {
+            //   if (subControl.name == 'addOnDetails') {
+            //     subControl.innerSubControls = subControl.innerSubControls?.slice(0, 1)
+            //     this.formData['insuredMemberDetails'].forEach((member: any) => {
+            //       if (subControl.innerSubControls) {
+            //         let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
+            //         console.log(tempInnerControl, member);
+            //         const tempRelationshipType = JSON.parse(member.relationshipType);
+            //         tempInnerControl.label = tempRelationshipType.value;
+            //         tempInnerControl.name = tempRelationshipType.value;
+            //         subControl.innerSubControls.push(tempInnerControl)
+            //       }
+            //     })
+            //   }
+            // })
+            if (control.type == 'questionnaire') {
+              let demoMember: any;
+              let demoTypeIndex: any;
+              let doneButton: any;
+              console.log(control);
+              if (control.subControls) {
+                demoMember = control.subControls.findIndex(control => control.name === 'demoMember')
+                demoTypeIndex = control.subControls.findIndex(control => control.name === 'demoType');
+                doneButton = control.subControls.find(control => control.name === 'doneButton');
+                console.log(control);
+                control.subControls = [
+                  ...control.subControls.slice(demoMember, demoMember + 1),
+                  ...control.subControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
+                ]; // Keep the first control (or reset)
+                console.log(control);
+              }
+              console.log(this.formData['insuredMemberDetails']);
+              this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {
+                console.log(member, this.formData[control.name], control);
+                if (control.subControls) {
+                  let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
+                  let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
+
+                  const tempRelationshipType = JSON.parse(member.relationshipType);
+                  tempMemberControl.label = tempRelationshipType.value;
+                  tempMemberControl.name = tempRelationshipType.value.toLowerCase();
+                  tempInnerControl.label = tempRelationshipType.value;
+                  tempInnerControl.name = tempRelationshipType.value;
+                  console.log(tempInnerControl);
+                  if (this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true) {
+                    for (const key in this.formData[control.name]) {
+                      const value = this.formData[control.name][key];
+                      if (key == tempRelationshipType.value.toLowerCase()) {
+                        if (typeof this.formData[control.name][key] === 'boolean' && this.formData[control.name][key] == true) {
+                          // const arrayName = (key).charAt(0).toUpperCase() + (key).slice(1);
+                          console.log(key, value);
+                          tempMemberControl.value = true;
+                          tempInnerControl.visible = true;
+                          this.formData[control.name][tempRelationshipType.value].forEach((item: any) => {
+                            tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
+                          })
+                        }
+                      }
+                    }
+                  }
+                  else {
+                    tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
+                  }
+
+                  control.subControls?.push(tempMemberControl);
+                  control.subControls?.push(tempInnerControl);
+                  console.log(control);
+                }
+              });
+              control.subControls?.push(doneButton);
+              console.log(control);
+              this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls.slice(2)));
+            }
+            else {
+              control.subControls.forEach((subControl: ISubControl) => {
+                if (subControl.name == 'addOnDetails') {
+                  let demoTypeIndex: any;
+                  let doneButton: any;
+                  if (subControl.innerSubControls) {
+                    demoTypeIndex = subControl.innerSubControls.findIndex(control => control.name === 'demoType');
+                    doneButton = subControl.innerSubControls.find(control => control.name === 'doneButton');
+                    // Slice the array to retain demoType and doneButton only
+                    subControl.innerSubControls = [
+                      ...subControl.innerSubControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
+                      // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
+                    ]; // Keep the first control (or reset)
+                  }
+
+
+                  console.log(subControl.innerSubControls);
+
+
+                  this.formData['insuredMemberDetails'].forEach((member: any) => {
+                    if (subControl.innerSubControls) {
+                      let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
+                      console.log(tempInnerControl, member);
+
+                      const tempRelationshipType = JSON.parse(member.relationshipType);
+                      tempInnerControl.label = tempRelationshipType.value;
+                      tempInnerControl.name = tempRelationshipType.value;
+                      subControl.innerSubControls?.push(tempInnerControl);
+                    }
+                  });
+                  subControl.innerSubControls?.push(doneButton);
+                }
+              });
+            }
+
+            console.log(this.initializeSubControls(control.subControls));
+
+            this.dynamicFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
+          }
+          else {
+            if (control.type === 'date') {
+              const lowerCaseName = control.name.toLowerCase();
+              if (lowerCaseName.includes('dob') || lowerCaseName.includes('dateofbirth')) {
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear();
+                const currentMonth = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const currentDay = String(currentDate.getDate()).padStart(2, '0');
+
+                // Construct dobRegex pattern as a string
+                const dobPattern =
+                  `^(18[0-9]{2}|19[0-9]{2}|20[0-${currentYear.toString().slice(2, 3)}][0-${currentYear.toString().slice(3, 4)}])` + // Years 1800-Current Year
+                  `-(0[1-9]|1[0-2])` + // All valid months for past years
+                  `-(0[1-9]|[12][0-9]|3[01])` + // All valid days for past years and months
+                  `|${currentYear}-(${currentMonth}|0[1-9]|1[0-9])` + // Current year, only months up to current month
+                  `-${currentDay}|(0[1-9]|[12][0-9]|3[01])$`; // Only days up to current day for the current month
+
+                // Push the pattern as a validator to the control
+                control.validators?.push({
+                  validatorName: "pattern",
+                  pattern: dobPattern, // Use the constructed string pattern here
+                  message: "Date of Birth should not exceed the current date and must be in yyyy-MM-dd format."
+                });
+              }
+            }
+            let controlValidators: any = [];
+            if (control.validators && control.visible == true) {
+              control.validators.forEach((val: IValidator) => {
+                if (val.validatorName === 'required') controlValidators.push(Validators.required);
+                if (val.validatorName === 'email') controlValidators.push(Validators.email);
+                if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+                if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+                if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+              })
+            }
+            // if(control.type=='select' && control.methodName && control.options?.length==0){
+            //   this.callMethod(control.methodName,control);
+            // }
+            if (control.type === 'multiSelectCheckbox' && control.selectCheckboxOptions) {
+              // Only call resolveMethod if selectCheckboxOptions is empty
+              // if (control.selectCheckboxOptions.length === 0) {
+              //   await this.resolveMethod(control.methodName, control);
+
+              // }
+              // After resolving, add the control to the dynamic form group
+              const controlGroup = this.fb.group({});
+              control.selectCheckboxOptions.forEach(option => {
+                controlGroup.addControl(option.value, new FormControl(false));
+              });
+              this.dynamicFormGroup.addControl(control.name, controlGroup);
+            }
+            if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
+              if (control.otherControlName) {
+                this.callMethod(control.methodName, control, section)
+              }
+              else {
+                this.resolveMethod(control.methodName, control)
+              }
+            }
+            if (control.type === 'select' && control.options) {
+              // Call the method to get all options if defined and options array is empty
+              if (control.getAllOption && control.options.length === 0) {
+                this.callMethod(control.getAllOption, control);
+              }
+
+              console.log(this.form, control.value, this.isQuote, control.name);
+
+              // If the control's value is empty, set it based on the selected options
+              if (control.value === "") {
+                // Set control value if any option is selected
+                if (control.options.length > 0) {
+                  control.options.forEach((option: IOptions) => {
+                    if (option.selected) {
+                      control.value = option.id ? this.stringifyObject(option) : option.value;
+                    }
+                  });
+                }
+
+                // Call the methodName method after setting the value if defined
+                if (control.methodName) {
+                  await this.resolveMethod(control.methodName, control);
+                }
+              }
+              else if (control.value != "" && this.isQuote === true && control.methodName) {
+                await this.resolveMethod(control.methodName, control);
+                // if (control.name == 'insuredMembers') {
+                //   //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
+                //   control.selectCheckboxOptions?.forEach((option: any) => {
+                //     if (this.formData.insuredMembers[option.value] === true) {
+                //       // Call logSelection function (pass null for event if not triggering through UI)
+                //       this.logSelection(null, option, control);
+                //     }
+                //   })
+                // }
+
+              }
+            }
+
+            if (control.type == 'radio') {
+
+              control.value = control.radioOptions?.find(option => option.selected)?.value || "";
+
+              if (control.methodName)
+                this.callMethod(control.methodName, control);
+            }
+
+            if (control.type == 'custom-radio' && control.methodName) {
+              this.resolveMethod(control.methodName, control);
+            }
+            const radioOptionsControl = this.dynamicFormGroup.get('totalPremium');
+
+            if (radioOptionsControl) {
+              radioOptionsControl.valueChanges.subscribe((value: string) => {
+
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((formControl: any) => {
+                    if (formControl.name == 'totalPremium' && formControl.type == 'custom-radio') {
+                      this.selectedIndex = formControl.radioOptions.findIndex((option: any) => option.value === value);
+                      if(this.QuoteNumber.length > 0){
+                        this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                      }
+                      this.formData.tenure = this.selectedIndex + 1;
+                      console.log(this.selectedIndex, this.formData);
+                    }
+                  });
+                });
+              })
+            }
+
+
+            if (control.name == 'totalPremium' && this.totalPremium != 0) {
+              console.log(this.totalPremium);
+              
+              this.dynamicFormGroup.addControl(control.name, new FormControl(this.totalPremium, controlValidators));
+            }
+            else
+              this.dynamicFormGroup.addControl(control.name, new FormControl(control.value, controlValidators));
+            if (control.name == 'memberDobProposer') {
+              console.log(control, this.dynamicFormGroup.get(control.name));
+            }
+            if (control.type == 'custom-radio' && this.formData[control.name]) {
+              const radioControl = this.dynamicFormGroup.get(control.name);
+              if (radioControl) {
+                control.radioOptions?.forEach((option: any, index: number) => {
+                  if (option.value == this.formData[control.name]) {
+                    radioControl.setValue(option.value);
+                    this.selectedIndex = index;
+                  }
+                });
+              }
+            }
+
+          }
+        });
+      });
+      this.dynamicFormGroup.addControl('leadNumber', new FormControl(this.leadnumber));
+      //dynamic css
+      // this.showHtmlContent = true;
+      console.log(this.form);
+      console.log(this.dynamicFormGroup, this.formData);
+
+
+
+      this.flattenObject(this.formData);
+      this.spinner.hide();
+    }
+    console.log(this.dynamicFormGroup.value,this.formData);
+
+
+    if(this.formSequence[this.getFormIndexValue()].formName == "Confirmation"){
+      //this.customerFeedbackModule.show();
+      this.isFeedBackModalVisible = true;
+    }
+
+
+  }
+  
+  
+  
+  async ngOnInit() {
+    this.showHtmlContent = false;
+
+    // Check for formSequence in history.state and initialize if available
+    this.formSequence = history.state.formSequence || [];
+    // Use localStorage for additional data if available
+    if (localStorage.getItem('code')) {
+      this.Code = localStorage.getItem('code');
+    }
+    if (localStorage.getItem('agentCode')) {
+      this.agentCode = localStorage.getItem('agentCode');
+    // this.agencyCode = history.state.productData.agencyCode;
+    if(history.state && history.state.productData){
+      if (history.state.productData.productId)
+        this.productId = history.state.productData.productId;
+      if (history.state.productData.partnerId)
+        this.partnerId = history.state.productData.partnerId;
+      if (history.state.productData.proposalNum)
+        this.proposalNum = history.state.productData.proposalNum;
+      if (history.state.productData.tenureAmounts) {
+        this.tenureAmount = history.state.productData.tenureAmounts;
+      }
+      if (history.state.productData.quickQuoteRedirect) {
+        this.quickQuoteRedirect = history.state.productData.quickQuoteRedirect;
+      }
+      if(history.state.productData.productComparison){
+        this.productComparison =  history.state.productData.productComparison;
+      }
+      if (history.state.productData.tenure) {
+        this.formData = { ...this.formData, tenure: history.state.productData.tenure }
+      }
+
+    }
+    console.log(this.formData);
+
+
+    if (sessionStorage.getItem('allJsonForm')) {
+      this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string);
+      console.log(this.allJsonForm);
+
+    }
+    console.log(this.formSequence);
+
+    // if (history.state.productData) {
+    //   const productData = history.state.productData;
+    //   this.productId = productData.productId || this.productId;
+    //   this.partnerId = productData.partnerId || this.partnerId;
+    //   this.proposalNum = productData.proposalNum || this.proposalNum;
+    //   this.tenureAmount = productData.tenureAmounts || this.tenureAmount;
+    //   this.selectedAddons = productData.selectedAddons || this.selectedAddons;
+    //   if (productData.tenure) {
+    //     this.formData = { ...this.formData, tenure: productData.tenure };
+    //   }
+    // }
+
+    if (Object.keys(this.route.snapshot.queryParams).length) {
+      this.route.queryParams.subscribe(async params => {
+        console.log(params);
+
+        const decryptedData = this.encryptionService.decrypt(params['data']);
+        if (decryptedData) {
+          console.log(decryptedData);
+
+          this.agentCode = decryptedData.agentCode;
+          this.partnerId = decryptedData.partnerId;
+          this.productId = decryptedData.productId;
+          // this.formData.proposalNumber = decryptedData.proposalNum;
+          this.proposalNum = decryptedData.proposalNum;
+          decryptedData.currentFormSequence = this.getFormIndexValue().toString();
+          await this.yatraService.getForm1(decryptedData).subscribe({
+            next: (res: any) => {
+              console.log(res);
+              this.formSequence = JSON.parse(res.data.formConfig) || [];
+              this.form = JSON.parse(res.data.jsonFormData);
+              this.formData = JSON.parse(res.data.formData);
+
+              if(this.formData){
+                const proposalRequiredDetails: {
+                  totalPremium: any;
+                  proposalNumber: any;
+                  covers?: any;  // Make covers an optional property
+              } = {
+                  totalPremium: this.formData.totalPremium,
+                  proposalNumber: this.proposalNum
+              };
+
+              console.log(this.formData);
+              
+              if(this.formData.covers){
+                proposalRequiredDetails.covers = this.formData.covers;
+              }
+
+              if(this.formData.tenureAmount){
+                this.tenureAmount = this.formData.tenureAmount;
+              }
+
+              if(this.formData.displayTaxList){
+                this.displayTaxList = this.formData.displayTaxList;
+              }
+    
+              if(this.formData.covers){
+                this.covers = this.formData.covers;
+              }
+              sessionStorage.setItem("proposalRequiredDetails", this.encryptionService.encrypt(proposalRequiredDetails));
+
+            }
+              console.log(this.form, this.formSequence, this.formData);
+
+              this.initializeForm();
+            },
+            error: (err) => {
+              console.log(err);
+            }
+          });
+        }
+      });
+    } else {
+      // Retrieve form data based on form sequence if available
+      if (this.formSequence && this.formSequence.length > 0) {
+        this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+      } else {
+        console.warn("formSequence is empty or undefined");
+      }
+    }
+
+    console.log("sjdjksahdka");
+
+
+
+    // Initialize customer feedback module and form
+    this.customerFeedbackForm = this.fb.group({
+      message: [''],
+      rating: [null, Validators.required], // Add rating to the form
+    });
+  }
+}
+
+covers : any[][] =[];

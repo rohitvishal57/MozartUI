@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { QuoteService } from '../quote.service';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
   selector: 'app-product-details',
@@ -29,12 +31,20 @@ export class ProductDetailsComponent {
 
 
   constructor(private quoteservices: QuoteService, private router: Router, private toast: NgToastService,
-    private encryptionService: EncryptionService, private commonService: CommonService
+    private encryptionService: EncryptionService, private commonService: CommonService, private languageService: LanguageService,
+    private translateService: TranslateService
   ) {
 
   }
 
   ngOnInit(): void {
+    this.languageService.language$.subscribe(lang => {
+      this.translateService.use(lang).subscribe({
+        error: () => {
+          this.translateService.use('en'); // Fallback to English if translation file is missing
+        }
+      });
+    });
     this.productId = history.state.item.productId
     this.partnerId = history.state.item.partnerId;
     this.state = history.state.item

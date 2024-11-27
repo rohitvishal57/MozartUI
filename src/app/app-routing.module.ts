@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
   {
@@ -52,10 +53,6 @@ const routes: Routes = [
     loadChildren: () => import('./renewals/renewals.module').then((m) => m.RenewalsModule)
   },
   {
-    path: 'leads',
-    loadChildren: () => import("./leads/leads.module").then((m) => m.LeadsModule)
-  },
-  {
     path: 'customers',
     loadChildren: () => import("./customers/customers.module").then((m) => m.CustomersModule)
   },
@@ -75,8 +72,10 @@ const routes: Routes = [
     path: 'performance',
     loadChildren: () => import("./performance/performance.module").then((m) => m.PerformanceModule)
   },
-  { path: '**', redirectTo: '', pathMatch: 'full' }
-
+  {
+    path: '**',
+    component: PageNotFoundComponent
+  }
 ];
 
 @NgModule({

@@ -1,12 +1,12 @@
 <main class="siteBody">
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
-            <h2>My Customers</h2>
+            <h2>{{"My Customers" | translate}}</h2>
             <section class="quickFilterMain" id="quickFilterMain" name="quickFilterMain">
                 <div class="quickFilterLeft">
                     <ul class="quickFilter">
-                        <li class="quickFilterHeading block-hide">Quick Filter</li>
-                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter active">All ({{totalRecords}})</button></li>
+                        <li class="quickFilterHeading block-hide">{{"Quick Filter" | translate}}</li>
+                        <li><button type="button" id="allpolicies" name="allpolicies" value="allpolicies" class="btn_quickFilter active">{{"All" | translate}} ({{totalRecords}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight">
@@ -14,80 +14,80 @@
                         <div class="field_searchMain">
                             <div>
                                 <select id="filterSearchOption" name="filterSearchOption" class="filterSearch" [(ngModel)]="selected" (change)="selected === '' ? cancelSearch() : null" (ngModelChange)="onSelectChanges($event)">
-                                <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">Select an Option</option>
-                                <option id="nameOption" name="nameOption" value="name">Name</option>
-                                <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">Mobile Number</option>
-                                <option id="policyNumberOption" name="policyNumberOption" value="policyNumber">Policy Number</option>
-                                <option id="emailIDOption" name="emailIDOption" value="emailID">Email ID</option>
+                                <option id="selectOption" name="selectOption" value="" (click)="cancelSearch()">{{"Select an Option" | translate}}</option>
+                                <option id="nameOption" name="nameOption" value="name">{{"Name" | translate}}</option>
+                                <option id="mobileNumberOption" name="mobileNumberOption" value="mobileNumber">{{"Mobile Number" | translate}}</option>
+                                <option id="policyNumberOption" name="policyNumberOption" value="policyNumber">{{"Policy Number" | translate}}</option>
+                                <option id="emailIDOption" name="emailIDOption" value="emailID">{{"Email ID" | translate}}</option>
                                 </select>
                             </div>
                             <div class="filterFieldGroup">
-                                <input  class="filterSearch" id="filterSearch" name="filterSearch" [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [formControl]="searchInputControl" [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)">
+                                <input  class="filterSearch" id="filterSearch" name="filterSearch" [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [formControl]="searchInputControl" [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)" (keyup.enter)="applySearch()">
                                 <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
                                 <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
-                                    <small *ngIf="searchInputControl.dirty && selected === '' ">Select an option and enter.</small>
-                                    <small *ngIf="searchInputControl.hasError('required')">This field is required.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">Enter a valid 10-digit mobile number.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">Enter a valid policy number.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">Enter a valid name.</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">Enter a valid email id.</small>
+                                    <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter a valid 10-digit mobile number." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter a valid policy number." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'name'">{{"Enter a valid name." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">{{"Enter a valid email id." | translate}}</small>
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> Filter ({{appliedFiltersCount}})<span id="filter-count"></span></button>
+                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown($event)" class="btn_filter jsFilterBtnClick" [ngClass]="{'active': appliedFiltersCount > 0}" aria-label="filterForm"><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter"> {{"Filter" | translate}} ({{appliedFiltersCount}})<span id="filter-count"></span></button>
                         <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
                             <div class="fw_form mobile_popupMain">
                                 <div class="filterHeader">
-                                    <header>Filter</header>
+                                    <header>{{"Filter" | translate}}</header>
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div>
                                 <div class="fw_formBody">
                                     <div class="fw_formRow">
-                                        <h6>Products</h6>
+                                        <h6>{{"Products" | translate}}</h6>
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
                                                 <div class="input-checkbox-feild">
                                                     <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                    <label for="product{{i}}">{{product.productName}}</label>
+                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="fw_formRow">
-                                        <h6>Policy Type</h6>
+                                        <h6>{{"Policy Type" | translate}}</h6>
                                         <div class="fw_checkboxWraper">
                                             <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
                                                 <div class="input-checkbox-feild">
                                                   <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                                  <label for="policytype{{i}}">{{policyType.name}}</label>
+                                                  <label for="policytype{{i}}">{{policyType.name | translate}}</label>
                                                 </div>
                                               </div>                                              
                                         </div>
                                     </div>
                                     <div class="fw_formRow">
-                                        <h6>Date Range</h6>
+                                        <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="startdate" name="startdate" value="" [max]="currentDate" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="startDate" (dateChange)="formatDate('startDate')">
-                                                    <label for="startdate">Select Start Date</label>
+                                                    <label for="startdate">{{"Select Start Date" | translate}}</label>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                 <div class="input-block form-floating input-block-dob">
                                                     <input type="date" id="enddate" name="enddate" value="" [max]="currentDate" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
-                                                    <label for="enddate">Select End Date</label>
+                                                    <label for="enddate">{{"Select End Date" | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <footer>
-                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">Clear</button>
-                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">Apply</button>
+                                    <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
+                                    <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
                                 </footer>
                             </div>
                         </div>
@@ -102,11 +102,11 @@
                     <table class="table table-borderless table-search">
                       <thead>
                         <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col" nowrap>Customer ID</th>
-                          <th scope="col">No.Of.Policies</th>
-                          <th scope="col" nowrap>Email ID</th>
-                          <th scope="col" nowrap>Mobile Number</th>
+                          <th scope="col">{{"Name" | translate}}</th>
+                          <th scope="col" nowrap>{{"Customer ID" | translate}}</th>
+                          <th scope="col">{{"No.Of.Policies" | translate}}</th>
+                          <th scope="col" nowrap>{{"Email ID" | translate}}</th>
+                          <th scope="col" nowrap>{{"Mobile Number" | translate}}</th>
                           <th scope="col"></th>
                         </tr>
                       </thead>
@@ -128,16 +128,16 @@
                             <table class="table table-borderless table-search">
                               <thead>
                                 <tr>
-                                  <th scope="col" nowrap>Policy Number</th>
-                                  <th scope="col" nowrap>Product Name</th>
-                                  <th scope="col" nowrap>Policy Type</th>
-                                  <th scope="col">No.Of.Members</th>
-                                  <th scope="col">Sum Insured</th>
+                                  <th scope="col" nowrap>{{"Policy Number" | translate}}</th>
+                                  <th scope="col" nowrap>{{"Product Name" | translate}}</th>
+                                  <th scope="col" nowrap>{{"Policy Type" | translate}}</th>
+                                  <th scope="col">{{"No.Of.Members" | translate}}</th>
+                                  <th scope="col">{{"Sum Insured" | translate}}</th>
                                   <th scope="col">Premium</th>
-                                  <th scope="col" nowrap>Start Date <div><small>(dd-mm-yyyy)</small></div></th>
-                                  <th scope="col" nowrap>End Date <div><small>(dd-mm-yyyy)</small></div></th>
-                                  <th scope="col">Status</th>
-                                  <th scope="col">Action</th>
+                                  <th scope="col" nowrap>{{"Start Date" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
+                                  <th scope="col" nowrap>{{"End Date" | translate}} <div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
+                                  <th scope="col">{{"Status" | translate}}</th>
+                                  <th scope="col">{{"Action" | translate}}</th>
                                 </tr>
                               </thead>
                               <tbody class="table-group-divider">
@@ -152,10 +152,10 @@
                                   <td>{{ formatPolicyStartDate(policy.policyEndDate) }}</td>
                                   <td>
                                     <span class="info_status" [ngClass]="{
-                                        'info_status_green': policy.policyStatus === 'IF',
-                                        'info_status_yellow': policy.policyStatus === 'IP',
-                                        'info_status_red': policy.policyStatus == 'RJ',
-                                        'info_status_gray': policy.policyStatus == 'CN'
+                                        'info_status_green': policy.policyStatus === 'IF' || policy.policyStatus === 'Inforced',
+                                        'info_status_yellow': policy.policyStatus === 'IP' || policy.policyStatus === 'InProgress',
+                                        'info_status_red': policy.policyStatus == 'RJ' || policy.policyStatus === 'Rejected',
+                                        'info_status_gray': policy.policyStatus == 'CN' || policy.policyStatus === 'Cancelled'
                                       }">
                                       {{ policy.policyStatus }}
                                     </span>
@@ -171,13 +171,13 @@
                                                         <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
                                                     </li> -->
                                                     <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
-                                                        <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email </span></a>
+                                                        <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>{{"Share via Email" | translate}}</span></a>
                                                     </li>
                                                     <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
-                                                        <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
+                                                        <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
                                                     </li>
                                                     <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
-                                                        <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
+                                                        <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -202,8 +202,8 @@
                         </p-paginator>
                       </li>
                       <li class="pageCountMain">
-                        <span class="pageCount">Showing {{ first + 1 }} - {{ first + rows > totalRecords ? totalRecords : first + rows }}</span>
-                        of <span class="pageCountTotal">{{ totalRecords }} entries</span>
+                        <span class="pageCount">{{"Showing" | translate}} {{ first + 1 }} - {{ first + rows > totalRecords ? totalRecords : first + rows }}</span>
+                        of <span class="pageCountTotal">{{ totalRecords }} {{"entries" | translate}}</span>
                       </li>
                     </ul>
                   </nav>
@@ -221,19 +221,19 @@
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems ">
-                                <div class="item_lable">Customer ID</div>
+                                <div class="item_lable">{{"Customer ID" | translate}}</div>
                                 <div class="item_value">{{ row.customerID }}</div>
                             </div>
                             <div class="cv_bodyItems">
-                                <div class="item_lable">No.Of.Policies</div>
+                                <div class="item_lable">{{"No.Of.Policies" | translate}}</div>
                                 <div class="item_value">{{ row.noOfPolicy }}</div>
                             </div>
                             <div class="cv_bodyItems">
-                                <div class="item_lable">Mobile Number</div>
+                                <div class="item_lable">{{"Mobile Number" | translate}}</div>
                                 <div class="item_value">{{ row.mobileNumber }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_100">
-                                <div class="item_lable">Email ID</div>
+                                <div class="item_lable">{{"Email ID" | translate}}</div>
                                 <div class="item_value">{{ row.emailID }}</div>
                             </div>
                             <section class="quickFilterMain cv_bodyItems_policyInfo">
@@ -241,52 +241,52 @@
                                 <div class="quickFilterLeft">
                                     <ul class="quickFilter">
                                         <li *ngIf="row.noOfPolicy >= 1">
-                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 1}"(click)="activePolicys(1, i)">Policy 1</button>
+                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 1}"(click)="activePolicys(1, i)">{{"Policy 1" | translate}}</button>
                                         </li>
                                         <li *ngIf="row.noOfPolicy >= 2">
-                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 2}"(click)="activePolicys(2, i)">Policy 2</button>
+                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 2}"(click)="activePolicys(2, i)">{{"Policy 2" | translate}}</button>
                                         </li>
                                         <li *ngIf="row.noOfPolicy >= 3">
-                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 3}"(click)="activePolicys(3, i)">View All</button>
+                                            <button type="button" class="btn_quickFilter"[ngClass]="{'active': row.activePolicy === 3}"(click)="activePolicys(3, i)">{{"View All" | translate}}</button>
                                         </li>
                                     </ul>
                                 </div>
                             </section>
                             <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo" *ngFor="let policy of getFilteredPolicies(row.policyDetails, row.activePolicy || 0,i)">
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Policy Number</div>
+                                    <div class="item_lable">{{"Policy Number" | translate}}</div>
                                     <div class="item_value">{{ policy.policyNumber ? policy.policyNumber : '-' }}</div>
                                 </div>
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Product Name</div>
+                                    <div class="item_lable">{{"Product Name" | translate}}</div>
                                     <div class="item_value">{{ policy.productVariantName }}</div>
                                 </div>
                                 <div class="userInfoItem">
-                                    <div class="item_lable">Policy Type</div>
+                                    <div class="item_lable">{{"Policy Type" | translate}}</div>
                                     <div class="item_value">{{ policy.policyType }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">No.Of.Members</div>
+                                    <div class="item_lable">{{"No.Of.Members" | translate}}</div>
                                     <div class="item_value">{{policy.noOfInsured}}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Start Date</div>
+                                    <div class="item_lable">{{"Start Date" | translate}}</div>
                                     <div class="item_value">{{ formatPolicyStartDate(policy.policyStartDate) }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">End Date</div>
+                                    <div class="item_lable">{{"End Date" | translate}}</div>
                                     <div class="item_value">{{ formatPolicyStartDate(policy.policyEndDate) }}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Sum Insured</div>
+                                    <div class="item_lable">{{"Sum Insured" | translate}}</div>
                                     <div class="item_value">{{policy.sumInsured}}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Premium</div>
+                                    <div class="item_lable">{{"Premium" | translate}}</div>
                                     <div class="item_value">{{policy.totalPremium}}</div>
                                 </div>
                                 <div class="userInfoItem userInfoItem-30">
-                                    <div class="item_lable">Status</div>
+                                    <div class="item_lable">{{"Status" | translate}}</div>
                                     <span class="info_status" [ngClass]="{
                                         'info_status_green': policy.policyStatus === 'IF',
                                         'info_status_yellow': policy.policyStatus === 'IP',
@@ -305,13 +305,13 @@
                                                     <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Policy Kit</span></a>
                                                 </li> -->
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,1)">
-                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>Share via Email</span></a>
+                                                    <a><img src="assets/Img/icon_share_via_email_grey.svg" alt="Share via email"><span>{{"Share via Email" | translate}}</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,2)">
-                                                    <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>Share via SMS</span></a>
+                                                    <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
                                                 </li>
                                                 <li class="actionItem" (click)="sendCustomerDetails(row,policy,3)">
-                                                    <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>Share via Whatsapp</span></a>
+                                                    <a> <img src="assets/Img/icon_share_whatsapp_grey.svg" alt="Share via Whatsapp"><span>{{"Share via Whatsapp" | translate}}</span></a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -329,7 +329,7 @@
                                 </p-paginator>
                             </li>
                             <li class="pageCountMain">
-                                <span class="pageCount">Showing {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> of <span class="pageCountTotal">{{totalRecords}} entries</span>
+                                <span class="pageCount">{{"Showing" | translate}} {{first + 1}} - {{first + rows > totalRecords ? totalRecords : first + rows}}</span> {{"of" | translate}} <span class="pageCountTotal">{{totalRecords}} {{"entries" | translate}}</span>
                             </li>
                         </ul>
                     </nav>
@@ -339,7 +339,7 @@
                 <div class="cardViewWraper">
                     <div class="no_dataFound">
                         <img src="assets/Img/img_no_data_found.svg" alt="No data found">
-                        <p>No data found</p>
+                        <p>{{"No data found" | translate}}</p>
                     </div>
                 </div>
             </section>
