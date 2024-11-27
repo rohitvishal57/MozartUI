@@ -22,7 +22,7 @@ env:
   SONAR_PROJECT_KEY: "frontend-sonar-project"
   DEPLOY_BASE_DIR: "C:/ABHI_DATA/abhi_deployments/frontend_deployments"
   WEB_ROOT: "C:/inetpub/wwwroot"
-  PORT: 4800
+  PORT: 4700
 
 jobs:
   build:
