@@ -374,9 +374,10 @@
             <ng-container *ngFor="let tab of tabsInfo">
               <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                 <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }"><span>Total {{tab.tabName}}</span><label>{{tab.totalCount}}</label></header>
-                <div class="leads_content leads_contentDashboard">
+                <div class="leads_content leads_contentDashboard ">
+                  <div class="scroll_contentDashboard">
                   <ng-container *ngFor="let buz of tab.category">
-                    <div class="leads_item_contentDashboard" [ngSwitch]="tab.tabName">
+                    <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
                     <div  *ngSwitchCase="'Leads'">
                       <div class="leads_item leads_open">
                         <header>
@@ -395,12 +396,13 @@
                     </div>
                   </div>
                   </ng-container>
+                </div>
                   <div [ngSwitch]="tab.chart">
-                    <div *ngSwitchCase="'Leads'">
-                      <canvas #chartCanvas width="200" height="200"></canvas>
+                    <div *ngSwitchCase="'Leads'" style="position: relative; height:35vh; width:100%">
+                      <canvas #chartCanvas style="margin: auto;"></canvas>
                     </div>
-                    <div *ngSwitchCase="'Proposals'">
-                      <canvas #chartPropCanvas width="200" height="200"></canvas>
+                    <div *ngSwitchCase="'Proposals'" style="position: relative; height:35vh; width:100%">
+                      <canvas #chartPropCanvas style="margin: auto;"></canvas>
                     </div>
                   </div>
                 </div>
@@ -410,7 +412,7 @@
               <!-- <h6>My Renewals</h6> -->
 
               <header class="leads_itemHeader leads_itemHeaderRenewal" ><span>Total Renewals</span><label>{{renewalDetail && renewalDetail[0]?.totalCount}}</label></header>
-              <div class="leads_content leads_contentDashboard">
+              <div class="leads_content leads_contentDashboard scroll_contentDashboard">
                 <ng-container *ngFor="let buz of renewalDetail">
                   <div class="leads_item_contentDashboard">
                     <div class="leads_item leads_open">
@@ -423,7 +425,7 @@
                </ng-container>
               </div>
               <div class="cardWraper-container">
-                <div class="chart-container" style="position: relative; height:25vh; width:100%">
+                <div class="chart-container" style="position: relative; height:35vh; width:100%">
                   <canvas id="renew" style="margin: auto;">{{renewalChart}}</canvas>
                 </div>
               </div>
@@ -444,8 +446,20 @@
                     <canvas id="MyChart" style="margin: auto;">{{ customerChart }}</canvas>
                   </div>
                 </div>
-                <canvas id="MyServiceChart" style="margin: auto;">{{ customerChart }}</canvas>
-
+              </div>
+            </div>
+            <div class="item_otherSections">
+              <div class="otherSections_wraper">
+                <header>
+                  <div class="otherSections_head">
+                    <h2>{{"Claim Service" | translate}}</h2>
+                  </div>
+                </header>
+                <div class="otherSections_body">
+                  <div class="chart-container" style="position: relative; height:50vh; width:100%">
+                    <canvas id="MyServiceChart" style="margin: auto;">{{ customerChart }}</canvas>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

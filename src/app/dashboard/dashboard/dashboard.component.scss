@@ -1394,4 +1394,13 @@ h2 {
         }
     }
 }
+.scroll_contentDashboard{
+    max-height: 124px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    &::-webkit-scrollbar-track-piece {
+        background: #ffffff;
+        border-radius: 20px;
+    }
+}
 /*---dahboard new sections styles end---*/

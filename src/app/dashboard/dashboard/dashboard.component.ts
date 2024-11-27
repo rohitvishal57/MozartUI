@@ -419,9 +419,9 @@ export class DashboardComponent {
         datasets: [{
           data: [this.customerInfo.totalCustomerCount, this.customerInfo.activeCustomerCount, this.customerInfo.totalCustomerCount - this.customerInfo.activeCustomerCount],
           backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
+            '#f44336',
+            '#4caf50',
+            '#ff9800'
           ],
           hoverOffset: 4
         }]
@@ -510,10 +510,15 @@ export class DashboardComponent {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: ['rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
-          'rgb(255, 205, 86)'], // Dynamic colors
-        hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+        backgroundColor: ['#58d68d',
+          '#5dade2',
+          '#dc7633',
+          '#48c9b0',
+          '#f5b041',
+          '#af7ac5',
+          '#ec7063'
+        ], // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
       }]
     };
   }
@@ -527,10 +532,18 @@ export class DashboardComponent {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: ['rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
-          'rgb(255, 205, 86)'], // Dynamic colors
-        hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c',
+          '#27ae60',
+          '#e67e22',
+          '#f1c40f',
+          '#95a5a6'
+        ],
+         // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
       }]
     };
   }
@@ -553,12 +566,12 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'right',
+              position: 'bottom',
               labels: {
                 font: {
-                  size: 10,  // Reduce the font size of the legend labels
+                  size: 12,  // Reduce the font size of the legend labels
                   weight: 'normal',  // Adjust the weight of the legend text
-                  family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
                 },
                 boxWidth: 10,  // Set the width of the colored box (legend symbol)
                 boxHeight: 10,  // Set the height of the colored box (legend symbol)
@@ -599,12 +612,12 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'right',
+              position: 'bottom',
               labels: {
                 font: {
-                  size: 10,  // Reduce the font size of the legend labels
+                  size: 12,  // Reduce the font size of the legend labels
                   weight: 'normal',  // Adjust the weight of the legend text
-                  family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
                 },
                 boxWidth: 10,  // Set the width of the colored box (legend symbol)
                 boxHeight: 10,  // Set the height of the colored box (legend symbol)
@@ -641,21 +654,21 @@ export class DashboardComponent {
           datasets: [{
             data: [data.data[0].persistencyPercentage],
             backgroundColor: [
-              'rgb(255, 99, 132)'
+              '#58d68d'
             ],
-            hoverOffset: 4
+            hoverOffset: 0
           }]
         },
         options: {
           responsive: true,
           plugins: {
             legend: {
-              position: 'top',  // Move legend to the side (right or left)
+              position: 'bottom',  // Move legend to the side (right or left)
               labels: {
                 font: {
-                  size: 10,  // Reduce the font size of the legend labels
+                  size: 12,  // Reduce the font size of the legend labels
                   weight: 'normal',  // Adjust the weight of the legend text
-                  family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
                 },
                 boxWidth: 10,  // Set the width of the colored box (legend symbol)
                 boxHeight: 10,  // Set the height of the colored box (legend symbol)
