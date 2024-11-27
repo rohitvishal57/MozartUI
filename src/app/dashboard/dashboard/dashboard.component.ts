@@ -1,12 +1,11 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { DashboardService } from './dashboard.service';
-import Chart from 'chart.js/auto';
-import { forkJoin } from 'rxjs';
+import Chart, { ChartData } from 'chart.js/auto';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +19,6 @@ export class DashboardComponent {
   searchedData: any;
   taskDetailsList: any = [];
   customerInfo: any;
-  businessInfo: any;
   public customerChart: any;
   public renewalChart: any;
   showSearchedResults = false;
@@ -28,6 +26,15 @@ export class DashboardComponent {
   tabsInfo: any = [];
   renewalDetail: any;
   quickActionDetails: any;
+  businessSummary: any
+  public chart: any;
+  @ViewChild('chartCanvas') chartCanvas: ElementRef | undefined;
+  @ViewChild('chartPropCanvas') chartPropCanvas: ElementRef | undefined;
+  searchedValue: any;
+  serviceInfo: any;
+  public serviceChart: any;
+  wellnessInfo: any;
+  dhaCard : any = [];
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
@@ -117,10 +124,10 @@ export class DashboardComponent {
     ];
   }
 
-  onSearch(ev?: any) {
+  onSearch() {
     const obj = {
       "agentCode": localStorage.getItem('agentCode'),
-      "searchValue": ev.target.value
+      "searchValue": this.searchedValue
     }
     this.dashboardService.searchByPrefix(obj).subscribe(res => {
       this.searchedData = res?.data;
@@ -136,8 +143,17 @@ export class DashboardComponent {
   }
 
   onRedirectBasedonSource(data: any) {
+    const fullNumber = data?.searchValue;
+    const extractedValue = fullNumber.slice(8) == localStorage.getItem('agentCode') ? true : false;
+
     if (data?.searchValue.includes('UPL')) {
-      alert('redirect to lead')
+      this.route.navigate(['leads/leadsList'])
+    } else if (data?.searchValue.includes('UPP')) {
+      this.route.navigate(['proposals/proposalsList'])
+    } else if (extractedValue) {
+      this.route.navigate(['claims/claimsList'])
+    } else {
+      this.route.navigate(['customers/customersList'])
     }
   }
 
@@ -179,6 +195,12 @@ export class DashboardComponent {
       },
       {
         name: 'Customer', isFilter: false
+      },
+      {
+        name: 'Servicing', isFilter: false
+      },
+      {
+        name: 'Wellness', isFilter: false
       }
     ];
 
@@ -263,35 +285,115 @@ export class DashboardComponent {
           })
           break;
 
+        case 'Servicing':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
+            console.log('Servicing', res.data)
+            this.serviceInfo = res.data;
+            this.createServiceChart();
+          })
+          break;
+
+        case 'Wellness':
+          this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
+            console.log('Wellness', res.data)
+            res.data = [
+              {
+                "wellnessType": "DHA - Vaccination",
+                "count": 10
+              },
+              {
+                "wellnessType": "DHA - Prevention Services",
+                "count": 5
+              },
+              {
+                "wellnessType": "DHA - Emergency Services",
+                "count": 3
+              },
+              {
+                "wellnessType": "HHS - Home Health Care",
+                "count": 5
+              },
+              {
+                "wellnessType": "HHS - Emergency Response",
+                "count": 3
+              },
+              {
+                "wellnessType": "HHS - Long-Term Care",
+                "count": 2
+              },
+              {
+                "wellnessType": "HRS - Health Risk Assessments",
+                "count": 8
+              },
+              {
+                "wellnessType": "HRS - Screening",
+                "count": 6
+              },
+              {
+                "wellnessType": "HRS - Preventive Care",
+                "count": 4
+              }
+            ];
+            res.data.length && Object.values(res.data).forEach((el: any) => {
+              switch (el.wellnessType) {
+                case 'DHA - Vaccination':
+                case 'DHA - Prevention Services':
+                  'DHA - Emergency Services'
+                  const nops = {
+                    title: 'Policies Sold',
+                    value: res.data[el],
+                    description: `Policies sold as per selected range ${res.data[el]}`,
+                    icon: 'assets/Img/icon_dashboard_policysold.svg',
+                    subIcon: 'assets/Img/icon_price_tag.svg',
+                    type: 'text',
+                    class: ''
+                  }
+                  this.dhaCard.push(nops)
+                  break;
+
+                case 'HHS - Home Health Care':
+                  const achievementsPercentage = {
+                    title: 'My Goals',
+                    value: res.data[el],
+                    description: 'Achievement',
+                    icon: 'assets/Img/icon_dashboard_myperformance.svg',
+                    type: 'gauge',
+                    progress: res.data[el],
+                    class: 'my-goals'
+                  }
+                  this.dhaCard.push(achievementsPercentage)
+                  break;
+
+                default:
+                  break;
+              }
+            })
+          })
+          break;
+
         case 'Business':
           this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
             console.log('Business', res.data);
-
+            this.businessSummary = res.data;
             this.tabsInfo = [
               {
                 tabName: 'Leads',
+                chart: 'Leads',
                 totalCount: res.data.filter((item: any) => item.dataType === "Lead").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Lead").map((item: any) => ({
-
                   name: item.status,
                   count: item.count
                 }))
               },
               {
                 tabName: 'Proposals',
+                chart: 'Proposals',
                 totalCount: res.data.filter((item: any) => item.dataType === "Proposal").reduce((sum: any, item: any) => sum + item.count, 0),
                 category: res.data.filter((item: any) => item.dataType === "Proposal").map((item: any) => ({
                   name: item.status,
                   count: item.count
                 }))
-              },
-              // {
-              //   tabName: 'Renewals',
-              //   category: res.data.filter((item: any) => item.dataType === "Renewal").map((item: any) => ({
-              //     name: item.status,
-              //     count: item.count
-              //   }))
-              // }
+              }
             ];
             return this.tabsInfo;
           })
@@ -312,22 +414,216 @@ export class DashboardComponent {
       type: 'doughnut',
       data: {
         labels: [
-          'Total Customers ',
-          'Active Customers',
-          'InActive Customers'
+          'Total Customers', 'Active Customers', 'InAcive Customers'
         ],
         datasets: [{
-          label: 'My First Dataset',
           data: [this.customerInfo.totalCustomerCount, this.customerInfo.activeCustomerCount, this.customerInfo.totalCustomerCount - this.customerInfo.activeCustomerCount],
           backgroundColor: [
-            '#be9bd5',
-            '#d39299',
-            '#5cbd9a'
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
           ],
           hoverOffset: 4
         }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              font: {
+                size: 10,  // Reduce the font size of the legend labels
+                weight: 'normal',  // Adjust the weight of the legend text
+                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+              },
+              boxWidth: 10,  // Set the width of the colored box (legend symbol)
+              boxHeight: 10,  // Set the height of the colored box (legend symbol)
+              padding: 5  // Adjust the padding around each legend item
+            }
+
+          }
+        }
       }
     });
+  }
+
+  createServiceChart(): void {
+    this.serviceChart = new Chart("MyServiceChart", {
+      type: 'doughnut',
+      data: {
+        labels: [
+          'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
+        ],
+        datasets: [{
+          data: [2, 0, 1, 4, 6, 7],
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+          ],
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              font: {
+                size: 10,  // Reduce the font size of the legend labels
+                weight: 'normal',  // Adjust the weight of the legend text
+                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+              },
+              boxWidth: 10,  // Set the width of the colored box (legend symbol)
+              boxHeight: 10,  // Set the height of the colored box (legend symbol)
+              padding: 5  // Adjust the padding around each legend item
+            }
+
+          }
+        }
+      }
+    });
+  }
+
+
+
+  ngAfterViewInit(): void {
+    // Ensure that the canvas is available before rendering the chart
+    setTimeout(() => {
+      if (this.chartCanvas && this.chartCanvas.nativeElement) {
+        this.renderChart();
+        this.renderPropChart()
+      } else {
+        console.error('Canvas element not found.');
+      }
+    }, 20000); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
+  }
+
+  createChartData(): ChartData<'pie' | 'doughnut'> {
+    const categories = this.businessSummary.filter((item: any) => item.dataType === 'Lead');
+    const labels = categories.map((item: any) => item.status);
+    const data = categories.map((item: any) => item.count);
+
+    return {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'], // Dynamic colors
+        hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  createPropChartData(): ChartData<'pie' | 'doughnut'> {
+    const categories = this.businessSummary.filter((item: any) => item.dataType === 'Proposal');
+    const labels = categories.map((item: any) => item.status);
+    const data = categories.map((item: any) => item.count);
+
+    return {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'], // Dynamic colors
+        hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderChart(): void {
+    if (this.chartCanvas && this.chartCanvas.nativeElement) {
+      const canvas = this.chartCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.chart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                font: {
+                  size: 10,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+
+  renderPropChart(): void {
+    if (this.chartPropCanvas && this.chartPropCanvas.nativeElement) {
+      const canvas = this.chartPropCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.chart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createPropChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                font: {
+                  size: 10,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
   }
 
   createRenewChart() {
@@ -340,16 +636,33 @@ export class DashboardComponent {
         type: 'doughnut',
         data: {
           labels: [
-            'Persistency Percentage'
+            'Persistency %'
           ],
           datasets: [{
-            // label: 'My First Dataset',
             data: [data.data[0].persistencyPercentage],
             backgroundColor: [
-              'rgba(208, 241, 229, 1)'
+              'rgb(255, 99, 132)'
             ],
             hoverOffset: 4
           }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',  // Move legend to the side (right or left)
+              labels: {
+                font: {
+                  size: 10,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            }
+          }
         }
       });
     });
@@ -363,9 +676,9 @@ export class DashboardComponent {
     });
   }
 
-
-  ngOnDestroy(): void {
-   // this.renewalChart.destroy(); //kept comment for temporary fix ,We are getting issue with destroy function please check.
-   // this.customerChart.destroy();
-  }
+  // ngOnDestroy(): void {
+  //  this.renewalChart.destroy(); //kept comment for temporary fix ,We are getting issue with destroy function please check.
+  //  this.customerChart.destroy();
+  //  this.chart.destroy();
+  // }
 }

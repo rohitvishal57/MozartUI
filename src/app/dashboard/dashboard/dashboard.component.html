@@ -7,7 +7,6 @@
             <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
               <h6>Good {{getTimeOfDay()}}, {{profileDetails?.firstName}} ({{profileDetails?.agentCode}})</h6>
             </div>
-
           </div>
         </section>
         <div class="section_fullWidth">
@@ -17,9 +16,8 @@
                 <div class="cardItem_headerSearch">
                   <div class="field_searchMain">
                     <input type="text" class="filterSearch"
-                      [placeholder]="'Search Your Customer, Leads, Claims No and more' | translate" (input)="onSearch($event)" />
-                    <img src="assets/Img/icon_magnify_grey.svg">
-                    <!--Search Results section start-->
+                      placeholder="Search Your Customer, Leads, Claims No and more" [(ngModel)]="searchedValue" />
+                    <img src="assets/Img/icon_magnify_grey.svg" (click)="onSearch()">
                     <div class="overlay_popupMain overlay_dropdown_w518 overlay_searchResults"
                       *ngIf="showSearchedResults && searchedData?.length">
                       <div class="option_policyType">
@@ -64,7 +62,6 @@
                   <button class="get-quote-btn" type="button" id="createlead" name="createlead" (click)="createLead()">
                     <img src="assets/Img/plus_icon.svg"> {{"Create Lead" | translate}}
                   </button>
-
                 </div>
               </div>
               <div *ngIf="showCard">
@@ -372,14 +369,16 @@
                         </header>
                       </div>
                     </div>
-                    <!-- <div *ngSwitchDefault>
-                      <div class="chart-container">
-                        <canvas id="renew">{{createrenew(buz)}}</canvas>
-                      </div>
-                    </div> -->
-                    
                   </div>
                   </ng-container>
+                  <div [ngSwitch]="tab.chart">
+                    <div *ngSwitchCase="'Leads'">
+                      <canvas #chartCanvas width="200" height="200"></canvas>
+                    </div>
+                    <div *ngSwitchCase="'Proposals'">
+                      <canvas #chartPropCanvas width="200" height="200"></canvas>
+                    </div>
+                  </div>
                 </div>
               </div>
             </ng-container>
@@ -421,6 +420,8 @@
                     <canvas id="MyChart" style="margin: auto;">{{ customerChart }}</canvas>
                   </div>
                 </div>
+                <canvas id="MyServiceChart" style="margin: auto;">{{ customerChart }}</canvas>
+
               </div>
             </div>
           </div>
@@ -434,9 +435,6 @@
               </div>
             </div>
           </div>
-          <!-- <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-            Sample
-          </div> -->
         </section>
 
       </div>
