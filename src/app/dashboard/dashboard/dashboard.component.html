@@ -17,7 +17,7 @@
                 <div class="cardItem_headerSearch">
                   <div class="field_searchMain">
                     <input type="text" class="filterSearch"
-                      placeholder="Search Your Customer, Leads, Claims No and more" (input)="onSearch($event)" />
+                      [placeholder]="'Search Your Customer, Leads, Claims No and more' | translate" (input)="onSearch($event)" />
                     <img src="assets/Img/icon_magnify_grey.svg">
                     <!--Search Results section start-->
                     <div class="overlay_popupMain overlay_dropdown_w518 overlay_searchResults"
