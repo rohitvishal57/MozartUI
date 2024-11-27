@@ -1223,4 +1223,171 @@ h2 {
         }
     }
 }
+.blue_bg {
+    /* background: linear-gradient(261.23deg,var(--bs-primary) .42%,#5a52ff 100%) !important; */
+    background: linear-gradient(to right, #461ee7 0%, #ba49ff 100%) !important;
+}
+.lightblue_bg {
+    background: linear-gradient(to right, #1eb6e7 0%, #4aece2 100%) !important;
+}
+.lightgreen_bg {
+    background: linear-gradient(to right, #40d4a8 0%, #40e5dc 100%) !important;
+}
+.purple_bg {
+    background: linear-gradient(to right, #ac39d4 0%, #f04cf3 100%) !important;
+}
+.org_color_bg {
+    background: rgba(255, 167, 85, 1);
+    background: linear-gradient(180deg,rgba(248,194,10,.12) 0,rgba(248,194,10,.03) 100%);
+}
+.green_color_bg {
+    background: rgba(104, 227, 101, 1);
+    background: linear-gradient(180deg,rgba(22, 205, 199,.12) 0,rgba(22, 205, 199,.03) 100%);
+}
+.blue_color_bg{
+    background:#5e72e4;
+    background: linear-gradient(180deg,rgba(99,91,255,.12) 0,rgba(99,91,255,.03) 100%);
+}
+.taskCard {
+    position: relative;
+    box-shadow: 0px 2px 4px 0px rgba(213, 215, 222, 0.2), 0px 1px 10px 0px rgba(213, 215, 222, 0.1215686275), 0px 4px 5px 0px rgba(213, 215, 222, 0.1411764706);
+}
+.taskCard:after {
+    position: absolute;
+    content: "";
+    /* height: 120px;
+    width: 120px;
+    top: -35px;
+    right: -35px; */
+    height: 40px;
+    width: 40px;
+    top: 23px;
+    left: 27px;
+    border-radius: 1rem;
+    transform: rotate(40deg);
+    background: -moz-linear-gradient(left, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26ffffff', endColorstr='#00ffffff',GradientType=1 );
+}
+.taskCard:before {
+    position: absolute;
+    content: "";
+    height: 120px;
+    width: 120px;
+    /* top: -35px;
+    right: -35px; */
+    top: 23px;
+    right: 23px;
+    border-radius: 1rem;
+    transform: rotate(40deg);
+    background: -moz-linear-gradient(left, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+    background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26ffffff', endColorstr='#00ffffff',GradientType=1 );
+}
+.dashboard_importantEvents {
+    
+    .taskCard {
+        gap: 20px !important;
+        &.taskCardEvents {
+            figure {
+            background: #635BFF;
+            }
+            footer {
+                a {
+                  color: #635BFF;  
+                }
+            }
+        }
+        &.taskCardBirthday {
+            figure {
+            background: #F8C20A;
+            }
+            footer {
+                a {
+                  color: #F8C20A;  
+                }
+            }
+        }
+        &.taskCardNotifications {
+            figure {
+            background: #16CDC7;
+            }
+            footer {
+                a {
+                  color: #16CDC7;  
+                }
+            }
+        }
+        figure {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: #e5e5e7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            img {
+                width: 20px;
+                height: 20px;
+                filter: brightness(0) invert(1);
+            }
+        }
+        footer {
+            text-align: right;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+    figure {
+        margin: 0;
+    }
+    h5 {
+        font-weight: 600;
+        font-size: 18px;
+        margin: 0;
+    }
+    h6 {
+        font-weight: 600;
+        font-size: 22px;
+        margin: 0;
+    }
+    main {
+        gap: 10px !important;
+        min-height: 110px;
+    }
+    .content_taskCard {
+        font-weight: 400;
+        font-size: 13px;
+        line-height: normal;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        background: rgba(255, 255, 255, 0.36);
+        padding: 10px;
+        border-radius: 10px;
+        min-height: 50px;
+        small {
+            font-weight: 500;
+            color: #797979;
+            text-align: right;
+            display: inline-block;
+        }
+        h6 {
+            font-weight: 400;
+            font-size: 15px;
+            line-height: normal;
+            span {
+                display: inline-block;
+                max-width: 200px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+    }
+}
 /*---dahboard new sections styles end---*/
