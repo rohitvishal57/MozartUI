@@ -411,7 +411,7 @@ export class RenewalListComponent {
           this.router.navigate(['renewal/payment']);
         }
          else {
-          this.toast.error({ detail: "", summary: res.message, duration: 3000 });
+          this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
         }
       },
       (err) => {

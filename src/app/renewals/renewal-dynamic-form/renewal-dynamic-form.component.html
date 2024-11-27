@@ -1526,7 +1526,7 @@
             </div>
         </div>
       </div>
-      <div class="bodyColumns bodyColumnsCenter m-auto" *ngIf="activeSection === 'kyc' ">
+      <div class="bodyColumns bodyColumnsCenter" *ngIf="activeSection === 'kyc' ">
         <div class="bcc_main">
             <div class="accordionMain">  
                 <div class="accordionItem">
@@ -1664,8 +1664,8 @@
           </div>
           <div class="bi_right">
               <button type="button" id="back" name="back" value="back" class="btn_pink btn_pinkNext" (click)="comeBack()">{{"Back" | translate}}</button>
-              <button type="button" id="next" name="next" value="next" class="btn_red btn_redRenew" (click)="goNext()" *ngIf="(activeSection!=='payment' || selectedPaymentType == 'offline')  ">{{"Next" | translate}}</button>
-         </div>
+              <button type="button" id="next" name="next" value="next" class="btn_red btn_redRenew" (click)="goNext()" *ngIf="(activeSection !== 'payment' || selectedPaymentType === 'offline')">{{"Next" | translate}}</button>
+          </div>
       </div>
   </div> 
   <div class="contentBody bodyColumns-3 justify-content-center mobile-flex-column" *ngIf="activeSection === 'thankyou'">

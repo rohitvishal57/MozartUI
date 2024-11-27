@@ -113,7 +113,13 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.activeAction = this.encryptionService.decrypt(sessionStorage.getItem("policyActionRen") as string);
       if (this.activeAction) {
         if (this.activeAction == "withoutmodify") {
-          this.setSection("payment");
+          if(this.renewalInfo?.response?.policyData[0]?.CKYC_Number){
+            console.log("ckyc nymber",this.renewalInfo?.response?.policyData[0]?.CKYC_Number);
+            this.setSection("payment");
+          }
+          else{
+            this.setSection("kyc")
+          }
           this.getRenewalInfo();
         } else {
           this.getRenewalInfo();
@@ -138,9 +144,6 @@ export class RenewalDynamicFormComponent implements OnInit {
       console.warn("formObject is empty or undefined.");
     }
     this.form = this.fb.group(group);
-
-    console.log("form",this.form);
-    console.log("form object",this.formObject);
   }
 
   async getRenewalInfo() {
@@ -158,9 +161,7 @@ export class RenewalDynamicFormComponent implements OnInit {
         if(this.bankDetailsObject.bankName==""){
           this.getBankDetails();
         }
-        this.formObject = this.bankDetailsObject;
-        console.log(this.formObject);
-        
+        this.formObject = this.bankDetailsObject;        
         this.initializeForm();
       } else if (value == 5005) {
         if (this.renewalInfo?.response?.policyData?.length > 0) {
@@ -190,7 +191,6 @@ export class RenewalDynamicFormComponent implements OnInit {
           });
         } else {
           this.memberDetails = true;
-          console.log("Form is invalid");
           return;
         }
       } else if (value == 5002) {
@@ -250,8 +250,6 @@ export class RenewalDynamicFormComponent implements OnInit {
           this.requestObject.memberId = "";
           this.requestObject.productId = 2;
           this.requestObject.quoteData = "";
-          console.log("update or add", this.requestObject);
-          console.log("add", this.form.value);
           this.renewalService.updateMemberDetailsApi(this.requestObject).subscribe(
               (res: any) => {
                 if (res.data.isUpdateSuccess == true) {
@@ -613,9 +611,10 @@ getproductdetailsandfeatures() {
       };
       this.renewalService.paymentGatewayApi(paymentRequestBody).subscribe({
         next: (response: any) => {
-          const paymenturl = response.data.paymentURL;
+          const paymenturl = response.data.paymentURL;          
           if (response.isSuccess == true && paymenturl) {
-            window.open(paymenturl, "_blank");
+            // window.open(paymenturl, '_blank')
+            window.location.href= paymenturl
           } else {
             console.log("Payment initiation failed:",response.message || "Unknown error");
           }
@@ -630,7 +629,7 @@ getproductdetailsandfeatures() {
   getBankDetails() {
     this.yatraService.getAllBankDetails().subscribe({
       next: (res: any) => {
-        this.bankNameList = this.aesEncryptionService.decrypt(res.data).data;
+        this.bankNameList = res.data;
         console.log(this.bankNameList);
         
       },
@@ -777,10 +776,19 @@ getproductdetailsandfeatures() {
       this.setSection('policySummary')
     } 
     else if(this.activeSection== 'policySummary'){
-      this.setSection('payment')
-    }else if(this.activeSection == 'payment'){
+      this.setSection('kyc')
+    }
+    else if(this.activeSection== 'kyc'){
+      // this.setSection('payment')
+      if(this.kycData==undefined){
+        this.toast.error({detail: "",summary: "Please complete the kyc",duration: 3000});
+      }
+      else{
+        this.setSection('payment')
+      }
+    }
+    else if(this.activeSection == 'payment'){
       console.log("form",this.form);
-      
       if(this.selectedPaymentType == 'offline' && !this.form.valid){
         this.form.markAllAsTouched();
         return;
@@ -801,22 +809,19 @@ getproductdetailsandfeatures() {
         "micrNo":"",
         "documentId": this.documentId
       };
-    
       console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res:any)=>{
           console.log("response before successs",res);
-          const decryptResponse=this.aesEncryptionService.decrypt(res.data)
-          console.log(decryptResponse);
-          if(decryptResponse.isSuccess){
-            console.log("offline payment reponse",decryptResponse.data);
-            this.fullQuoteResponse=decryptResponse.data;          
+          if(res.isSuccess){
+            console.log("offline payment reponse",res.data);
+            this.fullQuoteResponse=res.data;          
             this.setSection('thankyou')
             this.hideSection=false
             this.isFeedBackModalVisible = true;
           }
           else{
-            this.toast.error({ detail: '',summary:res.message,duration: 3000});
+            this.toast.error({ detail: '',summary:res.message || "Failed to do Payment",duration: 3000});
           }
         },
         (err)=>{
@@ -850,15 +855,15 @@ getproductdetailsandfeatures() {
         (response: any) => {
           if (response.isSuccess === true) {
             this.kycData = response.data;
-            const kycRequestBody = {policy_Number: this.policyNumber,};
-            this.renewalService.kycUpdate(kycRequestBody).subscribe(
-              (res) => {
-                this.kycFlag = res;
-              },
-              (err) => {
-                console.log(err);
-              }
-            );
+            // const kycRequestBody = {policy_Number: this.policyNumber,};
+            // this.renewalService.kycUpdate(kycRequestBody).subscribe(
+            //   (res) => {
+            //     this.kycFlag = res;
+            //   },
+            //   (err) => {
+            //     console.log(err);
+            //   }
+            // );
             this.actionKyc = action;
             this.toast.success({detail: "",summary: "KYC Details Fetched Successfully.",duration: 1000,});
           } else if (response.isSuccess === false) {
@@ -880,7 +885,7 @@ getproductdetailsandfeatures() {
       fullName: "",panNumber: "",dob: "",pepCheck: "",businessType: "ren",};
     this.renewalService.getkycURL(requestBody, { responseType: "json" }).subscribe(
         (response: any) => {
-          this.kycLink = `${response.message}`;
+          this.kycLink = `${response.data}`;
         },
         (error) => {
           this.kycLink = " ";
@@ -938,19 +943,13 @@ getproductdetailsandfeatures() {
     const policyNum = this.policyNumber.replace(/-/g, "");
     const formData = new FormData();
     formData.append("Files", this.file);
-    formData.append("UniqueNumber", policyNum);
-    console.log("form data",formData);
-    
+    formData.append("UniqueNumber", policyNum);    
     this.commonService.uploaDocument(formData).subscribe(
-      (res: any) => {
-        console.log("response before successs",res);
-        const decryptResponse=this.aesEncryptionService.decrypt(res.data)
-        console.log(decryptResponse);
-        
-        if (decryptResponse.isSuccess) {
-          console.log("response aftes successs",decryptResponse);
-          console.log("unique id",decryptResponse.data.uploadResponse[0].globalId);
-          this.documentId = decryptResponse.data.uploadResponse[0].globalId;
+      (res: any) => {        
+        if (res.isSuccess) {
+          console.log("response aftes successs",res);
+          console.log("unique id",res.data.uploadResponse[0].globalId);
+          this.documentId = res.data.uploadResponse[0].globalId;
         }
       },
       (err) => {
@@ -978,6 +977,8 @@ getproductdetailsandfeatures() {
       } else if (this.activeSection == "policySummary") {
         this.setSection("additional");
       } else if (this.activeSection == "primary") {
+        this.router.navigate(["renewal/renewalList"]);
+      } else if (this.activeSection == "kyc") {
         this.router.navigate(["renewal/renewalList"]);
       }
     } else {
