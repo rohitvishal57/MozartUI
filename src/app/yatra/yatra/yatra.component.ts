@@ -674,6 +674,12 @@ console.log(reqData);
                 if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
                 if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
                 if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+                if (val.validatorName === 'requiredTrue') {
+                  // Custom validator for checkboxes
+                  controlValidators.push((formControl: AbstractControl) => {
+                    return formControl.value === true ? null : { requiredTrue: val.message || 'This field is required' };
+                  });
+                }
               })
             }
             // if(control.type=='select' && control.methodName && control.options?.length==0){
@@ -806,7 +812,7 @@ console.log(reqData);
       this.flattenObject(this.formData);
       this.spinner.hide();
     }
-    console.log(this.dynamicFormGroup.value, this.formData);
+    console.log(this.dynamicFormGroup, this.formData);
 
 
     if (this.formSequence[this.getFormIndexValue()].formName == "Confirmation") {
@@ -3894,7 +3900,6 @@ console.log(reqData);
 
               // Array of objects that you want to set in the FormArray
               const arrayOfObject = value[key2];
-              console.log(arrayOfObject);
               // Loop through the array and create FormGroups for each object
               arrayOfObject.forEach((obj: any,index:any) => {
                 if (key2 == 'covers') {
@@ -3905,7 +3910,6 @@ console.log(reqData);
                   formArray.push(group);
                 }
                 else{
-                  console.log(formArray,arrayOfObject,obj,index);
                   const innerarray = formArray.at(index) as FormGroup;
                   Object.keys(obj).forEach((key) => {
                     if (innerarray.contains(key)) {
@@ -3917,7 +3921,6 @@ console.log(reqData);
                     }
                   });
                 }
-                console.log(formArray);
                 // else {
                 //   const group = formArray.controls[0]
                 //   console.log(group);
@@ -5055,84 +5058,88 @@ console.log(reqData);
     };
     console.log(reqData, this.dynamicFormGroup.value);
 
-    this.spinner.show();
-
-    this.yatraService.GetKycDetails(reqData).subscribe({
-      next: (response: any) => {
-        console.log('KYC details:', response);
-        if (response.isSuccess == true) {
-          this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
-          // this.spinner.hide();
-          control.disabled = true;
-          if (typeof response.data === 'object' && response.data !== null) {
-            Object.keys(response.data).forEach((key: any) => {
-              this.dynamicFormGroup.get(key)?.setValue(response.data[key])
-              const insuredMemberDetailsControl = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-
-              if (insuredMemberDetailsControl) {
-                insuredMemberDetailsControl.controls.forEach((control: any) => {
-                  if (control.get('relation')?.value === 'Self') {
-                    // Set the value for the matching 'self' relation
-                    control.get(key)?.setValue(response.data[key]);
-                  }
+    if(panNumber && formattedDOB){
+      this.spinner.show();
+      this.yatraService.GetKycDetails(reqData).subscribe({
+        next: (response: any) => {
+          console.log('KYC details:', response);
+          if (response.isSuccess == true) {
+            this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
+            // this.spinner.hide();
+            control.disabled = true;
+            if (typeof response.data === 'object' && response.data !== null) {
+              Object.keys(response.data).forEach((key: any) => {
+                this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+                const insuredMemberDetailsControl = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+  
+                if (insuredMemberDetailsControl) {
+                  insuredMemberDetailsControl.controls.forEach((control: any) => {
+                    if (control.get('relation')?.value === 'Self') {
+                      // Set the value for the matching 'self' relation
+                      control.get(key)?.setValue(response.data[key]);
+                    }
+                  });
+                }
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    if (control.name === key) {
+                      control.disabled = true; // Disable the field in the JSON structure
+                      control.value = response.data[key]; // Update the value in the JSON as well
+                    }
+                  });
+                });
+              });
+  
+              // const zoneControl = this.dynamicFormGroup.get('zone');
+              // if (control.name == 'zone' && control.type == 'select') {
+              //   this.formData.availableZones.forEach((zoneOption: any) => {
+              //     control.value = this.formData.proposerZone;
+              //     control.options.push({
+              //       name: zoneOption.toString(),
+              //       value: zoneOption.toString()
+              //     })
+              //   })
+              // }
+  
+  
+              if (response.data.upgradableZones) {
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    if (control.name === 'zone' && control.type === 'select') {
+                      control.value = response.data.zoneCode; // Set the default value
+                      control.options = []; // Clear any existing options
+                      response.data.upgradableZones.forEach((zoneOption: any) => {
+                        console.log(zoneOption);
+                        control.options.push({
+                          name: zoneOption.zone.toString(), // Display name
+                          value: zoneOption.zone.toString() // Corresponding value
+                        });
+                      });
+                    }
+                  });
                 });
               }
-              this.form.formSections.forEach((section: any) => {
-                section.formControls.forEach((control: any) => {
-                  if (control.name === key) {
-                    control.disabled = true; // Disable the field in the JSON structure
-                    control.value = response.data[key]; // Update the value in the JSON as well
-                  }
-                });
-              });
-            });
-
-            // const zoneControl = this.dynamicFormGroup.get('zone');
-            // if (control.name == 'zone' && control.type == 'select') {
-            //   this.formData.availableZones.forEach((zoneOption: any) => {
-            //     control.value = this.formData.proposerZone;
-            //     control.options.push({
-            //       name: zoneOption.toString(),
-            //       value: zoneOption.toString()
-            //     })
-            //   })
-            // }
-
-
-            if (response.data.upgradableZones) {
-              this.form.formSections.forEach((section: any) => {
-                section.formControls.forEach((control: any) => {
-                  if (control.name === 'zone' && control.type === 'select') {
-                    control.value = response.data.zoneCode; // Set the default value
-                    control.options = []; // Clear any existing options
-                    response.data.upgradableZones.forEach((zoneOption: any) => {
-                      console.log(zoneOption);
-                      control.options.push({
-                        name: zoneOption.zone.toString(), // Display name
-                        value: zoneOption.zone.toString() // Corresponding value
-                      });
-                    });
-                  }
-                });
-              });
+  
             }
-
           }
+          else {
+            this.toast.warning({ detail: "WARNING", summary: "No Record Found", duration: 3000 });
+          }
+          // else {
+          //   console.error('Expected response.data to be an object, but received:', response.data);
+          // }
+          // this.dynamicFormGroup.get('ckycNo')?.setValue(response.data.ckycNo);
+        },
+        error: (error) => {
+          this.spinner.hide();
+          this.toast.warning({ detail: "WARNING", summary: "Failed to fetch KYC Details", duration: 3000 });
+          console.error('Error fetching KYC details:', error);
         }
-        else {
-          this.toast.warning({ detail: "WARNING", summary: "No Record Found", duration: 3000 });
-        }
-        // else {
-        //   console.error('Expected response.data to be an object, but received:', response.data);
-        // }
-        // this.dynamicFormGroup.get('ckycNo')?.setValue(response.data.ckycNo);
-      },
-      error: (error) => {
-        this.spinner.hide();
-        this.toast.warning({ detail: "WARNING", summary: "Failed to fetch KYC Details", duration: 3000 });
-        console.error('Error fetching KYC details:', error);
-      }
-    });
+      });
+    }
+    else{
+      this.toast.warning({ detail: "WARNING", summary: "Please fill Pan Card and Date of Birth", duration: 3000 });
+    }
   }
 
   getPolicyDetails(control: any) {
