@@ -179,7 +179,7 @@
               </div>
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5002">
-                      <header>{{memberRole | translate}} {{"Member" | translate}}</header>
+                      <header>{{"Add" | translate}} {{"Member" | translate}}</header>
                       <div class="accordionBody">
                           <div class="accordionBodyRow">
                               <div class="breadcrumbNav">
@@ -312,7 +312,7 @@
                                                   <option value="500000">{{"upto 5L" | translate}}</option>
                                                   <option value="1000000">{{"5L to 10L" | translate}}</option>
                                                   <option value="1500000">{{"10L to 15L" | translate}}</option>
-                                                  <option value="2000000">{{"15L to 10L" | translate}}</option>
+                                                  <option value="2000000">{{"15L to 20L" | translate}}</option>
                                                   <option value="2500000"> {{">20L" | translate}}</option>
                                               </select>
                                               <label for="air">{{"Annual income range" | translate}} *</label>
@@ -483,7 +483,7 @@
               <div class="accordionMain">
                   <div class="accordionItem" [formGroup]="form" *ngIf="formId == 5003">
                       <header>
-                          {{memberRole}} Details of your {{ form.get('Relation')?.value || '' }}
+                          {{"Add" | translate}} Details of your {{ form.get('Relation')?.value || '' }}
                           <button type="button" id="deletemember" name="deletemember" value="another" class="btn_iconText"><img src="assets/Img/icon_delete_red.svg"> Delete Member</button>
                       </header>
                       <div class="accordionBody">
@@ -695,7 +695,7 @@
                       </div>
                       <footer>
                         <button type="button" id="cancel2" name="cancel2" value="next" class="btn_pink btn_redRenew btn_cancel" (click)="handleAction('cancel')">Cancel</button>
-                        <button type="button" id="next2" name="next2" value="next" class="btn_red btn_redRenew" (click)="handleAction('Member')">{{memberRole}} Member</button>
+                        <button type="button" id="next2" name="next2" value="next" class="btn_red btn_redRenew" (click)="handleAction('Member')">{{"Add" | translate}} Member</button>
                       </footer>
                   </div>
               </div>

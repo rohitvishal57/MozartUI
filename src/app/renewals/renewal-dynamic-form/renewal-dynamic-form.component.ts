@@ -9,8 +9,6 @@ import { validationConfig } from "src/app/interface/renewal-list.interface";
 import { EncryptionService } from "src/app/services/encryption.service";
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
-import { coverageDetails } from "src/app/interface/renewal-list.interface";
-import { AesEncryptionService } from "src/app/services/AESEncrypt.service";
 
 @Component({
   selector: "app-renewal-dynamic-form",
@@ -22,7 +20,6 @@ export class RenewalDynamicFormComponent implements OnInit {
   formId: number = 5001;
   selectedButton: string = "primary";
   selectedCoverages: any[] = [];
-  isRadioSelected = false;
   selectedPaymentType: string = "";
   policySummary: boolean = false;
   activeSection: string = "primary";
@@ -36,7 +33,6 @@ export class RenewalDynamicFormComponent implements OnInit {
   referenceNumber: any = null;
   selectedTenure: string = "";
   activeTab: string = "chronicCondition";
-  memberRole: string = "";
   kycFlag: any;
   preexistingConditionSelected: string = "no";
   healthConditions: string[] = ["Asthma","Diabetes","Hyperlipidaemia","Hypertension","PTCA","COPD","HighBMI" ];
@@ -87,13 +83,12 @@ export class RenewalDynamicFormComponent implements OnInit {
   showAppointee: boolean = false;
   isMemberRadioSelected: boolean = false;
   selectedCheckboxes: Set<number> = new Set<number>();
-  listOfProductFeatures:any= coverageDetails;
 
 
   constructor( private fb: FormBuilder,private renewalService: RenewalsService,private router: Router,
     private toast: NgToastService,private ac: ActivatedRoute,private yatraService: YatraService,
-    private commonService: CommonService,private encryptionService: EncryptionService, private languageService: LanguageService,
-    private translateService: TranslateService,private aesEncryptionService: AesEncryptionService) {
+    private commonService: CommonService,private encryptionService: EncryptionService,
+    private languageService: LanguageService, private translateService: TranslateService) {
   }
 
   ngOnInit() {
@@ -113,14 +108,12 @@ export class RenewalDynamicFormComponent implements OnInit {
       this.activeAction = this.encryptionService.decrypt(sessionStorage.getItem("policyActionRen") as string);
       if (this.activeAction) {
         if (this.activeAction == "withoutmodify") {
+          this.getRenewalInfo();
           if(this.renewalInfo?.response?.policyData[0]?.CKYC_Number){
-            console.log("ckyc nymber",this.renewalInfo?.response?.policyData[0]?.CKYC_Number);
             this.setSection("payment");
-          }
-          else{
+          } else {
             this.setSection("kyc")
           }
-          this.getRenewalInfo();
         } else {
           this.getRenewalInfo();
         }
@@ -181,13 +174,7 @@ export class RenewalDynamicFormComponent implements OnInit {
         if (this.form.valid) {
           this.formId = value;
           this.PreExistingDiseases = this.fb.group({
-            Asthma: ["N"],
-            Diabetes: ["N"],
-            Hyperlipidaemia: ["N"],
-            Hypertension: ["N"],
-            PTCA: ["N"],
-            COPD: ["N"],
-            HighBMI: ["N"],
+            Asthma: ["N"],Diabetes: ["N"],Hyperlipidaemia: ["N"],Hypertension: ["N"],PTCA: ["N"],COPD: ["N"],HighBMI: ["N"],
           });
         } else {
           this.memberDetails = true;
@@ -195,7 +182,6 @@ export class RenewalDynamicFormComponent implements OnInit {
         }
       } else if (value == 5002) {
         if ( this.renewalInfo?.response?.policyData?.length > 0 && content == "addMember" ) {
-          this.memberRole = "Add";
           this.subObject = Object.keys( this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0] ||
               {} ).reduce((acc: any, key: any) => {
             const value = this.renewalInfo?.response?.policyData[0]?.Members[member ?? 0][ key ];
@@ -240,7 +226,7 @@ export class RenewalDynamicFormComponent implements OnInit {
   handleAction(event: string, item?: any) {
     switch (event) {
       case "Member":
-        if (this.memberRole === "Add" && this.form.valid) {
+        if (this.form.valid) {
           this.requestObject = {};
           this.memberDetail();
           this.requestObject.member = JSON.stringify(this.form.value);
@@ -286,11 +272,7 @@ export class RenewalDynamicFormComponent implements OnInit {
             (res: any) => {
               if (res.data.isUpdateSuccess == true) {
                 Object.keys(this.form.value).forEach((key) => {
-                  if (
-                    this.form.value[key] !== null &&
-                    this.form.value[key] !== undefined &&
-                    this.form.value[key] !== ""
-                  ) {
+                  if (this.form.value[key] !== null && this.form.value[key] !== undefined && this.form.value[key] !== "" ) {
                     this.renewalInfo.response.policyData[0].HomeAddress[key] =
                       this.form.value[key];
                   }
@@ -357,11 +339,7 @@ export class RenewalDynamicFormComponent implements OnInit {
             }
           },
           (err) => {
-            this.toast.error({
-              detail: "",
-              summary: "Failed to Update Bank Details.",
-              duration: 1500,
-            });
+            this.toast.error({detail: "",summary: "Failed to Update Bank Details.",duration: 1500});
           }
         );} else {
           this.form.markAllAsTouched();
@@ -376,7 +354,8 @@ export class RenewalDynamicFormComponent implements OnInit {
       default:
         console.warn("Unknown action:", event);
       }
-    }
+  }
+
   getTenureDetails() {
     const productName =this.renewalInfo?.response?.policyData[0]?.Name_of_product;
     if (productName) {
@@ -387,7 +366,6 @@ export class RenewalDynamicFormComponent implements OnInit {
           agentCode: this.agentCode,
           // productId: matchingProduct.productId,
           productId: 1,
-          // quoteData: "{\n  \"proposerPincode\": \"500013\",\n  \"typeOfBusiness\": \"NB\",\n  \"isEmployee\": false,\n  \"sumInsured\": \"5000000\",\n  \"numberOfInsuredMembers\": \"1\",\n  \"familySize\": \"1A\",\n  \"proposerName\": \"Manjunath Saukar\",\n  \"mobileNumber\": \"9876543211\",\n  \"memberPolicyType\": \"Multi Individual\",\n  \"insuredMemberDetails\": [\n    {\n      \"roomCategory\": \"\",\n      \"memberAge\": \"43\",\n      \"sumInsured\": \"5000000\",\n      \"isChronic\": \"No\",\n      \"chronicDiseases\": null,\n  \"pincode\": \"360380\",\n     \"zone\": \"Zone II\",\n      \"memberGender\": \"M\",\n      \"memberDob\": \"1980-12-31\",\n      \"memberRelation\": \"self\",\n      \"memberRelationCode\": \"24\",\n      \"covers\": [\n        {\n          \"coverId\": \"CIL\",\n          \"value\": \"1000000\"\n        },\n        {\n          \"coverId\": \"DECOV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"SCOP\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"ANCANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"PCDED\",\n          \"value\": \"15000\"\n        },\n        {\n          \"coverId\": \"PPNDISC\",\n          \"value\": \"\"\n        },\n        {\n          \"coverId\": \"COMV\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"CANC\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RVCV\",\n          \"value\": \"500\"\n        },\n        {\n          \"coverId\": \"TOPD\",\n          \"value\": \"5000000\"\n        },\n        {\n          \"coverId\": \"RRTO\",\n          \"value\": \"YSY\"\n        }\n      ]\n    }\n  ]\n}"
           quoteData: JSON.stringify(this.renewalInfo),
         };
         this.renewalService.getTenureDetailsApi(tenureRequestBody).subscribe(
@@ -395,7 +373,6 @@ export class RenewalDynamicFormComponent implements OnInit {
             if (res.isSuccess) {
               this.tenureDetail = res.data;
             }
-            console.log("Tenure details received:", res);
           },
           (err) => {
             console.error("Error from getTenureDetails API:", err);
@@ -422,67 +399,31 @@ getproductdetailsandfeatures() {
         productId: 2,
         agentCode: this.agentCode,
       };
-
       this.renewalService.getproductdetailsandfeatures(request).subscribe(
         (res: any) => {
-          console.log(res.data);
           const productFeatures = res.data.productFeatures;
           const listOfMembers = this.renewalInfo?.response?.policyData?.[0]?.Members;
-          productFeatures.forEach((feature: any) => {
-           const matchingFeature = this.listOfProductFeatures.find(
-              (existingFeature: any) => existingFeature.featureName === feature.featureName
-            );
-            feature.member = listOfMembers.map((member: any) => ({
-              memberType: member.Relation || "",
-              isSelected: false,
-              fields: matchingFeature
-                ? matchingFeature.member[0].fields.map((field: any) => ({
-                    ...field,
-                    // coverAmount: field.coverAmount || null,
-                    // occupationValue: field.occupationValue || null, 
-                  }))
-                : [],
-            }));
-          });
           this.optionalCovers = productFeatures.filter(
             (feature: any) => feature.categoryName === 'Optional Covers'
           );
           this.healthAddOns = productFeatures.filter(
             (feature: any) => feature.categoryName === 'Health Add On'
           );
-          console.log(this.optionalCovers);
-          console.log(this.healthAddOns);
-          
-          
           console.log('Updated Product Features:', productFeatures);
-          // this.listOfProductFeatures = productFeatures; // Assign updated productFeatures back to the main list
         },
         (error: any) => {
           console.error('Error fetching product details and features:', error);
         }
-      
       );
     }
   }
 }
-
-  formatTickLabel(value: number, forSlider: boolean): string {
-    if (value >= 10000000) {
-      return forSlider == true ? value / 10000000 + "Cr": "₹" + value / 10000000 + " Crores";
-    } else if (value >= 100000 && value < 1000000) {
-      return forSlider == true ? value / 100000 + "L" : "₹" + value / 100000 + " Lakhs";
-    } else if (value >= 100000) {
-      return forSlider == true ? value / 100000 + "L" : "₹" + value / 100000 + " Lakhs";
-    }
-    return value.toString();
-  }
 
   tenureUpdate(value: string, premium: number): void {
     const tenureRequest = {
       agentCode: this.agentCode,policyNumber: this.policyNumber,
       referenceNumber: this.referenceNumber || null,quoteNumber: "QE0042548062411",
     };
-    console.log(tenureRequest);
     this.selectedTenure = value;
     this.renewalInfo.response.policyData[0].Tenure = value;
     this.renewalInfo.response.policyData[0].NetPremium = premium;
@@ -548,18 +489,11 @@ getproductdetailsandfeatures() {
 
   isAnyConditionSelected(): boolean {
     return (
-      this.chronicApplication.get("highBlood")?.value ||
-      this.chronicApplication.get("asthma")?.value ||
-      this.chronicApplication.get("diabetes")?.value ||
-      this.chronicApplication.get("heart")?.value ||
-      this.chronicApplication.get("lung")?.value ||
-      this.chronicApplication.get("ent")?.value ||
-      this.chronicApplication.get("kidney")?.value ||
-      this.chronicApplication.get("brain")?.value ||
-      this.chronicApplication.get("cancer")?.value ||
-      this.chronicApplication.get("sexuallyTransmitted")?.value ||
-      this.chronicApplication.get("anemia")?.value ||
-      this.chronicApplication.get("accidental")?.value
+      this.chronicApplication.get("highBlood")?.value || this.chronicApplication.get("asthma")?.value ||
+      this.chronicApplication.get("diabetes")?.value || this.chronicApplication.get("heart")?.value || this.chronicApplication.get("lung")?.value ||
+      this.chronicApplication.get("ent")?.value || this.chronicApplication.get("kidney")?.value || this.chronicApplication.get("brain")?.value ||
+      this.chronicApplication.get("cancer")?.value || this.chronicApplication.get("sexuallyTransmitted")?.value ||
+      this.chronicApplication.get("anemia")?.value || this.chronicApplication.get("accidental")?.value
     );
   }
 
@@ -630,8 +564,6 @@ getproductdetailsandfeatures() {
     this.yatraService.getAllBankDetails().subscribe({
       next: (res: any) => {
         this.bankNameList = res.data;
-        console.log(this.bankNameList);
-        
       },
       error: (err) => {
         console.error(err);
@@ -682,6 +614,7 @@ getproductdetailsandfeatures() {
       this.filteredCitiesList = [];
     }
   }
+
   onCitySelected(selectedCityName: string): void {
     this.form.get("bankBranch")?.setValue("");
     const selectedCity = this.cityNameList.find(
@@ -694,6 +627,7 @@ getproductdetailsandfeatures() {
       this.selectedCityId = "";
     }
   }
+
   onBranchSelected(selectedBranchName: string): void {
     const selectedbranch = this.branchNameList.find(
       (branch) => branch.name ===  selectedBranchName
@@ -716,11 +650,11 @@ getproductdetailsandfeatures() {
       event.preventDefault();
       return;
     }
-    
     this.filteredBankNamesList = this.bankNameList.filter((bank: any) =>
       bank.name.toLowerCase().includes(input)
     );
   }
+
   filterCityList(event: any): void {
     const input = (event.target as HTMLInputElement).value.toLowerCase();
     this.form.get('bankBranch')?.reset()
@@ -730,11 +664,11 @@ getproductdetailsandfeatures() {
       event.preventDefault();
       return;
     }
-
     this.filteredCitiesList = this.cityNameList.filter((city: any) =>
       city.name.toLowerCase().includes(input)
     );
   }
+
   filterBranchList(event: any): void {
     const input = (event.target as HTMLInputElement).value.toLowerCase();
     const allowedKeys = ["Backspace","Tab","Enter","ArrowLeft","ArrowRight","ArrowUp","ArrowDown" ];
@@ -751,9 +685,11 @@ getproductdetailsandfeatures() {
   openBankDropdown(): void {
     this.filteredBankNamesList = [...this.bankNameList];
   }
+
   openCityDropdown(): void {
     this.filteredCitiesList = [...this.cityNameList];
   }
+
   openBranchDropdown(): void {
     this.filteredBranchList = [...this.branchNameList];
   }
@@ -776,7 +712,11 @@ getproductdetailsandfeatures() {
       this.setSection('policySummary')
     } 
     else if(this.activeSection== 'policySummary'){
-      this.setSection('kyc')
+      if(this.renewalInfo?.response?.policyData[0]?.CKYC_Number){
+        this.setSection("payment");
+      } else {
+        this.setSection("kyc")
+      }
     }
     else if(this.activeSection== 'kyc'){
       // this.setSection('payment')
@@ -812,9 +752,7 @@ getproductdetailsandfeatures() {
       console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res:any)=>{
-          console.log("response before successs",res);
           if(res.isSuccess){
-            console.log("offline payment reponse",res.data);
             this.fullQuoteResponse=res.data;          
             this.setSection('thankyou')
             this.hideSection=false
@@ -865,16 +803,16 @@ getproductdetailsandfeatures() {
             //   }
             // );
             this.actionKyc = action;
-            this.toast.success({detail: "",summary: "KYC Details Fetched Successfully.",duration: 1000,});
+            this.toast.success({detail: "",summary: "KYC Details Fetched Successfully.",duration: 2000,});
           } else if (response.isSuccess === false) {
-            this.toast.error({detail: "",summary: "Failed to Fetch KYC Details,Please try again later.",duration: 1000,});
+            this.toast.error({detail: "",summary: "Failed to Fetch KYC Details,Please try again later.",duration: 2000,});
             this.getkycURL();
           }
           console.log("responsec body", response.isSuccess);
         },
         (error: any) => {
           this.getkycURL();
-          this.toast.error({detail: "",summary: "Failed to Fetch KYC Details,Please try again later.",duration: 1000,});
+          this.toast.error({detail: "",summary: "Failed to Fetch KYC Details,Please try again later.",duration: 2000,});
         }
       );
     }
@@ -885,7 +823,11 @@ getproductdetailsandfeatures() {
       fullName: "",panNumber: "",dob: "",pepCheck: "",businessType: "ren",};
     this.renewalService.getkycURL(requestBody, { responseType: "json" }).subscribe(
         (response: any) => {
-          this.kycLink = `${response.data}`;
+          if (response.data && Object.keys(response.data).length === 0) {
+            this.kycLink = "";
+          } else {
+            this.kycLink = `${response.data}`;
+          }
         },
         (error) => {
           this.kycLink = " ";
@@ -947,8 +889,6 @@ getproductdetailsandfeatures() {
     this.commonService.uploaDocument(formData).subscribe(
       (res: any) => {        
         if (res.isSuccess) {
-          console.log("response aftes successs",res);
-          console.log("unique id",res.data.uploadResponse[0].globalId);
           this.documentId = res.data.uploadResponse[0].globalId;
         }
       },
@@ -988,8 +928,14 @@ getproductdetailsandfeatures() {
         this.setSection("primary");
       } else if (this.activeSection == "policySummary") {
         this.setSection("additional");
-      } else if (this.activeSection == "payment") {
+      } else if (this.activeSection == "kyc") {
         this.setSection("policySummary");
+      } else if (this.activeSection == "payment") {
+        if(this.renewalInfo?.response?.policyData[0]?.CKYC_Number){
+          this.setSection("policySummary");
+        } else {
+          this.setSection("kyc")
+        }
       }
     }
   }
