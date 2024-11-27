@@ -22,8 +22,8 @@
                 </div>     
               </div>
               <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onChange($event.option.value)">
-                <mat-option *ngFor="let option of filteredActivity | async" [value]="option.policynumber">
-                    {{ option?.policynumber }}  
+                <mat-option *ngFor="let option of filteredActivity | async" [value]="option.policyNumber">
+                    {{ option?.policyNumber }}  
                 </mat-option>
              </mat-autocomplete>
             </div>
@@ -31,13 +31,11 @@
               <div class="input-block form-floating input-block-renew">
                 <select class="form-select input-selectBox" formControlName="member" id="selectmember" name="selectmember" (change)="memberIdChange($event)">
                   <option value="" disabled selected>{{"Select Member" | translate}}</option>
-                  <option *ngFor="let opt of MemberIdList" [value]="opt.memberid">
-                    {{ opt.membername | translate }} ({{ opt.relationwithproposer }})
+                  <option *ngFor="let opt of MemberIdList" [value]="opt.memberId">
+                    {{ opt.memberName | translate }} ({{ opt.relationWithProposer }})
                   </option>
                 </select>
                 <label for="member">{{"Member Name" | translate}}</label>
-                <!-- <span *ngIf="submitted && caseCreationForm.get('member').invalid" class="ui-error block-show">Please
-                  select member</span> -->
                 <div *ngIf="caseCreationForm.get('member')?.invalid && (caseCreationForm.get('member')?.touched || caseCreationForm.get('member')?.dirty) || submitted">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('member')?.errors?.required">{{"Member name is required." | translate}}</small>
                 </div>
@@ -145,15 +143,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                      <div class="input-block form-floating input-block-renew">
-                        <input class="form-control input-textBox" id="nomineeRelationship" placeholder="" formControlName="nomineeRelationship" type="text" OnlyCharacter [ngClass]="{ 'is-invalid': submitted && f['nomineeRelationship'].errors }">
-                        <label for="nomineeRelationship">Nominee Relationship</label>
-                        <div *ngIf="caseCreationForm.get('endorsementDetails.nomineeRelationship')?.invalid && (caseCreationForm.get('endorsementDetails.nomineeRelationship')?.touched || caseCreationForm.get('endorsementDetails.nomineeRelationship')?.dirty || submitted)">
-                          <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.nomineeRelationship')?.errors?.required">Nominee Relationship is required.</small>
-                        </div>
-                      </div>
-                    </div> -->
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                       <div class="input-block form-floating input-block-renew">
                         <select class="form-select input-selectBox" id="nomineeRelationship" name="nomineeRelationship" formControlName="nomineeRelationship">
@@ -211,9 +200,6 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="primaryContactNumber" name="primaryContactNumber" placeholder="" formControlName="primaryContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'primaryContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['primaryContactNumber'].errors }">
                         <label for="primaryContactNumber">{{"Primary Number" | translate}}</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['primaryContactNumber'].errors"><span class="ui-error block-show" *ngIf="f['primaryContactNumber'].errors['required']">Field
-                            cannot be blank</span><span class="ui-error block-show" *ngIf="f['primaryContactNumber'].errors['pattern']">Enter
-                            valid number</span></span> -->
                         <div *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.primaryContactNumber')?.touched || caseCreationForm.get('endorsementDetails.primaryContactNumber')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.required">{{"Mobile number is required." | translate}}</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.primaryContactNumber')?.errors?.pattern">{{"Enter valid mobile number." | translate}}</small>
@@ -226,9 +212,6 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="memberPrimaryContactNumber" name="memberPrimaryContactNumber" placeholder="" formControlName="memberPrimaryContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'memberPrimaryContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['memberPrimaryContactNumber'].errors }">
                         <label for="memberPrimaryContactNumber">{{"Primary Registered Number- Member" | translate}}</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['memberPrimaryContactNumber'].errors"><span class="ui-error block-show"
-                            *ngIf="f['memberPrimaryContactNumber'].errors['required']">Field cannot be blank</span><span class="ui-error block-show"
-                            *ngIf="f['memberPrimaryContactNumber'].errors['pattern']">Enter valid number</span></span> -->
                         <div *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.touched || caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.dirty|| submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.required">{{"Mobile number is required." | translate}}</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberPrimaryContactNumber')?.errors?.pattern">{{"Enter valid mobile number." | translate}}</small>
@@ -241,9 +224,6 @@
                       <div class="input-block form-floating input-block-renew">
                         <input class="form-control input-textBox" id="memberAlternateContactNumber" name="memberAlternateContactNumber" placeholder="" formControlName="memberAlternateContactNumber" type="tel" maxlength="10" minlength="10" (keydown)="onKeydown($event)" (ngModelChange)="mobAndEmailValueChange($event, 'memberAlternateContactNumber')" [ngClass]="{ 'is-invalid': submitted && f['memberAlternateContactNumber'].errors }">
                         <label for="memberAlternateContactNumber">{{"Alternate number- member" | translate}}</label>
-                        <!-- <span class="invalid-feedback" *ngIf="f['memberAlternateContactNumber'].errors"><span class="ui-error block-show"
-                            *ngIf="f['memberAlternateContactNumber'].errors['required']">Field cannot be blank</span><span class="ui-error block-show"
-                            *ngIf="f['memberAlternateContactNumber'].errors['pattern']">Enter valid number</span></span> -->
                         <div *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.invalid && (caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.touched || caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.dirty || submitted)">
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.required">{{"Mobile number is required." | translate}}</small>
                           <small class="ui-error block-show" *ngIf="caseCreationForm.get('endorsementDetails.memberAlternateContactNumber')?.errors?.pattern">{{"Enter valid mobile number." | translate}}</small>
@@ -414,7 +394,6 @@
             <input type="password" name="otp5" #otp5 class="otp-input OTP_Input" maxlength="1" [(ngModel)]="otp[5]" (keydown)="onKey($event, 5)">
           </div>
         </div>
-        <!--<div class="text-center"><button type="button" (click)="validateOTP()" class="verify-btn">Verify</button></div>-->
       </div>
       <div class="modal-footer modal_footerBtnGroup_column">
         <button type="button" id="verify" name="verify" (click)="validateOTP()" class="verify-btn btn_red btn_fullWidth">Verify</button>
