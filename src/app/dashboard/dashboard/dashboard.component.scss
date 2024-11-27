@@ -1287,7 +1287,9 @@ h2 {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#26ffffff', endColorstr='#00ffffff',GradientType=1 );
 }
 .dashboard_importantEvents {
-    
+    .width_taskCard {
+        width: 100%;
+    }
     .taskCard {
         gap: 20px !important;
         position: relative;
@@ -1360,7 +1362,7 @@ h2 {
     }
     main {
         gap: 5px !important;
-        min-height: 110px;
+        min-height: 143px;
     }
     .content_taskCard {
         font-weight: 400;

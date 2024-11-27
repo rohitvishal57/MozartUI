@@ -74,10 +74,9 @@
         <section class="commonSection dashboard_LPR_main dashboard_importantEvents">
           <h3>{{"Important Tasks" | translate}}</h3>
           <div class="body_flex_row mt-3">
-            <ng-conatiner *ngFor="let qucikAction of quickActionDetails">
-              <ng-conatiner  [ngSwitch]="qucikAction.name">
-                <div *ngSwitchCase="'eventDetails'">
-                  <div class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
+            <ng-conatiner class="width_taskCard" *ngFor="let qucikAction of quickActionDetails">
+              <ng-conatiner [ngSwitch]="qucikAction.name">
+                  <div *ngSwitchCase="'eventDetails'" class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notification_list_products.svg">
@@ -87,20 +86,16 @@
                       </div>
                     </header>
                     <main class="body_flex_column">
-                      <ng-container *ngFor="let tasks of qucikAction?.value">
-                        <div class="content_taskCard">
+                        <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
                           <h6><span title={{tasks?.event}}>{{tasks?.event}}</span></h6>
                           <small>{{tasks?.event}}</small>
                         </div>
-                      </ng-container>
                     </main>
                     <footer>
                       <a (click)="onClickEvents('events')">View all</a>
                     </footer>
                   </div>
-                </div>
-                <div *ngSwitchCase="'birthdayDetails'">
-                  <div class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
+                  <div *ngSwitchCase="'birthdayDetails'" class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notification_list_birthday.svg">
@@ -110,20 +105,16 @@
                       </div>
                     </header>
                     <main class="body_flex_column">
-                      <ng-container *ngFor="let tasks of qucikAction?.value">
-                        <div class="content_taskCard">
+                        <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
                           <h6><span title={{tasks.name}}>{{tasks.name}}</span></h6>
                           <small>{{tasks.dob | date : 'dd/mm/yy'}}</small>
                         </div>
-                      </ng-container>
                     </main>
                     <footer>
                       <a (click)="onClickEvents('birthday')">View all</a>
                     </footer>
                   </div>
-                </div>
-                <div *ngSwitchCase="'notifications'">
-                  <div class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
+                  <div *ngSwitchCase="'notifications'" class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notifications.svg">
@@ -133,8 +124,7 @@
                       </div>
                     </header>
                     <main class="body_flex_column">
-                      <ng-container *ngFor="let tasks of qucikAction?.value">
-                        <div class="content_taskCard">
+                        <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
                           <ng-container *ngIf="tasks?.description.includes('No notifications') ? true : template">
                             <h6><span title={{tasks?.description}}>{{tasks?.description}}</span></h6>
                           </ng-container>
@@ -142,13 +132,11 @@
                           <small>{{tasks?.description | date : 'dd/mm/yy'}}</small>
                           </ng-template>
                         </div>
-                      </ng-container>
                     </main>
                     <footer>
                       <a (click)="onClickEvents('notification')">View all</a>
                     </footer>
                   </div>
-                </div>
               </ng-conatiner>
             </ng-conatiner>
            

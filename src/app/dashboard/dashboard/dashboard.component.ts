@@ -414,9 +414,9 @@ export class DashboardComponent {
             position: 'right',
             labels: {
               font: {
-                size: 10,  // Reduce the font size of the legend labels
+                size: 12,  // Reduce the font size of the legend labels
                 weight: 'normal',  // Adjust the weight of the legend text
-                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
               },
               boxWidth: 10,  // Set the width of the colored box (legend symbol)
               boxHeight: 10,  // Set the height of the colored box (legend symbol)
@@ -439,9 +439,12 @@ export class DashboardComponent {
         datasets: [{
           data: [2, 0, 1, 4, 6, 7],
           backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
+            '#ff5722',
+            '#4caf50',
+            '#673ab7',
+            '#9c27b0',
+            '#2196f3',
+            '#f44336'
           ],
           hoverOffset: 4
         }]
@@ -453,9 +456,9 @@ export class DashboardComponent {
             position: 'right',
             labels: {
               font: {
-                size: 10,  // Reduce the font size of the legend labels
+                size: 12,  // Reduce the font size of the legend labels
                 weight: 'normal',  // Adjust the weight of the legend text
-                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
               },
               boxWidth: 10,  // Set the width of the colored box (legend symbol)
               boxHeight: 10,  // Set the height of the colored box (legend symbol)
