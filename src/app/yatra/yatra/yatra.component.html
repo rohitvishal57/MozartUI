@@ -220,7 +220,7 @@
                   </small>
                 </div>
 
-                <div *ngIf="control.type === 'checkbox'">
+                <div *ngIf="control.type === 'checkbox'" class="checkbox-error">
                   <div [class]="control.class" style="display: -webkit-box;">
                     <input type="checkbox" formControlName="{{ control.name }}" [id]="control.name" [name]="control.name"
                       id="{{control.name}}" class="checkbox-label" (change)="onCheckboxSelect(control.name)" />

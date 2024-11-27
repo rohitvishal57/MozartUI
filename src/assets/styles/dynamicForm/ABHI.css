@@ -2798,4 +2798,13 @@ margin: 0;
       }
     }
   }
+
+.checkbox-error {
+    position: relative;
+}
+ 
+.checkbox-error .text-danger {
+    top: auto !important;
+    bottom: -13px !important;
+}
   
