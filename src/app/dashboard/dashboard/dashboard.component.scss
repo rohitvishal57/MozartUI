@@ -1290,6 +1290,8 @@ h2 {
     
     .taskCard {
         gap: 20px !important;
+        position: relative;
+        padding: 16px 18px 25px;
         &.taskCardEvents {
             figure {
             background: #635BFF;
@@ -1338,6 +1340,9 @@ h2 {
             text-align: right;
             font-size: 14px;
             font-weight: 500;
+            position: absolute;
+            top: 25px;
+            right: 18px;
         }
     }
     figure {
@@ -1354,7 +1359,7 @@ h2 {
         margin: 0;
     }
     main {
-        gap: 10px !important;
+        gap: 5px !important;
         min-height: 110px;
     }
     .content_taskCard {
@@ -1367,9 +1372,8 @@ h2 {
         align-items: center;
         gap: 15px;
         background: rgba(255, 255, 255, 0.36);
-        padding: 10px;
+        padding: 7px 10px 5px;
         border-radius: 10px;
-        min-height: 50px;
         small {
             font-weight: 500;
             color: #797979;
