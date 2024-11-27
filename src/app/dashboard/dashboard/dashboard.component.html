@@ -83,7 +83,7 @@
                         <img src="./assets/Img/icon_notification_list_products.svg">
                       </figure>
                       <div>
-                        <h5>Events</h5>
+                        <h5>{{"Events" | translate}}</h5>
                       </div>
                     </header>
                     <main class="body_flex_column">
@@ -106,7 +106,7 @@
                         <img src="./assets/Img/icon_notification_list_birthday.svg">
                       </figure>
                       <div>
-                        <h5>Birthdays</h5>
+                        <h5>{{"Birthdays" | translate}}</h5>
                       </div>
                     </header>
                     <main class="body_flex_column">
@@ -301,7 +301,7 @@
           <div class="body_flex_row mt-3">
             <ng-container *ngFor="let tab of tabsInfo">
               <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-                <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }"><span>Total {{tab.tabName}}</span><label>{{tab.totalCount}}</label></header>
+                <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }"><span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
                 <div class="leads_content leads_contentDashboard ">
                   <div class="scroll_contentDashboard">
                   <ng-container *ngFor="let buz of tab.category">
@@ -339,7 +339,7 @@
             <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <!-- <h6>My Renewals</h6> -->
 
-              <header class="leads_itemHeader leads_itemHeaderRenewal" ><span>Total Renewals</span><label>{{renewalDetail && renewalDetail[0]?.totalCount}}</label></header>
+              <header class="leads_itemHeader leads_itemHeaderRenewal" ><span>{{"Total Renewals" | translate}}</span><label>{{renewalDetail && renewalDetail[0]?.totalCount}}</label></header>
               <div class="leads_content leads_contentDashboard scroll_contentDashboard">
                 <ng-container *ngFor="let buz of renewalDetail">
                   <div class="leads_item_contentDashboard">

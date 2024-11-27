@@ -3,8 +3,8 @@
       <div class="bodyColumn body_flex_column">
           <div class="container">
               <div class="view-switcher">
-                <button class="continue-btn-0 " (click)="setView('day')" [class.active]="currentView === 'day'">Day View</button>
-                <button class="continue-btn-0" (click)="setView('week')" [class.active]="currentView === 'week'">Week View</button>
+                <button class="continue-btn-0 " (click)="setView('day')" [class.active]="currentView === 'day'">{{"Day View" | translate}}</button>
+                <button class="continue-btn-0" (click)="setView('week')" [class.active]="currentView === 'week'">{{"Week View" | translate}}</button>
               </div>
 
 
@@ -18,7 +18,7 @@
                     <div class="header-content">
                         <h3 class="header-title">Birthdays <span class="todayDate">{{todayDate}}</span></h3>
                         <p class="header-subtitle">
-                            Email or SMS birthday wishes to your customers
+                            {{"Email or SMS birthday wishes to your customers" | translate}}
                             <span class="sparkle">✨</span>
                         </p>
                     </div>
@@ -42,7 +42,7 @@
             
             
             <div *ngIf="currentView === 'week'" class="week-view">
-                <h3>Birthday Wishes for This Week</h3>
+                <h3>{{"Birthday Wishes for This Week" | translate}}</h3>
                 <div class="week-grid">
                     <div *ngFor="let day of weekData" class="day-box">
                         <h4 class="day-title">
@@ -66,13 +66,13 @@
               
               
               <div *ngIf="currentView === 'month'" class="month-view">
-                  <h3>Birthday Wishes for This Month</h3>
+                  <h3>{{"Birthday Wishes for This Month" | translate}}</h3>
                   <div class="month-grid">
                       <div *ngFor="let day of getMonthDays()" class="day">
                           <strong>{{ day.date | date: 'dd MMM yyyy' }}</strong>
                           <ul>
                               <li *ngFor="let birthday of day.birthdays">
-                                  🎉 Happy birthday, <strong>{{ birthday.name }}</strong>!
+                                  🎉 {{"Happy birthday" | translate}}, <strong>{{ birthday.name }}</strong>!
                               </li>
                           </ul>
                       </div>
