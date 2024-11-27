@@ -15,7 +15,7 @@
           <div class="row mb-3">
             <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3">
               <div class="input-block form-floating input-block-renew">
-                <input class="form-control input-textBox" value="" (keydown)="onKeyDown($event)" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber"  placeholder="Search Policy Number">
+                <input class="form-control input-textBox" value="" (keydown)="onKeyDown($event)" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber"  [placeholder]="'Search Policy Number' | translate">
                 <label for="policyNumber">{{"Search Policy Number" | translate}} </label>
                 <div *ngIf="caseCreationForm.get('policyNumber')?.invalid && (caseCreationForm.get('policyNumber')?.touched || caseCreationForm.get('policyNumber')?.dirty) || submitted">
                   <small class="ui-error block-show" *ngIf="caseCreationForm.get('policyNumber')?.errors?.required">{{"Policy number is required." | translate}}</small>
