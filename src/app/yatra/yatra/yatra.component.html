@@ -1073,9 +1073,7 @@
                                           class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
                                           <hr>
                                           <input type="button" class="add-btn"
-                                            (click)="removeDisease(subControl,control,k)" value="Remove" />
-                                          {{ k-1 }}
-                                        </div>
+                                            (click)="removeDisease(subControl,control,k)" value="Remove" />                                        </div>
                                         <ng-container *ngFor="let innerControl of allSubForm">
                                           <!-- <ng-container *ngIf="innerControl.visible"> -->
                                           <!-- {{ innerControl | json }} {{ question }} -->
@@ -1165,7 +1163,7 @@
                                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
 
                                   <input *ngIf="subControl.disabled == false" type="button" class="next-btn"
-                                    (click)="closePopUp()" [value]="'Done' | translate" />
+                                    (click)="closePopUp(control)" [value]="'Done' | translate" />
                                   <!-- <input *ngIf="innerSubForm.disabled == false" type="button" class="next-btn"
                                     (click)="addOnMemberAdded(subControl,control)" value="Done" /> -->
                                   <input *ngIf="subControl.disabled == true" type="button" class="next-btn disable"

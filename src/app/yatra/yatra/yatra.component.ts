@@ -821,7 +821,7 @@ console.log(reqData);
   }
 
   initializeSubControls(subControls: any, controlGroup: any = null) {
-    console.log(subControls);
+    console.log(subControls,controlGroup);
     let formGroup: any
     if (controlGroup) {
       formGroup = controlGroup;
@@ -848,12 +848,17 @@ console.log(reqData);
           }
         }
         if (control.innerArrayControl) {
-          let tempFormArray = this.fb.array([]);
-          console.log(control.innerArrayControl);
-          for (let i = 1; i < control.innerArrayControl.length; i++) {
-            tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i));
+          if(control.visible){
+            let tempFormArray = this.fb.array([]);
+            console.log(control.innerArrayControl);
+            for (let i = 1; i < control.innerArrayControl.length; i++) {
+              tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i));
+            }
+            formGroup.addControl(control.name, tempFormArray);
           }
-          formGroup.addControl(control.name, tempFormArray);
+          else{
+            formGroup.addControl(control.name, new FormArray([]));
+          }
         }
 
         if (control.innerSubControls) {
@@ -899,6 +904,19 @@ console.log(reqData);
         }
         else {
           formGroup.addControl(subControls.name, new FormGroup({}));
+        }
+      }
+      if (subControls.innerArrayControl) {
+        if(subControls.visible){
+          let tempFormArray = this.fb.array([]);
+          console.log(subControls.innerArrayControl);
+          for (let i = 1; i < subControls.innerArrayControl.length; i++) {
+            tempFormArray.push(this.initializeDynamicFormControls(subControls.innerArrayControl[i], i));
+          }
+          formGroup.setValue(subControls.name, tempFormArray);
+        }
+        else{
+          formGroup.addControl(subControls.name, new FormArray([]));
         }
       }
       formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators))
@@ -1008,12 +1026,10 @@ console.log(reqData);
       myFormControl = parentControl != null && index != null ? ((((this.dynamicFormGroup.get(innerSubControl.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
         .controls[subControl.name] as FormArray).controls[index] as FormGroup)
         .controls[innerControl.name].get(control.name) : this.dynamicFormGroup.get(innerSubControl.name);
-      console.log(myFormControl);
     }
     else if (subControl != null && index != null) {
       myFormControl = parentControl != null && index != null ? ((this.dynamicFormGroup.get(subControl.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(control.name)
         : this.dynamicFormGroup.get(control.name);
-      console.log(myFormControl);
     }
     else {
       myFormControl = parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name) : this.dynamicFormGroup.get(control.name)
@@ -1052,7 +1068,6 @@ console.log(reqData);
       const parentArray3 = parentArray2.controls[index] as FormGroup;
 
       myControl = parentArray3.controls[innerControl.name].get(innerSubControl.name);
-      console.log(myControl);
     }
     else if (subControl != null && parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(control.name) as FormGroup;
@@ -1060,7 +1075,6 @@ console.log(reqData);
       const parentArray2 = parentArray1.controls[index] as FormGroup;
 
       myControl = parentArray2.get(subControl.name);
-      console.log(myControl);
     }
     else if (parentControl != null && index != null) {
       const parentArray = this.dynamicFormGroup.get(parentControl.name) as FormArray;
@@ -1091,7 +1105,10 @@ console.log(reqData);
     return parentControl != null && index != null ? (this.dynamicFormGroup.get(parentControl.name) as FormArray).controls[index].get(control.name)?.value : this.dynamicFormGroup.get(control.name)?.value
   }
   hasInnerValue(control: any, parentControl: any | null = null, innerControl: any | null = null, index: any | null = null) {
-    return parentControl != null && index != null ? ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(innerControl.name)?.value : this.dynamicFormGroup.get(control.name)?.value
+    const formControl = parentControl != null && index != null ? 
+                        ((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormArray).controls[index].get(innerControl.name)?.value
+                         : this.dynamicFormGroup.get(control.name);
+    return formControl;
   }
   hasInnerSubValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null) {
     const formControl = parentControl != null && index != null
@@ -2266,6 +2283,7 @@ console.log(reqData);
     // Wrapping the asynchronous operation in a promise
     return new Promise((resolve, reject) => {
       const reqData = {
+        productId: this.productId.toString(),
         policyType: this.dynamicFormGroup.get('memberPolicyType')?.value,
       };
 
@@ -3222,6 +3240,27 @@ console.log(reqData);
                         let dsubControl = dcontrol.get(subControl.innerSubControls[controlIndex].name) as FormArray;
                         let dindexj = dsubControl.at(zindex) as FormGroup;
                         let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
+                        if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
+                          innerControl.dependentControls.forEach((dependentName: string) => {
+                            // Find the dependent control in coreControls
+                            const dependentControlIndex = subControl.innerSubControls[controlIndex].coreControls.findIndex(
+                              (control: any) => control.name === dependentName
+                            );
+                            let dependentControl = subControl.innerSubControls[controlIndex].coreControls[dependentControlIndex];
+                            
+                            if (dependentControl) {
+                              dependentControl.visible = visibility;
+                              dindexj = dsubControl.at(dependentControlIndex) as FormGroup;
+                              dinnercontrol = dindexj.get(dependentControl.name) as FormGroup;
+                              Object.keys(dinnercontrol.controls).forEach((element: any) => {
+                                dinnercontrol.removeControl(element);
+                              });
+                              console.log('Dependent Control:', dependentControl);
+                            } else {
+                              console.log('Dependent Control not found for:', dependentName);
+                            }
+                          });
+                        }
                         if (innerControl.innerControls && innerControl.visible == true) {
                           this.initializeSubControls(innerControl.innerControls, dinnercontrol)
                         }
@@ -3856,7 +3895,7 @@ console.log(reqData);
               const arrayOfObject = value[key2];
               console.log(arrayOfObject);
               // Loop through the array and create FormGroups for each object
-              arrayOfObject.forEach((obj: any) => {
+              arrayOfObject.forEach((obj: any,index:any) => {
                 if (key2 == 'covers') {
                   const group = this.fb.group({
                     coverId: [obj.coverId],
@@ -3864,6 +3903,20 @@ console.log(reqData);
                   });
                   formArray.push(group);
                 }
+                else{
+                  console.log(formArray,arrayOfObject,obj,index);
+                  const innerarray = formArray.at(index) as FormGroup;
+                  Object.keys(obj).forEach((key) => {
+                    if (innerarray.contains(key)) {
+                      // Update the value if the control exists
+                      innerarray.get(key)?.setValue(obj[key]);
+                    } else {
+                      // Optionally, add a new control if it does not exist
+                      innerarray.addControl(key, new FormControl(obj[key]));
+                    }
+                  });
+                }
+                console.log(formArray);
                 // else {
                 //   const group = formArray.controls[0]
                 //   console.log(group);
@@ -4047,8 +4100,16 @@ console.log(reqData);
           if (subControl.name === arrayName) {
             subControl.visible = event.target.checked;
             console.log(subControl, event.target.value);
+            let parentCode = this.dynamicFormGroup.get(parentControl.name) as FormGroup;
+            let controlCode = parentCode.get(subControl.name) as FormArray;
+            if(event.target.checked == true){
+              if(index){
+                const newForm =  this.initializeSubControls(subControl.innerArrayControl[0]);
+                controlCode.push(newForm);
+                console.log(parentCode,controlCode,subControl.innerArrayControl,newForm,parentCode);
+              }
+            }
           }
-
           if (subControl.name === 'doneButton') {
             subControl.disabled = !event.target.checked;
             console.log(subControl, event.target.value);
@@ -4130,15 +4191,16 @@ console.log(reqData);
               let formArray = (this.dynamicFormGroup.get(parentControl.name) as FormGroup)?.controls[arrayName] as FormArray;
               console.log(formArray);
               // Remove all items from the FormArray
-              while (formArray.length > 1) {
-                formArray.removeAt(1);
-              }
-
+              // while (formArray.length > 1) {
+              //   formArray.removeAt(1);
+              // }
+              
+              formArray.clear();
               // Reset the value of the first element in the FormArray to an empty string.
-              const firstControl = formArray.at(0) as FormGroup;
-              Object.keys(firstControl.controls).forEach(key => {
-                firstControl.get(key)?.setValue('');
-              });
+              // const firstControl = formArray.at(0) as FormGroup;
+              // Object.keys(firstControl.controls).forEach(key => {
+              //   firstControl.get(key)?.setValue('');
+              // });
 
               Object.keys(this.formData).forEach(key => {
                 const baseKey = `${control.name}.${subControl.name}.`;
@@ -4909,8 +4971,22 @@ console.log(reqData);
       subControl.visible = false;
     }
   }
-  closePopUp() {
-    this.isOverlayVisible = false;
+  closePopUp(control:any = null) {
+    console.log(control,this.dynamicFormGroup);
+    if (this.dynamicFormGroup.invalid) {
+      let dynamicControl = this.dynamicFormGroup.get(control.name);
+      this.traverseFormGroup(dynamicControl as FormGroup);
+      if (dynamicControl instanceof FormGroup) {
+        Object.keys(dynamicControl.controls).forEach(arrayControl => {
+          console.log(arrayControl);
+        })
+      }
+      console.log(this.dynamicFormGroup,dynamicControl);
+      // this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+    }
+    else{
+      this.isOverlayVisible = false;
+    }
   }
 
   changeOverLayDone(control: any, parentControl: any, changeValue: boolean = false) {
@@ -5126,7 +5202,7 @@ console.log(reqData);
     console.log(subControl, control, this.form);
   }
   addNewDisease(subControl: any, control: any) {
-    console.log(subControl, control);
+    console.log(subControl, control,this.dynamicFormGroup.value);
     // if (subControl.innerArrayControl.length < 2) {
     //   const innerarrayControl = subControl.innerArrayControl[0]
     //   const firstKey = innerarrayControl.shift();  // This is the checkbox object
@@ -5683,6 +5759,35 @@ console.log(reqData);
       this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
     }
   }
+  traverseFormGroup(formGroup: FormGroup | FormArray){
+    if (formGroup instanceof FormGroup) {
+      Object.keys(formGroup.controls).forEach((key) => {
+        const control = formGroup.get(key);
+  
+        if (control instanceof FormControl) {
+          control.markAsTouched();
+          console.log(`FormControl - Key: ${key}, Value: ${control.value}`);
+        } else if (control instanceof FormGroup) {
+          console.log(`FormGroup - Key: ${key}`);
+          // Recursively traverse nested FormGroup
+          this.traverseFormGroup(control);
+        } else if (control instanceof FormArray) {
+          console.log(`FormArray - Key: ${key}`);
+          control.controls.forEach((arrayControl, index) => {
+            console.log(`FormArray Index: ${index}`);
+            // Recursively traverse FormGroup or FormControl within the FormArray
+            this.traverseFormGroup(arrayControl as FormArray);
+          });
+        }
+      });
+    } else if (formGroup instanceof FormArray) {
+      formGroup.controls.forEach((arrayControl, index) => {
+        console.log(`FormArray Index: ${index}`);
+        // Recursively traverse FormGroup or FormControl within the FormArray
+        this.traverseFormGroup(arrayControl as FormArray);
+      });
+    }
+  };
 
 }
 
