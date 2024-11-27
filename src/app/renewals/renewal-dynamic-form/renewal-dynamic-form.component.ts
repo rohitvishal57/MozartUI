@@ -33,7 +33,6 @@ export class RenewalDynamicFormComponent implements OnInit {
   referenceNumber: any = null;
   selectedTenure: string = "";
   activeTab: string = "chronicCondition";
-  kycFlag: any;
   preexistingConditionSelected: string = "no";
   healthConditions: string[] = ["Asthma","Diabetes","Hyperlipidaemia","Hypertension","PTCA","COPD","HighBMI" ];
   requestObject: any = { policyNumber: "string", referenceNumber: "string" };
@@ -143,7 +142,6 @@ export class RenewalDynamicFormComponent implements OnInit {
     const base = this.encryptionService.decrypt(sessionStorage.getItem("renewalData") as string);
     this.renewalInfo = JSON.parse(base.data.baseResponse);
     this.renewalBaseObject = this.renewalInfo;
-    this.kycFlag = base.data.isKYCComplete;
     this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
   }
 
@@ -793,15 +791,17 @@ getproductdetailsandfeatures() {
         (response: any) => {
           if (response.isSuccess === true) {
             this.kycData = response.data;
-            // const kycRequestBody = {policy_Number: this.policyNumber,};
-            // this.renewalService.kycUpdate(kycRequestBody).subscribe(
-            //   (res) => {
-            //     this.kycFlag = res;
-            //   },
-            //   (err) => {
-            //     console.log(err);
-            //   }
-            // );
+            const kycRequestBody = {policyNumber: this.policyNumber,ckyC_Number:response.data.ckycNo};
+            console.log(kycRequestBody);
+            this.renewalService.kycUpdate(kycRequestBody).subscribe(
+              (res:any) => {
+                this.renewalInfo.response.policyData[0].CKYC_Number=response.data.ckycNo
+                sessionStorage.setItem("renewalData", this.encryptionService.encrypt(this.renewalInfo));
+              },
+              (err) => {
+                console.log(err);
+              }
+            );
             this.actionKyc = action;
             this.toast.success({detail: "",summary: "KYC Details Fetched Successfully.",duration: 2000,});
           } else if (response.isSuccess === false) {
