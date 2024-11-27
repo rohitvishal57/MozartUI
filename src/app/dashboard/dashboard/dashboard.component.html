@@ -74,161 +74,89 @@
         <section class="commonSection dashboard_LPR_main dashboard_importantEvents">
           <h3>{{"Important Tasks" | translate}}</h3>
           <div class="body_flex_row mt-3">
-            <div class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
-              <header class="body_flex_row align-items-center">
-                <figure>
-                  <img src="./assets/Img/icon_notification_list_products.svg">
-                </figure>
-                <div>
-                  <h5>Events</h5>
+            <ng-conatiner *ngFor="let qucikAction of quickActionDetails">
+              <ng-conatiner  [ngSwitch]="qucikAction.name">
+                <div *ngSwitchCase="'eventDetails'">
+                  <div class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
+                    <header class="body_flex_row align-items-center">
+                      <figure>
+                        <img src="./assets/Img/icon_notification_list_products.svg">
+                      </figure>
+                      <div>
+                        <h5>Events</h5>
+                      </div>
+                    </header>
+                    <main class="body_flex_column">
+                      <ng-container *ngFor="let tasks of qucikAction?.value">
+                        <div class="content_taskCard">
+                          <h6><span title={{tasks?.event}}>{{tasks?.event}}</span></h6>
+                          <small>{{tasks?.event}}</small>
+                        </div>
+                      </ng-container>
+                    </main>
+                    <footer>
+                      <a (click)="onClickEvents('events')">View all</a>
+                    </footer>
+                  </div>
                 </div>
-              </header>
-              <main class="body_flex_column">
-                <div class="content_taskCard">
-                  <h6><span title="">Partner with us to silence noise and create peaceful communities worldwide.</span></h6>
-                  <small>12:00:00 AM</small>
+                <div *ngSwitchCase="'birthdayDetails'">
+                  <div class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
+                    <header class="body_flex_row align-items-center">
+                      <figure>
+                        <img src="./assets/Img/icon_notification_list_birthday.svg">
+                      </figure>
+                      <div>
+                        <h5>Birthdays</h5>
+                      </div>
+                    </header>
+                    <main class="body_flex_column">
+                      <ng-container *ngFor="let tasks of qucikAction?.value">
+                        <div class="content_taskCard">
+                          <h6><span title={{tasks.name}}>{{tasks.name}}</span></h6>
+                          <small>{{tasks.dob | date : 'dd/mm/yy'}}</small>
+                        </div>
+                      </ng-container>
+                    </main>
+                    <footer>
+                      <a (click)="onClickEvents('birthday')">View all</a>
+                    </footer>
+                  </div>
                 </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Partner with us to silence noise and create peaceful communities worldwide.</span></h6>
-                  <small>12:00:00 AM</small>
+                <div *ngSwitchCase="'notifications'">
+                  <div class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
+                    <header class="body_flex_row align-items-center">
+                      <figure>
+                        <img src="./assets/Img/icon_notifications.svg">
+                      </figure>
+                      <div>
+                        <h5>Notifications</h5>
+                      </div>
+                    </header>
+                    <main class="body_flex_column">
+                      <ng-container *ngFor="let tasks of qucikAction?.value">
+                        <div class="content_taskCard">
+                          <ng-container *ngIf="tasks?.description.includes('No notifications') ? true : template">
+                            <h6><span title={{tasks?.description}}>{{tasks?.description}}</span></h6>
+                          </ng-container>
+                          <ng-template #template>
+                          <small>{{tasks?.description | date : 'dd/mm/yy'}}</small>
+                          </ng-template>
+                        </div>
+                      </ng-container>
+                    </main>
+                    <footer>
+                      <a (click)="onClickEvents('notification')">View all</a>
+                    </footer>
+                  </div>
                 </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Partner with us to silence noise and create peaceful communities worldwide.</span></h6>
-                  <small>12:00:00 AM</small>
-                </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Partner with us to silence noise and create peaceful communities worldwide.</span></h6>
-                  <small>12:00:00 AM</small>
-                </div>
-              </main>
-              <footer>
-                <a href="#">View all</a>
-              </footer>
-            </div>
-            <div class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
-              <header class="body_flex_row align-items-center">
-                <figure>
-                  <img src="./assets/Img/icon_notification_list_birthday.svg">
-                </figure>
-                <div>
-                  <h5>Birthdays</h5>
-                </div>
-              </header>
-              <main class="body_flex_column">
-                <div class="content_taskCard">
-                  <h6><span title="">Natasha Vijaykumar Amin</span></h6>
-                  <small>11/27/2024</small>
-                </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Ramdas  Pandurangdhumal</span></h6>
-                  <small>11/27/2024</small>
-                </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Natasha Vijaykumar Amin</span></h6>
-                  <small>11/27/2024</small>
-                </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Ramdas  Pandurangdhumal</span></h6>
-                  <small>11/27/2024</small>
-                </div>
-              </main>
-              <footer>
-                <a href="#">View all</a>
-              </footer>
-            </div>
-            <div class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
-              <header class="body_flex_row align-items-center">
-                <figure>
-                  <img src="./assets/Img/icon_notifications.svg">
-                </figure>
-                <div>
-                  <h5>Notifications</h5>
-                </div>
-              </header>
-              <main class="body_flex_column">
-                <div class="content_taskCard">
-                  <h6><span title="">Your insurance policy will expire in 30 days. Please renew it to maintain continuous coverage.</span></h6>
-                  <small>11/27/2024</small>
-                </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Your insurance policy will expire in 30 days. Please renew it to maintain continuous coverage.</span></h6>
-                  <small>11/27/2024</small>
-                </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Your insurance policy will expire in 30 days. Please renew it to maintain continuous coverage.</span></h6>
-                  <small>11/27/2024</small>
-                </div>
-                <div class="content_taskCard">
-                  <h6><span title="">Your insurance policy will expire in 30 days. Please renew it to maintain continuous coverage.</span></h6>
-                  <small>11/27/2024</small>
-                </div>
-              </main>
-              <footer>
-                <a href="#">View all</a>
-              </footer>
-            </div>
+              </ng-conatiner>
+            </ng-conatiner>
+           
+            
           </div>
         </section>
         <!--Important Tasks New design end-->
 
-        <section class="commonSection block-hide">
-          <h3>{{"Important Tasks" | translate}}</h3>
-          <div class="body_flex_row dashboard_improtantTasks suggested_styles allItems_improtantTasks commonSection mt-3">
-            <div class="item_improtantTasks">
-              <h5>Events</h5>
-              <div class="card_wraper improtantTasks mt-3">
-                <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
-                  (cdkDropListDropped)="dropTasks($event)">
-                  <ng-container *ngFor="let tasks of quickActionDetails?.eventDetails">
-                    <div class="card_item" cdkDrag>
-                      <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">{{"Meet this target today" | translate}}<img src="assets/Img/icon_star_four_points.svg"></div>
-                      <h5>{{tasks?.event | translate}}</h5>
-                    </div>
-                  </ng-container>
-                </div>
-              </div>
-            </div>
-            <div class="item_improtantTasks">
-              <h5>Birthdays</h5>
-              <div class="card_wraper improtantTasks mt-3">
-                <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
-                  (cdkDropListDropped)="dropTasks($event)">
-                  <ng-container *ngFor="let tasks of quickActionDetails?.birthdayDetails">
-                    <div class="card_item" cdkDrag>
-                      <!-- <div class="block-hide">
-                        <div class="card_item_badge "><img src="assets/Img/icon_star_four_points.svg">{{tasks.name}}<img src="assets/Img/icon_star_four_points.svg"></div>
-                        <h5>{{tasks?.dob}}</h5>
-                        <p>{{tasks.mobile}}</p>
-                      </div> -->
-                      <div class="body_flex_row birthday_cardItem">
-                          <div class="icon_birthday"><img src="assets/Img/icon_notification_list_birthday.svg"></div>
-                          <div class="name_birthday"><span title="{{tasks.name}}">{{tasks.name}}</span></div>
-                          <div class="details_birthday">
-                            <p>{{tasks?.dob}}</p>
-                            <p class="details_phone">{{tasks.mobile}}</p>
-                          </div>
-                      </div>
-                    </div>
-                  </ng-container>
-                </div>
-              </div>
-            </div>
-            <div class="item_improtantTasks">
-              <h5>Notifications</h5>
-              <div class="card_wraper improtantTasks mt-3">
-                <div class="cardsub_wraper" cdkDropListOrientation="horizontal" cdkDropList
-                  (cdkDropListDropped)="dropTasks($event)">
-                  <ng-container *ngFor="let tasks of quickActionDetails?.notifications">
-                    <div class="card_item" cdkDrag>
-                      <div class="card_item_badge"><img src="assets/Img/icon_star_four_points.svg">Meet this target today<img src="assets/Img/icon_star_four_points.svg"></div>
-                      <h5>{{tasks?.description}}</h5>
-                    </div>
-                  </ng-container>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
         <section class="body_flex_column dashboard_latestABHI commonSection ">
           <div class="body_flex_row justify-content-between">
             <h6>{{"Latest from ABHI" | translate}}</h6>
@@ -425,8 +353,8 @@
                </ng-container>
               </div>
               <div class="cardWraper-container">
-                <div class="chart-container" style="position: relative; height:35vh; width:100%">
-                  <canvas id="renew" style="margin: auto;">{{renewalChart}}</canvas>
+                <div class="chart-container">
+                  <canvas #chartRenewCanvas width="200" height="200"></canvas>
                 </div>
               </div>
             </div>
@@ -443,7 +371,7 @@
                 </header>
                 <div class="otherSections_body">
                   <div class="chart-container" style="position: relative; height:50vh; width:100%">
-                    <canvas id="MyChart" style="margin: auto;">{{ customerChart }}</canvas>
+                    <canvas id="MyChart" style="margin: auto;">{{ chart }}</canvas>
                   </div>
                 </div>
               </div>
@@ -457,7 +385,7 @@
                 </header>
                 <div class="otherSections_body">
                   <div class="chart-container" style="position: relative; height:50vh; width:100%">
-                    <canvas id="MyServiceChart" style="margin: auto;">{{ customerChart }}</canvas>
+                    <canvas id="MyServiceChart" style="margin: auto;">{{ chart }}</canvas>
                   </div>
                 </div>
               </div>
@@ -469,7 +397,7 @@
             <h6>{{"My Customers" | translate}}</h6>
             <div class="leads_content">
               <div class="chart-container" style="position: relative; height:50vh; width:100%">
-                <canvas id="MyChart" style="margin: auto;">{{ customerChart }}</canvas>
+                <canvas id="MyChart" style="margin: auto;">{{ chart }}</canvas>
               </div>
             </div>
           </div>

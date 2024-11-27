@@ -19,22 +19,21 @@ export class DashboardComponent {
   searchedData: any;
   taskDetailsList: any = [];
   customerInfo: any;
-  public customerChart: any;
-  public renewalChart: any;
   showSearchedResults = false;
   performanceCard: any = [];
   tabsInfo: any = [];
   renewalDetail: any;
-  quickActionDetails: any;
+  quickActionDetails: any = [];
   businessSummary: any
   public chart: any;
   @ViewChild('chartCanvas') chartCanvas: ElementRef | undefined;
   @ViewChild('chartPropCanvas') chartPropCanvas: ElementRef | undefined;
+  @ViewChild('chartRenewCanvas') chartRenewCanvas: ElementRef | undefined;
+
   searchedValue: any;
   serviceInfo: any;
-  public serviceChart: any;
   wellnessInfo: any;
-  dhaCard : any = [];
+  dhaCard: any = [];
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
@@ -156,31 +155,6 @@ export class DashboardComponent {
       this.route.navigate(['customers/customersList'])
     }
   }
-
-  // combineCalls() {
-
-  //   forkJoin({
-  //     quickActionWidget: this.dashboardService.fetchPerformanceDetails({
-  //       "WidgetName": 'QuickAction',
-  //       "AgentCode": localStorage.getItem('agentCode')
-  //     }),
-  //     performanceWidget: this.dashboardService.fetchPerformanceDetails({
-  //       "WidgetName": 'Performance',
-  //       "AgentCode": localStorage.getItem('agentCode')
-  //     }),
-  //     businessWidget: this.dashboardService.fetchPerformanceDetails({
-  //       "WidgetName": 'Business',
-  //       "AgentCode": localStorage.getItem('agentCode')
-  //     }),
-  //     customerwidget: this.dashboardService.fetchPerformanceDetails({
-  //       "WidgetName": 'Customer',
-  //       "AgentCode": localStorage.getItem('agentCode')
-  //     })
-  //   }).subscribe(data => {
-  //     console.log(data)
-  //   })
-  // }
-
 
   fetchWidgets() {
     const arr = [
@@ -401,8 +375,15 @@ export class DashboardComponent {
 
         default:
           this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
-            console.log('Quick action', res.data);
-            this.quickActionDetails = res.data;
+             Object.keys(res.data).forEach((el :any) => {
+              this.quickActionDetails.push({
+                name : el,
+                value : res.data[el].slice(0, 4)
+              })
+            });
+           
+            console.log('Quick action', this.quickActionDetails);
+
           })
           break;
       }
@@ -410,7 +391,7 @@ export class DashboardComponent {
   }
 
   createChart(): void {
-    this.customerChart = new Chart("MyChart", {
+    this.chart = new Chart("MyChart", {
       type: 'doughnut',
       data: {
         labels: [
@@ -449,7 +430,7 @@ export class DashboardComponent {
   }
 
   createServiceChart(): void {
-    this.serviceChart = new Chart("MyServiceChart", {
+    this.chart = new Chart("MyServiceChart", {
       type: 'doughnut',
       data: {
         labels: [
@@ -487,14 +468,13 @@ export class DashboardComponent {
     });
   }
 
-
-
   ngAfterViewInit(): void {
     // Ensure that the canvas is available before rendering the chart
     setTimeout(() => {
       if (this.chartCanvas && this.chartCanvas.nativeElement) {
         this.renderChart();
-        this.renderPropChart()
+        this.renderPropChart();
+        this.renderEXPropChart();
       } else {
         console.error('Canvas element not found.');
       }
@@ -639,26 +619,37 @@ export class DashboardComponent {
     }
   }
 
-  createRenewChart() {
-    const reqData = {
-      "agentCode": localStorage.getItem('agentCode')
-    }
-    this.renewalChart = this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(data => {
-      console.log('renew', data)
-      this.renewalChart = new Chart("renew", {
-        type: 'doughnut',
-        data: {
-          labels: [
-            'Persistency %'
-          ],
-          datasets: [{
-            data: [data.data[0].persistencyPercentage],
-            backgroundColor: [
-              '#58d68d'
-            ],
-            hoverOffset: 0
-          }]
-        },
+  createEXChartData(): ChartData<'pie' | 'doughnut'> {
+    const categories = this.renewalDetail;
+    const labels = categories.map((item: any) => item.name);
+    const data = categories.map((item: any) => item.count);
+
+    return {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'], // Dynamic colors
+        hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderEXPropChart(): void {
+    if (this.chartRenewCanvas && this.chartRenewCanvas.nativeElement) {
+      const canvas = this.chartRenewCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.chart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createEXChartData(), // Dynamic chart data
         options: {
           responsive: true,
           plugins: {
@@ -674,11 +665,26 @@ export class DashboardComponent {
                 boxHeight: 10,  // Set the height of the colored box (legend symbol)
                 padding: 5  // Adjust the padding around each legend item
               }
-            }
-          }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
         }
       });
-    });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+  createRenewChart() {
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
 
     this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
       this.renewalDetail = res.data.map((item: any) => ({
@@ -687,11 +693,18 @@ export class DashboardComponent {
         count: item.customerCount
       }))
     });
+
+    this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(data => {
+      this.renewalDetail.push({
+        name: 'Persistency %',
+        count: data.data[0].persistencyPercentage
+      })
+    });
+
+
   }
 
-  // ngOnDestroy(): void {
-  //  this.renewalChart.destroy(); //kept comment for temporary fix ,We are getting issue with destroy function please check.
-  //  this.customerChart.destroy();
-  //  this.chart.destroy();
-  // }
+  onClickEvents(event: any) {
+
+  }
 }
