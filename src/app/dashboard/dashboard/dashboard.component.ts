@@ -29,7 +29,7 @@ export class DashboardComponent {
   @ViewChild('chartCanvas') chartCanvas: ElementRef | undefined;
   @ViewChild('chartPropCanvas') chartPropCanvas: ElementRef | undefined;
   @ViewChild('chartRenewCanvas') chartRenewCanvas: ElementRef | undefined;
-
+  @ViewChild('chartDHACanvas') chartDHACanvas: ElementRef | undefined;
   searchedValue: any;
   serviceInfo: any;
   wellnessInfo: any;
@@ -270,78 +270,27 @@ export class DashboardComponent {
         case 'Wellness':
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
             console.log('Wellness', res.data)
-            res.data = [
-              {
-                "wellnessType": "DHA - Vaccination",
-                "count": 10
-              },
-              {
-                "wellnessType": "DHA - Prevention Services",
-                "count": 5
-              },
-              {
-                "wellnessType": "DHA - Emergency Services",
-                "count": 3
-              },
-              {
-                "wellnessType": "HHS - Home Health Care",
-                "count": 5
-              },
-              {
-                "wellnessType": "HHS - Emergency Response",
-                "count": 3
-              },
-              {
-                "wellnessType": "HHS - Long-Term Care",
-                "count": 2
-              },
-              {
-                "wellnessType": "HRS - Health Risk Assessments",
-                "count": 8
-              },
-              {
-                "wellnessType": "HRS - Screening",
-                "count": 6
-              },
-              {
-                "wellnessType": "HRS - Preventive Care",
-                "count": 4
-              }
-            ];
-            res.data.length && Object.values(res.data).forEach((el: any) => {
-              switch (el.wellnessType) {
-                case 'DHA - Vaccination':
-                case 'DHA - Prevention Services':
-                  'DHA - Emergency Services'
-                  const nops = {
-                    title: 'Policies Sold',
-                    value: res.data[el],
-                    description: `Policies sold as per selected range ${res.data[el]}`,
-                    icon: 'assets/Img/icon_dashboard_policysold.svg',
-                    subIcon: 'assets/Img/icon_price_tag.svg',
-                    type: 'text',
-                    class: ''
-                  }
-                  this.dhaCard.push(nops)
-                  break;
+            this.dhaCard = res.data;
+            // res.data.length && Object.values(res.data).forEach((el: any) => {
+            //   switch (el.wellnessType) {
+            //     case 'DHA - Vaccination':
+            //     case 'DHA - Prevention Services':
+            //       const nops = {
+            //         title: 'Policies Sold',
+            //         value: res.data[el],
+            //         description: `Policies sold as per selected range ${res.data[el]}`,
+            //         icon: 'assets/Img/icon_dashboard_policysold.svg',
+            //         subIcon: 'assets/Img/icon_price_tag.svg',
+            //         type: 'text',
+            //         class: ''
+            //       }
+            //       this.dhaCard.push(nops)
+            //       break;
 
-                case 'HHS - Home Health Care':
-                  const achievementsPercentage = {
-                    title: 'My Goals',
-                    value: res.data[el],
-                    description: 'Achievement',
-                    icon: 'assets/Img/icon_dashboard_myperformance.svg',
-                    type: 'gauge',
-                    progress: res.data[el],
-                    class: 'my-goals'
-                  }
-                  this.dhaCard.push(achievementsPercentage)
-                  break;
-
-                default:
-                  break;
-              }
-            })
+            //     default:
+            //       break;
+            //   }
+            // })
           })
           break;
 
@@ -437,7 +386,7 @@ export class DashboardComponent {
           'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
         ],
         datasets: [{
-          data: [2, 0, 1, 4, 6, 7],
+          data: [this.serviceInfo.claimRejectedCount,this.serviceInfo.claimSettledLessAmountCount,this.serviceInfo.claimsOpenCount,this.serviceInfo.complaintsOpenCount,this.serviceInfo.endorsementsOpenCount,this.serviceInfo.policyCancellationRequestsCount],
           backgroundColor: [
             '#ff5722',
             '#4caf50',
@@ -478,6 +427,7 @@ export class DashboardComponent {
         this.renderChart();
         this.renderPropChart();
         this.renderEXPropChart();
+        this.renderDHAChart();
       } else {
         console.error('Canvas element not found.');
       }
@@ -705,6 +655,76 @@ export class DashboardComponent {
     });
 
 
+  }
+
+  createDHAChartData(): ChartData<'pie' | 'doughnut'> {
+    const categories = this.dhaCard;
+    const labels = categories.map((item: any) => item.wellnessType);
+    const data = categories.map((item: any) => item.count);
+
+    return {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c',
+          '#27ae60',
+          '#e67e22',
+          '#f1c40f',
+          '#95a5a6'
+        ],
+         // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderDHAChart(): void {
+    if (this.chartDHACanvas && this.chartDHACanvas.nativeElement) {
+      const canvas = this.chartDHACanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.chart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createDHAChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                font: {
+                  size: 12,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
   }
 
   onClickEvents(event: any) {

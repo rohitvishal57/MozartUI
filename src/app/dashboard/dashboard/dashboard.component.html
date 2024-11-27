@@ -258,7 +258,7 @@
                       <div class="value">₹ {{perform.value}}</div>
                       <div class="progress-barMain">
                         <p>{{perform.description | translate}}</p>
-                        <app-guage [progress]="20" [guageType]="'linear'"></app-guage>
+                        <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
                       </div>
                     </div>
                     <div [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag>
@@ -273,7 +273,7 @@
                       <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
                       </header>
                       <div class="gauge">
-                        <app-guage [halfProgress]="75" [guageType]="'half-moon'"></app-guage>
+                        <app-guage [halfProgress]="perform.progress" [guageType]="'half-moon'"></app-guage>
                       </div>
                     </div>
                   </ng-container>
@@ -391,6 +391,60 @@
           </div>
         </section>
 
+        <section class="dashboard_otherSections commonSection">
+          <div class="board_otherSections">
+              <!--DHA & HR Portfolio start-->
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"DHA & HR Portfolio" | translate}}</h2>
+                    </div>
+                  </header>
+                  <div class="leads_content">
+                    <div class="chart-container" style="position: relative; height:50vh; width:100%">
+                      <canvas #chartDHACanvas style="margin: auto;"></canvas>
+                    </div>
+                    <!-- <div class="card_wraper">
+                      <div class="cardsub_wraper">
+                      <ng-container *ngFor="let perform of dhaCard">
+                        <ng-container [ngSwitch]="perform.type">
+                          <div class="cardItem" *ngSwitchCase="'text'" cdkDrag>
+                            <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_dha.svg"></span>{{"Digital Health Assessments" | translate}}</header>
+                            <div class="info_assessments body_flex_row justify-content-between">
+                                <div class="item_assessments">
+                                  <div class="value">241</div>
+                                  <div class="label">{{"Total Assessments" | translate}}</div>
+                                </div>
+                                <div class="item_assessments">
+                                  <div class="value">199</div>
+                                  <div class="label">{{"Users" | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="card-tip">
+                              <img src="assets/Img/icon_lightbulb.svg">
+                              {{"Dummy placeholder text" | translate}}
+                            </div>
+                          </div>
+                        </ng-container>
+                      </ng-container>
+                        
+                        <div class="cardItem">
+                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Returns" | translate}}</header>
+                          <div class="value">₹ 50,000</div>
+                          <div class="card-tip">
+                            <img src="assets/Img/icon_currency.svg">
+                            {{"Nudge your users to actively participate to save more" | translate}}
+                          </div>
+                        </div>
+                      </div>
+                    </div> -->
+                  </div>
+                </div>
+              </div>
+              <!--DHA & HR Portfolio end-->
+          </div>
+        </section>
       </div>
     </div>
   </div>
