@@ -1116,6 +1116,13 @@ console.log(reqData);
                          : this.dynamicFormGroup.get(control.name);
     return formControl;
   }
+  hasSubValue(control: any, parentControl: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null, index: any | null = null) {
+    console.log(control,parentControl,innerControl,innerSubControl,index,this.dynamicFormGroup);
+    const formControl = parentControl != null && index != null ? 
+                        (((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup).controls[innerControl.name] as FormArray).controls[index].get(innerSubControl.name)?.value
+                         : this.dynamicFormGroup.get(control.name);
+    return formControl;
+  }
   hasInnerSubValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null) {
     const formControl = parentControl != null && index != null
       ? ((((this.dynamicFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
