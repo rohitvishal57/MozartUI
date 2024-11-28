@@ -17,7 +17,6 @@ export class DashboardComponent {
   showDropdownsFlag: boolean = false;
   profileDetails: any;
   searchedData: any;
-  taskDetailsList: any = [];
   customerInfo: any;
   showSearchedResults = false;
   performanceCard: any = [];
@@ -83,44 +82,23 @@ export class DashboardComponent {
     moveItemInArray(this.performanceCard, event.previousIndex, event.currentIndex);
   }
 
-  dropTabs(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
+  dropQuickAct(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.quickActionDetails, event.previousIndex, event.currentIndex);
   }
 
-  dropTaskDetail(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.taskDetailsList, event.previousIndex, event.currentIndex);
+  dropTabs(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
   }
 
   getQuote() {
     this.showCard = true;
     this.showDropdownsFlag = true;
     console.log('showCard:', this.showCard);
-    // this.saveDataToStorage();
   }
 
   createLead() {
     this.route.navigate(['/leads/createLead'], {
     });
-  }
-
-  onToggle(event: any) {
-    const button = event.target;
-    const contentBlock = button.nextElementSibling;
-    if (contentBlock.style.display === 'none') {
-      contentBlock.style.display = 'block';
-    } else {
-      contentBlock.style.display = 'none';
-    }
-  }
-
-  getData() {
-    return [
-      { asset: "Stocks", amount: 60000 },
-      { asset: "Bonds", amount: 40000 },
-      { asset: "Cash", amount: 7000 },
-      { asset: "Real Estate", amount: 5000 },
-      { asset: "Commodities", amount: 3000 },
-    ];
   }
 
   onSearch() {
@@ -210,7 +188,7 @@ export class DashboardComponent {
                   const premiumEarned = {
                     title: 'Premium',
                     value: res.data[0][el],
-                    description: `78% of monthly goal achieved`,
+                    description: `${res.data[0][el]} of monthly goal achieved`,
                     icon: 'assets/Img/icon_dashboard_premium.svg',
                     type: 'progress',
                     progress: res.data[0][el],
@@ -347,11 +325,11 @@ export class DashboardComponent {
           'Total Customers', 'Active Customers', 'InAcive Customers'
         ],
         datasets: [{
-          data: [this.customerInfo.totalCustomerCount, this.customerInfo.activeCustomerCount, this.customerInfo.totalCustomerCount - this.customerInfo.activeCustomerCount],
+          data: [this.customerInfo?.totalCustomerCount, this.customerInfo?.activeCustomerCount, (this.customerInfo?.totalCustomerCount - this.customerInfo?.activeCustomerCount)],
           backgroundColor: [
-            '#f44336',
-            '#4caf50',
-            '#ff9800'
+            '#3498db',
+            '#27ae60',
+            '#f44336'
           ],
           hoverOffset: 4
         }]
@@ -581,10 +559,12 @@ export class DashboardComponent {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: ['rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
-          'rgb(255, 205, 86)'], // Dynamic colors
-        hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c'], // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
       }]
     };
   }
@@ -728,6 +708,13 @@ export class DashboardComponent {
   }
 
   onClickEvents(event: any) {
-
+    if(event == 'events'){
+      this.route.navigate(['events/eventsList'])
+    } else if(event == 'birthday'){
+      this.route.navigate(['events/birthdaysList'])
+    } else {
+      const url = 'notifications' + '?agentCode=' + localStorage.getItem('agentCode');
+      this.route.navigateByUrl(url)
+    }
   }
 }

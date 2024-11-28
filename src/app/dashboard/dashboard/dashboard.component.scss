@@ -97,7 +97,7 @@ h2 {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 6px;
     h2 {
         font-weight: 600;
         font-size: 22px;
@@ -298,13 +298,15 @@ h2 {
         }
         .mdc-linear-progress__bar-inner {
             border-color: #1F874C;
+            border-radius: 10px 0 0 10px;
+            max-width: 202px;
         }
         .mat-mdc-progress-bar {
             --mdc-linear-progress-active-indicator-height: 6px;
             --mdc-linear-progress-track-height: 13px;
         }
         .mdc-linear-progress__bar {
-            padding: 0 20px;
+            padding: 0 5px;
         }
     }
 }

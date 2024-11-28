@@ -28,9 +28,9 @@ export class EncryptionInterceptor implements HttpInterceptor {
     if (isExcluded) {
       return next.handle(req);
     }
+    this.loadingService.show();
 
     if (req.body && !(req.body instanceof FormData) && req?.method == 'POST') {
-      this.loadingService.show();
       const encryptedBody = this.aesEncryptService.encrypt(req.body);
       const clonedRequest = req.clone({
         body: this.isEncrypt ? encryptedBody : req.body,

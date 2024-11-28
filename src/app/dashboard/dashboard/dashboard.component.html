@@ -71,12 +71,13 @@
           </div>
         </div>
         <!--Important Tasks New design start-->
-        <section class="commonSection dashboard_LPR_main dashboard_importantEvents">
+        <section class="commonSection dashboard_LPR_main dashboard_importantEvents" *ngIf="quickActionDetails">
           <h3>{{"Important Tasks" | translate}}</h3>
-          <div class="body_flex_row mt-3">
+          <div class="body_flex_row mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          (cdkDropListDropped)="dropQuickAct($event)">
             <ng-conatiner class="width_taskCard" *ngFor="let qucikAction of quickActionDetails">
               <ng-conatiner [ngSwitch]="qucikAction.name">
-                  <div *ngSwitchCase="'eventDetails'" class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
+                  <div cdkDrag *ngSwitchCase="'eventDetails'" class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notification_list_products.svg">
@@ -86,16 +87,20 @@
                       </div>
                     </header>
                     <main class="body_flex_column">
-                        <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
+                      <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
+                        <ng-container *ngIf="tasks?.event.includes('No') ? true : template">
                           <h6><span title={{tasks?.event}}>{{tasks?.event}}</span></h6>
-                          <small>{{tasks?.event}}</small>
-                        </div>
-                    </main>
+                        </ng-container>
+                        <ng-template #template>
+                        <small>{{tasks?.event | date:'dd-MM-yy'}}</small>
+                        </ng-template>
+                      </div>
+                  </main>
                     <footer>
                       <a (click)="onClickEvents('events')">View all</a>
                     </footer>
                   </div>
-                  <div *ngSwitchCase="'birthdayDetails'" class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
+                  <div cdkDrag *ngSwitchCase="'birthdayDetails'" class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notification_list_birthday.svg">
@@ -107,14 +112,14 @@
                     <main class="body_flex_column">
                         <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
                           <h6><span title={{tasks.name}}>{{tasks.name}}</span></h6>
-                          <small>{{tasks.dob | date : 'dd/mm/yy'}}</small>
+                          <small>{{tasks.dob | date:'dd-MM-yy'}}</small>
                         </div>
                     </main>
                     <footer>
                       <a (click)="onClickEvents('birthday')">View all</a>
                     </footer>
                   </div>
-                  <div *ngSwitchCase="'notifications'" class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
+                  <div cdkDrag *ngSwitchCase="'notifications'" class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notifications.svg">
@@ -129,7 +134,7 @@
                             <h6><span title={{tasks?.description}}>{{tasks?.description}}</span></h6>
                           </ng-container>
                           <ng-template #template>
-                          <small>{{tasks?.description | date : 'dd/mm/yy'}}</small>
+                          <small>{{tasks?.description | date:'dd-MM-yy'}}</small>
                           </ng-template>
                         </div>
                     </main>
@@ -144,8 +149,7 @@
           </div>
         </section>
         <!--Important Tasks New design end-->
-
-        <section class="body_flex_column dashboard_latestABHI commonSection ">
+        <section class="body_flex_column dashboard_latestABHI commonSection">
           <div class="body_flex_row justify-content-between">
             <h6>{{"Latest from ABHI" | translate}}</h6>
             <button type="button" id="btn-exploreMore" name="btn-exploreMore"
@@ -228,8 +232,7 @@
             </div>
           </div>
         </section>
-
-        <div class="contentBody dashboard_contentContainer">
+        <div class="contentBody dashboard_contentContainer" *ngIf="performanceCard.length">
           <div class="performance-overview">
             <header>
               <h2>{{"Performance Overview" | translate}}</h2>
@@ -282,13 +285,12 @@
             </div>
           </div>
         </div>
-
-
-        <section class="commonSection dashboard_LPR_main">
+        <section class="commonSection dashboard_LPR_main" *ngIf="tabsInfo.length">
           <h3>{{"Business Summary" | translate}}</h3>
-          <div class="body_flex_row mt-3">
+          <div class="body_flex_row mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          (cdkDropListDropped)="dropTabs($event)">
             <ng-container *ngFor="let tab of tabsInfo">
-              <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+              <div cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                 <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }"><span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
                 <div class="leads_content leads_contentDashboard ">
                   <div class="scroll_contentDashboard">
@@ -325,8 +327,6 @@
               </div>
             </ng-container>
             <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-              <!-- <h6>My Renewals</h6> -->
-
               <header class="leads_itemHeader leads_itemHeaderRenewal" ><span>{{"Total Renewals" | translate}}</span><label>{{renewalDetail && renewalDetail[0]?.totalCount}}</label></header>
               <div class="leads_content leads_contentDashboard scroll_contentDashboard">
                 <ng-container *ngFor="let buz of renewalDetail">
@@ -348,7 +348,7 @@
             </div>
           </div>
         </section>
-        <section class="dashboard_otherSections commonSection ">
+        <section class="dashboard_otherSections commonSection">
           <div class="board_otherSections">
             <div class="item_otherSections">
               <div class="otherSections_wraper">
@@ -380,17 +380,6 @@
             </div>
           </div>
         </section>
-        <section class="body_flex_row commonSection dashboard_LPR_main dashboard_mycustomers_main block-hide">
-          <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-            <h6>{{"My Customers" | translate}}</h6>
-            <div class="leads_content">
-              <div class="chart-container" style="position: relative; height:50vh; width:100%">
-                <canvas id="MyChart" style="margin: auto;">{{ chart }}</canvas>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section class="dashboard_otherSections commonSection">
           <div class="board_otherSections">
               <!--DHA & HR Portfolio start-->
