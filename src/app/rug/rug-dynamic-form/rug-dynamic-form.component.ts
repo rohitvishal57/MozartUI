@@ -180,11 +180,11 @@ export class RugDynamicFormComponent {
     if (sessionStorage.getItem('allJsonForm'))
       this.allJsonForm = this.encryptionService.decrypt(sessionStorage.getItem('allJsonForm') as string)
     this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-    this.customerFeedbackModule = new bootstrap.Modal(document.getElementById('customerFeedbackModule'));
-    this.customerFeedbackForm = this.fb.group({
-      message: [''],
-      rating: [null, Validators.required], // Add rating to the form
-    });
+    // this.customerFeedbackModule = new bootstrap.Modal(document.getElementById('customerFeedbackModule'));
+    // this.customerFeedbackForm = this.fb.group({
+    //   message: [''],
+    //   rating: [null, Validators.required], // Add rating to the form
+    // });
     console.log(this.formSequence[0].formName);
     if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
       let reqObj = {
@@ -327,10 +327,18 @@ export class RugDynamicFormComponent {
     }
 
     else {
+      // let reqData = {
+      //   "partnerId": this.partnerId,
+      //   "productId": this.productId,
+      //   "formId": formId
+      // }
       let reqData = {
         "partnerId": this.partnerId,
         "productId": this.productId,
-        "formId": formId
+        "formId": formId, // put it as 0 (hard code)
+        "proposalNum": "585754578",
+        "agentCode": this.agentCode,
+        "currentFormSequence": this.getFormIndexValue().toString() //the index of the form Id from the formSequence which is going to get called
       }
       console.log(reqData);
       this.yatraService.Getform(reqData).subscribe({
@@ -1063,7 +1071,7 @@ export class RugDynamicFormComponent {
   }
   addNavbar(index: number, value: any) {
     if (value.formName === 'Confirmation') {
-      this.customerFeedbackModule.show();
+      // this.customerFeedbackModule.show();
       this.feedbackSubmit = false;
       this.impressedValues = false;
       this.feedBackMessage = false;
@@ -5073,7 +5081,7 @@ export class RugDynamicFormComponent {
 
   setRating(star: number) {
     this.rating = star;
-    this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
+    // this.customerFeedbackForm.patchValue({ rating: this.rating }); // Update form with rating
     this.feedbackSubmit = true;
     this.impressedValues = true;
     if (star > 3) {
@@ -5087,15 +5095,15 @@ export class RugDynamicFormComponent {
   submitFeedback() {
     let reqData: any = {};
     reqData.agentCode = this.agentCode;
-    reqData.rating = this.customerFeedbackForm.value.rating;
-    reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
+    // reqData.rating = this.customerFeedbackForm.value.rating;
+    // reqData.remarks = this.feedbackImpressedValue + ":" + this.customerFeedbackForm.value.message;
     reqData.customerId = "";
     this.yatraService.submitFeedback(reqData).subscribe((response) => {
       this.toast.success({ detail: 'Feedback submitted successfully! Thank you for your input.' });
     }, (error) => {
       this.toast.error({ detail: 'Failed to submit feedback. Please try again later.' });
     });
-    this.customerFeedbackModule.hide();
+    // this.customerFeedbackModule.hide();
   }
   onSelectValue(value: String) {
     this.feedbackImpressedValue = value;

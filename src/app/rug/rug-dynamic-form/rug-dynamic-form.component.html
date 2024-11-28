@@ -1310,7 +1310,7 @@
 
 
 <!-- Customer Feedback module  -->
-<div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" id="customerFeedbackModule" tabindex="-1"
+<!-- <div class="modal fade popupModalMain modal-bgWhite modal-customerFeedback" id="customerFeedbackModule" tabindex="-1"
   aria-labelledby="otpModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -1321,7 +1321,6 @@
         <div class="modal-body">
           <p class="para-rate-18">Please rate your online renewal experience with us.</p>
 
-          <!-- Star Rating -->
           <div class="star-rating">
             <span class="star" *ngFor="let star of stars; let i = index" [ngClass]="{'selected': i < rating}"
               (click)="setRating(i + 1)">
@@ -1335,7 +1334,6 @@
             </div>
 
             <div class="col-12">
-              <!-- Feedback Buttons -->
               <div class="btn_feedbackGroup">
                 <button type="button" class="btn_quickFilter" (click)="onSelectValue(value)"
                   [ngClass]="{'selected': feedbackImpressedValue === value}"
@@ -1366,6 +1364,6 @@
       </form>
     </div>
   </div>
-</div>
+</div> -->
 
 
