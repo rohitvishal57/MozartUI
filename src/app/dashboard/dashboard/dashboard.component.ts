@@ -409,7 +409,7 @@ export class DashboardComponent {
       } else {
         console.error('Canvas element not found.');
       }
-    }, 5000); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
+    }, 20000); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
   }
 
   createChartData(): ChartData<'pie' | 'doughnut'> {
@@ -708,6 +708,13 @@ export class DashboardComponent {
   }
 
   onClickEvents(event: any) {
-
+    if(event == 'events'){
+      this.route.navigate(['events/eventsList'])
+    } else if(event == 'birthday'){
+      this.route.navigate(['events/birthdaysList'])
+    } else {
+      const url = 'notifications' + '?agentCode=' + localStorage.getItem('agentCode');
+      this.route.navigateByUrl(url)
+    }
   }
 }
