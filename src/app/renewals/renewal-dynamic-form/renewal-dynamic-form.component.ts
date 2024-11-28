@@ -141,6 +141,8 @@ export class RenewalDynamicFormComponent implements OnInit {
   async getRenewalInfo() {
     const base = this.encryptionService.decrypt(sessionStorage.getItem("renewalData") as string);
     this.renewalInfo = JSON.parse(base.data.baseResponse);
+    console.log(this.renewalInfo);
+    
     this.renewalBaseObject = this.renewalInfo;
     this.selectedTenure = this.renewalInfo?.response?.policyData[0]?.Tenure;
   }

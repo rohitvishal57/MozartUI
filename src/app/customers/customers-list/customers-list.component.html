@@ -288,10 +288,10 @@
                                 <div class="userInfoItem userInfoItem-30">
                                     <div class="item_lable">{{"Status" | translate}}</div>
                                     <span class="info_status" [ngClass]="{
-                                        'info_status_green': policy.policyStatus === 'IF',
-                                        'info_status_yellow': policy.policyStatus === 'IP',
-                                        'info_status_red': policy.policyStatus == 'RJ',
-                                        'info_status_gray': policy.policyStatus == 'CN'
+                                        'info_status_green': policy.policyStatus === 'IF' || policy.policyStatus === 'Inforced',
+                                        'info_status_yellow': policy.policyStatus === 'IP' || policy.policyStatus === 'InProgress',
+                                        'info_status_red': policy.policyStatus == 'RJ' || policy.policyStatus === 'Rejected',
+                                        'info_status_gray': policy.policyStatus == 'CN' || policy.policyStatus === 'Cancelled'
                                       }">
                                       {{ policy.policyStatus }}
                                     </span>
