@@ -7,7 +7,7 @@
             <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8 align-items-center">
               <div class="body_flex_row">
                 <h2>{{"Birthdays" | translate}}</h2>
-                <button type="button" id="btn-events" name="btn-events" class="btn_red btn_redBirthday">
+                <button type="button" id="btn-events" name="btn-events" class="btn_red btn_redBirthday" (click)="navigateToEvents()">
                   {{"Events" | translate}}
                 </button>
               </div>
@@ -18,11 +18,11 @@
               
           </div>
           <div class="container">
-            <div class="body_flex_row justify-content-between">
-                <h2 (click)="navigateToEvents()" >{{"
+            <!-- <div class="body_flex_row justify-content-between">
+                 <h2 (click)="navigateToEvents()" >{{"
                   Events" | translate}} &gt; <a  class="breadcrumb-link">Birthdays</a>
                 </h2>
-            </div>
+            </div> --> 
             <div class="view-switcher">
                 <button class="continue-btn-0" (click)="setView('day')" [class.active]="currentView === 'day'">Day View</button>
                 <button class="continue-btn-0" (click)="setView('week')" [class.active]="currentView === 'week'">Week View</button>
