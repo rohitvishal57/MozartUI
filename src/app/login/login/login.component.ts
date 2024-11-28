@@ -283,7 +283,16 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('userData', JSON.stringify(res.data));
             this.items = this.authService.getUserInfo()?.repotingMembers;
             this.updatePreferredLanguage();
-            res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate(['dashboard']);
+            if(res.data.agentCode === "467896"){
+              this.router.navigate(['rug'])
+            }else if(res.data.agentCode === "467895"){
+              this.router.navigate(['rug/av-upload'])
+            }else if(res.data.agentCode === "467894"){
+              this.router.navigate(['rug/base-caller-upload'])
+            }else{
+
+              res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate(['dashboard']);
+            }
           } else {
             this.errorMessage = res.message;
             res.message.includes("Your Account Has been locked") ? this.timerOn = false : this.timerOn = true;

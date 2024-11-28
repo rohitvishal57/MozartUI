@@ -27,6 +27,7 @@ export class SideNavbarComponent {
     { id: 11, displayName: 'Events', path: 'events/eventsList', imagePath: 'assets/Img/icon_menu_events.png' },
 
   ];
+
   agentCode: any;
   constructor(
     private router: Router,
@@ -37,6 +38,46 @@ export class SideNavbarComponent {
 
   ngOnInit(): void {
     this.agentCode = localStorage.getItem('agentCode')
+    if(this.agentCode == "467896"){
+      this.sideMenuList = [
+        { id: 1, displayName: 'Create Leads', path: 'rug', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 2, displayName: 'View Leads', path: 'rug/web', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        // { id: 3, displayName: 'Products', path: 'endorsements', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 3, displayName: 'Verification Script', path: 'rug/verification-script', imagePath: 'assets/Img/icon_products.svg' },
+        { id: 4, displayName: 'Product Details', path: 'rug/productdownload', imagePath: 'assets/Img/icon_paper_grey.svg' },
+        { id: 5, displayName: 'View Checker Leads', path: 'endorsements', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+    
+      ];
+    }
+    if(this.agentCode == "467894"){
+      this.sideMenuList = [
+        { id: 1, displayName: 'Base Caller Upload', path: 'rug/base-caller-upload', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 2, displayName: 'AV Upload', path: 'rug/av-upload', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 3, displayName: 'View For Solo Journey', path: 'rug/view-for-solo-journey', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 4, displayName: 'View UnVerified Leads', path: 'rug/view-unVerified-leads', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 5, displayName: 'View For Dual Journey', path: 'rug/view-for-dual-journey', imagePath: 'assets/Img/icon_products.svg' },        
+        { id: 6, displayName: 'Verification Script', path: 'rug/verification-script', imagePath: 'assets/Img/icon_products.svg' },
+        { id: 7, displayName: 'Product Details', path: 'rug/productdownload', imagePath: 'assets/Img/icon_paper_grey.svg' },
+        { id: 8, displayName: 'Extract Base Agent & AV Master', path: 'rug/extract-base-agent', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+        { id: 9, displayName: 'Manage LOB', path: 'rug/manage-LOB', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+        { id: 10, displayName: 'Proposal/Policy View Details', path: 'rug/policy-view-details', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+    
+      ];
+    }
+    if(this.agentCode == "467895"){
+      this.sideMenuList = [
+        { id: 1, displayName: 'AV Upload', path: 'rug/av-upload', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 2, displayName: 'View For Solo Journey', path: 'rug/view-for-solo-journey', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 3, displayName: 'View UnVerified Leads', path: 'rug/view-unVerified-leads', imagePath: 'assets/Img/icon_menu_boxes_grey.svg' },
+        { id: 4, displayName: 'View For Dual Journey', path: 'rug/view-for-dual-journey', imagePath: 'assets/Img/icon_products.svg' },        
+        { id: 5, displayName: 'Verification Script', path: 'rug/verification-script', imagePath: 'assets/Img/icon_products.svg' },
+        { id: 6, displayName: 'Product Details', path: 'rug/productdownload', imagePath: 'assets/Img/icon_paper_grey.svg' },
+        { id: 7, displayName: 'Extract Base Agent & AV Master', path: 'rug/extract-base-agent', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+        { id: 8, displayName: 'Manage LOB', path: 'rug/manage-LOB', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+        { id: 9, displayName: 'Proposal/Policy View Details', path: 'rug/policy-view-details', imagePath: 'assets/Img/icon_menu_calims_grey.svg' },
+    
+      ];
+    }
     // Fetch allowed pages from AuthService
     const allowedPages = this.authService.getAllowedModules();
     

@@ -4,7 +4,7 @@ import { CommonModule } from "@angular/common";
 import { RugDynamicFormComponent } from "./rug-dynamic-form/rug-dynamic-form.component";
 import { PrimeNgModule } from "../prime-ng.module";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -13,12 +13,18 @@ import { OtpPopupComponent } from './otp-popup/otp-popup.component';
 import { MyMaterialModule } from "../material.module";
 import { PaymentInfoComponent } from './payment-info/payment-info.component';
 import { CaptchaPopupComponent } from './captcha-popup/captcha-popup.component';
+import { ViewLeadsComponent } from "./components/view-leads/view-leads.component";
+import { ProductDownloadComponent } from "./components/product-download/product-download.component";
+import { SafeUrlPipe } from "./components/product-download/safe-url.pipe";
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/','.json');
 }
 @NgModule({
-    declarations:[RugDynamicFormComponent, OtpPopupComponent, PaymentInfoComponent, CaptchaPopupComponent],
+    declarations:[RugDynamicFormComponent, OtpPopupComponent, PaymentInfoComponent, CaptchaPopupComponent, ViewLeadsComponent,
+        ProductDownloadComponent,
+        SafeUrlPipe
+    ],
     imports:[
         CommonModule,
         PrimeNgModule,
@@ -26,6 +32,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         ReactiveFormsModule,
         RugRoutingModule,
         MyMaterialModule,
+        FormsModule,
         TranslateModule.forRoot({
             loader: {
               provide: TranslateLoader,
