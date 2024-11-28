@@ -327,9 +327,9 @@ export class DashboardComponent {
         datasets: [{
           data: [this.customerInfo?.totalCustomerCount, this.customerInfo?.activeCustomerCount, (this.customerInfo?.totalCustomerCount - this.customerInfo?.activeCustomerCount)],
           backgroundColor: [
-            '#f44336',
-            '#4caf50',
-            '#ff9800'
+            '#3498db',
+            '#27ae60',
+            '#f44336'
           ],
           hoverOffset: 4
         }]
@@ -559,10 +559,12 @@ export class DashboardComponent {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: ['rgb(255, 99, 132)',
-          'rgb(54, 162, 235)',
-          'rgb(255, 205, 86)'], // Dynamic colors
-        hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c'], // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
       }]
     };
   }
