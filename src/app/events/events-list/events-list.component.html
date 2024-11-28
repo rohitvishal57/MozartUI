@@ -2,12 +2,23 @@
   <div class="contentBody bodyColumns-1">
     <div class="bodyColumn body_flex_column">
 
-          <div class="body_flex_row justify-content-between">
-            <h2>{{"Events" | translate}} &gt; <a  (click)="navigateToBirthdays()" class="breadcrumb-link">{{"Birthdays" | translate}}</a>
-            </h2>
+          <div class="row m-0">
+            <!-- <h2>{{"Events" | translate}} &gt; <a  (click)="navigateToBirthdays()" class="breadcrumb-link">{{"Birthdays" | translate}}</a>
+            </h2> -->
+            <div class="col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+              <div class="body_flex_row">
+                <h2>{{"Events" | translate}}</h2>
+                <button type="button" id="btn-birthday" name="btn-birthday" class="btn_red btn_redBirthday" (click)="navigateToBirthdays()">
+                  {{"Birthdays" | translate}}
+                </button>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 d-flex justify-content-end">
               <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest" (click)="addEvents()">
-                  <img src="assets/Img/icon_plus_red.svg">{{"Add Event" | translate}}
-              </button>
+                <img src="assets/Img/icon_plus_red.svg">{{"Add Event" | translate}}
+            </button>
+            </div>
+              
           </div>
           <!-- <div class="body_flex_row justify-content-between align-items-center">
             <h2 class="events-title">Events</h2>

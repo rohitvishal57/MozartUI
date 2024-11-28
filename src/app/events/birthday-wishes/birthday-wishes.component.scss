@@ -202,7 +202,12 @@ li {
   font-size: 14px;
   color: #aaa;
 }
-
+.btn_redBirthday {
+  font-size: 14px;
+    padding: 5px 16px;
+    line-height: normal;
+    border-radius: 5px;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
   .week-grid {

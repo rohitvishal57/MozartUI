@@ -194,7 +194,7 @@
     color: #495057;
   }
   
-  .row {
+  /* .row {
     display: flex;
     margin: 0 -8px;
   }
@@ -207,7 +207,7 @@
   .col-12 {
     flex: 0 0 100%;
     padding: 0 8px;
-  }
+  } */
   ::ng-deep{
     .cdk-overlay-pane {
       margin-top: 5% !important;
@@ -217,5 +217,11 @@
   max-height: 280px;
   overflow-y: auto;
 }
+}
+.btn_redBirthday {
+  font-size: 14px;
+    padding: 5px 16px;
+    line-height: normal;
+    border-radius: 5px;
 }
   
