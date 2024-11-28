@@ -316,10 +316,10 @@
                   </ng-container>
                 </div>
                   <div [ngSwitch]="tab.chart">
-                    <div *ngSwitchCase="'Leads'" style="position: relative; height:35vh; width:100%">
+                    <div *ngSwitchCase="'Leads'" style="position: relative; width:100%">
                       <canvas #chartCanvas style="margin: auto;"></canvas>
                     </div>
-                    <div *ngSwitchCase="'Proposals'" style="position: relative; height:35vh; width:100%">
+                    <div *ngSwitchCase="'Proposals'" style="position: relative; width:100%">
                       <canvas #chartPropCanvas style="margin: auto;"></canvas>
                     </div>
                   </div>
@@ -341,97 +341,94 @@
                </ng-container>
               </div>
               <div class="cardWraper-container">
-                <div class="chart-container"  style="position: relative; height:35vh; width:100%">
+                <div class="chart-container"  style="position: relative; width:100%">
                   <canvas #chartRenewCanvas style="margin: auto;"></canvas>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        <section class="dashboard_otherSections commonSection">
-          <div class="board_otherSections">
-            <div class="item_otherSections">
+        <section class="dashboard_LPR_main commonSection">
+          <div class="body_flex_row mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          (cdkDropListDropped)="dropCharts($event)">
+          <ng-container *ngFor="let obj of chartsArray">
+            <div *ngIf="obj == 'customer'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <div class="otherSections_wraper">
                 <header>
                   <div class="otherSections_head">
-                    <h2>{{"My Customers" | translate}}</h2>
+                    <h3>{{"My Customers" | translate}}</h3>
                   </div>
                 </header>
-                <div class="otherSections_body">
-                  <div class="chart-container" style="position: relative; height:50vh; width:100%">
+                <div class="otherSections_body mt-5">
+                  <div class="chart-container" style="position: relative;width:100%">
                     <canvas id="MyChart" style="margin: auto;">{{ chart }}</canvas>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="item_otherSections">
+            <div *ngIf="obj == 'claim'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <div class="otherSections_wraper">
                 <header>
                   <div class="otherSections_head">
-                    <h2>{{"Claim Service" | translate}}</h2>
+                    <h3>{{"Claim Service" | translate}}</h3>
                   </div>
                 </header>
-                <div class="otherSections_body">
-                  <div class="chart-container" style="position: relative; height:50vh; width:100%">
+                <div class="otherSections_body mt-5">
+                  <div class="chart-container" style="position: relative;width:100%">
                     <canvas id="MyServiceChart" style="margin: auto;">{{ chart }}</canvas>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-        <section class="dashboard_otherSections commonSection">
-          <div class="board_otherSections">
-              <!--DHA & HR Portfolio start-->
-              <div class="item_otherSections">
-                <div class="otherSections_wraper">
-                  <header>
-                    <div class="otherSections_head">
-                      <h2>{{"DHA & HR Portfolio" | translate}}</h2>
-                    </div>
-                  </header>
-                  <div class="leads_content">
-                    <div class="chart-container" style="position: relative; height:50vh; width:100%">
-                      <canvas #chartDHACanvas style="margin: auto;"></canvas>
-                    </div>
-                    <!-- <div class="card_wraper">
-                      <div class="cardsub_wraper">
-                      <ng-container *ngFor="let perform of dhaCard">
-                        <ng-container [ngSwitch]="perform.type">
-                          <div class="cardItem" *ngSwitchCase="'text'" cdkDrag>
-                            <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_dha.svg"></span>{{"Digital Health Assessments" | translate}}</header>
-                            <div class="info_assessments body_flex_row justify-content-between">
-                                <div class="item_assessments">
-                                  <div class="value">241</div>
-                                  <div class="label">{{"Total Assessments" | translate}}</div>
-                                </div>
-                                <div class="item_assessments">
-                                  <div class="value">199</div>
-                                  <div class="label">{{"Users" | translate}}</div>
-                                </div>
-                            </div>
-                            <div class="card-tip">
-                              <img src="assets/Img/icon_lightbulb.svg">
-                              {{"Dummy placeholder text" | translate}}
-                            </div>
+            <div *ngIf="obj == 'dha'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+              <div class="otherSections_wraper">
+                <header>
+                  <div class="otherSections_head">
+                    <h3>{{"DHA & HR Portfolio" | translate}}</h3>
+                  </div>
+                </header>
+                <div class="otherSections_body mt-5">
+                  <div class="chart-container" style="position: relative;width:100%">
+                    <canvas #chartDHACanvas style="margin: auto;"></canvas>
+                  </div>
+                  <!-- <div class="card_wraper">
+                    <div class="cardsub_wraper">
+                    <ng-container *ngFor="let perform of dhaCard">
+                      <ng-container [ngSwitch]="perform.type">
+                        <div class="cardItem" *ngSwitchCase="'text'" cdkDrag>
+                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_dha.svg"></span>{{"Digital Health Assessments" | translate}}</header>
+                          <div class="info_assessments body_flex_row justify-content-between">
+                              <div class="item_assessments">
+                                <div class="value">241</div>
+                                <div class="label">{{"Total Assessments" | translate}}</div>
+                              </div>
+                              <div class="item_assessments">
+                                <div class="value">199</div>
+                                <div class="label">{{"Users" | translate}}</div>
+                              </div>
                           </div>
-                        </ng-container>
-                      </ng-container>
-                        
-                        <div class="cardItem">
-                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Returns" | translate}}</header>
-                          <div class="value">₹ 50,000</div>
                           <div class="card-tip">
-                            <img src="assets/Img/icon_currency.svg">
-                            {{"Nudge your users to actively participate to save more" | translate}}
+                            <img src="assets/Img/icon_lightbulb.svg">
+                            {{"Dummy placeholder text" | translate}}
                           </div>
                         </div>
+                      </ng-container>
+                    </ng-container>
+                      
+                      <div class="cardItem">
+                        <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Returns" | translate}}</header>
+                        <div class="value">₹ 50,000</div>
+                        <div class="card-tip">
+                          <img src="assets/Img/icon_currency.svg">
+                          {{"Nudge your users to actively participate to save more" | translate}}
+                        </div>
                       </div>
-                    </div> -->
-                  </div>
+                    </div>
+                  </div> -->
                 </div>
               </div>
-              <!--DHA & HR Portfolio end-->
+            </div>
+          </ng-container>
           </div>
         </section>
       </div>

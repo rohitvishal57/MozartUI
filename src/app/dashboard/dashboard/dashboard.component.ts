@@ -34,6 +34,10 @@ export class DashboardComponent {
   wellnessInfo: any;
   dhaCard: any = [];
 
+  chartsArray: any = [
+    'customer', 'claim', 'dha'
+  ]
+
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
 
@@ -88,6 +92,10 @@ export class DashboardComponent {
 
   dropTabs(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
+  }
+
+  dropCharts(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.chartsArray, event.previousIndex, event.currentIndex);
   }
 
   getQuote() {
@@ -302,13 +310,13 @@ export class DashboardComponent {
 
         default:
           this.dashboardService.fetchPerformanceDetails(obj).subscribe((res: any) => {
-             Object.keys(res.data).forEach((el :any) => {
+            Object.keys(res.data).forEach((el: any) => {
               this.quickActionDetails.push({
-                name : el,
-                value : res.data[el].slice(0, 4)
+                name: el,
+                value: res.data[el].slice(0, 4)
               })
             });
-           
+
             console.log('Quick action', this.quickActionDetails);
 
           })
@@ -341,7 +349,7 @@ export class DashboardComponent {
             position: 'right',
             labels: {
               font: {
-                size: 12,  // Reduce the font size of the legend labels
+                size: 11,  // Reduce the font size of the legend labels
                 weight: 'normal',  // Adjust the weight of the legend text
                 family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
               },
@@ -364,7 +372,7 @@ export class DashboardComponent {
           'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
         ],
         datasets: [{
-          data: [this.serviceInfo.claimRejectedCount,this.serviceInfo.claimSettledLessAmountCount,this.serviceInfo.claimsOpenCount,this.serviceInfo.complaintsOpenCount,this.serviceInfo.endorsementsOpenCount,this.serviceInfo.policyCancellationRequestsCount],
+          data: [this.serviceInfo.claimRejectedCount, this.serviceInfo.claimSettledLessAmountCount, this.serviceInfo.claimsOpenCount, this.serviceInfo.complaintsOpenCount, this.serviceInfo.endorsementsOpenCount, this.serviceInfo.policyCancellationRequestsCount],
           backgroundColor: [
             '#ff5722',
             '#4caf50',
@@ -383,7 +391,7 @@ export class DashboardComponent {
             position: 'right',
             labels: {
               font: {
-                size: 12,  // Reduce the font size of the legend labels
+                size: 11,  // Reduce the font size of the legend labels
                 weight: 'normal',  // Adjust the weight of the legend text
                 family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
               },
@@ -453,7 +461,7 @@ export class DashboardComponent {
           '#f1c40f',
           '#95a5a6'
         ],
-         // Dynamic colors
+        // Dynamic colors
         //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
       }]
     };
@@ -477,10 +485,10 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'bottom',
+              position: 'right',
               labels: {
                 font: {
-                  size: 12,  // Reduce the font size of the legend labels
+                  size: 11,  // Reduce the font size of the legend labels
                   weight: 'normal',  // Adjust the weight of the legend text
                   family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
                 },
@@ -523,10 +531,10 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'bottom',
+              position: 'right',
               labels: {
                 font: {
-                  size: 12,  // Reduce the font size of the legend labels
+                  size: 11,  // Reduce the font size of the legend labels
                   weight: 'normal',  // Adjust the weight of the legend text
                   family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
                 },
@@ -587,10 +595,10 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'bottom',  // Move legend to the side (right or left)
+              position: 'right',  // Move legend to the side (right or left)
               labels: {
                 font: {
-                  size: 12,  // Reduce the font size of the legend labels
+                  size: 11,  // Reduce the font size of the legend labels
                   weight: 'normal',  // Adjust the weight of the legend text
                   family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
                 },
@@ -656,7 +664,7 @@ export class DashboardComponent {
           '#f1c40f',
           '#95a5a6'
         ],
-         // Dynamic colors
+        // Dynamic colors
         //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
       }]
     };
@@ -708,9 +716,9 @@ export class DashboardComponent {
   }
 
   onClickEvents(event: any) {
-    if(event == 'events'){
+    if (event == 'events') {
       this.route.navigate(['events/eventsList'])
-    } else if(event == 'birthday'){
+    } else if (event == 'birthday') {
       this.route.navigate(['events/birthdaysList'])
     } else {
       const url = 'notifications' + '?agentCode=' + localStorage.getItem('agentCode');
