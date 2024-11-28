@@ -24,12 +24,14 @@
     .siteSidenav .siteSidenavMain.siteSidenavMain_scroll,
     .siteSidenav .sidenavMenu.sidenavMenu_links {
         max-height: 430px;
+        max-height: 76vh;
     }
 }
 @media only screen and (max-width:1094px) and (max-height:631px) {
     .siteSidenav .siteSidenavMain.siteSidenavMain_scroll,
     .siteSidenav .sidenavMenu.sidenavMenu_links {
         max-height: 350px;
+        max-height: 76vh;
     }
 }
 @media (max-width:1093px) {

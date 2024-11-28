@@ -722,16 +722,18 @@ button {
 
 .siteSidenav .siteSidenavMain.siteSidenavMain_scroll{
   justify-content: space-between;
-  height: auto;
+  /* height: auto; */
+  max-height: 80vh;
   flex-direction: column;
   position: relative;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_links{
-  max-height: 400px;
+  /* max-height: 400px; */
+  max-height: 80vh;
   overflow-y: auto;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_logout {
-    position: absolute;
+    /* position: absolute; */
     top: 110%;
     top: auto;
     bottom: 20px;
