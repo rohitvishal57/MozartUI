@@ -208,5 +208,14 @@
     flex: 0 0 100%;
     padding: 0 8px;
   }
-
+  ::ng-deep{
+    .cdk-overlay-pane {
+      margin-top: 5% !important;
+    }
+  
+.mat-mdc-dialog-container .mdc-dialog__container .mat-mdc-dialog-content .mat-mdc-card-content {
+  max-height: 280px;
+  overflow-y: auto;
+}
+}
   
