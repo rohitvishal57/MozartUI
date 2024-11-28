@@ -5705,7 +5705,9 @@ console.log(reqData);
             mobileNumber: this.quoteLeadInformation.phoneNumber,
             educationDetails: this.quoteLeadInformation.education,
             memberPolicyType: this.quoteLeadInformation.policyType,
-            occupation: this.quoteLeadInformation.occupation
+            occupation: this.quoteLeadInformation.occupation,
+            proposerPincode : this.quoteLeadInformation.pincode
+
           });
           this.patchDropDownValues();
 
