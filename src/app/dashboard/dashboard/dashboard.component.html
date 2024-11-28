@@ -317,10 +317,10 @@
                 </div>
                   <div [ngSwitch]="tab.chart">
                     <div *ngSwitchCase="'Leads'" style="position: relative; width:100%">
-                      <canvas #chartCanvas style="margin: auto;"></canvas>
+                      <canvas #chartCanvas style="margin: auto;  width:100%"></canvas>
                     </div>
                     <div *ngSwitchCase="'Proposals'" style="position: relative; width:100%">
-                      <canvas #chartPropCanvas style="margin: auto;"></canvas>
+                      <canvas #chartPropCanvas style="margin: auto;  width:100%"></canvas>
                     </div>
                   </div>
                 </div>
@@ -342,17 +342,15 @@
               </div>
               <div class="cardWraper-container">
                 <div class="chart-container"  style="position: relative; width:100%">
-                  <canvas #chartRenewCanvas style="margin: auto;"></canvas>
+                  <canvas #chartRenewCanvas style="margin: auto;  width:100%"></canvas>
                 </div>
               </div>
             </div>
           </div>
         </section>
         <section class="dashboard_LPR_main commonSection">
-          <div class="body_flex_row mt-3" cdkDropListOrientation="horizontal" cdkDropList
-          (cdkDropListDropped)="dropCharts($event)">
-          <ng-container *ngFor="let obj of chartsArray">
-            <div *ngIf="obj == 'customer'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+          <div class="body_flex_row mt-3">
+            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <div class="otherSections_wraper">
                 <header>
                   <div class="otherSections_head">
@@ -360,13 +358,13 @@
                   </div>
                 </header>
                 <div class="otherSections_body mt-5">
-                  <div class="chart-container" style="position: relative;width:100%">
-                    <canvas id="MyChart" style="margin: auto;">{{ chart }}</canvas>
+                  <div class="chart-container" style="position: relative; width:100%">
+                    <canvas id="MyChart" style="margin: auto; width:100%">{{ chart }}</canvas>
                   </div>
                 </div>
               </div>
             </div>
-            <div *ngIf="obj == 'claim'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <div class="otherSections_wraper">
                 <header>
                   <div class="otherSections_head">
@@ -374,13 +372,13 @@
                   </div>
                 </header>
                 <div class="otherSections_body mt-5">
-                  <div class="chart-container" style="position: relative;width:100%">
-                    <canvas id="MyServiceChart" style="margin: auto;">{{ chart }}</canvas>
+                  <div class="chart-container" style="position: relative; width:100%">
+                    <canvas id="MyServiceChart" style="margin: auto;  width:100%">{{ chart }}</canvas>
                   </div>
                 </div>
               </div>
             </div>
-            <div *ngIf="obj == 'dha'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <div class="otherSections_wraper">
                 <header>
                   <div class="otherSections_head">
@@ -388,8 +386,8 @@
                   </div>
                 </header>
                 <div class="otherSections_body mt-5">
-                  <div class="chart-container" style="position: relative;width:100%">
-                    <canvas #chartDHACanvas style="margin: auto;"></canvas>
+                  <div class="chart-container" style="position: relative; width:100%">
+                    <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
                   </div>
                   <!-- <div class="card_wraper">
                     <div class="cardsub_wraper">
@@ -428,7 +426,6 @@
                 </div>
               </div>
             </div>
-          </ng-container>
           </div>
         </section>
       </div>

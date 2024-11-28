@@ -346,7 +346,7 @@ export class DashboardComponent {
         responsive: true,
         plugins: {
           legend: {
-            position: 'right',
+            position: 'bottom',
             labels: {
               font: {
                 size: 11,  // Reduce the font size of the legend labels
@@ -388,7 +388,7 @@ export class DashboardComponent {
         responsive: true,
         plugins: {
           legend: {
-            position: 'right',
+            position: 'bottom',
             labels: {
               font: {
                 size: 11,  // Reduce the font size of the legend labels
@@ -485,7 +485,7 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'right',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 11,  // Reduce the font size of the legend labels
@@ -531,7 +531,7 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'right',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 11,  // Reduce the font size of the legend labels
@@ -595,7 +595,7 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'right',  // Move legend to the side (right or left)
+              position: 'bottom',  // Move legend to the side (right or left)
               labels: {
                 font: {
                   size: 11,  // Reduce the font size of the legend labels
@@ -688,7 +688,7 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'right',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 12,  // Reduce the font size of the legend labels
