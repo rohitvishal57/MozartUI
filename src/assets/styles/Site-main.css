@@ -1951,7 +1951,7 @@ input[type="search"]::-webkit-search-results-decoration {
 /*Body start*/
 .siteBody {
   width: 100%;
-  padding: 23px;
+  padding: 23px 10%;
   padding-bottom: 12rem;
   padding-top: 13rem;
   background: var(--bg-verylight-grey);

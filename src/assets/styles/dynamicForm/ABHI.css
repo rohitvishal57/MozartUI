@@ -1840,11 +1840,11 @@ body {
 .main-container .right-panel .checkbox-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
 }
 
 .main-container .right-panel .checkbox-wrapper {
-    width: 165px !important;
+    max-width: 180px !important;
     flex: 0 0 auto !important;
     margin: 0;
 }
@@ -2641,14 +2641,24 @@ margin: 0;
 }
 
 @media (max-width:767px) {
-    .main-container {
+    .main-container, .main-container .main-subContainer {
         flex-direction: column;
     }
-
+    .main-container {
+        padding-bottom: 12rem;
+    }
     .main-container .left-nav,
     .main-container .right-panel {
         width: 90%;
         margin: 15px auto;
+    }
+    .main-container .main-subContainer .right-panel {
+        width: 90%;
+        margin: 0 auto 15px;
+    }
+    .main-container .right-panel .bottom-section {
+        margin: 0 -21px;
+        width: 100%;
     }
 
     .main-container .left-nav {
@@ -2687,6 +2697,7 @@ margin: 0;
 
     .left-nav-mobileMain {
         display: block;
+        margin: 15px auto 0;
     }
 
     .main-container .right-panel .radio-card-container {
@@ -2724,7 +2735,9 @@ margin: 0;
     }
 
     /*Overlay CSS*/
- 
+    .main-container .right-panel .checkbox-wrapper {
+        max-width: 170px !important;
+    }
   
 }
 .main-container .right-panel .next-btn:focus,
