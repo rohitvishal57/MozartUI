@@ -2,13 +2,15 @@
   <div class="contentBody bodyColumns-1">
       <div class="bodyColumn body_flex_column">
           <div class="container">
-              <div class="view-switcher">
-                <button class="continue-btn-0 " (click)="setView('day')" [class.active]="currentView === 'day'">{{"Day View" | translate}}</button>
-                <button class="continue-btn-0" (click)="setView('week')" [class.active]="currentView === 'week'">{{"Week View" | translate}}</button>
-              </div>
-
-
-
+            <div class="body_flex_row justify-content-between">
+                <h2 (click)="navigateToEvents()" >{{"
+                  Events" | translate}} &gt; <a  class="breadcrumb-link">Birthdays</a>
+                </h2>
+            </div>
+            <div class="view-switcher">
+                <button class="continue-btn-0" (click)="setView('day')" [class.active]="currentView === 'day'">Day View</button>
+                <button class="continue-btn-0" (click)="setView('week')" [class.active]="currentView === 'week'">Week View</button>
+            </div>
             <div class="birthday-card" *ngIf="currentView === 'day'">
                 <div class="birthday-header">
                     <div class="header-icons">
@@ -16,7 +18,7 @@
                         <span class="balloon-icon">🎈</span>
                     </div>
                     <div class="header-content">
-                        <h3 class="header-title">Birthdays <span class="todayDate">{{todayDate}}</span></h3>
+                        <h3 class="header-title">Birthdays <span class="todayDate">{{ selectedDate |  date: 'dd-MM-yyyy'  }}</span></h3>
                         <p class="header-subtitle">
                             {{"Email or SMS birthday wishes to your customers" | translate}}
                             <span class="sparkle">✨</span>
@@ -26,7 +28,6 @@
                         {{ isSendingAllWishes ? 'Sending...' : 'Send All' }}
                     </button>
                 </div>
-            
                 <div class="birthday-list-container body_flex_row">
                     <ng-container *ngFor="let birthday of birthdays; let i = index">
                         <div class="birthday-item">
@@ -38,8 +39,19 @@
                         </div>
                     </ng-container>
                 </div>
+            <br/><br/>
+                <div class="birthday-list-container body_flex_row">
+                    <ng-container  *ngFor="let birthday of selectedDayBirthdays; let i = index">
+                        <div class="birthday-item">
+                            <span class="name">{{ birthday.name }}</span>
+                            <button class="send-wish-btn" (click)="sendWishes(birthday)" [disabled]="isSendingWishes">
+                                <img src="assets/bdayWish.png" alt="" style="width: 20px; height: 20px;">
+                                {{ isSendingWishes ? 'Sending...' : '' }}
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
             </div>
-            
             
             <div *ngIf="currentView === 'week'" class="week-view">
                 <h3>{{"Birthday Wishes for This Week" | translate}}</h3>
@@ -47,7 +59,7 @@
                     <div *ngFor="let day of weekData" class="day-box">
                         <h4 class="day-title">
                             {{ day.date | date: 'EEEE, MMM d' }}
-                            <button class="nav-btn">
+                            <button class="nav-btn" (click)="navigateToDayView(day.date)">
                                 <img src="assets/bdayWish.png" alt="" style="width: 20px; height: 20px;">
                             </button>
                         </h4>
@@ -62,9 +74,9 @@
                     </div>
                 </div>
             </div>
+            
 
-              
-              
+
               <div *ngIf="currentView === 'month'" class="month-view">
                   <h3>{{"Birthday Wishes for This Month" | translate}}</h3>
                   <div class="month-grid">

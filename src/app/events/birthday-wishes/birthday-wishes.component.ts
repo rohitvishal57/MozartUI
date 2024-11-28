@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
 import { EventsService } from '../events-new/events.service';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface Birthday {
   name: string;
@@ -27,14 +28,16 @@ export class BirthdayWishesComponent implements OnInit {
   startDate: string = '';
   endDate: string = '';
   birthdays: Birthday[] = [];
-  weekData: WeekDay[] = [];
+  // weekData: WeekDay[] = [];
   filteredBirthdays: Birthday[] = [];
   weekDays: string[] = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   isSendingWishes: boolean = false;
   isSendingAllWishes: boolean = false;
-  
-  todayDate = new Date().toISOString().split('T')[0];  
-  constructor(private http: HttpClient, private eventsService: EventsService, private datePipe : DatePipe) {}
+  selectedDate: Date = new Date(); 
+  selectedDayBirthdays: Birthday[] = []; 
+  weekData: { date: Date; birthdays: Birthday[] }[] = [];
+  todayDate = this.datePipe.transform(new Date().toISOString().split('T')[0], 'dd-MM-yyyy');
+  constructor(private http: HttpClient, private eventsService: EventsService, private datePipe : DatePipe, private route: Router) {}
 
   ngOnInit(): void {
     this.setView(this.currentView);
@@ -70,7 +73,6 @@ export class BirthdayWishesComponent implements OnInit {
 
   sendWishesToAll(): void {
     if (this.isSendingAllWishes) return;
-
     this.isSendingAllWishes = true;
     const SendWishesAllPayload = this.birthdays.map(birthday => ({
       customerId: birthday.customerID,
@@ -94,22 +96,48 @@ export class BirthdayWishesComponent implements OnInit {
       });
   }
   private showSuccessMessage(message: string): void {
-    // Implement your success message display logic here
-    // You could use a toast or alert service
-    alert(message); // Replace with your preferred notification method
+    alert(message);
   }
 
   private showErrorMessage(message: string): void {
-    // Implement your error message display logic here
-    alert(message); // Replace with your preferred notification method
+    alert(message);
   }
 
   setView(view: string): void {
     this.currentView = view;
+    if (view === 'day') {
+        this.filterDayBirthdays(this.selectedDate);
+    }
     this.setDates();
     this.loadBirthdayData();
-  }
+}
 
+navigateToDayView(date: Date): void {
+    this.selectedDate = date;
+    this.setView('day');
+}
+
+filterDayBirthdays(date: Date): void {
+    const dayData = this.weekData.find((day) => this.isSameDate(day.date, date));
+    this.selectedDayBirthdays = dayData ? dayData.birthdays : [];
+    this.birthdays = [];
+}
+
+isSameDate(date1: Date, date2: Date): boolean {
+    return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+    );
+}
+
+  // setView(view: string): void {
+  //   this.currentView = view;
+  //   this.setDates();
+  //   this.loadBirthdayData();
+  // }
+
+  
   setDates(): void {
     const today = new Date();
   
@@ -119,7 +147,6 @@ export class BirthdayWishesComponent implements OnInit {
         this.endDate = format(today, 'yyyy-MM-dd');
         break;
       case 'week':
-        // Use today as the start date instead of start of week
         this.startDate = format(today, 'yyyy-MM-dd');
         const endDate = new Date(today);
         endDate.setDate(today.getDate() + 6);
@@ -253,22 +280,21 @@ loadWeekData(): void {
     console.log(birthdaysForDay, "birthdaysforday" )
 
     // Create week data item with full birthday information
-    const weekDataItem: WeekDay = {
-      date: currentDateStr,
+    const weekDataItem: { date: Date; day: string; birthdays: Birthday[] } = {
+      date: new Date(currentDateStr), // Convert string to Date object
       day,
       birthdays: birthdaysForDay.map(birthday => ({
-        name: birthday.name,
-        date: birthday.date,
-        customerID: birthday.customerID, 
-        mobileNumber: birthday.mobileNumber  
-    }))
-    };
-
-    this.weekData.push(weekDataItem);
-    console.log(`Added week data for ${currentDateStr}:`, weekDataItem);
-  }
-
+          name: birthday.name,
+          date: birthday.date,
+          customerID: birthday.customerID,
+          mobileNumber: birthday.mobileNumber
+      }))
+  };
+  
+  this.weekData.push(weekDataItem);
+  console.log(`Added week data for ${currentDateStr}:`, weekDataItem);
   console.log('Final week data:', this.weekData);
+}
 }
 
   getBirthdaysForDay(day: WeekDay): Birthday[] {
@@ -320,5 +346,9 @@ loadWeekData(): void {
     }
 
     return monthDays;
+  }
+
+  navigateToEvents() {
+    this.route.navigate(["events/eventsList"]);
   }
 }

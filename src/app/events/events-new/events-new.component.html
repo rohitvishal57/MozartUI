@@ -45,7 +45,7 @@
                 <div
                   *ngIf="saveEvent.get('activityTitle')?.invalid && (saveEvent.get('activityTitle')?.dirty || saveEvent.get('activityTitle')?.touched)">
                   <div class="text-danger" *ngIf="saveEvent.get('activityTitle')?.errors?.['required']">{{"Activity
-                    title is required" | translate}}</div>
+                    title is required" | translate}}.</div>
                 </div>
               </div>
             </div>
@@ -99,7 +99,7 @@
                 <div
                   *ngIf="saveEvent.get('endTime')?.invalid && (saveEvent.get('endTime')?.dirty || saveEvent.get('endTime')?.touched)">
                   <div class="text-danger" *ngIf="saveEvent.get('endTime')?.errors?.['required']">{{"End time is
-                    required" | translate}}</div>
+                    required" | translate}}.</div>
                 </div>
               </div>
             </div>
@@ -110,7 +110,7 @@
                 <div
                   *ngIf="saveEvent.get('endDate')?.invalid && (saveEvent.get('endDate')?.dirty || saveEvent.get('endDate')?.touched)">
                   <div class="text-danger" *ngIf="saveEvent.get('endDate')?.errors?.['required']">{{"End date is
-                    required" | translate}}</div>
+                    required" | translate}}.</div>
                 </div>
               </div>
             </div>
@@ -119,17 +119,21 @@
               <div class="input-block form-floating input-block-renew">
                 <input type="text" class="form-control input-textBox" id="note" formControlName="note" placeholder="">
                 <label for="note" class="form-label">{{"Note" | translate}}</label>
+                <div
+                  *ngIf="saveEvent.get('note')?.invalid && (saveEvent.get('note')?.dirty || saveEvent.get('note')?.touched)">
+                  <div class="text-danger" *ngIf="saveEvent.get('note')?.errors?.['required']">Note is required.</div>
+                </div>
               </div>
             </div>
           </div>
-        </section>
-        
-        <div class="row mt-4">
-          <div class="col-12">
-            <button type="submit" id="submitsave" name="submitsave" class="btn_red" [disabled]="isSubmitting">{{"Save" | translate}}</button>
-            <!--<button type="button" class="btn btn-secondary ms-2">Cancel</button>-->
+
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn_red" [disabled]="isSubmitting">
+              {{"Save" | translate}}
+            </button>
+            <!-- <button type="button" class="btn btn-secondary ms-2">Cancel</button> -->
           </div>
-        </div>
+        </section>
       </form>
     </div>
   </div>

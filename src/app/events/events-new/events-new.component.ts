@@ -65,13 +65,6 @@ export class EventsNewComponent implements OnInit {
     });
   }
 
-  // formatTime(time: string): string {
-  //   const timeParts = time.split(':');    
-  //   let hours = timeParts[0].padStart(2, '0');  
-  //   let minutes = timeParts[1].padStart(2, '0');   
-  //   let seconds = '00';
-  //     return `${hours}:${minutes}:${seconds}`;
-  // }
   formatTime(time: string): string {
     const [hours, minutes] = time.split(':');
     return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
@@ -91,7 +84,6 @@ export class EventsNewComponent implements OnInit {
       });
       currentDate.setDate(currentDate.getDate() + 1);
     }
-
     return schedule;
   }
 
@@ -100,15 +92,6 @@ export class EventsNewComponent implements OnInit {
       this.isSubmitting = true;
       const startTime = this.formatTime(this.saveEvent.value.startTime);
       const endTime = this.formatTime(this.saveEvent.value.endTime);
-  
-      // const formattedStartTime = this.formatTime(startTime);
-      // const formattedEndTime = this.formatTime(endTime);
-  
-      // this.saveEvent.patchValue({
-      //   startTime: formattedStartTime,
-      //   endTime: formattedEndTime
-      // });
-
       const eventSchedule = this.generateEventSchedule(
         this.saveEvent.value.startDate,
         this.saveEvent.value.endDate,

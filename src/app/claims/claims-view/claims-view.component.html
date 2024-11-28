@@ -36,9 +36,8 @@
                                 </select>
                                 <label for="member">{{"Select Member" | translate}}</label>
                                 <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
-                                {{"Member name is required." | translate}}
-                              </small>
-
+                                  {{"Member name is required." | translate}}
+                                </small>
                             </div>
                         </div>
 
@@ -113,7 +112,9 @@
                                             <option *ngFor="let state of states" [value]="state.stateID">{{ state.stateName | translate }}</option>
                                         </select>
                                         <label for="state">{{"Select State" | translate}}</label>
-                                        <span class="ui-error">{{"Please select state" | translate}}</span>
+                                        <small class="ui-error block-show" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">
+                                            {{"State is required" | translate}}
+                                          </small>
                                     </div>
                                 </div>
 
@@ -124,7 +125,10 @@
                                             <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName | translate }}</option>
                                         </select>
                                         <label for="city">{{"Select City" | translate}}</label>
-                                        <span class="ui-error">{{"Please select city" | translate}}</span>
+                                        <!-- <span class="ui-error">{{"Please select city" | translate}}</span> -->
+                                        <small class="ui-error block-show" *ngIf="form.get('city')?.invalid && form.get('city')?.touched">
+                                            {{"City is required" | translate}}
+                                        </small>
                                     </div>
                                 </div>
 
@@ -135,13 +139,18 @@
                                             <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName | translate }}</option>
                                         </select>
                                         <label for="city">{{"Select Hospital" | translate}}</label>
-                                        <span class="ui-error">{{"Please select Hospital" | translate}}</span>
-                                    </div>
+                                        <small class="ui-error block-show" *ngIf="form.get('hospitalName')?.invalid && form.get('hospitalName')?.touched">
+                                            {{"Hospital Name is required" | translate}}
+                                          </small>                                    
+                                        </div>
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
                                         <input type="text" class="form-control input-textBox" id="hospitalAddress" name="hospitalAddress" formControlName="hospitalAddress" placeholder="Hospital Address" readonly/>
                                         <label for="addnotes">{{"Hospital Address" | translate }}</label>
+                                        <small class="ui-error block-show" *ngIf="form.get('hospitalAddress')?.invalid && form.get('hospitalAddress')?.touched">
+                                            {{"Hospital Address is required" | translate}}
+                                        </small>   
                                     </div>
                                 </div>
                             </div>
@@ -159,6 +168,17 @@
                                         <label for="coverName">{{"Cover Name" | translate}}</label>
                                     </div>
                                 </div>
+
+                                <div *ngIf="showFirstScenario " class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                    <div class="input-block form-floating input-block-renew">
+                                        <input class="form-control input-textBox" id="claimedAmount" name="claimedAmount" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
+                                        <label for="claimamount">{{"Claim Amount" | translate}}</label>
+                                        <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
+                                                 {{"Claim amount is required" | translate}}
+                                </small>
+                                    </div>
+                                </div>
+                                
                                 <div *ngIf="showSecondScenario " class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
                                         <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" name="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
@@ -200,7 +220,7 @@
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                             <div class="input-block form-floating input-block-renew">
-                                                <input class="form-control input-textBox" formControlName="billAmount" type="number" id="billamount" placeholder="Bill Amount">
+                                                <input class="form-control input-textBox" formControlName="billAmount" type="number" id="billamount" placeholder="Bill Amount" (keydown)="onInput($event)">
                                                 <label for="billamount">Bill Amount</label>
                                             </div>
                                         </div>
@@ -240,8 +260,10 @@
                                                 <option *ngFor="let state of states" [value]="state.stateID">{{ state.stateName }}</option>
                                             </select>
                                             <label for="state">Select State</label>
-                                            <span class="ui-error">Please select state</span>
-                                        </div>
+                                            <small class="ui-error block-show" *ngIf="form.get('state')?.invalid && form.get('state')?.touched">
+                                                {{"State is required" | translate}}
+                                              </small>                                        
+                                            </div>
                                     </div>
 
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -251,8 +273,9 @@
                                                 <option *ngFor="let city of cities" [value]="city.cityID">{{ city.cityName }}</option>
                                             </select>
                                             <label for="city">Select City</label>
-                                            <span class="ui-error">Please select city</span>
-                                        </div>
+                                            <small class="ui-error block-show" *ngIf="form.get('city')?.invalid && form.get('city')?.touched">
+                                                {{"City is required" | translate}}
+                                            </small>                                        </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
@@ -261,7 +284,9 @@
                                                 <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName }}</option>
                                             </select>
                                             <label for="city">Select Hospital</label>
-                                            <span class="ui-error">Please select Hospital</span>
+                                            <small class="ui-error block-show" *ngIf="form.get('hospitalName')?.invalid && form.get('hospitalName')?.touched">
+                                                {{"Hospital Name is required" | translate}}
+                                            </small>                                         
                                         </div>
                                     </div>
 
@@ -269,6 +294,9 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" id="hospitalAddress" name="hospitalAddress" placeholder="Hospital Address" readonly/>
                                             <label for="addnotes">Hospital Address</label>
+                                            <small class="ui-error block-show" *ngIf="form.get('hospitalAddress')?.invalid && form.get('hospitalAddress')?.touched">
+                                                {{"Hospital Address is required" | translate}}
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
@@ -277,15 +305,17 @@
 
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block form-floating input-block-renew">
-                                <textarea class="form-control input-textBox" formControlName="ailmentDescription" id="ailmentDescription" name="ailmentDescription" placeholder="Description of the Ailment"></textarea>
+                                <textarea class="form-control input-textBox" formControlName="ailmentDescription" id="ailmentDescription" name="ailmentDescription" placeholder="Description of the Ailment" maxlength="250"></textarea>
                                 <label for="ailmentDescription">{{"Description of the Ailment" | translate}}</label>
+                                <small class="ui-error block-show" *ngIf="form.get('ailmentDescription')?.hasError('required') && form.get('ailmentDescription')?.touched">
+                                    Description of ailment is required.
+                                </small>
                             </div>
                         </div>
 
-
                         <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                             <div class="input-block form-floating input-block-renew">
-                                <textarea class="form-control input-textBox" placeholder="Leave a comment here" id="addnotes" name="addnotes" rows="2" cols="30" formControlName="notes" pInputTextarea></textarea>
+                                <textarea class="form-control input-textBox" placeholder="Leave a comment here" id="addnotes" name="addnotes" rows="2" cols="30" formControlName="notes" pInputTextarea maxlength="250"></textarea>
                                 <label for="addnotes">{{"Add Notes" | translate}}</label>
                             </div>
                         </div>
@@ -330,8 +360,8 @@
                                     </button>
                                 </div>
                                 <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
-
                             </div>
+                            <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span>
                             <span class="ui-error block-show" *ngIf="uploadValidFormat">
                             {{"File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." | translate}}
                           </span>
@@ -356,7 +386,6 @@
                                                             <ng-container *ngIf="file.isEditing">
                                                                 <input type="text" [formControl]="editableControl" (blur)="stopEditing(file)" (keydown)="onLabelKeyDown($event, file)" autofocus />
                                                             </ng-container>
-
                                                         </div>
                                                     </div>
                                                     <div class="headInfo_item">
@@ -382,7 +411,6 @@
                                                         </div>
 
                                                     </div>
-
                                                 </div>
                                             </li>
                                         </ul>

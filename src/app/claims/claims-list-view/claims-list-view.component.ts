@@ -282,6 +282,11 @@ clear() {
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
     const selectedValidators = searchValidationConfig[this.selected] || [];
+    if (this.selected === "") {
+      this.claimsReqBody.searchType = "";
+      this.claimsReqBody.searchString = []
+      this.fetchData();
+    }
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }

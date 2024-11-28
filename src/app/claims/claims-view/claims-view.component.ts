@@ -85,9 +85,11 @@ export class ClaimsViewComponent {
   isDropdownOpen: boolean = false;  
   selectedPolicyNumber:any;
   isFocused: boolean = false;
+  selectedFile:any;
   fromDate: any;
   toDate: any;
   maxDate = new Date().toISOString().split('T')[0];
+  isFilenotSelected: boolean = false;
 
   coverNames = [
     "AYUSH Treatment",
@@ -150,7 +152,6 @@ export class ClaimsViewComponent {
     this.getProposalDetails();
     this.fetchStates();
     const policyNumberControl = this.form.get('policyNumber');
-   
   }
   
   navigateToListClaim(){
@@ -191,9 +192,9 @@ export class ClaimsViewComponent {
       requestType: [""],
       claimStatus: [""],
       raisedDate: [""],
-      hospitalName: [""],
+      hospitalName: ["", Validators.required],
       isFileUploadRequired: [true],
-      claimedAmount: [""],
+      claimedAmount: ["", Validators.required],
       approvedAmount: [""],
       deductedAmount: [""],
       deductionReason: [""],
@@ -204,14 +205,14 @@ export class ClaimsViewComponent {
       claimType: ["",Validators.required],
       notes: [""],
       proposerName: [""],
-      state: [""],
-      city: [""],
-      hospitalAddress: "",
+      state: ["", Validators.required],
+      city: ["", Validators.required],
+      hospitalAddress: [""],
       admissionDate: null,
       dischargeDate: null,
       admissionTime: [""],
       dischargeTime: [""],
-      ailmentDescription: [""],
+      ailmentDescription: ["", Validators.required],
       documentName: [""],
       status: [""],
       labelName: [""],
@@ -223,6 +224,50 @@ export class ClaimsViewComponent {
         }),
       ]),
     });
+    this.form.get('coverName')?.valueChanges.subscribe(coverName => {
+      this.handleCoverNameValidation(coverName);
+    });
+  }
+
+  handleCoverNameValidation(coverName: string): void {
+    
+    const stateControl = this.form.get('state');
+    const cityControl = this.form.get('city');
+    const hospitalNameControl = this.form.get('hospitalName');
+    const hospitalAddressControl = this.form.get('hospitalAddress');
+    
+    if (coverName === 'AYUSH Treatment') {
+      // Remove validators for state, city, and hospital
+      stateControl?.clearValidators();
+      cityControl?.clearValidators();
+      hospitalNameControl?.clearValidators();
+      hospitalAddressControl?.clearValidators();
+  
+      // Update validity without triggering validation
+      stateControl?.updateValueAndValidity({ onlySelf: true });
+      cityControl?.updateValueAndValidity({ onlySelf: true });
+      hospitalNameControl?.updateValueAndValidity({ onlySelf: true });
+      hospitalAddressControl?.updateValueAndValidity({onlySelf: true});
+  
+      // Optional: Clear values if needed
+      stateControl?.setValue('');
+      cityControl?.setValue('');
+      hospitalNameControl?.setValue('');
+      hospitalAddressControl?.setValue('');
+    } else {
+      // Restore required validators for state, city, and hospital
+      stateControl?.setValidators([Validators.required]);
+      cityControl?.setValidators([Validators.required]);
+      hospitalNameControl?.setValidators([Validators.required]);
+      hospitalAddressControl?.setValidators([Validators.required]);
+
+  
+      // Update validity
+      stateControl?.updateValueAndValidity();
+      cityControl?.updateValueAndValidity();
+      hospitalNameControl?.updateValueAndValidity();
+      hospitalAddressControl?.updateValueAndValidity();
+    }
   }
 
   onFocus() {
@@ -559,10 +604,11 @@ export class ClaimsViewComponent {
     const inputElement = event.target;
     const files = inputElement.files as File[];
     this.totalFilesCount += files.length;
+    this.isFilenotSelected = false;
   
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      
+      this.selectedFile = file;
       // Check if the file was previously deleted and re-uploaded
       const fileExists = this.uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size);
   
@@ -723,6 +769,7 @@ export class ClaimsViewComponent {
   }
 
   submitRequest(): void {
+    debugger
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = { ...this.form.value };     
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
@@ -732,11 +779,30 @@ export class ClaimsViewComponent {
         ...bill,
         billAmount: bill.billAmount ? bill.billAmount.toString() : ""
       }));
-  
+
+      if (!this.selectedFile) {
+        this.isFilenotSelected = true;
+        return;
+      }
+
       if (!saveClaimData.claimedAmount) {
         saveClaimData.claimedAmount = 0;
       }
   
+      const coverName = this.form.get('coverName')?.value;
+      if(coverName){
+
+        this.handleCoverNameValidation(coverName);
+
+        if (coverName === 'AYUSH Treatment') {
+          saveClaimData.state = "";
+          saveClaimData.city = "";
+          saveClaimData.hospitalName = "";
+        }
+      
+  
+      }
+      
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
