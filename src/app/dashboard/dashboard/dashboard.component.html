@@ -349,8 +349,10 @@
           </div>
         </section>
         <section class="dashboard_LPR_main commonSection">
-          <div class="body_flex_row mt-3">
-            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+          <div class="body_flex_row mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          (cdkDropListDropped)="dropCharts($event)">
+          <ng-container *ngFor="let obj of chartsArray">
+            <div *ngIf="obj == 'customer'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <div class="otherSections_wraper">
                 <header>
                   <div class="otherSections_head">
@@ -364,7 +366,7 @@
                 </div>
               </div>
             </div>
-            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+            <div *ngIf="obj == 'claim'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <div class="otherSections_wraper">
                 <header>
                   <div class="otherSections_head">
@@ -378,7 +380,7 @@
                 </div>
               </div>
             </div>
-            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+            <div *ngIf="obj == 'dha'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <div class="otherSections_wraper">
                 <header>
                   <div class="otherSections_head">
@@ -426,6 +428,7 @@
                 </div>
               </div>
             </div>
+          </ng-container>
           </div>
         </section>
       </div>
