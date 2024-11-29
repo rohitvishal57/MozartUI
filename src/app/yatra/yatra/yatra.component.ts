@@ -820,9 +820,9 @@ console.log(reqData);
       this.isFeedBackModalVisible = true;
     }
 
-    if (this.quickQuoteRedirect) {
-      this.getLeadInformation();
-    }
+    // if (this.quickQuoteRedirect) {
+    //   this.getLeadInformation();
+    // }
 
   }
 
@@ -5713,17 +5713,18 @@ console.log(reqData);
             educationDetails: this.quoteLeadInformation.education,
             memberPolicyType: this.quoteLeadInformation.policyType,
             occupation: this.quoteLeadInformation.occupation,
-            proposerPincode : this.quoteLeadInformation.pincode
+            proposerPincode : this.quoteLeadInformation.pincode,
+            zoneValue : this.quoteLeadInformation.zone
 
           });
           this.patchDropDownValues();
 
-          Object.keys(this.dynamicFormGroup.controls).forEach(controlName => {
-            const control = this.dynamicFormGroup.get(controlName);
-            if (control?.value) {
-              control.disable();
-            }
-          });
+          // Object.keys(this.dynamicFormGroup.controls).forEach(controlName => {
+          //   const control = this.dynamicFormGroup.get(controlName);
+          //   if (control?.value) {
+          //     control.disable();
+          //   }
+          // });
         }
         else { console.error("API request was not successful."); }
       },
