@@ -105,7 +105,7 @@
           <span class="badge" >{{notificationCount}}</span>
         </button>
         <!--Overlay: Notifications start-->
-        <div class="overlay_popupMain overlay_dropdown_w386 overlay_notification" *ngIf="showNotifications && notificationCount" >
+        <div class="overlay_popupMain overlay_dropdown_w386 overlay_notification" *ngIf="showNotifications" >
           
           <div class="option_policyType" (click)="onPopupClick($event)">
             <div class="overlay_body insurer_detailsMain">
@@ -123,12 +123,14 @@
                   <div class="col-12">
                     <div class="input-block input-block-renew input-filed-white">
                       <ul class="notificationList" >
-                        <li  *ngFor="let item of unReadNotificaitons; let i =index">
+                        <div *ngFor="let item of notifications; let i =index" >
+                        <li  >
                           <div class="tipInfo_org" *ngIf="item.isRead ==false" (click)="routeNotification(item)"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
                         </li>
-                        <!-- <li class="read_notification">
-                          <div class="tipInfo_org" *ngIf="item.isRead"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
-                        </li> -->
+                        <li class="read_notification">
+                          <div class="tipInfo_org" *ngIf="item.isRead ==true"><img src="assets/Img/icon_lightbulb.svg">{{item.description}}</div>
+                        </li> 
+                      </div>
                       </ul>
                       <!--<mat-list-item *ngFor="let notification of notifications ; let i =index">
                         <span style="color: black;">{{i+1}}: {{notification.message}}</span>
