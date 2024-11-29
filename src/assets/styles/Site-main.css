@@ -6149,26 +6149,37 @@ input[type=number]::-webkit-outer-spin-button {
   top: -100%;
   left: 0;
 }*/
-
-.captcha-label {
-  font-weight: normal;       /* Sets a lighter font weight */
-  font-size: 24px;
-  color: #666;               /* Slightly lighter gray for the text */
-  background-color: #f2f2f2; /* Light gray background */
-  padding: 8px 13px;        /* Adds padding for better appearance */
-  display: inline-block;
-  border: 1px solid #ccc;    /* Adds a subtle border */
-  border-radius: 5px;        /* Rounded corners for aesthetics */
-  user-select: none;
-  letter-spacing: 5px;        
-      /* Prevents text selection */
+.main_captcha{
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: #d7d7d7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
-/* Optional: Additional styles for visual complexity */
+.main_captcha .captcha-label {
+  font-size: 20px;
+  font-weight: 500;
+  color: #282828;
+  letter-spacing: 3px; 
+  user-select: none;
+}
 .captcha-label span {
   display: inline-block;
   transform: rotate(calc(-4deg + 10deg * random()));
 }
+.main_captcha .mat-icon {
+  color: #ffffff;
+  cursor: pointer;
+  background: #c7222a;
+  border-radius: 10px;
+  padding: 3px 4px;
+  width: auto;
+  height: auto;
+  font-size: 20px;
+}
+/* Optional: Additional styles for visual complexity */
+
 /*----New styles added 13-nov-24 end----*/
 
 

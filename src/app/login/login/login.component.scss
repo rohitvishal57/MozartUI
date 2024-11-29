@@ -247,6 +247,14 @@
                     font-size: 13px;
                     font-weight: 600;
                 }
+                &.btn_text {
+                    background: transparent;
+                    color: #C7222A;
+                    font-size: 14px;
+                    font-weight: 400;
+                    text-decoration: underline;
+                    margin: 0;
+                }
             }
         
             button>span {
