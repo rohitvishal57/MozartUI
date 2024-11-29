@@ -1844,18 +1844,21 @@ export class YatraComponent {
               this.dynamicFormGroup.get('state')?.setValue(res.data.state || '');
 
               const zoneControl = this.dynamicFormGroup.get('zone');
+              const zoneControlValue = this.dynamicFormGroup.get('zoneValue');
               if (zoneControl) {
                 zoneControl.setValue(res.data.zone || '');
-                zoneControl.enable();
+              }
+                // zoneControl.enable();
+              if(zoneControlValue){
+                zoneControlValue.setValue(res.data.zoneValue);
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
-                    if (control.name === 'zone') {
-                      control.value = res.data.zone || '';
+                    if (control.name === 'zoneValue') {
                       control.options = [];
                       res.data.upgradableZones?.forEach((zoneOption: any) => {
                         control.options.push({
                           name: zoneOption.zone,
-                          value: zoneOption.zone
+                          value: zoneOption.zoneCode
                         });
                       });
                       // control.visible = true;
@@ -1863,6 +1866,8 @@ export class YatraComponent {
                   });
                 });
               }
+                
+              
             } else {
               console.error('Failed to fetch zone details.');
               this.resetZoneAndLocationFields();
