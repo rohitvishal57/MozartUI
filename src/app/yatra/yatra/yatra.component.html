@@ -845,7 +845,7 @@
                             <div style="display: flex;">
                               <input type="checkbox" formControlName="{{ subControl.name }}" [id]="subControl.name" [name]="subControl.name"
                                 (click)="onCheckboxChange($event, subControl,control)"
-                                style="height:25px; width:25px; margin-left: 10px;" />
+                                style="height:20px; width:20px; margin-left: 10px;" />
                               <label [for]="subControl.name" [innerHTML]="subControl.label" class="checkbox-label"
                                 style="padding-left: 15px;
                     font-weight: 600;
@@ -880,19 +880,22 @@
                                             <!--<div *ngFor="let coreControl of innerControl.coreControls"> -->
                                             <div *ngIf="innerControl.type === 'select'" [class]="innerControl.class"
                                               class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                              <label *ngIf="innerControl.visibleLabel==true">{{ innerControl.label?(innerControl.label | translate):''}}
-                                                <span *ngIf="innerControl.validators">*</span></label>
-                                              <select class="inputField_Select" *ngIf="!innerControl.disabled"
-                                                (change)="onInputChange($event, subControl,control)"
-                                                [formControlName]="innerControl.name" [name]="innerControl.name"
-                                                aria-label="Default select example">
-                                                <option selected value="">{{"Choose..." | translate}}</option>
-                                                <ng-container *ngFor="let opt of innerControl.options">
-                                                  <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{
-                                                    opt.name?(opt.name | translate):'' }}
-                                                  </option>
-                                                </ng-container>
-                                              </select>
+                                              <div class="input-container">
+                                                <select class="inputField_Select" *ngIf="!innerControl.disabled"
+                                                  [formControlName]="innerControl.name" [name]="innerControl.name" [id]="innerControl.name"
+                                                  aria-label="Default select example"
+                                                  [ngClass]="{'has-value': hasSubValue(control,subControl,innerSubForm,innerControl,l)}"
+                                                  (change)="onInputChange($event, subControl,control)">
+                                             
+                                                  <option selected value="">{{"Choose..." | translate}}</option>
+                                                  <ng-container *ngFor="let opt of innerControl.options">
+                                                    <option [value]="opt.id ? stringifyObject(opt) : opt.value">{{
+                                                      opt.name?(opt.name | translate):'' }}
+                                                    </option>
+                                                  </ng-container>
+                                                </select>
+                                                <label *ngIf="innerControl.visibleLabel">{{ innerControl.label ? (innerControl.label | translate) : '' }} <span *ngIf="innerControl.validators">*</span></label>
+                                              </div>
                                             </div>
 
                                             <!-- (click)="onCheckboxChange($event, subControl,control)" -->
