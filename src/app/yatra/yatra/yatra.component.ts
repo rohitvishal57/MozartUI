@@ -89,6 +89,7 @@ export class YatraComponent {
 
   displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
+  futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 6)).toISOString().split('T')[0];
   selectedButton: string | null = null;
   collapsedSections: { [key: string]: boolean } = {};
   isOverlayVisible = false;
@@ -1740,9 +1741,24 @@ export class YatraComponent {
       console.log(year.toString().length);
 
       const currentYear = new Date().getFullYear();
+      const [years, month, day] = dob.split('-').map(Number);
+      const inputDate = new Date(`${years}-${month}-${day}`);
+      const minDate = new Date('1800-01-01');
+      const currentDate = new Date();
+      console.log(currentDate,minDate,inputDate);
+      // // Validate the full date in dd/MM/yyyy format using regex
+      // const dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(18[0-9]{2}|19[0-9]{2}|20[0-9]{2})$/;
+      // if (!dobRegex.test(formattedDOB) && year.toString().length == 4) {
+      //   this.toast.error({
+      //     detail: 'Error',
+      //     summary: 'Invalid Date of Birth: Please enter a valid date in dd/MM/yyyy format',
+      //     duration: 5000
+      //   });
+      //   return;
+      // }
 
       // Validate year after the full date is entered
-      if ((year < 1800 || year > currentYear) && year.toString().length === 4) {
+      if ((year < 1800 || inputDate > currentDate) && year.toString().length === 4) {
         // Invalid year: Show error and reset age control
         this.toast.error({
           detail: 'Error',

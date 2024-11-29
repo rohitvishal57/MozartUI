@@ -87,6 +87,7 @@ export interface IFormControl {
   button?:any;
   icon?:string;
   imageUrl?:string;
+  maxLength?: number;
 }
 export interface ISubControl {
   name: string;
@@ -201,6 +202,7 @@ export interface IDynamicControl {
   image?:IImage;
   tabs?:ITab[];
   getAllOption?: string;
+  maxLength?: number;
 }
 export interface IValidator {
   validatorName?: string;
