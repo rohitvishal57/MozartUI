@@ -313,7 +313,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": "15521231222",
+        "proposalNum": "15521234543",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -664,25 +664,28 @@ export class RugDynamicFormComponent {
           }
         }
       });
-      this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
-        // const selfResult = this.centimetersToFeetAndInches(item.height);
-        const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
-        console.log(insuredMembersArray.value);
-        if(insuredMembersArray.value[index].relation = item.relation){
-          insuredMembersArray.at(index).patchValue({
-            firstName: item.firstName,
-            lastName: item.lastName,
-            dob: item.dob,
-            gender: item.gender,
-            age: item.age,
-            weight: item.weight,
-            height: item.height,
-            heightInches: item.heightInches
-            // height: selfResult.feet !== 0 ? selfResult.feet : null,
-            // heightInches: selfResult.inch !== 0 ? selfResult.inch : null,
-          });
-        }
-      });
+      if(this.getFormIndexValue() == 0){
+        this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
+          // const selfResult = this.centimetersToFeetAndInches(item.height);
+          const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
+          console.log(insuredMembersArray.value);
+          if(insuredMembersArray.value[index].relation = item.relation){
+            insuredMembersArray.at(index).patchValue({
+              firstName: item.firstName,
+              lastName: item.lastName,
+              dob: item.dob,
+              gender: item.gender,
+              age: item.age,
+              weight: item.weight,
+              height: item.height,
+              heightInches: item.heightInches
+              // height: selfResult.feet !== 0 ? selfResult.feet : null,
+              // heightInches: selfResult.inch !== 0 ? selfResult.inch : null,
+            });
+          }
+        });
+      }
+
       // Restore the preserved form array for 'insuredMemberDetails'
       if (insuredMemberDetailsArray) {
         this.dynamicFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
@@ -708,12 +711,12 @@ export class RugDynamicFormComponent {
           proposerIsNri: this.bbdetails.proposerIsNri
 
         })
-        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.proposerDetails.premium);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
         this.dynamicFormGroup.patchValue({
           nomineeShare: this.bbdetails.defaultShare,
-          relationWithProposer: this.bbdetails.nomineeRelation,
+          relationWithProposer: this.bbdetails.relationWithProposer,
           nomineeFirstName: this.bbdetails.nomineeFirstName,
           nomineeLastName: this.bbdetails.nomineeLastName,
           nomineeMobileNumber: this.bbdetails.nomineeMobileNumber,
@@ -725,7 +728,7 @@ export class RugDynamicFormComponent {
           appointeeDob: this.bbdetails.appointeeDOB,
           relationWithNominee: this.bbdetails.relationWithNominee,
         })
-        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.proposerDetails.premium);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       if (this.formSequence[this.getFormIndexValue()].formId == 4 && this.formSequence[this.getFormIndexValue()].formName == "Bank/Payment Details") {
         this.dynamicFormGroup.patchValue({
@@ -735,10 +738,10 @@ export class RugDynamicFormComponent {
           micrCode:this.bbdetails.micrCode,
           branchName:this.bbdetails.branchName,
         })
-        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.premium);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       if(this.formSequence[this.getFormIndexValue()].formId == 5 && this.formSequence[this.getFormIndexValue()].formName == "Health Declaration"){
-        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.premium);
+        this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       this.flattenObject(this.formData);
       this.spinner.hide();
