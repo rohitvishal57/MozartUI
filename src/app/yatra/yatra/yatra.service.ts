@@ -153,7 +153,7 @@ export class YatraService {
     return this.httpService.post(familyConstructData,reqData);
   }
   saveBBCommonDraft(reqData:any){
-    const saveCommonDraftData = this.configService.config.axisBaseUrl + this.configService.config.saveBBCommonDraft;
+    const saveCommonDraftData = this.configService.config.baseUrl + this.configService.config.saveBBCommonDraft;
     return this.httpService.post(saveCommonDraftData,reqData);
   }
   insertFullQuoteJson(reqData:any){

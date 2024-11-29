@@ -23,7 +23,8 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProductCombination',
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetPremium',
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/BranchBanking/SaveBBCommonDraft',
-    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProposerRelations'
+    'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProposerRelations',
+    'https://usp.monocept.ai/api/v1/SaveBBCommonDraft'
   ];
 
   intercept(

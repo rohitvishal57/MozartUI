@@ -115,7 +115,7 @@ export const environment = {
     getSumInsuredDetails: "/Product/GetSumInsuredList",
     getPremiumDetaiks: "/Product/GetPremium",
     getFamilyConstruct: "/Common/GetFamilyConstructByProductCode",
-    saveBBCommonDraft: "/BranchBanking/SaveBBCommonDraft",
+    saveBBCommonDraft: "api/v1/SaveBBCommonDraft",
     getLeadStatusCount: "GetLeadStatusCount",
     getProposalStatusCount: "GetProposalStatusCount",
     getRenewalStatusCount: "GetRenewalStatusCount",
