@@ -40,4 +40,6 @@ export class CreateLead {
     isUpdate!: number;
     AdditionalInformation!: string;
     proposalNumber!:string;
+    zone!:string;
+
 }

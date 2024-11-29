@@ -243,9 +243,7 @@ export class CreateLeadComponent implements OnInit {
       age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     }
     this.CreateLead.age = age.toString();
-
-   
-  
+    this.CreateLead.zone =  this.zoneCode
     
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
@@ -319,6 +317,8 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
+
+    this.zoneCode = this.submittedUser?.zone ?? '';
   }
 
 
