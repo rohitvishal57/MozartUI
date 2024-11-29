@@ -1415,5 +1415,21 @@ h4 {
       bottom: -30px;
     }
   }
+  @media (max-width:767px) {
+    padding: 0;
+  }
+}
+@media (max-width:767px) {
+  .overlay_popupMain.overlay_dropdown_w518 {
+    width: 100%;
+  }
+  .insurer_memberDetails {
+    .input-checkbox-withIcon {
+      gap:6px;
+      .input-checkbox-feild {
+        width: 100%;
+      }
+    }
+  }
 }
 /*Custom overlay dropdown end*/

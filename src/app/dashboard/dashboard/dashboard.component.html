@@ -12,7 +12,7 @@
         <div class="section_fullWidth">
           <div class="cardWraper">
             <div class="cardItem">
-              <div class="cardItem_header">
+              <div class="cardItem_header main_headerSearch">
                 <div class="cardItem_headerSearch">
                   <div class="field_searchMain">
                     <input type="text" class="filterSearch"
@@ -73,7 +73,7 @@
         <!--Important Tasks New design start-->
         <section class="commonSection dashboard_LPR_main dashboard_importantEvents" *ngIf="quickActionDetails">
           <h3>{{"Important Tasks" | translate}}</h3>
-          <div class="body_flex_row mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          <div class="body_flex_row body_importantEvents mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropQuickAct($event)">
             <ng-conatiner class="width_taskCard" *ngFor="let qucikAction of quickActionDetails">
               <ng-conatiner [ngSwitch]="qucikAction.name">
@@ -287,7 +287,7 @@
         </div>
         <section class="commonSection dashboard_LPR_main" *ngIf="tabsInfo.length">
           <h3>{{"Business Summary" | translate}}</h3>
-          <div class="body_flex_row mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropTabs($event)">
             <ng-container *ngFor="let tab of tabsInfo">
               <div cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
@@ -316,10 +316,10 @@
                   </ng-container>
                 </div>
                   <div [ngSwitch]="tab.chart">
-                    <div *ngSwitchCase="'Leads'" style="position: relative; width:100%">
+                    <div *ngSwitchCase="'Leads'" class="chart-container" style="position: relative; width:100%">
                       <canvas #chartCanvas style="margin: auto;  width:100%"></canvas>
                     </div>
-                    <div *ngSwitchCase="'Proposals'" style="position: relative; width:100%">
+                    <div *ngSwitchCase="'Proposals'" class="chart-container" style="position: relative; width:100%">
                       <canvas #chartPropCanvas style="margin: auto;  width:100%"></canvas>
                     </div>
                   </div>
@@ -349,7 +349,7 @@
           </div>
         </section>
         <section class="dashboard_LPR_main commonSection">
-          <div class="body_flex_row mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropCharts($event)">
           <ng-container *ngFor="let obj of chartsArray">
             <div *ngIf="obj == 'customer'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">

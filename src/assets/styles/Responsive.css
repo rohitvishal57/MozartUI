@@ -35,7 +35,9 @@
     }
 }
 @media (max-width:1093px) {
-    
+    .siteBody {
+        padding: 13rem 5% 12rem;
+    }
     .siteHeader .abcLinksMain {
         padding: 3px 10px;
     }
