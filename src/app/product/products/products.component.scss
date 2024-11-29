@@ -425,12 +425,21 @@
             header {
                 .body_flex_row {
                     align-items: center;
+                    @media (max-width:767px) {
+                        max-width: 90%;
+                    }
                 }
                 h6 {
                     font-weight: 700;
                     font-size: 18px;
                     color: #4C4C4C;
                     margin: 0;
+                    @media (max-width:767px) {
+                        max-width: 80%;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
                 }
             }
             .cardViewBody {
@@ -446,7 +455,7 @@
             footer {
                 .btn_groupAction {
                     gap:8px;
-                    @media (max-width:912px) {
+                    @media (max-width:1024px) {
                         flex-direction: column;
                     }
                 }
