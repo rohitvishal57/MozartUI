@@ -6073,6 +6073,37 @@ input[type=number]::-webkit-outer-spin-button {
 }
 /*----Calendar styles  end----*/
 
+/*---Common Error styles Start--*/
+.main_commonError {
+  padding: 40px 20px;
+}
+.submain_commonError {
+  display: flex;
+  flex-direction: column;
+  gap:14px;
+  max-width: 400px;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  font-weight: 400;
+  font-size: 16px;
+  color: #767D93;
+}
+.submain_commonError img {
+  width: 120px;
+  height: 107px;
+}
+.submain_commonError h6, .submain_pageLoading h6 {
+  font-weight: 600;
+  font-size: 20px;
+  color: #2e2e2e;
+  margin: 0
+}
+.submain_commonError button {
+  padding: 10px 40px;
+}
+/*---Common Error styles End--*/
+
 /*----New styles added 13-nov-24 start----*/
 .note_remarkText_width {
   max-width: 320px;

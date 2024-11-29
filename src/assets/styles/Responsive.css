@@ -494,7 +494,9 @@
         width: 30px;
         height: 30px;
    }
-   
+   .submain_commonError button {
+        padding: 10px 30px;
+    }
 }
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
