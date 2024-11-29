@@ -16,7 +16,7 @@
                 <div class="cardItem_headerSearch">
                   <div class="field_searchMain">
                     <input type="text" class="filterSearch"
-                      placeholder="Search Your Customer, Leads, Claims No and more" [(ngModel)]="searchedValue" />
+                      [placeholder]="'Search Your Customer, Leads, Claims No and more' | translate" [(ngModel)]="searchedValue" />
                     <img src="assets/Img/icon_magnify_grey.svg" (click)="onSearch()">
                     <div class="overlay_popupMain overlay_dropdown_w518 overlay_searchResults"
                       *ngIf="showSearchedResults && searchedData?.length">
@@ -97,7 +97,7 @@
                       </div>
                   </main>
                     <footer>
-                      <a (click)="onClickEvents('events')">View all</a>
+                      <a (click)="onClickEvents('events')">{{"View all" | translate}}</a>
                     </footer>
                   </div>
                   <div cdkDrag *ngSwitchCase="'birthdayDetails'" class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
@@ -116,7 +116,7 @@
                         </div>
                     </main>
                     <footer>
-                      <a (click)="onClickEvents('birthday')">View all</a>
+                      <a (click)="onClickEvents('birthday')">{{"View all" | translate}}</a>
                     </footer>
                   </div>
                   <div cdkDrag *ngSwitchCase="'notifications'" class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
@@ -125,7 +125,7 @@
                         <img src="./assets/Img/icon_notifications.svg">
                       </figure>
                       <div>
-                        <h5>Notifications</h5>
+                        <h5>{{"Notifications" | translate}}</h5>
                       </div>
                     </header>
                     <main class="body_flex_column">
@@ -139,7 +139,7 @@
                         </div>
                     </main>
                     <footer>
-                      <a (click)="onClickEvents('notification')">View all</a>
+                      <a (click)="onClickEvents('notification')">{{"View all" | translate}}</a>
                     </footer>
                   </div>
               </ng-conatiner>
