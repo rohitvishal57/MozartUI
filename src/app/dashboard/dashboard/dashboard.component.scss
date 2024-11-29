@@ -38,7 +38,8 @@
         }
   
         .filterSearch {
-          background: #fafafa;
+          /* background: #fafafa; */
+          background: #efefef;
           border-radius: 20px;
           font-size: 12px;
           font-weight: 400;
@@ -1407,4 +1408,102 @@ h2 {
         border-radius: 20px;
     }
 }
+
+/*---Responsive dahboard new sections styles start---*/
+@media (max-width:1280px){
+    .cardWraper-container {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+}
+@media (max-width:1024px){
+    .cardWraper-container {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .dashboard_importantEvents .content_taskCard  {
+        h6 {
+            span {
+                max-width: 90%;
+            }
+        }
+        small{
+            min-width: 42px;
+        }
+    }
+    .cardWraper-container {
+        grid-template-columns: repeat(auto-fit, minmax(189px, 1fr));
+    }
+}
+@media (max-width:912px) {
+    .main_headerSearch {
+        gap:15px;
+    }
+    .dashboard_importantEvents .width_taskCard {
+        width: 32%;
+    }
+    .dashboard_importantEvents .content_taskCard  {
+        h6 {
+            max-width: 120px;
+        }
+    }
+}
+@media (max-width:820px) {
+    .cardWraper-container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+    .dashboard_LPR_main .body_LPR_main{
+        flex-wrap: wrap;
+        .dashboard_leadsMain {
+            width: 48%;
+            &:last-child {
+                width: 100%;
+                .chart-container {
+                    width: 50% !important;
+                    margin: auto;
+                }
+            }
+        }
+    }
+}
+@media (max-width:768px) {
+    .dashboard_importantEvents .content_taskCard {
+        h6 {
+            max-width: 60%;
+        }
+    }
+}
+@media (max-width:767px) {
+    .dashboard_importantEvents .body_importantEvents,
+    .dashboard_LPR_main .body_LPR_main {
+        flex-direction: column;
+    }
+    .performance-overview {
+        margin-top: 25px;
+    }
+    .main_headerSearch {
+        flex-direction: column-reverse;
+        gap:15px;
+        .cardItem_headerSearch {
+            width: 100%;
+        }
+        .get-quote-btn {
+            padding: 10px !important;
+        }
+    }
+    .dashboard_importantEvents .width_taskCard {
+        width: 100%;
+    }
+    .dashboard_LPR_main .body_LPR_main{
+        flex-wrap: wrap;
+        .dashboard_leadsMain {
+            width: 100%;
+            .chart-container {
+                width: 50% !important;
+                margin: auto;
+            }
+        }
+    }
+}
+
+/*---Responsive dahboard new sections styles end---*/
+
 /*---dahboard new sections styles end---*/
