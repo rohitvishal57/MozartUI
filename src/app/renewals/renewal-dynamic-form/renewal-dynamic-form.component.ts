@@ -888,7 +888,7 @@ getproductdetailsandfeatures() {
     const formData = new FormData();
     formData.append("Files", this.file);
     formData.append("UniqueNumber", policyNum);    
-    this.commonService.uploaDocument(formData).subscribe(
+    this.commonService.uploadDocument(formData).subscribe(
       (res: any) => {        
         if (res.isSuccess) {
           this.documentId = res.data.uploadResponse[0].globalId;

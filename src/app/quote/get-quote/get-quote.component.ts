@@ -28,8 +28,8 @@ export class GetQuoteComponent {
   showDropdownsFlag: boolean = false;
   showCustomDiv = false;
   selectedDropdown = '';
-  availableZones: string[] = [];
-  upgradedZone:string='';
+  upgradableZones: any[] = [];
+  upgradedZone: string = '';
   currentZone: string = '';
   relationCountMap: Map<string, number> = new Map([
     ["R003", 0],
@@ -61,7 +61,7 @@ export class GetQuoteComponent {
   ];
 
   proposerZone: any;
-  proposerZoneValue: any;
+  proposerZoneValue: any = '';
   proposerCity: any;
   proposerState: any;
   selectedSumInsured: any;
@@ -99,12 +99,12 @@ export class GetQuoteComponent {
 
   value: number = 5;
   currentDate = new Date().toISOString().split('T')[0];
-  addHide:boolean = false;
-  numberOfChild :any = 0;
+  addHide: boolean = false;
+  numberOfChild: any = 0;
   relations: any[] = [
     {
       "id": "R001",
-      "relationCode":25,
+      "relationCode": 25,
       "value": "Self",
       "name": "Self",
       "isIncrement": false,
@@ -115,7 +115,7 @@ export class GetQuoteComponent {
     },
     {
       "id": "R002",
-      "relationCode":24,
+      "relationCode": 24,
       "value": "Spouse",
       "name": "Spouse",
       "isIncrement": false,
@@ -126,7 +126,7 @@ export class GetQuoteComponent {
     },
     {
       "id": "R005",
-      "relationCode":22,
+      "relationCode": 22,
       "value": "Mother",
       "name": "Mother",
       "isIncrement": false,
@@ -137,7 +137,7 @@ export class GetQuoteComponent {
     },
     {
       "id": "R006",
-      "relationCode":20,
+      "relationCode": 20,
       "value": "Father",
       "name": "Father",
       "isIncrement": false,
@@ -148,7 +148,7 @@ export class GetQuoteComponent {
     },
     {
       "id": "R003",
-      "relationCode":23,
+      "relationCode": 23,
       "value": "Son1",
       "name": "Son1",
       "isIncrement": true,
@@ -159,7 +159,7 @@ export class GetQuoteComponent {
     },
     {
       "id": "R004",
-      "relationCode":19,
+      "relationCode": 19,
       "value": "Daughter1",
       "name": "Daughter1",
       "isIncrement": true,
@@ -174,9 +174,9 @@ export class GetQuoteComponent {
     ["R003", 0],
     ["R004", 0],
   ];
-  constructor(private fb: FormBuilder,private encryptionService: EncryptionService,
+  constructor(private fb: FormBuilder, private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
-    private translateService: TranslateService,private router: Router) { }
+    private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
@@ -187,7 +187,7 @@ export class GetQuoteComponent {
       });
     });
     console.log(this.currentDate);
-    console.log(this.relationCountMap,this.anotherRelationCountMap);
+    console.log(this.relationCountMap, this.anotherRelationCountMap);
     // this.quoteForm = this.fb.group(formControls);
     this.selectedSumInsured = this.sliderOptions?.stepsArray?.[0]?.value;
     let formData: any;
@@ -195,7 +195,7 @@ export class GetQuoteComponent {
       formData = this.encryptionService.decrypt(sessionStorage.getItem('formData') as string);
       this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
     }
-    console.log(formData,this.relations);
+    console.log(formData, this.relations);
     if (formData && formData.currentZone) {
       this.currentZone = formData.currentZone;
     }
@@ -204,9 +204,9 @@ export class GetQuoteComponent {
       proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
       mobileNumber: [null, [Validators.required, Validators.pattern('^[6-9][0-9]{9}$'), Validators.maxLength(10)]],
       typeOfBusiness: ["NB"],
-      proposerZone: [this.upgradedZone],
+      zoneValue: [this.proposerZoneValue],
       currentZone: [this.currentZone],
-      availableZones: [this.availableZones],
+      upgradableZones: [this.upgradableZones],
       zone: [this.proposerZone],
       isEmployee: [false],
       sumInsured: [this.selectedSumInsured, [Validators.required]],
@@ -224,16 +224,16 @@ export class GetQuoteComponent {
       if (formData.memberPolicyType) {
         this.onPlanTypeChange(formData.memberPolicyType);
       }
-      if (formData.availableZones) {
-        this.availableZones = formData.availableZones;
+      if (formData.upgradableZones) {
+        this.upgradableZones = formData.upgradableZones;
       }
       if (formData.sumInsured) {
         this.selectedSumInsured = formData.sumInsured;
       }
-      if(formData.insuredMembers && formData.insuredMemberDetails.length > 0){
+      if (formData.insuredMembers && formData.insuredMemberDetails.length > 0) {
         // const currentMember:any = {};
 
-// Add members from `this.relations` in the exact sequence
+        // Add members from `this.relations` in the exact sequence
         // this.relations.forEach(relation => {
         //   currentMember[relation.value] = formData.insuredMembers[relation.value] ?? false;
         //   if (relation.value.startsWith('Son') || relation.value.startsWith('Daughter')) {
@@ -251,19 +251,19 @@ export class GetQuoteComponent {
         // console.log(JSON.stringify(currentMember, null, 2));
         this.relations = this.encryptionService.decrypt(sessionStorage.getItem('relations') as string);
         console.log(this.relations);
-        console.log(this.relationCountMap,this.anotherRelationCountMap);
-        this.relations.forEach((item:any) => {
-          Object.entries(formData.insuredMembers).forEach(([memberName, isIncluded],index) =>{
+        console.log(this.relationCountMap, this.anotherRelationCountMap);
+        this.relations.forEach((item: any) => {
+          Object.entries(formData.insuredMembers).forEach(([memberName, isIncluded], index) => {
             const mockEvent = { target: { checked: isIncluded } };
-            if(item.name == memberName){
-              console.log(item,memberName);
-              if (this.relationCountMap.has(item.id)){
-                let currentCount:any = this.relationCountMap.get(item.id) || 1;
+            if (item.name == memberName) {
+              console.log(item, memberName);
+              if (this.relationCountMap.has(item.id)) {
+                let currentCount: any = this.relationCountMap.get(item.id) || 1;
                 currentCount += 1;
                 this.relationCountMap.set(item.id, currentCount);
               }
-              this.onRelationChange(mockEvent, item); 
-           }
+              this.onRelationChange(mockEvent, item);
+            }
           });
         })
         // Object.entries(currentMember).forEach(([memberName, isIncluded],index) => {
@@ -297,7 +297,7 @@ export class GetQuoteComponent {
         //         // this.onRelationChange(mockEvent, newMember);
         //         let currentCount:any = this.relationCountMap.get(aindex.id) || 1;
         //         currentCount += 1;
-  
+
         //         // Update the count in the map
         //         this.relationCountMap.set(aindex.id, currentCount);
         //       // }
@@ -319,7 +319,7 @@ export class GetQuoteComponent {
         //   }
         //   this.onRelationChange(mockEvent, memberName);
         //   // this.DateCheck.push(true);
-          console.log(this.selectedRelationships,this.relations,this.relationCountMap);
+        console.log(this.selectedRelationships, this.relations, this.relationCountMap);
         // });
         // this.addInsuredMemberDetails();
         const insuredMembersGroup = this.fb.group({});
@@ -330,8 +330,8 @@ export class GetQuoteComponent {
         this.quoteFormGroup.setControl('insuredMemberDetails', insuredMemberDetailsArray);
 
         // Add controls for the currently selected relationships
-        const insured:any=[];
-        if(formData.insuredMemberDetails){
+        const insured: any = [];
+        if (formData.insuredMemberDetails) {
           const insured = formData.insuredMemberDetails;
           console.log(insured);
         }
@@ -345,8 +345,8 @@ export class GetQuoteComponent {
             sumInsured: [this.quoteFormGroup.get('sumInsured')?.value, [Validators.required]],
             isChronic: ["No"],
             chronicDiseases: [this.diseaseNames],
-            zone: [this.proposerZone  || formData.insuredMemberDetails[0].zone],
-            availableZones: [this.availableZones  || formData.insuredMemberDetails[0].availableZones],
+            zone: [this.proposerZone || formData.insuredMemberDetails[0].zone],
+            upgradableZones: [this.upgradableZones  || formData.insuredMemberDetails[0].upgradableZones],
             memberGender: [relation.gender, [Validators.required]],
             memberdob: [relation.dob, [Validators.required]],
             memberRelationCode: [relation.relationCode, [Validators.required]],
@@ -367,7 +367,7 @@ export class GetQuoteComponent {
         console.log(this.selectedRelation);
       }
     }
-  console.log(this.quoteFormGroup.value);
+    console.log(this.quoteFormGroup.value);
     // Object.keys(this.multiIndiReqData).forEach((key: string)=>{
     //   if(Array.isArray(this.multiIndiReqData[key])){
 
@@ -384,13 +384,13 @@ export class GetQuoteComponent {
   onRelationChange(event: any, relation: any) {
     const isChecked = event.target.checked;
     const selectedValue = relation.value;
-    console.log(this.relationCountMap,this.selectedPlan,this.relations,relation,isChecked,selectedValue,this.selectedRelationships);
+    console.log(this.relationCountMap, this.selectedPlan, this.relations, relation, isChecked, selectedValue, this.selectedRelationships);
 
     if (isChecked) {
-       if (!this.selectedRelationships.some(
+      if (!this.selectedRelationships.some(
         (existingRelation: any) => existingRelation.name === relation.name
       )) {
-        if(this.relationCountMap.has(relation.id)){
+        if (this.relationCountMap.has(relation.id)) {
           if (this.selectedPlan === 'Family Floater') {
             if (this.numberOfChild == 3) {
               this.addHide = true;
@@ -413,7 +413,7 @@ export class GetQuoteComponent {
             //   this.toast.warning({detail: "Error",summary: "Already 4 Child are Added.",duration: 2000});
             // }
           }
-          else{
+          else {
             this.selectedRelationships.push(relation);
             this.addHide = false;
           }
@@ -423,7 +423,7 @@ export class GetQuoteComponent {
         //   this.selectedRelationships.push(relation);
         //   this.addHide = false;
         // }
-        else{
+        else {
           this.selectedRelationships.push(relation);
           // this.addHide = false;
         }
@@ -432,20 +432,20 @@ export class GetQuoteComponent {
       this.selectedRelationships = this.selectedRelationships.filter((r: any) => r.name !== relation.name);
       relation.age = null;
       relation.dob = null;
-      if (this.relationCountMap.has(relation.id)){
-        if (this.selectedPlan === 'Family Floater'){
+      if (this.relationCountMap.has(relation.id)) {
+        if (this.selectedPlan === 'Family Floater') {
           // if(!relation.dob){
-            this.numberOfChild -= 1;
+          this.numberOfChild -= 1;
           // }
           this.addHide = false;
         }
-        else{
+        else {
           this.addHide = false;
         }
       }
     }
-    console.log(this.selectedRelationships,selectedValue,isChecked,this.numberOfChild);
-    console.log(this.selectedRelationships,this.relations,this.relationCountMap);
+    console.log(this.selectedRelationships, selectedValue, isChecked, this.numberOfChild);
+    console.log(this.selectedRelationships, this.relations, this.relationCountMap);
     // this.saveDataToStorage();
   }
 
@@ -458,19 +458,19 @@ export class GetQuoteComponent {
     this.selectedRelationships.forEach((selectedRelation: any) => {
       if (selectedRelation.name == relation.name) {
         selectedRelation.dob = dob;
-        console.log(dob.length,year as number,currentYear,year.toString().length);
-        if(year.toString().length === 4){
+        console.log(dob.length, year as number, currentYear, year.toString().length);
+        if (year.toString().length === 4) {
           if (year < 1800 || year > currentYear) {
-            console.log(selectedRelation,dobArray);
+            console.log(selectedRelation, dobArray);
             this.toast.error({
               detail: "Error",
               summary: "Please fill valid Date.",
               duration: 3000
             });
           }
-          else{
+          else {
             console.log(dobArray[0]);
-            
+
             const age = this.calculateAge(dob);
             selectedRelation.age = age;
           }
@@ -542,7 +542,7 @@ export class GetQuoteComponent {
   }
 
   openCustomDiv(label: string, index: number) {
-    console.log(label,index);
+    console.log(label, index);
     if (this.activeDropdown === index) {
       this.activeDropdown = null;
     } else {
@@ -617,8 +617,9 @@ export class GetQuoteComponent {
     this.quoteFormGroup.get('numberOfInsuredMembers')?.setValue(this.selectedRelationships.length);
     this.quoteFormGroup.get('familySize')?.setValue(this.selectedRelationships.length + "A");
     this.quoteFormGroup.get('currentZone')?.setValue(this.currentZone);
-    this.quoteFormGroup.get('availableZones')?.setValue(this.availableZones);
-    this.quoteFormGroup.get('zone')?.setValue(this.currentZone);
+    this.quoteFormGroup.get('upgradableZones')?.setValue(this.upgradableZones);
+    this.quoteFormGroup.get('zone')?.setValue(this.upgradedZone);
+    this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
     console.log(this.quoteFormGroup.value);
     sessionStorage.setItem("formData", this.encryptionService.encrypt(this.quoteFormGroup.value));
     sessionStorage.setItem("relations", this.encryptionService.encrypt(this.relations));
@@ -682,7 +683,7 @@ export class GetQuoteComponent {
 
     // Get the current count for the relation type (Son, Daughter, etc.)
     let currentCount = this.relationCountMap.get(relation.id) || 1; // Start count at 1 if not set
-    console.log(relation,baseName,currentCount,this.relations,this.relationCountMap);
+    console.log(relation, baseName, currentCount, this.relations, this.relationCountMap);
     let baseRelation = { ...relation }; // Deep copy the relation
     baseRelation.isIncrement = true; // Mark the cloned relation as a regular relation
     // baseRelation['deletable'] = true; // Mark it as deletable
@@ -838,7 +839,7 @@ export class GetQuoteComponent {
 
   // Add new member details
   addInsuredMemberDetails(): void {
-    console.log(this.selectedRelationships,this.quoteFormGroup);
+    console.log(this.selectedRelationships, this.quoteFormGroup);
     if (this.selectedRelationships.length < 2 && this.selectedPlan === 'Family Floater') {
       this.toast.error({
         detail: "Error",
@@ -848,7 +849,7 @@ export class GetQuoteComponent {
       return; // Prevent proceeding if fewer than 2 members are selected
     }
     let isValid = false;
-    this.selectedRelationships.forEach((member:any) => {
+    this.selectedRelationships.forEach((member: any) => {
       console.log(member);
       if (member.dob == null || member.age == null || member.dob === '' || member.age === '') {
         this.toast.error({
@@ -895,13 +896,13 @@ export class GetQuoteComponent {
           isChronic: ["No"],
           chronicDiseases: [this.diseaseNames],
           zone: [this.upgradedZone],
-          availableZones: [this.availableZones],
+          upgradableZones: [this.upgradableZones],
           memberGender: [relation.gender, [Validators.required]],
           memberdob: [relation.dob, [Validators.required]],
           memberRelationCode: [relation.relationCode, [Validators.required]],
           pincode: [this.quoteFormGroup.get('proposerPincode')?.value],
           city: [this.proposerCity],
-          zoneValue: [this.proposerZone],
+          zoneValue: [this.proposerZoneValue],
           state: [this.proposerState]
         });
 
@@ -944,9 +945,10 @@ export class GetQuoteComponent {
   }
 
   onZoneChange(event: any) {
-    this.upgradedZone = event.target.value
-    this.proposerZone = event.target.value
-    this.quoteFormGroup.get('proposerZone')?.setValue(this.upgradedZone);
+    const matchingZone = this.upgradableZones.find((zone: any) => zone.value === event.target.value);
+    this.upgradedZone = matchingZone ? matchingZone.name : null;
+    this.proposerZoneValue = event.target.value
+    this.quoteFormGroup.get('zone')?.setValue(this.upgradedZone);
     console.log(event.target.value);
   }
 
@@ -954,13 +956,13 @@ export class GetQuoteComponent {
     const pincode = event.target.value;
 
     if (!pincode) {
-      this.availableZones = []; // Clear available zones
-      this.quoteFormGroup.get('proposerZone')?.setValue(''); // Reset the zone field in the form
+      this.upgradableZones = []; // Clear available zones
+      this.quoteFormGroup.get('zoneValue')?.setValue(''); // Reset the zone field in the form
       return;
     }
-    
+
     const isValidPincode = /^[0-9]{6}$/.test(pincode) && !/^(\d)\1{5}$/.test(pincode);
-  
+
     if (!isValidPincode) {
       this.toast.error({
         detail: "WARNING",
@@ -969,26 +971,35 @@ export class GetQuoteComponent {
       });
       return;
     }
-  
+
     const reqdata = {
       pincode: pincode
     };
-  
-    this.availableZones = [];
+
+    this.upgradableZones = [];
     this.service.getPinCodeByCity(reqdata).subscribe({
       next: (res) => {
         if (res.isSuccess) {
+          console.log(res);
+
           this.currentZone = res.data.zone;
           this.upgradedZone = res.data.zone;
           this.proposerZone = res.data.zone;
           this.proposerCity = res.data.city;
           this.proposerState = res.data.state;
-          this.proposerZoneValue = res.data.zoneCode;
+          this.proposerZoneValue = res.data.zoneValue;
 
           const upgradableZones = res.data.upgradableZones as any[];
-          this.availableZones = upgradableZones.map(zone => zone.zone);
-  
-          this.quoteFormGroup.get('proposerZone')?.setValue(this.upgradedZone);
+          // this.availableZones = upgradableZones.map(zone => zone.zone);
+
+          upgradableZones.forEach((zone: any) => {
+            this.upgradableZones.push({
+              name: zone.zone,
+              value: zone.zoneCode
+            });
+          })
+
+          this.quoteFormGroup.get('zoneValue')?.setValue(this.proposerZoneValue);
         } else {
           this.toast.error({
             detail: "WARNING",
