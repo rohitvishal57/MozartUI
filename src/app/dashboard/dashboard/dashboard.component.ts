@@ -29,6 +29,8 @@ export class DashboardComponent {
   @ViewChild('chartPropCanvas') chartPropCanvas: ElementRef | undefined;
   @ViewChild('chartRenewCanvas') chartRenewCanvas: ElementRef | undefined;
   @ViewChild('chartDHACanvas') chartDHACanvas: ElementRef | undefined;
+  @ViewChild('chartCustomerCanvas') chartCustomerCanvas: ElementRef | undefined;
+  @ViewChild('chartServicingCanvas') chartServicingCanvas: ElementRef | undefined;
   searchedValue: any;
   serviceInfo: any;
   wellnessInfo: any;
@@ -36,7 +38,13 @@ export class DashboardComponent {
 
   chartsArray: any = [
     'customer', 'claim', 'dha'
-  ]
+  ];
+
+  sectionList: any = [
+    'QuickAction', 'ABHI', 'Performance', 'Business', 'Customer'
+  ];
+
+  otherSection: any = [];
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
@@ -96,6 +104,10 @@ export class DashboardComponent {
 
   dropCharts(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.chartsArray, event.previousIndex, event.currentIndex);
+  }
+
+  dropSections(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.sectionList, event.previousIndex, event.currentIndex);
   }
 
   getQuote() {
@@ -241,7 +253,15 @@ export class DashboardComponent {
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
             console.log('customer', res.data)
             this.customerInfo = res.data;
-            this.createChart();
+            this.otherSection.push({
+              tabName: 'Customer',
+              chart: 'Customer',
+              totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
+              category: Object.entries(res.data).map(([name, count]) => ({
+                name: name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+                count: count
+              }))
+            })
           })
           break;
 
@@ -249,7 +269,15 @@ export class DashboardComponent {
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
             console.log('Servicing', res.data)
             this.serviceInfo = res.data;
-            this.createServiceChart();
+            this.otherSection.push({
+              tabName: 'Servicing',
+              chart: 'Servicing',
+              totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
+              category: Object.entries(res.data).map(([name, count]) => ({
+                name: name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+                count: count
+              }))
+            })
           })
           break;
 
@@ -257,26 +285,15 @@ export class DashboardComponent {
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
             console.log('Wellness', res.data)
             this.dhaCard = res.data;
-            // res.data.length && Object.values(res.data).forEach((el: any) => {
-            //   switch (el.wellnessType) {
-            //     case 'DHA - Vaccination':
-            //     case 'DHA - Prevention Services':
-            //       const nops = {
-            //         title: 'Policies Sold',
-            //         value: res.data[el],
-            //         description: `Policies sold as per selected range ${res.data[el]}`,
-            //         icon: 'assets/Img/icon_dashboard_policysold.svg',
-            //         subIcon: 'assets/Img/icon_price_tag.svg',
-            //         type: 'text',
-            //         class: ''
-            //       }
-            //       this.dhaCard.push(nops)
-            //       break;
-
-            //     default:
-            //       break;
-            //   }
-            // })
+            this.otherSection.push({
+              tabName: 'Wellness',
+              chart: 'Wellness',
+              totalCount: res.data.reduce((sum: any, item: any) => sum + item.count, 0),
+              category: res.data.map((item: any) => ({
+                name: item.wellnessType,
+                count: item.count
+              }))
+            })
           })
           break;
 
@@ -322,87 +339,7 @@ export class DashboardComponent {
           })
           break;
       }
-    });
-  }
 
-  createChart(): void {
-    this.chart = new Chart("MyChart", {
-      type: 'doughnut',
-      data: {
-        labels: [
-          'Total Customers', 'Active Customers', 'InAcive Customers'
-        ],
-        datasets: [{
-          data: [this.customerInfo?.totalCustomerCount, this.customerInfo?.activeCustomerCount, (this.customerInfo?.totalCustomerCount - this.customerInfo?.activeCustomerCount)],
-          backgroundColor: [
-            '#3498db',
-            '#27ae60',
-            '#f44336'
-          ],
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              font: {
-                size: 11,  // Reduce the font size of the legend labels
-                weight: 'normal',  // Adjust the weight of the legend text
-                family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
-              },
-              boxWidth: 10,  // Set the width of the colored box (legend symbol)
-              boxHeight: 10,  // Set the height of the colored box (legend symbol)
-              padding: 5  // Adjust the padding around each legend item
-            }
-
-          }
-        }
-      }
-    });
-  }
-
-  createServiceChart(): void {
-    this.chart = new Chart("MyServiceChart", {
-      type: 'doughnut',
-      data: {
-        labels: [
-          'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
-        ],
-        datasets: [{
-          data: [this.serviceInfo.claimRejectedCount, this.serviceInfo.claimSettledLessAmountCount, this.serviceInfo.claimsOpenCount, this.serviceInfo.complaintsOpenCount, this.serviceInfo.endorsementsOpenCount, this.serviceInfo.policyCancellationRequestsCount],
-          backgroundColor: [
-            '#ff5722',
-            '#4caf50',
-            '#673ab7',
-            '#9c27b0',
-            '#2196f3',
-            '#f44336'
-          ],
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'bottom',
-            labels: {
-              font: {
-                size: 11,  // Reduce the font size of the legend labels
-                weight: 'normal',  // Adjust the weight of the legend text
-                family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
-              },
-              boxWidth: 10,  // Set the width of the colored box (legend symbol)
-              boxHeight: 10,  // Set the height of the colored box (legend symbol)
-              padding: 5  // Adjust the padding around each legend item
-            }
-
-          }
-        }
-      }
     });
   }
 
@@ -414,6 +351,8 @@ export class DashboardComponent {
         this.renderPropChart();
         this.renderEXPropChart();
         this.renderDHAChart();
+        this.renderCustomerChart();
+        this.renderServiceChart();
       } else {
         console.error('Canvas element not found.');
       }
@@ -684,6 +623,141 @@ export class DashboardComponent {
       this.chart = new Chart(ctx, {
         type: 'doughnut', // 'pie' or 'doughnut'
         data: this.createDHAChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 12,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+  createCustomerChartData(): ChartData<'pie' | 'doughnut'> {
+    return {
+      labels: ['Total Customers', 'Active Customers', 'InAcive Customers'],
+      datasets: [{
+        data: [this.customerInfo?.totalCustomerCount, this.customerInfo?.activeCustomerCount, (this.customerInfo?.totalCustomerCount - this.customerInfo?.activeCustomerCount)],
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c',
+          '#27ae60',
+          '#e67e22',
+          '#f1c40f',
+          '#95a5a6'
+        ],
+        // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderCustomerChart(): void {
+    if (this.chartDHACanvas && this.chartDHACanvas.nativeElement) {
+      const canvas = this.chartDHACanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.chart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createCustomerChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                font: {
+                  size: 12,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
+  createServiceChartData(): ChartData<'pie' | 'doughnut'> {
+    
+    return {
+      labels: [
+        'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
+      ],
+      datasets: [{
+        data: [this.serviceInfo.claimRejectedCount, this.serviceInfo.claimSettledLessAmountCount, this.serviceInfo.claimsOpenCount, this.serviceInfo.complaintsOpenCount, this.serviceInfo.endorsementsOpenCount, this.serviceInfo.policyCancellationRequestsCount],
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c',
+          '#27ae60',
+          '#e67e22',
+          '#f1c40f',
+          '#95a5a6'
+        ],
+        // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderServiceChart(): void {
+    if (this.chartDHACanvas && this.chartDHACanvas.nativeElement) {
+      const canvas = this.chartDHACanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.chart = new Chart(ctx, {
+        type: 'doughnut', // 'pie' or 'doughnut'
+        data: this.createServiceChartData(), // Dynamic chart data
         options: {
           responsive: true,
           plugins: {

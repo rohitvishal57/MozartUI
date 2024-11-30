@@ -70,8 +70,11 @@
             </div>
           </div>
         </div>
+        <ng-conatiner class="body_flex_column" cdkDropListOrientation="vertical" cdkDropList
+        (cdkDropListDropped)="dropSections($event)">
+        <ng-container *ngFor="let section of sectionList">
         <!--Important Tasks New design start-->
-        <section class="commonSection dashboard_LPR_main dashboard_importantEvents" *ngIf="quickActionDetails">
+        <section cdkDrag class="commonSection dashboard_LPR_main dashboard_importantEvents" *ngIf="section == 'QuickAction' && quickActionDetails">
           <h3>{{"Important Tasks" | translate}}</h3>
           <div class="body_flex_row body_importantEvents mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropQuickAct($event)">
@@ -149,7 +152,7 @@
           </div>
         </section>
         <!--Important Tasks New design end-->
-        <section class="body_flex_column dashboard_latestABHI commonSection">
+        <section cdkDrag class="body_flex_column dashboard_latestABHI commonSection" *ngIf="section == 'ABHI'">
           <div class="body_flex_row justify-content-between">
             <h6>{{"Latest from ABHI" | translate}}</h6>
             <button type="button" id="btn-exploreMore" name="btn-exploreMore"
@@ -232,7 +235,7 @@
             </div>
           </div>
         </section>
-        <div class="contentBody dashboard_contentContainer" *ngIf="performanceCard.length">
+        <div cdkDrag class="contentBody dashboard_contentContainer" *ngIf="section == 'Performance' && performanceCard.length">
           <div class="performance-overview">
             <header>
               <h2>{{"Performance Overview" | translate}}</h2>
@@ -285,7 +288,7 @@
             </div>
           </div>
         </div>
-        <section class="commonSection dashboard_LPR_main" *ngIf="tabsInfo.length">
+        <section cdkDrag class="commonSection dashboard_LPR_main" *ngIf="section == 'Business' && tabsInfo.length">
           <h3>{{"Business Summary" | translate}}</h3>
           <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropTabs($event)">
@@ -348,89 +351,67 @@
             </div>
           </div>
         </section>
-        <section class="dashboard_LPR_main commonSection">
+        <section cdkDrag class="dashboard_LPR_main commonSection" *ngIf="section == 'Customer'">
           <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropCharts($event)">
-          <ng-container *ngFor="let obj of chartsArray">
-            <div *ngIf="obj == 'customer'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-              <div class="otherSections_wraper">
-                <header>
-                  <div class="otherSections_head">
-                    <h3>{{"My Customers" | translate}}</h3>
-                  </div>
-                </header>
-                <div class="otherSections_body mt-5">
-                  <div class="chart-container" style="position: relative; width:100%">
-                    <canvas id="MyChart" style="margin: auto; width:100%">{{ chart }}</canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="obj == 'claim'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-              <div class="otherSections_wraper">
-                <header>
-                  <div class="otherSections_head">
-                    <h3>{{"Claim Service" | translate}}</h3>
-                  </div>
-                </header>
-                <div class="otherSections_body mt-5">
-                  <div class="chart-container" style="position: relative; width:100%">
-                    <canvas id="MyServiceChart" style="margin: auto;  width:100%">{{ chart }}</canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="obj == 'dha'" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-              <div class="otherSections_wraper">
-                <header>
-                  <div class="otherSections_head">
-                    <h3>{{"DHA & HR Portfolio" | translate}}</h3>
-                  </div>
-                </header>
-                <div class="otherSections_body mt-5">
-                  <div class="chart-container" style="position: relative; width:100%">
-                    <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
-                  </div>
-                  <!-- <div class="card_wraper">
-                    <div class="cardsub_wraper">
-                    <ng-container *ngFor="let perform of dhaCard">
-                      <ng-container [ngSwitch]="perform.type">
-                        <div class="cardItem" *ngSwitchCase="'text'" cdkDrag>
-                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_dha.svg"></span>{{"Digital Health Assessments" | translate}}</header>
-                          <div class="info_assessments body_flex_row justify-content-between">
-                              <div class="item_assessments">
-                                <div class="value">241</div>
-                                <div class="label">{{"Total Assessments" | translate}}</div>
-                              </div>
-                              <div class="item_assessments">
-                                <div class="value">199</div>
-                                <div class="label">{{"Users" | translate}}</div>
-                              </div>
-                          </div>
-                          <div class="card-tip">
-                            <img src="assets/Img/icon_lightbulb.svg">
-                            {{"Dummy placeholder text" | translate}}
-                          </div>
-                        </div>
-                      </ng-container>
-                    </ng-container>
-                      
-                      <div class="cardItem">
-                        <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Returns" | translate}}</header>
-                        <div class="value">₹ 50,000</div>
-                        <div class="card-tip">
-                          <img src="assets/Img/icon_currency.svg">
-                          {{"Nudge your users to actively participate to save more" | translate}}
+          <ng-container *ngFor="let tab of otherSection">
+            <div cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+              <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
+                <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
+              <div class="leads_content leads_contentDashboard ">
+                <div class="scroll_contentDashboard">
+                  <ng-container *ngFor="let buz of tab.category">
+                    <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
+                      <div *ngSwitchCase="'Customer'">
+                        <div class="leads_item leads_open">
+                          <header>
+                            <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                            <label>{{buz.count}}</label>
+                          </header>
                         </div>
                       </div>
+                      <div *ngSwitchCase="'Wellness'">
+                        <div class="leads_item leads_open">
+                          <header>
+                            <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                            <label>{{buz.count}}</label>
+                          </header>
+                        </div>
+                      </div>
+
+                      <div *ngSwitchCase="'Servicing'">
+                        <div class="leads_item leads_open">
+                          <header>
+                            <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                            <label>{{buz.count}}</label>
+                          </header>
+                        </div>
+                      </div>
+
                     </div>
-                  </div> -->
+                  </ng-container>
+                </div>
+                <div [ngSwitch]="tab.chart">
+                  <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
+                    <!-- <canvas id="MyChart" style="margin: auto; width:100%">{{ chart }}</canvas> -->
+                    <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
+                  </div>
+                  <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
+                    <!-- <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas> -->
+                    <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
+                  </div>
+                  <div *ngSwitchCase="'Servicing'" class="chart-container" style="position: relative; width:100%">
+                    <!-- <canvas id="MyServiceChart" style="margin: auto;  width:100%">{{ chart }}</canvas> -->
+                    <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
           </ng-container>
           </div>
         </section>
+      </ng-container>
+    </ng-conatiner>
       </div>
     </div>
   </div>
