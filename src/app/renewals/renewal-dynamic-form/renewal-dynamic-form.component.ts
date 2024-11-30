@@ -243,6 +243,9 @@ export class RenewalDynamicFormComponent implements OnInit {
                   this.renewalInfo.response.policyData[0].Members.push(this.form.value);
                   const newMemberIndex =this.renewalInfo.response.policyData[0].Members.length - 1;
                   this.referenceNumber = res.data.referenceNumber;
+                  this.toast.success({detail: "",summary: "New Member Added Successfully.",duration: 2000,});
+                } else {
+                  this.toast.error({detail: "",summary: "Failed to Add New Member.",duration: 1500,});
                 }
               },
               (err) => {
@@ -278,6 +281,9 @@ export class RenewalDynamicFormComponent implements OnInit {
                   }
                 });
                 this.referenceNumber = res.data.referenceNumber;
+                this.toast.success({detail: "",summary: "Address Updated Successfully.",duration: 2000,});
+              } else {
+                this.toast.error({detail: "",summary: "Failed to Update Address.",duration: 1500});
               }
             },
             (err) => {
@@ -304,6 +310,9 @@ export class RenewalDynamicFormComponent implements OnInit {
                   }
                 });
                 this.referenceNumber = res.data.referenceNumber;
+                this.toast.success({detail: "",summary: "Nominee Updated Successfully.",duration: 2000,});
+              } else {
+                this.toast.error({ detail: "",summary: "Failed to Update Nominee Details.",duration: 1500});
               }
             },
             (err) => {
@@ -336,6 +345,9 @@ export class RenewalDynamicFormComponent implements OnInit {
                 }
               });
               this.referenceNumber = res.data.referenceNumber;
+              this.toast.success({detail: "",summary: "Bank Details Updated Successfully.",duration: 2000,});
+            } else {
+              this.toast.error({detail: "",summary: "Failed to Update Bank Details.",duration: 1500});
             }
           },
           (err) => {
