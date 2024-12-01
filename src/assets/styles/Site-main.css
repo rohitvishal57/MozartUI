@@ -1186,7 +1186,9 @@ input[type="checkbox"]:focus + label:before {
   top: 44px;*/
   display: none;
 }
-
+.inputbox-error {
+  border:1px solid #EB0000 !important;
+}
 .ui-dob-icon {
   width: 20px;
   height: 20px;

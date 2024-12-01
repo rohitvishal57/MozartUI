@@ -827,7 +827,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-size: 14px;
   line-height: 24px;
   color: #fff;
-  border: 1px solid #767d93;
+  border: 1px solid #C7222A;
   min-width: 196px;
   // margin: 9px 0px -4% 39px;
 }
@@ -871,7 +871,6 @@ h4 {
 }
 
 .btn_grey:hover {
-  color: #767d93;
   background: #fff;
 }
 
@@ -1412,6 +1411,7 @@ h4 {
     margin: 0;
     .btn_grey {
       position: relative;
+      background-color: #C7222A;
       bottom: -30px;
     }
   }

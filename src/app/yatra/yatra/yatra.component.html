@@ -687,7 +687,7 @@
                 <div *ngIf="control.type === 'editableInfo'" [class]="control.class" class="typecss">
                   <div [hidden]="!control.visible">
                     <!-- <div style="display: flex; flex-direction: row;">
-                      <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                      <input *ngIf="control.disabled" class="inputField_Text_disabled" [name]="control.name" [id]="control.name"
                         formControlName="{{ control.name }}" 
                         [ngClass]="{'disabled-has-value': hasAnyValue(control)}" readonly>
                         <i class="fa-regular fa-copy"></i>
