@@ -313,7 +313,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": "15521234543",
+        "proposalNum": "155212323423",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -1498,12 +1498,45 @@ export class RugDynamicFormComponent {
       }
       else {
         if (dobArray[0] as number >= 1800) {
-          const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
+          if(control.name == "nomineeDob"){
+            const nomineeAge = this.calculateAge(dob);
+            if (typeof nomineeAge === "number") {        
+              // Determine the second argument based on nomineeAge
+              const shouldEnableDependentControls = nomineeAge < 18;
+              if(shouldEnableDependentControls){
+                control.dependentControls.forEach((item: any) => {
+                  item.visibility = true
+                })
+                this.form.formSections.forEach((section: IFormSections) => {
+                  section.formControls.forEach((control: IFormControl) => {
+                    if(control.name == "appointeeName" || control.name == "appointeeMobileNumber" || control.name == "appointeeDob" || control.name == "relationWithNominee"){
+                      control.visible = true;
+                    }
+                  })
+                })
+              }else{
+                control.dependentControls.forEach((item: any) => {
+                  item.visibility = false
+                })
+                this.form.formSections.forEach((section: IFormSections) => {
+                  section.formControls.forEach((control: IFormControl) => {
+                    if(control.name == "appointeeName" || control.name == "appointeeMobileNumber" || control.name == "appointeeDob" || control.name == "relationWithNominee"){
+                      control.visible = false;
+                    }
+                  })
+                })
+              }
+            } else {
+              console.error("Nominee age is not a number:", nomineeAge);
+            }
+          }else{
+            const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
 
-          if (dob && ageControl) {
-            ageControl.markAsTouched();
-            const age = this.calculateAge(dob);
-            ageControl.setValue(age);
+            if (dob && ageControl) {
+              ageControl.markAsTouched();
+              const age = this.calculateAge(dob);
+              ageControl.setValue(age);
+            }
           }
         }
       }
@@ -5406,14 +5439,40 @@ export class RugDynamicFormComponent {
       }
     });
   }
-  changeBbSumInsured(event: any) {
+  async changeBbSumInsured(event: any) {
     console.log(this.sumInsuredData);
     console.log(this.dynamicFormGroup.value.sumInsured);
-    let filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
-    console.log(filterArr);
+    let filterArr;
+    if(this.sumInsuredData == undefined){
+      let sumInsuredObj = {
+        ProductCode: "R03"
+      }
+      await this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
+        next: (res: any) => {
+          res.productSIDetails.map((item: any) => {
+            item.value = item.siPlanValue.split('.')[0],
+              item.name = item.siPlanValue.split('.')[0]
+          })
+          this.sumInsuredData = res.productSIDetails;
+          filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
+          console.log(filterArr);
+          this.getBbPremium(filterArr);
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }else{
+      filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
+      console.log(filterArr);
+      this.getBbPremium(filterArr);
+    }
     // this.yatraService.policyDetails.groupCode = filterArr[0].groupCode;
     // this.yatraService.policyDetails.productPlanName = "GHI,GP";
     // this.yatraService.policyDetails.productPlanCode = filterArr[0].siPlanId.toString();
+
+  }
+  getBbPremium(filterArr: any){
     if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
       let obj = {
         IsMinor: true,
