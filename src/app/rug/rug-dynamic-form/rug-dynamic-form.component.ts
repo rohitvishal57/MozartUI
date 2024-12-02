@@ -2934,36 +2934,48 @@ export class RugDynamicFormComponent {
     this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
-    // const dialogRef = this.dialog.open(OtpPopupComponent, {
-    //   width: "500px",
-    //   autoFocus: false,
-    //   data: {
-    //     fields: "this.fields"
-    //   }
-    // });
-    // dialogRef.afterClosed().subscribe((result: any) => {
-    //   console.log(result);
-    // })
-    // const dialogRef = this.dialog.open(PaymentInfoComponent, {
-    //   width: "500px",
-    //   autoFocus: false,
-    //   data: {
-    //     fields: "this.fields"
-    //   }
-    // });
-    // dialogRef.afterClosed().subscribe((result: any) => {
-    //   console.log(result);
-    // })
-    // const dialogRef = this.dialog.open(CaptchaPopupComponent, {
-    //   width: "500px",
-    //   autoFocus: false,
-    //   data: {
-    //     fields: "this.fields"
-    //   }
-    // });
-    // dialogRef.afterClosed().subscribe((result: any) => {
-    //   console.log(result);
-    // })
+  }
+  onBbCustomerSubmit(){
+    // let reqObjBody = {
+    //   leadId: this.bbdetails.leadId,
+    //   productName: this.bbdetails.productName,
+    //   mobileNumber: this.bbdetails.proposerMobileNumber,
+    //   email: this.bbdetails.proposerEmailAddress
+    // }
+    let reqObjBody = {
+          "leadId": "155212321111",
+          "productName": "Freedom Plus Plan",
+          "mobileNumber": "9550971874",
+          "email": "ajaykrishnasoma@monocept.com"
+      }
+    const dialogRef = this.dialog.open(CaptchaPopupComponent, {
+      width: "500px",
+      autoFocus: false,
+      data: reqObjBody
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      console.log(result);
+      const dialogRef = this.dialog.open(OtpPopupComponent, {
+        width: "500px",
+        autoFocus: false,
+        data: {
+          fields: "this.fields"
+        }
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        console.log(result);
+        const dialogRef = this.dialog.open(PaymentInfoComponent, {
+          width: "500px",
+          autoFocus: false,
+          data: {
+            fields: "this.fields"
+          }
+        });
+        dialogRef.afterClosed().subscribe((result: any) => {
+          console.log(result);
+        })
+      })
+    })
   }
   ond2cSubmit(){
     // if(!this.dynamicFormGroup.valid){

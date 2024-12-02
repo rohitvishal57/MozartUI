@@ -18,7 +18,8 @@ export class EncryptionInterceptor implements HttpInterceptor {
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetPremium',
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/BranchBanking/SaveBBCommonDraft',
     'https://affinitycld-uat.adityabirlahealth.com/Axis_redirection_data_new/api/Product/GetProposerRelations',
-    'https://usp.monocept.ai/api/v1/SaveBBCommonDraft'
+    'https://usp.monocept.ai/api/v1/SaveBBCommonDraft',
+    'https://usp.monocept.ai/api/v1/GetBBOTP'
   ];
 
   constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService) { }

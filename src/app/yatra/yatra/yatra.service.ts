@@ -156,6 +156,10 @@ export class YatraService {
     const saveCommonDraftData = this.configService.config.baseUrl + this.configService.config.saveBBCommonDraft;
     return this.httpService.post(saveCommonDraftData,reqData);
   }
+  getBbOtp(reqData:any){
+    const getBbOtp = this.configService.config.baseUrl + this.configService.config.getBBOTP;
+    return this.httpService.post(getBbOtp,reqData);
+  }
   insertFullQuoteJson(reqData:any){
     const insertfullquotejson = this.configService.config.baseUrl + this.configService.config.insertfullquotejson;
     return this.httpService.post(insertfullquotejson,reqData);

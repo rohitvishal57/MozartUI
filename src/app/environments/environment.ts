@@ -126,5 +126,6 @@ export const environment = {
     searchDeytailsByPrfix:"api/quote/SearchLeadPolicyClaim",
     fetchPermoranceDetails:"api/quote/GetWidgetData",
     fetchPersistencyPercentage:"api/quote/GetPersistencyPercentage",
-    GetDueRenewals:"api/quote/GetDueRenewals"
+    GetDueRenewals:"api/quote/GetDueRenewals",
+    getBBOTP:"api/v1/GetBBOTP"
   }
