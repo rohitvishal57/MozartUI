@@ -41,5 +41,6 @@ export class CreateLead {
     AdditionalInformation!: string;
     proposalNumber!:string;
     zone!:string;
+    leadPriority!:string;
 
 }

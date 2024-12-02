@@ -22,7 +22,6 @@ import { TranslateService } from '@ngx-translate/core'; // Import TranslateServi
 })
 export class LeadsListComponent {
   
-
   leadsList: LeadsList[] = [];
   countsList: any = [];
   activeFilter: string = "all";
@@ -59,8 +58,6 @@ export class LeadsListComponent {
   selectedCheckBox = false
   checkBoxSelectedLeads: any = [];
   auditTrails: any;
-  referenceStatus: any;
-  referenceSubStatus: any;
   statusUpdateLead: any;
   startDate: any;
   endDate: any;
@@ -70,6 +67,12 @@ export class LeadsListComponent {
   StaticPolicyTypes = [
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
+  ];
+  leadFilterStatus  = [
+    { "name": "Open", "selected": false },
+    { "name": "In progress", "selected": false },
+    { "name": "Won", "selected": false },
+    { "name": "Lost", "selected": false }
   ];
   private allJsonFormData: any[] = [];
   formData: any = {};
@@ -108,6 +111,7 @@ export class LeadsListComponent {
     "fromdate": null,
     "todate": null,
     "policyList": "",
+    "statusList":"",
     "isSellerPortal": true
   }
 
@@ -202,21 +206,12 @@ export class LeadsListComponent {
     );
   }
   filterQuotes(filter: string) {
-   // this.leadsInfoListRequestBody.searchby = "";
-   // this.leadsInfoListRequestBody.fromdate = null;
-   // this.leadsInfoListRequestBody.todate = null;
-   // this.leadsInfoListRequestBody.searchlist = "";
-   // this.productsList.forEach((product) => (product.selected = false));
-   // this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-   // this.startDate = "";
-   // this.endDate = "";
     this.leadsInfoListRequestBody.myleads = true;
     this.leadsInfoListRequestBody.assignedleads = true;
     this.leadsInfoListRequestBody.unassignedleads = true;
     this.filterLeads = false;
     this.getLeadsList();
     this.activeFilter = filter;
-   // this.searchInputControl.reset();
   }
 
   getProducts() {
@@ -243,7 +238,8 @@ export class LeadsListComponent {
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter((product) => product.selected).length;
     const selectedpolicyTypeCount = this.StaticPolicyTypes.filter((policyType) => policyType.selected).length;
-    let count = selectedProductsCount + selectedpolicyTypeCount;
+    const selectedLeadStatus = this.leadFilterStatus.filter((leadStatus) => leadStatus.selected).length;
+    let count = selectedProductsCount + selectedpolicyTypeCount+selectedLeadStatus;
     if (this.startDate && this.endDate) {
       count++;
     }
@@ -260,15 +256,15 @@ export class LeadsListComponent {
       .map((product) => product.productName);
     const selectedPolicyTypes = this.StaticPolicyTypes.filter((policyType) => policyType.selected)
       .map((policyType) => policyType.name);
+      const selectedLeadStatus = this.leadFilterStatus.filter((leadStatus) => leadStatus.selected)
+      .map((leadStatus) => leadStatus.name);
     this.leadsInfoListRequestBody.searchlist = selectedProducts.join(", ");
     this.leadsInfoListRequestBody.policyList = selectedPolicyTypes.join(", ");
-
+    this.leadsInfoListRequestBody.statusList = selectedLeadStatus.join(",");
     this.leadsInfoListRequestBody.fromdate = this.startDate || null;
     this.leadsInfoListRequestBody.todate = this.endDate || null;
     this.getLeadsList();
     this.toggeledropdown = false;
-   // this.searchInputControl.reset();
-
   }
   cancel() {
     this.filterLeads = false;
@@ -418,15 +414,6 @@ export class LeadsListComponent {
     this.showAssigneLeadDialog(this.selectedleadInformation);
   }
   getAssignedLeads() {
-   // this.leadsInfoListRequestBody.searchby = "";
-   // this.leadsInfoListRequestBody.fromdate = null;
-   // this.leadsInfoListRequestBody.todate = null;
-   // this.leadsInfoListRequestBody.searchlist = "";
-   // this.productsList.forEach((product) => (product.selected = false));
-   //this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-   //  this.startDate = "";
-   // this.endDate = "";
-
     this.filterLeads = false;
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = true;
@@ -436,15 +423,6 @@ export class LeadsListComponent {
     //this.searchInputControl.reset();
   }
   getUnAssignedLeads() {
-   // this.leadsInfoListRequestBody.searchby = "";
-   // this.leadsInfoListRequestBody.fromdate = null;
-   // this.leadsInfoListRequestBody.todate = null;
-   // this.leadsInfoListRequestBody.searchlist = "";
-   //this.productsList.forEach((product) => (product.selected = false));
-   //this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
-   //this.startDate = "";
-  // this.endDate = "";
-
     this.filterLeads = false;
     this.leadsInfoListRequestBody.myleads = false;
     this.leadsInfoListRequestBody.assignedleads = false;
@@ -476,7 +454,7 @@ export class LeadsListComponent {
    
 
     if (this.startDate > new Date().toISOString().split('T')[0]) {
-      this.startDate = ''; // Clear the invalid date
+      this.startDate = ''; 
       this.toast.warning({ detail: "", summary: 'StartDate should not be greater than today date.', duration: 5000 });
     }
 
@@ -484,7 +462,7 @@ export class LeadsListComponent {
 
   formatCreatedOn(dateString: string | null | undefined) {
     if (!dateString) {
-      return 'N/A'; // Handle null or undefined values
+      return 'N/A'; 
     }
     const date = new Date(dateString);
     const formattedDate = this.datePipe.transform(date, 'dd-MM-yyyy');
@@ -493,6 +471,7 @@ export class LeadsListComponent {
 
   redirectProducts(lead: any) {
     let formSequence :any;
+    let proposalNumber :any ='';
     if (lead.interestedProductName ) {
    
       const reqData = {
@@ -504,7 +483,6 @@ export class LeadsListComponent {
           const interestedProductItem  = ProductList.find((product: any) => product.productName == lead.interestedProductName); 
        
           try {
-           // sessionStorage.clear();
             const reqData = {
               "partnerId": interestedProductItem.partnerId,
               "productId": interestedProductItem.productId
@@ -522,19 +500,23 @@ export class LeadsListComponent {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }
 
-          // try{
-          //   const response = await firstValueFrom(this.common.getProposalNumber());
-          //   this.proposalNumber = response.data?.proposalNumber;
-          // }catch(err){
-          //   this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-          // }
-        
+          if (lead.leadStatus.includes('Open')) {
+            try {
+              const response = await firstValueFrom(this.common.getProposalNumber());
+              proposalNumber = response.data?.proposalNumber;
+            } catch (err) {
+              this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+            }
+          } else {
+            proposalNumber = lead.leadStatus.proposalNumber;
+          }
+
           const productData = {
             partnerId: interestedProductItem.partnerId,
             productId: interestedProductItem.productId,
             quickQuoteRedirect : true,
             leadId :  lead.leadNumber,
-            proposalNum: lead.proposalNumber
+            proposalNum: proposalNumber
           }
         
 

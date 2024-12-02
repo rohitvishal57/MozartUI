@@ -10,7 +10,6 @@ import { CommonService } from 'src/app/services/common.service';
 import { firstValueFrom } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core'; // Import TranslateService
-import { error } from 'jquery';
 
 @Component({
   selector: 'app-create-lead',
@@ -55,6 +54,7 @@ export class CreateLeadComponent implements OnInit {
   productSumInsured: any = [];
   occupationInfo : any;
   zoneCode :any;
+ 
     
   constructor(private formBuilder: FormBuilder,
     private toast: NgToastService,
@@ -112,7 +112,7 @@ export class CreateLeadComponent implements OnInit {
     }
      this.getProducts();
      this.fetchOccupationInfo();
-     this.getReferenceStatus();
+    // this.getReferenceStatus();
      this.fetchActivityTypeInfo();
     this.today = new Date().toISOString().split('T')[0];
   }
@@ -165,7 +165,6 @@ export class CreateLeadComponent implements OnInit {
     );
     this.userValidations.get('age')?.disable();
 
-
     this.addNoteForm = this.formBuilder.group({
       activityTitle: ['', [Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       activityStartDate: ['', Validators.required], // Start date is required
@@ -217,21 +216,19 @@ export class CreateLeadComponent implements OnInit {
 
     if (this.userValidations.invalid) {
       console.log('userValidations ',this.userValidations.errors)
-      // this.disableFormFields()
       return;
     }
     else {
-      // Continue with form submission if it's valid
       this.CreateLead = this.userValidations.getRawValue();
     }
-    let proposalNumber :any  ;
-    try{
-      const response = await firstValueFrom(this.common.getProposalNumber());
-      proposalNumber = response.data?.proposalNumber;
-    }catch(err){
-      this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-    }
-    this.CreateLead.proposalNumber = proposalNumber;
+    //let proposalNumber :any  ;
+    // try{
+    //   const response = await firstValueFrom(this.common.getProposalNumber());
+    //   proposalNumber = response.data?.proposalNumber;
+    // }catch(err){
+    //   this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+    // }
+    //this.CreateLead.proposalNumber = proposalNumber;
     this.CreateLead.AgentCode = this.agentCode;
     this.CreateLead.PhoneNumber = this.userValidations.get('mobilenumber')?.value;
     this.CreateLead.campaignname = 'Self'
@@ -243,7 +240,10 @@ export class CreateLeadComponent implements OnInit {
       age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     }
     this.CreateLead.age = age.toString();
-    this.CreateLead.zone =  this.zoneCode
+    this.CreateLead.zone =  this.zoneCode;
+    this.CreateLead.leadPriority  =this.userValidations.get('leadSubStatus')?.value;
+
+    console.log('req data',this.CreateLead);
     
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
@@ -336,37 +336,37 @@ export class CreateLeadComponent implements OnInit {
       });
   }
 
-  getReferenceStatus() {
-    this.leadsService.getReferenceStatus().subscribe(
-      (response: any) => {
-        console.log(response);
-        this.referenceStatus = response?.data;
+  // getReferenceStatus() {
+  //   this.leadsService.getReferenceStatus().subscribe(
+  //     (response: any) => {
+  //       console.log(response);
+  //       this.referenceStatus = response?.data;
 
-        if(this.submittedUser){
-          this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === this.submittedUser.leadStatus);
-          this.userValidations.patchValue({
-            leadSubStatus: this.submittedUser?.leadSubStatus??'',
-          });
-        }
+  //       if(this.submittedUser){
+  //         this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === this.submittedUser.leadStatus);
+  //         this.userValidations.patchValue({
+  //           leadSubStatus: this.submittedUser?.leadSubStatus??'',
+  //         });
+  //       }
     
-      },
-      (error) => {
-        console.error("Error from getMyReportingUsers API:", error);
-      }
-    );
-  }
+  //     },
+  //     (error) => {
+  //       console.error("Error from getMyReportingUsers API:", error);
+  //     }
+  //   );
+  // }
 
-  changeReferStatus(event: any) {
-    if (event) {
-      let selectedStatus = typeof (event) == 'string' ? event : event.target.value;
-      console.log('selectedStatus', selectedStatus);
-      this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
-      }
-      this.userValidations.patchValue({
-        leadSubStatus:'',
-      });
+  // changeReferStatus(event: any) {
+  //   if (event) {
+  //     let selectedStatus = typeof (event) == 'string' ? event : event.target.value;
+  //     console.log('selectedStatus', selectedStatus);
+  //     this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
+  //     }
+  //     this.userValidations.patchValue({
+  //       leadSubStatus:'',
+  //     });
 
-  }
+  // }
 
   changeSumInsured(event: any) {
     if (event) {
@@ -535,9 +535,6 @@ export class CreateLeadComponent implements OnInit {
     );
   }
 
-  // validateActivityEndTime(){
-  
-  // }
 
   stringifyJson(opt: any): string {
     return JSON.stringify(opt); 

@@ -279,6 +279,7 @@ donwloadBrowcher(productName : any){
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.open(URL, '_blank');  
     } else {
       console.error('Invalid or missing URL.');
     }
