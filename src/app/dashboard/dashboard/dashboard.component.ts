@@ -103,7 +103,7 @@ export class DashboardComponent {
   }
 
   dropCharts(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.chartsArray, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.otherSection, event.previousIndex, event.currentIndex);
   }
 
   dropSections(event: CdkDragDrop<any[]>) {
@@ -676,8 +676,8 @@ export class DashboardComponent {
   }
 
   renderCustomerChart(): void {
-    if (this.chartDHACanvas && this.chartDHACanvas.nativeElement) {
-      const canvas = this.chartDHACanvas.nativeElement;
+    if (this.chartCustomerCanvas && this.chartCustomerCanvas.nativeElement) {
+      const canvas = this.chartCustomerCanvas.nativeElement;
       const ctx = canvas.getContext('2d');
 
       if (!ctx) {
@@ -745,8 +745,8 @@ export class DashboardComponent {
   }
 
   renderServiceChart(): void {
-    if (this.chartDHACanvas && this.chartDHACanvas.nativeElement) {
-      const canvas = this.chartDHACanvas.nativeElement;
+    if (this.chartServicingCanvas && this.chartServicingCanvas.nativeElement) {
+      const canvas = this.chartServicingCanvas.nativeElement;
       const ctx = canvas.getContext('2d');
 
       if (!ctx) {
