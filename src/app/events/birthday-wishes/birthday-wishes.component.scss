@@ -68,7 +68,7 @@
 
 .birthday-header {
   grid-column: 1 / -1;  /* Spans across all columns */
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -76,9 +76,10 @@
 }
 .todayDate{
   border-radius: 0px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 7px 6px 4px 6px;
+  box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+  padding: 0;
   margin-left: 10px;
+  color: #c7222a;
 }
 
 .header-icons {
@@ -124,6 +125,7 @@
   overflow-y: auto;
   padding-right: 8px;
   flex-wrap: wrap;
+  gap:6px;
 }
 
 .send-all-btn{
@@ -147,8 +149,8 @@
   border: none;
 }
 .name {
-  font-size: 1.5rem;
-  color: #333;
+  font-size: 14px;
+  color: #282828;
   flex: 1;
   margin-right: 1rem;
 }
@@ -163,7 +165,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   color: #555;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
   width: 32%;
   border:1px solid #e6e6e6;
 }
@@ -207,6 +209,11 @@ li {
     padding: 5px 16px;
     line-height: normal;
     border-radius: 5px;
+}
+.btn_newRequest {
+  &.active {
+    border: 1px solid #c7222a;
+  }
 }
 /* Responsive Design */
 @media (max-width: 768px) {
