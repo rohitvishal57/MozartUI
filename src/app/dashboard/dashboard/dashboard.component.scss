@@ -1401,6 +1401,7 @@ h2 {
 }
 .scroll_contentDashboard{
     max-height: 124px;
+    min-height: 124px;
     overflow-y: auto;
     margin-bottom: 10px;
     &::-webkit-scrollbar-track-piece {
