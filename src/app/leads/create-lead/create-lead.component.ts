@@ -312,6 +312,7 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: this.submittedUser.isUpdate || 1,
       leadStatus : this.submittedUser?.leadStatus??'',
       interestedProductName: this.submittedUser?.interestedProductName??'',
+      leadSubStatus : this.submittedUser?.leadPriority??''
     });
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();

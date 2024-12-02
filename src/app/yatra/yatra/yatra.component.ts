@@ -198,6 +198,7 @@ export class YatraComponent {
           this.productId = decryptedData.productId;
           // this.formData.proposalNumber = decryptedData.proposalNum;
           this.proposalNum = decryptedData.proposalNum;
+          
           decryptedData.currentFormSequence = this.getFormIndexValue().toString();
           await this.yatraService.Getform(decryptedData).subscribe({
             next: (res: any) => {
@@ -412,9 +413,12 @@ export class YatraComponent {
       formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
       proposalNum: this.proposalNum,
       agentCode: this.agentCode,
+      leadId : this.quickQuoteRedirect==false ?null:this.leadNumber,
+      isLead : this.quickQuoteRedirect==false ? false: true,
       currentFormSequence: this.getFormIndexValue().toString()
     }
 
+    //TODO : Changes required.
     console.log(reqData);
 
 
@@ -3237,7 +3241,7 @@ export class YatraComponent {
         }
         //   // for Store Form Data in Database
         let reqData = {
-          "proposalNum": this?.formData?.proposalNumber ?? this.proposalNum,
+          "proposalNum": this?.formData?.proposalNumber,
           "partnerId": this.partnerId,
           "agentCode": this.agentCode,
           "formData": JSON.stringify(this.dynamicFormGroup.value),
