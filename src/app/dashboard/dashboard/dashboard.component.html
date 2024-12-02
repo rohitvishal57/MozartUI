@@ -303,16 +303,18 @@
         </div>
         <!-- Business -->
         <section cdkDrag class="commonSection dashboard_LPR_main move-cursor" *ngIf="section == 'Business'">
-          <h3>{{"Business Summary" | translate}}</h3>
-          <div class="filter_performanceOverview">
-            <div class="filterfields_PO">
-              <div class="filterfields_input">
-                <div class="input-block input-block-renew compare_inputblock">
-                  <select id="filter-annually" name="filter-annually" class="form-select input-selectBox" [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter" (change)="onSelectFilter('Business', businessFilter)">
-                    <option *ngFor="let opt of busninessFilterList" [value]="opt">
-                        {{ opt | translate }}
-                    </option>
-                  </select>
+          <div class="body_flex_row justify-content-between align-items-center">
+            <h3>{{"Business Summary" | translate}}</h3>
+            <div class="filter_performanceOverview">
+              <div class="filterfields_PO">
+                <div class="filterfields_input">
+                  <div class="input-block input-block-renew compare_inputblock">
+                    <select id="filter-annually" name="filter-annually" class="form-select input-selectBox" [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter" (change)="onSelectFilter('Business', businessFilter)">
+                      <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                          {{ opt | translate }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
