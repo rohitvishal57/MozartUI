@@ -168,6 +168,9 @@
   padding-right: 8px;
   flex-wrap: wrap;
   gap:6px;
+  &::-webkit-scrollbar-track-piece {
+    background: #ffffff;
+  }
 }
 
 .send-all-btn{
