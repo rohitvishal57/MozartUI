@@ -198,6 +198,7 @@ export class YatraComponent {
           this.productId = decryptedData.productId;
           // this.formData.proposalNumber = decryptedData.proposalNum;
           this.proposalNum = decryptedData.proposalNum;
+          
           decryptedData.currentFormSequence = this.getFormIndexValue().toString();
           await this.yatraService.Getform(decryptedData).subscribe({
             next: (res: any) => {
@@ -412,9 +413,12 @@ export class YatraComponent {
       formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
       proposalNum: this.proposalNum,
       agentCode: this.agentCode,
+      leadId : this.quickQuoteRedirect==false ?null:this.leadNumber,
+      isLead : this.quickQuoteRedirect==false ? false: true,
       currentFormSequence: this.getFormIndexValue().toString()
     }
 
+    //TODO : Changes required.
     console.log(reqData);
 
 
@@ -3237,7 +3241,7 @@ export class YatraComponent {
         }
         //   // for Store Form Data in Database
         let reqData = {
-          "proposalNum": this?.formData?.proposalNumber ?? this.proposalNum,
+          "proposalNum": this?.formData?.proposalNumber,
           "partnerId": this.partnerId,
           "agentCode": this.agentCode,
           "formData": JSON.stringify(this.dynamicFormGroup.value),
@@ -3280,6 +3284,20 @@ export class YatraComponent {
       }
       else {
         console.log('Form is invalid', this.dynamicFormGroup);
+        let firstInvalidTabIndex: number | null = null;
+        this.form.formSections.forEach(section => {
+          section.formControls.forEach(control =>{
+            if(control.dynamicControls){
+              control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
+                const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
+                console.log(formGroup);
+                if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
+                  firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
+                }
+            })
+          }
+          })
+        })
         Object.keys(this.dynamicFormGroup.controls).forEach(field => {
           const control = this.dynamicFormGroup.get(field);
           if (control instanceof FormArray) {
@@ -3301,8 +3319,14 @@ export class YatraComponent {
             control?.markAsTouched({ onlySelf: true });
           }
         });
-        if (this.dynamicFormGroup.invalid)
-          this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+        if (this.dynamicFormGroup.invalid){
+          this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+          if (firstInvalidTabIndex !== null) {
+            // Navigate to the first invalid tab
+            this.activeMemberTabIndex = firstInvalidTabIndex;
+            // this.changeDetectorRef.detectChanges(); // Ensure change detection syncs the tab
+          }
+        }
         else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
           this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
       }

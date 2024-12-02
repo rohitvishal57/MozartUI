@@ -154,29 +154,33 @@ export class DashboardComponent {
     }
   }
 
+  performanceFilter = 'Quarterly';
+  performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
+  businessFilter = 'Last7Days';
+  busninessFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
+  widgetArr = [
+    {
+      name: 'QuickAction', isFilter: false
+    },
+    {
+      name: 'Performance', isFilter: true, filterType: this.performanceFilter
+    },
+    {
+      name: 'Business', isFilter: true, filterType: this.businessFilter
+    },
+    {
+      name: 'Customer', isFilter: false
+    },
+    {
+      name: 'Servicing', isFilter: false
+    },
+    {
+      name: 'Wellness', isFilter: false
+    }
+  ];
   fetchWidgets() {
-    const arr = [
-      {
-        name: 'QuickAction', isFilter: false
-      },
-      {
-        name: 'Performance', isFilter: true, filterType: 'Monthly'
-      },
-      {
-        name: 'Business', isFilter: true, filterType: 'LastMonth'
-      },
-      {
-        name: 'Customer', isFilter: false
-      },
-      {
-        name: 'Servicing', isFilter: false
-      },
-      {
-        name: 'Wellness', isFilter: false
-      }
-    ];
 
-    arr.forEach(element => {
+    this.widgetArr.forEach(element => {
 
       const obj = {
         "WidgetName": element.name,
@@ -188,7 +192,7 @@ export class DashboardComponent {
         case 'Performance':
 
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
-            console.log('performance', res.data)
+            console.log('performance', res.data);
             res.data.length && Object.keys(res.data[0]).forEach(el => {
               switch (el) {
                 case 'nops':
@@ -346,17 +350,17 @@ export class DashboardComponent {
   ngAfterViewInit(): void {
     // Ensure that the canvas is available before rendering the chart
     setTimeout(() => {
-      if (this.chartCanvas && this.chartCanvas.nativeElement) {
-        this.renderChart();
-        this.renderPropChart();
-        this.renderEXPropChart();
-        this.renderDHAChart();
-        this.renderCustomerChart();
-        this.renderServiceChart();
-      } else {
-        console.error('Canvas element not found.');
-      }
+      this.fetchCharts();
     }, 20000); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
+  }
+
+  fetchCharts() {
+    this.renderChart();
+    this.renderPropChart();
+    this.renderEXPropChart();
+    this.renderDHAChart();
+    this.renderCustomerChart();
+    this.renderServiceChart();
   }
 
   createChartData(): ChartData<'pie' | 'doughnut'> {
@@ -721,7 +725,7 @@ export class DashboardComponent {
   }
 
   createServiceChartData(): ChartData<'pie' | 'doughnut'> {
-    
+
     return {
       labels: [
         'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
@@ -798,5 +802,21 @@ export class DashboardComponent {
       const url = 'notifications' + '?agentCode=' + localStorage.getItem('agentCode');
       this.route.navigateByUrl(url)
     }
+  }
+
+  onSelectFilter(section: any, filter: any) {
+    this.performanceCard = [];
+    this.tabsInfo = [];
+    this.otherSection = [];
+    this.quickActionDetails = [];
+    this.widgetArr.forEach((action: any) => {
+      if (action.name === section && action.isFilter) {
+        action.filterType = filter;
+      }
+      return action;
+    });
+    
+    this.fetchWidgets();
+    this.ngAfterViewInit();
   }
 }

@@ -545,13 +545,13 @@
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" id="leadStatus" name="leadStatus" formControlName="leadStatus"
-                                    (change)="changeReferStatus($event)">
+                                    (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>{{"Choose Option" | translate}}</option>
-                                    <option *ngFor="let item of referenceStatus" [value]="item.name">
-                                        {{ item.name | translate }}
+                                    <option *ngFor="let item of CreateLeadList.leadStatus" [value]="item">
+                                        {{ item | translate }}
                                     </option>
                                 </select>
-                                <label for="interestedProductName">{{"Enter Lead Status" | translate}}</label>
+                                <label for="interestedProductName">{{"Lead Status" | translate}}</label>
                             </div>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -559,11 +559,14 @@
                                 <select class="form-select input-selectBox" id="leadSubStatus" name="leadSubStatus" formControlName="leadSubStatus"
                                     (selectionChange)="campnoSelected()">
                                     <option value="" disabled selected>{{"Choose Option" | translate}}</option>
-                                    <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
+                                    <!-- <option *ngFor="let item of referenceSubStatus?.substatus" [value]="item.name">
                                         {{ item.name | translate }}
+                                    </option> -->
+                                    <option *ngFor="let item of CreateLeadList.LeadPriority" [value]="item">
+                                        {{ item | translate }}
                                     </option>
                                 </select>
-                                <label for="familyConstruct">{{"Enter Lead Sub-Status" | translate}}</label>
+                                <label for="familyConstruct">{{"Lead Priority " | translate}}</label>
                             </div>
                         </div>
                     </div>

@@ -97,8 +97,8 @@ export class YatraService {
     return this.httpService.post(GetFullQuote,reqData);
   }
   GetKycDetails(reqData:any){
-    // const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.getKycDetails;
-    const getKycDetails='https://localhost:7188/getkycdetails';
+    const getKycDetails=this.configService.config.baseUrl1 + this.configService.config.getKycDetails;
+    // const getKycDetails='https://localhost:7188/getkycdetails';
     return this.httpService.post<any>(getKycDetails,reqData);
   }
   GetCustomerDetailsViaPolicyNumber(reqData:any){
@@ -165,8 +165,8 @@ export class YatraService {
     return this.httpService.post(insertfullquotejson,reqData);
   }
   getFullQuoteViaOfflinePayment(reqData:any){
-    // const getfullquoteviaofflinepayment = this.configService.config.baseUrl1 + this.configService.config.getfullquoteviaofflinepayment;
-    const getfullquoteviaofflinepayment = 'https://localhost:7070/getfullquoteviaofflinepayment';
+    const getfullquoteviaofflinepayment = this.configService.config.baseUrl1 + this.configService.config.getfullquoteviaofflinepayment;
+    // const getfullquoteviaofflinepayment = 'https://localhost:7070/getfullquoteviaofflinepayment';
     return this.httpService.post(getfullquoteviaofflinepayment,reqData);
   }
 }
