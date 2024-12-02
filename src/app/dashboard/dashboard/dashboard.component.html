@@ -91,11 +91,12 @@
                     </header>
                     <main class="body_flex_column">
                       <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
-                        <ng-container *ngIf="tasks?.event.includes('No') ? true : template">
-                          <h6><span title={{tasks?.event}}>{{tasks?.event}}</span></h6>
+                        <ng-container *ngIf="tasks?.activityTitle.includes('No') ? true : template">
+                          <h6><span title={{tasks?.activityTitle}}>{{tasks?.activityTitle}}</span></h6>
                         </ng-container>
                         <ng-template #template>
-                        <small>{{tasks?.event | date:'dd-MM-yy'}}</small>
+                          <h6><span title={{tasks?.activityTitle}}>{{tasks?.activityTitle}}</span></h6>
+                        <small>{{tasks?.note}}</small>
                         </ng-template>
                       </div>
                   </main>
@@ -114,7 +115,7 @@
                     </header>
                     <main class="body_flex_column">
                         <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
-                          <h6><span title={{tasks.name}}>{{tasks.name}}</span></h6>
+                          <h6><span title={{tasks.firstName}}>{{tasks.firstName}}</span></h6>
                           <!-- <small>{{tasks.dob | date:'dd-MM-yy'}}</small> -->
                         </div>
                     </main>
@@ -133,11 +134,11 @@
                     </header>
                     <main class="body_flex_column">
                         <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
-                          <ng-container *ngIf="tasks?.description.includes('No notifications') ? true : template">
-                            <h6><span title={{tasks?.description}}>{{tasks?.description}}</span></h6>
+                          <ng-container *ngIf="tasks?.Description.includes('No notifications') ? true : template">
+                            <h6><span title={{tasks?.Description}}>{{tasks?.Description}}</span></h6>
                           </ng-container>
                           <ng-template #template>
-                          <small>{{tasks?.description | date:'dd-MM-yy'}}</small>
+                          <small>{{tasks?.Description}}</small>
                           </ng-template>
                         </div>
                     </main>

@@ -813,8 +813,9 @@ export class DashboardComponent {
       if (action.name === section && action.isFilter) {
         action.filterType = filter;
       }
-      return action
+      return action;
     });
+    
     this.fetchWidgets();
     this.ngAfterViewInit();
   }
