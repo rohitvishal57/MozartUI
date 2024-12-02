@@ -49,6 +49,10 @@ const routes: Routes = [
     loadChildren: () => import('./rug/rug-module').then((m) => m.RugModule)
   },
   {
+    path: 'rug/:leadId',
+    loadChildren: () => import('./rug/rug-module').then((m) => m.RugModule)
+  },
+  {
     path: 'renewal',
     loadChildren: () => import('./renewals/renewals.module').then((m) => m.RenewalsModule)
   },

@@ -39,6 +39,7 @@ export class AppComponent {
       '/quote',
       '/yatra',
       '/rug',
+      '/rug:leadId',
       '/renewal',
       '/customers',
       '/proposals',

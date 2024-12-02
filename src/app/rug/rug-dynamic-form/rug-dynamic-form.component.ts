@@ -119,6 +119,7 @@ export class RugDynamicFormComponent {
   bbPremiumData: any;
   familyConstructsData: any;
   isD2C: boolean = true;
+  paramLeadId: any;
   constructor(private dialog: MatDialog, private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef, private aesEncryptService: AesEncryptionService,
@@ -126,10 +127,44 @@ export class RugDynamicFormComponent {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
+    console.log(this.paramLeadId)
+    this.route.params.subscribe((params) => {
+      if (Object.keys(this.route.snapshot.params).length > 0) {
+        console.log('Route has parameters:', params);
+        this.paramLeadId = this.aesEncryptService.decryptUrlData(this.paramLeadId);
+        console.log(this.paramLeadId)
+        this.paramLeadId = JSON.parse(this.paramLeadId)
+        this.leadId = this.paramLeadId.LeadId;
+        this.partnerId = this.paramLeadId.PartnerId;
+        this.productId = this.paramLeadId.ProductId;
+        this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
+        console.log(this.formSequence);
+      } else {
+        this.formSequence = history.state.formSequence;
+        console.log(this.formSequence);
+        if (history.state.productData.productId)
+          this.productId = history.state.productData.productId;
+        if (history.state.productData.partnerId)
+          this.partnerId = history.state.productData.partnerId;
+        if (history.state.productData.proposalNum)
+          this.proposalNum = history.state.productData.proposalNum;
+        if (history.state.productData.tenureAmounts) {
+          this.tenureAmount = history.state.productData.tenureAmounts
+        }
+        if (history.state.productData.tenure) {
+          this.formData = { ...this.formData, tenure: history.state.productData.tenure }
+        }
+        console.log(this.formData);
+        if (history.state.productData.selectedAddons) {
+          this.selectedAddons = history.state.productData.selectedAddons
+        }
+        console.log('No route parameters found.');
+      }
+    });
     this.spinner.show();
     this.showHtmlContent = false;
-    this.formSequence = history.state.formSequence;
-    console.log(this.formSequence);
+
     if (localStorage.getItem('agentCode')){
       this.agentCode = localStorage.getItem('agentCode');
     }
@@ -154,24 +189,10 @@ export class RugDynamicFormComponent {
     // this.proposalNum = history.state.productData.proposalNumber;
 
     // this.agencyCode = history.state.productData.agencyCode;
-    if (history.state.productData.productId)
-      this.productId = history.state.productData.productId;
-    if (history.state.productData.partnerId)
-      this.partnerId = history.state.productData.partnerId;
-    if (history.state.productData.proposalNum)
-      this.proposalNum = history.state.productData.proposalNum;
-    if (history.state.productData.tenureAmounts) {
-      this.tenureAmount = history.state.productData.tenureAmounts
-    }
-    if (history.state.productData.tenure) {
-      this.formData = { ...this.formData, tenure: history.state.productData.tenure }
-    }
-    console.log(this.formData);
 
 
-    if (history.state.productData.selectedAddons) {
-      this.selectedAddons = history.state.productData.selectedAddons
-    }
+
+
 
     // this.formData = this.encryptionService.decrypt(sessionStorage.getItem('allFormData') as string)
     // console.log(this.formData)
@@ -213,12 +234,12 @@ export class RugDynamicFormComponent {
     if (sessionStorage.getItem('insuredMemberDetails') != null)
       this.insuredMemberDetails = this.encryptionService.decrypt(sessionStorage.getItem('insuredMemberDetails') as string)
 
-    if (sessionStorage.getItem('leadId') != null) {
-      this.leadId = this.encryptionService.decrypt(sessionStorage.getItem('leadId') as string);
-    }
-    else {
-      this.leadId = "";
-    }
+    // if (sessionStorage.getItem('leadId') != null) {
+    //   this.leadId = this.encryptionService.decrypt(sessionStorage.getItem('leadId') as string);
+    // }
+    // else {
+    //   this.leadId = "";
+    // }
     if (sessionStorage.getItem("isQuote")) {
       this.isQuote = sessionStorage.getItem("isQuote") == 'true'
     }
@@ -309,11 +330,12 @@ export class RugDynamicFormComponent {
     }
 
     else {
+      console.log(this.leadId);
       let reqData = {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": "155212321111",
+        "proposalNum": this.leadId != undefined ? this.leadId : "1552123534345",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -5414,7 +5436,7 @@ export class RugDynamicFormComponent {
   }
   getBbSumInsured(control: any) {
     let sumInsuredObj = {
-      ProductCode: "R03"
+      ProductCode: this.bbdetails.productCode
     }
     this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
       next: (res: any) => {
@@ -5464,7 +5486,7 @@ export class RugDynamicFormComponent {
     let filterArr;
     if(this.sumInsuredData == undefined){
       let sumInsuredObj = {
-        ProductCode: "R03"
+        ProductCode: this.bbdetails.productCode
       }
       await this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
         next: (res: any) => {
@@ -5492,7 +5514,7 @@ export class RugDynamicFormComponent {
 
   }
   getBbPremium(filterArr: any){
-    if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
+    // if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {
       let obj = {
         IsMinor: true,
         SIGroupId: filterArr[0].siGroupId,
@@ -5508,7 +5530,7 @@ export class RugDynamicFormComponent {
           console.error(err);
         }
       });
-    }
+    // }
   }
   backToleads() {
     this.router.navigate(['/leads/leadsList'], {
