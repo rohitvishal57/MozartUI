@@ -5941,6 +5941,9 @@ input[type=number]::-webkit-outer-spin-button {
   max-height: 300px;
   overflow-y: auto;
 }
+.dropdown-menu-scroll::-webkit-scrollbar-track-piece {
+  background: #ffffff;
+}
 .dropdown-menu-scroll::-webkit-scrollbar-button {
   width: 0px;
   height: 0;

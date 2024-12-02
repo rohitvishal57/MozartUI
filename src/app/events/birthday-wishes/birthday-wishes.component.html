@@ -71,24 +71,28 @@
                     </div>
                 </div>
                 
-                <div *ngIf="currentView === 'week'" class="week-view">
+                <div *ngIf="currentView === 'week'" class="week-view p-0">
                     <h3 class="header-title">{{"Birthday Wishes for This Week" | translate}}</h3>
                     <div class="week-grid">
                         <div *ngFor="let day of weekData" class="day-box">
-                            <h4 class="day-title">
-                                {{ day.date | date: 'EEEE, MMM d' }}
-                                <button class="nav-btn" (click)="navigateToDayView(day.date)">
-                                    <img src="assets/bdayWish.png" alt="" style="width: 20px; height: 20px;">
-                                </button>
-                            </h4>
-                            <ul *ngIf="day.birthdays.length > 0" class="birthday-list">
-                                <li *ngFor="let birthday of day.birthdays" class="birthday-itemWeek">
-                                    <strong>{{ birthday.name }}</strong>
-                                </li>
-                            </ul>
-                            <p *ngIf="day.birthdays.length === 0" class="no-birthdays">
-                                No birthdays
-                            </p>
+                            <header>
+                                <h4 class="day-title">
+                                    {{ day.date | date: 'EEEE, MMM d' }}
+                                    <button class="nav-btn" (click)="navigateToDayView(day.date)">
+                                        <img src="assets/bdayWish.png" alt="" style="width: 20px; height: 20px;">
+                                    </button>
+                                </h4>
+                            </header>
+                            <main>
+                                <ul *ngIf="day.birthdays.length > 0" class="birthday-list">
+                                    <li *ngFor="let birthday of day.birthdays" class="birthday-itemWeek">
+                                        {{ birthday.name }}
+                                    </li>
+                                </ul>
+                                <p *ngIf="day.birthdays.length === 0" class="no-birthdays">
+                                    No birthdays
+                                </p>
+                            </main>
                         </div>
                     </div>
                 </div>
