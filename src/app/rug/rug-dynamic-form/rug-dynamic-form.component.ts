@@ -313,7 +313,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": "155212323423",
+        "proposalNum": "155212321111",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -3115,7 +3115,7 @@ export class RugDynamicFormComponent {
             } 
               let commonDraftRequest = {
                 leadId: this.bbdetails.leadId,
-                requestData: JSON.stringify(testObj),
+                requestData: JSON.stringify(payloadObject),
                 isFinalSubmit: true,
                 leadStatus: "SUBMITTED"
               }
@@ -4665,6 +4665,13 @@ export class RugDynamicFormComponent {
   mergeMember(control: any) {
     const a = Object.keys(this.formData.insuredMembers).filter(
       key => this.formData.insuredMembers[key] === true
+    );
+    control.value = a;
+    console.log(control, this.formData, a);
+  }
+  mergeBbMember(control: any){
+    const a = Object.keys(this.bbdetails.insuredMembers).filter(
+      key => this.bbdetails.insuredMembers[key] === true
     );
     control.value = a;
     console.log(control, this.formData, a);
