@@ -319,7 +319,7 @@
               </div>
             </div>
           </div>
-          <div *ngIf="tabsInfo.length" class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          <div *ngIf="businessSummary && tabsInfo.length" class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropTabs($event)">
             <ng-container *ngFor="let tab of tabsInfo">
               <div cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">

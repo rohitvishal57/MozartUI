@@ -192,7 +192,7 @@ export class DashboardComponent {
         case 'Performance':
 
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
-            console.log('performance', res.data)
+            console.log('performance', res.data);
             res.data.length && Object.keys(res.data[0]).forEach(el => {
               switch (el) {
                 case 'nops':
@@ -350,17 +350,17 @@ export class DashboardComponent {
   ngAfterViewInit(): void {
     // Ensure that the canvas is available before rendering the chart
     setTimeout(() => {
-      if (this.chartCanvas && this.chartCanvas.nativeElement) {
-        this.renderChart();
-        this.renderPropChart();
-        this.renderEXPropChart();
-        this.renderDHAChart();
-        this.renderCustomerChart();
-        this.renderServiceChart();
-      } else {
-        console.error('Canvas element not found.');
-      }
+      this.fetchCharts();
     }, 20000); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
+  }
+
+  fetchCharts() {
+    this.renderChart();
+    this.renderPropChart();
+    this.renderEXPropChart();
+    this.renderDHAChart();
+    this.renderCustomerChart();
+    this.renderServiceChart();
   }
 
   createChartData(): ChartData<'pie' | 'doughnut'> {
@@ -807,11 +807,15 @@ export class DashboardComponent {
   onSelectFilter(section: any, filter: any) {
     this.performanceCard = [];
     this.tabsInfo = [];
+    this.otherSection = [];
+    this.quickActionDetails = [];
     this.widgetArr.forEach((action: any) => {
       if (action.name === section && action.isFilter) {
         action.filterType = filter;
       }
+      return action
     });
     this.fetchWidgets();
+    this.ngAfterViewInit();
   }
 }
