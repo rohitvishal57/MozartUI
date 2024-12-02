@@ -154,29 +154,33 @@ export class DashboardComponent {
     }
   }
 
+  performanceFilter = 'Quarterly';
+  performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
+  businessFilter = 'Last7Days';
+  busninessFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
+  widgetArr = [
+    {
+      name: 'QuickAction', isFilter: false
+    },
+    {
+      name: 'Performance', isFilter: true, filterType: this.performanceFilter
+    },
+    {
+      name: 'Business', isFilter: true, filterType: this.businessFilter
+    },
+    {
+      name: 'Customer', isFilter: false
+    },
+    {
+      name: 'Servicing', isFilter: false
+    },
+    {
+      name: 'Wellness', isFilter: false
+    }
+  ];
   fetchWidgets() {
-    const arr = [
-      {
-        name: 'QuickAction', isFilter: false
-      },
-      {
-        name: 'Performance', isFilter: true, filterType: 'Monthly'
-      },
-      {
-        name: 'Business', isFilter: true, filterType: 'LastMonth'
-      },
-      {
-        name: 'Customer', isFilter: false
-      },
-      {
-        name: 'Servicing', isFilter: false
-      },
-      {
-        name: 'Wellness', isFilter: false
-      }
-    ];
 
-    arr.forEach(element => {
+    this.widgetArr.forEach(element => {
 
       const obj = {
         "WidgetName": element.name,
@@ -721,7 +725,7 @@ export class DashboardComponent {
   }
 
   createServiceChartData(): ChartData<'pie' | 'doughnut'> {
-    
+
     return {
       labels: [
         'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
@@ -798,5 +802,16 @@ export class DashboardComponent {
       const url = 'notifications' + '?agentCode=' + localStorage.getItem('agentCode');
       this.route.navigateByUrl(url)
     }
+  }
+
+  onSelectFilter(section: any, filter: any) {
+    this.performanceCard = [];
+    this.tabsInfo = [];
+    this.widgetArr.forEach((action: any) => {
+      if (action.name === section && action.isFilter) {
+        action.filterType = filter;
+      }
+    });
+    this.fetchWidgets();
   }
 }

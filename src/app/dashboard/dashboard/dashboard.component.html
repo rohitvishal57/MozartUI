@@ -115,7 +115,7 @@
                     <main class="body_flex_column">
                         <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
                           <h6><span title={{tasks.name}}>{{tasks.name}}</span></h6>
-                          <small>{{tasks.dob | date:'dd-MM-yy'}}</small>
+                          <!-- <small>{{tasks.dob | date:'dd-MM-yy'}}</small> -->
                         </div>
                     </main>
                     <footer>
@@ -235,7 +235,8 @@
             </div>
           </div>
         </section>
-        <div cdkDrag class="contentBody dashboard_contentContainer move-cursor" *ngIf="section == 'Performance' && performanceCard.length">
+        <!-- performance -->
+        <div cdkDrag class="contentBody dashboard_contentContainer move-cursor" *ngIf="section == 'Performance'">
           <div class="performance-overview">
             <div class="body_flex_row justify-content-between align-items-center">
               <h2>{{"Performance Overview" | translate}}</h2>
@@ -243,27 +244,22 @@
                 <div class="filterfields_PO">
                   <div class="filterfields_input">
                     <div class="input-block input-block-renew compare_inputblock">
-                      <select id="filter-annually" name="filter-annually" class="form-select input-selectBox">
-                        <option value="" >Select</option>
-                        <option value="annually" selected>Annually</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="weekly">Weekly</option>
+                      <select id="filter-annually" name="filter-annually" class="form-select input-selectBox" [(ngModel)]='performanceFilter' (change)="onSelectFilter('Performance', performanceFilter)" id="performanceFilter" name="performanceFilter">
+                        <option *ngFor="let opt of performanceFilterList" [value]="opt">
+                            {{ opt | translate }}
+                        </option>
                       </select>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- <header>
-              <h2>{{"Performance Overview" | translate}}</h2>
-            </header> -->
             <div class="subHeader">
               <div class="notification">
                 <img src="assets/Img/icon_tips.svg">{{"You've converted 10% more people this month compared to last month" | translate}}
               </div>
-
             </div>
-            <div>
+            <div *ngIf="performanceCard.length">
               <div class="cardWraper-container" cdkDropListOrientation="horizontal" cdkDropList
                 (cdkDropListDropped)="dropPerformance($event)">
                 <ng-container *ngFor="let perform of performanceCard">
@@ -305,9 +301,23 @@
             </div>
           </div>
         </div>
-        <section cdkDrag class="commonSection dashboard_LPR_main move-cursor" *ngIf="section == 'Business' && tabsInfo.length">
+        <!-- Business -->
+        <section cdkDrag class="commonSection dashboard_LPR_main move-cursor" *ngIf="section == 'Business'">
           <h3>{{"Business Summary" | translate}}</h3>
-          <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
+          <div class="filter_performanceOverview">
+            <div class="filterfields_PO">
+              <div class="filterfields_input">
+                <div class="input-block input-block-renew compare_inputblock">
+                  <select id="filter-annually" name="filter-annually" class="form-select input-selectBox" [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter" (change)="onSelectFilter('Business', businessFilter)">
+                    <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                        {{ opt | translate }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="tabsInfo.length" class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropTabs($event)">
             <ng-container *ngFor="let tab of tabsInfo">
               <div cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
@@ -368,6 +378,7 @@
             </div>
           </div>
         </section>
+        <!-- Other Section -->
         <section cdkDrag class="dashboard_LPR_main commonSection move-cursor" *ngIf="section == 'Customer'">
           <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropCharts($event)">
@@ -395,7 +406,6 @@
                           </header>
                         </div>
                       </div>
-
                       <div *ngSwitchCase="'Servicing'">
                         <div class="leads_item leads_open">
                           <header>
@@ -404,21 +414,17 @@
                           </header>
                         </div>
                       </div>
-
                     </div>
                   </ng-container>
                 </div>
                 <div [ngSwitch]="tab.chart">
                   <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
-                    <!-- <canvas id="MyChart" style="margin: auto; width:100%">{{ chart }}</canvas> -->
                     <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
                   </div>
                   <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
-                    <!-- <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas> -->
                     <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
                   </div>
                   <div *ngSwitchCase="'Servicing'" class="chart-container" style="position: relative; width:100%">
-                    <!-- <canvas id="MyServiceChart" style="margin: auto;  width:100%">{{ chart }}</canvas> -->
                     <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
                   </div>
                 </div>
