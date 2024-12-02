@@ -7,12 +7,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./payment-info.component.scss']
 })
 export class PaymentInfoComponent implements OnInit{
-
+  paymentData: any;
   constructor(
     private dialogRef: MatDialogRef<PaymentInfoComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
   ) { }
   ngOnInit() {
+    this.paymentData = this.data;
     console.log(this.data);
   }
   proceedToSubmit(){

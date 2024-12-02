@@ -2965,7 +2965,7 @@ export class RugDynamicFormComponent {
     //   email: this.bbdetails.proposerEmailAddress
     // }
     let reqObjBody = {
-          "leadId": "155212321111",
+          "leadId": this.leadId,
           "productName": "Freedom Plus Plan",
           "mobileNumber": "9550971874",
           "email": "ajaykrishnasoma@monocept.com"
@@ -2980,22 +2980,32 @@ export class RugDynamicFormComponent {
       const dialogRef = this.dialog.open(OtpPopupComponent, {
         width: "500px",
         autoFocus: false,
-        data: {
-          fields: "this.fields"
-        }
+        data: { leadId: this.leadId, message: result.statusMessage, generateOtpReq: reqObjBody}
       });
       dialogRef.afterClosed().subscribe((result: any) => {
         console.log(result);
-        const dialogRef = this.dialog.open(PaymentInfoComponent, {
-          width: "500px",
-          autoFocus: false,
-          data: {
-            fields: "this.fields"
-          }
-        });
-        dialogRef.afterClosed().subscribe((result: any) => {
-          console.log(result);
-        })
+        if (result?.statusMessage == "OTP has been validated Successfully.") {
+          const dialogRef = this.dialog.open(PaymentInfoComponent, {
+            width: "500px",
+            autoFocus: false,
+            data: {
+              leadId: this.bbdetails.leadId,
+              customerName: this.bbdetails?.customerFirstName + " " + this.bbdetails?.customerLastName,
+              mobileNumber: this.bbdetails?.proposerMobileNumber,
+              amount: this.bbdetails?.totalPremium
+            }
+          });
+          dialogRef.afterClosed().subscribe((result: any) => {
+            console.log(result);
+            if (this.bbdetails?.paymentMode == 'easypay') {
+              this.router.navigateByUrl('/thankyou');
+            }else{
+              let reqBody = {
+                leadId: this.bbdetails?.leadId
+              }
+            }
+          })
+        }
       })
     })
   }
@@ -3156,16 +3166,14 @@ export class RugDynamicFormComponent {
               this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
                 next: (res: any) => {
                   console.log(res);
-                  if (res.isSuccess == true && res.statusCode == 200) {
-                    this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
-                    // if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                    //   this.incrementIndex();
-                    //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-                      
-                    // }
-          
+                  let responseData = JSON.parse(res.data);
+                  if (responseData.isSuccess == true && responseData.statusCode == 200) {
+                    this.toast.success({ detail: "SUCCESS", summary: responseData.message, duration: 3000 });
+                    if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                      this.incrementIndex();
+                      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                    }
                   }
-          
                 },
                 error: (err) => {
                   console.error(err);

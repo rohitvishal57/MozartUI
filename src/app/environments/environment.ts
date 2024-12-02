@@ -127,5 +127,6 @@ export const environment = {
     fetchPermoranceDetails:"api/quote/GetWidgetData",
     fetchPersistencyPercentage:"api/quote/GetPersistencyPercentage",
     GetDueRenewals:"api/quote/GetDueRenewals",
-    getBBOTP:"api/v1/GetBBOTP"
+    getBBOTP:"api/v1/GetBBOTP",
+    getValidateBbOtp:"api/v1/ValidateBBOTP"
   }

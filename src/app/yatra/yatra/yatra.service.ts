@@ -160,6 +160,10 @@ export class YatraService {
     const getBbOtp = this.configService.config.baseUrl + this.configService.config.getBBOTP;
     return this.httpService.post(getBbOtp,reqData);
   }
+  validateBBOTP(reqData:any){
+    const validateBbOtp = this.configService.config.baseUrl + this.configService.config.getValidateBbOtp;
+    return this.httpService.post(validateBbOtp,reqData);
+  }
   insertFullQuoteJson(reqData:any){
     const insertfullquotejson = this.configService.config.baseUrl + this.configService.config.insertfullquotejson;
     return this.httpService.post(insertfullquotejson,reqData);
