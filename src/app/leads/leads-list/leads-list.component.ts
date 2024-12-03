@@ -80,21 +80,9 @@ export class LeadsListComponent {
   interestedProductItem : any = '';
   ProductList :any = [];
 
-  constructor(
-    private leadsService: LeadsService,
-    private commonService: CommonService,
-    private fb: FormBuilder,
-    private router: Router,
-    private datePipe: DatePipe,
-    private toast: NgToastService,
-    private productService: ProductsService,
-    private common: CommonService,
-    private encryptionService: EncryptionService,
-    private languageService: LanguageService,
-    private translateService: TranslateService
-
-  ) { }
-
+  constructor(private leadsService: LeadsService,private commonService: CommonService,private fb: FormBuilder,private router: Router,
+    private datePipe: DatePipe,private toast: NgToastService,private productService: ProductsService,private common: CommonService,
+    private encryptionService: EncryptionService,private languageService: LanguageService,private translateService: TranslateService) {}
 
   leadsInfoListRequestBody = {
     "agentcode": this.agentCode,
@@ -213,10 +201,9 @@ export class LeadsListComponent {
     this.getLeadsList();
     this.activeFilter = filter;
   }
-
   getProducts() {
     const reqData = {
-      "agentCode": this.agentCode
+      agentCode: this.agentCode
     }
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res) => {
@@ -224,7 +211,7 @@ export class LeadsListComponent {
         console.log("product list", this.productsList)
       },
       error: (err) => {
-        console.log("error coming form getproduct list API");
+        console.log("error coming form getproduct list API",err);
       }
     });
   }
