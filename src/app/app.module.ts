@@ -28,9 +28,6 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { SharedModule } from './shared/shared.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
-import { LocationStrategy, PathLocationStrategy } from '@angular/common';  // Import LocationStrategy and PathLocationStrategy
-
-
 export function loadConfig(configService: ConfigService) {
   return () => configService.loadConfig();
 }
@@ -76,8 +73,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     ConfigService,
     LoadingService,
-    { provide: LocationStrategy, useClass: PathLocationStrategy },  // Use PathLocationStrategy
-
     {
       provide: APP_INITIALIZER,
       useFactory: loadConfig,
