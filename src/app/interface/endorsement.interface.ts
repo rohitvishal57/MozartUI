@@ -7,5 +7,6 @@ export interface endorsementDetails {
     raisedOn: Date,
     requestType: string,
     status: string
-    mobileNumber: string
+    mobileNumber: string,
+    email: string
 }

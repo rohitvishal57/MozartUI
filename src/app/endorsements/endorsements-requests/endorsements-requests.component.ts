@@ -305,6 +305,8 @@ export class EndorsementsRequestsComponent implements OnInit {
       return "Enter Policy Number";
     } else if (this.selected === "mobileNumber") {
       return "Enter Mobile Number";
+    } else if (this.selected === "email") {
+      return "Enter Email Id";
     }
     else {
       return "Search...";
@@ -328,6 +330,10 @@ export class EndorsementsRequestsComponent implements OnInit {
       }
       else if (this.selected === "mobileNumber") {
         this.requestsListRequestBody.searchColumn = "MobileNumber";
+        this.requestsListRequestBody.searchString = searchValue;
+      }
+      else if (this.selected === "email") {
+        this.requestsListRequestBody.searchColumn = "EmailId";
         this.requestsListRequestBody.searchString = searchValue;
       }
     this.isSearch = true;

@@ -200,7 +200,7 @@ export class LoginComponent implements OnInit {
       next: (res: any) => {
         if (res.data && res.isSuccess && res.statusCode == '200') {
           localStorage.setItem('agentCode', this.loginForm.value.userName);
-          window.open(res.data.redirectUrl, "_blank");
+          window.open(res.data.redirectUrl, "_self");
         } else {
           this.userErrorMsg = res.message;
         }
