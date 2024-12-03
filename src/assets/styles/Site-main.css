@@ -3265,18 +3265,22 @@ input[type="search"]::-webkit-search-results-decoration {
   background: transparent !important;
   cursor:auto !important;
   box-shadow: none !important;
-  flex-direction: column;
+  flex-direction: row;
   gap: 2px;
   text-align: left !important;
-  font-size: 14px !important;
+  font-size: 20px !important;
+  justify-content: space-between;
+  width: 100%;
 }
 .cartlist_plans .planLabel {
-  color: #818181;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  color: #282828;
 }
 .cartlist_plans .planPrice {
-  font-weight: 500 !important;
-  font-size: 20px !important;
-  color: #c7222a !important;
+  font-weight: 600 !important;
+  font-size: 18px !important;
+  color: #282828 !important;
 }
 .cart_listBody .h_line {
   margin: 15px auto;
