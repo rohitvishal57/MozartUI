@@ -1,5 +1,5 @@
 <!--NEW HTML CODE START-->
-<main class="siteBody block-hide">
+<main class="siteBody">
     <div class="contentBody bodyColumns-1 bodyColumns-dashboard">
         <div class="bodyColumn body_flex_column">
             <div class="row">
@@ -15,12 +15,257 @@
                 <div class="main_productList">
                     <div class="item_productList left_productList">
                         <div class="main_listProducts">
-                            1
+                           <!--Policy list start-->
+                           <div class="cardViewMain" *ngIf="ProductList.length > 0; else noProducts">
+                                <div class="cardViewWraper">
+                                    <div class="cardViewItem" *ngFor="let item of ProductList; let i = index">
+                                        <header class="head_cardViewItem">
+                                            <div class="productInfoDetails">
+                                                <div class="planProductInfo">
+                                                    <div class="ppi_img">
+                                                        <img src="assets/logo/activeOne.svg">
+                                                    </div>
+                                                    <div class="ppi_info">
+                                                        <h4>{{item.productName | translate}}</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div></div>
+                                        </header>
+                                        <main class="body_cardViewItem body_flex_column">
+                                            <ul class="tick_round">
+                                                <li *ngFor="let key of item.keyFeatures">
+                                                    <img src="assets/Img/icon_tick_org.svg">
+                                                    {{ key }}
+                                                </li>
+                                            </ul>
+                                            <div class="cardViewItem_planContainer">
+    
+                                                <!-- Plan 1 -->
+                                                <div class="cardViewItem_plans" [ngClass]="{ 'highlight': selectedPlans[i] === 1 }"
+                                                    (click)="selectPlan(i, 1)">
+                                                    <div class="planPrice" [ngClass]="{ 'highlight': selectedPlans[i] === 1}">
+                                                        ₹{{ item.tenure1Premium }}*<span class="planTenure">/ {{"1year" | translate}}</span>
+                                                    </div>
+                                                    <div *ngIf="item.t1DiscountPercentage" class="planDuration">
+                                                        /{{ item.t1DiscountPercentage }}%
+                                                    </div>
+                                                    <div *ngIf="item.t1DiscountAmount" class="planDuration"
+                                                        [ngClass]="{'highlight': selectedPlans[i] === 1}">
+                                                        ( {{ item.t1DiscountAmount }} )
+                                                    </div>
+                                                </div>
+            
+                                                <!-- Plan 2 -->
+                                                <div class="cardViewItem_plans" [ngClass]="{ 'highlight': selectedPlans[i] === 2 }"
+                                                    (click)="selectPlan(i, 2)">
+                                                    <div class="planPrice" [ngClass]="{ 'highlight': selectedPlans[i] === 2}">
+                                                        ₹{{ item.tenure2Premium }}*<span class="planTenure">/ {{"2 year" | translate}}</span>
+                                                    </div>
+                                                    <div *ngIf="item.t2DiscountPercentage" class="planDuration">
+                                                         {{ item.t2DiscountPercentage }}%
+                                                    </div>
+                                                    <div *ngIf="item.t2DiscountAmount" class="planDuration"
+                                                        [ngClass]="{'highlight': selectedPlans[i] === 2}">
+                                                        ( {{ item.t2DiscountAmount }} )
+                                                    </div>
+                                                </div>
+            
+                                                <!-- Plan 3 -->
+                                                <div class="cardViewItem_plans" [ngClass]="{ 'highlight': selectedPlans[i] === 3 }"
+                                                    (click)="selectPlan(i, 3)">
+                                                    <div class="planPrice" [ngClass]="{ 'highlight': selectedPlans[i] === 3}">
+                                                        ₹{{ item.tenure3Premium }}*<span class="planTenure">/ {{"3 year" | translate}}</span>
+                                                    </div>
+                                                    <div *ngIf="item.t3DiscountPercentage" class="planDuration">
+                                                        {{ item.t3DiscountPercentage }}%
+                                                    </div>
+                                                    <div *ngIf="item.t3DiscountAmount" class="planDuration"
+                                                        [ngClass]="{'highlight': selectedPlans[i] === 3}">
+                                                        ( {{ item.t3DiscountAmount }} )
+                                                    </div>
+                                                </div>
+            
+                                            </div>
+                                            
+                                        <div class="backdrop" *ngIf="isOverlayVisible"></div>
+    
+                                        <!-- Popup Overlay -->
+                                        <div class="popup-overlay" *ngIf="isOverlayVisible">
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
+                                                    <i class="fa-solid fa-xmark" (click)="closeOverlay()"></i>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="big-text">{{"Recommended Add-Ons" | translate}}</div>
+                                                <!-- <div class="col-md-12 add-container">
+                                                    <div *ngFor="let addon of ProductList[popIndex].productFeatures"
+                                                    class="add-wrapper col-6 col-md-6 col-lg-3"> -->
+                                                <!-- <div class="add-box"
+                                                        [ngClass]="{'selected': isSelected(addon.featureName), 'unselected': !isSelected(addon.featureName)}"> -->
+                                                <!-- <div>
+                                                            <input type="checkbox" [value]="addon.featureName" id="addon.featureName"
+                                                                (change)="onCheckboxChange($event, addon.featureName)"/>
+                                                                <label for="addon.featureName" class="add-checkbox">
+                                                                    <span>
+                                                                        {{addon.featureName}}
+                                                                    </span>
+                                                                </label>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+                                                <div class="col-md-12 add-container">
+                                                    <div *ngFor="let addon of ProductList[popIndex].productFeatures"
+                                                        class="add-wrapper" [ngClass]="{'selected': addon.isSelected}">
+                                                        <label for="{{addon.featureName}}" class="add-checkbox">
+                                                            <input type="checkbox" [value]="addon.featureName"
+                                                                id="{{addon.featureName}}" name="{{addon.featureName}}" [checked]="addon.isSelected"
+                                                                (change)="onCheckboxChange($event, addon,i)" />
+                                                            <span>{{addon.featureName | translate}}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+        
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                    <button id="Continue" name="Continue"
+                                                    class="get" (click)="closeOverlay()">{{"Continue" | translate}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </main>
+                                        <footer class="footer_cardViewItem mt-4">
+                                            <div class="btn_groupAction">
+                                                <button class="btn_red btn_products btn_buy" id="Add to Cart" name="Add to Cart" (click)="addToCart(item)">
+                                                    <img src="assets/Img/trolley1.svg" alt="">
+                                                    {{"Add to Cart" | translate}}
+                                                </button>
+                                                <button class="btn_pink btn_products" id="View Recommended Add-Ons" name="View Recommended Add-Ons"
+                                                (click)="showOverlay(i)">{{"View Recommended Add-Ons" | translate}}</button>
+                                                <button class="btn_grey btn_products btn_addtocompare" id="Add to Compare" name="Add to Compare" (click)="addToCompareProducts(item)">
+                                                    <img src="assets/Img/left-and-right-arrows1.svg" alt="">
+                                                    {{"Add to Compare" | translate}}
+                                                </button>
+                                            </div>
+                                        </footer>
+                                    </div>
+                                </div>
+                           </div>
+                           <!--Poicy list end-->
+                            <ng-template #noProducts>
+                                <div class="no-products-message" *ngIf="displayNoProductsMessage">{{"No products available for the selected type."}}</div>
+                            </ng-template>
                         </div>
                     </div>
                     <div class="item_productList right_productList">
                         <div class="cart_listProducts">
-                            2
+                            <header class="cart_listHead body_flex_row justify-content-between">
+                                <h4>{{"Cart" | translate}}</h4>
+                                <div class="cart_listHeadInfo">
+                                    <div *ngIf="cartProductList.length >0">
+                                        <div class="allitem">
+                                            <!-- <input type="button" class="btn_pink" id="Remove All"
+                                            name="Remove All" [value]="'Remove All' | translate"
+                                                        (click)="deleteallcartitems()"> -->
+                                            <button type="button" class="btn_pink" id="RemoveAll"
+                                            name="RemoveAll" (click)="deleteallcartitems()">{{"Remove All" | translate}}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </header>
+                            <main class="cart_listBody" [ngClass]="{'center-elements': cartProductList.length === 0}">
+                                <!--No Products start-->
+                                <div *ngIf="cartProductList.length == 0" class="no-product">
+                                    <!-- <div> -->
+                                    <img src="assets/Img/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
+                                    <p class="no-prod-para">{{"No product added in the cart" | translate}}</p>
+                                    <!-- </div> -->
+                                </div>
+                                <!--No Products end-->
+                                <div class="cart_listLength" *ngIf="cartProductList.length >0">
+                                    <div class="cart_cartProductList" *ngFor="let item of cartProductList; let i = index">
+                                        <div class="cardViewItem">
+                                            <div class="row">
+                                                <div class="col-6 data-item">
+                                                    <label>{{"Proposer Name:" | translate}}</label>
+                                                    <h6>{{item.proposerName | translate}}</h6>
+                                                </div>
+                                                <div class="col-6 data-item text-end">
+                                                    <label>{{"Mobile Number:" | translate}}</label>
+                                                    <h6>{{item.mobileNumber | translate}}</h6>
+                                                </div>
+                                            </div>
+                                            <header class="head_cardViewItem body_flex_row justify-content-between">
+                                                <div class="productInfoDetails">
+                                                    <div class="planProductInfo">
+                                                        <div class="ppi_img">
+                                                            <img src="assets/logo/activeOne.svg">
+                                                        </div>
+                                                        <div class="ppi_info">
+                                                            <h4>{{item.productName | translate}}</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="allitem">
+                                                    <!-- <input type="button" class="product-remove-btn" [value]="'Remove' | translate"
+                                                id="Remove" name="Remove" (click)="deleteagentcartitems([item.id])"> -->
+                                                <button type="button" class="btn_pink" id="Remove"
+                                            name="Remove" (click)="deleteagentcartitems([item.id])">{{"Remove" | translate}}</button>
+                                                </div>
+                                            </header>
+                                            <main class="body_cardViewItem mt-4">
+                                                <ul class="tick_round">
+                                                    <li *ngFor="let key of item.productFeatures">
+                                                        <img src="assets/Img/icon_tick_org.svg">
+                                                        {{ key }}
+                                                    </li>
+                                                </ul>
+                                                <div class="cardViewItem_planContainer mt-4">
+                                                    <div class="cardViewItem_plans cartlist_plans">
+                                                        <div class="planLabel">
+                                                            {{"Premium" | translate}}
+                                                        </div>
+                                                        <div class="planPrice">
+                                                            ₹{{ item.selectedPremiumAmount }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="item.selectedAddons">
+                    
+                                                    <div *ngIf="item.selectedAddons.length > 0">
+                                                        <hr>
+                                                        <!-- <div class="add-tag">Selected Addons</div> -->
+                                                        <div class="add-container">
+                                                            <ng-container *ngFor="let addon of item.selectedAddons">
+                                                                <div class="add-box">
+                                                                    <img src="assets/logo/greenpoint.svg" alt="">
+                                                                    <div class="add-text">
+                                                                        {{addon | translate}}
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tipInfo_org tipInfo_quick  mt-4">
+                                                    <img src="assets/Img/lightbulb.svg" alt="">
+                                                   {{"Premium might increase based on the addOns." | translate}}
+                                                </div>
+                                            </main>
+                                            <footer class="footer_cardViewItem mt-4">
+                                                <!-- <input type="button" class="buy-btn" (click)="insurenow(item)"
+                                            id="Buy now" name="Buy now" [value]="'Buy now' | translate"> -->
+                                                <button type="button" class="btn_red btn_products btn_buy btn_fullWidth" (click)="insurenow(item)"
+                                                id="Buy now" name="Buy now">{{"Buy now" | translate}}</button>
+                                            </footer>
+                                        </div>
+                                        <div class="h_line"></div>
+                                    </div>
+                                </div>
+                            </main>
+                            <footer class="cart_listFooter"></footer>
                         </div>
                     </div>
                 </div>
@@ -30,268 +275,6 @@
 </main>
 <!--NEW HTML CODE END-->
 
-<div class="main-class">
-    <div class="r-p-header">
-        <div class="product-heading">{{"Products" | translate}}</div>
-        <div class="prod-head-desc">{{"Discover our products to insure your health" | translate}}
-        </div>
-    </div>
-    <app-get-quote></app-get-quote>
-    <div class="main-container">
-        <div class="left-panel-product">
-            <div class="product-list-container">
-                <div *ngIf="ProductList.length > 0; else noProducts">
-                    <div class="card_ProductList">
-                        <div class="cardRow">
-    
-                            <ng-container *ngFor="let item of ProductList; let i = index">
-                                <div class="cardItem box">
-                                    <!-- {{ item | json}}  -->
-                                    <div class="product-item">
-                                        <img src="assets/logo/activeOne.svg">
-                                        {{item.productName | translate}}
-                                    </div>
-                                    <div class="product-button">
-                                        <button class="get" id="Add to Cart" name="Add to Cart">
-                                            {{"Share Quote" | translate}}
-                                        </button>
-                                    </div>
-                                  
-                                    <!-- <p>{{item.productDescription}}</p> -->
-                                    <div class="key">
-                                        <div *ngFor="let key of item.keyFeatures">
-                                            <div class="keypoint">
-                                                <img src="assets/logo/keypoint.svg">
-                                                {{ key }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="plan-container">
-    
-                                        <!-- Plan 1 -->
-                                        <div class="plan1" [ngClass]="{ 'highlight': selectedPlans[i] === 1 }"
-                                            (click)="selectPlan(i, 1)">
-                                            <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 1}">
-                                                ₹{{ item.tenure1Premium }}*/ {{"1year" | translate}}
-                                            </div>
-                                            <div *ngIf="item.t1DiscountPercentage" class="plan-discount">
-                                                /{{ item.t1DiscountPercentage }}%
-                                            </div>
-                                            <div *ngIf="item.t1DiscountAmount" class="plan-duration"
-                                                [ngClass]="{'highlight': selectedPlans[i] === 1}">
-                                                ( {{ item.t1DiscountAmount }} )
-                                            </div>
-                                        </div>
-    
-                                        <!-- Plan 2 -->
-                                        <div class="plan2" [ngClass]="{ 'highlight': selectedPlans[i] === 2 }"
-                                            (click)="selectPlan(i, 2)">
-                                            <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 2}">
-                                                ₹{{ item.tenure2Premium }}*/ {{"2 year" | translate}}
-                                            </div>
-                                            <div *ngIf="item.t2DiscountPercentage" class="plan-discount">
-                                                 {{ item.t2DiscountPercentage }}%
-                                            </div>
-                                            <div *ngIf="item.t2DiscountAmount" class="plan-duration"
-                                                [ngClass]="{'highlight': selectedPlans[i] === 2}">
-                                                ( {{ item.t2DiscountAmount }} )
-                                            </div>
-                                        </div>
-    
-                                        <!-- Plan 3 -->
-                                        <div class="plan3" [ngClass]="{ 'highlight': selectedPlans[i] === 3 }"
-                                            (click)="selectPlan(i, 3)">
-                                            <div class="plan-price" [ngClass]="{ 'highlight': selectedPlans[i] === 3}">
-                                                ₹{{ item.tenure3Premium }}*/ {{"3 year" | translate}}
-                                            </div>
-                                            <div *ngIf="item.t3DiscountPercentage" class="plan-discount">
-                                                {{ item.t3DiscountPercentage }}%
-                                            </div>
-                                            <div *ngIf="item.t3DiscountAmount" class="plan-duration"
-                                                [ngClass]="{'highlight': selectedPlans[i] === 3}">
-                                                ( {{ item.t3DiscountAmount }} )
-                                            </div>
-                                        </div>
-    
-                                    </div>
-                                    <!-- <div class="addon" *ngIf="addonView[i] == true">
-                                        <hr>
-                                        <div class="big-text">Selected Add-Ons</div>
-                                        <div class="add-container">
-                                            <ng-container *ngFor="let addon of item.productFeatures">
-                                                <div class="add-box">
-                                                    {{addon.featureName}}
-                                                </div>
-                                            </ng-container>
-                                        </div>
-                                    </div> -->
-                                    <div class="backdrop" *ngIf="isOverlayVisible"></div>
-    
-                                    <!-- Popup Overlay -->
-                                    <div class="popup-overlay" *ngIf="isOverlayVisible">
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 text-right">
-                                                <i class="fa-solid fa-xmark" (click)="closeOverlay()"></i>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="big-text">{{"Recommended Add-Ons" | translate}}</div>
-                                            <!-- <div class="col-md-12 add-container">
-                                                <div *ngFor="let addon of ProductList[popIndex].productFeatures"
-                                                class="add-wrapper col-6 col-md-6 col-lg-3"> -->
-                                            <!-- <div class="add-box"
-                                                    [ngClass]="{'selected': isSelected(addon.featureName), 'unselected': !isSelected(addon.featureName)}"> -->
-                                            <!-- <div>
-                                                        <input type="checkbox" [value]="addon.featureName" id="addon.featureName"
-                                                            (change)="onCheckboxChange($event, addon.featureName)"/>
-                                                            <label for="addon.featureName" class="add-checkbox">
-                                                                <span>
-                                                                    {{addon.featureName}}
-                                                                </span>
-                                                            </label>
-                                                    </div>
-                                                </div>
-                                            </div> -->
-                                            <div class="col-md-12 add-container">
-                                                <div *ngFor="let addon of ProductList[popIndex].productFeatures"
-                                                    class="add-wrapper" [ngClass]="{'selected': addon.isSelected}">
-                                                    <label for="{{addon.featureName}}" class="add-checkbox">
-                                                        <input type="checkbox" [value]="addon.featureName"
-                                                            id="{{addon.featureName}}" name="{{addon.featureName}}" [checked]="addon.isSelected"
-                                                            (change)="onCheckboxChange($event, addon,i)" />
-                                                        <span>{{addon.featureName | translate}}</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-    
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                                <button id="Continue" name="Continue"
-                                                 class="get" (click)="closeOverlay()">{{"Continue" | translate}}</button>
-                                            </div>
-                                        </div>
-                                    </div>
-    
-                                    <!-- <p *ngIf="selectedPlan.value" class="mt-4">
-                                        You have selected the {{ selectedPlan.value }} year plan.
-                                    </p> -->
-                                    <div class="product-button">
-                                        <!-- /*<button class="get" (click)="getQuote(item)">Get Quote</button>*/ -->
-                                        <button class="get" id="Add to Cart" name="Add to Cart"
-                                         (click)="addToCart(item)">
-                                            <img src="assets/Img/trolley1.svg" alt="">
-                                            {{"Add to Cart" | translate}}
-                                        </button>
-                                        <button class="get1" id="View Recommended Add-Ons" name="View Recommended Add-Ons"
-                                         (click)="showOverlay(i)">{{"View Recommended Add-Ons" | translate}}</button>
-                                        <button class="get2" id="Add to Compare" name="Add to Compare" (click)="addToCompareProducts(item)">
-                                            <img src="assets/Img/left-and-right-arrows1.svg" alt="">
-                                            {{"Add to Compare" | translate}}
-                                        </button>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <ng-template #noProducts>
-                <div class="no-products-message" *ngIf="displayNoProductsMessage">{{"No products available for the selected type."}}</div>
-            </ng-template>
-        </div>
-    
-        <div class="right-panel-cart">
-            <div class="r-p-header">
-                <div class="cart-heading">{{"Cart" | translate}}</div>
-            </div>
-            <div class="cardItem box " [ngClass]="{'center-elements': cartProductList.length === 0}">
-                <div *ngIf="cartProductList.length == 0" class="no-product">
-                    <!-- <div> -->
-                    <img src="assets/Img/trolley.svg" alt="trolley" style="height: 41.25px; width: 174px;">
-                    <p class="no-prod-para">{{"No product added in the cart" | translate}}</p>
-                    <!-- </div> -->
-                </div>
-                <div *ngIf="cartProductList.length >0">
-                    <div class="allitem">
-                        <input type="button" class="product-remove-btn" id="Remove All"
-                        name="Remove All" [value]="'Remove All' | translate"
-                                    (click)="deleteallcartitems()">
-                    </div>
-                    <div *ngFor="let item of cartProductList; let i = index">
-                        <div class="cart-cardItem">
-                            <div class="cart-info-container">
-                                <div class="proposer-info">
-                                    <h5>{{"Proposer Name:" | translate}}</h5>
-                                    <p>{{item.proposerName | translate}}</p>
-                                </div>
-                                <div class="mobile-info">
-                                    <h5>{{"Mobile Number:" | translate}}</h5>
-                                    <p>{{item.mobileNumber}}</p>
-                                </div>
-                            </div>
-                            <div class="product-header">
-                                <div class="cart-productText"><img src="assets/logo/activeOne.svg"
-                                        class="cart-productImage"> {{item.productName | translate}}</div>
-                                <input type="button" class="product-remove-btn" [value]="'Remove' | translate"
-                                id="Remove" name="Remove" (click)="deleteagentcartitems([item.id])">
-                            </div>
-                            <div class="product-features">
-                                <div *ngFor="let key of item.productFeatures">
-                                    <div class="feature-element">
-                                        <img src="assets/Img/Frame2.svg" alt="">
-                                        <div class="feature"> {{ key }}</div>
-                                    </div>
-                                </div>
-                            </div>
-    
-                            <div class="plan-container">
-    
-                                <div class="plan-label">
-                                    {{"Premium" | translate}}
-                                </div>
-                                <div class="plan1">
-                                    <div class="plan-price">
-                                        ₹{{ item.selectedPremiumAmount }}
-                                    </div>
-                                </div>
-    
-                            </div>
-                            <div *ngIf="item.selectedAddons">
-    
-                                <div *ngIf="item.selectedAddons.length > 0">
-                                    <hr>
-                                    <!-- <div class="add-tag">Selected Addons</div> -->
-                                    <div class="add-container">
-                                        <ng-container *ngFor="let addon of item.selectedAddons">
-                                            <div class="add-box">
-                                                <img src="assets/logo/greenpoint.svg" alt="">
-                                                <div class="add-text">
-                                                    {{addon | translate}}
-                                                </div>
-                                            </div>
-                                        </ng-container>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="quick-tip">
-                                <img src="assets/Img/lightbulb.svg" alt="">
-                               {{"Premium might increase based on the addOns." | translate}}
-                            </div>
-                            <!-- <div class=""> -->
-                            <input type="button" class="buy-btn" (click)="insurenow(item)"
-                            id="Buy now" name="Buy now" [value]="'Buy now' | translate">
-                            <!-- </div> -->
-                        </div>
-                        <div class="line">
-    
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <p-confirmDialog></p-confirmDialog>
 
 <!-- <ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-scale-multiple" [fullScreen]="true">

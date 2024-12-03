@@ -857,6 +857,12 @@
     .item_productList {
         width: 100%;
         flex: auto;
+        .cardViewItem {
+            width: 100%;
+            padding: 16px 22px;
+            box-shadow: 0px 2px 4px 0px #D5D7DE33, 0px 1px 10px 0px #D5D7DE1F, 0px 4px 5px 0px #D5D7DE24;
+ 
+        }
     }
     .right_productList {
         max-width: 394px;
