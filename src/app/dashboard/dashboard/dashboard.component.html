@@ -91,13 +91,12 @@
                     </header>
                     <main class="body_flex_column">
                       <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
-                        <ng-container *ngIf="tasks?.activityTitle.includes('No') ? true : template">
+                        <!-- <ng-container *ngIf="tasks.includes('No') ? true : template">
                           <h6><span title={{tasks?.activityTitle}}>{{tasks?.activityTitle}}</span></h6>
-                        </ng-container>
-                        <ng-template #template>
+                        </ng-container> -->
                           <h6><span title={{tasks?.activityTitle}}>{{tasks?.activityTitle}}</span></h6>
-                        <small>{{tasks?.note}}</small>
-                        </ng-template>
+                          <small>{{tasks?.note}}</small>
+                          <small>{{tasks?.startTime}}</small>
                       </div>
                   </main>
                     <footer>
@@ -134,11 +133,11 @@
                     </header>
                     <main class="body_flex_column">
                         <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
-                          <ng-container *ngIf="tasks?.Description.includes('No notifications') ? true : template">
-                            <h6><span title={{tasks?.Description}}>{{tasks?.Description}}</span></h6>
+                          <ng-container *ngIf="tasks?.description.includes('No notifications') ? true : template">
+                            <h6><span title={{tasks?.description}}>{{tasks?.description}}</span></h6>
                           </ng-container>
                           <ng-template #template>
-                          <small>{{tasks?.Description}}</small>
+                          <small>{{tasks?.description}}</small>
                           </ng-template>
                         </div>
                     </main>
@@ -147,9 +146,7 @@
                     </footer>
                   </div>
               </ng-conatiner>
-            </ng-conatiner>
-           
-            
+            </ng-conatiner>            
           </div>
         </section>
         <!--Important Tasks New design end-->
@@ -237,7 +234,7 @@
           </div>
         </section>
         <!-- performance -->
-        <div cdkDrag class="contentBody dashboard_contentContainer move-cursor" *ngIf="section == 'Performance'">
+        <div cdkDrag class="contentBody dashboard_contentContainer move-cursor" [routerLink]="'/performance/my-performance'" *ngIf="section == 'Performance'">
           <div class="performance-overview">
             <div class="body_flex_row justify-content-between align-items-center">
               <h2>{{"Performance Overview" | translate}}</h2>
@@ -330,7 +327,7 @@
                   <ng-container *ngFor="let buz of tab.category">
                     <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
                     <div  *ngSwitchCase="'Leads'">
-                      <div class="leads_item leads_open">
+                      <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'">
                         <header>
                           <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                           <label>{{buz.count}}</label>
@@ -338,7 +335,7 @@
                       </div>
                     </div>
                     <div *ngSwitchCase="'Proposals'">
-                      <div class="leads_item leads_open">
+                      <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'">
                         <header>
                           <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                           <label>{{buz.count}}</label>
@@ -364,7 +361,7 @@
               <div class="leads_content leads_contentDashboard scroll_contentDashboard">
                 <ng-container *ngFor="let buz of renewalDetail">
                   <div class="leads_item_contentDashboard">
-                    <div class="leads_item leads_open">
+                    <div class="leads_item leads_open" [routerLink]="'/renewal/renewalList'">
                       <header>
                         <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                         <label>{{buz.count}}</label>
@@ -394,7 +391,7 @@
                   <ng-container *ngFor="let buz of tab.category">
                     <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
                       <div *ngSwitchCase="'Customer'">
-                        <div class="leads_item leads_open">
+                        <div class="leads_item leads_open" [routerLink]="'/customers/customersList'">
                           <header>
                             <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                             <label>{{buz.count}}</label>
