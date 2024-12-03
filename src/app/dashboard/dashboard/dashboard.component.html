@@ -74,7 +74,7 @@
         (cdkDropListDropped)="dropSections($event)">
         <ng-container *ngFor="let section of sectionList">
         <!--Important Tasks New design start-->
-        <section cdkDrag class="commonSection dashboard_LPR_main dashboard_importantEvents move-cursor" *ngIf="section == 'QuickAction' && quickActionDetails">
+        <section cdkDrag class="commonSection dashboard_LPR_main dashboard_importantEvents " *ngIf="section == 'QuickAction' && quickActionDetails">
           <h3>{{"Important Tasks" | translate}}</h3>
           <div class="body_flex_row body_importantEvents mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropQuickAct($event)">
@@ -95,7 +95,7 @@
                           <h6><span title={{tasks?.activityTitle}}>{{tasks?.activityTitle}}</span></h6>
                         </ng-container> -->
                           <h6><span title={{tasks?.activityTitle}}>{{tasks?.activityTitle}}</span></h6>
-                          <small>{{tasks?.note}}</small>
+                          <!-- <small>{{tasks?.note}}</small> -->
                           <small>{{tasks?.startTime}}</small>
                       </div>
                   </main>
@@ -150,7 +150,7 @@
           </div>
         </section>
         <!--Important Tasks New design end-->
-        <section cdkDrag class="body_flex_column dashboard_latestABHI commonSection move-cursor" *ngIf="section == 'ABHI'">
+        <section cdkDrag class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section == 'ABHI'">
           <div class="body_flex_row justify-content-between">
             <h6>{{"Latest from ABHI" | translate}}</h6>
             <button type="button" id="btn-exploreMore" name="btn-exploreMore"
@@ -234,7 +234,7 @@
           </div>
         </section>
         <!-- performance -->
-        <div cdkDrag class="contentBody dashboard_contentContainer move-cursor" [routerLink]="'/performance/my-performance'" *ngIf="section == 'Performance'">
+        <div cdkDrag class="contentBody dashboard_contentContainer " [routerLink]="'/performance/my-performance'" *ngIf="section == 'Performance'">
           <div class="performance-overview">
             <div class="body_flex_row justify-content-between align-items-center">
               <h2>{{"Performance Overview" | translate}}</h2>
@@ -300,7 +300,7 @@
           </div>
         </div>
         <!-- Business -->
-        <section cdkDrag class="commonSection dashboard_LPR_main move-cursor" *ngIf="section == 'Business'">
+        <section cdkDrag class="commonSection dashboard_LPR_main " *ngIf="section == 'Business'">
           <div class="body_flex_row justify-content-between align-items-center">
             <h3>{{"Business Summary" | translate}}</h3>
             <div class="filter_performanceOverview">
@@ -379,7 +379,7 @@
           </div>
         </section>
         <!-- Other Section -->
-        <section cdkDrag class="dashboard_LPR_main commonSection move-cursor" *ngIf="section == 'Customer'">
+        <section cdkDrag class="dashboard_LPR_main commonSection " *ngIf="section == 'Customer'">
           <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropCharts($event)">
           <ng-container *ngFor="let tab of otherSection">

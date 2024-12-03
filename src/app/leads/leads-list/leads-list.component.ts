@@ -4,7 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { LeadsService } from '../leads.service';
 import { CommonService } from 'src/app/services/common.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
 import { ProductsService } from 'src/app/product/products/products.service';
@@ -79,10 +79,23 @@ export class LeadsListComponent {
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
+  leadId: any;
 
-  constructor(private leadsService: LeadsService,private commonService: CommonService,private fb: FormBuilder,private router: Router,
-    private datePipe: DatePipe,private toast: NgToastService,private productService: ProductsService,private common: CommonService,
-    private encryptionService: EncryptionService,private languageService: LanguageService,private translateService: TranslateService) {}
+  constructor(
+    private leadsService: LeadsService,
+    private commonService: CommonService,
+    private fb: FormBuilder,
+    private router: Router,
+    private datePipe: DatePipe,
+    private toast: NgToastService,
+    private productService: ProductsService,
+    private common: CommonService,
+    private encryptionService: EncryptionService,
+    private languageService: LanguageService,
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute
+  ) { }
+
 
   leadsInfoListRequestBody = {
     "agentcode": this.agentCode,
@@ -110,6 +123,18 @@ export class LeadsListComponent {
           this.translateService.use('en');
         }
       });
+    });
+
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeLeadStatus  = params['leadstatus'];
+      if(routeLeadStatus){
+        this.leadFilterStatus.map((leadStatus:any)=>{
+         if(leadStatus.name == routeLeadStatus){
+          leadStatus.selected = true;
+         } 
+        });
+        this.applyFilter();
+      }
     });
 
     this.assigneLeadModal = new bootstrap.Modal(document.getElementById('assigneLeadModal'));

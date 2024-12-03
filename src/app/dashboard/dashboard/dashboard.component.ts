@@ -23,8 +23,16 @@ export class DashboardComponent {
   tabsInfo: any = [];
   renewalDetail: any;
   quickActionDetails: any = [];
-  businessSummary: any
+  businessSummary: any;
+
   public chart: any;
+  public Leadchart : any;
+  public proposalChart : any;
+  public renewChart : any;
+  public customerchart : any;
+  public servicingchart : any;
+  public dhaChart: any;
+
   @ViewChild('chartCanvas') chartCanvas: ElementRef | undefined;
   @ViewChild('chartPropCanvas') chartPropCanvas: ElementRef | undefined;
   @ViewChild('chartRenewCanvas') chartRenewCanvas: ElementRef | undefined;
@@ -414,14 +422,14 @@ export class DashboardComponent {
     if (this.chartCanvas && this.chartCanvas.nativeElement) {
       const canvas = this.chartCanvas.nativeElement;
       const ctx = canvas.getContext('2d');
-
+  
       if (!ctx) {
         console.error('Failed to get context from canvas.');
         return;
       }
-
+  
       // Create the chart using Chart.js
-      this.chart = new Chart(ctx, {
+      this.Leadchart = new Chart(ctx, {
         type: 'doughnut', // 'pie' or 'doughnut'
         data: this.createChartData(), // Dynamic chart data
         options: {
@@ -448,13 +456,29 @@ export class DashboardComponent {
               },
             },
           },
+          onClick: (event, activeElements) => {
+            debugger;
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.Leadchart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.Leadchart.data.labels[index];  // Access labels via `this.chart`
+  
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/leads/leadsList/'], {
+                queryParams: { leadstatus : label  },
+              });
+            }
+          }
         }
       });
     } else {
       console.error('Chart canvas element is not found.');
     }
   }
-
 
   renderPropChart(): void {
     if (this.chartPropCanvas && this.chartPropCanvas.nativeElement) {
@@ -467,7 +491,7 @@ export class DashboardComponent {
       }
 
       // Create the chart using Chart.js
-      this.chart = new Chart(ctx, {
+      this.proposalChart = new Chart(ctx, {
         type: 'doughnut', // 'pie' or 'doughnut'
         data: this.createPropChartData(), // Dynamic chart data
         options: {
@@ -531,7 +555,7 @@ export class DashboardComponent {
       }
 
       // Create the chart using Chart.js
-      this.chart = new Chart(ctx, {
+      this.renewChart = new Chart(ctx, {
         type: 'doughnut', // 'pie' or 'doughnut'
         data: this.createEXChartData(), // Dynamic chart data
         options: {
@@ -624,7 +648,7 @@ export class DashboardComponent {
       }
 
       // Create the chart using Chart.js
-      this.chart = new Chart(ctx, {
+      this.dhaChart = new Chart(ctx, {
         type: 'doughnut', // 'pie' or 'doughnut'
         data: this.createDHAChartData(), // Dynamic chart data
         options: {
@@ -690,7 +714,7 @@ export class DashboardComponent {
       }
 
       // Create the chart using Chart.js
-      this.chart = new Chart(ctx, {
+      this.customerchart = new Chart(ctx, {
         type: 'doughnut', // 'pie' or 'doughnut'
         data: this.createCustomerChartData(), // Dynamic chart data
         options: {
@@ -759,7 +783,7 @@ export class DashboardComponent {
       }
 
       // Create the chart using Chart.js
-      this.chart = new Chart(ctx, {
+      this.servicingchart = new Chart(ctx, {
         type: 'doughnut', // 'pie' or 'doughnut'
         data: this.createServiceChartData(), // Dynamic chart data
         options: {
@@ -815,7 +839,7 @@ export class DashboardComponent {
       }
       return action;
     });
-    
+
     this.fetchWidgets();
     this.ngAfterViewInit();
   }
