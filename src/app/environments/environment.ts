@@ -51,6 +51,8 @@ export const environment = {
     getClaimsDetails: "api/claims/getclaimdetails",
     getHospitals: "api/claims/gethospitaldetails",
     getClaimStatus: "api/claims/getclaimstatus",
+    getClaimStatusCounts:"api/claims/GetClaimStatusCountByAgentCode?agentCode",
+    getMemberDetails:"api/claims/GetMemberDetails",
     getClaimTracker: "api/claims/getclaimtracker",
     getUploadedFiles: "api/claims/getclaimsdocument",
     deleteFile: "api/claims/deleteclaimdocument",

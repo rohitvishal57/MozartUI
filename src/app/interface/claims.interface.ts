@@ -7,6 +7,7 @@ export interface ClaimsInterface {
         requestType: string;
         claimStatus: string;
         raisedDate: Date;
+        mobileNumber: string
       
 }
 
