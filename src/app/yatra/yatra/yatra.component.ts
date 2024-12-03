@@ -1026,7 +1026,7 @@ export class YatraComponent {
     this.dynamicStyle = this.renderer.createElement('link');
     this.renderer.setAttribute(this.dynamicStyle, 'rel', 'stylesheet');
     this.renderer.setAttribute(this.dynamicStyle, 'type', 'text/css');
-    this.renderer.setAttribute(this.dynamicStyle, 'href', 'assets/styles/dynamicForm/' + tf)
+    this.renderer.setAttribute(this.dynamicStyle, 'href', './assets/styles/dynamicForm/' + tf)
     this.renderer.appendChild(this.document.head, this.dynamicStyle);
     this.showHtmlContent = true;
   }
@@ -2605,6 +2605,7 @@ export class YatraComponent {
                 }
               });
             });
+            this.flattenObject(this.formData);
           }
           else {
 
@@ -2631,7 +2632,7 @@ export class YatraComponent {
           // }
 
           // Process formData for flattening if needed
-          this.flattenObject(this.formData);
+          
           console.log(this.formData, this.form);
         }),
         tap(() => {
