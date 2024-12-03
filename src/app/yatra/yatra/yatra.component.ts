@@ -418,9 +418,7 @@ export class YatraComponent {
       currentFormSequence: this.getFormIndexValue().toString()
     }
 
-    //TODO : Changes required.
     console.log(reqData);
-
 
     await this.yatraService.Getform(reqData).subscribe({
       next: (res: any) => {
@@ -433,7 +431,6 @@ export class YatraComponent {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
         };
-
         console.log(this.form, this.formSequence, this.formData);
 
         this.initializeForm();
@@ -3274,6 +3271,7 @@ export class YatraComponent {
               sessionStorage.setItem("isQuote", this.isQuote.toString());
             }
 
+            this.quickQuoteRedirect = false;
             console.log(this.isQuote);
           },
           error: (err) => {
