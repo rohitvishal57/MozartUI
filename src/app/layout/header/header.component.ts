@@ -26,6 +26,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   agentCode : any;
   @Input() isLoggedIn: any;
 
+  
   constructor(private router: Router,
     private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
     ,public headerInformation : HeaderInformation

@@ -606,6 +606,7 @@ button {
 .siteHeader .logoMain .logoMainRight .logoLeftNav{
   height: 100%;
   display: flex;
+  align-items: center;
 }
 .siteHeader .logoMain .logoMainRight .logoRightNav {
   display: flex;
