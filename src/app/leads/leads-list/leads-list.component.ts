@@ -470,6 +470,7 @@ export class LeadsListComponent {
   }
 
   redirectProducts(lead: any) {
+    debugger;
     let formSequence :any;
     let proposalNumber :any ='';
     if (lead.interestedProductName ) {
@@ -500,23 +501,23 @@ export class LeadsListComponent {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }
 
-          if (lead.leadStatus.includes('Open')) {
-            try {
-              const response = await firstValueFrom(this.common.getProposalNumber());
-              proposalNumber = response.data?.proposalNumber;
-            } catch (err) {
-              this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-            }
-          } else {
-            proposalNumber = lead.leadStatus.proposalNumber;
-          }
+          // if (lead.leadStatus.includes('Open')) {
+          //   try {
+          //     const response = await firstValueFrom(this.common.getProposalNumber());
+          //     proposalNumber = response.data?.proposalNumber;
+          //   } catch (err) {
+          //     this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+          //   }
+          // } else {
+          //   proposalNumber = lead?.proposalNumber??'';
+          // }
 
           const productData = {
             partnerId: interestedProductItem.partnerId,
             productId: interestedProductItem.productId,
             quickQuoteRedirect : true,
             leadId :  lead.leadNumber,
-            proposalNum: proposalNumber
+            proposalNum: lead?.proposalNumber??''
           }
         
 

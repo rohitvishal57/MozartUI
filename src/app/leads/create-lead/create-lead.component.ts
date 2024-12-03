@@ -221,14 +221,14 @@ export class CreateLeadComponent implements OnInit {
     else {
       this.CreateLead = this.userValidations.getRawValue();
     }
-    //let proposalNumber :any  ;
-    // try{
-    //   const response = await firstValueFrom(this.common.getProposalNumber());
-    //   proposalNumber = response.data?.proposalNumber;
-    // }catch(err){
-    //   this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
-    // }
-    //this.CreateLead.proposalNumber = proposalNumber;
+    let proposalNumber :any  ;
+     try{
+       const response = await firstValueFrom(this.common.getProposalNumber());
+       proposalNumber = response.data?.proposalNumber;
+     }catch(err){
+       this.toast.warning({ detail: "WARNING", summary: "Failed to Generate Proposal Number", duration: 2000 });
+     }
+    this.CreateLead.proposalNumber = proposalNumber;
     this.CreateLead.AgentCode = this.agentCode;
     this.CreateLead.PhoneNumber = this.userValidations.get('mobilenumber')?.value;
     this.CreateLead.campaignname = 'Self'
