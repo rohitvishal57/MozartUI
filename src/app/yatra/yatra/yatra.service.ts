@@ -181,4 +181,9 @@ export class YatraService {
     // const getfullquoteviaofflinepayment = 'https://localhost:7070/getfullquoteviaofflinepayment';
     return this.httpService.post(getfullquoteviaofflinepayment,reqData);
   }
+
+  getBankDetailsViaIFSC(reqData:any){
+    const getBankDetailsViaIFSC = this.configService.config.baseUrl + this.configService.config.getBankDetailsViaIFSC;
+    return this.httpService.post(getBankDetailsViaIFSC,reqData);
+  }
 }

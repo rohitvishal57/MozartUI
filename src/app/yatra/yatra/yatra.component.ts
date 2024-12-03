@@ -86,10 +86,10 @@ export class YatraComponent {
 
   partnerId: any
   productId: any
-
+  pastDate = new Date(1900, 0, 1).toISOString().split('T')[0];
   displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
-  futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 6)).toISOString().split('T')[0];
+  futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString().split('T')[0];
   selectedButton: string | null = null;
   collapsedSections: { [key: string]: boolean } = {};
   isOverlayVisible = false;
@@ -496,6 +496,11 @@ export class YatraComponent {
         //   })
 
         // }
+        const value = this.formData[control.name];
+        if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
+          control.value = JSON.parse(this.formData[control.name]).value;
+        }
+
         else {
           if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
             control.value = this.formData[control.name];
@@ -1186,6 +1191,7 @@ export class YatraComponent {
   }
 
   uploadSelectedDocument(): Promise<void> {
+    this.spinner.show();
     return new Promise(async (resolve, reject) => {
       try {
         const policyNum = this.proposalNum.replace(/-/g, "");
@@ -1193,16 +1199,21 @@ export class YatraComponent {
         formData.append("Files", this.selectedFile);
         formData.append("UniqueNumber", policyNum);
 
+        this.spinner.show();
         this.commonService.uploadDocument(formData).subscribe(
           async (res: any) => {
+            
             try {
               if (res.isSuccess) {
+                this.spinner.hide();
                 console.log("response after success", res);
                 console.log("unique id", res.data.uploadResponse[0].globalId);
                 this.documentId = res.data.uploadResponse[0].globalId;
 
+                this.spinner.show();
                 // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
                 await this.getFullQuoteViaOfflinePayment();
+                this.spinner.hide();
                 resolve(); // Resolve the promise once everything completes
               } else {
                 reject(new Error("Document upload failed with isSuccess=false"));
@@ -1211,6 +1222,7 @@ export class YatraComponent {
               console.error("Error processing response:", innerError);
               reject(innerError); // Reject the promise on processing error
             }
+            
           },
           (err) => {
             console.error("Error during upload:", err);
@@ -1607,22 +1619,60 @@ export class YatraComponent {
     return JSON.stringify(obj);
   }
 
+  isSequential(enteredNumber: string): boolean {
+    if (!/^\d{6}$/.test(enteredNumber)) {
+      return false;
+    }
+
+    const digits = enteredNumber.split('').map(Number);
+    const allSame = digits.every(digit => digit === digits[0]);
+    if (allSame) {
+      return true;
+    }
+
+    let isAscending = true;
+    let isDescending = true;
+
+    for (let i = 0; i < digits.length - 1; i++) {
+      if (digits[i + 1] - digits[i] !== 1) {
+        isAscending = false;
+      }
+      if (digits[i + 1] - digits[i] !== -1) {
+        isDescending = false;
+      }
+    }
+    return isAscending || isDescending || allSame;
+  }
+
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
     console.log(event.target.checked, control, parentControl, index, subControl, innerControl, indexj);
 
     this.changesMade = true;
     let eventValue = event.target.value;
-    if (control.name === "chequeNumber") {
-      const chequeNumber = event.target.value;
-      if (chequeNumber.length > 6) {
-        event.target.value = chequeNumber.slice(0, 6);
-        this.dynamicFormGroup.get(control.name)?.setValue(chequeNumber.slice(0, 6));
+    if (["chequeNumber", "demandDraftNumber", "payOrderNumber"].includes(control.name)) {
+      const enteredNumber = event.target.value;
+
+      // Check if the cheque number is longer than 6 digits
+      if (enteredNumber.length > 6) {
+        event.target.value = enteredNumber.slice(0, 6);
+        this.dynamicFormGroup.get(control.name)?.setValue(enteredNumber.slice(0, 6));
         this.toast.error({ detail: "ERROR", summary: "Cheque number cannot exceed 6 digits", duration: 3000 });
-        return;
       }
-      if (chequeNumber.length < 6) {
+
+      // Check if the cheque number is less than 6 digits
+      else if (enteredNumber.length < 6) {
         this.toast.error({ detail: "ERROR", summary: "Cheque number must be exactly 6 digits", duration: 3000 });
+      }
+
+      // Check if the cheque number is sequential
+      else if (this.isSequential(enteredNumber)) {
+        this.toast.error({
+          detail: "ERROR",
+          summary: "Sequential or repetitive numbers are not allowed",
+          duration: 3000
+        });
+        this.dynamicFormGroup.get(control.name)?.setValue('');
       }
     }
 
@@ -1720,6 +1770,32 @@ export class YatraComponent {
       }
     }
 
+    if (parentControl == null && control.name == 'ifscCode') {
+    const ifscCodeDetails=this.dynamicFormGroup.get('ifscCode')?.value.length || 0;
+    console.log(ifscCodeDetails);
+
+    if (ifscCodeDetails == 11) {
+      const reqData={
+        "ifscCode":event.target.value
+      }
+      console.log(reqData);
+
+      this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
+        next: (response:any) => {
+          if (response.isSuccess && response.data) {
+            this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+            this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+          } else {
+            // Handle error, you can show a message if required
+            this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+          }
+        },
+        error: (err) => {
+          this.toast.error({ detail: "ERROR", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+        }
+      });
+    }
+  }
 
 
     if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
@@ -1746,7 +1822,7 @@ export class YatraComponent {
       const inputDate = new Date(`${years}-${month}-${day}`);
       const minDate = new Date('1800-01-01');
       const currentDate = new Date();
-      console.log(currentDate,minDate,inputDate);
+      console.log(currentDate, minDate, inputDate);
       // // Validate the full date in dd/MM/yyyy format using regex
       // const dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(18[0-9]{2}|19[0-9]{2}|20[0-9]{2})$/;
       // if (!dobRegex.test(formattedDOB) && year.toString().length == 4) {
@@ -1849,8 +1925,8 @@ export class YatraComponent {
               if (zoneControl) {
                 zoneControl.setValue(res.data.zone || '');
               }
-                // zoneControl.enable();
-              if(zoneControlValue){
+              // zoneControl.enable();
+              if (zoneControlValue) {
                 zoneControlValue.setValue(res.data.zoneValue);
                 this.form.formSections.forEach((section: any) => {
                   section.formControls.forEach((control: any) => {
@@ -1867,8 +1943,8 @@ export class YatraComponent {
                   });
                 });
               }
-                
-              
+
+
             } else {
               console.error('Failed to fetch zone details.');
               this.resetZoneAndLocationFields();
@@ -1987,6 +2063,11 @@ export class YatraComponent {
   calculateAge(dob: Date): number | string {
     const today = new Date();
     const birthDate = new Date(dob);
+
+    if (birthDate > today) {
+      return 'invalid';
+    }
+
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDifference = today.getMonth() - birthDate.getMonth();
     if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
@@ -1996,13 +2077,12 @@ export class YatraComponent {
       const diffInMs = today.getTime() - birthDate.getTime();
       const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
       if (diffInDays < 91) {
-        return `Age must be at least 91 days.`;
+        return 'invalid'; // Less than 91 days is not valid
       }
-
-      return `0 yrs ${diffInDays} days`;
+      return `${diffInDays}days`; // Return age in 'days' format
     }
 
-    return age;
+    return `${age}`;
   }
 
   // async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
@@ -5345,7 +5425,7 @@ export class YatraComponent {
     this.yatraService.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
       next: (response: any) => {
         console.log('Policy details:', response);
-        this.toast.success({ detail: "SUCCESS", summary: "Policy Details Fetched Successfully", duration: 3000 });
+        this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
         this.spinner.hide();
         control.disabled = true;
 
@@ -5516,7 +5596,7 @@ export class YatraComponent {
           memberRoomCategory: member?.memberRoomCategory || ''
         };
       }) || [],
-      CKYCNo: formData?.ckycNo || '',
+      CKYCNo: this.formData?.ckycNo || '',
       QuoteId: formData?.quoteId || '',
       LeadId: formData?.leadNumber || '',
       proposerSalutation: formData?.preFix || '',
@@ -5537,7 +5617,7 @@ export class YatraComponent {
       idProof: this.jsonParse(formData?.idProof, 'value') || '',
       idNo: formData?.idNo || '',
       proposerAnnualIncome: formData?.annualIncome || '',
-      proposerOccupation: this.jsonParse(formData?.occupation, 'value') || '',
+      proposerOccupation: this.jsonParse(formData?.occupation, 'name') || '',
       proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
       proposerPANNo: formData?.panNo || '',
       gstDetails: formData?.gstDetails || '',
@@ -5561,7 +5641,7 @@ export class YatraComponent {
       paymentMode: this.selectedButton || '',
       chequeNumber: formData?.chequeNumber || '',
       chequeDate: formData?.chequeDate || '',
-      bankName: this.jsonParse(formData?.bankName, 'name') || '',
+      bankName: this.formData?.bankName || '',
       ifscCode: formData?.ifscCode || '',
       micrNo: formData?.micrCode || '',
       premiumAmount: formData?.totalPremium || '',
@@ -5578,6 +5658,7 @@ export class YatraComponent {
   }
 
   async getFullQuoteViaOfflinePayment(): Promise<void> {
+    this.spinner.show();
     return new Promise((resolve, reject) => {
       const data = this.dynamicFormGroup.value;
       const formData = {
@@ -5588,7 +5669,7 @@ export class YatraComponent {
         instrumentDate: (this.formData?.chequeDate || '').toString(),
         policyNumber: "".toString(),
         agentCode: (this.agentCode || '').toString(),
-        bankName: this.jsonParse(this.formData?.bankName, 'name').toString(),
+        bankName: (this.formData?.bankName).toString(),
         IFSC: (this.formData?.ifscCode || '').toString(),
         micrNo: (this.formData?.micrCode || '').toString(),
         instrumentType: (this.formData.paymentOption || '').toString(),
@@ -5608,9 +5689,23 @@ export class YatraComponent {
           this.formData.quoteValidToDate = res.data.policyEndDate || null;
           this.formData.ReceiptNumber = res.data.receiptNumber || null;
           this.formData.customerId = res.data.customerId || null;
+          this.spinner.hide();
+
+          this.toast.success({
+            detail: "SUCCESS",
+            summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
+            duration: 3000,
+          });
           resolve(); // Resolve the promise after successful response
-        },
+        },      
         error: (err) => {
+          this.spinner.hide();
+          const errorMessage= err.message
+          this.toast.error({
+            detail: "ERROR",
+            summary: errorMessage,
+            duration: 5000,
+          });
           console.error(err);
           reject(err); // Reject the promise on error
         },
@@ -5630,7 +5725,7 @@ export class YatraComponent {
         this.yatraService.insertFullQuoteJson(req).subscribe({
           next: (res: any) => {
             console.log(res);
-            this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.`, duration: 3000 });
+            // this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.`, duration: 3000 });
             resolve();
           },
           error: (err) => {
@@ -6007,6 +6102,16 @@ export class YatraComponent {
       });
     }
   };
+  getDate(dateType: any): string {
+    if (dateType === 'currentDate') {
+      return this.currentDate;
+    } else if (dateType === 'futureDate') {
+      return this.futureDate;
+    } else if (dateType === 'pastDate') {
+      return this.pastDate;
+    }
+    return '';  // Default return if no valid date type is found
+  }
 
 }
 
