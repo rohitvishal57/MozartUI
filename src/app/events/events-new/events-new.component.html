@@ -13,12 +13,15 @@
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
                 <input type="text" class="form-control input-textBox" id="customerName" formControlName="customerName"
-                  placeholder="">
+                  placeholder="" pattern="^[A-Za-z\s]+$">
                 <label for="customerName">{{"Customer Name" | translate}}</label>
-                <div
-                  *ngIf="saveEvent.get('customerName')?.invalid && (saveEvent.get('customerName')?.dirty || saveEvent.get('customerName')?.touched)">
-                  <div class="text-danger" *ngIf="saveEvent.get('customerName')?.errors?.['required']">{{"Customer name
-                    is required" | translate}}</div>
+                <div *ngIf="saveEvent.get('customerName')?.invalid && (saveEvent.get('customerName')?.dirty || saveEvent.get('customerName')?.touched)">
+                  <div class="text-danger" *ngIf="saveEvent.get('customerName')?.errors?.['required']">
+                    {{"Customer name is required" | translate}}
+                  </div>
+                  <div class="text-danger" *ngIf="saveEvent.get('customerName')?.errors?.['pattern']">
+                    {{"Customer name should contain only letters and spaces" | translate}}
+                  </div>
                 </div>
               </div>
             </div>
@@ -40,14 +43,17 @@
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
                 <input type="text" class="form-control input-textBox" id="activityTitle" formControlName="activityTitle"
-                  placeholder="">
+                  placeholder="" pattern="^[A-Za-z\s]+$">
                 <label for="activityTitle">{{"Activity Title" | translate}}<span class="text-danger">*</span></label>
-                <div
-                  *ngIf="saveEvent.get('activityTitle')?.invalid && (saveEvent.get('activityTitle')?.dirty || saveEvent.get('activityTitle')?.touched)">
-                  <div class="text-danger" *ngIf="saveEvent.get('activityTitle')?.errors?.['required']">{{"Activity
-                    title is required" | translate}}.</div>
+                <div *ngIf="saveEvent.get('activityTitle')?.invalid && (saveEvent.get('activityTitle')?.dirty || saveEvent.get('activityTitle')?.touched)">
+                  <div class="text-danger" *ngIf="saveEvent.get('activityTitle')?.errors?.['required']">
+                    {{"Activity title is required" | translate}}.
+                  </div>
+                  <div class="text-danger" *ngIf="saveEvent.get('activityTitle')?.errors?.['pattern']">
+                    {{"Activity title should contain only letters and spaces" | translate}}.
+                  </div>
                 </div>
-              </div>
+              </div>              
             </div>
           </div>
 
@@ -117,14 +123,19 @@
 
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
               <div class="input-block form-floating input-block-renew">
-                <input type="text" class="form-control input-textBox" id="note" formControlName="note" placeholder="">
+                <input type="text" class="form-control input-textBox" id="note" formControlName="note" placeholder="" pattern="^[A-Za-z0-9\s.,!?;:()-]*$">
                 <label for="note" class="form-label">{{"Note" | translate}}</label>
-                <div
-                  *ngIf="saveEvent.get('note')?.invalid && (saveEvent.get('note')?.dirty || saveEvent.get('note')?.touched)">
-                  <div class="text-danger" *ngIf="saveEvent.get('note')?.errors?.['required']">Note is required.</div>
+                <div *ngIf="saveEvent.get('note')?.invalid && (saveEvent.get('note')?.dirty || saveEvent.get('note')?.touched)">
+                  <div class="text-danger" *ngIf="saveEvent.get('note')?.errors?.['required']">
+                    {{"Note is required." | translate}}
+                  </div>
+                  <div class="text-danger" *ngIf="saveEvent.get('note')?.errors?.['pattern']">
+                    {{"Note should contain letters, numbers, spaces, and certain punctuation marks (.,!?;:()-)." | translate}}
+                  </div>
                 </div>
               </div>
             </div>
+            
           </div>
 
           <div class="d-flex justify-content-end">
