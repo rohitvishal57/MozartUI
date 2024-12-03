@@ -367,6 +367,7 @@ export class RugDynamicFormComponent {
           // this.form = totalpremium;
           console.log(this.form);
           console.log(this.d2cDetails);
+          console.log(this.bbdetails);
           // this.form.formSections[0].formControls[0].value = "";
           this.initializeForm();
         },
@@ -737,7 +738,10 @@ export class RugDynamicFormComponent {
             }
           }
         });
-        if(this.getFormIndexValue() == 0){
+        console.log(this.getFormIndexValue());
+        console.log(this.formSequence[0].formName);
+        if(this.getFormIndexValue() == 0 && (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness")){
+          console.log(this.bbdetails)
           this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
             // const selfResult = this.centimetersToFeetAndInches(item.height);
             const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
@@ -787,6 +791,7 @@ export class RugDynamicFormComponent {
           proposerIsNri: this.bbdetails.proposerIsNri
 
         })
+        console.log(this.bbdetails.totalPremium);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       if (this.formSequence[this.getFormIndexValue()].formId == 3 && this.formSequence[this.getFormIndexValue()].formName == "Add Nominee") {
@@ -804,6 +809,7 @@ export class RugDynamicFormComponent {
           appointeeDob: this.bbdetails.appointeeDOB,
           relationWithNominee: this.bbdetails.relationWithNominee,
         })
+        console.log(this.bbdetails.totalPremium);
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       if (this.formSequence[this.getFormIndexValue()].formId == 4 && this.formSequence[this.getFormIndexValue()].formName == "Bank/Payment Details") {
@@ -5785,6 +5791,7 @@ export class RugDynamicFormComponent {
     })
   }
   getBbSumInsured(control: any) {
+    console.log(this.bbdetails);
     let sumInsuredObj = {
       ProductCode: this.bbdetails.productCode
     }
