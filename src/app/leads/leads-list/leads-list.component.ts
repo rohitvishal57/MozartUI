@@ -282,6 +282,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.leadFilterStatus.forEach((leadStatus) => (leadStatus.selected = false));
     this.appliedFiltersCount = 0;
     this.toggeledropdown = false;
     this.startDate = "";
@@ -298,6 +299,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.leadFilterStatus.forEach((leadStatus) => (leadStatus.selected = false));
     this.appliedFiltersCount = 0;
     this.startDate = "";
     this.endDate = "";
