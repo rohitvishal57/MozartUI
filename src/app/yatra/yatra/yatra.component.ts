@@ -418,9 +418,7 @@ export class YatraComponent {
       currentFormSequence: this.getFormIndexValue().toString()
     }
 
-    //TODO : Changes required.
     console.log(reqData);
-
 
     await this.yatraService.Getform(reqData).subscribe({
       next: (res: any) => {
@@ -433,7 +431,6 @@ export class YatraComponent {
           ...this.formData,  // existing form data
           ...JSON.parse(res.data.formData)  // parsed response data
         };
-
         console.log(this.form, this.formSequence, this.formData);
 
         this.initializeForm();
@@ -2975,7 +2972,6 @@ export class YatraComponent {
         });
       });
     }
-
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
@@ -2988,13 +2984,19 @@ export class YatraComponent {
         quoteNumber: '',
         OrderID: ''
       };
-
       this.yatraService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
           console.log('Juspay API Response:', response);
 
           if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-            window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+            if(this.selectedButton == 'sendLinkButton'){
+              console.log(response);
+              this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
+              // res = response.data.paymentURL;
+            }
+            else{
+              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+            }
           } else {
             this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
             console.error('Invalid payment link received:', response);
@@ -3014,6 +3016,7 @@ export class YatraComponent {
           control.dependentControls.forEach((item: any) => {
             if (controls.name == item) {
               controls.visible = true; // Show dependent controls
+              control.disabled = true;
             }
           });
         });
@@ -3274,6 +3277,7 @@ export class YatraComponent {
               sessionStorage.setItem("isQuote", this.isQuote.toString());
             }
 
+            this.quickQuoteRedirect = false;
             console.log(this.isQuote);
           },
           error: (err) => {
@@ -5457,7 +5461,8 @@ export class YatraComponent {
   }
   copyText(control: any) {
     console.log(control);
-    this.clipboard.copy(control);
+    this.clipboard.copy(this.dynamicFormGroup.get(control.name)?.value);
+    this.toast.success({ detail: "SUCCESS", summary: `Text copied to clipboard!`, duration: 3000 });
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
   }
 
