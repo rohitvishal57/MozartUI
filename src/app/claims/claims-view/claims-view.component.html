@@ -30,9 +30,9 @@
 
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" id="memberName" name="memberName" formControlName="fullName" [ngClass]="{'has-value': true}">
+                                <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberName" [ngClass]="{'has-value': true}">
                                     <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
-                                    <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.id">{{ member.fullName | translate }}</option>
+                                    <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.id">{{ member.memberName | translate }}</option>
                                 </select>
                                 <label for="member">{{"Select Member" | translate}}</label>
                                 <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
@@ -417,8 +417,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="headInfo_item">
-                                                        <div class="upload-success" *ngIf="uploadSuccess"><img src="assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
-                                                        <div class="upload-fail" *ngIf="!uploadSuccess"><img src="assets/Img/icon_failure.svg"><span class="failed-text">Failed</span></div>
+                                                        <!-- <div class="upload-success" *ngIf="uploadSuccess"><img src="assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
+                                                        <div class="upload-fail" *ngIf="!uploadSuccess"><img src="assets/Img/icon_failure.svg"><span class="failed-text">Success</span></div> -->
                                                         <div *ngIf="file.uploadDateTime">
                                                             <span class="date-time">{{ file.formattedUploadDateTime }}</span>
                                                         </div>

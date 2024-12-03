@@ -57,6 +57,7 @@ export class ClaimsViewComponent {
   uploadDateTime: Date | null = null;
   formattedUploadDateTime: string = "";
   totalFilesCount = 0;
+  selectedMember:any;
   uploadedFilesCount = 0;
   uploadStatus = "0 of 0 files uploaded";
   failedFilesCount = 0;
@@ -197,7 +198,6 @@ export class ClaimsViewComponent {
   }
   navigateToListClaim() {
     this.router.navigate(['claims/claimsList'])
-
   }
 
   saveUpload(): void {
@@ -224,8 +224,8 @@ export class ClaimsViewComponent {
     this.form = this.fb.group({
       id: localStorage.getItem("agentCode"),
       policyNumber: ["", Validators.required],
-      proposalNumber: ["",],
-      memberName: ["", Validators.required],
+      proposalNumber: [""],
+      memberName: [""],
       productName: [""],
       fullName: [""],
       policyType: ["",],
@@ -377,12 +377,8 @@ export class ClaimsViewComponent {
     this.claimsService.getMemberDetails(membersReq).subscribe(
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
-          this.policyMembersList = resp.data
-          console.log(resp.data);
-          
-          this.getMemberIdList(this.policyMembersList)
-          console.log();
-          
+          this.policyMembersList = resp.data.policyMembersList          
+          this.getMemberIdList(this.policyMembersList)          
         }
       },
       (err) => {
@@ -972,6 +968,11 @@ export class ClaimsViewComponent {
       file.isEdited = true;
     }
   }
+
+  memberIdChange(event:any){    
+    this.selectedMember = event.target.value;
+  }
+
   ///////current date and time
   formatUploadDateTime() {
     if (this.uploadDateTime) {
@@ -980,11 +981,11 @@ export class ClaimsViewComponent {
   }
 
   submitRequest(): void {
-    debugger
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : null;
+     // saveClaimData.memberName = this.form.get('memberName')?.setValue('memberName');
 
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,
@@ -1028,7 +1029,7 @@ export class ClaimsViewComponent {
         (response: any) => {
           if (response?.isSuccess) {
             this.uploadSuccess = true;
-            this.toast.success({ detail: "Claims submitted successfully" });
+            this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
             this.router.navigate(["claims/claimsList"]);
           } else {
             this.toast.error({ detail: "Failed to submit claims" });

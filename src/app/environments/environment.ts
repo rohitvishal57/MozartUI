@@ -52,7 +52,7 @@ export const environment = {
     getHospitals: "api/claims/gethospitaldetails",
     getClaimStatus: "api/claims/getclaimstatus",
     getClaimStatusCounts:"api/claims/GetClaimStatusCountByAgentCode?agentCode",
-    getMemberDetails:"api/claims/GetMemberDetails",
+    getMemberDetails:"api/claims/getpolicymembers",
     getClaimTracker: "api/claims/getclaimtracker",
     getUploadedFiles: "api/claims/getclaimsdocument",
     deleteFile: "api/claims/deleteclaimdocument",
