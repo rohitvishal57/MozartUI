@@ -27,6 +27,7 @@
                                     <option value="caseId">{{"Request ID" | translate}}</option>
                                     <option value="policyNumber">{{"Policy Number" | translate}}</option>
                                     <option value="memberName">{{"Member Name" | translate}}</option>
+                                    <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
                                 </select>
                             </div>
                             <div>
@@ -115,6 +116,7 @@
                                 <th scope="col">{{"Policy No." | translate}}</th>
                                 <th scope="col">{{"Product Name" | translate}}</th>
                                 <th scope="col">{{"Member Name" | translate}}</th>
+                                <th scope="col">{{"Mobile Number" | translate}}</th>
                                 <!--<th scope="col">Member Relation</th>-->
                                 <th scope="col">{{"Request Type" | translate}}</th>
                                 <th scope="col">{{"Status" | translate}}</th>
@@ -130,6 +132,7 @@
                                 <td >{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
                                 <td><span class="text-break-w100">{{ row?.memberName }}</span></td>
+                                <td><span class="text-break-w100">{{ row?.mobileNumber }}</span></td>
                                 <!--<td align="center">{{ row?.memberRelation }}</td>-->
                                 <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
                                 <td>{{ row?.status }}</td>
@@ -177,9 +180,13 @@
                                 <div class="item_value">{{ row?.memberName }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">Mobile Number</div>
+                                <div class="item_value">{{ row?.mobileNumber}}</div>
+                            </div>
+                            <!-- <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Member Relation</div>
                                 <div class="item_value">{{ row?.memberRelation}}</div>
-                            </div>
+                            </div> -->
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Raised Date</div>
                                 <div class="item_value">{{ row?.raisedOn }}</div>
