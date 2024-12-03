@@ -351,7 +351,7 @@ export class DashboardComponent {
     // Ensure that the canvas is available before rendering the chart
     setTimeout(() => {
       this.fetchCharts();
-    }, 20000); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
+    }, 15000); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
   }
 
   fetchCharts() {
