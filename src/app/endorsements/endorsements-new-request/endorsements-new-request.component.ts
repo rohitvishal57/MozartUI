@@ -217,25 +217,10 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
 
-  onKeyDown(event: KeyboardEvent) {
-    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    const regex = /^[0-9-]$/; // Allow only numbers and hyphens
-
-    const inputValue = (event.target as HTMLInputElement).value;
-
-    if (inputValue === '') {
-      this.caseCreationForm.get('member').setValue('');
-      this.MemberIdList = [];
-    }
-
-    // Allow backspace and other special keys
-    if (allowedKeys.includes(event.key)) {
-      return;
-    }
-    // Prevent default if the key is not allowed
-    if (!regex.test(event.key)) {
-      event.preventDefault();
-    }
+  onPolicyNoChange(event: KeyboardEvent) {
+    const inputValue = (event.target as HTMLInputElement).value.trim();
+    this.caseCreationForm.get('member').setValue('');
+    this.MemberIdList = [];
   }
 
   validateNumberInput(event: any): void {
