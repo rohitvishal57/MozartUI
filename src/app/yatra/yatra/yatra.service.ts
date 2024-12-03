@@ -164,6 +164,14 @@ export class YatraService {
     const validateBbOtp = this.configService.config.baseUrl + this.configService.config.getValidateBbOtp;
     return this.httpService.post(validateBbOtp,reqData);
   }
+  saveD2CCommonDraft(reqData:any){
+    const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft";
+    return this.httpService.post(saveCommonDraftData,reqData);
+  }
+  d2cJustpayRedirection(reqData:any){
+    const saveCommonDraftData = "https://usp.monocept.ai/api/Yatra/JusPayPaymentRedirectRUG";
+    return this.httpService.post(saveCommonDraftData,reqData);
+  }
   insertFullQuoteJson(reqData:any){
     const insertfullquotejson = this.configService.config.baseUrl + this.configService.config.insertfullquotejson;
     return this.httpService.post(insertfullquotejson,reqData);
