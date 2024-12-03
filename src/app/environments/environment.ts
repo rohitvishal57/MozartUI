@@ -128,5 +128,6 @@ export const environment = {
     fetchPersistencyPercentage:"api/quote/GetPersistencyPercentage",
     GetDueRenewals:"api/quote/GetDueRenewals",
     getBBOTP:"api/v1/GetBBOTP",
-    getValidateBbOtp:"api/v1/ValidateBBOTP"
+    getValidateBbOtp:"api/v1/ValidateBBOTP",
+    getBankDetailsViaIFSC:"api/yatra/getbankdetailsviaifsccode"
   }
