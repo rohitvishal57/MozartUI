@@ -131,5 +131,7 @@ export const environment = {
     GetDueRenewals:"api/quote/GetDueRenewals",
     getBBOTP:"api/v1/GetBBOTP",
     getValidateBbOtp:"api/v1/ValidateBBOTP",
-    getBankDetailsViaIFSC:"api/yatra/getbankdetailsviaifsccode"
+    getBankDetailsViaIFSC:"api/yatra/getbankdetailsviaifsccode",
+    searchDocument: "api/yatra/searchdocument",
+    downloadDocument:"api/yatra/download"
   }
