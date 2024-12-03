@@ -352,7 +352,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": this.leadId != undefined ? this.leadId : "586020047",
+        "proposalNum": this.leadId != undefined ? this.leadId : "155212321111",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -363,6 +363,7 @@ export class RugDynamicFormComponent {
           this.form = JSON.parse(res.data.jsonFormData);
           this.bbdetails = JSON.parse(res.data.formData);
           this.d2cDetails = JSON.parse(res.data.formData);
+          this.leadId = this.bbdetails.leadId;
           
           // this.form = totalpremium;
           console.log(this.form);
@@ -746,7 +747,7 @@ export class RugDynamicFormComponent {
             // const selfResult = this.centimetersToFeetAndInches(item.height);
             const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
             const formGroup = insuredMembersArray.at(index) as FormGroup;
-            // console.log(insuredMembersArray?.value);
+            console.log(insuredMembersArray?.value);
             if(insuredMembersArray.value[index].relation == item.relation){
               insuredMembersArray.at(index).patchValue({
                 firstName: item.firstName,
@@ -2159,7 +2160,7 @@ export class RugDynamicFormComponent {
             console.log(option);
             console.log(res.data.relationShip)
             console.log(this.bbdetails);
-            if (this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
+            if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
               controlGroup.addControl(option.value, new FormControl((relationCodes.includes(option.id)) ? true : false));
               if (relationCodes.includes(option.id)) {
                 this.logSelection(null, option, control);
