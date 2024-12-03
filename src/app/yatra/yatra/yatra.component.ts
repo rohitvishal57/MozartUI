@@ -2972,7 +2972,6 @@ export class YatraComponent {
         });
       });
     }
-
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
@@ -2985,13 +2984,19 @@ export class YatraComponent {
         quoteNumber: '',
         OrderID: ''
       };
-
       this.yatraService.justPayRedirection(reqData).subscribe({
         next: (response: any) => {
           console.log('Juspay API Response:', response);
 
           if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-            window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+            if(this.selectedButton == 'sendLinkButton'){
+              console.log(response);
+              this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
+              // res = response.data.paymentURL;
+            }
+            else{
+              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+            }
           } else {
             this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
             console.error('Invalid payment link received:', response);
@@ -3011,6 +3016,7 @@ export class YatraComponent {
           control.dependentControls.forEach((item: any) => {
             if (controls.name == item) {
               controls.visible = true; // Show dependent controls
+              control.disabled = true;
             }
           });
         });
@@ -5455,7 +5461,8 @@ export class YatraComponent {
   }
   copyText(control: any) {
     console.log(control);
-    this.clipboard.copy(control);
+    this.clipboard.copy(this.dynamicFormGroup.get(control.name)?.value);
+    this.toast.success({ detail: "SUCCESS", summary: `Text copied to clipboard!`, duration: 3000 });
     // this.messageService.add({severity:'success', summary: 'Success', detail: 'Text copied to clipboard!'});
   }
 
