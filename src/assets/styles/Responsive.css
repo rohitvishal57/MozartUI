@@ -179,6 +179,7 @@
     }
     .siteHeader .logoMain .logoMainRight {
         justify-content: space-between;
+        padding: 0 10px 0 15px;
     }
 }
 @media (max-width:991px) {
