@@ -51,6 +51,12 @@
                                         <img src="assets/logo/activeOne.svg">
                                         {{item.productName | translate}}
                                     </div>
+                                    <div class="product-button">
+                                        <button class="get" id="Add to Cart" name="Add to Cart">
+                                            {{"Share Quote" | translate}}
+                                        </button>
+                                    </div>
+                                  
                                     <!-- <p>{{item.productDescription}}</p> -->
                                     <div class="key">
                                         <div *ngFor="let key of item.keyFeatures">
