@@ -3114,9 +3114,53 @@ export class RugDynamicFormComponent {
             if (this.bbdetails?.paymentMode == 'easypay') {
               this.router.navigateByUrl('/thankyou');
             }else{
-              let reqBody = {
-                leadId: this.bbdetails?.leadId
+              console.log(this.bbdetails)
+              // let reqBody = {
+              //   leadId: this.bbdetails?.leadId
+              // }
+              let commonDraftRequest = {
+                leadId: this.bbdetails?.leadId,
+                requestData: null,
+                isFinalSubmit: true,
+                leadStatus: "SUBMITTED"
               }
+              this.yatraService.saveD2CCommonDraft(commonDraftRequest).subscribe({
+                next: (res: any) => {
+                  console.log(res);
+                  if (res.isSuccess == true && res.statusCode == 200) {
+                    this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+                    let justpayPayload = { 
+                      "agentcode": this.agentCode,
+                       "proposalNumber": this.bbdetails?.leadId,
+                       "paymentMethod": "autoDebit",
+                       "source": "RUG",
+                       "policyType": "New Business",
+                       "policyNumber": "", 
+                       "quoteNumber": "",
+                       "OrderId": "",
+                       "Amount": 500000,
+                       "FirstName": "Demojs",
+                       "MiddleName": "",
+                       "LastName": "Person",
+                       "Phone": "9992232551",
+                       "Email": "LHME.SHAH@ARVIND.IN",
+                       "DOB": "10/07/1997" 
+                              
+                      }
+                    this.d2cJustPayRedirection(justpayPayload)
+                    // if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                    //   this.incrementIndex();
+                    //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                      
+                    // }
+          
+                  }
+          
+                },
+                error: (err) => {
+                  console.error(err);
+                }
+              });
             }
           })
         }
