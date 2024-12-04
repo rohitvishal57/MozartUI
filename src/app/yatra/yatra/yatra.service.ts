@@ -153,7 +153,7 @@ export class YatraService {
     return this.httpService.post(familyConstructData,reqData);
   }
   saveBBCommonDraft(reqData:any){
-    const saveCommonDraftData = this.configService.config.baseUrl + this.configService.config.saveBBCommonDraft;
+    const saveCommonDraftData = this.configService.config.baseUrl1 + this.configService.config.saveBBCommonDraft;
     return this.httpService.post(saveCommonDraftData,reqData);
   }
   getBbOtp(reqData:any){
@@ -167,6 +167,10 @@ export class YatraService {
   saveD2CCommonDraft(reqData:any){
     const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft";
     return this.httpService.post(saveCommonDraftData,reqData);
+  }
+  bbHalfQuote(reqData:any){
+    const halfQuoteData = "https://usp.monocept.ai/api/v1/HalfQuote";
+    return this.httpService.post(halfQuoteData,reqData);
   }
   d2cJustpayRedirection(reqData:any){
     const saveCommonDraftData = "https://usp.monocept.ai/api/Yatra/JusPayPaymentRedirectRUG";

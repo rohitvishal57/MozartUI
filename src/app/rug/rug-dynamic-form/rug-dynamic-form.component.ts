@@ -141,6 +141,7 @@ export class RugDynamicFormComponent {
         this.productId = this.paramLeadId.ProductId;
         this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
         console.log(this.formSequence);
+        localStorage.setItem('token', this.paramLeadId.token)
       } else {
         this.formSequence = history.state.formSequence;
         console.log(this.formSequence);
@@ -340,7 +341,7 @@ export class RugDynamicFormComponent {
     //   })
 
     // }\
-    if (Object.keys(this.allJsonForm[this.getFormIndexValue()]).length > 0) {
+    if (Object.keys(this.allJsonForm?.[this.getFormIndexValue()] || {}).length > 0) {
       this.form = this.allJsonForm[this.getFormIndexValue()];
       console.log(this.form);
       this.initializeForm();
@@ -352,7 +353,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": this.leadId != undefined ? this.leadId : "155212321111",
+        "proposalNum": this.leadId != undefined ? this.leadId : "153452765",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -1263,7 +1264,17 @@ export class RugDynamicFormComponent {
       }
     });
   }
-
+  getBBoccupation(control: any) {
+    this.yatraService.getProposerOccupation().subscribe({
+      next: (res: any) => {
+        console.log(res);
+        control.options = res?.data;
+      },
+      error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
   getNatureOfDuty(control: any) {
     this.yatraService.getNatureOfDuty().subscribe({
       next: (res: any) => {
@@ -3041,8 +3052,11 @@ export class RugDynamicFormComponent {
     }
     console.log(familyConstruct);
     // this.yatraService.policyDetails.familyConstructId = familyConstruct.toString();
+    this.dynamicFormGroup.get('familyConstructId')?.setValue(familyConstruct.toString());
+
     let filteredFamilyConstruct = this.familyConstructsData.filter((item: any) => item.familyConstructID === familyConstruct.toString());
     console.log(filteredFamilyConstruct);
+    this.dynamicFormGroup.get('familyConstruct')?.setValue(filteredFamilyConstruct[0].displayText);
     // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
     let ageRange = this.returnAgeRange(familyConstruct, selfDob, selfDob)
     console.log(ageRange);
@@ -3065,8 +3079,12 @@ export class RugDynamicFormComponent {
     //   })
     // }
     console.log(premiumObj);
+    this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());
+
     // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
     // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
+    this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj[1].premium.toString());
+
     this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
     this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
@@ -3120,16 +3138,15 @@ export class RugDynamicFormComponent {
               //   leadId: this.bbdetails?.leadId
               // }
               let commonDraftRequest = {
-                leadId: this.bbdetails?.leadId,
-                requestData: null,
-                isFinalSubmit: true,
-                leadStatus: "SUBMITTED"
+                "leadId": this.bbdetails?.leadId
               }
-              this.yatraService.saveD2CCommonDraft(commonDraftRequest).subscribe({
+              this.yatraService.bbHalfQuote(commonDraftRequest).subscribe({
                 next: (res: any) => {
+                  let halfQuoteResponse: any;
                   console.log(res);
-                  if (res.isSuccess == true && res.statusCode == 200) {
-                    this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+                  halfQuoteResponse = JSON.parse(res.data);
+                  if (halfQuoteResponse.isSuccess == true && halfQuoteResponse.statusCode == 200) {
+                    this.toast.success({ detail: "SUCCESS", summary: halfQuoteResponse.message, duration: 3000 });
                     let justpayPayload = { 
                       "agentcode": this.agentCode,
                        "proposalNumber": this.bbdetails?.leadId,
@@ -3139,13 +3156,13 @@ export class RugDynamicFormComponent {
                        "policyNumber": "", 
                        "quoteNumber": "",
                        "OrderId": "",
-                       "Amount": 500000,
-                       "FirstName": "Demojs",
+                       "Amount": this.bbdetails?.totalPremium,
+                       "FirstName": this.bbdetails?.customerFirstName,
                        "MiddleName": "",
-                       "LastName": "Person",
-                       "Phone": "9992232551",
-                       "Email": "LHME.SHAH@ARVIND.IN",
-                       "DOB": "10/07/1997" 
+                       "LastName": this.bbdetails?.customerLastName,
+                       "Phone": this.bbdetails?.proposerMobileNumber,
+                       "Email": this.bbdetails?.proposerEmailAddress,
+                       "DOB": this.bbdetails?.proposerDob
                               
                       }
                     this.d2cJustPayRedirection(justpayPayload)
@@ -3155,6 +3172,9 @@ export class RugDynamicFormComponent {
                       
                     // }
           
+                  }else{
+                    this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+
                   }
           
                 },
@@ -3470,7 +3490,7 @@ export class RugDynamicFormComponent {
                   annualIncome: "",
                   axisProductCode: this.bbdetails.axisProductCode,
                   axisProductName: this.bbdetails.axisProductName,
-                  familyConstruct: "1A",
+                  familyConstruct: this.bbdetails.familyConstruct,
                   isAxisBankAccount: this.bbdetails.isAxisBankAccount,
                   accountNumber: this.bbdetails.accountNumber,
                   ifscCode: this.bbdetails.ifscCode,
@@ -3492,19 +3512,19 @@ export class RugDynamicFormComponent {
                   leadStatus: null,
                   productCode: this.bbdetails.productCode,
                   productName: this.bbdetails.productName,
-                  isSubmitted: false,
+                  isSubmitted: true,
                   isPayment: false,
-                  groupCode: "GRP001",
-                  productPlanName: "GHI,GP",
-                  productPlanCode: "22",
+                  groupCode: this.bbdetails.groupCode,
+                  productPlanName: this.bbdetails.productPlanName,
+                  productPlanCode: this.bbdetails.productPlanCode,
                   combiId: "10",
                   combiName: null,
-                  familyConstructId: "1",
-                  ghiPremium: "15665",
+                  familyConstructId: this.bbdetails.familyConstructId,
+                  ghiPremium: this.bbdetails.ghiPremium,
                   gpaPremium: null,
                   gciPremium: null,
                   deductibleAmount: null,
-                  gpPremium: "1332",
+                  gpPremium: this.bbdetails.gpPremium,
                   micrCode: this.bbdetails.micrCode,
                   accType: this.bbdetails.accType == "primary" ? "Primary" : "Primary",
                   bankAccountType: this.bbdetails.bankAccountType || "saving"
@@ -5983,8 +6003,11 @@ export class RugDynamicFormComponent {
       console.log(filterArr);
       this.getBbPremium(filterArr);
     }
+    this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
     // this.yatraService.policyDetails.groupCode = filterArr[0].groupCode;
+    this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
     // this.yatraService.policyDetails.productPlanName = "GHI,GP";
+    this.dynamicFormGroup.get('productPlanCode')?.setValue(filterArr[0].siPlanId.toString());
     // this.yatraService.policyDetails.productPlanCode = filterArr[0].siPlanId.toString();
 
   }
