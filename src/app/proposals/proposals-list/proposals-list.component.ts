@@ -83,6 +83,8 @@ export class ProposalsListComponent {
     });
     this.getProposalList();
     this.getProducts();
+
+    this.checkView(); //Screen View check
   }
   onPageChange(event: any) {
     this.first = event.first;
@@ -350,6 +352,20 @@ export class ProposalsListComponent {
       localStorage.setItem("formIndex", "0");
     } catch (err) {
       this.toast.warning({ detail: "", summary: "Form Configuration not found!!", duration: 2000 });
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkView(); //Screen View check
+  }
+  //Screen View check
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 1116;
+    if (this.isDesktopView) {
+      this.selectedView = 'grid'; 
+    }else {
+      this.selectedView = 'list'; // Use 'grid' view for desktop
     }
   }
 }

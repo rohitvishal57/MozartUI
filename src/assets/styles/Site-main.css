@@ -3433,6 +3433,9 @@ input[type="search"]::-webkit-search-results-decoration {
 .menu_morePolicy {
   position: absolute;
   right: 10px;
+  top: 6px;
+  display: flex;
+  gap: 10px;
 }
 .userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo .modifiedBadge {
   border-radius: 19px;

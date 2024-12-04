@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { LeadsList } from '../leads-list.interface';
 import { FormControl, Validators } from '@angular/forms';
 import { LeadsService } from '../leads.service';
@@ -150,7 +150,7 @@ export class LeadsListComponent {
     });
 
     this.today = new Date().toISOString().split('T')[0];
-
+    this.checkView(); //Screen View check
   }
   fetchActivityType(event: any) {
     let fetchActivityTypeRequest: any = {};
@@ -555,5 +555,17 @@ export class LeadsListComponent {
       event.preventDefault();
     }
   }
-
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkView(); //Screen View check
+  }
+  //Screen View check
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 1116;
+    if (this.isDesktopView) {
+      this.selectedView = 'grid'; 
+    }else {
+      this.selectedView = 'list'; // Use 'grid' view for desktop
+    }
+  }
 }

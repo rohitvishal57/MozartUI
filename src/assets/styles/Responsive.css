@@ -307,6 +307,9 @@
         padding: 16px 18px;
         align-items: flex-start !important;
     }
+    .quickFilterMain.cv_bodyItems_policyInfo {
+        flex-direction: row;
+    }
     .common_searchWraper{
         width: 100%;
     }
@@ -349,7 +352,10 @@
     }
     .quickFilterLeft .quickFilter {
         flex-wrap: nowrap;
-        /*min-width: 520px;*/
+        /* min-width: 520px; */
+    }
+    .quickFilterMain.cv_bodyItems_policyInfo .quickFilterLeft .quickFilter {
+        min-width: auto;
     }
     .filterWraperForm {
         min-width: 100%;

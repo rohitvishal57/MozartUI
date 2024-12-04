@@ -27,6 +27,10 @@
   background: var(--Neutral-Additional-White100, #FFFFFF) !important;
   padding: 8px 12px; 
   margin: 0 5px; 
+  @media (max-width:767px) {
+    margin: 0 0;
+    padding: 8px 8px; 
+  }
 }
   
 ::ng-deep .p-paginator .p-paginator-first,
@@ -44,6 +48,10 @@
   background-color: white;
   padding: 8px 12px; 
   margin: 0 5px;
+  @media (max-width:767px) {
+    margin: 0 0;
+    padding: 8px 8px; 
+  }
 }
   
 ::ng-deep .p-paginator .p-paginator-page:hover,
