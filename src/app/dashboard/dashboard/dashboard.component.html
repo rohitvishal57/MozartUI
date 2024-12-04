@@ -383,11 +383,11 @@
           <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropCharts($event)">
           <ng-container *ngFor="let tab of otherSection">
-            <div cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-              <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
-                <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
-              <div class="leads_content leads_contentDashboard ">
-                <div class="scroll_contentDashboard">
+            <div *ngIf="tab.isShow" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+              <header  class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
+                <span >{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
+              <div class="leads_content leads_contentDashboard">
+                <!-- <div class="scroll_contentDashboard">
                   <ng-container *ngFor="let buz of tab.category">
                     <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
                       <div *ngSwitchCase="'Customer'">
@@ -416,14 +416,14 @@
                       </div>
                     </div>
                   </ng-container>
-                </div>
+                </div> -->
                 <div [ngSwitch]="tab.chart">
                   <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
                     <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
                   </div>
-                  <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
+                  <!-- <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
                     <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
-                  </div>
+                  </div> -->
                   <div *ngSwitchCase="'Servicing'" class="chart-container" style="position: relative; width:100%">
                     <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
                   </div>
@@ -433,6 +433,280 @@
           </ng-container>
           </div>
         </section>
+
+        <section class="dashboard_otherSections commonSection" *ngIf="section == 'Others'">
+          <div class="board_otherSections">
+              <!--Knowledge Centre start-->
+              <div class="item_otherSections" style="display: none;">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"Knowledge Centre" | translate}}</h2>
+                      <button type="button" id="btn-view-all-courses" name="btn-view-all-courses" class="btn_iconText btn_exploreMore">
+                        {{"View All Courses" | translate}} <img src="assets/Img/icon_red_downarrow.svg"></button>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <ul class="inlineFilter">
+                      <li><button type="button" id="kc-completed" name="kc-completed" class="btn_quickFilter btn_quickFilterClaim active">{{"Completed" | translate}} </button></li>
+                      <li><button type="button" id="kc-inprogress" name="kc-inprogress" class="btn_quickFilter btn_quickFilterClaim ">{{"In Progress" | translate}} </button></li>
+                      <li><button type="button" id="kc-pending" name="kc-pending" class="btn_quickFilter btn_quickFilterClaim ">{{"Pending" | translate}} </button></li>
+                    </ul>
+                    <div class="card_wraper">
+                      <div class="cardsub_wraper">
+
+                        <div class="card_item body_flex_column knowledgeInfo">
+                            <div class="video_knowledgeInfo">
+                              <img src="assets/Img/img_knowledge.png">
+                            </div>
+                            <div class="content_knowledgeInfo body_flex_row">
+                              <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                              <button type="button" id="btn-resume" name="btn-resume"
+                                class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
+                        </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
+                        </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+              <!--Knowledge Centre end-->
+              <!--DHA & HR Portfolio start-->
+              <div class="item_otherSections" *ngIf="otherSection.length" >
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"DHA & HR Portfolio" | translate}}</h2>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper">
+                      <div class="cardsub_wraper">
+                        <div class="cardItem">
+                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_dha.svg"></span>{{"Digital Health Assessments" | translate}}</header>
+                          <div class="info_assessments body_flex_row justify-content-between">
+                              <div class="item_assessments">
+                                <div class="value">{{otherSection[0].totalCount}}</div>
+                                <div class="label">{{"Total Assessments" | translate}}</div>
+                              </div>
+                              <!-- <div class="item_assessments">
+                                <div class="value">199</div>
+                                <div class="label">{{"Users" | translate}}</div>
+                              </div> -->
+                          </div>
+                          <div class="card-tip">
+                            <img src="assets/Img/icon_lightbulb.svg">
+                            {{"Dummy placeholder text" | translate}}
+                          </div>
+                        </div>
+                        <div class="cardItem">
+                          <header><span class="cardItem_icon"><img src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Returns" | translate}}</header>
+                          <div class="value">₹ 50,000</div>
+                          <div class="card-tip">
+                            <img src="assets/Img/icon_currency.svg">
+                            {{"Nudge your users to actively participate to save more" | translate}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--DHA & HR Portfolio end-->
+              <!--Top Selling Products start-->
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"Top Selling Products" | translate}}</h2>
+                      <div class="filterfields_input">
+                        <div class="input-block input-block-renew compare_inputblock">
+                          <select id="filter-topselling" name="filter-topselling" class="form-select input-selectBox">
+                            <option value="" >{{"Select" | translate}}</option>
+                            <option value="seniorcitizens" selected>{{"For Senior Citizens" | translate}}</option>
+                            <option value="seniorcitizens">{{"For Senior Citizens" | translate}}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper topSellingProducts">
+                      <div class="cardsub_wraper">
+
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <header class="body_flex_row head_tsp">
+                              <div class="common_ProductInfo">
+                                  <div class="common_ppi_img">
+                                    <img src="assets/Img/icon_activeone.svg">
+                                  </div>
+                                  <div class="common_ppi_info">
+                                    <h4>{{"Activ One NXT" | translate}}</h4>
+                                  </div>
+                              </div>
+                              <div class="common_ProductPrice">
+                                <span class="text-red">₹6,863*</span>{{"/ 1 year" | translate}}
+                              </div>
+                          </header>
+                          <ul class="tick_round">
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"5X Coverage of Base Sum" | translate}} </div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"Health Assessment" | translate}}</div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"Cover Home-based Treatments" | translate}}</div></li>
+                          </ul>
+                          <footer>
+                            <button type="button" id="btn-sellingTips" name="btn-sellingTips"
+                              class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span class="body_flex_row"><img
+                              src="assets/Img/icon_lightbulb2.svg">{{"Show selling tips for me" | translate}}</span> <em><img
+                                src="assets/Img/icon_right_arrow_black.svg"></em></button>
+                          </footer>
+                        </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <header class="body_flex_row head_tsp">
+                              <div class="common_ProductInfo">
+                                  <div class="common_ppi_img">
+                                    <img src="assets/Img/icon_activeone.svg">
+                                  </div>
+                                  <div class="common_ppi_info">
+                                    <h4>{{"Activ One NXT" | translate}}</h4>
+                                  </div>
+                              </div>
+                              <div class="common_ProductPrice">
+                                <span class="text-red">₹6,863*</span>{{"/ 1 year" | translate}}
+                              </div>
+                          </header>
+                          <ul class="tick_round">
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"5X Coverage of Base Sum" | translate}}</div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"Health Assessment" | translate}} </div></li>
+                            <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{"Cover Home-based Treatments" | translate}}</div></li>
+                          </ul>
+                          <footer>
+                            <button type="button" id="btn-sellingTips" name="btn-sellingTips"
+                              class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span class="body_flex_row"><img
+                              src="assets/Img/icon_lightbulb2.svg">{{"Show selling tips for me" | translate}}</span> <em><img
+                                src="assets/Img/icon_right_arrow_black.svg"></em></button>
+                          </footer>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Top Selling Products end-->
+              <!--Participate in challenge to start-->
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head otherSections_head_column">
+                      <h2>{{"Participate in challenge to" | translate}}</h2>
+                      <div class="body_flex_row">
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_hityourdailygoal.svg">{{"Hit your daily goal" | translate}}</span>
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_competewithpeer.svg">{{"Compete with peers" | translate}}</span>
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_earnbadge.svg">{{"Earn badges" | translate}}</span>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper topSellingProducts participateChallenge">
+                      <div class="cardsub_wraper">
+
+                        <div class="card_item body_flex_row knowledgeInfo">
+                          <div class="left_PC block_bg_blue">
+                            {{"#95k Steps in 15 Days" | translate}}
+                          </div>
+                          <div class="right_PC">
+                              <div class="body_flex_column">
+                                <div class="PC_information">
+                                  <div class="PC_head">
+                                    <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}                                  </div>
+                                  <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
+                                  <div class="PC_dateInfo">
+                                    <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" | translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
+                                  </div>
+                                </div>
+                                <button type="button" id="btn-knowmore" name="btn-knowmore" class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="card_item body_flex_row knowledgeInfo">
+                          <div class="left_PC block_bg_green">
+                            {{"#1200 Calorie Burn" | translate}}
+                          </div>
+                          <div class="right_PC">
+                              <div class="body_flex_column">
+                                <div class="PC_information">
+                                  <div class="PC_head">
+                                    <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}
+                                  </div>
+                                  <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
+                                  <div class="PC_dateInfo">
+                                    <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" | translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
+                                  </div>
+                                </div>
+                                <button type="button" id="btn-knowmore" name="btn-knowmore" class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
+                              </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Participate in challenge to end-->
+
+              <!--My Goals start-->
+              <div class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"My Goals" | translate}}</h2>
+                      <div class="filterfields_input">
+                        <div class="input-block input-block-renew compare_inputblock">
+                          <select id="filter-annually" name="filter-annually" class="form-select input-selectBox" [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter" (change)="onSelectFilter('Business', businessFilter)">
+                            <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                                {{ opt | translate }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <canvas id="horizontalBarChart"></canvas>
+                  </div>
+                </div>
+              </div>
+              <!--My Goals end-->
+          </div>
+        </section>
+
       </ng-container>
     </ng-conatiner>
       </div>

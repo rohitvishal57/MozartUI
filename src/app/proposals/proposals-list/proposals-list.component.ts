@@ -4,7 +4,7 @@ import { DatePipe } from "@angular/common";
 import { ProposalList } from 'src/app/interface/proposals.interface';
 import { ProposalsService } from '../proposals.service';
 import { CommonService } from 'src/app/services/common.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
@@ -62,6 +62,8 @@ export class ProposalsListComponent {
     "email": "",  
     "leadId": ""
  } 
+
+ routeStatus : any;
  
   constructor(
     private proposalService: ProposalsService,
@@ -70,7 +72,8 @@ export class ProposalsListComponent {
     private toast: NgToastService,
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
-   private translateService: TranslateService
+   private translateService: TranslateService,
+   private activatedRoute: ActivatedRoute
   ) {}
   
   ngOnInit(): void {
@@ -80,6 +83,9 @@ export class ProposalsListComponent {
           this.translateService.use('en'); // Fallback to English if translation file is missing
         }
       });
+    });
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      this.routeStatus  = params['status'];
     });
     this.getProposalList();
     this.getProducts();
@@ -98,12 +104,23 @@ export class ProposalsListComponent {
     this.proposalService.getProposalListApi(this.proposalListRequestBody).subscribe(
       (response) => { 
         if (response.isSuccess) {
-          this.proposalList = response.data.proposalList.map((item: any) => ({
-            ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
-          })); 
-          console.log("proposal List",this.proposalList);
-          this.countsList = response.data;
-          this.totalRecords = response.data[this.filterType]; 
+
+          if(this.routeStatus){
+            this.proposalList = response.data.proposalList.map((item: any) => ({
+              ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
+            })).filter((k: any) => {
+              return k.proposalStatus == this.routeStatus;
+            });
+            this.countsList = this.proposalList.length;
+            this.totalRecords = response.data[this.filterType]; 
+          } else {
+            this.proposalList = response.data.proposalList.map((item: any) => ({
+              ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
+            }));
+            console.log("proposal List",this.proposalList);
+            this.countsList = response.data;
+            this.totalRecords = response.data[this.filterType]; 
+          }
         } 
         else {
           console.error("API request was not successful.");

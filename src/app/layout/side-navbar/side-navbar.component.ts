@@ -29,6 +29,7 @@ export class SideNavbarComponent {
   ];
 
   agentCode: any;
+  public sidebarStateSubscription: any;
   constructor(
     private router: Router,
     private loginService: CommonService,
@@ -87,11 +88,19 @@ export class SideNavbarComponent {
 
     // Check initial expansion based on window width
     this.isExpanded = window.innerWidth < 1024;
+    this.loginService.setValue(!this.isExpanded)
+    this.sidebarStateSubscription = this.loginService.sidebarState$.subscribe((state: boolean) => {
+      this.isExpanded = state;
+      this.isActive = state;
+      this.loginService.setValue(state)
+    });
   }
 
   // Handle route redirection
   redirect(route: string): void {
     if (route) {
+      this.isExpanded = false;
+      this.isActive = false
       this.router.navigate([route]);
     }
   }

@@ -26,6 +26,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   agentCode : any;
   @Input() isLoggedIn: any;
 
+
   
   constructor(private router: Router,
     private loginService: CommonService, private toast: NgToastService, private el: ElementRef, private languageService:LanguageService, private translateService: TranslateService,private notificationService : NotificationService
@@ -95,6 +96,8 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     this.isDesktopView = window.innerWidth >= 768;
     if (this.isDesktopView) {
       this.isSidenavOpen = false;
+    } else {
+      this.isSidenavOpen = true;
     }
   }
   redirect(value: any) {
@@ -119,6 +122,10 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     if (!this.el.nativeElement.contains(event.target)) {
       this.closePopup();
     }
+  }
+
+  onClickHamburger(ev : any){
+    this.loginService.toggleSidebar(!this.loginService.getValue());
   }
 
  showAllNotifications(){

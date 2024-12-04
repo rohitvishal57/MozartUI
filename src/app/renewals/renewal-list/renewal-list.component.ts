@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { RenewalList } from "src/app/interface/renewal-list.interface";
 import { firstValueFrom, Subject } from "rxjs";
@@ -52,7 +52,8 @@ export class RenewalListComponent {
   constructor(
     private renewalService: RenewalsService, private router: Router, private datePipe: DatePipe,
     private commonService: CommonService, private toast: NgToastService, private encryptionService: EncryptionService, private languageService: LanguageService,
-    private translateService: TranslateService, private customerService:CustomersService
+     private customerService:CustomersService,
+    private translateService: TranslateService, private activatedRoute: ActivatedRoute
   ) { }
 
   renewalListRequestBody = {
@@ -77,10 +78,14 @@ export class RenewalListComponent {
         }
       });
     });
+    
     this.getRenewalsList();
     this.getProducts();
 
     this.checkView(); //Screen View check
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeStatus  = params['status'];
+    });
   }
   onPageChange(event: any) {
     this.first = event.first;

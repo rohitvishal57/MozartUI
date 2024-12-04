@@ -9,6 +9,7 @@ import { searchValidationConfig }  from 'src/app/interface/common-validation.int
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-customers-list',
@@ -56,8 +57,8 @@ export class CustomersListComponent {
     private customerService: CustomersService ,private datePipe: DatePipe,
     private commonService:CommonService,private toast: NgToastService,
     private languageService: LanguageService,
-    private translateService: TranslateService,
-    private yatraService:YatraService
+    private yatraService:YatraService,
+    private translateService: TranslateService, private activatedRoute: ActivatedRoute
   ) {}
 
   customerListRequestBody={
@@ -84,6 +85,9 @@ export class CustomersListComponent {
           this.translateService.use('en'); // Fallback to English if translation file is missing
         }
       });
+    });
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeStatus  = params['status'];
     });
     this.getCustomerList();
     this.getProducts();

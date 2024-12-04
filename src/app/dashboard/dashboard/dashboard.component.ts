@@ -49,7 +49,7 @@ export class DashboardComponent {
   ];
 
   sectionList: any = [
-    'QuickAction', 'ABHI', 'Performance', 'Business', 'Customer'
+    'QuickAction', 'ABHI', 'Performance', 'Business', 'Customer', 'Others'
   ];
 
   otherSection: any = [];
@@ -268,7 +268,8 @@ export class DashboardComponent {
             this.otherSection.push({
               tabName: 'Customer',
               chart: 'Customer',
-              totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
+              isShow : true,
+              totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => item.count, 0),
               category: Object.entries(res.data).map(([name, count]) => ({
                 name: name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
                 count: count
@@ -284,6 +285,7 @@ export class DashboardComponent {
             this.otherSection.push({
               tabName: 'Servicing',
               chart: 'Servicing',
+              isShow : true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
               category: Object.entries(res.data).map(([name, count]) => ({
                 name: name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
@@ -300,6 +302,7 @@ export class DashboardComponent {
             this.otherSection.push({
               tabName: 'Wellness',
               chart: 'Wellness',
+              isShow : false,
               totalCount: res.data.reduce((sum: any, item: any) => sum + item.count, 0),
               category: res.data.map((item: any) => ({
                 name: item.wellnessType,
@@ -369,6 +372,7 @@ export class DashboardComponent {
     this.renderDHAChart();
     this.renderCustomerChart();
     this.renderServiceChart();
+    this.createHorizontalBarChart();
   }
 
   createChartData(): ChartData<'pie' | 'doughnut'> {
@@ -457,7 +461,6 @@ export class DashboardComponent {
             },
           },
           onClick: (event, activeElements) => {
-            debugger;
             if (activeElements.length > 0) {
               // Using the correct context (chart instance) within the onClick handler
               const datasetIndex = activeElements[0].datasetIndex;
@@ -469,7 +472,7 @@ export class DashboardComponent {
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/leads/leadsList/'], {
-                queryParams: { leadstatus : label  },
+                queryParams: { status : label  },
               });
             }
           }
@@ -518,6 +521,22 @@ export class DashboardComponent {
               },
             },
           },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.proposalChart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.proposalChart.data.labels[index];  // Access labels via `this.chart`
+  
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/proposals/proposalsList/'], {
+                queryParams: { status : label  },
+              });
+            }
+          }
         }
       });
     } else {
@@ -721,7 +740,7 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'bottom',
+              position: 'right',
               labels: {
                 font: {
                   size: 12,  // Reduce the font size of the legend labels
@@ -784,13 +803,13 @@ export class DashboardComponent {
 
       // Create the chart using Chart.js
       this.servicingchart = new Chart(ctx, {
-        type: 'doughnut', // 'pie' or 'doughnut'
+        type: 'pie', // 'pie' or 'doughnut'
         data: this.createServiceChartData(), // Dynamic chart data
         options: {
           responsive: true,
           plugins: {
             legend: {
-              position: 'bottom',
+              position: 'right',
               labels: {
                 font: {
                   size: 12,  // Reduce the font size of the legend labels
@@ -842,5 +861,40 @@ export class DashboardComponent {
 
     this.fetchWidgets();
     this.ngAfterViewInit();
+  }
+
+  createHorizontalBarChart(): void {
+    new Chart('horizontalBarChart', {
+      type: 'bar',  // Chart type
+      data: {
+        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4'],  // X-axis labels
+        datasets: [{
+          label: 'Dataset 1',
+          data: [65, 59, 80, 81],  // Data for the bars
+          backgroundColor: '#42A5F5',
+        }, {
+          label: 'Dataset 2',
+          data: [28, 48, 40, 19],
+          backgroundColor: '#FF7043',
+        }]
+      },
+      options: {
+        responsive: true,
+        indexAxis: 'y',  // This makes the chart horizontal
+        scales: {
+          x: {
+            beginAtZero: true,  // Ensure the x-axis starts at zero
+          },
+          y: {
+            beginAtZero: true,
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+        }
+      }
+    });
   }
 }
