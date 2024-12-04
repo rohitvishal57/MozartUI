@@ -280,11 +280,9 @@ donwloadBrowcher(productName : any){
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-      // Try to open the URL in a new tab only if it's not already downloading
-      if (window.navigator.userAgent.indexOf('Chrome') !== -1) {
-        window.open(URL, '_blank');  // Open in a new tab for Chrome
-      }
+ 
+    window.open(URL, '_blank');  // Open in a new tab for Chrome
+      
     } else {
       console.error('Invalid or missing URL.');
     }
