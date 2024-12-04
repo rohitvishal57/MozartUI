@@ -46,6 +46,7 @@ export class AppComponent {
       '/profile',
       '/declaration',
       '/performance',
+      '/mycommissions'
     ];
     return !validPaths.some((path) => url.startsWith(path));
   }
