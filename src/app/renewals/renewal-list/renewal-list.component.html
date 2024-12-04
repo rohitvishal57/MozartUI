@@ -148,9 +148,9 @@
                                             <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems active">
                                                 <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                                     <ul class="actionItemsMain">
-                                                        <!-- <li class="actionItem" (click)="handleAction(row, 'download')">
-                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                        </li> -->
+                                                        <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="row.renewalStatus !== 'LAPSED'">
+                                                            <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
+                                                        </li>
                                                         <li class="actionItem" (click)="handleAction(row, 'sms')">
                                                             <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
                                                         </li>
@@ -204,9 +204,9 @@
                                     <mat-menu #moreMenu="matMenu" class="overlay_popupMenu_Main_CDK moreActionItems">
                                         <div class="overlay_popupMenu_Sub moreActionItemsSub">
                                             <ul class="actionItemsMain">
-                                                <!-- <li class="actionItem" (click)="handleAction(row, 'download')">
-                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download</span></a>
-                                                </li> -->
+                                                <li class="actionItem" (click)="handleAction(row, 'download')" *ngIf="row.renewalStatus !== 'LAPSED'">
+                                                    <a> <img src="assets/Img/icon_download2_grey.svg" alt="Download"><span>Download Renewal Notice</span></a>
+                                                </li>
                                                 <li class="actionItem" (click)="handleAction(row, 'sms')">
                                                     <a> <img src="assets/Img/icon_share_via_sms_grey.svg" alt="Share via SMS"><span>{{"Share via SMS" | translate}}</span></a>
                                                 </li>

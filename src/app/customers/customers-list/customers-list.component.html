@@ -169,7 +169,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="btn_groupAction">
-                                                            <button type="button" id="View" name="View" class="btn_action btn_editAction" title="View" (click)="getCustomerInfo()">
+                                                            <button type="button" id="View" name="View" class="btn_action btn_editAction" title="View" (click)="getCustomerInfo(policy.policyNumber, row.customerID)">
                                                                 <img src="assets/Img/icon_profile.svg" />
                                                             </button>
                                                             <button type="button" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
@@ -305,7 +305,7 @@
                                     </span>
                                 </div>
                                 <div class="menu_morePolicy">
-                                    <button type="button" id="View" name="View" class="btn_action btn_moreActionCard" title="View" (click)="getCustomerInfo()">
+                                    <button type="button" id="View" name="View" class="btn_action btn_editAction" title="View" (click)="getCustomerInfo(policy.policyNumber, row.customerID)">
                                         <img src="assets/Img/icon_profile.svg" />
                                     </button>
                                     <button type="button" id="customermoregrid" name="customermoregrid" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
@@ -398,30 +398,30 @@
               <a class="btn_backPage" (click)="backSubquotes()"></a>
               {{"Customer Policy Details" | translate}}
             </h3>
-            <div class="accordionMain">
+            <div class="accordionMain" *ngIf="customerBasicDetails">
                 <div class="accordionItem">
-                    <header>{{"Cilamala Padmavathi(12-24-0000544-00)" | translate}}</header>
+                    <header>{{ customerBasicDetails?.customerName }} ({{ customerBasicDetails?.policyNo }})</header>
                     <div class="accordionBody">
                         <div class="accordionBodyRow">
-                            <div class="data-row">
+                            <div class="data-row" >
                                 <div class="data-item">
-                                    <label>{{"Member ID" | translate}}</label>
-                                    <h6>PT87575308</h6>
-                                </div>
-                                <div class="data-item">
-                                    <label>{{"Email ID" | translate}}</label>
-                                    <h6>di************@qu**********.com</h6>
-                                </div>
+                                    <label>{{ "Member ID" | translate }}</label>
+                                    <h6>{{ customerBasicDetails.customerID || "-" }}</h6>
+                                  </div>
+                                  <div class="data-item">
+                                    <label>{{ "Email ID" | translate }}</label>
+                                    <h6>
+                                      {{ customerBasicDetails.emailID || "-" }}
+                                    </h6>
+                                  </div>
                                 <div class="data-item">
                                     <label>{{"Mobile Number" | translate}}</label>
-                                    <h6>+91 915******35</h6>
+                                    <h6>{{ customerBasicDetails.mobileNo || "-" }}</h6>
                                 </div>
-                                <!-- <div class="data-item">
-                        <label>{{"Status" | translate}}</label>
-                        <h6 class="info_status">                                   
-                          Inforced 
-                        </h6>
-                      </div> -->
+                                <div class="data-item">
+                                    <label>{{"Status" | translate}}</label>
+                                    <h6 class="info_status">{{ customerBasicDetails.policyStatus || "-" }}</h6>                          
+                                </div>
                                 <div class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal">
                                     <a>
                                         <img src="assets/Img/icon_download2_grey.svg" alt="Download">
@@ -455,66 +455,67 @@
                     </ul>
                 </div>
             </section>
-            <section class="block_bg_lightGrey memberPoliySummary" *ngIf="selectedFilter === 'basicDetails'">
-                <div class="row mt-2">
+                <section class="block_bg_lightGrey memberPoliySummary" *ngIf="selectedFilter === 'basicDetails' && customerBasicDetails">
+                    <div class="row mt-2">
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Policy Number" | translate}}</label>
-                        <h6>12-24-0000544-00</h6>
+                        <label>{{ "Policy Number" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyNo || "-" }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Term" | translate}}</label>
-                        <h6>1 Year</h6>
+                        <label>{{ "Term" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyTerm || "-"}} Year(s)</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Policy Type" | translate}}</label>
-                        <h6>Individual</h6>
+                        <label>{{ "Policy Type" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyType || "-"}}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Start Date" | translate}}</label>
-                        <h6>06 Jun, 2024</h6>
+                        <label>{{ "Start Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyStartDate || "-" }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Renewal Date" | translate}}</label>
-                        <h6>06 Jun, 2025</h6>
+                        <label>{{ "Renewal Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.renewalDate || "-" }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"End Date" | translate}}</label>
-                        <h6>05 Jun, 2025</h6>
+                        <label>{{ "End Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyEndDate || "-"}}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Intermediary Name" | translate}}</label>
-                        <h6>5100003</h6>
+                        <label>{{ "Intermediary Name" | translate }}</label>
+                        <h6>{{ customerBasicDetails.intermediaryName || "-"}}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Intermediary Code" | translate}}</label>
-                        <h6>Sachin Poovanna</h6>
+                        <label>{{ "Intermediary Code" | translate }}</label>
+                        <h6>{{ customerBasicDetails.intermediaryID || "-"}}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Source" | translate}}</label>
-                        <h6>TCSBANCS</h6>
+                        <label>{{ "Source" | translate }}</label>
+                        <h6>{{ customerBasicDetails.source || "-"}}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Branch" | translate}}</label>
-                        <h6>Bengaluru - Jayanagar</h6>
+                        <label>{{ "Branch" | translate }}</label>
+                        <h6>{{ customerBasicDetails.branchofficename || "-"}}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"SP" | translate}}</label>
-                        <h6>-</h6>
+                        <label>{{ "SP" | translate }}</label>
+                        <h6>{{ customerBasicDetails.specfiedpersonname || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Ref code 1" | translate}}</label>
-                        <h6>-</h6>
+                        <label>{{ "Ref code 1" | translate }}</label>
+                        <h6>{{ customerBasicDetails.refCode1 || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Ref Code 2" | translate}}</label>
-                        <h6>-</h6>
+                        <label>{{ "Ref Code 2" | translate }}</label>
+                        <h6>{{ customerBasicDetails.refCode2 || '-' }}</h6>
                     </div>
                     <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                        <label>{{"Employee Code" | translate}}</label>
-                        <h6>-</h6>
+                        <label>{{ "Employee Code" | translate }}</label>
+                        <h6>{{ customerBasicDetails.employeeCode || '-' }}</h6>
                     </div>
-                </div>
-            </section>
+                    </div>
+                </section>
+              
             <section class="block_bg_lightGrey memberPoliySummary" *ngIf="selectedFilter === 'productDetails'">
                 <div class="row mt-2">
                     <header>
@@ -561,92 +562,43 @@
             </section>
             <section id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'insuredDetails'">
                 <div class="cardViewWraper">
-                    <div class="cardViewItem">
+                    <div class="cardViewItem" *ngFor="let member of insuredMemberDetails">
                         <div class="cardViewBody">
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"First Name" | translate}}</div>
-                                <div class="item_value">Vijay</div>
+                                <div class="item_value">{{ member.firstName || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Middle Name" | translate}}</div>
-                                <div class="item_value">-</div>
+                                <div class="item_value">{{ member.middleName  || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Last Name" | translate}}</div>
-                                <div class="item_value">Mhatre</div>
+                                <div class="item_value">{{ member.lastName || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Date Of Birth" | translate}}</div>
-                                <div class="item_value">01-01-2000</div>
+                                <div class="item_value">{{ member.memberdob || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Gender" | translate}}</div>
-                                <div class="item_value">Male</div>
+                                <div class="item_value">{{ member.memberGender || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Relation" | translate}}</div>
-                                <div class="item_value">-</div>
+                                <div class="item_value">{{ member.relation || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems ">
                                 <div class="item_lable">{{"Member ID" | translate}}</div>
-                                <div class="item_value">PT87575308</div>
+                                <div class="item_value">{{ member.memberID || '-' }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Is Proposer" | translate}}</div>
-                                <div class="item_value">Yes</div>
+                                <div class="item_value">{{ member.isPrimaryMember ? "Yes" : "No" }}</div>
                             </div>
                             <div class="cv_bodyItems">
                                 <div class="item_lable">{{"Is Audit" | translate}}</div>
-                                <div class="item_value">No</div>
-                            </div>
-                            <div class="cv_bodyItems">
-                                <div class="item_lable">{{"Health Returns" | translate}}</div>
-                                <div class="item_value">-</div>
-                            </div>
-                            <div class="cv_bodyItems">
-                                <div class="item_lable">{{"Active Days" | translate}}</div>
-                                <div class="item_value">-</div>
-                            </div>
-                            <div class="cv_bodyItems">
-                                <div class="item_lable">{{"Health Heart Score" | translate}}</div>
-                                <div class="item_value">-</div>
-                            </div>
-                            <section class="quickFilterMain cv_bodyItems_policyInfo">
-                                <span class="modifiedBadge userPolicyBadge">Contact Info</span>
-                            </section>
-                            <div class="cv_bodyItems cv_bodyItems_100 userInfo userPolicyInfo">
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"City" | translate}}</div>
-                                    <div class="item_value">Mumbai</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"State" | translate}}</div>
-                                    <div class="item_value">Maharastra</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Pin Code" | translate}}</div>
-                                    <div class="item_value">400001</div>
-                                </div>
-                                <div class="cv_bodyItems cv_bodyItems_45">
-                                    <div class="item_lable">{{"Address Line 1" | translate}}</div>
-                                    <div class="item_value">Mumbai</div>
-                                </div>
-                                <div class="cv_bodyItems cv_bodyItems_45">
-                                    <div class="item_lable">{{"Address Line 2" | translate}}</div>
-                                    <div class="item_value">Mumbai</div>
-                                </div>
-                                <div class="cv_bodyItems cv_bodyItems_45">
-                                    <div class="item_lable">{{"Mobile Number" | translate}}</div>
-                                    <div class="item_value">915******35</div>
-                                </div>
-                                <div class="cv_bodyItems cv_bodyItems_45">
-                                    <div class="item_lable">{{"Whatsapp Number" | translate}}</div>
-                                    <div class="item_value">915******35</div>
-                                </div>
-                                <div class="cv_bodyItems cv_bodyItems_100">
-                                    <div class="item_lable">{{"Email ID" | translate}}</div>
-                                    <div class="item_value">di************@qu**********.com</div>
-                                </div>
+                                <div class="item_value">{{ member.isAdult ? "Yes" : "No" }}</div>
                             </div>
                         </div>
                     </div>

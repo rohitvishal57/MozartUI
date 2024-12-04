@@ -133,5 +133,11 @@ export const environment = {
     getValidateBbOtp:"api/v1/ValidateBBOTP",
     getBankDetailsViaIFSC:"api/yatra/getbankdetailsviaifsccode",
     searchDocument: "api/yatra/searchdocument",
-    downloadDocument:"api/yatra/download"
+    downloadDocument:"api/yatra/download",
+    getCustomerBasicDetails:"api/yatra/GetPolicyBasicDetails",
+    getCustomerProductDetails:"api/yatra/GetPolicyBasicDetails",
+    getCustomerInsuredDetails:"api/yatra/GetPolicyBasicDetails",
+    getCustomerClaimDetails:"api/yatra/getclaimdetails",
+    getCustomerEndorsementDetails:"api/yatra/GetPolicyBasicDetails",
+
   }
