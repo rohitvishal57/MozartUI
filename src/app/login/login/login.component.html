@@ -16,7 +16,7 @@
                 <small *ngIf="isSubmitted" class="text-danger">{{userErrorMsg | translate}}</small>
               </div>
             </div>
-            <div class="col-6 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
               <div class="input-block form-floating input-block-renew">
                 <input class="form-control input-textBox" id="captcha" name="captcha" placeholder="" (keydown)="onKeyDownEvent()" type="text" formControlName="captcha" />
                 <label for="captcha">{{"Enter CAPTCHA" | translate}}<span class="text-danger">*</span></label>
@@ -24,7 +24,7 @@
                 <small *ngIf="isSubmitted" class="text-danger">{{captchaErrorMsg | translate}}</small>
               </div>
             </div>
-            <div class="col-6 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                 <div class="main_captcha">
                   <label class="captcha-label">
                     <span *ngFor="let char of captchaCode.split('')">{{ char }}</span>

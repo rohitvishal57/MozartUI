@@ -123,6 +123,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
     this.getRequestList();
     this.getProducts();
+    this.checkView(); //Screen View check
   }
   getProducts() {
     this.agentCode =  localStorage.getItem("agentCode");
@@ -157,9 +158,7 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.isDesktopView = window.innerWidth <= 1116;
-    if (this.isDesktopView) {
-    }
+    this.checkView(); //Screen View check
   }
 
   getEndorsementCaseDetails (data:any) {
@@ -348,5 +347,15 @@ export class EndorsementsRequestsComponent implements OnInit {
 
   redirect(value:any){
     this.router.navigate([value]);
+  }
+
+  //Screen View check
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 1116;
+    if (this.isDesktopView) {
+      this.selectedView = 'grid'; 
+    }else {
+      this.selectedView = 'list'; // Use 'grid' view for desktop
+    }
   }
 }

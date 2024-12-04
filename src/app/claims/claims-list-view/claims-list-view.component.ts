@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
@@ -54,6 +54,7 @@ export class ClaimsListViewComponent implements OnInit {
   productsList:any;
   countsList: any = [];
   status: string = "totalRecords";
+  isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode')
   StaticRequestTypes = [
     { name: 'Cashless', selected: false },
@@ -75,6 +76,7 @@ export class ClaimsListViewComponent implements OnInit {
     this.fetchData(); 
     this.getProducts();
     this.fetchClaimStatusCounts(this.agentCode);
+    this.checkView(); //Screen View check
   }
 
   claimsView(view:string){
@@ -390,5 +392,17 @@ getPlaceholder(): string {
       }
     );
   }
-  
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkView(); //Screen View check
+  }
+  //Screen View check
+  checkView() {
+    this.isDesktopView = window.innerWidth <= 1116;
+    if (this.isDesktopView) {
+      this.selectedView = 'grid'; 
+    }else {
+      this.selectedView = 'list'; // Use 'grid' view for desktop
+    }
+  }
 }

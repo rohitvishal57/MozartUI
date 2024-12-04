@@ -2734,7 +2734,9 @@ margin: 0;
     .main-container .right-panel .checkbox-wrapper {
         max-width: 170px !important;
     }
-  
+    .main-container .right-panel .ah-opcovers {
+        min-width: 100%;
+    }
 }
 .main-container .right-panel .next-btn:focus,
     .main-container .right-panel .add-btn:focus,
