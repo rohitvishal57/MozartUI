@@ -29,6 +29,15 @@
     .right_productList {
         max-width: 394px;
     }
+    @media (max-width:767px) {
+        flex-direction: column;
+    }
+    .btn_iconGrey {
+        background: #F9FAFB;
+        &:hover {
+            background: #ffe7e5;
+        }
+    }
 }
 .no-product {
     display: flex;
