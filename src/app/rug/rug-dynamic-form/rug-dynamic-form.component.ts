@@ -164,7 +164,7 @@ export class RugDynamicFormComponent {
         console.log('No route parameters found.');
       }
     });
-    this.spinner.show();
+    
     this.showHtmlContent = false;
 
     if (localStorage.getItem('agentCode')){
@@ -353,7 +353,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": this.leadId != undefined ? this.leadId : "342787776",
+        "proposalNum": this.leadId != undefined ? this.leadId : "342729568",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -828,7 +828,7 @@ export class RugDynamicFormComponent {
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
       this.flattenObject(this.formData);
-      this.spinner.hide();
+      
     }
   }
 
@@ -1103,13 +1103,13 @@ export class RugDynamicFormComponent {
       formData.append('Files', this.selectedFile);
       formData.append('NameOfInsuranceCompany', insurerControl.value); // Dynamic value from the form control
 
-      this.spinner.show();
+      
 
       this.yatraService.fetchPolicyDetailsFromFile(formData).subscribe({
         next: (response: any) => {
           console.log('File uploaded and policy details fetched:', response);
           this.toast.success({ detail: "SUCCESS", summary: "Policy document uploaded and processed successfully.", duration: 3000 });
-          this.spinner.hide();
+          
 
           this.isPolicyDetailsFetch = true;
 
@@ -1142,7 +1142,7 @@ export class RugDynamicFormComponent {
           console.log(this.formData);
         },
         error: (error) => {
-          this.spinner.hide();
+          
           this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
           console.error('Error fetching Policy details:', error);
         }
@@ -1288,12 +1288,12 @@ export class RugDynamicFormComponent {
   }
 
   getAllInsureData(control: any) {
-    this.spinner.show();
+    
     this.yatraService.getInsurerData().subscribe({
       next: (res: any) => {
         console.log(res);
         control.options = res.InsurerName;
-        this.spinner.hide();
+        
       },
       error: (err) => {
         console.error(err);
@@ -1460,7 +1460,7 @@ export class RugDynamicFormComponent {
   }
 
   getAllRelationship(control: any) {
-    this.spinner.show();
+    
     this.yatraService.getRelationship().subscribe({
       next: (res: any) => {
         console.log(res);
@@ -1468,10 +1468,10 @@ export class RugDynamicFormComponent {
           const index = res.RelationShip.findIndex((relation: any) => relation.value === element.label);
           element.id = res.RelationShip[index].id;
         })
-        this.spinner.hide();
+        
       },
       error: (err) => {
-        this.spinner.hide();
+        
         console.error(err);
       }
     });
@@ -1666,7 +1666,7 @@ export class RugDynamicFormComponent {
             const reqdata = {
               "pincode": event.target.value
             }
-            // this.spinner.show();
+            // 
             // this.commonService.getPinCodeByCity(reqdata).subscribe({
             //   next: (res: any) => {
             //     console.log(res)
@@ -1687,7 +1687,7 @@ export class RugDynamicFormComponent {
 
 
             //     this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
-            //     this.spinner.hide();
+            //     
             //   },
             //   error: (err: any) => {
             //     console.error(err);
@@ -1707,7 +1707,7 @@ export class RugDynamicFormComponent {
 
 
             //     this.dynamicFormGroup.get(parentControl.name)?.patchValue(formArray);
-            //     this.spinner.hide();
+            //     
             //   }
             // });
           }
@@ -2046,7 +2046,7 @@ export class RugDynamicFormComponent {
 
   // getProposerRelationship(control: IFormControl): Promise<any> {
   //   // Showing the spinner before making the API call
-  //   this.spinner.show();
+  //   
 
   //   // Wrapping the asynchronous operation in a promise
   //   return new Promise((resolve, reject) => {
@@ -2114,7 +2114,7 @@ export class RugDynamicFormComponent {
   //           })
   //         }
   //         // Hide the spinner once the response is processed
-  //         this.spinner.hide();
+  //         
   //         this.flattenObject(this.formData);
   //         console.log(this.formData, this.form);
 
@@ -2125,7 +2125,7 @@ export class RugDynamicFormComponent {
   //       },
   //       error: (err) => {
   //         console.error(err);
-  //         this.spinner.hide();
+  //         
 
   //         // Reject the promise on error
   //         reject(err);
@@ -2136,7 +2136,7 @@ export class RugDynamicFormComponent {
 
   getProposerRelationship(control: IFormControl): Promise<any> {
     // Showing the spinner before making the API call
-    this.spinner.show();
+    
 
     // Wrapping the asynchronous operation in a promise
     return new Promise((resolve, reject) => {
@@ -2238,7 +2238,7 @@ export class RugDynamicFormComponent {
         }),
         tap(() => {
           // Hide the spinner once the response is processed
-          this.spinner.hide();
+          
         })
       ).subscribe({
         next: (res) => {
@@ -2248,7 +2248,7 @@ export class RugDynamicFormComponent {
         error: (err) => {
           // Hide the spinner and handle error
           console.error(err);
-          this.spinner.hide();
+          
 
           // Reject the promise on error
           reject(err);
@@ -3988,7 +3988,7 @@ export class RugDynamicFormComponent {
   }
 
   async getPremiumAmount() {
-    this.spinner.show();
+    
     console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
 
     if (this.changesMade) {
@@ -3996,7 +3996,7 @@ export class RugDynamicFormComponent {
     }
 
     if (this.isQuote == false) {
-      this.spinner.show();
+      
       if (Object.keys(this.formData).length > 0) {
         // const modifiedInsuredMemberDetails = JSON.parse(JSON.stringify(this.formData));
         this.formData.insuredMemberDetails.forEach((member: any) => {
@@ -4065,7 +4065,7 @@ export class RugDynamicFormComponent {
 
         this.commonService.GetSingleProductQuote(reqData).pipe(
           tap((res: any) => {
-            this.spinner.hide();
+            
             // Update tenureAmount and discountList after receiving the response
             this.QuoteNumber = [];
             for (let i = 1; i <= 3; i++) {
@@ -4087,11 +4087,11 @@ export class RugDynamicFormComponent {
           next: () => {
             // After setting tenureAmount and discountList, call setPremiumAmount()
             this.setPremiumAmount();
-            this.spinner.hide();
+            
           },
           error: (err) => {
             console.log("Error while fetching product tenure", err);
-            this.spinner.hide();
+            
           }
         });
 
@@ -4299,7 +4299,7 @@ export class RugDynamicFormComponent {
     //     if (this.formData['numberOfInsuredMembers'] > 1 && this.formData['planType'] == 'Multi Individual') {
     //       reqData2.memberDiscount = 5;
     //     }
-    //     this.spinner.show();
+    //     
 
     //     console.log(reqData2);
 
@@ -4331,10 +4331,10 @@ export class RugDynamicFormComponent {
     //     sessionStorage.setItem('displayTaxList', this.encryptionService.encrypt(this.displayTaxList))
     //     sessionStorage.setItem('tenureAmount', this.encryptionService.encrypt(this.tenureAmount))
     //     this.changeDetectorRef.detectChanges();
-    //     this.spinner.hide();
+    //     
     //   } catch (err) {
     //     console.error(err);
-    //     this.spinner.hide();
+    //     
     //   }
     // }
     // this.setPremiumAmount();
@@ -4428,7 +4428,7 @@ export class RugDynamicFormComponent {
 
 
   // async fullQuotation() {
-  //   this.spinner.show();
+  //   
   //   console.log(this.formData);
   //   const data = await this.mappedFormDataFullQuote(this.formData);
   //   console.log(data);
@@ -4469,10 +4469,10 @@ export class RugDynamicFormComponent {
   //       this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
   //       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
   //       this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully.${this.customerId}`, duration: 3000 });
-  //       this.spinner.hide();
+  //       
   //       },
   //       error: (err) => {
-  //         this.spinner.hide();
+  //         
   //         console.error(err);
   //       }
   //     });
@@ -4481,7 +4481,7 @@ export class RugDynamicFormComponent {
 
   async fullQuotation(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.spinner.show();
+      
       console.log(this.formData);
       this.mappedFormDataFullQuote(this.formData).then((data) => {
         console.log(data);
@@ -4543,18 +4543,18 @@ export class RugDynamicFormComponent {
             this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
             this.toast.success({ detail: "SUCCESS", summary: `Full Quotation Generated Successfully. ${this.customerId}`, duration: 3000 });
-            this.spinner.hide();
+            
             resolve(); // Resolving the promise once the API call completes
           },
           error: (err) => {
-            this.spinner.hide();
+            
             console.error(err);
             this.toast.error({ detail: "ERROR", summary: "Something went wrong. Please try again.", duration: 3000 });
             reject(err); // Rejecting the promise if there is an error
           }
         });
       }).catch((err) => {
-        this.spinner.hide();
+        
         this.toast.error({ detail: "ERROR", summary: "Failed to map form data", duration: 3000 });
         reject(err);
       });
@@ -5365,14 +5365,14 @@ export class RugDynamicFormComponent {
     };
     console.log(reqData, this.dynamicFormGroup.value);
 
-    this.spinner.show();
+    
 
     this.yatraService.GetKycDetails(reqData).subscribe({
       next: (response: any) => {
         console.log('KYC details:', response);
         if (response.isSuccess == true) {
           this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
-          this.spinner.hide();
+          
           control.disabled = true;
           if (typeof response.data === 'object' && response.data !== null) {
             Object.keys(response.data).forEach((key: any) => {
@@ -5407,7 +5407,7 @@ export class RugDynamicFormComponent {
         // this.dynamicFormGroup.get('ckycNo')?.setValue(response.data.ckycNo);
       },
       error: (error) => {
-        this.spinner.hide();
+        
         this.toast.warning({ detail: "WARNING", summary: "Failed to fetch KYC Details", duration: 3000 });
         console.error('Error fetching KYC details:', error);
       }
@@ -5421,13 +5421,13 @@ export class RugDynamicFormComponent {
     };
     console.log(reqData);
 
-    this.spinner.show();
+    
 
     this.yatraService.GetCustomerDetailsViaPolicyNumber(reqData).subscribe({
       next: (response: any) => {
         console.log('Policy details:', response);
         this.toast.success({ detail: "SUCCESS", summary: "Policy Details Fetched Successfully", duration: 3000 });
-        this.spinner.hide();
+        
         control.disabled = true;
 
         this.isPolicyDetailsFetch = true;
@@ -5463,7 +5463,7 @@ export class RugDynamicFormComponent {
         })
       },
       error: (error) => {
-        this.spinner.hide();
+        
         this.toast.warning({ detail: "WARNING", summary: "Failed to fetch Policy Details", duration: 3000 });
         console.error('Error fetching Policy details:', error);
       }
@@ -5516,7 +5516,7 @@ export class RugDynamicFormComponent {
   }
   removeDisease(subControl: any, control: any, index: any) {
     console.log(subControl, control, index, this.form, this.dynamicFormGroup.value);
-    // this.spinner.show();
+    // 
 
     if (subControl.innerArrayControl.length > 1) {
       subControl.innerArrayControl?.splice(index, 1);
@@ -5531,7 +5531,7 @@ export class RugDynamicFormComponent {
         // }
       });
       // setTimeout(() => { 
-      //   // this.spinner.hide();
+      //   // 
       // }, 0);
       // subControl.innerArrayControl.splice(index, 1);
 

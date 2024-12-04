@@ -157,11 +157,11 @@ export class YatraService {
     return this.httpService.post(saveCommonDraftData,reqData);
   }
   getBbOtp(reqData:any){
-    const getBbOtp = this.configService.config.baseUrl + this.configService.config.getBBOTP;
+    const getBbOtp = this.configService.config.baseUrl1 + this.configService.config.getBBOTP;
     return this.httpService.post(getBbOtp,reqData);
   }
   validateBBOTP(reqData:any){
-    const validateBbOtp = this.configService.config.baseUrl + this.configService.config.getValidateBbOtp;
+    const validateBbOtp = this.configService.config.baseUrl1 + this.configService.config.getValidateBbOtp;
     return this.httpService.post(validateBbOtp,reqData);
   }
   saveD2CCommonDraft(reqData:any){
