@@ -8,6 +8,7 @@ import { ClaimsViewService } from './claims-view.service';
 import { v4 as uuidv4 } from 'uuid';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { EndorsementsRequestsService } from 'src/app/endorsements/endorsements-requests/endorsements-requests.service';
 
 
 @Component({
@@ -92,6 +93,7 @@ export class ClaimsViewComponent {
   isFilenotSelected: boolean = false;
   policyMembersList: any[] = [];
   MemberIdList: any;
+  policiesListData:any
   documentLabelOptions = [
     'govt/KYC ID',
     'Hospital bill invoice',
@@ -130,11 +132,12 @@ export class ClaimsViewComponent {
   billsForm!: FormGroup;
   claimInfoId: any;
   documentId: any;
-  filteredPolicyList: string[] = [];
+  filteredPolicyList: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private claimsService: ClaimsViewService,
+    private endorsement_service: EndorsementsRequestsService,
     private cdr: ChangeDetectorRef,
     private router: Router,
     private toast: NgToastService,
@@ -231,6 +234,7 @@ export class ClaimsViewComponent {
       requestType: [""],
       claimStatus: [""],
       raisedDate: [""],
+      memberId: [""],
       hospitalName: ["", Validators.required],
       isFileUploadRequired: [true],
       claimedAmount: ["", Validators.required],
@@ -320,33 +324,35 @@ export class ClaimsViewComponent {
   hasAnyValue(): boolean {
     return this.form.get('memberName')?.value ? true : false;
   }
-
+  extractUniqueValues(data: any[], key: string): string[] {
+    const uniqueValues = new Set(data.map(item => item[key]));
+    return Array.from(uniqueValues).filter(value => value != null);
+  }
+  
   getProposalDetails(): void {
-    this.agentCode = localStorage.getItem("agentCode");
-    this.claimsService.getProposalDetails(this.agentCode).subscribe(
-      (response: any) => {
-        if (response.isSuccess) {
-          this.response = response.data;
-          const allData: ClaimData[] = response.data;
-          this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');
-          this.policyNumbers = this.extractUniqueValues(
-            allData,
-            "policyNumber"
-          );
+    let data = {
+      AgentCode: localStorage.getItem("agentCode")
+    }
+    this.endorsement_service.getactivepolicynumbersApi(data).subscribe(
+      (resp: any) => {
+        if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
+          this.policyNumbers = this.removeDuplicates(resp?.data?.getPolicyDetails, "policyNumber");
           this.filteredPolicyList = [...this.policyNumbers];
-          this.claimTypes = this.extractUniqueValues(allData, "policyType");
           this.cdr.markForCheck();
-        } else {
-          console.error("Failed to fetch dropdown data", response.message);
+
         }
       },
-      (error) => console.error("Error fetching dropdown data", error)
-    );
+      (err) => {
+        console.log(err);
+      });
   }
 
-  extractUniqueValues(data: any[], key: string): any[] {
-    return [...new Set(data?.map((item) => item[key]).filter((val) => val))];
+  removeDuplicates(myArray: any, Prop: any) {
+    return myArray?.filter((obj: any, pos: any, arr: any) => {
+      return arr.map((mapObj: any) => mapObj[Prop]).indexOf(obj[Prop]) === pos;
+    });
   }
+
 
   handleDropdownChange(value: string): void {
     const selectedPolicyNumber = value;
@@ -356,7 +362,7 @@ export class ClaimsViewComponent {
         this.memberNames = [];
       }
     });
-    const filteredMembers = this.response.filter(
+    const filteredMembers = this.policyNumbers.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
     this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
@@ -962,7 +968,13 @@ export class ClaimsViewComponent {
   }
 
   memberIdChange(event:any){    
-    this.selectedMember = event.target.value;
+    const selectedMemberName = event.target.value;
+    const selectedMember = this.policyMembersList.find(member => member.memberName === selectedMemberName);
+  
+    if (selectedMember) {
+      this.form.get('memberId')?.setValue(selectedMember.memberId);  // Assuming 'memberId' is the name of the form control in your form group
+    }
+  
   }
 
   ///////current date and time

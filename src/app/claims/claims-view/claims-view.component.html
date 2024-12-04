@@ -22,8 +22,8 @@
                                 </div>
                             </div>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleDropdownChange($event.option.value)">
-                                <mat-option *ngFor="let policy of filteredPolicyList" [value]="policy">
-                                    {{ policy | translate }}
+                                <mat-option *ngFor="let policy of filteredPolicyList" [value]="policy.policyNumber">
+                                    {{ policy.policyNumber | translate }}
                                 </mat-option>
                             </mat-autocomplete>
                         </div>
