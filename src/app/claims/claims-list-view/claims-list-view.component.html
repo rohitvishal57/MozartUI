@@ -44,9 +44,9 @@
                             <li>
                                 <button type="button" id="claims-underDeficiency" name="claims-underDeficiency" value="underDeficiency" class="btn_quickFilter btn_quickFilterClaim"  
                                         (click)="filterClaims('underDeficiency')" [ngClass]="{'active': selectedStatus === 'underDeficiency'}">
-                                    {{ "Under Deficiency" | translate }} ({{ claimStatusCounts.underDeficiency }})
+                                  {{ "Under Deficiency" | translate }} ({{ claimStatusCounts.underDeficiency }})
                                 </button>
-                            </li>                      
+                              </li>                     
                         </ul>  
                     </div>
                     
@@ -156,7 +156,8 @@
                             <tr>
                                 <th scope="col">{{"Claim No." | translate}}</th>
                                 <th scope="col">{{"Policy No." | translate}}</th>
-                                <th scope="col" nowrap>{{"Product Name" | translate}}</th>
+                                <!-- <th scope="col" nowrap>{{"Product Name" | translate}}</th> -->
+                                <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
                                 <th scope="col" nowrap>{{"Member Id" | translate}}</th>
                                 <th scope="col" nowrap>{{"Claim Type" | translate}}</th>
                                 <th scope="col">{{"Status" | translate}}</th>
@@ -171,7 +172,8 @@
                               <tr class="table-values"  *ngFor="let row of claims;let i = index">
                                 <td class="card_insureInfo">{{ row?.claimInfoId | translate}}</td>
                                 <td>{{ row?.policyNumber }}</td>
-                                <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
+                                <td></td>
+                                <!-- <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td> -->
                                 <td>{{ row?.memberId }}</td>
                                 <td>{{ row?.requestType }}</td>
                                 <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
