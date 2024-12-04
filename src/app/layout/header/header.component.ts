@@ -176,23 +176,15 @@ export class HeaderComponent implements OnInit ,OnDestroy {
     window.open(event.target.value);    
   }
 
-downloadPdfBrochure(URL : any) {
-  if (URL) {
+   downloadPdfBrochure(URL: any) {
+    window.open(URL, '_blank');    
+    const fileNameWithExtension : any = URL.split('/').pop(); 
     const link = document.createElement('a');
     link.href = URL;
-    link.download = URL.split('/').pop() || 'download.pdf';  // Use the filename from the URL or default to 'download.pdf'
-
-    // First, try downloading by clicking the link
-    document.body.appendChild(link);
+    link.download = fileNameWithExtension; 
     link.click();
-    document.body.removeChild(link);
-
-    window.open(URL, '_blank');  // Open in a new tab for Chrome
-    
-  } else {
-    console.error('Invalid or missing URL.');
   }
-}
+  
 
 }
 
