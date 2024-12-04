@@ -1,14 +1,14 @@
-import { Component, HostListener  } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { RenewalList } from "src/app/interface/renewal-list.interface";
-import { Subject } from "rxjs";
+import { firstValueFrom, Subject } from "rxjs";
 import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
-import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { searchValidationConfig } from 'src/app/interface/common-validation.interface';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 
@@ -35,23 +35,24 @@ export class RenewalListComponent {
   toggeledropdown: boolean = false;
   selected: string = '';
   searchInputControl = new FormControl("");
-  isDesktopView:boolean=false
-  agentCode=localStorage.getItem('agentCode');
+  isDesktopView: boolean = false
+  agentCode = localStorage.getItem('agentCode');
   filterType: string = "totalRecords";
-  activeSection:string= "primary"
+  activeSection: string = "primary"
   StaticPolicyTypes = [
     { name: 'Multi Individual', selected: false },
     { name: 'Family Floater', selected: false },
   ];
   currentDate = new Date().toISOString().split('T')[0];
+  proposalNum: string = '';
 
   constructor(
-    private renewalService: RenewalsService,private router: Router,private datePipe: DatePipe,
-    private commonService:CommonService,private toast: NgToastService,private encryptionService: EncryptionService, private languageService: LanguageService,
+    private renewalService: RenewalsService, private router: Router, private datePipe: DatePipe,
+    private commonService: CommonService, private toast: NgToastService, private encryptionService: EncryptionService, private languageService: LanguageService,
     private translateService: TranslateService
-  ) {}
+  ) { }
 
-  renewalListRequestBody={
+  renewalListRequestBody = {
     "agentCode": this.agentCode,
     "proposer": "",
     "productName": "",
@@ -84,16 +85,16 @@ export class RenewalListComponent {
   }
   getRenewalsList() {
     this.renewalListRequestBody.pageNumber = this.page;
-    this.renewalListRequestBody.pageSize = this.rows;    
+    this.renewalListRequestBody.pageSize = this.rows;
     this.renewalService.getRenewalListApi(this.renewalListRequestBody).subscribe(
-      (response:any) => {
+      (response: any) => {
         if (response.isSuccess) {
           this.renewalsList = response.data.renewalsList.map((item: any) => ({
-            ...item,policyEndDate: this.formatRenewedDate(item.policyEndDate)
-          })); 
+            ...item, policyEndDate: this.formatRenewedDate(item.policyEndDate)
+          }));
           this.countsList = response.data;
-          this.totalRecords = response.data[this.filterType];  
-        }else {
+          this.totalRecords = response.data[this.filterType];
+        } else {
           this.toast.error({ detail: "", summary: "Failed to get Renewals List.", duration: 3000 });
         }
       },
@@ -105,7 +106,7 @@ export class RenewalListComponent {
   formatRenewedDate(datetime: string): string {
     return this.datePipe.transform(new Date(datetime), "dd-MM-yyyy") || "";
   }
-  filterQuotes(filter: string,filterRange: string) {
+  filterQuotes(filter: string, filterRange: string) {
     this.renewalListRequestBody.filterType = filter;
     this.first = 0;
     this.page = 1;
@@ -121,7 +122,7 @@ export class RenewalListComponent {
     }
   }
   getProducts() {
-    const productsRequestBody={
+    const productsRequestBody = {
       "agentCode": this.agentCode
     }
     this.commonService.Getproductlist(productsRequestBody).subscribe({
@@ -135,7 +136,7 @@ export class RenewalListComponent {
   }
   toggleFilterDropdown(event: Event) {
     event.stopPropagation();
-    this.toggeledropdown = !this.toggeledropdown;    
+    this.toggeledropdown = !this.toggeledropdown;
   }
   calculateAppliedFiltersCount() {
     const selectedProductsCount = this.productsList.filter(
@@ -152,25 +153,25 @@ export class RenewalListComponent {
     this.calculateAppliedFiltersCount();
     this.formatDate("startDate");
     this.formatDate("endDate");
-    this.renewalListRequestBody.startDate=this.startDate;
-    this.renewalListRequestBody.endDate=this.endDate;
+    this.renewalListRequestBody.startDate = this.startDate;
+    this.renewalListRequestBody.endDate = this.endDate;
     const selectedProducts = this.productsList
       .filter((product) => product.selected)
       .map((product) => product.productName);
     this.renewalListRequestBody.productName = selectedProducts.join(", ");
     const selectedPolicyTypes = this.StaticPolicyTypes
-    .filter((policyType) => policyType.selected)
-    .map((policyType) => policyType.name);
+      .filter((policyType) => policyType.selected)
+      .map((policyType) => policyType.name);
     this.renewalListRequestBody.policyType = selectedPolicyTypes.join(", ");
     this.first = 0;
     this.page = 1;
     this.getRenewalsList();
-    this.toggeledropdown=false;
+    this.toggeledropdown = false;
   }
   cancel() {
     this.toggeledropdown = false;
   }
-  clear(){
+  clear() {
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
     this.startDate = null;
@@ -204,7 +205,7 @@ export class RenewalListComponent {
       return "Enter Proposer Name";
     } else if (this.selected === "policyNumber") {
       return "Enter Policy Number";
-    }else {
+    } else {
       return "Search...";
     }
   }
@@ -213,10 +214,10 @@ export class RenewalListComponent {
       event.preventDefault();
     }
   }
-  
+
   applySearch() {
     if (this.searchInputControl.valid) {
-      const trimmedValue = this.searchInputControl.value?.trim(); 
+      const trimmedValue = this.searchInputControl.value?.trim();
       if (this.selected === "mobileNumber") {
         this.renewalListRequestBody.mobileNumber = trimmedValue || "";
         this.renewalListRequestBody.proposer = "";
@@ -298,7 +299,7 @@ export class RenewalListComponent {
               ]
             }
           }
-        };        
+        };
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -347,7 +348,7 @@ export class RenewalListComponent {
           grossRenewalAmount: item.renewalPremiumAmount.toString(),
           isAutoSMS: true,
           sessionId: ""
-        };        
+        };
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
@@ -365,11 +366,11 @@ export class RenewalListComponent {
         const whatsAppRequestBody = {
           templateCode: "DUE-CSTMR",
           policyNumbers: [item.policyNumber]
-        };        
+        };
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: "WhatsApp message sent successfully.", duration: 1500});
+              this.toast.success({ detail: "", summary: "WhatsApp message sent successfully.", duration: 1500 });
             } else {
               this.toast.error({ detail: "", summary: response.message, duration: 1500 });
             }
@@ -404,6 +405,210 @@ export class RenewalListComponent {
         this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
       }
     );
+  }
+
+  // async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
+
+  //   console.log(proposerDetail);
+
+  //   this.getProposalNum();
+    
+  //   const tempFormData = {
+  //     "productName": "Activ One Max Plus",
+  //     "memberDobProposer": "1999-07-22",
+  //     "panNo": "FVYPM1429K",
+  //     "productVariant": "Max Plus",
+  //     "ckycNo": "30081765657842",
+  //     "typeOfBusiness": "NB",
+  //     "memberPlan": "Max Plus",
+  //     "memberRoomCategory": "UPTOSI",
+  //     "productType": "AO",
+  //     "planCode": "MASSMARKET_PLUS",
+  //     "productId": "7200",
+  //     "preFix": "Mr",
+  //     "firstName": "SOUVIK",
+  //     "middleName": "",
+  //     "lastName": "MITRA",
+  //     "memberAgeProposer": 25,
+  //     "proposerGender": "M",
+  //     "emailId": "souvik@gmail.com",
+  //     "proposerAddress1": "C O MALAY KANTI MITRA WIRELESS COLONY BADARPUR",
+  //     "proposerAddress2": "KARIMGANJ ASSAM",
+  //     "proposerAddress3": ".",
+  //     "city": "Karimganj",
+  //     "country": "IN",
+  //     "state": "AS",
+  //     "mobileNumber": "6000473196",
+  //     "idProof": "{\"id\":\"2\",\"value\":\"Aadhar Card\",\"name\":\"Aadhar Card\"}",
+  //     "idNo": "7689",
+  //     "annualIncome": "500000",
+  //     "occupation": "{\"id\":\"10\",\"value\":\"O557\",\"name\":\"CA\"}",
+  //     "maritalStatus": "{\"id\":\"M\",\"value\":\"Married\",\"name\":\"Married\"}",
+  //     "gstDetails": "Consumers",
+  //     "educationDetails": "{\"id\":\"6\",\"value\":\"Post Graduate\",\"name\":\"Post Graduate\"}",
+  //     "nationality": "{\"id\":\"1\",\"value\":\"Indian\",\"name\":\"Indian\",\"selected\":true}",
+  //     "sumInsured": "1500000",
+  //     "proposerPincode": "788806",
+  //     "zone": "Zone III",
+  //     "zoneValue": "Z003",
+  //     "numberOfInsuredMembers": 2,
+  //     "plandetails": "",
+  //     "totalPremium": 56504,
+  //     "memberPolicyType": "Multi Individual",
+  //     "insuredMembers": {
+  //       "Self": true,
+  //       "Spouse": true,
+  //       "Son1": false,
+  //       "Daughter1": false,
+  //       "Mother": false,
+  //       "Father": false,
+  //       "Mother-In-Law": false,
+  //       "Father-In-Law": false,
+  //       "Brother1": false,
+  //       "Sister1": false,
+  //       "Grand-Father": false,
+  //       "Grand-Mother": false,
+  //       "Grand-Son1": false,
+  //       "Grand-Daughter1": false,
+  //       "Son-In-Law1": false,
+  //       "Daughter-In-Law1": false,
+  //       "Brother-In-Law": false,
+  //       "Sister-In-Law": false,
+  //       "Nephew1": false,
+  //       "Niece1": false
+  //     },
+  //     "insuredMemberDetails": [
+  //       {
+  //         "relation": "Self",
+  //         "firstName": "SOUVIK",
+  //         "lastName": "MITRA",
+  //         "height": "5",
+  //         "weight": "70",
+  //         "memberdob": "1999-07-22",
+  //         "emailId": "souvik@gmail.com",
+  //         "mobileNumber": "6000473196",
+  //         "relationshipType": "{\"id\":\"R001\",\"productId\":\"2\",\"value\":\"Self\",\"name\":\"Self\",\"memberRelationCode\":\"24\",\"isIncrement\":false,\"imagePath\":\"assets/Self.png\"}",
+  //         "memberAge": 25,
+  //         "memberGender": "M",
+  //         "pincode": "788806",
+  //         "sumInsured": "1500000",
+  //         "preExistingDisease": "no",
+  //         "memberIndex": 0,
+  //         "zone": "Zone III",
+  //         "state": "",
+  //         "city": "",
+  //         "memberType": "",
+  //         "middleName": "",
+  //         "planType": "Multi Individual",
+  //         "zoneValue": "Z003",
+  //         "memberRoomCategory": "UPTOSI",
+  //         "covers": [
+  //           {
+  //             "coverId": "CIL",
+  //             "value": "1500000"
+  //           }
+  //         ],
+  //         "preFix": "Mr",
+  //         "isChronic": "No",
+  //         "chronicDiseases": null,
+  //         "roomCategory": "",
+  //         "memberRelationCode": 24
+  //       },
+  //       {
+  //         "relation": "Spouse",
+  //         "firstName": "Emily",
+  //         "lastName": "Mitra",
+  //         "height": "5",
+  //         "weight": "52",
+  //         "memberdob": "2001-12-12",
+  //         "emailId": "emily@gmail.com",
+  //         "mobileNumber": "6000473196",
+  //         "relationshipType": "{\"id\":\"R002\",\"productId\":\"2\",\"value\":\"Spouse\",\"name\":\"Spouse\",\"memberRelationCode\":\"13\",\"isIncrement\":false,\"imagePath\":\"assets/Spouse.png\"}",
+  //         "memberAge": 22,
+  //         "memberGender": "F",
+  //         "pincode": "500013",
+  //         "sumInsured": "1500000",
+  //         "preExistingDisease": "no",
+  //         "memberIndex": 2,
+  //         "zone": "Zone II",
+  //         "state": "",
+  //         "city": "",
+  //         "memberType": "",
+  //         "middleName": "",
+  //         "heightInches": "",
+  //         "planType": "Multi Individual",
+  //         "zoneValue": "Z002",
+  //         "memberRoomCategory": "UPTOSI",
+  //         "covers": [
+  //           {
+  //             "coverId": "CIL",
+  //             "value": "1500000"
+  //           },
+  //           {
+  //             "coverId": "RVCV",
+  //             "value": "750"
+  //           }
+  //         ],
+  //         "preFix": "",
+  //         "isChronic": "No",
+  //         "chronicDiseases": null,
+  //         "roomCategory": "",
+  //         "memberRelationCode": 22
+  //       }
+  //     ],
+  //     "noOfChildrens": 0,
+  //     "familySize": "2A",
+  //     "proposerName": "SOUVIKMITRA",
+  //     "tenure": 2,
+  //     "personalDetails": "",
+  //     "nomineeFirstName": "Anekant",
+  //     "nomineeMiddleName": "",
+  //     "nomineeLastName": "Madrap",
+  //     "nomineeDob": "2001-11-07",
+  //     "nomineeRelationWithProposer": "{\"id\":\"9\",\"value\":\"R009\",\"name\":\"Brother\"}",
+  //     "Gender": "{\"id\":1,\"name\":\"Male\",\"value\":\"M\"}",
+  //     "nomineeAddress": "dgfhjlkjlhg",
+  //     "nomineeContactNo": "9876543210",
+  //     "policyNumber": null
+  //   }
+
+  //   const renewalInfoRequestBody = {
+  //     policy_Number: proposerDetail.policyNumber,
+  //   };
+  //   this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+  //     (res: any) => {
+  //       if (res.isSuccess) {
+  //         console.log(res);
+  //         const convertedData = this.encryptionService.encrypt(tempFormData);
+
+  //         console.log(convertedData,this.proposalNum);
+  //         debugger;
+  //         this.router.navigate(['renewal/renewalJourney'], {
+  //           queryParams: {
+  //             formData: convertedData,
+  //             proposalNum: this.encryptionService.encrypt(this.proposalNum),
+  //             policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber)
+  //           }
+  //         });
+  //       }
+  //       else {
+  //         this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
+  //       }
+  //     },
+  //     (err) => {
+  //       console.error("Error from getRenewalInfo API:", err);
+  //       this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
+  //     }
+  //   );
+  // }
+
+  async getProposalNum() {
+    try {
+      const res = await firstValueFrom(this.commonService.getProposalNumber());
+      this.proposalNum = res.data.proposalNumber;
+    } catch (error) {
+      console.error(error);
+    }
   }
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {

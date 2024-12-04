@@ -34,7 +34,7 @@ export class StatusValidationComponent implements OnInit {
             this.loginService.checkADFSLogin(data,data.Idtoken, data.username).subscribe({
               next: (res:any) => {
                 if(res.data && res.isSuccess && res.statusCode == '200') {
-                  localStorage.setItem('agentCode', res.data.agentcode);
+                  localStorage.setItem('agentCode', res.data.agentCode);
                   localStorage.setItem('userData', JSON.stringify(res.data));
                   this.toast.success({
                     detail: 'SUCCESS',
@@ -66,7 +66,7 @@ export class StatusValidationComponent implements OnInit {
           this.loginService.checkCyberArkLogin(data,data.Idtoken,data.username).subscribe({
             next: (res:any) => {
               if(res.data && res.isSuccess && res.statusCode == '200') {
-                localStorage.setItem('agentCode', res.data.agentcode);
+                localStorage.setItem('agentCode', res.data.agentCode);
                 localStorage.setItem('userData', JSON.stringify(res.data));
                 this.toast.success({
                   detail: 'SUCCESS',

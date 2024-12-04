@@ -51,6 +51,8 @@ export const environment = {
     getClaimsDetails: "api/claims/getclaimdetails",
     getHospitals: "api/claims/gethospitaldetails",
     getClaimStatus: "api/claims/getclaimstatus",
+    getClaimStatusCounts:"api/claims/GetClaimStatusCountByAgentCode?agentCode",
+    getMemberDetails:"api/claims/getpolicymembers",
     getClaimTracker: "api/claims/getclaimtracker",
     getUploadedFiles: "api/claims/getclaimsdocument",
     deleteFile: "api/claims/deleteclaimdocument",
@@ -129,5 +131,7 @@ export const environment = {
     GetDueRenewals:"api/quote/GetDueRenewals",
     getBBOTP:"api/v1/GetBBOTP",
     getValidateBbOtp:"api/v1/ValidateBBOTP",
-    getBankDetailsViaIFSC:"api/yatra/getbankdetailsviaifsccode"
+    getBankDetailsViaIFSC:"api/yatra/getbankdetailsviaifsccode",
+    searchDocument: "api/yatra/searchdocument",
+    downloadDocument:"api/yatra/download"
   }

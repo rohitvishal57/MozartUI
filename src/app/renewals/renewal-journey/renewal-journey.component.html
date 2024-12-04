@@ -1,0 +1,93 @@
+<div class="main-container" *ngIf="showHtmlContent==true">
+
+    <div class="main-subContainer">
+
+        <div class="left-nav left-nav-hideMobile">
+            <div class="left-navInner">
+                <!--     style="cursor: pointer;"-->
+                <div class="yourProgress">
+                    <h1>{{"Your Progress" | translate}}</h1>
+                    <div class="progressDetails">
+                        <!-- <div class="details" *ngFor="let case of formSequence;index as i;">
+                    <div class="step-count" >
+                      <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
+                        {{ i + 1 }}
+                      </button>
+                      <button *ngIf="i == getFormIndexValue() " class="btn btn-default" class="nav-last">
+                        {{i+1}}
+                      </button>
+                      <button *ngIf="i > getFormIndexValue() " class="btn btn-default" class="nav-bottom">
+                        {{i+1}}
+                      </button>
+                    </div>
+                    <div *ngIf="i < getFormIndexValue()" class="line-container">
+                      <div class="line"></div>
+                    </div>
+                    <div *ngIf="i == getFormIndexValue() && i != formSequence.length-1" class="line-container">
+                      <div class="line1"></div>
+                    </div>
+                    <div *ngIf="i > getFormIndexValue() && i != formSequence.length-1" class="line-container">
+                      <div class="line2"></div>
+                    </div>
+                    <div class="step-label">{{case.formName | translate}}</div>
+                  </div> -->
+                    </div>
+                    <!-- <div class="seperateLine"></div>
+                <div class="emailCustomerMain">
+                  <img src="assets/Img/icon_email_orange.svg">
+                  <h5>Email your customer a product brochure</h5>
+                  <p>This will help them browse later</p>
+                  <a>Send brochure</a>
+                </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <form [formGroup]="renewalFormGroup" style="margin-bottom: 20%;">
+                <!-- <h2 *ngIf="form.formTitle!=''">{{form.formTitle}}</h2> -->
+                <!-- <div class="card-body"> -->
+                <ng-container *ngFor="let section of form.formSections">
+                    <div *ngIf="section.visible" class="card-body accordionCard"
+                        [class.collapsed]="isSectionCollapsed(section.sectionTitle)" [class]="section.class">
+                        <div class="accordionCardHeader" *ngIf="section.visibleLabel == true"
+                            (click)="toggleSection(section.sectionTitle)">
+                            <h3 [innerHTML]="section.sectionTitle | translate" [class]="section.class"></h3>
+                            <span class="accordionArrow"
+                                [class.rotated]="isSectionCollapsed(section.sectionTitle)"></span>
+                        </div>
+                        <div class="accordionCardBody" *ngIf="!isSectionCollapsed(section.sectionTitle)">
+                            <ng-container *ngFor="let control of section.formControls; index as h">
+                                <div *ngIf="['text', 'email', 'password', 'number','time'].includes(control.type)"
+                                    [class]="control.class" class="typecss" [hidden]="!control.visible">
+                                    <div class="input-container">
+                                        <input *ngIf="!control.disabled" class="inputField_Text"
+                                            formControlName="{{ control.name }}" [type]="control.type"
+                                            [ngClass]="{'has-value': hasAnyValue(control)}" [id]="control.name"
+                                            [name]="control.name" (change)="onInputChange($event, control)">
+                                        <input *ngIf="control.disabled" class="inputField_Text_disabled"
+                                            formControlName="{{ control.name }}" [type]="control.type"
+                                            [id]="control.name" [name]="control.name"
+                                            [ngClass]="{'disabled-has-value': hasAnyValue(control)}"
+                                            (change)="onInputChange($event, control)" readonly>
+                                        <label *ngIf="control.visibleLabel">{{ control.label?(control.label |
+                                            translate):''}}
+                                            <span *ngIf="control.validators">*</span>
+                                        </label>
+                                    </div>
+                                    <!-- <label *ngIf="control.visibleLabel==true">{{ control.label }}</label> -->
+                                    <small
+                                        *ngIf="renewalFormGroup.get(control.name)?.invalid && (renewalFormGroup.get(control.name)?.touched)"
+                                        class="text-danger">{{ getValidationErrors(control)?
+                                        (getValidationErrors(control)|
+                                        translate) : ''}}
+                                    </small>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </ng-container>
+                <!-- </div> -->
+            </form>
+        </div>
+    </div>
+</div>

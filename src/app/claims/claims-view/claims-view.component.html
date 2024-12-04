@@ -30,9 +30,9 @@
 
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" id="memberName" name="memberName" formControlName="memberName" [ngClass]="{'has-value': true}">
+                                <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberName" [ngClass]="{'has-value': true}">
                                     <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
-                                    <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member">{{ member | translate }}</option>
+                                    <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.id">{{ member.memberName | translate }}</option>
                                 </select>
                                 <label for="member">{{"Select Member" | translate}}</label>
                                 <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
@@ -377,7 +377,7 @@
                                                 <div class="uploadedFiles_headInfo">
                                                     <div class="headInfo_item">
                                                         <div class="editable-label" [ngClass]="{ 'editing': file.isEditing, 'edited': file.isEdited }">
-                                                            <ng-container *ngIf="!file.isEditing">
+                                                            <!-- <ng-container *ngIf="!file.isEditing">
                                                                 <span class="label-text">{{ file.label | translate}}</span>
                                                                 <button type="button" id="labeledit" name="labeledit" (click)="startEditing(file)" class="edit-button">
                                                                     <img src="assets/Img/icon_pencil_blue.svg">
@@ -385,12 +385,40 @@
                                                             </ng-container>
                                                             <ng-container *ngIf="file.isEditing">
                                                                 <input type="text" [formControl]="editableControl" (blur)="stopEditing(file)" (keydown)="onLabelKeyDown($event, file)" autofocus />
-                                                            </ng-container>
+                                                            </ng-container> -->
+                                                            <ng-container *ngIf="file.isEditing">
+                                                                <div class="label-editing-container">
+                                                                    <form [formGroup]="file.documentLabelForm">
+                                                                        <select formControlName="documentLabel" class="form-control mb-2">
+                                                                            <option value="">Label this document</option>
+                                                                            <option *ngFor="let label of documentLabelOptions" [value]="label">
+                                                                                {{ label }}
+                                                                            </option>
+                                                                        </select>
+                                                                    
+                                                                    <input 
+                                                                      *ngIf="file.documentLabelForm.get('documentLabel')?.value === 'Others'"
+                                                                      type="text" 
+                                                                      formControlName="customLabel" 
+                                                                      class="form-control" 
+                                                                      placeholder="Enter custom label"
+                                                                      (blur)="onCustomLabelBlur(file)"
+                                                                    />
+                                                                  </form>
+                                                                </div>
+                                                              </ng-container>
+                                                      
+                                                              <ng-container *ngIf="!file.isEditing">
+                                                                <span class="label-text">{{ file.label | translate}}</span>
+                                                                <button type="button" id="labeledit" name="labeledit" (click)="startEditing(file)" class="edit-button">
+                                                                  <img src="assets/Img/icon_pencil_blue.svg">
+                                                                </button>
+                                                              </ng-container>
                                                         </div>
                                                     </div>
                                                     <div class="headInfo_item">
-                                                        <div class="upload-success" *ngIf="uploadSuccess"><img src="assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
-                                                        <div class="upload-fail" *ngIf="!uploadSuccess"><img src="assets/Img/icon_failure.svg"><span class="failed-text">Failed</span></div>
+                                                        <!-- <div class="upload-success" *ngIf="uploadSuccess"><img src="assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
+                                                        <div class="upload-fail" *ngIf="!uploadSuccess"><img src="assets/Img/icon_failure.svg"><span class="failed-text">Success</span></div> -->
                                                         <div *ngIf="file.uploadDateTime">
                                                             <span class="date-time">{{ file.formattedUploadDateTime }}</span>
                                                         </div>

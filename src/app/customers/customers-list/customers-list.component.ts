@@ -1,4 +1,4 @@
-import { Component, HostListener} from '@angular/core';
+import { Component, HostListener, Type} from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
 import { DatePipe } from "@angular/common";
 import { CustomerList } from 'src/app/interface/customers.interface';
@@ -41,7 +41,13 @@ export class CustomersListComponent {
   moreInfoIndex: number | null = null;
   activePolicy?: number= 1;
   filteredPolicyDetails = [];
-  
+  customerInfo:boolean =false;
+  BasicDetailsInfo:any;
+  selectedFilter: string = 'basicDetails';
+  documents:any[]=[];
+  selectedDocument: any = null;
+  isDownloadModalOpen: boolean = false;
+
   constructor(
     private customerService: CustomersService ,private datePipe: DatePipe,
     private commonService:CommonService,private toast: NgToastService,
@@ -82,6 +88,7 @@ export class CustomersListComponent {
     this.rows = event.rows;
     this.page = Math.floor(this.first / this.rows) + 1;
     this.getCustomerList();
+    this.moreInfoIndex=null
   }
   getCustomerList() {
     this.customerListRequestBody.pageNumber = this.page;
@@ -310,58 +317,130 @@ toggleMoreInfo(index: number): void {
       }
     );
   }
-  download(item: any, event: string) {
-    const downloadRequestBody={
-      EventName:"Search policy kit request from customers",
-      AgentCode:this.agentCode,
-      ReferenceId:this.agentCode,
-      SearchOperator:"AND",
-      SearchRequest: [
+  searchDocument(item: any, policy: any) {
+    const searchDocumentRequestBody = {
+      referenceId: this.agentCode,
+      searchRequest: [
         {
-          CategoryID: "",
-          DocumentID: "",
-          ReferenceID: "",
-          FileName: "",
-          Description: "",
-          DataClassParam: [
+          categoryID: "",
+          description: "",
+          dataClassParam: [
             {
-                DocSearchParamId: "2",
-                Value: "21-24-0002917-00"
+              docSearchParamId: "2",
+              value: policy.policyNumber,
             },
             {
-                DocSearchParamId: "15",
-                Value: "PS_04"
-            }
-          ]
-        }
+              docSearchParamId: "15",
+              value: "PS_04",
+            },
+          ],
+        },
       ],
-      Category: "N/A",
-      UserRole: "Guest",
-      SessionId: "0000",
-      UserLevel: "Basic",
-      BranchCode: "000",
-      Designation: "N/A",
-      IntCategory: "N/A",
-      SourceSystemName: "Portal"
-    }
-    this.customerService.downloadCustomerData(downloadRequestBody).subscribe(
+      agentCode: this.agentCode,
+      eventName: "Search policy kit request from customers",
+      sourceSystemName: "",
+      searchOperator: "AND",
+    };
+    this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(
       (response: any) => {
-        if (response.isSuccess) {
-          this.toast.success({ detail: "", summary: "customer data downloaded successfully.", duration: 2000 });
+        if (response.isSuccess) {          
+          const searchResponse = response.data.searchResponse;
+          console.log("search Response",searchResponse);
+          if (!searchResponse || searchResponse.length === 0) {
+            this.toast.error({ detail: "", summary: "No document found.", duration: 3000 });
+          }
+          else{
+            this.documents = searchResponse;
+            this.isDownloadModalOpen = true; 
+            console.log("modal opened",this.isDownloadModalOpen);
+
+          }
         } else {
-          this.toast.error({ detail: "", summary: "Failed to downloaded customer data.", duration: 2000 });
+          this.toast.error({ detail: "", summary: "Failed to search document.", duration: 2000 });
         }
       },
       (error: any) => {
-        this.toast.error({ detail: "", summary: "Error while downloaded customer data.", duration: 2000 });
+        console.error("Search document error", error);
+        this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
       }
-    )
+    );
+  }
+  downloadPolicyKit() {
+    if (!this.selectedDocument) {
+      this.toast.error({ detail: "", summary: "Please select a document to download.", duration: 3000 });
+      return;
+    }  
+    const downloadPolicyKitRequestBody = {
+      agentCode: this.agentCode,
+      referenceId: this.agentCode,
+      eventName: "Download policy kit request from customers",
+      proposalNumber: "",
+      downloadRequest: [
+        {
+          omniDocImageIndex: this.selectedDocument.omniDocImageIndex,
+          fileName: this.selectedDocument.fileName,
+        },
+      ],
+      sourceSystemName: "",
+      identifier: "",
+    };
+    console.log("Download Request Body:", downloadPolicyKitRequestBody);
+    this.customerService.downloadDocumentApi(downloadPolicyKitRequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess && response.data?.downloadResponse?.length > 0) {
+          const file = response.data.downloadResponse[0];
+          if (file.byteArray && file.fileName) {
+            const byteArray = new Uint8Array(
+              atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
+            );
+            // Create a Blob and download the file
+            const blob = new Blob([byteArray], { type: "application/pdf" });
+            const link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = file.fileName;
+            link.click();  
+            this.selectedDocument = null;
+            this.isDownloadModalOpen=false
+          }
+        } else {
+          this.toast.error({ detail: "", summary: "No file found to download.", duration: 3000 });
+        }
+      },
+      (error: any) => {
+        console.error("Download Policy Kit Error:", error);
+        this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+      }
+    );
+  }
+  onDocumentSelectionChange(document: any, event: any) {
+    if (event.target.checked) {
+      this.selectedDocument = {
+        fileName: document.fileName,
+        omniDocImageIndex: document.omniDocImageIndex,
+      };
+    } else {
+      this.selectedDocument = null;
+    }
   }
   
-  expandedRowIndex: any | null = false;
+  
+  // expandedRowIndex: any | null = false;
 
-  toggleDetails(index: any): void {
-      // Toggle row details visibility
-      this.expandedRowIndex = !this.expandedRowIndex
+  // toggleDetails(index: any): void {
+  //     this.expandedRowIndex = !this.expandedRowIndex
+  // }
+  getCustomerInfo() {
+    this.customerInfo = true;
+  }
+  backSubquotes(){
+    this.customerInfo=false;
+  }
+  fetchDetails(type: string) {
+  this.selectedFilter=type
+  if(type=='basicDetails'){}
+  else if(type=='productDetails'){}
+  else if(type=='insuredDetails'){}
+  else if(type=='claimDetails'){}
+  else if(type=='basicDetails'){}
   }
 }

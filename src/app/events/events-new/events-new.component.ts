@@ -21,6 +21,7 @@ export class EventsNewComponent implements OnInit {
     { value: 'Demo', label: 'Demo' },
     { value: 'Other', label: 'Other' },
     { value: 'Meeting', label: 'Meeting' },
+    { value: 'BirthdayReminder', label: 'BirthdayReminder' },
     { value: 'Follow-up', label: 'Follow-up' },
     { value: 'Training', label: 'Training' },
     { value: 'Webinar', label: 'Webinar' },
@@ -43,7 +44,7 @@ export class EventsNewComponent implements OnInit {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
-          this.translateService.use('en'); // Fallback to English if translation file is missing
+          this.translateService.use('en'); 
         }
       });
     });
@@ -53,15 +54,15 @@ export class EventsNewComponent implements OnInit {
   saveForm(): void {
     this.saveEvent = this.fb.group({
       agentCode: localStorage.getItem('agentCode'),
-      customerName: ['', Validators.required],
+      customerName: ['',  [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')]],
       mobileNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      activityTitle: ['', Validators.required],
+      activityTitle: ['', [Validators.required, Validators.pattern('^[A-Za-z\\s]+$')]],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       startTime: ['', Validators.required],
       endTime: ['', Validators.required],
       activityType: ['', Validators.required],
-      note: ['']
+      note: ['',[Validators.required, Validators.pattern('^[A-Za-z0-9\\s.,!?;:()-]*$')]]
     });
   }
 

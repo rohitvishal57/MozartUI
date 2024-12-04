@@ -21,4 +21,12 @@ export class CustomersService {
       const downloadCustomerData=this.configService.config.baseUrl + this.configService.config.download;
       return this.http.post<any>(downloadCustomerData,reqBody)
     }
+    searchDocumentApi(reqBody:any){
+      const searchDocument=this.configService.config.baseUrl + this.configService.config.searchDocument;
+      return this.http.post<any>(searchDocument,reqBody)
+    }
+    downloadDocumentApi(reqBody:any){
+      const downloadDocument=this.configService.config.baseUrl + this.configService.config.downloadDocument;
+      return this.http.post<any>(downloadDocument,reqBody)
+    }
 }

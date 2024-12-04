@@ -319,3 +319,55 @@ h6 {
 		padding: 4px 9px 4px;
 	}
 }
+
+:host ::ng-deep .contentBody {
+	display: block; 
+  }
+
+.data-row {
+    display: flex;
+    flex-direction: row;
+	justify-content:space-between;
+}
+:host ::ng-deep .actionItem img,
+:host ::ng-deep .actionItem span {
+  vertical-align: unset !important; 
+  color: red;
+}
+.accordionMain .accordionItem {
+    background: var(--white-color);
+    border-radius: 16px;
+    padding: 0;
+    gap: 14px;
+	margin-top: 10px;
+	margin-bottom: 40px;
+}
+
+// .quickFilterMain {
+//     padding: 12px 18px;
+//     align-items: center;
+//     // border: 1px solid rgb(231, 222, 222);
+
+// }
+// .quickFilterMain .quickFilter {
+//     gap: 17px;
+// }
+.block_bg_lightGrey, .block_bg_lightgreen {
+    border: 1px solid rgb(231, 222, 222);
+	background: #F7F7F7; 
+    padding: 16px;
+    border-radius: 16px;
+    position: unset; 
+	margin-top: 20px;
+	opacity: 1px;
+}
+.cardViewMain .cardViewWraper{
+	margin-top: 20px;
+
+}
+header h3 {
+	padding: 10px 0;
+	color: rgb(29, 26, 26);
+	font-weight: 500;
+  }
+  

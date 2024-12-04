@@ -12,9 +12,21 @@ export class ClaimsViewService {
     const getClaimsList = this.configService.config.baseUrl + this.configService.config.getClaimsList;
     return this.httpService.post(getClaimsList, data);
   }
+
+  getClaimStatusCounts(req:any,agentCode: any) {
+    const getClaimStatusCountsUrl = this.configService.config.baseUrl + this.configService.config.getClaimStatusCounts+`=${agentCode}`;
+    return this.httpService.post(getClaimStatusCountsUrl, req);
+  }
   getProposalDetails(agentCode: string) {
     const url = `${this.configService.config.baseUrl}${this.configService.config.getProposalDetails}=${agentCode}`;
     return this.httpService.get<any>(url);
+  }
+
+  getMemberDetails(member:any){
+    const getMemberDetails = this.configService.config.baseUrl + this.configService.config.getMemberDetails;
+    return this.httpService.post(getMemberDetails, member)
+//return this.httpService.post('https://localhost:7026/GetMemberDetails', member);
+
   }
   saveClaims(saveData: any) {
     const saveClaims = this.configService.config.baseUrl + this.configService.config.saveClaims;

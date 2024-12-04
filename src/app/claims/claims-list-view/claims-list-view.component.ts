@@ -30,6 +30,14 @@ export class ClaimsListViewComponent implements OnInit {
   rows: number = 10;
   page: number = 1;
   selectedStatus = 'all';
+  claimStatusCounts: any = {
+    all: 0,
+    active: 0,
+    approved: 0,
+    settled: 0,
+    rejected: 0,
+    underDeficiency: 0
+  };
   toggleSearchdropdown: boolean = false;
   searchInputControl = new FormControl("");
   selected: string = "";
@@ -44,11 +52,14 @@ export class ClaimsListViewComponent implements OnInit {
   maxDate: string | undefined;
   isSearch:boolean = false;
   productsList:any;
+  countsList: any = [];
+  status: string = "totalRecords";
   agentCode = localStorage.getItem('agentCode')
   StaticRequestTypes = [
     { name: 'Cashless', selected: false },
     { name: 'Reimbursement', selected: false },
   ];
+
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService, private languageService: LanguageService,
     private translateService: TranslateService){ }
 
@@ -63,6 +74,7 @@ export class ClaimsListViewComponent implements OnInit {
 
     this.fetchData(); 
     this.getProducts();
+    this.fetchClaimStatusCounts(this.agentCode);
   }
 
   claimsView(view:string){
@@ -76,6 +88,39 @@ export class ClaimsListViewComponent implements OnInit {
   }
 
   //-------------filters--------------//
+  claimSatusCount = {
+    "AgentCode": this.agentCode
+  }
+
+  fetchClaimStatusCounts(agentCode:any) {
+    this.claimsService.getClaimStatusCounts(this.claimSatusCount, agentCode)
+      .subscribe((response:any) => {
+        if (response) {
+          response.data.forEach((item:any) => {
+            this.claimStatusCounts[this.mapStatusName(item.claimStatus)] = item.totalCount;
+          });
+          this.claimStatusCounts.all = response.data.reduce((total:any, item:any) => total + item.totalCount, 0);
+        }
+      });
+  }
+
+  mapStatusName(status: string): string {
+    switch (status) {
+      case 'Approved':
+        return 'approved';
+      case 'Intimated':
+        return 'active';
+      case 'underDeficiency':
+        return 'underDeficiency';
+      case 'Rejected':
+        return 'rejected';
+      case 'Settled':
+        return 'settled';
+      default:
+        return 'all';
+    }
+  }
+
   filterClaims(status: string) {
     this.claimsReqBody.status = status;
     this.selectedStatus = status;
@@ -115,7 +160,7 @@ claimsReqBody =  {
     "fromDate": null,
     "toDate": null
   }
-
+  
 fetchData(): void {
   if (!this.isSearch) {
     this.claimsReqBody.start = (this.page - 1) * this.rows;
@@ -125,8 +170,9 @@ fetchData(): void {
   }
   this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
     if (res.data && res.statusCode == "200" && res.isSuccess) {
-    this.claims = res.data.claimDetails;      
-   // this.productsList = res.claimDetails     
+    this.claims = res.data.claimDetails;   
+    this.countsList = res.data;   
+    // this.productsList = res.claimDetails     
     this.gridClaimsData = res.data.claimDetails; 
     this.totalRecords = res.data.totalRecords;    
 }
@@ -269,6 +315,10 @@ clear() {
 
   applySearch(): void {
     let searchValue = this.searchInputControl.value?.trim();
+    if (!searchValue) {
+        this.resetFilters();
+        return;
+    }
     if (searchValue && this.searchInputControl.valid) {
       this.claimsReqBody.searchType = this.selected;
       this.claimsReqBody.searchString = [searchValue];    
@@ -278,6 +328,24 @@ clear() {
 
     }
   }
+  onInputChange(): void {
+    if (!this.searchInputControl.value) {
+        this.resetFilters();
+    }
+}
+
+resetFilters(): void {
+    this.selected = '';
+    // Optionally, reset any other states related to the search, e.g., search data
+    this.claimsReqBody.searchType = '';
+    this.claimsReqBody.searchString = [];
+    this.isSearch = false;
+    this.first = 0;
+
+    // You can call fetchData() to fetch all data if needed, or leave it empty for showing all
+    //this.fetchData();
+}
+
   onSelectChanges(event: any): void {
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
@@ -298,6 +366,8 @@ getPlaceholder(): string {
       return 'Enter Request ID';
     } else if (this.selected === 'memberId') {
       return 'Enter Member ID';
+    } else if (this.selected === 'mobileNumber') {
+      return 'Enter Mobile Number';
     }
   else {
       return 'Search...';

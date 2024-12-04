@@ -21,7 +21,7 @@ import { LanguageService } from 'src/app/services/language.service';
 })
 export class ClaimsViewComponent {
   @Input() uploadedFiles: {
-    documentId:string;
+    documentId: string;
     name: string;
     type: string;
     size: number;
@@ -37,6 +37,7 @@ export class ClaimsViewComponent {
     documentName?: string;
     documentType?: string;
     createdBy?: string;
+    documentLabelForm: FormGroup
   }[] = [];
   // uploadedFiles: File[] = [];
   form!: FormGroup;
@@ -45,7 +46,7 @@ export class ClaimsViewComponent {
   proposalNumbers: string[] = [];
   policyNumbers: string[] = [];
   productNames: string[] = [];
-  memberNames: string[] = [];
+  memberNames: any[] = [];
   claimTypes: string[] = [];
   showQuickActions = false;
   @Input() label: string = "Label this document";
@@ -56,6 +57,7 @@ export class ClaimsViewComponent {
   uploadDateTime: Date | null = null;
   formattedUploadDateTime: string = "";
   totalFilesCount = 0;
+  selectedMember:any;
   uploadedFilesCount = 0;
   uploadStatus = "0 of 0 files uploaded";
   failedFilesCount = 0;
@@ -78,18 +80,33 @@ export class ClaimsViewComponent {
   selectedCoverName: string = "";
   index: number = 0;
   selectedHospital: any;
-  allowedFileTypes: string[] = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/bmp']; 
+  allowedFileTypes: string[] = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'image/bmp'];
   uploadValidFormat: boolean = false;
   hospitalAddress: any;
   searchText: string = '';
-  isDropdownOpen: boolean = false;  
-  selectedPolicyNumber:any;
+  isDropdownOpen: boolean = false;
+  selectedPolicyNumber: any;
   isFocused: boolean = false;
-  selectedFile:any;
+  selectedFile: any;
   fromDate: any;
   toDate: any;
   maxDate = new Date().toISOString().split('T')[0];
   isFilenotSelected: boolean = false;
+  policyMembersList: any[] = [];
+  MemberIdList: any;
+  documentLabelOptions = [
+    'govt/KYC ID',
+    'Hospital bill invoice',
+    'Investigation report',
+    'Doctor’s Prescription',
+    'NEFT/ Cancelled cheque/ Passbook',
+    'Hospital discharge form',
+    'Consultation form',
+    'Claim form',
+    'Others'
+  ];
+
+  documentLabelForm!: FormGroup;
 
   coverNames = [
     "AYUSH Treatment",
@@ -139,6 +156,25 @@ export class ClaimsViewComponent {
   }
 
   ngOnInit(): void {
+    this.documentLabelForm = this.fb.group({
+      documentLabel: [''],
+      customLabel: ['']
+    });
+
+    // Listen to changes in document label dropdown
+    const documentLabelControl = this.documentLabelForm.get('documentLabel');
+    const customLabelControl = this.documentLabelForm.get('customLabel');
+
+    if (documentLabelControl && customLabelControl) {
+      documentLabelControl.valueChanges.subscribe(value => {
+        if (value === 'Others') {
+          customLabelControl.enable();
+        } else {
+          customLabelControl.disable();
+          customLabelControl.setValue('');
+        }
+      });
+    }
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -153,10 +189,15 @@ export class ClaimsViewComponent {
     this.fetchStates();
     const policyNumberControl = this.form.get('policyNumber');
   }
-  
-  navigateToListClaim(){
-    this.router.navigate(['claims/claimsList'])
 
+  initializeDocumentLabelForm(): FormGroup {
+    return this.fb.group({
+      documentLabel: ['', Validators.required],
+      customLabel: [{ value: '', disabled: true }, Validators.maxLength(100)]
+    });
+  }
+  navigateToListClaim() {
+    this.router.navigate(['claims/claimsList'])
   }
 
   saveUpload(): void {
@@ -182,9 +223,9 @@ export class ClaimsViewComponent {
   createForm(): void {
     this.form = this.fb.group({
       id: localStorage.getItem("agentCode"),
-      policyNumber: ["",Validators.required],
-      proposalNumber: ["",],
-      memberName: ["",Validators.required],
+      policyNumber: ["", Validators.required],
+      proposalNumber: [""],
+      memberName: [""],
       productName: [""],
       fullName: [""],
       policyType: ["",],
@@ -202,7 +243,7 @@ export class ClaimsViewComponent {
       reasonForCoPay: [""],
       coverName: [""],
       AgentCode: localStorage.getItem("agentCode"),
-      claimType: ["",Validators.required],
+      claimType: ["", Validators.required],
       notes: [""],
       proposerName: [""],
       state: ["", Validators.required],
@@ -230,25 +271,25 @@ export class ClaimsViewComponent {
   }
 
   handleCoverNameValidation(coverName: string): void {
-    
+
     const stateControl = this.form.get('state');
     const cityControl = this.form.get('city');
     const hospitalNameControl = this.form.get('hospitalName');
     const hospitalAddressControl = this.form.get('hospitalAddress');
-    
+
     if (coverName === 'AYUSH Treatment') {
       // Remove validators for state, city, and hospital
       stateControl?.clearValidators();
       cityControl?.clearValidators();
       hospitalNameControl?.clearValidators();
       hospitalAddressControl?.clearValidators();
-  
+
       // Update validity without triggering validation
       stateControl?.updateValueAndValidity({ onlySelf: true });
       cityControl?.updateValueAndValidity({ onlySelf: true });
       hospitalNameControl?.updateValueAndValidity({ onlySelf: true });
-      hospitalAddressControl?.updateValueAndValidity({onlySelf: true});
-  
+      hospitalAddressControl?.updateValueAndValidity({ onlySelf: true });
+
       // Optional: Clear values if needed
       stateControl?.setValue('');
       cityControl?.setValue('');
@@ -261,7 +302,7 @@ export class ClaimsViewComponent {
       hospitalNameControl?.setValidators([Validators.required]);
       hospitalAddressControl?.setValidators([Validators.required]);
 
-  
+
       // Update validity
       stateControl?.updateValueAndValidity();
       cityControl?.updateValueAndValidity();
@@ -289,9 +330,9 @@ export class ClaimsViewComponent {
     this.claimsService.getProposalDetails(this.agentCode).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.response = response.data;          
+          this.response = response.data;
           const allData: ClaimData[] = response.data;
-          this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');          
+          this.proposalNumbers = this.extractUniqueValues(allData, 'proposalNumber');
           this.policyNumbers = this.extractUniqueValues(
             allData,
             "policyNumber"
@@ -313,32 +354,52 @@ export class ClaimsViewComponent {
 
   handleDropdownChange(value: string): void {
     const selectedPolicyNumber = value;
-      this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
+    this.form.get('policyNumber')?.valueChanges.subscribe(policyValue => {
       if (!policyValue) {
         this.form.get('memberName')?.setValue('');
-        this.memberNames = []; 
+        this.memberNames = [];
       }
     });
     const filteredMembers = this.response.filter(
       (item: any) => item.policyNumber === selectedPolicyNumber
     );
-      this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
-      this.form.get("memberName")?.setValue("");
-      this.cdr.markForCheck();
+    this.memberNames = this.extractUniqueValues(filteredMembers, "fullName");
+    this.form.get("memberName")?.setValue("");
+    this.cdr.markForCheck();
+    this.getPolicyMembers(value)
   }
+  getPolicyMembers(value: string) {
+    const membersReq = {
+      "AgentCode": localStorage.getItem("agentCode"),
+      "policyNumber": value
+    }
 
+    this.claimsService.getMemberDetails(membersReq).subscribe(
+      (resp: any) => {
+        if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
+          this.policyMembersList = resp.data.policyMembersList          
+          this.getMemberIdList(this.policyMembersList)          
+        }
+      },
+      (err) => {
+        console.log(err);
+      });
+  }
+  getMemberIdList(membersList: Array<any>) {
+    this.memberNames = membersList;
+  }
   filterList(event: KeyboardEvent): void {
     const input = (event.target as HTMLInputElement).value.toLowerCase();
     this.form.patchValue({
-      "memberName":"",
-     
+      "memberName": "",
+
     })
-    
-    this.filteredPolicyList = this.policyNumbers.filter((item : any) =>
+
+    this.filteredPolicyList = this.policyNumbers.filter((item: any) =>
       item.toLowerCase().includes(input)
     );
     const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    const regex = /^[0-9-]$/; 
+    const regex = /^[0-9-]$/;
 
     if (allowedKeys.includes(event.key)) {
       return;
@@ -346,30 +407,30 @@ export class ClaimsViewComponent {
     // Prevent default if the key is not allowed
     if (!regex.test(event.key)) {
       event.preventDefault();
-    }  
+    }
   }
 
   onInput(event: KeyboardEvent): void {
     const input = event.target as HTMLInputElement;
     const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-  
+
     if (allowedKeys.includes(event.key)) {
       return;
     }
-  
+
     const isDigit = /^[0-9]$/.test(event.key);
     if (!isDigit) {
       event.preventDefault();
       return;
     }
-  
+
     const currentValue = input.value;
     if (currentValue === '' && event.key === '0') {
       event.preventDefault();
     }
   }
-  
-  toggleDropdown(open: boolean): void {    
+
+  toggleDropdown(open: boolean): void {
     this.isDropdownOpen = open;
   }
 
@@ -383,7 +444,7 @@ export class ClaimsViewComponent {
     } else if (dateType === "toDate" && this.toDate) {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
-}
+  }
 
   // ngAfterViewInit() {
   //   document.addEventListener('click', this.handleClickOutside.bind(this));
@@ -398,18 +459,18 @@ export class ClaimsViewComponent {
       input.blur(); // This will programmatically remove the focus from the input field
     }
   }
-  
+
   onClaimTypeChange(event: any): void {
     this.form.patchValue({
-      "state":"",
-      "hospitalName":"",
-      "hospitalAddress":"",
-      "city":"",
-      "claimedAmount":"",
-      "notes":"",
-      "ailmentDescription":"",
-      "dischargeDate":"",
-      "admissionDate":""
+      "state": "",
+      "hospitalName": "",
+      "hospitalAddress": "",
+      "city": "",
+      "claimedAmount": "",
+      "notes": "",
+      "ailmentDescription": "",
+      "dischargeDate": "",
+      "admissionDate": ""
     })
 
     const selectedType = event.target.value;
@@ -482,7 +543,7 @@ export class ClaimsViewComponent {
       (info: any) => {
         console.log("resp", info);
         if (info.isSuccess) {
-          this.states = info.data.response;          
+          this.states = info.data.response;
         } else {
           console.error("Failed to fetch states", info.message);
         }
@@ -496,9 +557,9 @@ export class ClaimsViewComponent {
   onStateChange(event: any): void {
     this.selectedState = Number(event.target.value);
     this.form.patchValue({
-      "hospitalName":"",
-      "hospitalAddress":"",
-      "city":""
+      "hospitalName": "",
+      "hospitalAddress": "",
+      "city": ""
     })
     if (this.selectedState !== null) {
       this.fetchCities();
@@ -530,8 +591,8 @@ export class ClaimsViewComponent {
   onCityChange(event: any) {
     this.selectedCity = event.target.value;
     this.form.patchValue({
-      "hospitalName":"",
-      "hospitalAddress":""
+      "hospitalName": "",
+      "hospitalAddress": ""
     })
     if (this.selectedCity !== null) {
       this.fetchHospitals();
@@ -561,14 +622,14 @@ export class ClaimsViewComponent {
   fetchBlackListedHsp(event: any) {
     this.selectedHospital = event.target.value;
     if (this.selectedHospital) {
-      this.hospitalAddress = this.hospitals.filter(h => h.hospitalName ===  this.selectedHospital).map(h => h.hospitalAddress );
+      this.hospitalAddress = this.hospitals.filter(h => h.hospitalName === this.selectedHospital).map(h => h.hospitalAddress);
     } else {
-      this.hospitalAddress = '' 
+      this.hospitalAddress = ''
     }
     this.form.patchValue({
-      hospitalAddress : this.hospitalAddress
+      hospitalAddress: this.hospitalAddress
     })
-    
+
     let claimsBlackListHspReqBody = {
       agentId: 0,
       agentCode: localStorage.getItem("agentCode"),
@@ -588,9 +649,9 @@ export class ClaimsViewComponent {
     this.claimsService
       .getBlackListedhospitals(claimsBlackListHspReqBody)
       .subscribe((info: any) => {
-        console.log(info,'hspNMe');
-        if(this.selectedHospital.includes(info.hospitalName)){
-    console.log(info.hospitalName,'hn')
+        console.log(info, 'hspNMe');
+        if (this.selectedHospital.includes(info.hospitalName)) {
+          console.log(info.hospitalName, 'hn')
           console.error("Black listed hospital")
         }
       });
@@ -600,30 +661,76 @@ export class ClaimsViewComponent {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
   }
 
+  // onFileSelected(event: any): void {
+  //   const inputElement = event.target;
+  //   const files = inputElement.files as File[];
+  //   this.totalFilesCount += files.length;
+  //   this.isFilenotSelected = false;
+
+  //   for (let i = 0; i < files.length; i++) {
+  //     const file = files[i];
+  //     this.selectedFile = file;
+  //     // Check if the file was previously deleted and re-uploaded
+  //     const fileExists = this.uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size);
+
+  //     if (!fileExists && this.allowedFileTypes.includes(file.type)) {
+  //       // Initialize label with an empty value for new files
+  //       this.uploadedFiles.push({
+  //         documentId: uuidv4(),
+  //         name: file.name,
+  //         type: file.type,
+  //         size: file.size,
+  //         label: "Label this document",
+  //         isEditing: false,
+  //         isEdited: false,
+  //         uploadDateTime: new Date(),
+  //         editableControl: new FormControl(""),
+  //         formattedUploadDateTime: this.formatDate(new Date()),
+  //         status: "pending",
+  //         file: file,
+  //         policyNumber: this.saveForm.value.policyNumber,
+  //         documentName: this.saveForm.value.documentName,
+  //         documentType: this.saveForm.value.documentType,
+  //         createdBy: this.saveForm.value.createdBy,
+  //       });
+  //       this.uploadValidFormat = false;
+  //     } else if (fileExists) {
+  //       console.warn('File already uploaded.');
+  //     } else {
+  //       this.uploadValidFormat = true;
+  //     }
+  //   }
+
+  //   this.updateStatusLabel();
+  //   this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
+  // }
+
   onFileSelected(event: any): void {
     const inputElement = event.target;
     const files = inputElement.files as File[];
+
     this.totalFilesCount += files.length;
     this.isFilenotSelected = false;
-  
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       this.selectedFile = file;
-      // Check if the file was previously deleted and re-uploaded
-      const fileExists = this.uploadedFiles.some((uploadedFile) => uploadedFile.name === file.name && uploadedFile.size === file.size);
-  
+
+      const fileExists = this.uploadedFiles.some((uploadedFile) =>
+        uploadedFile.name === file.name && uploadedFile.size === file.size
+      );
+
       if (!fileExists && this.allowedFileTypes.includes(file.type)) {
-        // Initialize label with an empty value for new files
-        this.uploadedFiles.push({
+        const newFile = {
           documentId: uuidv4(),
           name: file.name,
           type: file.type,
           size: file.size,
           label: "Label this document",
-          isEditing: false,
+          editableControl: new FormControl(""),
+          isEditing: true,
           isEdited: false,
           uploadDateTime: new Date(),
-          editableControl: new FormControl(""),
           formattedUploadDateTime: this.formatDate(new Date()),
           status: "pending",
           file: file,
@@ -631,19 +738,72 @@ export class ClaimsViewComponent {
           documentName: this.saveForm.value.documentName,
           documentType: this.saveForm.value.documentType,
           createdBy: this.saveForm.value.createdBy,
-        });
-        this.uploadValidFormat = false;
+          documentLabelForm: this.initializeDocumentLabelForm()
+        };
+
+        // Add the new file to the uploadedFiles array
+        this.uploadedFiles.push(newFile);
+
+        // Clear the selected label for the new file
+        this.clearSelectedLabel(newFile);
+
       } else if (fileExists) {
         console.warn('File already uploaded.');
       } else {
         this.uploadValidFormat = true;
       }
     }
-  
+
     this.updateStatusLabel();
     this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
   }
-  
+
+
+  clearSelectedLabel(file: any): void {
+    // Reset the documentLabelForm for the newly uploaded file
+    file.documentLabelForm.reset({
+      documentLabel: '',
+      customLabel: ''
+    });
+
+    // Enable custom label control when "Others" is selected
+    const documentLabelControl = file.documentLabelForm.get('documentLabel');
+    const customLabelControl = file.documentLabelForm.get('customLabel');
+
+    if (documentLabelControl && customLabelControl) {
+      // Listen to document label changes and enable custom label when "Others" is selected
+      documentLabelControl.valueChanges.subscribe((selectedLabel: any) => {
+        if (selectedLabel === 'Others') {
+          customLabelControl.enable();  // Enable the custom label field
+        } else {
+          customLabelControl.disable(); // Disable it if not 'Others'
+        }
+      });
+    }
+  }
+
+
+
+  onCustomLabelBlur(file: any) {
+    const documentLabelControl = file.documentLabelForm.get('documentLabel');
+    const customLabelControl = file.documentLabelForm.get('customLabel');
+
+    if (documentLabelControl && customLabelControl) {
+      const selectedLabel = documentLabelControl.value;
+      const customLabel = customLabelControl.value;
+
+      file.label = selectedLabel === 'Others'
+        ? (customLabel || 'Others')
+        : selectedLabel;
+
+      if (file.label !== "Label this document") {
+        file.isEditing = false;
+        file.isEdited = true;
+      }
+    }
+  }
+
+
   uploadFiles(files: File[]): void {
     const fileNames: string[] = files.map((file) => file.name);
     const fileTypes: string[] = files.map((file) => file.type);
@@ -672,10 +832,10 @@ export class ClaimsViewComponent {
       };
       formData.append(`fileDetails[${index}].documentId`, metadata.documentId);
       formData.append(`fileDetails[${index}].AgentCode`, metadata.createdBy);
-      formData.append(`fileDetails[${index}].policyNumber`,metadata.policyNumber);
+      formData.append(`fileDetails[${index}].policyNumber`, metadata.policyNumber);
       formData.append(`fileDetails[${index}].labelName`, metadata.labelName);
-      formData.append(`fileDetails[${index}].documentName`,metadata.documentName);
-      formData.append(`fileDetails[${index}].documentType`,metadata.documentType);
+      formData.append(`fileDetails[${index}].documentName`, metadata.documentName);
+      formData.append(`fileDetails[${index}].documentType`, metadata.documentType);
       formData.append(`fileDetails[${index}].createdBy`, metadata.createdBy);
       formData.append(`fileDetails[${index}].file`, file.file, file.file.name);
       formData.append(`fileDetails[${index}].memberId`, metadata.memberId);
@@ -708,12 +868,13 @@ export class ClaimsViewComponent {
     const kb = bytes / 1024;
     return `${kb.toFixed(2)} KB`;
   }
-  
+
   onLabelKeyDown(event: KeyboardEvent, file: any): void {
     if (event.key === 'Enter') {
       this.stopEditing(file);
     }
   }
+
   updateStatusLabel(): void {
     // this.uploadStatus = `${this.uploadedFilesCount} of ${this.totalFilesCount} files uploaded`;
     this.uploadStatus = `${this.totalFilesCount} of ${this.totalFilesCount} files uploaded`;
@@ -725,11 +886,11 @@ export class ClaimsViewComponent {
       documentId: fileToDelete.documentId,
       claimNumber: ""
     };
-  
+
     this.claimsService.deleteFile(payload).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-            this.uploadedFiles = this.uploadedFiles.filter(
+          this.uploadedFiles = this.uploadedFiles.filter(
             (file) => file.documentId !== fileToDelete.documentId
           );
           this.totalFilesCount = this.uploadedFiles.length;
@@ -746,21 +907,72 @@ export class ClaimsViewComponent {
     );
   }
   ////////////////////file upload input label //////////////////
+  //   startEditing(file: any) {
+  //     file.isEditing = true;
+  //     if (!file.editableControl) {
+  //       file.editableControl = new FormControl(file.label);
+  //     }
+  //     this.editableControl.setValue("");
+  //   }
+
+  //  stopEditing(file: any) {
+  //     if (this.editableControl.value !== this.label) {
+  //       file.label = this.editableControl.value; 
+  //     }
+  //     file.isEditing = false;
+  //     file.isEdited = true;
+  //   }
+
+  // startEditing(file: any) {
+  //   file.isEditing = true;
+  //   const documentLabelControl = this.documentLabelForm.get('documentLabel');
+  //   const customLabelControl = this.documentLabelForm.get('customLabel');
+
+  //   if (documentLabelControl && customLabelControl) {
+  //     // Initialize form with current label
+  //     documentLabelControl.setValue(
+  //       this.documentLabelOptions.includes(file.label) ? file.label : 'Others'
+  //     );
+
+  //     if (documentLabelControl.value === 'Others') {
+  //       customLabelControl.enable();
+  //       customLabelControl.setValue(
+  //         this.documentLabelOptions.includes(file.label) ? '' : file.label
+  //       );
+  //     }
+  //   }
+  // }
   startEditing(file: any) {
     file.isEditing = true;
-    if (!file.editableControl) {
-      file.editableControl = new FormControl(file.label);
+    const documentLabelControl = file.documentLabelForm.get('documentLabel');
+    const customLabelControl = file.documentLabelForm.get('customLabel');
+
+    if (documentLabelControl && customLabelControl) {
+      documentLabelControl.setValue('');
+      customLabelControl.setValue('');
+      customLabelControl.disable();
     }
-    this.editableControl.setValue("");
+  }
+  stopEditing(file: any) {
+    const documentLabelControl = this.documentLabelForm.get('documentLabel');
+    const customLabelControl = this.documentLabelForm.get('customLabel');
+
+    if (documentLabelControl && customLabelControl) {
+      const selectedLabel = documentLabelControl.value;
+      const customLabel = customLabelControl.value;
+
+      // Determine the final label
+      file.label = selectedLabel === 'Others' ? customLabel : selectedLabel;
+
+      file.isEditing = false;
+      file.isEdited = true;
+    }
   }
 
- stopEditing(file: any) {
-    if (this.editableControl.value !== this.label) {
-      file.label = this.editableControl.value; 
-    }
-    file.isEditing = false;
-    file.isEdited = true;
+  memberIdChange(event:any){    
+    this.selectedMember = event.target.value;
   }
+
   ///////current date and time
   formatUploadDateTime() {
     if (this.uploadDateTime) {
@@ -769,12 +981,12 @@ export class ClaimsViewComponent {
   }
 
   submitRequest(): void {
-    debugger
     if (this.saveForm.valid || this.form.valid) {
-      const saveClaimData = { ...this.form.value };     
+      const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : null;
-  
+     // saveClaimData.memberName = this.form.get('memberName')?.setValue('memberName');
+
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,
         billAmount: bill.billAmount ? bill.billAmount.toString() : ""
@@ -785,12 +997,12 @@ export class ClaimsViewComponent {
         return;
       }
 
-      if (!saveClaimData.claimedAmount) {
-        saveClaimData.claimedAmount = 0;
-      }
-  
+      // if (!saveClaimData.claimedAmount) {
+      //   saveClaimData.claimedAmount = 0;
+      // }
+
       const coverName = this.form.get('coverName')?.value;
-      if(coverName){
+      if (coverName) {
 
         this.handleCoverNameValidation(coverName);
 
@@ -799,26 +1011,25 @@ export class ClaimsViewComponent {
           saveClaimData.city = "";
           saveClaimData.hospitalName = "";
         }
-      
-  
+
       }
-      
+
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
-  
+
       const documentsArray = this.uploadedFiles.map((file) => ({
         documentId: file.documentId,
         documentName: file.name,
         status: file.status,
         labelName: file.label
       }));
-      saveClaimData.documentsArray = documentsArray;  
+      saveClaimData.documentsArray = documentsArray;
       this.claimsService.saveClaims(saveClaimData).subscribe(
         (response: any) => {
           if (response?.isSuccess) {
             this.uploadSuccess = true;
-            this.toast.success({ detail: "Claims submitted successfully" });
+            this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
             this.router.navigate(["claims/claimsList"]);
           } else {
             this.toast.error({ detail: "Failed to submit claims" });
@@ -836,8 +1047,8 @@ export class ClaimsViewComponent {
       this.toast.error({ detail: "Please fill in the required form fields." });
     }
   }
-  
-  
+
+
 }
 
 

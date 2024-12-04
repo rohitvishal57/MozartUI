@@ -97,7 +97,6 @@ export class CreateLeadComponent implements OnInit {
       console.log("agent code is not present in local storege");
     }
 
-    let usr = storedAgentCode ? JSON.parse(storedAgentCode) : null;
     let obj = {
       "id": 0,
       "agent": storedAgentCode

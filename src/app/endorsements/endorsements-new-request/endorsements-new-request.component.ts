@@ -217,10 +217,13 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
 
-  onPolicyNoChange(event: KeyboardEvent) {
+  onPolicyNoChange(event:any) {
     const inputValue = (event.target as HTMLInputElement).value.trim();
     this.caseCreationForm.get('member').setValue('');
     this.MemberIdList = [];
+    if(event.target.value.length >= 16){
+      this.onChange(event.target.value);
+    }
   }
 
   validateNumberInput(event: any): void {

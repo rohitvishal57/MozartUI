@@ -4,7 +4,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { LeadsService } from '../leads.service';
 import { CommonService } from 'src/app/services/common.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from "@angular/common";
 import { NgToastService } from 'ng-angular-popup';
 import { ProductsService } from 'src/app/product/products/products.service';
@@ -79,6 +79,7 @@ export class LeadsListComponent {
   interestedProductName : string ='';
   interestedProductItem : any = '';
   ProductList :any = [];
+  leadId: any;
 
   constructor(
     private leadsService: LeadsService,
@@ -91,8 +92,8 @@ export class LeadsListComponent {
     private common: CommonService,
     private encryptionService: EncryptionService,
     private languageService: LanguageService,
-    private translateService: TranslateService
-
+    private translateService: TranslateService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
 
@@ -122,6 +123,18 @@ export class LeadsListComponent {
           this.translateService.use('en');
         }
       });
+    });
+
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeLeadStatus  = params['leadstatus'];
+      if(routeLeadStatus){
+        this.leadFilterStatus.map((leadStatus:any)=>{
+         if(leadStatus.name == routeLeadStatus){
+          leadStatus.selected = true;
+         } 
+        });
+        this.applyFilter();
+      }
     });
 
     this.assigneLeadModal = new bootstrap.Modal(document.getElementById('assigneLeadModal'));
@@ -213,10 +226,9 @@ export class LeadsListComponent {
     this.getLeadsList();
     this.activeFilter = filter;
   }
-
   getProducts() {
     const reqData = {
-      "agentCode": this.agentCode
+      agentCode: this.agentCode
     }
     this.commonService.Getproductlist(reqData).subscribe({
       next: (res) => {
@@ -224,7 +236,7 @@ export class LeadsListComponent {
         console.log("product list", this.productsList)
       },
       error: (err) => {
-        console.log("error coming form getproduct list API");
+        console.log("error coming form getproduct list API",err);
       }
     });
   }
@@ -270,6 +282,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.leadFilterStatus.forEach((leadStatus) => (leadStatus.selected = false));
     this.appliedFiltersCount = 0;
     this.toggeledropdown = false;
     this.startDate = "";
@@ -286,6 +299,7 @@ export class LeadsListComponent {
     this.filterLeads = false;
     this.productsList.forEach((product) => (product.selected = false));
     this.StaticPolicyTypes.forEach((policyType) => (policyType.selected = false));
+    this.leadFilterStatus.forEach((leadStatus) => (leadStatus.selected = false));
     this.appliedFiltersCount = 0;
     this.startDate = "";
     this.endDate = "";

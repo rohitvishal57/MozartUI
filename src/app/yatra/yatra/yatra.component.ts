@@ -6,7 +6,7 @@ import { DatePipe, DOCUMENT } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { tap } from 'rxjs';
+import {tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
@@ -129,7 +129,8 @@ export class YatraComponent {
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef,
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route: ActivatedRoute, private languageService: LanguageService, private aesEncryptService: AesEncryptionService,
-    private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe) { }
+    private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe) {
+     }
 
   ngOnInit() {
 
@@ -1026,7 +1027,7 @@ export class YatraComponent {
     this.dynamicStyle = this.renderer.createElement('link');
     this.renderer.setAttribute(this.dynamicStyle, 'rel', 'stylesheet');
     this.renderer.setAttribute(this.dynamicStyle, 'type', 'text/css');
-    this.renderer.setAttribute(this.dynamicStyle, 'href', 'assets/styles/dynamicForm/' + tf)
+    this.renderer.setAttribute(this.dynamicStyle, 'href', './assets/styles/dynamicForm/' + tf)
     this.renderer.appendChild(this.document.head, this.dynamicStyle);
     this.showHtmlContent = true;
   }
@@ -1263,7 +1264,7 @@ export class YatraComponent {
       this.yatraService.fetchPolicyDetailsFromFile(formData).subscribe({
         next: (response: any) => {
           console.log('File uploaded and policy details fetched:', response);
-          this.toast.success({ detail: "SUCCESS", summary: "Policy document uploaded and processed successfully.", duration: 3000 });
+          this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
           this.spinner.hide();
 
           this.isPolicyDetailsFetch = true;
@@ -2605,6 +2606,7 @@ export class YatraComponent {
                 }
               });
             });
+            this.flattenObject(this.formData);
           }
           else {
 
@@ -2631,7 +2633,7 @@ export class YatraComponent {
           // }
 
           // Process formData for flattening if needed
-          this.flattenObject(this.formData);
+          
           console.log(this.formData, this.form);
         }),
         tap(() => {
@@ -4997,7 +4999,6 @@ export class YatraComponent {
                 // }
                 option.selected = true;
                 if (this.dynamicFormGroup.value.totalPremium) {
-                  console.log("Hello");
 
                   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[this.selectedIndex];
                 }
@@ -5296,7 +5297,7 @@ export class YatraComponent {
         next: (response: any) => {
           console.log('KYC details:', response);
           if (response.isSuccess == true) {
-            this.toast.success({ detail: "SUCCESS", summary: "KYC Details Fetched Successfully", duration: 3000 });
+            this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
             // this.spinner.hide();
             console.log(response.data);
 
@@ -5304,7 +5305,7 @@ export class YatraComponent {
             if (typeof response.data === 'object' && response.data !== null) {
               Object.keys(response.data).forEach((key: any) => {
                 const fieldValue = response.data[key];
-                this.dynamicFormGroup.get(key)?.setValue(response.data[key])
+                this.dynamicFormGroup.get(key)?.setValue(fieldValue)
                 const insuredMemberDetailsControl = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
 
                 if (insuredMemberDetailsControl) {
@@ -5350,7 +5351,8 @@ export class YatraComponent {
                   section.formControls.forEach((control: any) => {
                     if (control.name === key) {
                       control.value = fieldValue;
-                      if (fieldValue !== null && fieldValue !== 'null' && fieldValue !== '') {
+                      if (fieldValue !== null && fieldValue !== 'null' && fieldValue !== '' &&
+                        key !== 'mobileNumber' && key !== 'emailId') {
                         control.disabled = true;
                       }
                     }
