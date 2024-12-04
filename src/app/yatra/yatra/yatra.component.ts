@@ -121,7 +121,7 @@ export class YatraComponent {
   covers: any[][] = [];
   documentId: any;
 
-
+  tooltipMessage: string = '';
   currentLanguage = 'en';
 
   constructor(private renderer: Renderer2, private el: ElementRef,
@@ -1692,6 +1692,7 @@ export class YatraComponent {
             Validators.required,
             Validators.pattern('[0-9]{4}')
           ]);
+          this.tooltipMessage = 'Please enter the last 4 digits of your Aadhar ID.';
           break;
 
         case 'Passport':
@@ -1699,6 +1700,7 @@ export class YatraComponent {
             Validators.required,
             Validators.pattern('^[A-Z][0-9]{2}(?:\\s?[0-9]{5})?$')
           ]);
+          this.tooltipMessage = 'Please specify Passport Number in the format: First character from (A-Z), followed by 2 numbers, an optional space, and 5 numbers.';
           break;
 
         case 'Voter ID':
@@ -1706,6 +1708,7 @@ export class YatraComponent {
             Validators.required,
             Validators.pattern('^[A-Z]{3}[0-9]{7}$')
           ]);
+          this.tooltipMessage = 'Please enter a valid Voter ID, e.g., WED1234567.';
           break;
 
         case 'Driving License':
@@ -1713,6 +1716,7 @@ export class YatraComponent {
             Validators.required,
             Validators.pattern('^[A-Z]{2}[0-9]{2}[0-9]{4}[0-9]{7}$')
           ]);
+          this.tooltipMessage = 'The first two characters should be upper-case alphabets representing the state code, followed by two digits representing the RTO code, four digits for the year, and seven digits.';
           break;
 
         case '10th (SSC) Mark sheet':
@@ -1720,10 +1724,12 @@ export class YatraComponent {
             Validators.required,
             Validators.pattern('^[0-9]{7}$')
           ]);
+          this.tooltipMessage = 'Please enter a valid SSC Marksheet number with 7 digits.';
           break;
 
         default:
           idNumberControl?.clearValidators();
+          this.tooltipMessage = '';
       }
 
       idNumberControl?.updateValueAndValidity();
@@ -3373,19 +3379,21 @@ export class YatraComponent {
       else {
         console.log('Form is invalid', this.dynamicFormGroup);
         let firstInvalidTabIndex: number | null = null;
-        this.form.formSections.forEach(section => {
-          section.formControls.forEach(control =>{
-            if(control.dynamicControls){
-              control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
-                const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
-                console.log(formGroup);
-                if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
-                  firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
-                }
+        if(this.dynamicFormGroup.get('insuredMemberDetails')){
+          this.form.formSections.forEach(section => {
+            section.formControls.forEach(control =>{
+              if(control.dynamicControls){
+                control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
+                  const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
+                  console.log(formGroup);
+                  if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
+                    firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
+                  }
+              })
+            }
             })
-          }
           })
-        })
+        }
         Object.keys(this.dynamicFormGroup.controls).forEach(field => {
           const control = this.dynamicFormGroup.get(field);
           if (control instanceof FormArray) {
