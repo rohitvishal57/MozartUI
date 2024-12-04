@@ -296,6 +296,13 @@
     .bottomInfoMain_comparePolices .bottomInfoSubMain .bi_right {
         justify-content:flex-end;
     }
+    .quickFilterMain_claims .quickFilterMain {
+        flex-direction: row;
+    }
+    .quickFilterMain_claims .quickFilterMain .quickFilterLeft, 
+    .quickFilterMain_claims .quickFilterMain .quickFilterRight {
+        width: auto;
+    }
 }
 @media (max-width:820px) {
     .mobile-flex-column {
@@ -515,6 +522,12 @@
     }
     .main_captcha .captcha-label {
         font-size: 18px !important;
+    }
+    .quickFilterMain_claims, .quickFilterMain_claims .quickFilterMain {
+        flex-direction: column-reverse;
+    }
+    .quickFilterMain_claims .claims_searchWraper .field_searchMain div button {
+        top: 6px !important;
     }
 }
 @media (max-width:390px){
