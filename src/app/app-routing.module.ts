@@ -2,11 +2,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { CommissionstatementComponent } from './commissionstatement/commissionstatement.component';
 
 const routes: Routes = [
   {
     path: 'notifications',
     component: NotificationsComponent
+  },
+  {
+    path: 'mycommissions',
+    component: CommissionstatementComponent
   },
   {
     path: '',

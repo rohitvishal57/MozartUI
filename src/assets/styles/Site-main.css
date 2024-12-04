@@ -2692,7 +2692,7 @@ input[type="search"]::-webkit-search-results-decoration {
   position: relative;
 }
 .quickFilterMain_claims .quickFilterMain .quickFilterLeft {
-  max-width: 350px;
+  /* max-width: 350px; */
 }
 .quickFilterMain_claims .quickFilterMain .quickFilter{
   flex-wrap: wrap;

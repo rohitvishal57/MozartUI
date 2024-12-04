@@ -126,7 +126,7 @@ export class LeadsListComponent {
     });
 
     this.activatedRoute.queryParams.subscribe((params : any) => {
-      let routeLeadStatus  = params['leadstatus'];
+      let routeLeadStatus  = params['status'];
       if(routeLeadStatus){
         this.leadFilterStatus.map((leadStatus:any)=>{
          if(leadStatus.name == routeLeadStatus){

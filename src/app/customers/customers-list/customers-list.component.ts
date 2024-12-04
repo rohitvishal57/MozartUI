@@ -8,6 +8,8 @@ import { NgToastService } from 'ng-angular-popup';
 import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { YatraService } from 'src/app/yatra/yatra/yatra.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-customers-list',
@@ -46,12 +48,17 @@ export class CustomersListComponent {
   selectedFilter: string = 'basicDetails';
   documents:any[]=[];
   selectedDocument: any = null;
+  insuredMemberDetails: any[] = [];
+  policyNumber: string | null = null;
+  customerID: string | null = null;
+  customerBasicDetails: any;
 
   constructor(
     private customerService: CustomersService ,private datePipe: DatePipe,
     private commonService:CommonService,private toast: NgToastService,
     private languageService: LanguageService,
-    private translateService: TranslateService,
+    private yatraService:YatraService,
+    private translateService: TranslateService, private activatedRoute: ActivatedRoute
   ) {}
 
   customerListRequestBody={
@@ -79,6 +86,9 @@ export class CustomersListComponent {
         }
       });
     });
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeStatus  = params['status'];
+    });
     this.getCustomerList();
     this.getProducts();
 
@@ -91,6 +101,7 @@ export class CustomersListComponent {
     this.getCustomerList();
     this.moreInfoIndex=null
   }
+
   getCustomerList() {
     this.customerListRequestBody.pageNumber = this.page;
     this.customerListRequestBody.pageSize = this.rows;
@@ -308,9 +319,9 @@ toggleMoreInfo(index: number): void {
     this.customerService.sendCustomerDetails(RequestBody).subscribe(
       (response: any) => {
         if (response.isSuccess) {
-          this.toast.success({ detail: "", summary: "customer data shared successfully.", duration: 2000 });
+          this.toast.success({ detail: "", summary: response.data.message, duration: 2000 });
         } else {
-          this.toast.error({ detail: "", summary: "Failed to send customer data.", duration: 2000 });
+          this.toast.error({ detail: "", summary: response.data.message || "Failed to send customer data.", duration: 2000 });
         }
       },
       (error: any) => {
@@ -348,13 +359,13 @@ toggleMoreInfo(index: number): void {
           const searchResponse = response.data.searchResponse;
           console.log("search Response",searchResponse);
           if (!searchResponse || searchResponse.length === 0) {
-            this.toast.error({ detail: "", summary: "No document found.", duration: 3000 });
+            this.toast.error({ detail: "", summary: response.message || "No document found.", duration: 3000 });
           }
           else{
             this.documents = searchResponse;
           }
         } else {
-          this.toast.error({ detail: "", summary: "Failed to search document.", duration: 2000 });
+          this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
         }
       },
       (error: any) => {
@@ -398,7 +409,7 @@ toggleMoreInfo(index: number): void {
             link.click();  
           }
         } else {
-          this.toast.error({ detail: "", summary: "No file found to download.", duration: 3000 });
+          this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
         }
       },
       (error: any) => {
@@ -418,25 +429,84 @@ toggleMoreInfo(index: number): void {
     }
   }
   
-  
-  // expandedRowIndex: any | null = false;
-
-  // toggleDetails(index: any): void {
-  //     this.expandedRowIndex = !this.expandedRowIndex
-  // }
-  getCustomerInfo() {
+  getCustomerInfo(policyNumber: string, customerID: string): void {
+    this.policyNumber = policyNumber;
+    this.customerID = customerID;
     this.customerInfo = true;
+    this.fetchDetails('basicDetails')
   }
   backSubquotes(){
     this.customerInfo=false;
+    this.selectedFilter='basicDetails';
+  }
+  getCustomrBasicDetails() {
+    const customerBasicDetailsRequestBody = {
+      customerID: this.customerID,
+      policyNumber: this.policyNumber,
+      agentCode: this.agentCode,
+    };
+  
+    this.customerService.getCustomerBasicDetailsApi(customerBasicDetailsRequestBody).subscribe(
+      (res: any) => {
+        if (res.isSuccess && res.data) {
+          this.customerBasicDetails = res.data; 
+        } else {
+          this.toast.error({ detail: "", summary: res.message || "Failed to get customer Basic Details.", duration: 2000 });
+          this.customerBasicDetails = null;
+        }
+      },
+      (err: any) => {
+        console.error("API Error:", err);
+        this.customerBasicDetails = null;
+      }
+    );
+  }
+  getCustomrProductDetails() {
+    const customerProductDetailsRequestBody = {
+      customerID: this.customerID,
+      policyNumber: this.policyNumber,
+      agentCode: this.agentCode,
+    };  }
+  getCustomerInsuredDetails() {
+    const customerInsuredDetailsRequestBody = {
+      customerID: this.customerID,
+      policyNumber: this.policyNumber,
+      agentCode: this.agentCode,
+    };  }
+  getCustomrClaimDetails() {
+    const customerClaimDetailsRequestBody = {
+      policyNumber: this.policyNumber,
+      agentCode: this.agentCode,
+    };
+  }
+  getCustomrEndorsementDetails() {
+    const customerEndorsementDetailsRequestBody = {
+      customerID: this.customerID,
+      policyNumber: this.policyNumber,
+      agentCode: this.agentCode,
+    };  
   }
   fetchDetails(type: string) {
+    if (!this.policyNumber) {
+      this.toast.warning({ detail: "", summary: "PolicyNumber is required.", duration: 2000 });
+      return;
+    }
   this.selectedFilter=type
-  if(type=='basicDetails'){}
-  else if(type=='productDetails'){}
-  else if(type=='insuredDetails'){}
-  else if(type=='claimDetails'){}
-  else if(type=='basicDetails'){}
+  if(type=='basicDetails'){
+    this.getCustomrBasicDetails();
+  }
+  else if(type=='productDetails'){
+    this.getCustomrProductDetails();
+  }
+  else if(type=='insuredDetails'){
+    this.getCustomerInsuredDetails();
+  }
+  else if(type=='claimDetails'){
+    this.getCustomrClaimDetails();
+  }
+  else if(type=='basicDetails'){
+    this.getCustomrEndorsementDetails();
+  }
   }
 
   @HostListener('window:resize', ['$event'])

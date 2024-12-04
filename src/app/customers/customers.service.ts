@@ -29,4 +29,25 @@ export class CustomersService {
       const downloadDocument=this.configService.config.baseUrl + this.configService.config.downloadDocument;
       return this.http.post<any>(downloadDocument,reqBody)
     }
+    getCustomerBasicDetailsApi(reqBody:any){
+      const customerBasicDetails=this.configService.config.baseUrl + this.configService.config.getCustomerBasicDetails;
+      return this.http.post<any>(customerBasicDetails,reqBody)
+    }
+    getCustomerProductDetailsApi(reqBody:any){
+      const customerProductDetails=this.configService.config.baseUrl + this.configService.config.getCustomerProductDetails;
+      return this.http.post<any>(customerProductDetails,reqBody)
+    }
+    getCustomerInsuredDetailsApi(reqBody:any){
+      const customerInsuredDetails=this.configService.config.baseUrl + this.configService.config.getCustomerInsuredDetails;
+      return this.http.post<any>(customerInsuredDetails,reqBody)
+    }
+    getCustomerClaimDetailsApi(reqBody:any){
+      const customerClaimDetails=this.configService.config.baseUrl + this.configService.config.getCustomerClaimDetails;
+      return this.http.post<any>(customerClaimDetails,reqBody)
+    }
+    getCustomerEndorsementDetailsApi(reqBody:any){
+      const customerEndorsementDetails=this.configService.config.baseUrl + this.configService.config.getCustomerEndorsementDetails;
+      return this.http.post<any>(customerEndorsementDetails,reqBody)
+    }
+    
 }

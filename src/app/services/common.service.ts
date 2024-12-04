@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { ConfigService } from './config.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,6 +10,10 @@ import { MatDialog } from '@angular/material/dialog';
 export class CommonService {
   private yatraUrl: string = 'https://usp.monocept.ai/yatra/';
   dialogRef: any;
+
+  private toggleSidebarSubject = new Subject<boolean>();
+  sidebarState$ = this.toggleSidebarSubject.asObservable();
+  selectedSideBarFlag: any;
 
   // private baseUrl: string = 'http://20.235.250.168:8086/';
 
@@ -129,4 +133,18 @@ export class CommonService {
     const uploadDocument= this.configService.config.baseUrl1+this.configService.config.uploadDocument;
     return this.http.post(uploadDocument,reqData);
   }
+
+  toggleSidebar(state: any) {
+    this.toggleSidebarSubject.next(state);
+  }
+
+  setValue(value : boolean){
+    this.selectedSideBarFlag = value;
+  }
+
+  getValue(){
+    return this.selectedSideBarFlag;
+  }
+
+  
 }

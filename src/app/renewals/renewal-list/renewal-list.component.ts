@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { FormControl, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { RenewalList } from "src/app/interface/renewal-list.interface";
 import { firstValueFrom, Subject } from "rxjs";
@@ -11,6 +11,7 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { searchValidationConfig } from 'src/app/interface/common-validation.interface';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { CustomersService } from 'src/app/customers/customers.service';
 
 @Component({
   selector: 'app-renewal-list',
@@ -45,11 +46,14 @@ export class RenewalListComponent {
   ];
   currentDate = new Date().toISOString().split('T')[0];
   proposalNum: string = '';
+  documents:any[]=[];
+  selectedDocument: any = null;
 
   constructor(
     private renewalService: RenewalsService, private router: Router, private datePipe: DatePipe,
     private commonService: CommonService, private toast: NgToastService, private encryptionService: EncryptionService, private languageService: LanguageService,
-    private translateService: TranslateService
+     private customerService:CustomersService,
+    private translateService: TranslateService, private activatedRoute: ActivatedRoute
   ) { }
 
   renewalListRequestBody = {
@@ -74,10 +78,14 @@ export class RenewalListComponent {
         }
       });
     });
+    
     this.getRenewalsList();
     this.getProducts();
 
     this.checkView(); //Screen View check
+    this.activatedRoute.queryParams.subscribe((params : any) => {
+      let routeStatus  = params['status'];
+    });
   }
   onPageChange(event: any) {
     this.first = event.first;
@@ -97,7 +105,7 @@ export class RenewalListComponent {
           this.countsList = response.data;
           this.totalRecords = response.data[this.filterType];
         } else {
-          this.toast.error({ detail: "", summary: "Failed to get Renewals List.", duration: 3000 });
+          this.toast.error({ detail: "", summary: response.message || "Failed to get Renewals List.", duration: 3000 });
         }
       },
       (error) => {
@@ -241,42 +249,100 @@ export class RenewalListComponent {
   renewalListView(view: string) {
     this.selectedView = view;
   }
+  downloadPolicyKit() {
+    if (!this.selectedDocument) {
+      this.toast.error({ detail: "", summary: "Please select a document to download.", duration: 3000 });
+      return;
+    }  
+    const downloadPolicyKitRequestBody = {
+      agentCode: this.agentCode,
+      referenceId: this.agentCode,
+      eventName: "Download policy kit request from customers",
+      proposalNumber: "",
+      downloadRequest: [
+        {
+          omniDocImageIndex: this.selectedDocument.omniDocImageIndex,
+          fileName: this.selectedDocument.fileName,
+        },
+      ],
+      sourceSystemName: "",
+      identifier: "",
+    };
+    console.log("Download Request Body:", downloadPolicyKitRequestBody);
+    this.customerService.downloadDocumentApi(downloadPolicyKitRequestBody).subscribe(
+      (response: any) => {
+        if (response.isSuccess && response.data?.downloadResponse?.length > 0) {
+          const file = response.data.downloadResponse[0];
+          if (file.byteArray && file.fileName) {
+            const byteArray = new Uint8Array(
+              atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
+            );
+            const blob = new Blob([byteArray], { type: "application/pdf" });
+            const link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = file.fileName;
+            link.click(); 
+            this.toast.success({ detail: "", summary: response.message || "Document downloaded successfully.", duration: 3000 });
+ 
+          }
+        } else {
+          this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
+        }
+      },
+      (error: any) => {
+        console.error("Download Policy Kit Error:", error);
+        this.toast.error({ detail: "", summary: "Error while downloading Policy Kit.", duration: 3000 });
+      }
+    );
+  }
   handleAction(item: RenewalList, event?: string) {
     switch (event) {
       case 'download':
-        // const downloadRequestBody={
-        //   EventName:"Search policy kit request from customers",
-        //   AgentCode:this.agentCode,
-        //   ReferenceId:this.agentCode,
-        //   SearchOperator:"AND",
-        //   SearchRequest: [
-        //     {
-        //       CategoryID: "",
-        //       DocumentID: "",
-        //       ReferenceID: "",
-        //       FileName: "",
-        //       Description: "",
-        //       DataClassParam: [
-        //         {
-        //             DocSearchParamId: "2",
-        //             Value: "21-24-0002917-00"
-        //         },
-        //         {
-        //             DocSearchParamId: "15",
-        //             Value: "PS_04"
-        //         }
-        //       ]
-        //     }
-        //   ],
-        //   Category: "N/A",
-        //   UserRole: "Guest",
-        //   SessionId: "0000",
-        //   UserLevel: "Basic",
-        //   BranchCode: "000",
-        //   Designation: "N/A",
-        //   IntCategory: "N/A",
-        //   SourceSystemName: "Portal"
-        // }
+        const searchDocumentRequestBody = {
+          referenceId: this.agentCode,
+          searchRequest: [
+            {
+              categoryID: "",
+              description: "",
+              dataClassParam: [
+                {
+                  docSearchParamId: "2",
+                  value: item.policyNumber,
+                },
+                {
+                  DocSearchParamId: "15",
+                  Value: "RN_Notice"
+                }
+              ],
+            },
+          ],
+          agentCode: this.agentCode,
+          eventName: "Search policy kit request from customers",
+          sourceSystemName: "",
+          searchOperator: "AND",
+        };
+        this.customerService.searchDocumentApi(searchDocumentRequestBody).subscribe(
+          (response: any) => {
+            if (response.isSuccess) {          
+              const searchResponse = response.data.searchResponse;
+              console.log("search Response",searchResponse);
+              if (!searchResponse || searchResponse.length === 0) {
+                this.toast.error({ detail: "", summary: response.message || "No document found.", duration: 3000 });
+              }
+              else{
+                this.documents = searchResponse;
+                this.selectedDocument=this.documents[0]  
+                this.downloadPolicyKit()
+              }
+            } else {
+              this.toast.error({ detail: "", summary: response.message || "Failed to search document.", duration: 2000 });
+            }
+          },
+          (error: any) => {
+            console.error("Search document error", error);
+            this.toast.error({ detail: "", summary: "Error while searching the document.", duration: 2000 });
+          }
+        );
         break;
       case 'email':
         const emailRequestBody = {
@@ -305,9 +371,9 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: "Renewal notice shared successfully.", duration: 1500 });
+              this.toast.success({ detail: "", summary: response.message || "Renewal notice shared successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "", summary: "Failed to send renewal notice.", duration: 1500 });
+              this.toast.error({ detail: "", summary: response.message || "Failed to send renewal notice.", duration: 1500 });
             }
           },
           (error: any) => {
@@ -354,9 +420,9 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: "SMS sent successfully.", duration: 1500 });
+              this.toast.success({ detail: "", summary: response.message || "SMS sent successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "", summary: "Failed to send SMS.", duration: 1500 });
+              this.toast.error({ detail: "", summary: response.message || "Failed to send SMS.", duration: 1500 });
             }
           },
           (error: any) => {
@@ -372,9 +438,9 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: "WhatsApp message sent successfully.", duration: 1500 });
+              this.toast.success({ detail: "", summary: response.message || "WhatsApp message sent successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "", summary: response.message, duration: 1500 });
+              this.toast.error({ detail: "", summary: response.message || "Failed to send Whasapp message.", duration: 1500 });
             }
           },
           (error: any) => {

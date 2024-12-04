@@ -25,8 +25,8 @@
     </div>
     <div class="logoMainRight">
       <div class="logoLeftNav">
-        <div class="icon_menuMobile">
-            <button type="button" class="btn_menuMobile" aria-label="siteSidenav">
+        <div class="icon_menuMobile"  *ngIf="isLoggedIn">
+            <button type="button" (click)="onClickHamburger($event)" class="btn_menuMobile" aria-label="siteSidenav">
                 <span></span><span></span><span></span>
             </button>
         </div>
