@@ -31,6 +31,7 @@ export class GetQuoteComponent {
   upgradableZones: any[] = [];
   upgradedZone: string = '';
   currentZone: string = '';
+  showErrors: any;
   relationCountMap: Map<string, number> = new Map([
     ["R003", 0],
     ["R004", 0]
@@ -346,7 +347,7 @@ export class GetQuoteComponent {
             isChronic: ["No"],
             chronicDiseases: [this.diseaseNames],
             zone: [this.proposerZone || formData.insuredMemberDetails[0].zone],
-            upgradableZones: [this.upgradableZones  || formData.insuredMemberDetails[0].upgradableZones],
+            upgradableZones: [this.upgradableZones || formData.insuredMemberDetails[0].upgradableZones],
             memberGender: [relation.gender, [Validators.required]],
             memberdob: [relation.dob, [Validators.required]],
             memberRelationCode: [relation.relationCode, [Validators.required]],
@@ -839,6 +840,7 @@ export class GetQuoteComponent {
 
   // Add new member details
   addInsuredMemberDetails(): void {
+    this.showErrors = false;
     console.log(this.selectedRelationships, this.quoteFormGroup);
     if (this.selectedRelationships.length < 2 && this.selectedPlan === 'Family Floater') {
       this.toast.error({
@@ -861,6 +863,26 @@ export class GetQuoteComponent {
         return; // Stop further execution if validation fails
       }
     })
+
+    const proposerFields = ['proposerName', 'mobileNumber', 'proposerPincode'];
+    const fieldErrors: string[] = [];
+    proposerFields.forEach(field => {
+      const control = this.quoteFormGroup.get(field);
+      if (control?.invalid && !control.touched) {
+        fieldErrors.push(field);
+        control.markAsTouched();
+      }
+    });
+
+    if (fieldErrors.length > 0) {
+      this.toast.error({
+        detail: 'Error',
+        summary: `Please fill Required Details: ${fieldErrors.join(', ')}`,
+        duration: 3000
+      });
+      return;
+    }
+
     // if(this.DateCheck.includes(false) && this.DateCheck.length > 0){
     //   this.toast.error({
     //     detail: "Error",
