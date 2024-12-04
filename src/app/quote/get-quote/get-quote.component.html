@@ -146,44 +146,61 @@
                   <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
+                        
                         <input type="text" id="nameproposer" name="nameproposer" formControlName="proposerName"
-                          placeholder="Enter name of proposer" class="input-textBox" maxlength="30">
+                          placeholder="" class="input-textBox" maxlength="30" [class.input-havevalue]="quoteFormGroup.get('proposerName')?.value">
+                          <label for="nameproposer" class="get-quote-label">
+                            {{"Enter name of proposer" | translate}} <span class="required">*</span>
+                          </label>
                         <span class="ui-error"
-                          *ngIf="quoteFormGroup.get('proposerName')?.invalid && (quoteFormGroup.get('proposerName')?.touched || quoteFormGroup.get('proposerName')?.dirty)">
+                          *ngIf="quoteFormGroup.get('proposerName')?.invalid && (quoteFormGroup.get('proposerName')?.touched || showErrors)">
                           {{"Please enter a valid name (only alphabets, max 30 characters)" | translate}}</span>
                       </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
+                        
                         <input type="text" id="mobileNumber" name="mobileNumber" formControlName="mobileNumber" value=""
-                          placeholder="Enter mobile no of proposer" class="input-textBox" maxlength="10"
+                          placeholder="" class="input-textBox" maxlength="10" [class.input-havevalue]="quoteFormGroup.get('mobileNumber')?.value"
                           (input)="enforceMaxLength($event, 10)">
+                          <label for="mobileNumber" class="get-quote-label">
+                            {{"Enter mobile no of proposer" | translate}} <span class="required">*</span>
+                          </label>
                         <span class="ui-error"
-                          *ngIf="quoteFormGroup.get('mobileNumber')?.invalid && (quoteFormGroup.get('mobileNumber')?.touched || quoteFormGroup.get('mobileNumber')?.dirty)">
+                          *ngIf="quoteFormGroup.get('mobileNumber')?.invalid && (quoteFormGroup.get('mobileNumber')?.touched || showErrors)">
                          {{" Please enter a valid 10-digit mobile number" | translate}}
                         </span>
                       </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
+                        
                         <input type="text" id="pincodeproposer" name="pincodeproposer" [required]="true"
-                          formControlName="proposerPincode" value="" placeholder="Enter your 6 digit pincode"
+                          formControlName="proposerPincode" value="" placeholder="" [class.input-havevalue]="quoteFormGroup.get('proposerPincode')?.value"
                           maxlength="6" (input)="enforceMaxLength($event, 6)" class="input-textBox"
                           (change)="getProposerPincode($event)">
+                          <label for="pincodeproposer" class="get-quote-label">
+                            {{"Enter your 6 digit pincode" | translate}} <span class="required">*</span>
+                          </label>
                         <span class="ui-error"
-                          *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && (quoteFormGroup.get('proposerPincode')?.touched || quoteFormGroup.get('proposerPincode')?.dirty)">
+                          *ngIf="quoteFormGroup.get('proposerPincode')?.invalid && (quoteFormGroup.get('proposerPincode')?.touched || showErrors)">
                         {{"Please enter a valid 6-digit pincode" | translate}}
                         </span>
                       </div>
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">
-                        <select id="zoneValue" name="zoneValue" formControlName="zoneValue" class="input-textBox" (change)="onZoneChange($event)">
-                          <option value="" disabled selected>{{"Select Zone" | translate}}</option>
+                        
+                        <select id="zoneValue" name="zoneValue" formControlName="zoneValue" class="input-textBox" 
+                        [class.input-havevalue]="quoteFormGroup.get('zoneValue')?.value" (change)="onZoneChange($event)">
+                          <option value="" disabled selected>{{"" | translate}}</option>
                           <option *ngFor="let zone of upgradableZones" [value]="zone.value">{{ zone.name | translate }}</option>
                         </select>
+                        <label for="zoneValue" class="get-quote-label">
+                          {{"Select Zone" | translate}} <span class="required">*</span>
+                        </label>
                         <span class="ui-error"
-                          *ngIf="quoteFormGroup.get('proposerZone')?.invalid && (quoteFormGroup.get('proposerZone')?.touched || quoteFormGroup.get('proposerZone')?.dirty)">
+                          *ngIf="quoteFormGroup.get('proposerZone')?.invalid && (quoteFormGroup.get('proposerZone')?.touched || showErrors)">
                           {{"Select Zone" | translate}}
                         </span>
                       </div>

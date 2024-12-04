@@ -11,10 +11,10 @@ import { Observable } from 'rxjs';
 export class AppComponent {
 
   showNavbar: boolean = false;
-  isLoading$: Observable<boolean>;
+  isLoading$ = this.loadingService.isLoading$;
 
   constructor(private router:Router, private loadingService: LoadingService){
-    this.isLoading$ = this.loadingService.isLoading;
+   
   }
   ngOnInit(){
     this.router.events.subscribe(() => {

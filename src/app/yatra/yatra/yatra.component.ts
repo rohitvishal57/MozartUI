@@ -1192,29 +1192,23 @@ export class YatraComponent {
   }
 
   uploadSelectedDocument(): Promise<void> {
-    this.spinner.show();
     return new Promise(async (resolve, reject) => {
       try {
         const policyNum = this.proposalNum.replace(/-/g, "");
         const formData = new FormData();
         formData.append("Files", this.selectedFile);
         formData.append("UniqueNumber", policyNum);
-
-        this.spinner.show();
         this.commonService.uploadDocument(formData).subscribe(
           async (res: any) => {
             
             try {
               if (res.isSuccess) {
-                this.spinner.hide();
                 console.log("response after success", res);
                 console.log("unique id", res.data.uploadResponse[0].globalId);
                 this.documentId = res.data.uploadResponse[0].globalId;
 
-                this.spinner.show();
                 // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
                 await this.getFullQuoteViaOfflinePayment();
-                this.spinner.hide();
                 resolve(); // Resolve the promise once everything completes
               } else {
                 reject(new Error("Document upload failed with isSuccess=false"));
@@ -1658,12 +1652,12 @@ export class YatraComponent {
       if (enteredNumber.length > 6) {
         event.target.value = enteredNumber.slice(0, 6);
         this.dynamicFormGroup.get(control.name)?.setValue(enteredNumber.slice(0, 6));
-        this.toast.error({ detail: "ERROR", summary: "Cheque number cannot exceed 6 digits", duration: 3000 });
+        this.toast.error({ detail: "ERROR", summary: "Number cannot exceed 6 digits", duration: 3000 });
       }
 
       // Check if the cheque number is less than 6 digits
       else if (enteredNumber.length < 6) {
-        this.toast.error({ detail: "ERROR", summary: "Cheque number must be exactly 6 digits", duration: 3000 });
+        this.toast.error({ detail: "ERROR", summary: "Number must be exactly 6 digits", duration: 3000 });
       }
 
       // Check if the cheque number is sequential
@@ -5292,7 +5286,6 @@ export class YatraComponent {
     console.log(reqData, this.dynamicFormGroup.value);
 
     if (panNumber && formattedDOB) {
-      this.spinner.show();
       this.yatraService.GetKycDetails(reqData).subscribe({
         next: (response: any) => {
           console.log('KYC details:', response);
@@ -5660,7 +5653,6 @@ export class YatraComponent {
   }
 
   async getFullQuoteViaOfflinePayment(): Promise<void> {
-    this.spinner.show();
     return new Promise((resolve, reject) => {
       const data = this.dynamicFormGroup.value;
       const formData = {
@@ -5691,7 +5683,6 @@ export class YatraComponent {
           this.formData.quoteValidToDate = res.data.policyEndDate || null;
           this.formData.ReceiptNumber = res.data.receiptNumber || null;
           this.formData.customerId = res.data.customerId || null;
-          this.spinner.hide();
 
           this.toast.success({
             detail: "SUCCESS",
@@ -5701,7 +5692,6 @@ export class YatraComponent {
           resolve(); // Resolve the promise after successful response
         },      
         error: (err) => {
-          this.spinner.hide();
           const errorMessage= err.message
           this.toast.error({
             detail: "ERROR",

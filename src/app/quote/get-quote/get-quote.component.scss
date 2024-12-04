@@ -101,7 +101,13 @@ p {
 .insurance_optionHUB {
   padding: 20px;
 }
-
+.input-block.input-block-renew > input:focus + label,
+.input-block.input-block-renew > select:focus + label,
+.input-block.input-block-renew > input.input-havevalue + label,
+.input-block.input-block-renew > select.input-havevalue + label {
+  top: -8px !important;
+  color: #000;
+}
 .dropdown-container {
   display: flex;
   flex-wrap: wrap;
@@ -1405,31 +1411,39 @@ h4 {
     top: 15px;
   }
 }
+
 .dashboard_contentContainer .insurance_optionHUB {
   padding: 0 20px;
+
   .continue-btn-container {
     margin: 0;
+
     .btn_grey {
       position: relative;
       background-color: #C7222A;
       bottom: -30px;
     }
   }
+
   @media (max-width:767px) {
     padding: 0;
   }
 }
+
 @media (max-width:767px) {
   .overlay_popupMain.overlay_dropdown_w518 {
     width: 100%;
   }
+
   .insurer_memberDetails {
     .input-checkbox-withIcon {
-      gap:6px;
+      gap: 6px;
+
       .input-checkbox-feild {
         width: 100%;
       }
     }
   }
 }
+
 /*Custom overlay dropdown end*/
