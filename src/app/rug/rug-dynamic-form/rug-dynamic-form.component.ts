@@ -2030,7 +2030,7 @@ export class RugDynamicFormComponent {
           formControl.selectCheckboxOptions?.push({
             label: option.label,
             value: newControlName,
-            isIncrement: option.isIncrement,
+            isIncrement: false,
             imagePath: option.imagePath
           });
 
