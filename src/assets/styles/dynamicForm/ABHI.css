@@ -2737,6 +2737,12 @@ margin: 0;
     .main-container .right-panel .ah-opcovers {
         min-width: 100%;
     }
+    .main-container .right-panel .popup-overlay{
+        width: 90%;
+    }
+    .main-container .right-panel .popup-overlay .next-btn {
+        left: 0px;
+    }
 }
 .main-container .right-panel .next-btn:focus,
     .main-container .right-panel .add-btn:focus,
