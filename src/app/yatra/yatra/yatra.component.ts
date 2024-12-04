@@ -1813,41 +1813,59 @@ export class YatraComponent {
       this.changeOverLayDone(control, parentControl, false);
     }
 
-    if (control.type == 'date') {
+
+    if (control.type === 'date' && control.dependentControls != null) {
       const dob = event.target.value;
 
       console.log(dob, dob.length, this.dynamicFormGroup.get(control.name));
 
-      // Split the input date assuming 'yyyy-MM-dd' format (browser behavior)
+      // Parse the DOB into a date object
       const dobArray = dob.split('-'); // [YYYY, MM, DD]
       const year = parseInt(dobArray[0]);
       const inputDate = new Date(`${dobArray[0]}-${dobArray[1]}-${dobArray[2]}`);
       const currentDate = new Date();
-      const age = currentDate.getFullYear() - inputDate.getFullYear() -
+
+      let age = currentDate.getFullYear() - inputDate.getFullYear() -
         (currentDate.getMonth() < inputDate.getMonth() ||
           (currentDate.getMonth() === inputDate.getMonth() && currentDate.getDate() < inputDate.getDate()) ? 1 : 0);
 
-      // // Validate the full date in dd/MM/yyyy format using regex
-      // const dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(18[0-9]{2}|19[0-9]{2}|20[0-9]{2})$/;
-      // if (!dobRegex.test(formattedDOB) && year.toString().length == 4) {
-      //   this.toast.error({
-      //     detail: 'Error',
-      //     summary: 'Invalid Date of Birth: Please enter a valid date in dd/MM/yyyy format',
-      //     duration: 5000
-      //   });
-      //   return;
-      // }
+      if (age < 0 && control.name === 'memberAgeProposer') {
+        this.form.formSections.forEach((section: any) => {
+          section.formControls.forEach((control: any) => {
+            control.visible = true;
+          });
+        });
+        this.toast.error({
+          detail: 'Error',
+          summary: 'Invalid Date: Age cannot be negative. Please enter a valid date.',
+          duration: 3000
+        });
 
-      // Validate year after the full date is entered
+        if (control.dependentControls) {
+          control.dependentControls.forEach((depControlName: string) => {
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((formControl: any) => {
+                if (formControl.name === depControlName) {
+                  formControl.visible = false; // Hide control
+                  formControl.value = ''; // Clear value
+                }
+              });
+            });
+          });
+        }
+
+        return;
+      }
+
+      // Validate year range and prevent future dates
       if ((year < 1800 || inputDate > currentDate) && year.toString().length === 4) {
-        // Invalid year: Show error and reset age control
         this.toast.error({
           detail: 'Error',
           summary: 'Invalid Year: Please enter a valid year between 1800 and the current year',
           duration: 3000
         });
 
-        // Clear age control value if DOB is invalid
+        // Clear dependent controls' values if DOB is invalid
         if (parentControl != null && index != null) {
           const ageControl = this.dynamicFormGroup.get(parentControl.name);
           if (ageControl) {
@@ -1862,39 +1880,69 @@ export class YatraComponent {
             ageControl.markAsTouched();
           }
         }
-        return; // Exit since the year is invalid
-      }
-      else if (year.toString().length === 4) {
-        // Specific logic for 'nomineeDob'
-        if (control.name === 'nomineeDob' && control.dependentControls) {
-          // Iterate through sections and formControls to toggle visibility
-          this.form.formSections.forEach((section: any) => {
-            section.formControls.forEach((formControl: any) => {
-              if (control.dependentControls.some((dependent: any) => dependent.name === formControl.name)) {
-                formControl.visible = age < 18; // Show if age < 18
-              }
+
+        if (control.dependentControls) {
+          control.dependentControls.forEach((depControlName: string) => {
+            this.form.formSections.forEach((section: any) => {
+              section.formControls.forEach((formControl: any) => {
+                if (formControl.name === depControlName) {
+                  formControl.visible = false; // Hide control
+                  formControl.value = ''; // Clear value
+                }
+              });
             });
           });
         }
 
-        // Valid year: Proceed with age calculation and form patching if DOB is valid
-        if (parentControl != null && index != null) {
-          const ageControl = this.dynamicFormGroup.get(parentControl.name);
-          if (ageControl) {
-            ageControl.value[index][control.dependentControls[0]] = this.calculateAge(dob);
-            (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
-            this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
-          }
-        } else {
-          const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
-          if (dob && ageControl) {
-            ageControl.markAsTouched();
-            const age = this.calculateAge(dob);
-            ageControl.setValue(age);
-          }
+        return;
+      }
+
+      if (control.dependentControls && control.name !== 'memberAgeProposer') {
+        control.dependentControls.forEach((depControlName: string) => {
+          this.form.formSections.forEach((section: any) => {
+            section.formControls.forEach((formControl: any) => {
+              if (formControl.name === depControlName) {
+                if (age < 18) {
+                  formControl.visible = true;
+                } else {
+                  // formControl.visible = false;
+                  formControl.value = '';
+                }
+              }
+            });
+          });
+        });
+      }
+
+      if (control.name === 'nomineeDob' && control.dependentControls) {
+        this.form.formSections.forEach((section: any) => {
+          section.formControls.forEach((formControl: any) => {
+            if (control.dependentControls.includes(formControl.name)) {
+              if (age < 18) {
+                formControl.visible = true;
+              } else {
+                formControl.visible = false;
+              }
+            }
+          });
+        });
+      }
+      if (parentControl != null && index != null) {
+        const ageControl = this.dynamicFormGroup.get(parentControl.name);
+        if (ageControl) {
+          ageControl.value[index][control.dependentControls[0]] = age;
+          (ageControl as FormArray).controls[index].get(control.dependentControls[0])?.markAsTouched();
+          this.dynamicFormGroup.get(parentControl.name)?.patchValue(ageControl.value);
+        }
+      } else {
+        const ageControl = this.dynamicFormGroup.get(control.dependentControls[0]);
+        if (dob && ageControl) {
+          ageControl.markAsTouched();
+          ageControl.setValue(age); // Set the calculated age value directly
         }
       }
     }
+
 
     if (parentControl == null && control.name == 'zoneValue') {
       const selectedZone = control.options.find((option: any) =>
@@ -2983,66 +3031,6 @@ export class YatraComponent {
       this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
     }
   }
-  // onButtonClick(control: any) {
-  //   this.selectedButton = control.name;
-  //   console.log(this.selectedButton);
-
-  //   const reqData = {
-  //     agentcode: this.agentCode, // Fill these fields dynamically as needed
-  //     proposalNumber: this.proposalNum,
-  //     paymentMethod: this.selectedButton, // Payment method based on selected button
-  //     source: 'Retail',
-  //     policyType: 'New Business',
-  //     policyNumber: '',
-  //     quoteNumber: ''
-  //   };
-
-  //   this.yatraService.justPayRedirection(reqData).subscribe({
-  //     next: (response: any) => {
-  //       console.log('Juspay API Response:', response);
-
-  //       if (response.paymentURL && response.paymentURL !== null && response.paymentURL !== '') {
-  //         window.location.href = response.paymentURL;
-  //       } else {
-  //         this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
-  //         console.error('Invalid payment link received:', response);
-  //       }
-  //     },
-  //     error: (error) => {
-  //       this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
-  //       console.error('Error generating payment link:', error);
-  //     }
-  //   });
-
-  //   if (control.dependentControls) {
-  //     this.form.formSections.forEach((section: any) => {
-  //       section.formControls.forEach((controls: any) => {
-  //         control.dependentControls.forEach((item: any) => {
-  //           if (controls.name == item) {
-  //             controls.visible = true;
-  //           }
-  //         })
-  //       })
-  //     })
-  //   }
-  //   else {
-  //     let list: any = [];
-  //     this.form.formSections.forEach((section: any) => {
-  //       section.formControls.forEach((controls: any) => {
-  //         console.log(controls);
-
-  //         if (controls.dependentControls) {
-  //           list = controls.dependentControls;
-  //         }
-  //         list.forEach((item: any) => {
-  //           if (controls.name == item) {
-  //             controls.visible = false;
-  //           }
-  //         })
-  //       })
-  //     })
-  //   }
-  // }
 
   onButtonClick(control: any) {
     this.selectedButton = control.name;
@@ -3112,8 +3100,22 @@ export class YatraComponent {
         section.formControls.forEach((controls: any) => {
           control.dependentControls.forEach((item: any) => {
             if (controls.name == item) {
-              controls.visible = true; // Show dependent controls
+              controls.visible = true; 
               control.disabled = true;
+              const formControl = this.dynamicFormGroup.get(controls.name);
+              if (formControl) {
+                formControl.enable();
+                if (controls.validators) {
+                  const validators = controls.validators.map((val: any) => {
+                    if (val.validatorName === 'required') {
+                      return Validators.required;
+                    }
+                    return null;
+                  }).filter(Boolean);
+                  formControl.setValidators(validators);
+                  formControl.updateValueAndValidity();
+                }
+              }
             }
           });
         });
@@ -3127,7 +3129,13 @@ export class YatraComponent {
           }
           list.forEach((item: any) => {
             if (controls.name == item) {
-              controls.visible = false; // Hide controls if no dependentControls are specified
+              controls.visible = false;
+              const formControl = this.dynamicFormGroup.get(control.name);
+              if (formControl) {
+                formControl.disable();
+                formControl.clearValidators();
+                formControl.updateValueAndValidity();
+              }
             }
           });
         });
