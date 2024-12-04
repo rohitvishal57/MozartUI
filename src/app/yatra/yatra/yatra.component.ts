@@ -6,7 +6,7 @@ import { DatePipe, DOCUMENT } from '@angular/common';
 import { NgToastService } from 'ng-angular-popup';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import {tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
@@ -130,7 +130,7 @@ export class YatraComponent {
     private encryptionService: EncryptionService, @Inject(DOCUMENT) private document: Document, private clipboard: Clipboard,
     private route: ActivatedRoute, private languageService: LanguageService, private aesEncryptService: AesEncryptionService,
     private translateService: TranslateService, private leadsService: LeadsService, private datepipe: DatePipe) {
-     }
+  }
 
   ngOnInit() {
 
@@ -199,7 +199,7 @@ export class YatraComponent {
           this.productId = decryptedData.productId;
           // this.formData.proposalNumber = decryptedData.proposalNum;
           this.proposalNum = decryptedData.proposalNum;
-          
+
           decryptedData.currentFormSequence = this.getFormIndexValue().toString();
           await this.yatraService.Getform(decryptedData).subscribe({
             next: (res: any) => {
@@ -414,8 +414,8 @@ export class YatraComponent {
       formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
       proposalNum: this.proposalNum,
       agentCode: this.agentCode,
-      leadId : this.quickQuoteRedirect==false ?null:this.leadNumber,
-      isLead : this.quickQuoteRedirect==false ? false: true,
+      leadId: this.quickQuoteRedirect == false ? null : this.leadNumber,
+      isLead: this.quickQuoteRedirect == false ? false : true,
       currentFormSequence: this.getFormIndexValue().toString()
     }
 
@@ -1200,14 +1200,14 @@ export class YatraComponent {
         formData.append("UniqueNumber", policyNum);
         this.commonService.uploadDocument(formData).subscribe(
           async (res: any) => {
-            
 
-              if (res.isSuccess) {
-                console.log("response after success", res);
-                console.log("unique id", res.data.uploadResponse[0].globalId);
-                this.documentId = res.data.uploadResponse[0].globalId;
 
-                try {
+            if (res.isSuccess) {
+              console.log("response after success", res);
+              console.log("unique id", res.data.uploadResponse[0].globalId);
+              this.documentId = res.data.uploadResponse[0].globalId;
+
+              try {
                 // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
                 await this.getFullQuoteViaOfflinePayment();
                 resolve(); // Resolve the promise once everything completes
@@ -1225,7 +1225,7 @@ export class YatraComponent {
               });
               reject(new Error(errorMessage));
             }
-            
+
           },
           (err) => {
             console.error("Error during upload:", err);
@@ -1780,31 +1780,31 @@ export class YatraComponent {
     }
 
     if (parentControl == null && control.name == 'ifscCode') {
-    const ifscCodeDetails=this.dynamicFormGroup.get('ifscCode')?.value.length || 0;
-    console.log(ifscCodeDetails);
+      const ifscCodeDetails = this.dynamicFormGroup.get('ifscCode')?.value.length || 0;
+      console.log(ifscCodeDetails);
 
-    if (ifscCodeDetails == 11) {
-      const reqData={
-        "ifscCode":event.target.value
-      }
-      console.log(reqData);
-
-      this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
-        next: (response:any) => {
-          if (response.isSuccess && response.data) {
-            this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
-            this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
-          } else {
-            // Handle error, you can show a message if required
-            this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
-          }
-        },
-        error: (err) => {
-          this.toast.error({ detail: "ERROR", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+      if (ifscCodeDetails == 11) {
+        const reqData = {
+          "ifscCode": event.target.value
         }
-      });
+        console.log(reqData);
+
+        this.yatraService.getBankDetailsViaIFSC(reqData).subscribe({
+          next: (response: any) => {
+            if (response.isSuccess && response.data) {
+              this.dynamicFormGroup.get('bankName')?.setValue(response.data.bankName || '');
+              this.dynamicFormGroup.get('micrCode')?.setValue(response.data.micrCode || '');
+            } else {
+              // Handle error, you can show a message if required
+              this.toast.warning({ detail: "WARNING", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+            }
+          },
+          error: (err) => {
+            this.toast.error({ detail: "ERROR", summary: 'Failed to Fetch Bank Details', duration: 3000 });
+          }
+        });
+      }
     }
-  }
 
 
     if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
@@ -1820,18 +1820,13 @@ export class YatraComponent {
 
       // Split the input date assuming 'yyyy-MM-dd' format (browser behavior)
       const dobArray = dob.split('-'); // [YYYY, MM, DD]
-      const formattedDOB = `${dobArray[2]}/${dobArray[1]}/${dobArray[0]}`; // Convert to dd/MM/yyyy
-
       const year = parseInt(dobArray[0]);
-
-      console.log(year.toString().length);
-
-      const currentYear = new Date().getFullYear();
-      const [years, month, day] = dob.split('-').map(Number);
-      const inputDate = new Date(`${years}-${month}-${day}`);
-      const minDate = new Date('1800-01-01');
+      const inputDate = new Date(`${dobArray[0]}-${dobArray[1]}-${dobArray[2]}`);
       const currentDate = new Date();
-      console.log(currentDate, minDate, inputDate);
+      const age = currentDate.getFullYear() - inputDate.getFullYear() -
+        (currentDate.getMonth() < inputDate.getMonth() ||
+          (currentDate.getMonth() === inputDate.getMonth() && currentDate.getDate() < inputDate.getDate()) ? 1 : 0);
+
       // // Validate the full date in dd/MM/yyyy format using regex
       // const dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(18[0-9]{2}|19[0-9]{2}|20[0-9]{2})$/;
       // if (!dobRegex.test(formattedDOB) && year.toString().length == 4) {
@@ -1870,6 +1865,18 @@ export class YatraComponent {
         return; // Exit since the year is invalid
       }
       else if (year.toString().length === 4) {
+        // Specific logic for 'nomineeDob'
+        if (control.name === 'nomineeDob' && control.dependentControls) {
+          // Iterate through sections and formControls to toggle visibility
+          this.form.formSections.forEach((section: any) => {
+            section.formControls.forEach((formControl: any) => {
+              if (control.dependentControls.some((dependent: any) => dependent.name === formControl.name)) {
+                formControl.visible = age < 18; // Show if age < 18
+              }
+            });
+          });
+        }
+
         // Valid year: Proceed with age calculation and form patching if DOB is valid
         if (parentControl != null && index != null) {
           const ageControl = this.dynamicFormGroup.get(parentControl.name);
@@ -2641,7 +2648,7 @@ export class YatraComponent {
           // }
 
           // Process formData for flattening if needed
-          
+
           console.log(this.formData, this.form);
         }),
         tap(() => {
@@ -3079,12 +3086,12 @@ export class YatraComponent {
           console.log('Juspay API Response:', response);
 
           if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-            if(this.selectedButton == 'sendLinkButton'){
+            if (this.selectedButton == 'sendLinkButton') {
               console.log(response);
               this.dynamicFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
               // res = response.data.paymentURL;
             }
-            else{
+            else {
               window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
             }
           } else {
@@ -3293,8 +3300,8 @@ export class YatraComponent {
           //   console.log('Waiting for fullQuote API response before proceeding...');
           //   await this.uploadSelectedDocument();
           // } else {
-            console.log('Proceeding without waiting for fullQuote API');
-            await this.resolveMethod(this.form.saveBtnFunction);
+          console.log('Proceeding without waiting for fullQuote API');
+          await this.resolveMethod(this.form.saveBtnFunction);
           // }
         }
         console.log(this.formData);
@@ -3378,18 +3385,18 @@ export class YatraComponent {
       else {
         console.log('Form is invalid', this.dynamicFormGroup);
         let firstInvalidTabIndex: number | null = null;
-        if(this.dynamicFormGroup.get('insuredMemberDetails')){
+        if (this.dynamicFormGroup.get('insuredMemberDetails')) {
           this.form.formSections.forEach(section => {
-            section.formControls.forEach(control =>{
-              if(control.dynamicControls){
+            section.formControls.forEach(control => {
+              if (control.dynamicControls) {
                 control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
                   const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
                   console.log(formGroup);
                   if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
                     firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
                   }
-              })
-            }
+                })
+              }
             })
           })
         }
@@ -3414,7 +3421,7 @@ export class YatraComponent {
             control?.markAsTouched({ onlySelf: true });
           }
         });
-        if (this.dynamicFormGroup.invalid){
+        if (this.dynamicFormGroup.invalid) {
           this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
           if (firstInvalidTabIndex !== null) {
             // Navigate to the first invalid tab
@@ -5693,31 +5700,31 @@ export class YatraComponent {
         next: (res: any) => {
           console.log(res);
           if (res?.isSuccess) {
-          this.formData.policyNumber = res.data.policyNumber || null;
-          this.formData.policyStatus = res.data.policyStatus || null;
-          this.formData.quoteValidFromDate = res.data.policyStartDate || null;
-          this.formData.quoteValidToDate = res.data.policyEndDate || null;
-          this.formData.ReceiptNumber = res.data.receiptNumber || null;
-          this.formData.customerId = res.data.customerId || null;
+            this.formData.policyNumber = res.data.policyNumber || null;
+            this.formData.policyStatus = res.data.policyStatus || null;
+            this.formData.quoteValidFromDate = res.data.policyStartDate || null;
+            this.formData.quoteValidToDate = res.data.policyEndDate || null;
+            this.formData.ReceiptNumber = res.data.receiptNumber || null;
+            this.formData.customerId = res.data.customerId || null;
 
-          this.toast.success({
-            detail: "SUCCESS",
-            summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
-            duration: 3000,
-          });
-          resolve(); 
-        }
-        else {
-          const errorMessage = res.message || "Full Quote generation failed.";
-          console.error(errorMessage);
-          this.toast.error({
-            detail: "ERROR",
-            summary: errorMessage,
-            duration: 5000,
-          });
-          reject(new Error(errorMessage));
-        }
-      },      
+            this.toast.success({
+              detail: "SUCCESS",
+              summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
+              duration: 3000,
+            });
+            resolve();
+          }
+          else {
+            const errorMessage = res.message || "Full Quote generation failed.";
+            console.error(errorMessage);
+            this.toast.error({
+              detail: "ERROR",
+              summary: errorMessage,
+              duration: 5000,
+            });
+            reject(new Error(errorMessage));
+          }
+        },
         error: (err) => {
           console.error(err);
           this.toast.error({
