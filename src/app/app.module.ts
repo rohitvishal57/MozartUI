@@ -29,6 +29,7 @@ import { SharedModule } from './shared/shared.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';  // Import LocationStrategy and PathLocationStrategy
+import { CommissionstatementComponent } from './commissionstatement/commissionstatement.component';
 
 
 export function loadConfig(configService: ConfigService) {
@@ -45,7 +46,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     HeaderComponent,
     SideNavbarComponent,
     NotificationsComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    CommissionstatementComponent
   ],
   imports: [
     BrowserModule,
