@@ -1201,21 +1201,29 @@ export class YatraComponent {
         this.commonService.uploadDocument(formData).subscribe(
           async (res: any) => {
             
-            try {
+
               if (res.isSuccess) {
                 console.log("response after success", res);
                 console.log("unique id", res.data.uploadResponse[0].globalId);
                 this.documentId = res.data.uploadResponse[0].globalId;
 
+                try {
                 // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
                 await this.getFullQuoteViaOfflinePayment();
                 resolve(); // Resolve the promise once everything completes
-              } else {
-                reject(new Error("Document upload failed with isSuccess=false"));
+              } catch (error) {
+                console.error("Error in full quote generation:", error);
+                reject(error); // Reject the promise to prevent further flow
               }
-            } catch (innerError) {
-              console.error("Error processing response:", innerError);
-              reject(innerError); // Reject the promise on processing error
+            } else {
+              const errorMessage = "Document upload failed.";
+              console.error(errorMessage, res);
+              this.toast.error({
+                detail: "ERROR",
+                summary: errorMessage,
+                duration: 3000,
+              });
+              reject(new Error(errorMessage));
             }
             
           },
@@ -1223,7 +1231,7 @@ export class YatraComponent {
             console.error("Error during upload:", err);
             this.toast.error({
               detail: "Error",
-              summary: err.message,
+              summary: err.message || "Document upload failed.",
               duration: 1500,
             });
             reject(err); // Reject the promise on upload error
@@ -1234,7 +1242,7 @@ export class YatraComponent {
         this.toast.error({
           detail: "Error",
           summary: "An unexpected error occurred while preparing the upload.",
-          duration: 1500,
+          duration: 3000,
         });
         reject(error); // Reject the promise on preparation error
       }
@@ -1253,7 +1261,7 @@ export class YatraComponent {
       formData.append('Files', this.selectedFile);
       formData.append('NameOfInsuranceCompany', insurerControl.value); // Dynamic value from the form control
 
-      this.spinner.show();
+      // this.spinner.show();
 
       this.yatraService.fetchPolicyDetailsFromFile(formData).subscribe({
         next: (response: any) => {
@@ -1424,7 +1432,7 @@ export class YatraComponent {
   }
 
   getAllInsureData(control: any) {
-    this.spinner.show();
+    // this.spinner.show();
     this.yatraService.getInsurerData().subscribe({
       next: (res: any) => {
         console.log(res);
@@ -1593,7 +1601,7 @@ export class YatraComponent {
     }
   }
   getAllRelationship(control: any) {
-    this.spinner.show();
+    // this.spinner.show();
     this.yatraService.getRelationship().subscribe({
       next: (res: any) => {
         console.log(res);
@@ -3275,13 +3283,13 @@ export class YatraComponent {
         //   await this.resolveMethod(this.form.saveBtnFunction);
         // }
         if (this.form.saveBtnFunction) {
-          if (this.form.saveBtnFunction === 'fullQuotation') {
-            console.log('Waiting for fullQuote API response before proceeding...');
-            await this.uploadSelectedDocument();
-          } else {
+          // if (this.form.saveBtnFunction === 'uploadSelectedDocument') {
+          //   console.log('Waiting for fullQuote API response before proceeding...');
+          //   await this.uploadSelectedDocument();
+          // } else {
             console.log('Proceeding without waiting for fullQuote API');
             await this.resolveMethod(this.form.saveBtnFunction);
-          }
+          // }
         }
         console.log(this.formData);
         sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
@@ -4204,7 +4212,7 @@ export class YatraComponent {
 
   async fullQuotation(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.spinner.show();
+      // this.spinner.show();
       console.log(this.formData);
 
       this.mappedFormDataFullQuote(this.formData)
@@ -5677,6 +5685,7 @@ export class YatraComponent {
       this.yatraService.getFullQuoteViaOfflinePayment(formData).subscribe({
         next: (res: any) => {
           console.log(res);
+          if (res?.isSuccess) {
           this.formData.policyNumber = res.data.policyNumber || null;
           this.formData.policyStatus = res.data.policyStatus || null;
           this.formData.quoteValidFromDate = res.data.policyStartDate || null;
@@ -5689,17 +5698,27 @@ export class YatraComponent {
             summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
             duration: 3000,
           });
-          resolve(); // Resolve the promise after successful response
-        },      
-        error: (err) => {
-          const errorMessage= err.message
+          resolve(); 
+        }
+        else {
+          const errorMessage = res.message || "Full Quote generation failed.";
+          console.error(errorMessage);
           this.toast.error({
             detail: "ERROR",
             summary: errorMessage,
             duration: 5000,
           });
+          reject(new Error(errorMessage));
+        }
+      },      
+        error: (err) => {
           console.error(err);
-          reject(err); // Reject the promise on error
+          this.toast.error({
+            detail: "ERROR",
+            summary: "Something went wrong. Please try again.",
+            duration: 3000,
+          });
+          reject(err);
         },
       });
     });

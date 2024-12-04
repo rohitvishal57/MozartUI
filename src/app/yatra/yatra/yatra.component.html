@@ -831,11 +831,6 @@
                   (click)="callMethod(control.methodName,control)" [disabled]="control.disabled"
                   [ngClass]="[control.class, getButtonClass(control)]" [name]="control.name" [id]="control.name"
                   value="{{ control.label ? (control.label | translate) : '' }}">
-                <small
-                  *ngIf="control.type === 'button' && dynamicFormGroup.get(control.name)?.invalid && dynamicFormGroup.get(control.name)?.touched"
-                  class="text-danger">
-                  {{ getValidationErrors(control) | translate }}
-                </small>
 
 
                 <div *ngIf="control.type === 'custom-radio'">
