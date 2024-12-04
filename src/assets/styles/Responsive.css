@@ -461,15 +461,15 @@
     }
     .popupModalMain .modal-dialog {
         max-width: 100%;
-        width: 100%;
-        left: 0;
+        width: 90%;
+        /* left: 0;
         bottom: 0;
         top: auto;
-        position: absolute;
+        position: absolute; */
         margin: 0;
     }
     .popupModalMain .modal-content {
-        border-radius: 16px 16px 0 0;
+        /* border-radius: 16px 16px 0 0; */
     }
     .common_searchWraper .field_searchMain button {
         top: auto;

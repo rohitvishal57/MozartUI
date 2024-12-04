@@ -1977,7 +1977,8 @@ input[type="search"]::-webkit-search-results-decoration {
   padding: 23px 10%;
   padding-bottom: 12rem;
   padding-top: 13rem;
-  background: var(--bg-verylight-grey);
+  /* background: var(--bg-verylight-grey); */
+  background: var(--site-body-bg);
     min-height: 100vh;
 }
 .siteBody_renewJourney {
@@ -3059,6 +3060,7 @@ input[type="search"]::-webkit-search-results-decoration {
   border-radius: 16px;
   background: var(--white-color);
   gap: 14px;
+  box-shadow: 0px 8px 16px 0px #0000000A;
 }
 
 .cardViewMain .cardViewWraper .cardViewItem header {
