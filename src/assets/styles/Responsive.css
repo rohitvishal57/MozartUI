@@ -504,6 +504,9 @@
     .footer_cardViewItem .btn_groupAction, .cardViewItem_planContainer {
         flex-direction: column;
     }
+    .footer_cardViewItem .btn_groupAction {
+        gap: 8px;
+    }
     .main_captcha .captcha-label {
         font-size: 18px !important;
     }
@@ -511,6 +514,10 @@
 @media (max-width:390px){
     .bcl_main .processBtnGroup {
         flex-direction: column;
+    }
+    .top_mainNavBar .navbar-toggler{
+        font-size: 13px;
+        padding: 8px 12px;
     }
 }
 
