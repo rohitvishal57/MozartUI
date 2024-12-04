@@ -7,142 +7,145 @@
                     <img src="assets/Img/icon_plus_red.svg">{{"Raise New Claim" | translate}}
                 </button>
             </div>
-            <section class="quickFilterMain">
-                <div class="quickFilterLeft">
-                    <ul class="quickFilter">
-                        <li>
-                            <button type="button" id="claims-all" name="claims-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  
-                                    (click)="filterClaims('all')" [ngClass]="{'active': selectedStatus === 'all'}">
-                                {{ "All" | translate }} ({{ claimStatusCounts.all }})
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" id="claims-intimated" name="claims-intimated" value="intimated" class="btn_quickFilter btn_quickFilterClaim"  
-                                    (click)="filterClaims('intimated')" [ngClass]="{'active': selectedStatus === 'intimated'}">
-                                {{ "Intimated" | translate }} ({{ claimStatusCounts.active }})
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" id="claims-approved" name="claims-approved" value="approved" class="btn_quickFilter btn_quickFilterClaim"  
-                                    (click)="filterClaims('approved')" [ngClass]="{'active': selectedStatus === 'approved'}">
-                                {{ "Approved" | translate }} ({{ claimStatusCounts.approved }})
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" id="claims-settled" name="claims-settled" value="settled" class="btn_quickFilter btn_quickFilterClaim"  
-                                    (click)="filterClaims('settled')" [ngClass]="{'active': selectedStatus === 'settled'}">
-                                {{ "Settled" | translate }} ({{ claimStatusCounts.settled }})
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" id="claims-rejected" name="claims-rejected" value="rejected" class="btn_quickFilter btn_quickFilterClaim"  
-                                    (click)="filterClaims('rejected')" [ngClass]="{'active': selectedStatus === 'rejected'}">
-                                {{ "Rejected" | translate }} ({{ claimStatusCounts.rejected }})
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" id="claims-underDeficiency" name="claims-underDeficiency" value="underDeficiency" class="btn_quickFilter btn_quickFilterClaim"  
-                                    (click)="filterClaims('underDeficiency')" [ngClass]="{'active': selectedStatus === 'underDeficiency'}">
-                                {{ "Under Deficiency" | translate }} ({{ claimStatusCounts.underDeficiency }})
-                            </button>
-                        </li>                      
-                    </ul>  
-                </div>
-                
-                
-                <div class="quickFilterRight" >
-                    <!--Search section start-->
-                    <div class="common_searchWraper common_searchWraper_proposals">
-                        <div class="field_searchMain">
-                            <div>
-                            <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption" >
-                                <option value=""  selected>{{"Select an option" | translate}}</option>
-                                <option value="claimInfoId">{{"Request ID" | translate}}</option>
-                                <option value="policyNumber">{{"Policy Number" | translate}}</option>
-                                <option value="memberId">{{"Member Id" | translate}}</option> 
-                                <option value="mobileNumber">{{"Mobile Number" | translate}}</option> 
+            <section class="quickFilterMain_claims">
+                <div class="quickFilterMain">
+                    <div class="quickFilterLeft">
+                        <ul class="quickFilter">
+                            <li>
+                                <button type="button" id="claims-all" name="claims-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  
+                                        (click)="filterClaims('all')" [ngClass]="{'active': selectedStatus === 'all'}">
+                                    {{ "All" | translate }} ({{ claimStatusCounts.all }})
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" id="claims-intimated" name="claims-intimated" value="intimated" class="btn_quickFilter btn_quickFilterClaim"  
+                                        (click)="filterClaims('intimated')" [ngClass]="{'active': selectedStatus === 'intimated'}">
+                                    {{ "Intimated" | translate }} ({{ claimStatusCounts.active }})
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" id="claims-approved" name="claims-approved" value="approved" class="btn_quickFilter btn_quickFilterClaim"  
+                                        (click)="filterClaims('approved')" [ngClass]="{'active': selectedStatus === 'approved'}">
+                                    {{ "Approved" | translate }} ({{ claimStatusCounts.approved }})
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" id="claims-settled" name="claims-settled" value="settled" class="btn_quickFilter btn_quickFilterClaim"  
+                                        (click)="filterClaims('settled')" [ngClass]="{'active': selectedStatus === 'settled'}">
+                                    {{ "Settled" | translate }} ({{ claimStatusCounts.settled }})
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" id="claims-rejected" name="claims-rejected" value="rejected" class="btn_quickFilter btn_quickFilterClaim"  
+                                        (click)="filterClaims('rejected')" [ngClass]="{'active': selectedStatus === 'rejected'}">
+                                    {{ "Rejected" | translate }} ({{ claimStatusCounts.rejected }})
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" id="claims-underDeficiency" name="claims-underDeficiency" value="underDeficiency" class="btn_quickFilter btn_quickFilterClaim"  
+                                        (click)="filterClaims('underDeficiency')" [ngClass]="{'active': selectedStatus === 'underDeficiency'}">
+                                    {{ "Under Deficiency" | translate }} ({{ claimStatusCounts.underDeficiency }})
+                                </button>
+                            </li>                      
+                        </ul>  
+                    </div>
+                    
+                    
+                    <div class="quickFilterRight" >
+                        <!--Search section start-->
+                        <div class="common_searchWraper common_searchWraper_proposals">
+                            <div class="field_searchMain">
+                                <div>
+                                    <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption" >
+                                        <option value=""  selected>{{"Select an option" | translate}}</option>
+                                        <option value="claimInfoId">{{"Request ID" | translate}}</option>
+                                        <option value="policyNumber">{{"Policy Number" | translate}}</option>
+                                        <option value="memberId">{{"Member Id" | translate}}</option> 
+                                        <option value="mobileNumber">{{"Mobile Number" | translate}}</option> 
 
-                            </select>
-                            </div>
-                       <div>
-                            <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()" (keydown.enter)="applySearch()" (input)="onInputChange()">
-                            <button [disabled]="!searchInputControl.value || selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()">
-                                <img src="assets/Img/icon_magnify_grey.svg">
-                            </button>
-                                <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
-                                <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
-                                <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
-                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'claimInfoId'">{{"Enter Valid Request Id." | translate}}</small>
-                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
-                                <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberId'">{{"Enter Valid Member Id." | translate}}</small>
-                            </span>                       
-                       </div>
-                </div>
-                </div>
-             
-
-                    <div class="filterWraper">
-                        <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">{{"Filter" | translate}} ({{appliedFiltersCount}})</button>
-                        <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
-                            <div class="fw_form mobile_popupMain">
-                                <div class="filterHeader" >
-                                    <header>{{"Filter" | translate}}</header>
-                                    <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
-                                </div> 
-                            <div class="fw_formBody"> 
-                                <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
-                                    <h6>{{"Products" | translate}}</h6>
-                                    <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
-                                            <div class="input-checkbox-feild">
-                                                <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
-                                                <label for="product{{i}}">{{product.productName | translate}}</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </select>
                                 </div>
-                                <div class="fw_formRow">
-                                    <h6>{{"Claim Type" | translate}}</h6>
-                                    <div class="fw_checkboxWraper">
-                                        <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
-                                            <div class="input-checkbox-feild">
-                                              <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                              <label for="policytype{{i}}">{{policyType.name | translate}}</label>
-                                            </div>
-                                          </div>                                              
-                                    </div>
+                                <div>
+                                    <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()" (keydown.enter)="applySearch()" (input)="onInputChange()">
+                                    <button [disabled]="!searchInputControl.value || selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()">
+                                        <img src="assets/Img/icon_magnify_grey.svg">
+                                    </button>
+                                        <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
+                                        <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
+                                        <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
+                                        <small *ngIf="searchInputControl.hasError('pattern') && selected === 'claimInfoId'">{{"Enter Valid Request Id." | translate}}</small>
+                                        <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
+                                        <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberId'">{{"Enter Valid Member Id." | translate}}</small>
+                                    </span>                       
                                 </div>
-                                <div class="fw_formRow">
-                                    <h6>{{"Date Range" | translate}}</h6>
-                                    <div class="row">
-                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                            <div class="input-block form-floating input-block-dob">
-                                                <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
-                                                <label for="fromDate">{{"From Date" | translate}}</label>
-                                                <span class="ui-error">{{"Please enter start date" | translate}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                            <div class="input-block form-floating input-block-dob">
-                                                <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
-                                                <label for="toDate">{{"To Date" | translate}}</label>
-                                                <span class="ui-error">{{"Please enter end date" | translate}}</span>
-                                            </div>
-                                        </div>
-                                        <footer>
-                                            <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
-                                            <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
-                                        </footer>
-                                    </div>
-                                </div>
-                              
-                                </div>
-                            </div>
                             </div>
                         </div>
-               
-                    <button type="button" id="claimgridlist" name="claimgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
-                    <button type="button" id="claimgridcard" name="claimgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
+                        <div class="filterWraper">
+                            <button type="button" id="productFilter" name="productFilter" value="filter" (click)="toggleFilterDropdown()" class="btn_filter jsFilterBtnClick"  aria-label="filterForm"><span id="filter-count"></span><img src="assets/Img/icon_clarity_filter_line_grey.svg" alt="Filter">{{"Filter" | translate}} ({{appliedFiltersCount}})</button>
+                            <div id="filterForm" class="filterWraperForm overlay_popupMain mobile_popupBackdrop" [ngClass]="{'active': toggeledropdown}">
+                                <div class="fw_form mobile_popupMain">
+                                    <div class="filterHeader" >
+                                        <header>{{"Filter" | translate}}</header>
+                                        <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
+                                    </div> 
+                                <div class="fw_formBody"> 
+                                    <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
+                                        <h6>{{"Products" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()">
+                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>{{"Claim Type" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticRequestTypes; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                <label for="policytype{{i}}">{{policyType.name | translate}}</label>
+                                                </div>
+                                            </div>                                              
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>{{"Date Range" | translate}}</h6>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
+                                                    <label for="fromDate">{{"From Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter start date" | translate}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob">
+                                                    <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
+                                                    <label for="toDate">{{"To Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter end date" | translate}}</span>
+                                                </div>
+                                            </div>
+                                            <footer>
+                                                <button type="button" id="filterClear" name="filterClear" value="cancel" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
+                                                <button type="button" id="filterApply" name="filterApply" value="apply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
+                                            </footer>
+                                        </div>
+                                    </div>
+                                
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                
+                        <button type="button" id="claimgridlist" name="claimgridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
+                        <button type="button" id="claimgridcard" name="claimgridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)="claimsView('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
+                    </div>
+                </div>
+                <div class="claims_searchWraper">
+                    
                 </div>
             </section>
             <section id="quotes-list" class="tableMain quoteView block-show " *ngIf="selectedView == 'list'">

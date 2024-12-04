@@ -46,13 +46,12 @@ export class CustomersListComponent {
   selectedFilter: string = 'basicDetails';
   documents:any[]=[];
   selectedDocument: any = null;
-  isDownloadModalOpen: boolean = false;
 
   constructor(
     private customerService: CustomersService ,private datePipe: DatePipe,
     private commonService:CommonService,private toast: NgToastService,
     private languageService: LanguageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {}
 
   customerListRequestBody={
@@ -351,9 +350,6 @@ toggleMoreInfo(index: number): void {
           }
           else{
             this.documents = searchResponse;
-            this.isDownloadModalOpen = true; 
-            console.log("modal opened",this.isDownloadModalOpen);
-
           }
         } else {
           this.toast.error({ detail: "", summary: "Failed to search document.", duration: 2000 });
@@ -393,14 +389,11 @@ toggleMoreInfo(index: number): void {
             const byteArray = new Uint8Array(
               atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
             );
-            // Create a Blob and download the file
             const blob = new Blob([byteArray], { type: "application/pdf" });
             const link = document.createElement("a");
             link.href = window.URL.createObjectURL(blob);
             link.download = file.fileName;
             link.click();  
-            this.selectedDocument = null;
-            this.isDownloadModalOpen=false
           }
         } else {
           this.toast.error({ detail: "", summary: "No file found to download.", duration: 3000 });

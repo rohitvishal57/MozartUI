@@ -1919,6 +1919,7 @@ input[type="search"]::-webkit-search-results-decoration {
   border-radius: 30px;
   background: #FFF4CE;
   font-weight: 300;
+  line-height: normal;
 }
 /*Tip Info start*/
 /*Mobile bottom nav start*/
@@ -2667,7 +2668,34 @@ input[type="search"]::-webkit-search-results-decoration {
   gap: 8px;
   align-items: center;
 }
-
+.quickFilterMain_claims {
+  width: 100%;
+  background: var(--white-color);
+  padding: 16px 18px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.quickFilterMain_claims .quickFilterMain{
+  width: 100%;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  gap: 10px;
+  justify-content: space-between;
+  position: relative;
+  align-items: flex-start;
+}
+.quickFilterMain_claims .field_searchMain div {
+  position: relative;
+}
+.quickFilterMain_claims .quickFilterMain .quickFilterLeft {
+  max-width: 350px;
+}
+.quickFilterMain_claims .quickFilterMain .quickFilter{
+  flex-wrap: wrap;
+}
 /*Quick Filter end*/
 /*Table css start*/
 .tableSubMain {

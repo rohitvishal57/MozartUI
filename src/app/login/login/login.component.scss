@@ -262,6 +262,9 @@
             }
         
         }
+        @media (max-width:1222px) {
+            padding: 8% 0% 0%;
+        }
         @media(max-width:912px) {
             padding: 14% 0% 5%;
         }
@@ -341,11 +344,7 @@
     }
 }
 
-@media (max-width:1222px) {
-    .login-mainContainer .login-formMain {
-        padding: 8% 0% 0%;
-    }
-}
+
 
 .dialog-container {
     padding: 16px;
