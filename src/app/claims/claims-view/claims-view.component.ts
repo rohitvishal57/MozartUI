@@ -2,8 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, O
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ClaimData } from 'src/app/interface/claims.interface';
 import { DatePipe, formatDate } from '@angular/common';
-import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, startWith } from 'rxjs/operators';
 import { NgToastService } from 'ng-angular-popup';
 import { Router } from '@angular/router';
 import { ClaimsViewService } from './claims-view.service';
@@ -301,8 +299,6 @@ export class ClaimsViewComponent {
       cityControl?.setValidators([Validators.required]);
       hospitalNameControl?.setValidators([Validators.required]);
       hospitalAddressControl?.setValidators([Validators.required]);
-
-
       // Update validity
       stateControl?.updateValueAndValidity();
       cityControl?.updateValueAndValidity();
@@ -753,7 +749,6 @@ export class ClaimsViewComponent {
         this.uploadValidFormat = true;
       }
     }
-
     this.updateStatusLabel();
     this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
   }
@@ -781,8 +776,6 @@ export class ClaimsViewComponent {
       });
     }
   }
-
-
 
   onCustomLabelBlur(file: any) {
     const documentLabelControl = file.documentLabelForm.get('documentLabel');
@@ -960,7 +953,6 @@ export class ClaimsViewComponent {
     if (documentLabelControl && customLabelControl) {
       const selectedLabel = documentLabelControl.value;
       const customLabel = customLabelControl.value;
-
       // Determine the final label
       file.label = selectedLabel === 'Others' ? customLabel : selectedLabel;
 
@@ -985,7 +977,7 @@ export class ClaimsViewComponent {
       const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : null;
-     // saveClaimData.memberName = this.form.get('memberName')?.setValue('memberName');
+      saveClaimData.memberName = this.selectedMember;
 
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,
@@ -1003,21 +995,17 @@ export class ClaimsViewComponent {
 
       const coverName = this.form.get('coverName')?.value;
       if (coverName) {
-
         this.handleCoverNameValidation(coverName);
-
         if (coverName === 'AYUSH Treatment') {
           saveClaimData.state = "";
           saveClaimData.city = "";
           saveClaimData.hospitalName = "";
         }
-
       }
 
       if (Array.isArray(saveClaimData.hospitalAddress)) {
         saveClaimData.hospitalAddress = saveClaimData.hospitalAddress.join(', ');
       }
-
       const documentsArray = this.uploadedFiles.map((file) => ({
         documentId: file.documentId,
         documentName: file.name,
@@ -1047,8 +1035,6 @@ export class ClaimsViewComponent {
       this.toast.error({ detail: "Please fill in the required form fields." });
     }
   }
-
-
 }
 
 
