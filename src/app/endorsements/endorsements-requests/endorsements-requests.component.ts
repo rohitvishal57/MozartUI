@@ -304,41 +304,46 @@ export class EndorsementsRequestsComponent implements OnInit {
       return "Enter Policy Number";
     } else if (this.selected === "mobileNumber") {
       return "Enter Mobile Number";
-    } else if (this.selected === "email") {
+    } else if (this.selected === "emailID") {
       return "Enter Email Id";
     }
     else {
       return "Search...";
     }
   }
+
+  searchInputChange(event: any) {
+    const value = event.target.value;
+    if(value === '') {
+      this.applySearch();
+    }
+  }
   
   applySearch() {
     const searchValue = this.searchInputControl?.value?.trim();
-    if (this.searchInputControl.valid) {
-      if (this.selected === "caseId") {
-        this.requestsListRequestBody.searchColumn = "CaseId";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "memberName") {
-        this.requestsListRequestBody.searchColumn = "MemberName";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "policyNumber") {
-        this.requestsListRequestBody.searchColumn = "PolicyNumber";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "mobileNumber") {
-        this.requestsListRequestBody.searchColumn = "MobileNumber";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "email") {
-        this.requestsListRequestBody.searchColumn = "EmailId";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
+    if (this.selected === "caseId") {
+      this.requestsListRequestBody.searchColumn = "CaseId";
+      this.requestsListRequestBody.searchString = searchValue;
+    }
+    else if (this.selected === "memberName") {
+      this.requestsListRequestBody.searchColumn = "MemberName";
+      this.requestsListRequestBody.searchString = searchValue;
+    }
+    else if (this.selected === "policyNumber") {
+      this.requestsListRequestBody.searchColumn = "PolicyNumber";
+      this.requestsListRequestBody.searchString = searchValue;
+    }
+    else if (this.selected === "mobileNumber") {
+      this.requestsListRequestBody.searchColumn = "MobileNumber";
+      this.requestsListRequestBody.searchString = searchValue;
+    }
+    else if (this.selected === "email") {
+      this.requestsListRequestBody.searchColumn = "EmailId";
+      this.requestsListRequestBody.searchString = searchValue;
+    }
     this.isSearch = true;
     this.first = 0;
     this.getRequestList();
-    }
   }
 
   quotesViews(view: string) {
