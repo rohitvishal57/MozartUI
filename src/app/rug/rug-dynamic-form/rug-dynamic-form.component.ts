@@ -353,10 +353,10 @@ export class RugDynamicFormComponent {
       let reqData = {
         "partnerId": this.partnerId,
         "productId": this.productId,
-        "formId": 7,
+        "formId": formId,
         "proposalNum": this.leadId != undefined ? this.leadId : "3876785",
         "agentCode": this.agentCode,
-        "currentFormSequence": "6"
+        "currentFormSequence": this.getFormIndexValue().toString()
       }
       console.log(reqData);
       this.yatraService.Getform(reqData).subscribe({
