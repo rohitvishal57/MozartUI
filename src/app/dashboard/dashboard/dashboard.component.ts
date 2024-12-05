@@ -6,6 +6,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { DashboardService } from './dashboard.service';
 import Chart, { ChartData } from 'chart.js/auto';
+import { ProductsService } from 'src/app/product/products/products.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,11 +27,11 @@ export class DashboardComponent {
   businessSummary: any;
 
   public chart: any;
-  public Leadchart : any;
-  public proposalChart : any;
-  public renewChart : any;
-  public customerchart : any;
-  public servicingchart : any;
+  public Leadchart: any;
+  public proposalChart: any;
+  public renewChart: any;
+  public customerchart: any;
+  public servicingchart: any;
   public dhaChart: any;
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef | undefined;
@@ -53,9 +54,10 @@ export class DashboardComponent {
   ];
 
   otherSection: any = [];
+  ProductList: any;
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
-    private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
+    private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef, private productService: ProductsService) {
 
   }
 
@@ -77,6 +79,7 @@ export class DashboardComponent {
     });
     this.fetchWidgets();
     this.createRenewChart();
+    this.getPoductList();
   }
 
   getTimeOfDay() {
@@ -268,10 +271,10 @@ export class DashboardComponent {
             this.otherSection.push({
               tabName: 'Customer',
               chart: 'Customer',
-              isShow : true,
+              isShow: true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => item.count, 0),
               category: Object.entries(res.data).map(([name, count]) => ({
-                name: name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+                name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
                 count: count
               }))
             })
@@ -283,12 +286,12 @@ export class DashboardComponent {
             console.log('Servicing', res.data)
             this.serviceInfo = res.data;
             this.otherSection.push({
-              tabName: 'Servicing',
-              chart: 'Servicing',
-              isShow : true,
+              tabName: 'Claims',
+              chart: 'Claims',
+              isShow: true,
               totalCount: Object.entries(res.data).map(([name, count]) => ({ name, count })).reduce((sum: any, item: any) => sum + item.count, 0),
               category: Object.entries(res.data).map(([name, count]) => ({
-                name: name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+                name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
                 count: count
               }))
             })
@@ -297,18 +300,12 @@ export class DashboardComponent {
 
         case 'Wellness':
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
-            console.log('Wellness', res.data)
-            this.dhaCard = res.data;
-            this.otherSection.push({
-              tabName: 'Wellness',
-              chart: 'Wellness',
-              isShow : false,
-              totalCount: res.data.reduce((sum: any, item: any) => sum + item.count, 0),
-              category: res.data.map((item: any) => ({
-                name: item.wellnessType,
-                count: item.count
-              }))
-            })
+            this.dhaCard = Object.entries(res.data[0]).map(([name, count]) => ({
+              name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
+              count: count,
+
+            }))
+            console.log(this.dhaCard)
           })
           break;
 
@@ -369,7 +366,7 @@ export class DashboardComponent {
     this.renderChart();
     this.renderPropChart();
     this.renderEXPropChart();
-    this.renderDHAChart();
+    // this.renderDHAChart();
     this.renderCustomerChart();
     this.renderServiceChart();
     this.createHorizontalBarChart();
@@ -426,12 +423,12 @@ export class DashboardComponent {
     if (this.chartCanvas && this.chartCanvas.nativeElement) {
       const canvas = this.chartCanvas.nativeElement;
       const ctx = canvas.getContext('2d');
-  
+
       if (!ctx) {
         console.error('Failed to get context from canvas.');
         return;
       }
-  
+
       // Create the chart using Chart.js
       this.Leadchart = new Chart(ctx, {
         type: 'doughnut', // 'pie' or 'doughnut'
@@ -467,12 +464,12 @@ export class DashboardComponent {
               const index = activeElements[0].index;
               const value = this.Leadchart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
               const label = this.Leadchart.data.labels[index];  // Access labels via `this.chart`
-  
+
               console.log(`Clicked on: ${label} with value ${value}`);
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/leads/leadsList/'], {
-                queryParams: { status : label  },
+                queryParams: { status: label },
               });
             }
           }
@@ -528,12 +525,12 @@ export class DashboardComponent {
               const index = activeElements[0].index;
               const value = this.proposalChart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
               const label = this.proposalChart.data.labels[index];  // Access labels via `this.chart`
-  
+
               console.log(`Clicked on: ${label} with value ${value}`);
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/proposals/proposalsList/'], {
-                queryParams: { status : label  },
+                queryParams: { status: label },
               });
             }
           }
@@ -631,75 +628,75 @@ export class DashboardComponent {
 
   }
 
-  createDHAChartData(): ChartData<'pie' | 'doughnut'> {
-    const categories = this.dhaCard;
-    const labels = categories.map((item: any) => item.wellnessType);
-    const data = categories.map((item: any) => item.count);
+  // createDHAChartData(): ChartData<'pie' | 'doughnut'> {
+  //   const categories = this.dhaCard;
+  //   const labels = categories.map((item: any) => item.wellnessType);
+  //   const data = categories.map((item: any) => item.count);
 
-    return {
-      labels: labels,
-      datasets: [{
-        data: data,
-        backgroundColor: ['#e74c3c',
-          '#9b59b6',
-          '#3498db',
-          '#f39c12',
-          '#1abc9c',
-          '#27ae60',
-          '#e67e22',
-          '#f1c40f',
-          '#95a5a6'
-        ],
-        // Dynamic colors
-        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
-      }]
-    };
-  }
+  //   return {
+  //     labels: labels,
+  //     datasets: [{
+  //       data: data,
+  //       backgroundColor: ['#e74c3c',
+  //         '#9b59b6',
+  //         '#3498db',
+  //         '#f39c12',
+  //         '#1abc9c',
+  //         '#27ae60',
+  //         '#e67e22',
+  //         '#f1c40f',
+  //         '#95a5a6'
+  //       ],
+  //       // Dynamic colors
+  //       //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+  //     }]
+  //   };
+  // }
 
-  renderDHAChart(): void {
-    if (this.chartDHACanvas && this.chartDHACanvas.nativeElement) {
-      const canvas = this.chartDHACanvas.nativeElement;
-      const ctx = canvas.getContext('2d');
+  // renderDHAChart(): void {
+  //   if (this.chartDHACanvas && this.chartDHACanvas.nativeElement) {
+  //     const canvas = this.chartDHACanvas.nativeElement;
+  //     const ctx = canvas.getContext('2d');
 
-      if (!ctx) {
-        console.error('Failed to get context from canvas.');
-        return;
-      }
+  //     if (!ctx) {
+  //       console.error('Failed to get context from canvas.');
+  //       return;
+  //     }
 
-      // Create the chart using Chart.js
-      this.dhaChart = new Chart(ctx, {
-        type: 'doughnut', // 'pie' or 'doughnut'
-        data: this.createDHAChartData(), // Dynamic chart data
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                font: {
-                  size: 12,  // Reduce the font size of the legend labels
-                  weight: 'normal',  // Adjust the weight of the legend text
-                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
-                },
-                boxWidth: 10,  // Set the width of the colored box (legend symbol)
-                boxHeight: 10,  // Set the height of the colored box (legend symbol)
-                padding: 5  // Adjust the padding around each legend item
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: (tooltipItem) => {
-                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
-                },
-              },
-            },
-          },
-        }
-      });
-    } else {
-      console.error('Chart canvas element is not found.');
-    }
-  }
+  //     // Create the chart using Chart.js
+  //     this.dhaChart = new Chart(ctx, {
+  //       type: 'doughnut', // 'pie' or 'doughnut'
+  //       data: this.createDHAChartData(), // Dynamic chart data
+  //       options: {
+  //         responsive: true,
+  //         plugins: {
+  //           legend: {
+  //             position: 'bottom',
+  //             labels: {
+  //               font: {
+  //                 size: 12,  // Reduce the font size of the legend labels
+  //                 weight: 'normal',  // Adjust the weight of the legend text
+  //                 family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+  //               },
+  //               boxWidth: 10,  // Set the width of the colored box (legend symbol)
+  //               boxHeight: 10,  // Set the height of the colored box (legend symbol)
+  //               padding: 5  // Adjust the padding around each legend item
+  //             }
+  //           },
+  //           tooltip: {
+  //             callbacks: {
+  //               label: (tooltipItem) => {
+  //                 return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+  //               },
+  //             },
+  //           },
+  //         },
+  //       }
+  //     });
+  //   } else {
+  //     console.error('Chart canvas element is not found.');
+  //   }
+  // }
 
   createCustomerChartData(): ChartData<'pie' | 'doughnut'> {
     return {
@@ -740,7 +737,7 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'right',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 12,  // Reduce the font size of the legend labels
@@ -809,7 +806,7 @@ export class DashboardComponent {
           responsive: true,
           plugins: {
             legend: {
-              position: 'right',
+              position: 'bottom',
               labels: {
                 font: {
                   size: 12,  // Reduce the font size of the legend labels
@@ -896,5 +893,33 @@ export class DashboardComponent {
         }
       }
     });
+  }
+
+  getCondition(d : any){
+    return ( d == 'Total Assessments' ||  d == 'Total Users')? true :false;
+  }
+
+  getPoductList() {
+    const reqData = {
+      "agentCode": localStorage.getItem('agentCode')
+    }
+    this.productService.Getproductlist(reqData).subscribe({
+      next: (res: any) => {
+        this.ProductList = res.data.slice(0, 2).map((item: any) => ({
+          productName: item.productName,
+          desc: item.productDescription,
+          keyFeatures: item.keyFeatures && JSON.parse(item.keyFeatures).slice(0, 3),
+          sumInsured: item.sumInsured && item.sumInsured.split(",")[0]
+        }));
+        console.log(this.ProductList)
+
+      },
+      error: (err) => {
+        console.error(err);
+        if (err.status === 404) {
+        }
+      }
+    })
+
   }
 }

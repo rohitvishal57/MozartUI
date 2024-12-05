@@ -493,11 +493,10 @@ h2 {
 }
 .dashboard_latestABHI {
     border-radius: 16px;
-    padding: 24px 32px;
     background: linear-gradient(180deg, #FFF5EC 0%, #FFFFFF 100%);
     border: 2px solid #FFFFFF;
     height: 166px;
-    margin-bottom: 80px;
+    margin-bottom: 120px;
     .card_wraper {
         .cardsub_wraper{
             overflow-x: auto;
@@ -894,12 +893,12 @@ h2 {
 .board_otherSections {
     display: flex;
     flex-wrap: wrap;
-    gap: 32px;
+    gap: 16px;
     .item_otherSections {
         padding: 20px 16px;
         border-radius: 16px;
         background: #ffffff;
-        max-width: 524px;
+        max-width: 533px;
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -1409,7 +1408,51 @@ h2 {
         border-radius: 20px;
     }
 }
-
+.dashboard_LPR_submain {
+    .leads_contentDashboard {
+       .scroll_contentDashboard{
+            /* max-height: none;
+            min-height: auto;
+            overflow-y: hidden;
+            display: flex;
+            flex-wrap: wrap;
+            gap:5px; 
+            .leads_item_contentDashboard {
+                width: 48%;
+                box-shadow: 0px 2px 4px 0px rgba(213, 215, 222, 0.2), 0px 1px 10px 0px rgba(213, 215, 222, 0.1215686275), 0px 4px 5px 0px rgba(213, 215, 222, 0.1411764706);
+            }*/
+       } 
+    }
+}
+.leads_newService {
+    display: flex;
+    flex-direction: row !important;
+    gap: 10px !important;
+    .scroll_contentDashboard, .leads_newChart {
+        width: 50%;
+    }
+    .scroll_contentDashboard{
+        max-height: none;
+        min-height: auto;
+        padding: 10px;
+        .data_inscroll{
+            padding: 6px;
+            border-radius: 16px;
+            box-shadow: 0px 2px 4px 0px rgba(213, 215, 222, 0.2), 0px 1px 10px 0px rgba(213, 215, 222, 0.1215686275), 0px 4px 5px 0px rgba(213, 215, 222, 0.1411764706);
+            .leads_item_contentDashboard {
+                &:last-child {
+                    border-width: 0 !important;
+                }
+                .leads_item {
+                    header {
+                        padding: 0;
+                    }
+                }
+            }
+        }
+        
+    }
+}
 /*---Responsive dahboard new sections styles start---*/
 @media (max-width:1280px){
     .cardWraper-container {
