@@ -48,7 +48,7 @@ export class CommissionstatementComponent {
       if(respose.isSuccess){
       let commissionDetails = respose?.data?.searchResponse[0];
       if(commissionDetails){
-        this.downloadStatement()
+        //this.downloadStatement()
       }
       }
       console.log('fetch commission statement',respose);
