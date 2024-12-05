@@ -29,7 +29,11 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://upuat.adityabirlahealth.com/api/v1/ValidateBBOTP',
     'https://upuat.adityabirlahealth.com/api/rug/saveupdatecommondraft',
     'https://upuat.adityabirlahealth.com/api/v1/SaveBBCommonDraft',
-    'https://upuat.adityabirlahealth.com/api/v1/HalfQuote'
+    'https://upuat.adityabirlahealth.com/api/v1/HalfQuote',
+    'https://usp.monocept.ai/api/rug/GetSumInsuredList',
+    'https://usp.monocept.ai/api/rug/GetFamilyConstructByProductCode',
+    'https://usp.monocept.ai/api/rug/GetPremium',
+    'https://usp.monocept.ai/api/rug/GetProposerRelations'
   ];
 
   intercept(

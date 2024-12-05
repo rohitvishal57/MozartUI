@@ -129,11 +129,11 @@ export class YatraService {
     return this.httpService.post(feedbackServiceURL,reqData);
   }
   getRelations(){
-    const  getRelationship = this.configService.config.axisBaseUrl + this.configService.config.getRelations;
+    const  getRelationship = this.configService.config.baseUrl + this.configService.config.getRelations;
     return this.httpService.get(getRelationship);
   }
   getProductCombinations(){
-    const  getProductCombinations = this.configService.config.axisBaseUrl + this.configService.config.getProductCombination;
+    const  getProductCombinations = this.configService.config.baseUrl + this.configService.config.getProductCombination;
     return this.httpService.get(getProductCombinations);
   }
   getProposalDetails(reqData:any){
@@ -141,15 +141,15 @@ export class YatraService {
     return this.httpService.post(proposalDetails,reqData);
   }
   getSumInsuredDetails(reqData:any){
-    const suminsuredDetails = this.configService.config.axisBaseUrl + this.configService.config.getSumInsuredDetails;
+    const suminsuredDetails = this.configService.config.baseUrl + this.configService.config.getSumInsuredDetails;
     return this.httpService.post(suminsuredDetails,reqData);
   }
   getPremiumData(reqData:any){
-    const premiumData = this.configService.config.axisBaseUrl + this.configService.config.getPremiumDetaiks;
+    const premiumData = this.configService.config.baseUrl + this.configService.config.getRUGPremium;
     return this.httpService.post(premiumData,reqData);
   }
   getFamilyConstructData(reqData:any){
-    const familyConstructData = this.configService.config.axisBaseUrl + this.configService.config.getFamilyConstruct;
+    const familyConstructData = this.configService.config.baseUrl + this.configService.config.getFamilyConstruct;
     return this.httpService.post(familyConstructData,reqData);
   }
   saveBBCommonDraft(reqData:any){
