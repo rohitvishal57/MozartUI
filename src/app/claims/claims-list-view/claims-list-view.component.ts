@@ -29,7 +29,7 @@ export class ClaimsListViewComponent implements OnInit {
   totalRecords: number = 0;
   rows: number = 10;
   page: number = 1;
-  selectedStatus = 'all';
+  selectedStatus = "";
   claimStatusCounts: any = {
     all: 0,
     active: 0,
@@ -91,10 +91,12 @@ export class ClaimsListViewComponent implements OnInit {
 
   //-------------filters--------------//
   claimSatusCount = {
-    "AgentCode": this.agentCode
+    "AgentCode": this.agentCode,
+    "claimStatus": ""
   }
 
   fetchClaimStatusCounts(agentCode:any) {
+    this.claimSatusCount.claimStatus = this.selectedStatus
     this.claimsService.getClaimStatusCounts(this.claimSatusCount, agentCode)
       .subscribe((response:any) => {
         if (response) {
@@ -111,7 +113,7 @@ export class ClaimsListViewComponent implements OnInit {
       case 'Approved':
         return 'approved';
       case 'Intimated':
-        return 'active';
+        return 'intimated';
       case 'Under deficiency':  
         return 'underDeficiency';
       case 'Rejected':
@@ -125,12 +127,20 @@ export class ClaimsListViewComponent implements OnInit {
 
   filterClaims(status: string) {
     this.claimsReqBody.status = status;
-    this.selectedStatus = status;
+    //(status === 'all') ? (this.selectedStatus = '') : (this.selectedStatus = status);
+    // this.selectedStatus = status;
     this.isSearch = true;
     this.first = 0;
-    this.fetchData();
-  }
-
+    this.fetchClaimStatusCounts(this.agentCode);
+    }
+    // filterClaims(status: string) {
+    //   this.selectedStatus = status === 'all' ? '' : status;
+    //   this.isSearch = true;
+    //   this.first = 0;
+    //   this.claimsReqBody.status = this.selectedStatus;  
+    //   this.fetchClaimStatusCounts(this.agentCode);  
+    // }
+    
 //---------pagination------------//
 onPageChange(event:any) {
     this.first = event.first;
@@ -316,40 +326,6 @@ clear() {
   this.toggeledropdown = false;
 }
 
-
-  applySearch(): void {
-    let searchValue = this.searchInputControl.value?.trim();
-    if (!searchValue) {
-        this.resetFilters();
-        return;
-    }
-    if (searchValue && this.searchInputControl.valid) {
-      this.claimsReqBody.searchType = this.selected;
-      this.claimsReqBody.searchString = [searchValue];    
-      this.isSearch = true;
-      this.first = 0;
-      this.fetchData();
-
-    }
-  }
-  onInputChange(): void {
-    if (!this.searchInputControl.value) {
-        this.resetFilters();
-    }
-}
-
-resetFilters(): void {
-    this.selected = '';
-    // Optionally, reset any other states related to the search, e.g., search data
-    this.claimsReqBody.searchType = '';
-    this.claimsReqBody.searchString = [];
-    this.isSearch = false;
-    this.first = 0;
-
-    // You can call fetchData() to fetch all data if needed, or leave it empty for showing all
-    //this.fetchData();
-}
-
   onSelectChanges(event: any): void {
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
@@ -363,11 +339,11 @@ resetFilters(): void {
     this.searchInputControl.updateValueAndValidity();
   }
 
-getPlaceholder(): string {
+  getPlaceholder(): string {
   if (this.selected === 'policyNumber') {
       return 'Enter Policy Number';
     } else if (this.selected === 'claimInfoId') {
-      return 'Enter Request ID';
+      return 'Enter Claim No.';
     } else if (this.selected === 'memberId') {
       return 'Enter Member ID';
     } else if (this.selected === 'mobileNumber') {
@@ -377,7 +353,59 @@ getPlaceholder(): string {
       return 'Search...';
     }
   } 
+  resetFilters(): void { 
+    this.claimsReqBody.searchType = '';
+    this.claimsReqBody.searchString = [];
+    this.isSearch = false;
+    this.first = 0;
+    this.fetchData();
+  }
+  
+  onInputChange(event: any): void {
+    const value = event.target.value;    
+    if (value === '') {
+      this.applySearch();
+    }
+  }
 
+  applySearch(): void {
+    let searchValue = this.searchInputControl.value?.trim();
+  
+    if (!searchValue) {
+      this.claimsReqBody.searchType = '';
+      this.claimsReqBody.searchString = []; 
+      this.isSearch = false;
+      this.first = 0;
+      this.fetchData();
+      return;
+    }
+  
+    if (searchValue && this.searchInputControl.valid) {
+      this.claimsReqBody.searchType = this.selected;  
+      this.claimsReqBody.searchString = [searchValue];    
+      this.isSearch = true;
+      this.first = 0;
+      this.fetchData();
+    }
+  }
+
+
+//   applySearch(): void {
+//     let searchValue = this.searchInputControl.value?.trim();
+//     if (!searchValue) {
+//       this.selected = '';
+//       this.fetchData();
+//         return;
+//     }
+//     if (searchValue && this.searchInputControl.valid) {
+//       this.claimsReqBody.searchType = this.selected;
+//       this.claimsReqBody.searchString = [searchValue];    
+//       this.isSearch = true;
+//       this.first = 0;
+//       this.fetchData();
+
+//     }
+//   }
   navigateToViewClaim(row:any){
     let claimDetailsReqBody = {
       "id": row.id,

@@ -361,7 +361,7 @@
                                 </div>
                                 <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                             </div>
-                            <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span>
+                            <!-- <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span> -->
                             <span class="ui-error block-show" *ngIf="uploadValidFormat">
                             {{"File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." | translate}}
                           </span>

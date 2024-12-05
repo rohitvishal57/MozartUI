@@ -124,7 +124,7 @@
                             <div>
                                 <select class="filterSearch" [(ngModel)]="selected" (ngModelChange)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption" >
                                     <option value=""  selected>{{"Select an option" | translate}}</option>
-                                    <option value="claimInfoId">{{"Request ID" | translate}}</option>
+                                    <option value="claimInfoId">{{"Claim No." | translate}}</option>
                                     <option value="policyNumber">{{"Policy Number" | translate}}</option>
                                     <option value="memberId">{{"Member Id" | translate}}</option> 
                                     <option value="mobileNumber">{{"Mobile Number" | translate}}</option> 
@@ -132,14 +132,14 @@
                                 </select>
                             </div>
                             <div>
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()" (keydown.enter)="applySearch()" (input)="onInputChange()">
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [placeholder]="getPlaceholder()" (keydown.enter)="applySearch()" (input)="onInputChange($event)" maxlength="50">
                                 <button [disabled]="!searchInputControl.value || selected === ''" type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()">
                                     <img src="assets/Img/icon_magnify_grey.svg">
                                 </button>
                                     <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'claimInfoId'">{{"Enter Valid Request Id." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'claimInfoId'">{{"Enter Valid Claim No." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberId'">{{"Enter Valid Member Id." | translate}}</small>
                                 </span>                       
@@ -167,12 +167,10 @@
                           </thead>
                           <tbody class="table-group-divider">
                             <ng-container *ngIf="claims.length > 0">
-
-                            
                               <tr class="table-values"  *ngFor="let row of claims;let i = index">
                                 <td class="card_insureInfo">{{ row?.claimInfoId | translate}}</td>
                                 <td>{{ row?.policyNumber }}</td>
-                                <td></td>
+                                <td>{{row?.mobileNumber}}/ <br/> {{row?.email}}</td>
                                 <!-- <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td> -->
                                 <td>{{ row?.memberId }}</td>
                                 <td>{{ row?.requestType }}</td>

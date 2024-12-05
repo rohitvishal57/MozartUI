@@ -778,7 +778,6 @@ export class ClaimsViewComponent {
     this.uploadFiles(Array.from(files).filter((file => this.allowedFileTypes.includes(file.type))));
   }
 
-
   clearSelectedLabel(file: any): void {
     // Reset the documentLabelForm for the newly uploaded file
     file.documentLabelForm.reset({
@@ -995,6 +994,20 @@ export class ClaimsViewComponent {
     }
   
   }
+  // memberIdChange(event: any): void {
+  //   // Get the selected memberId from the dropdown
+  //   const selectedMemberId = event.target.value;
+  
+  //   // Find the selected member object by memberId (since memberId is used as the value in the dropdown)
+  //   const selectedMember = this.policyMembersList.find(member => member.memberId === selectedMemberId);
+  
+  //   if (selectedMember) {
+  //     // Set both memberId and memberName in the form controls
+  //     this.form.get('memberId')?.setValue(selectedMember.memberId);   // Set memberId form control
+  //     this.form.get('memberName')?.setValue(selectedMember.memberName); // Set memberName form control
+  //   }
+  // }
+
 
   ///////current date and time
   formatUploadDateTime() {
@@ -1008,17 +1021,19 @@ export class ClaimsViewComponent {
       const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : null;
-      saveClaimData.memberId = this.selectedMemberName;
-
+     // saveClaimData.memberId = this.selectedMemberName;
+     saveClaimData.memberId = this.form.get('memberId')?.value;  
+     saveClaimData.memberName = this.form.get('memberName')?.value;  
+ 
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,
         billAmount: bill.billAmount ? bill.billAmount.toString() : ""
       }));
 
-      if (!this.selectedFile) {
-        this.isFilenotSelected = true;
-        return;
-      }
+      // if (!this.selectedFile) {
+      //   this.isFilenotSelected = true;
+      //   return;
+      // }
 
       // if (!saveClaimData.claimedAmount) {
       //   saveClaimData.claimedAmount = 0;
