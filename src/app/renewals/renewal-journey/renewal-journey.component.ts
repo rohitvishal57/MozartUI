@@ -1234,7 +1234,6 @@ export class RenewalJourneyComponent {
               //   }
 
               //   console.log(this.renewalFormGroup.value, this, this.renewalFormGroup);
-              //   debugger;
 
               //   // if ((this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1]) {
               //     (this.renewalFormGroup.get(controls.idProperty) as FormArray)?.controls[index - 1].get('memberdob')?.setValue(this.renewalFormGroup.get('memberDobProposer')?.value);
