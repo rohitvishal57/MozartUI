@@ -45,7 +45,7 @@ export class CommissionstatementComponent {
 
   fetchCommissionStatement() {
     let requestbody: any = this.commissionForm.getRawValue();
-    requestbody.agentCode = 'ABH1101695';
+    requestbody.agentCode = this.agentCode;
     requestbody.type = 'CommissionStatement';
     this.commissionstatementService.fetchCommissionStatement(requestbody).subscribe(
       (respose) => {
@@ -68,7 +68,7 @@ export class CommissionstatementComponent {
 
   downloadStatement(omniDocImageIndex: string, fileName: string) {
     let requestBody: any = {};
-    requestBody.agentCode = 'ABH1101695';
+    requestBody.agentCode =  this.agentCode;
     requestBody.downloadRequest = [{
       omniDocImageIndex: omniDocImageIndex,
       fileName: fileName
