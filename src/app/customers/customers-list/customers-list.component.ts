@@ -46,6 +46,7 @@ export class CustomersListComponent {
   customerInfo:boolean =false;
   BasicDetailsInfo:any;
   selectedFilter: string = 'basicDetails';
+  commonInfo: any[] = [];
   documents:any[]=[];
   selectedDocument: any = null;
   policyNumber: string | null = null;
@@ -53,8 +54,8 @@ export class CustomersListComponent {
   customerBasicDetails: any;
   customerProductDetails: any;
   customerClaimDetails: any[]=[];
-  customerEndorsementDetails: any;
-  customerInsuredDetails: any;
+  customerEndorsementDetails: any[]=[];
+  customerInsuredDetails: any[]=[];
 
   constructor(
     private customerService: CustomersService ,private datePipe: DatePipe,
@@ -444,7 +445,8 @@ toggleMoreInfo(index: number): void {
     this.customerInfo=false;
     this.selectedFilter='basicDetails';
   }
-  getCustomerBasicDetails() {
+getCustomerBasicDetails() {
+    this.commonInfo=[];
     const customerBasicDetailsRequestBody = {
       customerID: this.customerID,
       policyNumber: this.policyNumber,
@@ -455,6 +457,7 @@ toggleMoreInfo(index: number): void {
       (res: any) => {
         if (res.isSuccess && res.data) {
           this.customerBasicDetails = res.data; 
+          this.commonInfo=res.data;
         } else {
           this.toast.error({ detail: "", summary: res.message || "Failed to get customer Basic Details.", duration: 2000 });
           this.customerBasicDetails = null;
@@ -467,10 +470,12 @@ toggleMoreInfo(index: number): void {
     );
   }
   getCustomerProductDetails() {
+    this.commonInfo=[];
     this.customerService.getCustomerProductDetailsApi(this.policyNumber).subscribe(
       (res: any) => {
         if (res.isSuccess && res.data) {
-          this.customerProductDetails = res.data;          
+          this.customerProductDetails = res.data;  
+          this.commonInfo=res.data;        
         } else {
           this.toast.error({ detail: "", summary: res.message || "Failed to get customer Product Details.", duration: 2000 });
           this.customerProductDetails = null;
@@ -483,10 +488,12 @@ toggleMoreInfo(index: number): void {
     );
   }
   getCustomerInsuredDetails() {
+    this.commonInfo=[];
     this.customerService.getCustomerInsuredDetailsApi(this.policyNumber).subscribe(
       (res: any) => {
         if (res.isSuccess && res.data.length > 0) {
-          this.customerInsuredDetails = res.data;           
+          this.customerInsuredDetails = res.data;  
+          this.commonInfo=res.data;         
         } else {
           this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Insured Members Details.", duration: 3000 });
           this.customerInsuredDetails = []        
@@ -499,6 +506,7 @@ toggleMoreInfo(index: number): void {
     );
    }
   getCustomerClaimDetails() {
+    this.commonInfo=[];
     const customerClaimDetailsRequestBody = {
       policyNumber: this.policyNumber,
       agentCode: this.agentCode,
@@ -507,12 +515,13 @@ toggleMoreInfo(index: number): void {
       (res: any) => {
         if (res.isSuccess && res.data && res.data.claimDetails.length > 0) {
           this.customerClaimDetails = res.data.claimDetails; 
+          this.commonInfo=res.data.claimDetails;
           console.log("length",this.customerClaimDetails);
           
         } else {
           console.log("length",this.customerClaimDetails);
 
-          this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Claims Details.", duration: 3000 });
+          // this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Claims Details.", duration: 3000 });
           this.customerClaimDetails = []        }
       },
       (err: any) => {
@@ -521,15 +530,17 @@ toggleMoreInfo(index: number): void {
     );
   }
   getCustomerEndorsementDetails() {
+    this.commonInfo=[];
     this.customerService.getCustomerEndorsementDetailsApi(this.policyNumber).subscribe(
       (res: any) => {
         if (res.isSuccess && res.data.length > 0) {
           this.customerEndorsementDetails = res.data;  
+          this.commonInfo=res.data;
           console.log(this.customerEndorsementDetails);
                    
         } else {
           console.log(this.customerEndorsementDetails);
-          this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Service Details.", duration: 3000 });
+          // this.toast.warning({ detail: "", summary: res.message || "Failed to get customer Service Details.", duration: 3000 });
           this.customerEndorsementDetails = []        
         }
       },
@@ -561,7 +572,6 @@ toggleMoreInfo(index: number): void {
     this.getCustomerEndorsementDetails();
   }
   }
-
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.checkView(); 
