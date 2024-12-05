@@ -1193,6 +1193,7 @@ export class YatraComponent {
 
   uploadSelectedDocument(): Promise<void> {
     return new Promise(async (resolve, reject) => {
+      if(this.selectedButton){
       try {
         const policyNum = this.proposalNum.replace(/-/g, "");
         const formData = new FormData();
@@ -1200,8 +1201,6 @@ export class YatraComponent {
         formData.append("UniqueNumber", policyNum);
         this.commonService.uploadDocument(formData).subscribe(
           async (res: any) => {
-
-
             if (res.isSuccess) {
               console.log("response after success", res);
               console.log("unique id", res.data.uploadResponse[0].globalId);
@@ -1246,6 +1245,13 @@ export class YatraComponent {
         });
         reject(error); // Reject the promise on preparation error
       }
+    }else{
+      this.toast.warning({
+        detail: "WARNING",
+        summary: "Please select Payment Mode.",
+        duration: 3000,
+      });
+    }
     });
   }
 
