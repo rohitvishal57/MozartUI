@@ -24,7 +24,8 @@ export class UploadLeadComponent implements OnInit{
   AgentCode: string = '';
   uploadedFiles : boolean = false;
   fileList : any[] =[];
-
+  isContinueButtonDisabled : boolean = true;
+ 
   constructor( private formBuilder: FormBuilder, private toast: NgToastService, private leadsService: LeadsService,   private languageService: LanguageService,
     private translateService: TranslateService,   private router: Router  ){
 
@@ -97,6 +98,7 @@ export class UploadLeadComponent implements OnInit{
             fileExt : this.fileExt           
           };
           this.fileList.push(fileWithFileExt);
+          this.isContinueButtonDisabled= false;
           console.log('fileList',this.fileList);
         }else{
           this.showNote = true;

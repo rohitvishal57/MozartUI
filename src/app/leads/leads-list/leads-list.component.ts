@@ -117,6 +117,8 @@ export class LeadsListComponent {
   }
 
   ngOnInit(): void {
+    window.scrollTo(0, 0);
+
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
