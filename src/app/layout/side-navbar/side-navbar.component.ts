@@ -100,6 +100,7 @@ export class SideNavbarComponent {
   // Handle route redirection
   redirect(route: string): void {
     if (route) {
+      this.loginService.toggleSidebar(!this.loginService.getValue());
       this.router.navigate([route]);
     }
   }
@@ -133,7 +134,7 @@ export class SideNavbarComponent {
     const width = (event.target as Window).innerWidth;
     this.isExpanded = width < 1024;
   }
-
+  
   // Handle user logout
   logOut(): void {
     this.toast.success({ detail: 'SUCCESS', summary: 'Agent Logout successfully!!', duration: 2000 });
