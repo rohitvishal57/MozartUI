@@ -985,29 +985,24 @@ export class ClaimsViewComponent {
     }
   }
 
-  memberIdChange(event:any){    
-    this.selectedMemberName = event.target.value;
-    const selectedMember = this.policyMembersList.find(member => member.memberName === this.selectedMemberName);
-  
-    if (selectedMember) {
-      this.form.get('memberId')?.setValue(selectedMember.memberId);  // Assuming 'memberId' is the name of the form control in your form group
-    }
-  
-  }
-  // memberIdChange(event: any): void {
-  //   // Get the selected memberId from the dropdown
-  //   const selectedMemberId = event.target.value;
-  
-  //   // Find the selected member object by memberId (since memberId is used as the value in the dropdown)
-  //   const selectedMember = this.policyMembersList.find(member => member.memberId === selectedMemberId);
+  // memberIdChange(event:any){    
+  //   this.selectedMemberName = event.target.value;
+  //   const selectedMember = this.policyMembersList.find(member => member.memberName === this.selectedMemberName);
   
   //   if (selectedMember) {
-  //     // Set both memberId and memberName in the form controls
-  //     this.form.get('memberId')?.setValue(selectedMember.memberId);   // Set memberId form control
-  //     this.form.get('memberName')?.setValue(selectedMember.memberName); // Set memberName form control
+  //     this.form.get('memberId')?.setValue(selectedMember.memberId);  
   //   }
+  
   // }
-
+  memberIdChange(event: any) {
+    const selectedMemberId = event.target.value;
+    const selectedMember = this.policyMembersList.find(member => member.memberId === selectedMemberId);
+    
+    if (selectedMember) {
+      this.form.get('memberName')?.setValue(selectedMember.memberName);
+      this.form.get('memberId')?.setValue(selectedMember.memberId);
+    }
+  }
 
   ///////current date and time
   formatUploadDateTime() {

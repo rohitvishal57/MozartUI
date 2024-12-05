@@ -30,10 +30,15 @@
 
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberName" [ngClass]="{'has-value': true}">
+                                <!-- <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberName" [ngClass]="{'has-value': true}">
+                                    <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
+                                    <!-- <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }}</option> 
+                                 
+                                </select> -->
+                                <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberId" [ngClass]="{'has-value': true}">
                                     <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
                                     <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }}</option>
-                                </select>
+                                  </select>
                                 <label for="member">{{"Select Member" | translate}}</label>
                                 <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
                                   {{"Member name is required." | translate}}
