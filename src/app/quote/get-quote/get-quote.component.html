@@ -141,8 +141,14 @@
             <div class="overlay_popupMain overlay_dropdown_w518" *ngIf="selectedDropdown === 'Relationship'">
               <!--Overlay: Personal details start-->
               <div class="option_policyType">
-                <div class="overlay_body insurer_detailsMain">
-                  <h3>{{"Personal details" | translate}}</h3>
+                <div class="overlay_body insurer_detailsMain sumInsured_selectMain">
+                  <div class="sumInsured_select">
+                    <header>
+                      <h3>{{"Personal details" | translate}}</h3>
+                      <div class="sumInsured_value"><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        style="font-size: 14px;" (click)="closeCustomDiv()"></button></div>
+                    </header>
+                  </div>
                   <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                       <div class="input-block input-block-renew input-filed-white">

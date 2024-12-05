@@ -624,8 +624,8 @@ export class GetQuoteComponent {
     console.log(this.quoteFormGroup.value);
     sessionStorage.setItem("formData", this.encryptionService.encrypt(this.quoteFormGroup.value));
     sessionStorage.setItem("relations", this.encryptionService.encrypt(this.relations));
-
-    if (this.quoteFormGroup.valid) {
+    console.log(this.quoteFormGroup.get('insuredMemberDetails')?.value.length);
+    if (this.quoteFormGroup.valid && this.quoteFormGroup.get('insuredMemberDetails')?.value.length > 0) {
       console.log(this.quoteFormGroup.value);
       // this.saveDataToStorage();
       if (this.route.url.includes('quoteProducts')) {

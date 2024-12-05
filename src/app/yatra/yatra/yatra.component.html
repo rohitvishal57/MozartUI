@@ -928,9 +928,10 @@
                                   <p>{{"Select Member" | translate}}</p>
                                 </div>
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
-                                  <i (click)="closeOverlay(subControl,control)">
+                                  <!-- <i (click)="closeOverlay(subControl,control)">
                                     <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close" width="16%">
-                                  </i>
+                                  </i> -->
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeOverlay(subControl,control)"></button>
                                 </div>
                               </div>
                               <div class="row" style="height: 95%; overflow-y: scroll;">
@@ -1125,9 +1126,7 @@
                             <p>Add Disease</p>
                           </div>
                           <div class="col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4 text-right">
-                            <i (click)="closePopUp()">
-                              <img src="assets/Img/cancel-svgrepo-com.svg" alt="Close" width="16%">
-                            </i>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closePopUp()"></button>
                           </div>
                         </div>
                         <div class="row add-disease-popup" style="height: 95%; overflow-y: scroll;">
