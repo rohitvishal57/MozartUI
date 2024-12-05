@@ -217,6 +217,7 @@ export class RugDynamicFormComponent {
       this.yatraService.getFamilyConstructData(familyConstructObj).subscribe({
         next: (res: any) => {
           console.log(res);
+          res = JSON.parse(res.data).data
           this.familyConstructsData = res.familyConstructs
           console.log(this.familyConstructsData);
 
@@ -233,6 +234,7 @@ export class RugDynamicFormComponent {
       this.yatraService.getFamilyConstructData(familyConstructObj).subscribe({
         next: (res: any) => {
           console.log(res);
+          res = JSON.parse(res.data).data
           this.familyConstructsData = res.familyConstructs
           console.log(this.familyConstructsData);
 
@@ -3200,7 +3202,7 @@ export class RugDynamicFormComponent {
       //   // this.dynamicFormGroup.get('accountNumber')?.setValue(this.bbdetails.accountNumber);
       // }
       let reqData = {
-        "proposalNum": "586020047",
+        "proposalNum": this.leadId,
         "partnerId": this.partnerId,
         "agentCode": this.agentCode,
         "formData": JSON.stringify(this.dynamicFormGroup.value),
@@ -3210,7 +3212,7 @@ export class RugDynamicFormComponent {
         "formId": this.formSequence[this.getFormIndexValue()].formId,
         "jsonForm": JSON.stringify(this.form),
         "formSequence": this.getFormIndexValue(), // index of the form from FormSequence
-        "leadNumber": "586020047", // will be generated in the save of the first form (leads page) and will be sent as response of this API in the incoming requests, u need to pass that response's lead Id here
+        "leadNumber": this.leadId, // will be generated in the save of the first form (leads page) and will be sent as response of this API in the incoming requests, u need to pass that response's lead Id here
         "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""// will be generate in getQuoteForSingleProducts and top selling products
     }
       console.log(reqData);
@@ -3226,18 +3228,18 @@ export class RugDynamicFormComponent {
                 proposerDetails: {
                   leadId: this.d2cDetails.leadId,
                   // customerId: this.d2cDetails.customerId,
-                  salutation: this.d2cDetails.salutation,
-                  customerName: this.d2cDetails.insuredMemberDetails[0].name + this.d2cDetails.insuredMemberDetails[0].lastName,
+                  salutation: "MR",
+                  customerName: this.d2cDetails.insuredMemberDetails[0].name,
                   // customerLastName: this.d2cDetails.customerLastName,
                   address:this.d2cDetails.proposerAddress,
                   city:this.d2cDetails.proposerCity,
                   pinCode: this.d2cDetails.proposerPincode,
-                  state: this.d2cDetails.proposerState,
+                  state: "GUJARAT",
                   dob: this.d2cDetails.proposerDob,
                   gender: this.d2cDetails.proposerGender,
                   mobileNumber: this.d2cDetails.proposerMobileNumber,
                   nationality: this.d2cDetails.proposerNationality,
-                  emailAddress: this.d2cDetails.proposerEmailAddress,
+                  emailAddress: this.d2cDetails.proposerEmailAddress || "LHMUE.SHAH@ARVIND.IN",
                   maritalStatus: this.d2cDetails.proposerMaritalStatus,
                   occupationType: this.d2cDetails.proposerOccupationType,
                   panNumber: this.d2cDetails.proposerPanNumber,
@@ -3250,16 +3252,16 @@ export class RugDynamicFormComponent {
                   isPayment: null,              
                   leadStatus: this.d2cDetails.leadStatus,
                   quotationNumber: null,
-                  productCode: 'D02',
+                  productCode: this.productId == "7" ? 'D01' : this.productId == "9" ? "D02" : null,
                   productName: null,
                   occupationName: null,
-                  productPlanCode: '11',
+                  productPlanCode: '1',
                   productPlan: this.d2cDetails.planAvailable,                  
                   groupCode: "GRP001",
                   combiId: "1",
                   combiName: this.d2cDetails.planAvailable,
                   familyConstruct: "1A",
-                  familyConstructId: '1',
+                  familyConstructId: 1,
                   ghiPremium: this.d2cDetails.totalPremium,
                   gpaPremium: null,
                   gciPremium: null,
@@ -3324,7 +3326,7 @@ export class RugDynamicFormComponent {
                   leadId: this.d2cDetails.leadId,
                   name: member.name + member.lastName,
                   dob: member.dob,
-                  relationWithProposer: JSON.parse(member.relationshipType)?.name || member.relation,
+                  relationName: null,
                   relationCode: JSON.parse(member.relationshipType)?.id || "",
                   gender: member.gender,                
                   height: member.height || 0,
@@ -3334,46 +3336,47 @@ export class RugDynamicFormComponent {
                   leadId: this.d2cDetails.leadId,
                   nomineeName: this.d2cDetails.nomineeName,
                   nomineeRelation: this.d2cDetails.nomineeRelation,
-                  nomineeRelationCode: "R003",
-                  nomineeDOB: this.d2cDetails.nomineeDob,
-                  nomineeGender: this.d2cDetails.nomineeGender,
+                  nomineeRelationCode: "R002",
+                  nomineeDOB: "11-11-1999",
+                  nomineeGender: this.d2cDetails.nomineeGender == "F" ? "Female" : "Male",
                   nomineeMobileNumber: this.d2cDetails.mobileNumber,
-                  nomineeAddress: this.d2cDetails.nomineeAddress || null,// Assuming not provided
+                  nomineeAddress: this.d2cDetails.nomineeAddress || "kanpur",// Assuming not provided
                   appointeeDOB: null,
                   appointeeName: this.d2cDetails.appointeeName || null,
                   appointeeContactNo: this.d2cDetails.appointeeMobileNumber || null,
                   relationshipOfAppointeeWithNominee: this.d2cDetails.relationWithNominee || "",
-                  dateOfBirth: this.d2cDetails.nomineeDob,
                   defaultShare: this.d2cDetails.nomineeDefaultShare,
                 }
               };
               console.log(payloadObject);
               let testObj = {"leadId":"3000886759975308","requestData":"{\"proposerDetails\":{\"leadId\":\"3000886759975308\",\"salutation\":\"MR\",\"customerName\":\"Dfyjemo Person\",\"address\":\"11-BAVA F INSTAL RN IRAJALAWRAP K~ ~RVANPGNAURA\",\"city\":\"AHMEDABAD\",\"pinCode\":\"302019\",\"state\":\"GUJARAT\",\"dob\":\"20-02-1974\",\"gender\":\"M\",\"mobileNumber\":\"9992298551\",\"nationality\":\"IN\",\"emailAddress\":\"LHMUE.SHAH@ARVIND.IN\",\"maritalStatus\":\"Y\",\"occupationType\":\"BUSINESS -HNI\",\"panNumber\":\"ALXPS0000L\",\"sumInsured\":\"5000000\",\"premium\":\"16899\",\"isMinor\":false,\"relationShipWithChild\":null,\"relationShipWithChildCode\":null,\"isSubmitted\":null,\"isPayment\":null,\"leadStatus\":\"INITIAL\",\"quotationNumber\":null,\"productCode\":\"D02\",\"productName\":null,\"occupationName\":null,\"productPlanCode\":\"11\",\"productPlan\":\"GHI\",\"groupCode\":\"GRP001\",\"combiId\":\"1\",\"combiName\":\"GHI\",\"familyConstruct\":\"1A\",\"familyConstructId\":1,\"ghiPremium\":\"16899\",\"gpaPremium\":null,\"gciPremium\":null,\"deductibleAmount\":null,\"ghiQuoteNumber\":null,\"gfbQuoteNumber\":null,\"accountNumber\":\"003010100000264\",\"ifsc\":\"hughvgy\",\"accType\":\"secondary\",\"bankName\":\"\",\"bankAccountType\":\"Current\",\"micrCode\":\"\",\"branchName\":\"\"},\"insuredDetails\":[{\"leadId\":\"3000886759975308\",\"name\":\"Dfyjemo Person\",\"dob\":\"20-02-1974\",\"relationName\":null,\"relationCode\":\"R001\",\"gender\":\"M\",\"height\":\"165.10\",\"weight\":\"55\"}],\"nomineeDetails\":{\"leadId\":\"3000886759975308\",\"nomineeName\":\"ughj ugugig\",\"nomineeRelation\":\"spouse\",\"nomineeRelationCode\":\"R002\",\"nomineeDOB\":\"11-11-1999\",\"nomineeGender\":\"Male\",\"nomineeMobileNumber\":\"9887787657\",\"nomineeAddress\":\"jhkhb\",\"appointeeName\":\"\",\"appointeeDOB\":\"\",\"appointeeContactNo\":\"\",\"relationshipOfAppointeeWithNominee\":\"\",\"defaultShare\":\"100\"}}","currentPage":4,"isFinalSubmit":true,"leadStatus":"SUBMITTED"}
               let commonDraftRequest = {
-                leadId: "586020047",
-                requestData: JSON.stringify(testObj),
+                leadId: this.leadId,
+                requestData: JSON.stringify(payloadObject),
+                currentPage: this.getFormIndexValue(),
                 isFinalSubmit: true,
                 leadStatus: "SUBMITTED"
               }
               this.yatraService.saveD2CCommonDraft(commonDraftRequest).subscribe({
                 next: (res: any) => {
-                  console.log(res);
+                  console.log(JSON.parse(res.data));
+                  res = JSON.parse(res.data)
                   if (res.isSuccess == true && res.statusCode == 200) {
-                    this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+                    this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
                     let justpayPayload = { 
                       "agentcode": this.agentCode,
-                       "proposalNumber": "586020047",
+                       "proposalNumber": this.leadId,
                        "paymentMethod": "autoDebit",
                        "source": "RUG",
                        "policyType": "New Business",
                        "policyNumber": "", 
                        "quoteNumber": "",
                        "OrderId": "",
-                       "Amount": 500000,
-                       "FirstName": "Demojs",
+                       "Amount": this.d2cDetails.totalPremium,
+                       "FirstName": this.d2cDetails.insuredMemberDetails[0].name,
                        "MiddleName": "",
                        "LastName": "Person",
-                       "Phone": "9992232551",
+                       "Phone": this.d2cDetails.proposerMobileNumber,
                        "Email": "LHME.SHAH@ARVIND.IN",
                        "DOB": "10/07/1997" 
                               
@@ -3418,9 +3421,8 @@ export class RugDynamicFormComponent {
       next: (res: any) => {
         console.log(res);
         if (res.isSuccess == true && res.statusCode == 200) {
+          this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
           window.location.href = res.data.paymentURL
-          // this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
-          // window.open(res.data.paymentURL)
           // if (this.getFormIndexValue() < this.formSequence.length - 1) {
           //   this.incrementIndex();
           //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
@@ -5848,6 +5850,7 @@ export class RugDynamicFormComponent {
   getBbRelations(control: any){
     this.yatraService.getRelations().subscribe({
       next: (response: any) => {
+        response = JSON.parse(response.data).data
         this.nomineeRelations = this.aesEncryptService.axisDecrypt(response.encrypted_Response);
         console.log(this.nomineeRelations);
         this.nomineeRelations = this.nomineeRelations.relationShipModels;
@@ -5869,6 +5872,7 @@ export class RugDynamicFormComponent {
     }
     this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
       next: (res: any) => {
+        res = JSON.parse(res.data).data
         res.productSIDetails.map((item: any) => {
           item.value = item.siPlanValue.split('.')[0],
             item.name = item.siPlanValue.split('.')[0]
@@ -5900,6 +5904,7 @@ export class RugDynamicFormComponent {
     this.yatraService.getPremiumData(obj).subscribe({
       next: (res: any) => {
         console.log(res);
+        res = JSON.parse(res.data).data
         this.bbPremiumData = res.premium;
         console.log(this.bbPremiumData);
 
@@ -5911,10 +5916,11 @@ export class RugDynamicFormComponent {
   }
   getD2CSumInsured(control: any) {
     let sumInsuredObj = {
-      ProductCode: "D01"
+      ProductCode: this.productId == '7' ?  "D01" : this.productId == '9' ? "D02" : "D03"
     }
     this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
       next: (res: any) => {
+        res = JSON.parse(res.data).data
         res.productSIDetails.map((item: any) => {
           item.value = item.siPlanValue.split('.')[0],
             item.name = item.siPlanValue.split('.')[0]
@@ -5946,6 +5952,7 @@ export class RugDynamicFormComponent {
     this.yatraService.getPremiumData(obj).subscribe({
       next: (res: any) => {
         console.log(res);
+        res = JSON.parse(res.data).data
         this.bbPremiumData = res.premium;
         console.log(this.bbPremiumData);
 
@@ -5972,6 +5979,7 @@ export class RugDynamicFormComponent {
       this.yatraService.getPremiumData(obj).subscribe({
         next: (res: any) => {
           console.log(res);
+          res = JSON.parse(res.data).data
           this.bbPremiumData = res.premium;
           this.calculateD2CPremium()
         },
@@ -6028,6 +6036,7 @@ export class RugDynamicFormComponent {
       this.yatraService.getPremiumData(obj).subscribe({
         next: (res: any) => {
           console.log(res);
+          res = JSON.parse(res.data).data
           this.bbPremiumData = res.premium;
           this.calculateBBPremium()
         },
