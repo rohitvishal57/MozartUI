@@ -13,7 +13,7 @@
                     <div class="row mb-3">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber" (keydown)="filterList($event)" placeholder="Search Policy Number" />
+                                <input class="form-control input-textBox" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber" (keyup)="filterList($event)" placeholder="Search Policy Number" />
                                 <label for="policyNumber">{{"Search Policy Number" | translate}}</label>
                                 <div *ngIf="form.get('policyNumber')?.invalid && (form.get('policyNumber')?.touched || form.get('policyNumber')?.dirty)">
                                     <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
@@ -321,7 +321,7 @@
                         </div>
 
                     </div>
-                    <div class="body_flex_column gap-32">
+                    <div class="body_flex_column gap-32" *ngIf="hideDocument === true">
                         <div class="uploadDocument_head body_flex_column gap-2">
                             <h3 class="heading-20-black">{{"Upload Documents" | translate}}</h3>
                             <p>{{"Please upload the documents mentioned below. The files should be in .png / .jpg / .pdf with less than 2 MB size per image." | translate}}</p>

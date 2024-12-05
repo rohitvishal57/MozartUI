@@ -69,6 +69,7 @@ export class ClaimsViewComponent {
   agentCode: any;
   selectMemberData: any = {};
   showCashlessFields: boolean = false;
+  hideDocument: boolean = true;
   showReimbursementFields: boolean = false;
   states: any[] = [];
   cities: any[] = [];
@@ -228,6 +229,7 @@ export class ClaimsViewComponent {
       policyNumber: ["", Validators.required],
       proposalNumber: [""],
       memberName: [""],
+      memberId:[""],
       productName: [""],
       fullName: [""],
       policyType: ["",],
@@ -380,7 +382,9 @@ export class ClaimsViewComponent {
       (resp: any) => {
         if (resp?.data && resp?.statusCode == "200" && resp?.isSuccess) {
           this.policyMembersList = resp.data.policyMembersList          
-          this.getMemberIdList(this.policyMembersList)          
+          this.getMemberIdList(this.policyMembersList)    
+          console.log(this.policyMembersList);
+                
         }
       },
       (err) => {
@@ -390,29 +394,42 @@ export class ClaimsViewComponent {
   getMemberIdList(membersList: Array<any>) {
     this.memberNames = membersList;
   }
-  filterList(event: KeyboardEvent): void {
-    const input = (event.target as HTMLInputElement).value.toLowerCase();
+  filterList(event: any): void {
+    const input = (event.target as HTMLInputElement).value.trim(); 
     this.form.patchValue({
       "memberName": "",
-
-    })
+    });
 
     this.filteredPolicyList = this.policyNumbers.filter((item: any) =>
-      item.toLowerCase().includes(input)
+      item.policyNumber.includes(input)
     );
-    const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    const regex = /^[0-9-]$/;
 
-    if (allowedKeys.includes(event.key)) {
-      return;
+    if(input.length >=16) {
+        this.getPolicyMembers(input);
     }
+
+    // const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+    // const regex = /^[0-9-]$/;
+
+    // if (allowedKeys.includes(event.key)) {
+    //   return;
+    // }
+
     // Prevent default if the key is not allowed
-    if (!regex.test(event.key)) {
-      event.preventDefault();
-    }
-  }
+    // if (regex.test(event.key)) {
+    //   event.preventDefault();
+    // }
+}
 
-  onInput(event: KeyboardEvent): void {
+
+  onChange(value: string) {
+    this.selectedPolicyNumber = value;
+    if (value == "") {
+      // this.form.get('policyNumber').reset();
+    }
+    this.getPolicyMembers(value);
+  }
+  onInput(event: any): void {
     const input = event.target as HTMLInputElement;
     const allowedKeys = ['Backspace', 'Tab', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
 
@@ -479,10 +496,12 @@ export class ClaimsViewComponent {
     if (selectedType === "Cashless") {
       this.showReimbursementFields = false;
       this.showCashlessFields = true;
+      this.hideDocument = false;
       this.form.patchValue({
         coverName: "Hospitalization",
       });
     } else if (selectedType === "Reimbursement") {
+      this.hideDocument = true;
       this.showCashlessFields = false;
       this.showSecondScenario = false;
       this.showFirstScenario = false;
@@ -989,7 +1008,7 @@ export class ClaimsViewComponent {
       const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : null;
-      saveClaimData.memberName = this.selectedMemberName;
+      saveClaimData.memberId = this.selectedMemberName;
 
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,
