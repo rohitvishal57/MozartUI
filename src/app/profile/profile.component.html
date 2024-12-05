@@ -2,55 +2,193 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2>Profile Info</h2>
+                <h2 class="icon_withHeading"><!--<a class="btn_backPage"></a>-->{{"My Profile" | translate}}</h2>
             </div>
-            <section class="white_container">
-                <div class="row mb-5 qrCode_mr_0">
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                    <div class="userProfilePic">
-                        <img src="../../assets/images/img_profile.png" />
-                    </div>
-                    <div>
-                        My Hierarachy/ Escalation matrics/ Support 
-                        <button type="submit" id="save" name="save" class="btn_red" style="padding: 1px 16px;">{{"L1"}}</button> 
-                        <button type="submit" id="save" name="save" class="btn_red" style="padding: 1px 16px;">{{"L2"}}</button> 
+            <section class="white_container white_container_shadow">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="claims_matTabs_container">
+                            <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" class="claims_matTabs"
+                                (selectedTabChange)="onTabChanged($event)">
+                                <mat-tab [label]="'Profile Info' | translate">
+                                    <main class="siteBody performBody">
+                                        <div class="contentBody bodyColumns-1">
+                                            <div class="bodyColumn body_flex_column">
+                                                <section class="white_container">
+                                                    <div class="row mb-5 qrCode_mr_0">
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                            <div class="userProfilePic">
+                                                                <img src="../../assets/images/img_profile.png" />
+                                                            </div>
+                                                          <div>
                       </div>
                   </div>
-                 
+                                                       
                
                   <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="userProfile_qrCode">
-                            <!--<img src="../../assets/Img/QR_Code_Section.png" />-->
-                            <div class="img_qrCode">
-                                <img src="../../assets/Img/img_QR_code.png" />
-                            </div>
-                            <div class="qrCode_agentInfo">
-                                <h5>Your Agent Code</h5>
-                                <h6>Copy or scan your Agent Code/QR here.</h6>
-                                <div class="copy_qrCode">
-                                    <div class="copy_qrCode_url">https://www.adityabirlacapital.com/euv456b</div>
-                                    <div class="btn_group_qrCode">
-                                        <button type="button" id="btn-copy-content" name="btn-copy-content" title="Copy"><img src="../../assets/Img/icon_content_copy.svg"></button>
-                                        <button type="button" id="btn-link-content" name="btn-link-content" title="Link"><img src="../../assets/Img/icon_link_share.svg"></button>
+                                                            <div class="userProfile_qrCode">
+                                                                <!--<img src="../../assets/Img/QR_Code_Section.png" />-->
+                                                                <div class="img_qrCode">
+                                                                    <img src="../../assets/Img/img_QR_code.png" />
+                                                                </div>
+                                                                <div class="qrCode_agentInfo">
+                                                                    <h5>Your Agent Code</h5>
+                                                                    <h6>Copy or scan your Agent Code/QR here.</h6>
+                                                                    <div class="copy_qrCode">
+                                                                        <div class="copy_qrCode_url">
+                                                                            https://www.adityabirlacapital.com/euv456b
+                                                                        </div>
+                                                                        <div class="btn_group_qrCode">
+                                                                            <button type="button" id="btn-copy-content"
+                                                                                name="btn-copy-content"
+                                                                                title="Copy"><img
+                                                                                    src="../../assets/Img/icon_content_copy.svg"></button>
+                                                                            <button type="button" id="btn-link-content"
+                                                                                name="btn-link-content"
+                                                                                title="Link"><img
+                                                                                    src="../../assets/Img/icon_link_share.svg"></button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item data-item-mb-15 "
+                                                            *ngFor="let pr of profileDetails">
+                                                            <div class="main_userDetails">
+                                                                <div class="info_userDetails">
+                                                                    <div class="img_userProfile">
+                                                                        <img
+                                                                            src="../../assets/images/{{pr.icon}}.png" />
+                                                                    </div>
+                                                                    <div class="details_userProfile">
+                                                                        <label>{{pr.heading}}</label>
+                                                                        <h6><span title={{pr.value}}>{{pr.value}}</span>
+                                                                        </h6>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="edit_userDetails"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </div>
+                                    </main>
+                                </mat-tab>
+
+                                <mat-tab [label]="'Performance' | translate">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                            <div class="claims_member_info">
+                                                <h4>{{"Annual Club Performance" | translate}}</h4>
+                                                <ul class="list-detailsInfo">
+                                                    <li>
+                                                        <span class="label">{{"Code" | translate}} :</span>
+                                                        <span class="value membername">{{
+                                                            agentPerformanceData?.annualClubPermormance?.agentCode ||
+                                                            'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">{{"Name" | translate}}:</span>
+                                                        <span class="value">{{
+                                                            agentPerformanceData?.annualClubPermormance?.agentName ||
+                                                            'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span
+                                                            class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY1}}
+                                                            {{"Annual Club Status" | translate}} :</span>
+                                                        <span class="value">{{
+                                                            agentPerformanceData?.annualClubPermormance?.annualClubStatus1
+                                                            || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span
+                                                            class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubGWPFY}}
+                                                            {{"Annual Club GWP (Weighted) as on" | translate}} {{
+                                                            agentPerformanceData?.annualClubPermormance?.annualClubGWPWeightedAsOn
+                                                            | date:'d MMM\'yy'}} :</span>
+                                                        <span class="value">{{
+                                                            agentPerformanceData?.annualClubPermormance?.annualClubGWP
+                                                            || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">{{"NOP Persistency" | translate}} % :</span>
+                                                        <span class="value">{{
+                                                            agentPerformanceData?.annualClubPermormance?.nopPersistency
+                                                            || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span
+                                                            class="label">{{agentPerformanceData?.annualClubPermormance?.annualClubStatusFY2}}
+                                                            {{"Annual Club Status" | translate}} :</span>
+                                                        <span class="value">{{
+                                                            agentPerformanceData?.annualClubPermormance?.annualClubStatus2
+                                                            || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">{{"Next Club" | translate}} :</span>
+                                                        <span class="value">{{
+                                                            agentPerformanceData?.annualClubPermormance?.nextClub ||
+                                                            'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">{{"Shortall for Next level" | translate}}
+                                                            :</span>
+                                                        <span class="value">{{
+                                                            agentPerformanceData?.annualClubPermormance?.shortallForNextLevel
+                                                            || 'N/A' }}</span>
+                                                    </li>
+                                                    <li>
+                                                        <span class="label">{{"Loss Ratio" | translate}} :</span>
+                                                        <span class="value">{{
+                                                            agentPerformanceData?.annualClubPermormance?.lossRatio ||
+                                                            'N/A' }}</span>
+                                                    </li>
+                                                </ul>
+                                                <div class="claims_member_info-gradient"></div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                  </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 data-item data-item-mb-15 " *ngFor="let pr of profileDetails">
-                        <div class="main_userDetails">
-                            <div class="info_userDetails">
-                                <div class="img_userProfile">
-                                    <img src="../../assets/images/{{pr.icon}}.png" />
-                                </div>
-                                <div class="details_userProfile">
-                                    <label>{{pr.heading}}</label>
-                                    <h6><span title={{pr.value}}>{{pr.value}}</span></h6>
-                                </div>
-                            </div>
-                            <div class="edit_userDetails"></div>
+                                </mat-tab>
+
+                                <mat-tab [label]="'Escalation Matrix' | translate">
+                                    <div class="card flex justify-content-center lAccordian">
+                                        <p *ngIf="showmsg" class="no-data-message"> We regret to inform you that no
+                                            escalation matrix details are available at this time.</p>
+                                        <div class="row" *ngIf="!showmsg">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6"
+                                                *ngFor="let EDetails of EcalatinDetails">
+                                                <div class="claims_member_info">
+                                                    <h4 id="lbl_lebel"><span>{{EDetails.level}}</span></h4>
+                                                    <ul class="list-detailsInfo">
+                                                        <li>
+                                                            <span class="label">First Name :</span>
+                                                            <span class="value membername">{{EDetails.firstName}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="label">Last Name :</span>
+                                                            <span class="value">{{EDetails.lastName}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="label">Email Id :</span>
+                                                            <span class="value">{{EDetails.emailId}}</span>
+                                                        </li>
+                                                        <li>
+                                                            <span class="label">Mobile Number :</span>
+                                                            <span class="value">{{EDetails.mobileNumber}}</span>
+                                                        </li>
+
+                                                    </ul>
+                                                    <div class="claims_member_info-gradient"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-tab>
+                            </mat-tab-group>
                         </div>
                     </div>
                 </div>

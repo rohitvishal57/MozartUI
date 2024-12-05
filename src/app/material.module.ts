@@ -37,6 +37,7 @@ import { BidiModule } from '@angular/cdk/bidi';
 import { ObserversModule } from '@angular/cdk/observers';
 import { PlatformModule } from '@angular/cdk/platform';
 import { OverlayModule } from '@angular/cdk/overlay';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
 
 @NgModule({
   exports: [
@@ -79,6 +80,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     MatTooltipModule,
     MatTooltipModule,
     MatNativeDateModule,
+    CdkAccordionModule
   ],
 })
 export class MyMaterialModule { }

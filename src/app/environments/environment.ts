@@ -106,6 +106,7 @@ export const environment = {
     getquotefortopsellingproducts: "api/quote/getquotefortopsellingproducts",
     getPolicyNumberDetails: "api/yatra/getcustomerpolicydetailsviapolicynum",
     profileDetails: "api/auth/GetAgentProfileDetails",
+    escalationMatrixDetails:"api/yatra/GetEscalationMatrixDetails",
     fetchPolicyDetailsFromFile: "api/yatra/getcustomerpolicydetailsfrompolicydocument",
     justPayRedirection: "api/yatra/Payment/JuspayOrder",
     insertfullquotejson: "api/yatra/insertfullquotejson",
