@@ -120,6 +120,6 @@
     "markNotification":"api/quote/notificationbyid?id=",
     "uploadDocument":"api/yatra/uploaddocument",
     "fetchCommmission":"api/renewal/DocumentSearch",
-    "downloadCommmissionStatement":"api/renewal/DocumentSearch"
+    "downloadCommmissionStatement":"api/renewal/DocumentDownload"
 
 }

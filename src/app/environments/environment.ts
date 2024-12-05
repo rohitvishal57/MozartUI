@@ -140,6 +140,7 @@ export const environment = {
     getCustomerClaimDetails:"api/yatra/getclaimdetails",
     getCustomerEndorsementDetails:"api/yatra/GetPolicyBasicDetails",
     fetchCommmission:"api/renewal/DocumentSearch",
-    downloadCommmissionStatement:"api/renewal/DocumentSearch"
+    downloadCommmissionStatement:"api/renewal/DocumentDownload"
+    
 
   }

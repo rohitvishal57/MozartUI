@@ -13,7 +13,7 @@
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <h5><b> <u>Commission statement download is currently available from April’21 cycle. We are
                             working on previous download statement and will be available soon.</u> </b></h5>
-                        <h2>My Commission Statements</h2>
+                        My Commission Statements
                     </div>
                 </div>
                 <br>
@@ -45,8 +45,8 @@
                         <div class="input-block form-floating input-block-renew">
                             <select class="form-select input-selectBox" id="commssionsCycle" name="commssionsCycle"  formControlName="cycle">
                             <option value="" disabled selected>{{"Select Cycle" }}</option>
-                            <option *ngFor="let cycle of cycles" [value]="cycle">
-                                {{ cycle }}
+                            <option *ngFor="let cycle of cycles" [value]="cycle.value">
+                                {{ cycle.name }}
                             </option>
                         </select>
                             <label for="cycle">{{"cycle"}}</label>
