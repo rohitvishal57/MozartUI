@@ -33,7 +33,6 @@ export class RenewalJourneyComponent {
   ngOnInit(){
     this.showHtmlContent = false;
     console.log("history.state");
-    debugger;
     if (Object.keys(this.route.snapshot.queryParams).length) {
       this.route.queryParams.subscribe(async params => {
         const decryptedData = this.encryptionService.decrypt(params['formData']);
@@ -522,7 +521,6 @@ export class RenewalJourneyComponent {
     let tf: string = "default.css";
     if (form.themeFile) tf = form.themeFile;
     console.log(tf);
-    debugger;
     this.dynamicStyle = this.renderer.createElement('link');
     this.renderer.setAttribute(this.dynamicStyle, 'rel', 'stylesheet');
     this.renderer.setAttribute(this.dynamicStyle, 'type', 'text/css');

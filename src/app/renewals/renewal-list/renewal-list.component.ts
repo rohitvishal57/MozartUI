@@ -650,7 +650,6 @@ export class RenewalListComponent {
   //         const convertedData = this.encryptionService.encrypt(tempFormData);
 
   //         console.log(convertedData,this.proposalNum);
-  //         debugger;
   //         this.router.navigate(['renewal/renewalJourney'], {
   //           queryParams: {
   //             formData: convertedData,

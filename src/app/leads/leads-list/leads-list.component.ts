@@ -484,7 +484,6 @@ export class LeadsListComponent {
   }
 
   redirectProducts(lead: any) {
-    debugger;
     let formSequence :any;
     let proposalNumber :any ='';
     if (lead.interestedProductName ) {
