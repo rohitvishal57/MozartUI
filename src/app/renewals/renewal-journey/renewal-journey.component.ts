@@ -9,6 +9,8 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { combinedForms } from 'src/assets/styles/renewals-forms/combined_forms';
 import { renewals_lead } from 'src/assets/styles/renewals-forms/lead';
+import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
+import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
 
 @Component({
   selector: 'app-renewal-journey',
@@ -30,6 +32,21 @@ export class RenewalJourneyComponent {
   collapsedSections: { [key: string]: boolean } = {};
   public showHtmlContent: any;
   selectedButton: string | null = null;
+
+  showPopup: boolean = false;
+  showDoneButton = true;
+  parentControl: any;
+  selectedAddons: any[] = [];
+  question: any;
+  isOverlayVisible = false;
+  changesMade: boolean = false;
+
+  //tab-view variables
+  activeMemberTabIndex: number = 0;
+  activeTab: string = 'chronic';
+  expandedItem: string = '';
+  selectedItem: string = '';
+  expandedCardIndex: number | null = null;
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService) {
 
@@ -61,7 +78,9 @@ export class RenewalJourneyComponent {
     }
 
     // this.form = renewals_lead;
-    this.form = combinedForms;
+    // this.form = combinedForms;
+    // this.form = totalPremium;
+    this.form = new_combinedForms;
     this.initializeForm();
   }
 
@@ -108,6 +127,9 @@ export class RenewalJourneyComponent {
       });
     });
 
+    console.log(this.form,this.formData);
+    
+
     if (this.form?.formSections) {
       this.renewalFormGroup = this.fb.group({});
       this.form.formSections.forEach((section) => {
@@ -122,117 +144,148 @@ export class RenewalJourneyComponent {
               this.renewalFormGroup.addControl(control.name, tempFormArray);
             }
           }
-          // else if (control.subControls) {
-          //   if (control.type == 'questionnaire') {
-          //     let demoMember: any;
-          //     let demoTypeIndex: any;
-          //     let doneButton: any;
-          //     console.log(control);
-          //     if (control.subControls) {
-          //       demoMember = control.subControls.findIndex(control => control.name === 'demoMember')
-          //       demoTypeIndex = control.subControls.findIndex(control => control.name === 'demoType');
-          //       doneButton = control.subControls.find(control => control.name === 'doneButton');
-          //       console.log(control);
-          //       control.subControls = [
-          //         ...control.subControls.slice(demoMember, demoMember + 1),
-          //         ...control.subControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
-          //       ]; // Keep the first control (or reset)
-          //       console.log(control);
-          //     }
-          //     console.log(this.formData['insuredMemberDetails']);
-          //     this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {
-          //       console.log(member, this.formData[control.name], control);
-          //       if (control.subControls) {
-          //         let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
-          //         let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
+          else if (control.subControls) {
+            if (control.type == 'questionnaire') {
+              let demoMember: any;
+              let demoTypeIndex: any;
+              let doneButton: any;
+              console.log(control);
+              if (control.subControls) {
+                demoMember = control.subControls.findIndex(control => control.name === 'demoMember')
+                demoTypeIndex = control.subControls.findIndex(control => control.name === 'demoType');
+                doneButton = control.subControls.find(control => control.name === 'doneButton');
+                console.log(control);
+                control.subControls = [
+                  ...control.subControls.slice(demoMember, demoMember + 1),
+                  ...control.subControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
+                ]; // Keep the first control (or reset)
+                console.log(control);
+              }
+              console.log(this.formData['insuredMemberDetails']);
+              this.formData['insuredMemberDetails'].forEach((member: any, index: any) => {
+                console.log(member, this.formData[control.name], control);
+                if (control.subControls) {
+                  let tempMemberControl = JSON.parse(JSON.stringify(control.subControls[0]));
+                  let tempInnerControl = JSON.parse(JSON.stringify(control.subControls[1]));
 
-          //         const tempRelationshipType = JSON.parse(member.relationshipType);
-          //         tempMemberControl.label = tempRelationshipType.value;
-          //         tempMemberControl.name = tempRelationshipType.value.toLowerCase();
-          //         tempInnerControl.label = tempRelationshipType.value;
-          //         tempInnerControl.name = tempRelationshipType.value;
-          //         console.log(tempInnerControl);
-          //         if (this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true) {
-          //           for (const key in this.formData[control.name]) {
-          //             const value = this.formData[control.name][key];
-          //             if (key == tempRelationshipType.value.toLowerCase()) {
-          //               if (typeof this.formData[control.name][key] === 'boolean' && this.formData[control.name][key] == true) {
-          //                 // const arrayName = (key).charAt(0).toUpperCase() + (key).slice(1);
-          //                 console.log(key, value);
-          //                 tempMemberControl.value = true;
-          //                 tempInnerControl.visible = true;
-          //                 this.formData[control.name][tempRelationshipType.value].forEach((item: any) => {
-          //                   tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
-          //                 })
-          //               }
-          //             }
-          //           }
-          //         }
-          //         else {
-          //           tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
-          //         }
+                  const tempRelationshipType = JSON.parse(member.relationshipType);
+                  tempMemberControl.label = tempRelationshipType.value;
+                  tempMemberControl.name = tempRelationshipType.value.toLowerCase();
+                  tempInnerControl.label = tempRelationshipType.value;
+                  tempInnerControl.name = tempRelationshipType.value;
+                  console.log(tempInnerControl);
+                  if (this.formData[control.name] && this.formData[control.name][tempMemberControl.name] == true) {
+                    for (const key in this.formData[control.name]) {
+                      const value = this.formData[control.name][key];
+                      if (key == tempRelationshipType.value.toLowerCase()) {
+                        if (typeof this.formData[control.name][key] === 'boolean' && this.formData[control.name][key] == true) {
+                          // const arrayName = (key).charAt(0).toUpperCase() + (key).slice(1);
+                          console.log(key, value);
+                          tempMemberControl.value = true;
+                          tempInnerControl.visible = true;
+                          this.formData[control.name][tempRelationshipType.value].forEach((item: any) => {
+                            tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
+                          })
+                        }
+                      }
+                    }
+                  }
+                  else {
+                    tempInnerControl.innerArrayControl.push(tempInnerControl.innerArrayControl[0])
+                  }
 
-          //         control.subControls?.push(tempMemberControl);
-          //         control.subControls?.push(tempInnerControl);
-          //         console.log(control);
-          //       }
-          //     });
-          //     control.subControls?.push(doneButton);
-          //     console.log(control);
-          //     this.renewalFormGroup.addControl(control.name, this.initializeSubControls(control.subControls.slice(2)));
-          //   }
-          //   else {
-          //     control.subControls.forEach((subControl: ISubControl) => {
-          //       if (subControl.name == 'addOnDetails') {
-          //         let demoTypeIndex: any;
-          //         let doneButton: any;
-          //         if (subControl.innerSubControls) {
-          //           demoTypeIndex = subControl.innerSubControls.findIndex(control => control.name === 'demoType');
-          //           doneButton = subControl.innerSubControls.find(control => control.name === 'doneButton');
-          //           // Slice the array to retain demoType and doneButton only
-          //           subControl.innerSubControls = [
-          //             ...subControl.innerSubControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
-          //             // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
-          //           ]; // Keep the first control (or reset)
-          //         }
+                  control.subControls?.push(tempMemberControl);
+                  control.subControls?.push(tempInnerControl);
+                  console.log(control);
+                }
+              });
+              control.subControls?.push(doneButton);
+              console.log(control);
+              this.renewalFormGroup.addControl(control.name, this.initializeSubControls(control.subControls.slice(2)));
+            }
+            else if (control.type == 'combinedCheckbox') {
+              control.subControls.forEach((subControl: ISubControl) => {
+                if (subControl.name == 'addOnDetails') {
+                  const addOnId = control.subControls?.find(sub => sub.name === 'addOnId')?.value;
 
 
-          //         console.log(subControl.innerSubControls);
+                  let demoTypeIndex: any;
+                  let doneButton: any;
+                  if (subControl.innerSubControls) {
+                    demoTypeIndex = subControl.innerSubControls.findIndex(control => control.name === 'demoType');
+                    doneButton = subControl.innerSubControls.find(control => control.name === 'doneButton');
+                    // Slice the array to retain demoType and doneButton only
+                    subControl.innerSubControls = [
+                      ...subControl.innerSubControls.slice(demoTypeIndex, demoTypeIndex + 1), // Retain demoType
+                      // ...subControl.innerSubControls.slice(doneButtonIndex, doneButtonIndex + 1) // Retain doneButton
+                    ]; // Keep the first control (or reset)
+                  }
 
 
-          //         this.formData['insuredMemberDetails'].forEach((member: any) => {
-          //           if (subControl.innerSubControls) {
-          //             let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
-          //             console.log(tempInnerControl, member);
+                  console.log(subControl.innerSubControls);
 
-          //             const tempRelationshipType = JSON.parse(member.relationshipType);
-          //             tempInnerControl.label = tempRelationshipType.value;
-          //             tempInnerControl.name = tempRelationshipType.value;
-          //             if (subControl.conditionCheck) {
-          //               tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
-          //                 if (corecontrol.dependentControls && this.formData[control.name]) {
-          //                   const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
-          //                   corecontrol.dependentControls.forEach((question: any) => {
-          //                     let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
-          //                     newcontrol.visible = newvalue;
-          //                     console.log(corecontrol.name, question, newcontrol, newvalue);
-          //                   })
-          //                   console.log(this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name], control, subControl, tempRelationshipType.value, index, corecontrol);
-          //                 }
-          //               })
-          //             }
-          //             subControl.innerSubControls?.push(tempInnerControl);
-          //           }
-          //         });
-          //         subControl.innerSubControls?.push(doneButton);
-          //       }
-          //     });
-          //   }
 
-          //   console.log(this.initializeSubControls(control.subControls));
+                  this.formData['insuredMemberDetails'].forEach((member: any) => {
+                    const matchingCover = member.covers.find((cover: any) => cover.coverId === addOnId);
 
-          //   this.renewalFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
-          // }
+
+                    if (matchingCover) {
+                      // Update addOnCover to true
+                      const addOnCoverControl = control.subControls?.find(sub => sub.name === 'addOnCover');
+                      if (addOnCoverControl) {
+                        addOnCoverControl.value = true;
+                      }
+                    }
+                    if (subControl.innerSubControls) {
+                      let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
+                      console.log(tempInnerControl, member);
+
+                      const tempRelationshipType = JSON.parse(member.relationshipType);
+                      tempInnerControl.label = tempRelationshipType.value;
+                      tempInnerControl.name = tempRelationshipType.value;
+                      if (subControl.conditionCheck) {
+                        tempInnerControl.coreControls.forEach((corecontrol: any, index: any) => {
+                          if (corecontrol.dependentControls && this.formData[control.name]) {
+                            const newvalue = this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name];
+                            corecontrol.dependentControls.forEach((question: any) => {
+                              let newcontrol = tempInnerControl.coreControls.find((item: any) => item.name == question)
+                              newcontrol.visible = newvalue;
+                              console.log(corecontrol.name, question, newcontrol, newvalue);
+                            })
+                            console.log(this.formData[control.name][subControl.name][tempRelationshipType.value][index][corecontrol.name], control, subControl, tempRelationshipType.value, index, corecontrol);
+                          }
+                        })
+                      }
+
+                      if (matchingCover) {
+                        // Update sumInsured value
+                        const sumInsuredControl = tempInnerControl.coreControls.find(
+                          (core: any) => core.name === 'addOnSumInsured'
+                        );
+                        if (sumInsuredControl) {
+                          sumInsuredControl.value = matchingCover.value;
+                        }
+
+                        // Update memberCheckbox to true
+                        const memberCheckboxControl = tempInnerControl.coreControls.find(
+                          (core: any) => core.name === 'memberCheckbox'
+                        );
+                        if (memberCheckboxControl) {
+                          memberCheckboxControl.value = true;
+                        }
+                      }
+                      subControl.innerSubControls?.push(tempInnerControl);
+                    }
+                  });
+                  subControl.innerSubControls?.push(doneButton);
+                }
+              });
+            }
+
+            console.log(this.initializeSubControls(control.subControls));
+
+            this.renewalFormGroup.addControl(control.name, this.initializeSubControls(control.subControls));
+          }
           else {
             if (control.type === 'date') {
               const lowerCaseName = control.name.toLowerCase();
@@ -474,6 +527,114 @@ export class RenewalJourneyComponent {
     return formGroup;
   }
 
+  initializeSubControls(subControls: any, controlGroup: any = null) {
+    console.log(subControls, controlGroup);
+    let formGroup: any
+    if (controlGroup) {
+      formGroup = controlGroup;
+    }
+    else {
+      formGroup = this.fb.group({});
+    }
+    if (Array.isArray(subControls)) {
+      subControls.forEach((control: any) => {
+        let controlValidators: any = [];
+        if (control.validators && control.visible) {
+          control.validators.forEach((val: IValidator) => {
+            if (val.validatorName === 'required') controlValidators.push(Validators.required);
+            if (val.validatorName === 'email') controlValidators.push(Validators.email);
+            if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+            if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+            if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+          });
+        }
+
+        if (control.type == 'select' && control.getAllOption) {
+          if (control.options?.length == 0) {
+            this.callMethod(control.getAllOption, control);
+          }
+        }
+        if (control.innerArrayControl) {
+          if (control.visible) {
+            let tempFormArray = this.fb.array([]);
+            console.log(control.innerArrayControl);
+            for (let i = 1; i < control.innerArrayControl.length; i++) {
+              tempFormArray.push(this.initializeDynamicFormControls(control.innerArrayControl[i], i));
+            }
+            formGroup.addControl(control.name, tempFormArray);
+          }
+          else {
+            formGroup.addControl(control.name, new FormArray([]));
+          }
+        }
+
+        if (control.innerSubControls) {
+          formGroup.addControl(control.name, this.initializeSubControls(control.innerSubControls.slice(1)));
+        }
+        if (control.innerControls) {
+          formGroup.addControl(control.name, this.initializeSubControls(control.innerControls));
+        }
+        else if (control.coreControls) {
+          let tempFormArray = this.fb.array([]);
+          for (let i = 0; i < control.coreControls.length; i++) {
+            tempFormArray.push(this.initializeSubControls(control.coreControls[i]))
+          }
+          formGroup.addControl(control.name, tempFormArray);
+        }
+        else if (!control.displayOnly || control.displayOnly === false)
+          if (this.selectedAddons.length > 0 && this.selectedAddons.find((addon: any) => addon === control.label) && control.type === 'checkbox') {
+            formGroup.addControl(control.name, new FormControl(true, controlValidators));
+          } else {
+            formGroup.addControl(control.name, new FormControl(control.value, controlValidators));
+          }
+      });
+    }
+    else {
+      let controlValidators: any = [];
+      if (subControls.validators) {
+        subControls.validators.forEach((val: IValidator) => {
+          if (val.validatorName === 'required') controlValidators.push(Validators.required);
+          if (val.validatorName === 'email') controlValidators.push(Validators.email);
+          if (val.validatorName === 'minlength') controlValidators.push(Validators.minLength(val.minLength as number));
+          if (val.validatorName === 'maxlength') controlValidators.push(Validators.maxLength(val.maxLength as number));
+          if (val.validatorName === 'pattern') controlValidators.push(Validators.pattern(val.pattern as string));
+        });
+      }
+      if (subControls.type == 'select' && subControls.getAllOption) {
+        if (subControls.options?.length == 0) {
+          this.callMethod(subControls.getAllOption, subControls);
+        }
+      }
+      if (subControls.type == 'questionnaire' && subControls.innerControls) {
+        if (subControls.visible == true) {
+          formGroup.addControl(subControls.name, this.initializeSubControls(subControls.innerControls))
+        }
+        else {
+          formGroup.addControl(subControls.name, new FormGroup({}));
+        }
+      }
+      if (subControls.innerArrayControl) {
+        if (subControls.visible) {
+          let tempFormArray = this.fb.array([]);
+          console.log(subControls.innerArrayControl);
+          for (let i = 1; i < subControls.innerArrayControl.length; i++) {
+            tempFormArray.push(this.initializeDynamicFormControls(subControls.innerArrayControl[i], i));
+          }
+          formGroup.setValue(subControls.name, tempFormArray);
+        }
+        else {
+          formGroup.addControl(subControls.name, new FormArray([]));
+        }
+      }
+      formGroup.addControl(subControls.name, new FormControl(subControls.value, controlValidators))
+      // return new FormControl(subControls.value,controlValidators);
+    }
+
+
+
+    return formGroup;
+  }
+
   // async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
   //   if(methodName == 'handlePolicyTypeChange')
   //   console.log(methodName);
@@ -593,6 +754,16 @@ export class RenewalJourneyComponent {
 
   onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
     console.log('still working');
+
+
+
+
+
+    if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
+      console.log(innerControl.dependentControls, event.target.checked, control, parentControl, index, innerControl);
+      this.changeMainFormDependentControls(innerControl.dependentControls, event.target.checked, control.name, parentControl.name, index, innerControl.name);
+      this.changeOverLayDone(control, parentControl, false);
+    }
 
   }
 
@@ -835,23 +1006,24 @@ export class RenewalJourneyComponent {
 
           console.log(control);
 
-          this.form.formSections.forEach((section: any) => {
-            section.formControls.forEach((control: any) => {
-              if (control.name === 'insuredMembers') {
-                // Loop the options and see if the option has value true in the insuredMembers in formData
-                control.selectCheckboxOptions.forEach((option: any) => {
-                  if (this.formData.insuredMembers[option.value] === true) {
-                    // Call memberSelected function (pass null for event if not triggering through UI)
-                    this.memberSelected(null, option, control);
-                  }
-                });
-              }
-            });
-          });
+          // this.form.formSections.forEach((section: any) => {
+          //   section.formControls.forEach((control: any) => {
+          //     if (control.name === 'insuredMembers') {
+          //       // Loop the options and see if the option has value true in the insuredMembers in formData
+          //       control.selectCheckboxOptions.forEach((option: any) => {
+          //         if (this.formData.insuredMembers[option.value] === true) {
+          //           // Call memberSelected function (pass null for event if not triggering through UI)
+          //           this.memberSelected(null, option, control);
+          //         }
+          //       });
+          //     }
+          //   });
+          // });
+          console.log(this.formData, this.form,this.renewalFormGroup);
+
           this.flattenObject(this.formData);
 
 
-          console.log(this.formData, this.form);
         }),
         tap(() => {
           // Hide the spinner once the response is processed
@@ -875,7 +1047,7 @@ export class RenewalJourneyComponent {
   }
 
   onSubmit() {
-    console.log(this.renewalFormGroup.value);
+    console.log(this.renewalFormGroup.value,this.form);
 
   }
 
@@ -923,60 +1095,60 @@ export class RenewalJourneyComponent {
     console.log(this.form, control, planType);
 
     this.renewalFormGroup.get('numberOfInsuredMembers')?.setValue(0);
-    this.renewalFormGroup.removeControl('insuredMemberDetails');
+    // this.renewalFormGroup.removeControl('insuredMemberDetails');
     if (planType === 'Multi Individual') {
 
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, false, control.name);
 
 
-      this.form.formSections.forEach((section: any) => {
-        if (section.sectionTitle == "Insured Member Details") {
-          section.formControls[0].visible = true;
-          if (section.formControls[1]) {
-            section.formControls[1].visible = false;
-            while (section.formControls[1].dynamicControls.length > 1) {
-              section.formControls[1].dynamicControls.pop();
-            }
-          }
-          section.visible = false;
-        }
-      });
+      // this.form.formSections.forEach((section: any) => {
+      //   if (section.sectionTitle == "Insured Member Details") {
+      //     section.formControls[0].visible = true;
+      //     if (section.formControls[1]) {
+      //       section.formControls[1].visible = false;
+      //       while (section.formControls[1].dynamicControls.length > 1) {
+      //         section.formControls[1].dynamicControls.pop();
+      //       }
+      //     }
+      //     section.visible = false;
+      //   }
+      // });
     }
     else if (planType === 'Family Floater') {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, true, control.name);
       console.log(this.form);
 
-      this.form.formSections.forEach((section: any) => {
-        if (section.sectionTitle == "Insured Member Details") {
-          section.formControls[0].visible = false;
-          section.formControls[1].visible = true;
-          while (section.formControls[0].dynamicControls.length > 1) {
-            section.formControls[0].dynamicControls.pop();
-          }
-          section.visible = false;
-        }
-      });
+      // this.form.formSections.forEach((section: any) => {
+      //   if (section.sectionTitle == "Insured Member Details") {
+      //     section.formControls[0].visible = false;
+      //     section.formControls[1].visible = true;
+      //     while (section.formControls[0].dynamicControls.length > 1) {
+      //       section.formControls[0].dynamicControls.pop();
+      //     }
+      //     section.visible = false;
+      //   }
+      // });
     }
     else {
       if (control.dependentControls)
         this.changeMainFormDependentControls(control.dependentControls, false, control.name);
-      this.form.formSections.forEach((section: any) => {
-        if (section.sectionTitle == "Insured Member Details") {
-          section.formControls[0].visible = false;
-          section.formControls[1].visible = false;
+      // this.form.formSections.forEach((section: any) => {
+      //   if (section.sectionTitle == "Insured Member Details") {
+      //     section.formControls[0].visible = false;
+      //     section.formControls[1].visible = false;
 
-          while (section.formControls[0].dynamicControls.length > 1) {
-            section.formControls[0].dynamicControls.pop();
-          }
+      //     while (section.formControls[0].dynamicControls.length > 1) {
+      //       section.formControls[0].dynamicControls.pop();
+      //     }
 
-          while (section.formControls[1].dynamicControls.length > 1) {
-            section.formControls[1].dynamicControls.pop();
-          }
+      //     while (section.formControls[1].dynamicControls.length > 1) {
+      //       section.formControls[1].dynamicControls.pop();
+      //     }
 
-        }
-      });
+      //   }
+      // });
     }
   }
 
@@ -1166,8 +1338,11 @@ export class RenewalJourneyComponent {
               //   this.isQuote = false;
               // }
               let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
+              debugger;
+              
               tempControl[1].value = option.value;
               tempControl[0].value = JSON.stringify(option);
+              console.log(tempControl);
               // if (this.isQuote) {
               //   tempControl.forEach((temp) => {
               //     if (temp.name == 'zoneValue') {
@@ -1176,10 +1351,12 @@ export class RenewalJourneyComponent {
               //   })
               // }
               formControl.dynamicControls?.push(tempControl);
-              console.log(this.formData);
+              console.log(this.form);
 
               let formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
               // let formArr;
+              console.log(formArr,formControl.dynamicControls);
+              
 
               if (formArr != null) {
                 formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
@@ -1198,12 +1375,12 @@ export class RenewalJourneyComponent {
               //   let index = -1;
               //   let memberupgradableZones: IOptions[] = [];
               //   console.log(formControl.dynamicControls);
-                
+
               //   if (formControl.dynamicControls) {
               //     for (let i = 0; i < formControl.dynamicControls.length; i++) {
               //       let element = formControl.dynamicControls[i];
               //       console.log(element);
-                    
+
               //       try {
               //         console.log(element[0]);
 
@@ -1523,4 +1700,613 @@ export class RenewalJourneyComponent {
     return this.selectedButton === control.name ? 'active-button' : '';
   }
 
+  /* AddOn Related Method */
+
+  onCheckboxChange(event: any, control: any, parentControl: any = null, index: number | null = null) {
+    console.log(event, event.target, control, parentControl, index, this.renewalFormGroup);
+
+    this.changesMade = true;
+    if (parentControl != null && typeof parentControl === 'object') {
+      this.parentControl = parentControl;
+    }
+    if ((event.target.type === 'button')) {
+      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'questionnaire') {
+        console.log(event.target.type, event.target.checked);
+        console.log(control, parentControl);
+        this.question = parentControl.name;
+        this.openPopUp();
+        // this.showOverlay(parentControl);
+      }
+    }
+    if ((event.target.type === 'checkbox' && event.target.checked)) {
+      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'combinedCheckbox') {
+        const firstKey = Object.keys((this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls)[0];
+        (this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls[firstKey].setValue(false);
+        this.showOverlay(parentControl);
+      }
+
+      if (parentControl != null && parentControl.type == 'questionnaire') {
+        const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
+        console.log('questionnaire', arrayName, event.target.checked);
+        parentControl.subControls.forEach((subControl: any) => {
+          if (subControl.name === arrayName) {
+            subControl.visible = event.target.checked;
+            console.log(subControl, event.target.value);
+            let parentCode = this.renewalFormGroup.get(parentControl.name) as FormGroup;
+            let controlCode = parentCode.get(subControl.name) as FormArray;
+            if (event.target.checked == true) {
+              if (index) {
+                const newForm = this.initializeSubControls(subControl.innerArrayControl[0]);
+                controlCode.push(newForm);
+                console.log(parentCode, controlCode, subControl.innerArrayControl, newForm, parentCode);
+              }
+            }
+          }
+          if (subControl.name === 'doneButton') {
+            subControl.disabled = !event.target.checked;
+            console.log(subControl, event.target.value);
+          }
+        });
+        this.openPopUp();
+        // this.showOverlay(parentControl);
+      }
+
+      // Call the method only if the 'method' key is present in the JSON and the checkbox is checked  this.resolveMethod(control.method, control?.popUpFormId, control?.name, control?.dependentControls, 'add');
+      if (control.onChangeMethod)
+        this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, true, control?.name, parentControl?.name, index, 'add');
+    }
+
+    else if (event.target.type === 'checkbox' && event.target.checked == false) {
+
+      if (parentControl != null && typeof parentControl === 'object' && parentControl.type == 'combinedCheckbox') {
+        // if()
+        // console.log(parentControl,this.renewalFormGroup.get(parentControl.name),this.renewalFormGroup);
+
+        parentControl.subControls.forEach((subControl: any) => {
+          if (subControl.innerSubControls) {
+            for (let i = 1; i < subControl.innerSubControls.length; i++) {
+              console.log(subControl.innerSubControls[i]);
+
+              if (subControl.innerSubControls[i].coreControls) {
+                for (let j = 0; j < subControl.innerSubControls[i].coreControls.length; j++) {
+                  console.log(subControl.innerSubControls[i].coreControls[j], this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`));
+                  if (subControl.conditionCheck) {
+                    if (subControl.innerSubControls[i].coreControls[j].dependentControls) {
+                      if (subControl.innerSubControls[i].coreControls[j].conditionCheck) {
+                        subControl.innerSubControls[i].coreControls[j].value = false;
+                        subControl.innerSubControls[i].coreControls[j].visible = true;
+                      }
+                      else {
+                        subControl.innerSubControls[i].coreControls[j].value = false;
+                        subControl.innerSubControls[i].coreControls[j].visible = false;
+                      }
+                    }
+                    else {
+                      subControl.innerSubControls[i].coreControls[j].visible = false;
+                    }
+                    let newcontrol = (this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`) as any);
+                    console.log(newcontrol);
+                    if (newcontrol instanceof FormGroup) {
+                      Object.keys(newcontrol.controls).forEach((element: any) => {
+                        console.log(newcontrol.controls[element], element);
+                        newcontrol.removeControl(element);
+                      });
+                    }
+                    else {
+                      newcontrol.setValue(false);
+                    }
+                  }
+                  else if (this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == true || this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.value == false) {
+
+                    this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue(false);
+                  }
+                  else {
+                    this.renewalFormGroup.get(`${parentControl.name}.${subControl.name}.${subControl.innerSubControls[i].name}.${j}.${subControl.innerSubControls[i].coreControls[j].name}`)?.setValue('');
+                  }
+                }
+              }
+            }
+          }
+        })
+        this.changeRecalculate(true);
+        this.addOnRemoved(control, parentControl);
+      }
+      if (parentControl != null && parentControl.type == 'questionnaire') {
+        const arrayName = (control.name).charAt(0).toUpperCase() + (control.name).slice(1);
+        console.log('questionnaire', arrayName, event.target.checked);
+        parentControl.subControls.forEach((subControl: any) => {
+          if (subControl.name === arrayName) {
+            subControl.visible = event.target.checked;
+            if (event.target.checked == false) {
+              subControl.innerArrayControl = subControl.innerArrayControl?.slice(0, 2);
+
+              let formArray = (this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls[arrayName] as FormArray;
+              console.log(formArray);
+              // Remove all items from the FormArray
+              // while (formArray.length > 1) {
+              //   formArray.removeAt(1);
+              // }
+
+              formArray.clear();
+              // Reset the value of the first element in the FormArray to an empty string.
+              // const firstControl = formArray.at(0) as FormGroup;
+              // Object.keys(firstControl.controls).forEach(key => {
+              //   firstControl.get(key)?.setValue('');
+              // });
+
+              Object.keys(this.formData).forEach(key => {
+                const baseKey = `${control.name}.${subControl.name}.`;
+
+                // Check if the key starts with the baseKey.
+                if (key.startsWith(baseKey)) {
+                  const index = key.substring(baseKey.length).split('.')[0];
+
+                  // If the index is not "0", remove the key; otherwise, reset its value.
+                  if (index !== '0') {
+                    delete this.formData[key];
+                  } else {
+                    this.formData[key] = ''; // Reset value for index 0.
+                  }
+                }
+              });
+              console.log(this.formData, this.renewalFormGroup.value, this.form);
+            }
+            console.log(subControl, event.target.value);
+          }
+
+          if (subControl.name === 'doneButton') {
+            subControl.disabled = false;
+            console.log(subControl, event.target.value);
+          }
+        });
+        this.openPopUp();
+        // this.showOverlay(parentControl);
+      }
+      if (control.onChangeMethod)
+        this.resolveMethod(control.onChangeMethod, control?.popUpFormId, control?.dependentControls, false, control?.name, parentControl?.name, index, 'remove');
+    }
+    console.log(this.renewalFormGroup, this.form);
+  }
+
+  //new add On added
+  addOnAdded(control: any, parentControl: any = null) {
+    let addOnData = this.renewalFormGroup.get(parentControl.name)?.value;
+    let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+
+    Object.keys(addOnData.addOnDetails).forEach((key) => {
+      if (addOnData.addOnDetails[key][0].memberCheckbox === true) {
+        modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
+          if (member.relation === key) {
+            let addOnSumInsured: any = 0;
+            const coverId = addOnData.addOnId;
+            const coverName = addOnData.additionalCoverName;
+            let coverFound = false;
+
+            if (!member.covers) {
+              member.covers = [];
+            }
+
+            addOnData.addOnDetails[key].forEach((addOnDetail: any) => {
+              if (addOnDetail.addOnSumInsured) {
+                addOnSumInsured = addOnDetail.addOnSumInsured;
+              }
+              if (addOnData.addOnId === 'PA' && addOnDetail.occupation) {
+                member.occupationCode = JSON.parse(addOnDetail.occupation).value;
+              }
+              if (addOnData.addOnId === 'PA' && addOnDetail.occupationRisk) {
+                member.natureOfDutyCode = JSON.parse(addOnDetail.occupationRisk).value;
+              }
+            });
+
+            member.covers.forEach((cover: any) => {
+              if (cover.coverId === coverId) {
+                cover.value = addOnSumInsured;
+                coverFound = true;
+              }
+            });
+
+            if (!coverFound) {
+              member.covers.push({
+                coverId: coverId,
+                value: addOnSumInsured,
+                coverName: coverName
+              });
+            }
+
+            if (!this.covers[index]) {
+              this.covers[index] = [];
+            }
+
+            let coverInCovers = this.covers[index].find((c: any) => c.coverId === coverId);
+            if (coverInCovers) {
+              coverInCovers.value = addOnSumInsured;
+            } else {
+              this.covers[index].push({
+                coverId: coverId,
+                value: addOnSumInsured,
+                coverName: coverName
+              });
+            }
+          }
+        });
+      } else if (addOnData.addOnDetails[key][0].memberCheckbox === false) {
+        modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
+          if (member.relation === key) {
+            const coverId = addOnData.addOnId;
+
+            if (member.covers) {
+              member.covers = member.covers.filter((cover: any) => cover.coverId !== coverId);
+            }
+
+            if (this.covers[index]) {
+              this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== coverId);
+            }
+          }
+        });
+      }
+    });
+  }
+
+  //New Remove addOn
+  addOnRemoved(control: any, parentControl: any = null) {
+    let addOnData = this.renewalFormGroup.get(parentControl.name)?.value;
+    let modifiedInsuredMemberDetails = this.formData.insuredMemberDetails;
+
+    // Iterate over each member and remove the specified add-on from both insuredMemberDetails.covers and covers
+    modifiedInsuredMemberDetails.forEach((member: any, index: number) => {
+      const coverId = addOnData.addOnId;
+
+      // Remove the add-on from the covers array of insuredMemberDetails
+      if (member.covers) {
+        member.covers = member.covers.filter((cover: any) => cover.coverId !== coverId);
+      }
+
+      // Synchronize the change in the local covers variable
+      if (this.covers[index]) {
+        this.covers[index] = this.covers[index].filter((cover: any) => cover.coverId !== coverId);
+      }
+    });
+
+    // Call getPremiumAmount after removing the add-on if needed
+    // this.getPremiumAmount();
+  }
+
+  addOnMemberAdded(subControl: any, parentControl: any = null) {
+    console.log(subControl, parentControl);
+
+    if (parentControl != null) {
+      let count = 0;
+      let memberDetails = this.renewalFormGroup.get(parentControl.name)?.get(subControl.name)?.value;
+      console.log(memberDetails);
+
+      Object.keys(memberDetails).forEach(key => {
+        let memberArray = memberDetails[key];
+        console.log(memberArray);
+
+        // Check if memberCheckbox is false for any member and set other fields to empty
+        let memberCheckbox = memberArray.find((member: any) => member.memberCheckbox === false);
+
+        if (memberCheckbox) {
+          memberArray.forEach((member: any) => {
+            if (!member.memberCheckbox) {
+              // Set other fields to empty if memberCheckbox is false
+              Object.keys(member).forEach(memberKey => {
+                console.log(memberKey);
+                if (memberKey !== 'memberCheckbox') {
+                  member[memberKey] = '';
+                  console.log((this.renewalFormGroup.get(parentControl.name)?.get(subControl.name)?.get(key)) as FormArray);
+                  let memberArrayControl = (this.renewalFormGroup.get(parentControl.name)?.get(subControl.name)?.get(key)) as FormArray;
+                  let memberFormGroup = memberArrayControl.controls.find((group: AbstractControl) => {
+                    return (group as FormGroup).get(memberKey)
+                  }) as FormGroup;
+                  let memberFormGroupControl = memberFormGroup.get(memberKey);
+                  if (memberFormGroupControl) {
+                    memberFormGroupControl.setValue('');
+                  }
+
+                }
+              });
+            }
+          });
+        } else {
+          count++;
+          console.log(subControl, parentControl);
+          let dependentControls: string[] = [];
+          let tempControlArray = (((this.renewalFormGroup.get(parentControl.name) as FormGroup)?.get(subControl.name) as FormGroup)?.get(key) as FormArray);
+          let breakFlag = false;
+          this.form.formSections.forEach((section: IFormSections) => {
+            if (breakFlag) return;
+            section.formControls.forEach((control: IFormControl) => {
+              if (breakFlag) return;
+              if (control.name == parentControl.name && control.subControls) {
+                control.subControls.forEach((subControl: ISubControl) => {
+                  if (breakFlag) return;
+                  if (subControl.innerSubControls) {
+                    subControl.innerSubControls.forEach((innerSubControl: ISubControl) => {
+                      if (breakFlag) return;
+                      if (innerSubControl.name == key) {
+                        innerSubControl.coreControls?.forEach((coreControl: ISubControl, aindex: any) => {
+                          if (breakFlag) return;
+                          console.log(coreControl);
+                          if (coreControl.innerControls) {
+                            coreControl.innerControls?.forEach((innerControl: any) => {
+                              this.validationErrorNotification(tempControlArray, aindex, coreControl, innerControl, innerSubControl);
+                              breakFlag = true;
+                            })
+                          }
+                          else if (coreControl.name == 'memberCheckbox' && coreControl.dependentControls) {
+                            dependentControls = coreControl.dependentControls;
+                          }
+                          console.log(dependentControls, tempControlArray);
+                          if (!subControl.conditionCheck) {
+                            let memberFormGroup = tempControlArray.controls.find((group: AbstractControl) => {
+                              return (group as FormGroup).get(coreControl.name)
+                            }) as FormGroup;
+                            console.log(memberFormGroup);
+
+                            let memberFormGroupControl = memberFormGroup.get(coreControl.name);
+                            if (memberFormGroupControl?.value == '' && coreControl.type == 'text' && coreControl.name == 'addOnSumInsured') {
+                              memberFormGroupControl.setValue(this.formData.sumInsured);
+                            }
+                            else if (memberFormGroupControl?.value == '') {
+
+                              tempControlArray.controls.forEach((coreControlGroup: any) => {
+                                Object.keys(coreControlGroup.controls).forEach((controlName: string) => {
+                                  const control = coreControlGroup.get(controlName);
+
+                                  if (control) {
+                                    if (control.value === true) {
+                                      // If the control's value is true, set it to false
+                                      control.setValue(false);
+                                    } else {
+                                      // Set all other values to an empty string
+                                      control.setValue('');
+                                    }
+                                  }
+                                });
+
+                              })
+                              breakFlag = true;
+                              count--;
+                            }
+
+                            console.log(memberFormGroup);
+
+
+
+
+                          }
+                        })
+                      }
+                    })
+                  }
+                })
+              }
+            })
+          })
+        }
+      });
+
+      console.log(memberDetails, count);
+
+      console.log((this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls)
+      // ?.controls[0].setValue(false);
+      let control = this.renewalFormGroup.get(parentControl.name) as FormGroup;
+      if (control) {
+        const firstKey = Object.keys((this.renewalFormGroup.get(parentControl.name) as FormGroup)?.controls)[0];
+        console.log(firstKey, count);
+        // Get the first key
+        if (count == 0) {
+          control.controls[firstKey].setValue(false);
+          this.addOnRemoved(subControl, parentControl)
+        }
+        else {
+          control.controls[firstKey].setValue(true);
+          this.changeOverLayDone(subControl, parentControl, true);
+          this.addOnAdded(subControl, parentControl);
+        }
+      }
+
+    }
+    this.closeOverlay(subControl, parentControl);
+
+
+
+
+  }
+
+  closeOverlay(subControl: any, control: any = null) {
+    if (subControl.conditionCheck && (this.renewalFormGroup.get(control.name) as FormGroup).invalid) {
+      console.log(subControl);
+      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+    }
+    else {
+      this.closePopUp();
+      subControl.visible = false;
+    }
+  }
+  closePopUp(control: any = null) {
+    console.log(control, this.renewalFormGroup);
+    if (this.renewalFormGroup.invalid) {
+      let dynamicControl = this.renewalFormGroup.get(control.name);
+      this.traverseFormGroup(dynamicControl as FormGroup);
+      if (dynamicControl instanceof FormGroup) {
+        Object.keys(dynamicControl.controls).forEach(arrayControl => {
+          console.log(arrayControl);
+        })
+      }
+      console.log(this.renewalFormGroup, dynamicControl);
+      // this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 })
+    }
+    else {
+      this.isOverlayVisible = false;
+    }
+  }
+
+  changeOverLayDone(control: any, parentControl: any, changeValue: boolean = false) {
+
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((controls: any) => {
+        if (controls.name == 'recalculate') {
+          controls.visible = true;
+        }
+        if (controls.name == 'next') {
+          controls.visible = false;
+        }
+        if (controls.name == parentControl.name) {
+          if (parentControl.subControls) {
+            parentControl.subControls.forEach((subControl: any) => {
+              if (subControl.innerSubControls) {
+                subControl.innerSubControls.forEach((innerSubControl: any) => {
+                  if (innerSubControl.name == 'doneButton') {
+                    if (subControl.conditionCheck) {
+                      innerSubControl.disabled = false;
+                    }
+                    else {
+                      innerSubControl.disabled = changeValue;
+                    }
+                  }
+                })
+              }
+            })
+          }
+        }
+      })
+    })
+  }
+
+  showOverlay(control: any) {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        console.log(formControl, control);
+        if (formControl.name == control.name && formControl.subControls) {
+          formControl.subControls.forEach((subControl: any) => {
+            if (subControl.name == 'addOnDetails') {
+              subControl.visible = true;
+            }
+          })
+        }
+      })
+    })
+    this.openPopUp();
+  }
+  openPopUp() {
+    this.isOverlayVisible = true;
+  }
+
+  traverseFormGroup(formGroup: FormGroup | FormArray) {
+    if (formGroup instanceof FormGroup) {
+      Object.keys(formGroup.controls).forEach((key) => {
+        const control = formGroup.get(key);
+
+        if (control instanceof FormControl) {
+          control.markAsTouched();
+          console.log(`FormControl - Key: ${key}, Value: ${control.value}`);
+        } else if (control instanceof FormGroup) {
+          console.log(`FormGroup - Key: ${key}`);
+          // Recursively traverse nested FormGroup
+          this.traverseFormGroup(control);
+        } else if (control instanceof FormArray) {
+          console.log(`FormArray - Key: ${key}`);
+          control.controls.forEach((arrayControl, index) => {
+            console.log(`FormArray Index: ${index}`);
+            // Recursively traverse FormGroup or FormControl within the FormArray
+            this.traverseFormGroup(arrayControl as FormArray);
+          });
+        }
+      });
+    } else if (formGroup instanceof FormArray) {
+      formGroup.controls.forEach((arrayControl, index) => {
+        console.log(`FormArray Index: ${index}`);
+        // Recursively traverse FormGroup or FormControl within the FormArray
+        this.traverseFormGroup(arrayControl as FormArray);
+      });
+    }
+  }
+
+  hasSubValue(control: any, parentControl: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null, index: any | null = null) {
+    console.log(control, parentControl, innerControl, innerSubControl, index, this.renewalFormGroup);
+    const formControl = parentControl != null && index != null ?
+      (((this.renewalFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup).controls[innerControl.name] as FormArray).controls[index].get(innerSubControl.name)?.value
+      : this.renewalFormGroup.get(control.name);
+    return formControl;
+  }
+  hasInnerSubValue(control: any, parentControl: any | null = null, subControl: any | null = null, index: any | null = null, innerControl: any | null = null, innerSubControl: any | null = null) {
+    const formControl = parentControl != null && index != null
+      ? ((((this.renewalFormGroup.get(control.name) as FormGroup)?.controls[parentControl.name] as FormGroup)
+        .controls[subControl.name] as FormArray).controls[index] as FormGroup)
+        .controls[innerControl.name].get(innerSubControl.name)
+      : this.renewalFormGroup.get(control.name);
+    // formControl?.markAsTouched();
+    return formControl ? formControl.value : null;
+  }
+
+  changeRecalculate(visiblility: boolean) {
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name == 'recalculate') {
+          formControl.visible = visiblility;
+        }
+        if (formControl.name == 'next') {
+          formControl.visible = !visiblility;
+        }
+      })
+    })
+  }
+
+  validationErrorNotification(dynamicControl: any, aindex: any, coreControl: any, innerControl: any, innerSubControl: any) {
+    console.log(dynamicControl, aindex, coreControl, innerControl, innerSubControl);
+    if (dynamicControl instanceof FormArray) {
+      dynamicControl.controls.forEach(arrayControl => {
+        console.log(arrayControl);
+        if (arrayControl instanceof FormGroup) {
+          Object.keys(arrayControl.controls).forEach((nestedField: any) => {
+            const fieldJson = innerSubControl.coreControls.find((type: any) => type.name == nestedField);
+            console.log(fieldJson);
+            if (arrayControl.controls[nestedField] instanceof FormGroup) {
+              const subControl = arrayControl.controls[nestedField] as FormGroup;
+
+              for (const controlName of Object.keys(subControl.controls)) {
+                const control = subControl.controls[controlName];
+                const nestedControl = subControl.get(controlName);
+                console.log(controlName, control, nestedControl);
+                nestedControl?.markAsTouched({ onlySelf: true });
+              }
+            }
+
+            else if (fieldJson.type != 'checkbox') {
+              const nestedControl = arrayControl.get(nestedField);
+              nestedControl?.markAsTouched({ onlySelf: true });
+            }
+          });
+        } else {
+          arrayControl?.markAsTouched({ onlySelf: true });
+        }
+      });
+    }
+  }
+
+  //tab-view methods
+  generateHeader(control: any, i: any) {
+    console.log(control,this.renewalFormGroup);
+    
+    // console.log(this.formData[control.name][i-1].relationshipType,control,i);
+    // const imagePath = JSON.parse(this.formData[control.name][i - 1].relationshipType)?.imagePath;
+    console.log((this.renewalFormGroup.get(control.name) as FormArray)?.controls[i-1].value);
+    
+    // const imagePath = JSON.parse((this.renewalFormGroup.get(control.name) as FormArray)?.controls[i-1].value['relationshipType']).imagePath;
+    // console.log(imagePath);
+    
+    // // console.log(this.formData[control.name],control,i,imagePath);
+    // return imagePath;
+  }
+
+  selectTab(tabName: string) {
+    this.activeTab = tabName;
+    this.expandedItem = '';
+  }
+
+  toggleContent(index: number): void {
+    this.expandedCardIndex = this.expandedCardIndex === index ? null : index;
+  }
 }

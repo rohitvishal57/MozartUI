@@ -482,50 +482,50 @@ export class RenewalListComponent {
   //   this.getProposalNum();
     
   //   const tempFormData = {
-  //     "productName": "Activ One Max Plus",
-  //     "memberDobProposer": "1999-07-22",
-  //     "panNo": "FVYPM1429K",
-  //     "productVariant": "Max Plus",
-  //     "ckycNo": "30081765657842",
-  //     "typeOfBusiness": "NB",
-  //     "memberPlan": "Max Plus",
-  //     "memberRoomCategory": "UPTOSI",
-  //     "productType": "AO",
-  //     "planCode": "MASSMARKET_PLUS",
-  //     "productId": "7200",
-  //     "preFix": "Mr",
-  //     "firstName": "SOUVIK",
+  //     "productName": "Activ Health V2",
+  //     "memberDobProposer": "18/11/1999",
+  //     "panNo": "",
+  //     "productVariant": "Platinum - Enhanced",
+  //     "ckycNo": "20084759923752",
+  //     "typeOfBusiness": "REN",
+  //     "memberPlan": "",
+  //     "memberRoomCategory": "Single Private A/c Room",
+  //     "productType": "",
+  //     "planCode": "6212100003",
+  //     "productId": 14,
+  //     "preFix": "Mr.",
+  //     "firstName": "Aniket",
   //     "middleName": "",
-  //     "lastName": "MITRA",
+  //     "lastName": "Birambole",
   //     "memberAgeProposer": 25,
   //     "proposerGender": "M",
-  //     "emailId": "souvik@gmail.com",
-  //     "proposerAddress1": "C O MALAY KANTI MITRA WIRELESS COLONY BADARPUR",
-  //     "proposerAddress2": "KARIMGANJ ASSAM",
-  //     "proposerAddress3": ".",
-  //     "city": "Karimganj",
-  //     "country": "IN",
-  //     "state": "AS",
-  //     "mobileNumber": "6000473196",
-  //     "idProof": "{\"id\":\"2\",\"value\":\"Aadhar Card\",\"name\":\"Aadhar Card\"}",
-  //     "idNo": "7689",
-  //     "annualIncome": "500000",
-  //     "occupation": "{\"id\":\"10\",\"value\":\"O557\",\"name\":\"CA\"}",
-  //     "maritalStatus": "{\"id\":\"M\",\"value\":\"Married\",\"name\":\"Married\"}",
-  //     "gstDetails": "Consumers",
-  //     "educationDetails": "{\"id\":\"6\",\"value\":\"Post Graduate\",\"name\":\"Post Graduate\"}",
-  //     "nationality": "{\"id\":\"1\",\"value\":\"Indian\",\"name\":\"Indian\",\"selected\":true}",
-  //     "sumInsured": "1500000",
-  //     "proposerPincode": "788806",
-  //     "zone": "Zone III",
-  //     "zoneValue": "Z003",
-  //     "numberOfInsuredMembers": 2,
-  //     "plandetails": "",
-  //     "totalPremium": 56504,
+  //     "emailId": "sohel.shaikh@qualitykiosk.com",
+  //     "proposerAddress1": "aoisfoinasf",
+  //     "proposerAddress2": "oaisfnoiasf",
+  //     "proposerAddress3": "null",
+  //     "city": "Mumbai",
+  //     "country": "",
+  //     "state": "MAHARASHTRA",
+  //     "mobileNumber": "9930519086",
+  //     "idProof": "",
+  //     "idNo": "",
+  //     "annualIncome": "1000000",
+  //     "occupation": "O002",
+  //     "maritalStatus": "Single",
+  //     "gstDetails": "",
+  //     "educationDetails": "",
+  //     "nationality": "Indian",
+  //     "sumInsured": "2000000",
+  //     "proposerPincode": "",
+  //     "zone": "Zone I",
+  //     "zoneValue": "Z001",
+  //     "numberOfInsuredMembers": 1,
+  //     "planDetails": "",
+  //     "totalPremium": "14264.0",
   //     "memberPolicyType": "Multi Individual",
   //     "insuredMembers": {
   //       "Self": true,
-  //       "Spouse": true,
+  //       "Spouse": false,
   //       "Son1": false,
   //       "Daughter1": false,
   //       "Mother": false,
@@ -548,97 +548,146 @@ export class RenewalListComponent {
   //     "insuredMemberDetails": [
   //       {
   //         "relation": "Self",
-  //         "firstName": "SOUVIK",
-  //         "lastName": "MITRA",
-  //         "height": "5",
-  //         "weight": "70",
-  //         "memberdob": "1999-07-22",
-  //         "emailId": "souvik@gmail.com",
-  //         "mobileNumber": "6000473196",
-  //         "relationshipType": "{\"id\":\"R001\",\"productId\":\"2\",\"value\":\"Self\",\"name\":\"Self\",\"memberRelationCode\":\"24\",\"isIncrement\":false,\"imagePath\":\"assets/Self.png\"}",
-  //         "memberAge": 25,
+  //         "firstName": "Aniket",
+  //         "lastName": "Birambole",
+  //         "height": "165.1",
+  //         "weight": "55",
+  //         "memberDob": "18-11-1999 00:00:00",
+  //         "emailId": "sohel.shaikh@qualitykiosk.com",
+  //         "mobileNumber": "9930519086",
+  //         "relationshipType": "Self",
+  //         "memberAge": 0,
   //         "memberGender": "M",
-  //         "pincode": "788806",
-  //         "sumInsured": "1500000",
-  //         "preExistingDisease": "no",
+  //         "sumInsured": "2000000",
+  //         "preExistingDisease": "No",
   //         "memberIndex": 0,
-  //         "zone": "Zone III",
-  //         "state": "",
-  //         "city": "",
-  //         "memberType": "",
+  //         "zone": "Z001",
   //         "middleName": "",
-  //         "planType": "Multi Individual",
-  //         "zoneValue": "Z003",
-  //         "memberRoomCategory": "UPTOSI",
   //         "covers": [
   //           {
-  //             "coverId": "CIL",
-  //             "value": "1500000"
-  //           }
-  //         ],
-  //         "preFix": "Mr",
-  //         "isChronic": "No",
-  //         "chronicDiseases": null,
-  //         "roomCategory": "",
-  //         "memberRelationCode": 24
-  //       },
-  //       {
-  //         "relation": "Spouse",
-  //         "firstName": "Emily",
-  //         "lastName": "Mitra",
-  //         "height": "5",
-  //         "weight": "52",
-  //         "memberdob": "2001-12-12",
-  //         "emailId": "emily@gmail.com",
-  //         "mobileNumber": "6000473196",
-  //         "relationshipType": "{\"id\":\"R002\",\"productId\":\"2\",\"value\":\"Spouse\",\"name\":\"Spouse\",\"memberRelationCode\":\"13\",\"isIncrement\":false,\"imagePath\":\"assets/Spouse.png\"}",
-  //         "memberAge": 22,
-  //         "memberGender": "F",
-  //         "pincode": "500013",
-  //         "sumInsured": "1500000",
-  //         "preExistingDisease": "no",
-  //         "memberIndex": 2,
-  //         "zone": "Zone II",
-  //         "state": "",
-  //         "city": "",
-  //         "memberType": "",
-  //         "middleName": "",
-  //         "heightInches": "",
-  //         "planType": "Multi Individual",
-  //         "zoneValue": "Z002",
-  //         "memberRoomCategory": "UPTOSI",
-  //         "covers": [
-  //           {
-  //             "coverId": "CIL",
-  //             "value": "1500000"
+  //             "coverId": "AYSH",
+  //             "value": "2000000"
   //           },
   //           {
-  //             "coverId": "RVCV",
-  //             "value": "750"
+  //             "coverId": "CHMP",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "CTHZ",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "DCHS",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "DCOI",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "DCTT",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "DMAS",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "EXHC",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "HLCU",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "HLTHA",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "HLTHRET",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "HMTT",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "IMAS",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "IPTT",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "MITR",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "MTAT",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "OBTR",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "OPDE",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "ORDR",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "PUHM",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "PRHM",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "PWAIV",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "RACV",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "RVBE",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "SCOP",
+  //             "value": "2000000"
   //           }
   //         ],
-  //         "preFix": "",
-  //         "isChronic": "No",
-  //         "chronicDiseases": null,
+  //         "preFix": "Mr.",
+  //         "chronicDiseases": [],
   //         "roomCategory": "",
-  //         "memberRelationCode": 22
+  //         "memberRelationCode": 0
   //       }
   //     ],
-  //     "noOfChildrens": 0,
-  //     "familySize": "2A",
-  //     "proposerName": "SOUVIKMITRA",
-  //     "tenure": 2,
+  //     "noOfChildren": 0,
+  //     "familySize": "",
+  //     "proposerName": "14264.0",
+  //     "tenure": 1,
   //     "personalDetails": "",
-  //     "nomineeFirstName": "Anekant",
+  //     "nomineeFirstName": "Shashank",
   //     "nomineeMiddleName": "",
-  //     "nomineeLastName": "Madrap",
-  //     "nomineeDob": "2001-11-07",
-  //     "nomineeRelationWithProposer": "{\"id\":\"9\",\"value\":\"R009\",\"name\":\"Brother\"}",
-  //     "Gender": "{\"id\":1,\"name\":\"Male\",\"value\":\"M\"}",
-  //     "nomineeAddress": "dgfhjlkjlhg",
-  //     "nomineeContactNo": "9876543210",
-  //     "policyNumber": null
+  //     "nomineeLastName": "Shashank",
+  //     "nomineeDob": "29/11/2000",
+  //     "nomineeRelationWithProposer": "",
+  //     "gender": "",
+  //     "nomineeAddress": "oinas",
+  //     "nomineeContactNo": "8722499266",
+  //     "policyNumber": "21-24-0002891-00"
   //   }
+  //   // ,
+  //   // "isKYCComplete": true
 
   //   const renewalInfoRequestBody = {
   //     policy_Number: proposerDetail.policyNumber,
