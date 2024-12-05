@@ -716,7 +716,7 @@ getproductdetailsandfeatures() {
     }
   }
 
-  /* goNext(){
+  goNext(){
     if(this.activeSection== 'primary'){
       this.setSection('additional')
     }
@@ -779,64 +779,7 @@ getproductdetailsandfeatures() {
           console.log("error is coming from fullquote api");
       })
     }
-  } */
-    goNext(){
-      if(this.activeSection== 'primary'){
-        this.setSection('additional')
-      }
-      else if(this.activeSection == 'additional'){
-        this.setSection('policySummary')
-      }
-      else if(this.activeSection== 'policySummary'){
-        this.setSection('payment')
-      }
-      else if(this.activeSection== 'kyc'){
-        this.setSection('payment')
-      }else if(this.activeSection == 'payment'){    
-        this.setSection('thankyou')
-        this.hideSection=false
-        this.isFeedBackModalVisible = true;
-        // if(this.selectedPaymentType == 'offline' && !this.form.valid){
-        //   this.form.markAllAsTouched();
-        //   return;
-        // }
-        // const offlinePaymentRequestBody = {
-        //   "policyType": "Renewal",
-        //   "paymentMethod": "Offline",
-        //   "source":"Retail",
-        //   "instrumentType": this.form.value.paymentOption,
-        //   "premiumAmount": this.form.value.premiumAmount.toString(),
-        //   "instrumentNo": this.form.value.instrumentNumber.toString(),
-        //   "instrumentDate": this.form.value.instrumentDate.toString(),
-        //   "policyNumber": this.policyNumber,
-        //   "proposalNum":"",
-        //   "agentCode": this.agentCode,
-        //   "bankName": this.form.value.bankName,
-        //   "ifsc": this.form.value.ifscCode,
-        //   "micrNo":"",
-        //   "documentId": this.documentId
-        // };
-        // console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
-        // this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
-        //   (res:any)=>{
-        //     console.log("response before successs",res);
-        //     if(res.isSuccess){
-        //       console.log("offline payment reponse",res.data);
-        //       this.fullQuoteResponse=res.data;          
-        //       this.setSection('thankyou')
-        //       this.hideSection=false
-        //       this.isFeedBackModalVisible = true;
-        //     }
-        //     else{
-        //       this.toast.error({ detail: '',summary:res.message || "Failed to do Payment",duration: 3000});
-        //     }
-        //   },
-        //   (err)=>{
-        //     this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
-        //     console.log("error is coming from fullquote api");
-        // })
-      }
-    }
+  }
 
   getProducts() {
     const reqData = {agentCode: this.agentCode,};
