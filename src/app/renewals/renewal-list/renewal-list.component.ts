@@ -643,14 +643,24 @@ export class RenewalListComponent {
   //   const renewalInfoRequestBody = {
   //     policy_Number: proposerDetail.policyNumber,
   //   };
-  //   this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
-  //     (res: any) => {
-  //       if (res.isSuccess) {
-  //         console.log(res);
-  //         const convertedData = this.encryptionService.encrypt(tempFormData);
+  //   // this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+  //   //   (res: any) => {
+  //   //     if (res.isSuccess) {
+  //   //       console.log(res);
+          
+  //   //     }
+  //   //     else {
+  //   //       this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
+  //   //     }
+  //   //   },
+  //   //   (err) => {
+  //   //     console.error("Error from getRenewalInfo API:", err);
+  //   //     this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
+  //   //   }
+  //   // );
+  //   const convertedData = this.encryptionService.encrypt(tempFormData);
 
   //         console.log(convertedData,this.proposalNum);
-  //         debugger;
   //         this.router.navigate(['renewal/renewalJourney'], {
   //           queryParams: {
   //             formData: convertedData,
@@ -658,16 +668,6 @@ export class RenewalListComponent {
   //             policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber)
   //           }
   //         });
-  //       }
-  //       else {
-  //         this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
-  //       }
-  //     },
-  //     (err) => {
-  //       console.error("Error from getRenewalInfo API:", err);
-  //       this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
-  //     }
-  //   );
   // }
 
   async getProposalNum() {

@@ -6,11 +6,13 @@
                     Commission Statement
                 </h4>
             </div>
+            <form (ngSubmit)="fetchCommissionStatement()" [formGroup]="commissionForm">
+
             <section class="white_container">
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <h4> <u>Commission statement download is currently available from April’21 cycle. We are
-                            working on previous download statement and will be available soon.</u></h4>
+                        <h5><b> <u>Commission statement download is currently available from April’21 cycle. We are
+                            working on previous download statement and will be available soon.</u> </b></h5>
                         <h2>My Commission Statements</h2>
                     </div>
                 </div>
@@ -18,9 +20,9 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                         <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" id="commsionsYear" name="commsionsYear" >
-                            <option value="" disabled selected>{{"Choose Option" }}</option>
-                            <option *ngFor="let year of commisonYears" [value]="year">
+                            <select class="form-select input-selectBox" id="commissonYear" name="commissonYear"  formControlName="year" >
+                            <option value="" disabled selected>{{"Select Year" }}</option>
+                            <option *ngFor="let year of years" [value]="year">
                                 {{ year }}
                             </option>
                         </select>
@@ -29,10 +31,10 @@
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                         <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" id="commsionsYear" name="commsionsYear" >
-                            <option value="" disabled selected>{{"Choose Option" }}</option>
-                            <option *ngFor="let year of commisonMonth" [value]="year">
-                                {{ year }}
+                            <select class="form-select input-selectBox" id="commissonMonth" name="commissonMonth" formControlName="month">
+                            <option value="" disabled selected>{{"Select Month" }}</option>
+                            <option *ngFor="let month of months" [value]="month">
+                                {{ month }}
                             </option>
                         </select>
                             <label for="month">{{"month"}}</label>
@@ -41,9 +43,9 @@
 
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                         <div class="input-block form-floating input-block-renew">
-                            <select class="form-select input-selectBox" id="commsionsYear" name="commsionsYear" >
-                            <option value="" disabled selected>{{"Choose Option" }}</option>
-                            <option *ngFor="let cycle of commsionsCycle" [value]="cycle">
+                            <select class="form-select input-selectBox" id="commssionsCycle" name="commssionsCycle"  formControlName="cycle">
+                            <option value="" disabled selected>{{"Select Cycle" }}</option>
+                            <option *ngFor="let cycle of cycles" [value]="cycle">
                                 {{ cycle }}
                             </option>
                         </select>
@@ -56,8 +58,9 @@
                         </div>
                     </div>
                 </div>
-            </section>
-            
+        </section>
+    </form>
+
 
             
         </div>

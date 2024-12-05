@@ -118,6 +118,8 @@
     "getNotification":"api/quote/notificationlist?agentcode=",
     "markAllReadNotifications":"api/quote/readall?agentCode=",
     "markNotification":"api/quote/notificationbyid?id=",
-    "uploadDocument":"api/yatra/uploaddocument"
+    "uploadDocument":"api/yatra/uploaddocument",
+    "fetchCommmission":"api/renewal/DocumentSearch",
+    "downloadCommmissionStatement":"api/renewal/DocumentSearch"
 
 }
