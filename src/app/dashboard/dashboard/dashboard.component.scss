@@ -1416,6 +1416,11 @@ h2 {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
 }
+@media (max-width:1093px){
+    .siteBody {
+        padding: 13rem 8% 12rem;
+    }
+}
 @media (max-width:1024px){
     .cardWraper-container {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

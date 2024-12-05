@@ -18,7 +18,16 @@
     }
 }
 @media (max-width:1280px) {
-    
+    .checkbox_renew_optionalCoverages {
+        width: 48%;
+    }
+    .checkbox_renew_optionalCoverages .input-checkbox-feildInfo {
+        min-width: 120px;
+        max-width: initial;
+    }
+    .raido_paymentType .input-radiolabel span {
+        flex-direction: column;
+    }
 }
 @media only screen and (max-width:1280px) and (max-height:586px) {
     .siteSidenav .siteSidenavMain.siteSidenavMain_scroll,
@@ -181,6 +190,16 @@
         justify-content: space-between;
         padding: 0 10px 0 15px;
     }
+    .bottomInfoMain {
+        left: auto;
+        width: 90%;
+    }
+    .checkbox_renew_optionalCoverages .input-checkbox-feildInfo, .checkbox_renew_optionalCoverages {
+        width: 100%;
+    }
+    .raido_policyTenure {
+        flex-direction: column !important;
+    }
 }
 @media (max-width:991px) {
     /* .top_mainNavBar .navbar-collapse{
@@ -277,7 +296,7 @@
 }
 @media (max-width:912px){
     .bottomInfoMain, .bottomInfoMessage {
-        width: 100%;
+        width: 90%;
         left: auto;
     }
     .radio_additionalInfo .input-radiolabel span {
@@ -331,6 +350,17 @@
     }
     .data-row .data-item.data-itemEdit {
         align-items: flex-start;
+    }
+    .mobile_bodyColumns {
+        flex-direction: column;
+    }
+    .mobile_bodyColumns .bcc_main {
+        padding-bottom: 10px !important;
+    }
+}
+@media (max-width:768px) {
+    .checkbox_renew_optionalCoverages {
+        padding: 7px;
     }
 }
 @media (max-width:767px) {
@@ -528,6 +558,12 @@
     }
     .quickFilterMain_claims .claims_searchWraper .field_searchMain div button {
         top: 6px !important;
+    }
+    .checkbox_renew_optionalCoverages .input-checkbox-feildButton {
+        min-width: auto;
+    }
+    .checkbox_renew_optionalCoverages {
+        min-width: 100%;
     }
 }
 @media (max-width:390px){

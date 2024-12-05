@@ -1,5 +1,5 @@
 <div class="siteBody siteBody_renewJourney">
-  <div class="contentBody bodyColumns-3">
+  <div class="contentBody bodyColumns-3 mobile_bodyColumns">
       <div class="bodyColumns bodyColumnsLeft" *ngIf="hideSection">
           <div class="bcl_main">
               <h3>{{"Select from any customisation below" | translate}}</h3>
@@ -1189,15 +1189,15 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                    <div class="col-12 col-sm-12 col-md-3 col-lg-4 col-xl-4">
                                         <button type="button" id="sendlink" name="sendlink" class="btn_red btn_redRenew" (click)="sendLink()">{{"Send Link" | translate}}</button>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6" *ngIf="link != ''">
+                                    <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-6" *ngIf="link != ''">
                                         <div class="input-block form-floating input-block-renew">
                                             <input type="text" id="address3" name="address3" [(ngModel)]="link" readonly class="form-control input-textBox">
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2" *ngIf="link != ''">
+                                    <div class="col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2" *ngIf="link != ''">
                                         <button  type="button" id="copy" name="copy" class="btn_red btn_redRenew btn_redCopy"  [cdkCopyToClipboard]="link" title="Copy"><!-- <i class="fa-regular fa-copy"></i> --><img src="assets/Img/icon_content_copy.svg" ></button>                        
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">

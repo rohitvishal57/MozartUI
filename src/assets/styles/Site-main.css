@@ -4220,11 +4220,12 @@ input[type="search"]::-webkit-search-results-decoration {
     background: #F9FAFB;
     padding: 12px;
     border-radius: 12px;
-    gap: 10px;
+    gap: 3px;
     flex-wrap: nowrap;
     align-items: center;
-    min-width: 49%;
-    max-width: 100%;
+    /* min-width: 49%;
+    max-width: 100%; */
+    width: 49%;
 }
 .checkbox_renew_optionalCoverages .input-checkbox-feild {
   padding: 0;
