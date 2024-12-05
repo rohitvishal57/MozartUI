@@ -137,12 +137,10 @@ export const environment = {
     searchDocument: "api/yatra/searchdocument",
     downloadDocument:"api/yatra/download",
     getCustomerBasicDetails:"api/yatra/GetPolicyBasicDetails",
-    getCustomerProductDetails:"api/yatra/GetPolicyBasicDetails",
-    getCustomerInsuredDetails:"api/yatra/GetPolicyBasicDetails",
+    getCustomerProductDetails:"api/yatra/customerproducts?PolicyNumber",
+    getCustomerInsuredDetails:"api/yatra/customermember?PolicyNumber",
     getCustomerClaimDetails:"api/yatra/getclaimdetails",
-    getCustomerEndorsementDetails:"api/yatra/GetPolicyBasicDetails",
+    getCustomerEndorsementDetails:"api/yatra/customerservice?PolicyNumber",
     fetchCommmission:"api/renewal/DocumentSearch",
     downloadCommmissionStatement:"api/renewal/DocumentDownload"
-    
-
   }

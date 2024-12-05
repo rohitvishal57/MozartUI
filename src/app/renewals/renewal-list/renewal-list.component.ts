@@ -278,12 +278,14 @@ export class RenewalListComponent {
               atob(file.byteArray).split("").map((char) => char.charCodeAt(0))
             );
             const blob = new Blob([byteArray], { type: "application/pdf" });
+            const fileURL = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
-            link.href = window.URL.createObjectURL(blob);
+            link.href = fileURL;
             link.download = file.fileName;
-            link.click(); 
-            this.toast.success({ detail: "", summary: response.message || "Document downloaded successfully.", duration: 3000 });
- 
+            document.body.appendChild(link)
+            link.click();  
+            document.body.removeChild(link)
+            window.open(fileURL, "_blank"); 
           }
         } else {
           this.toast.error({ detail: "", summary: response.message || "No file found to download.", duration: 3000 });
@@ -406,7 +408,7 @@ export class RenewalListComponent {
           type: "DUE",
           customerName: item.proposerFirstName,
           customerMobileNo: item.proposerMobileNumber || "",
-          agentMobileNo: "9177035634",
+          agentMobileNo: "",
           eventName: "sending payment link to sms",
           dueDate: "",
           dateOfRenewal: item.policyEndDate,

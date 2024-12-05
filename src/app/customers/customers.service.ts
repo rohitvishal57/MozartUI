@@ -33,21 +33,21 @@ export class CustomersService {
       const customerBasicDetails=this.configService.config.baseUrl + this.configService.config.getCustomerBasicDetails;
       return this.http.post<any>(customerBasicDetails,reqBody)
     }
-    getCustomerProductDetailsApi(reqBody:any){
-      const customerProductDetails=this.configService.config.baseUrl + this.configService.config.getCustomerProductDetails;
-      return this.http.post<any>(customerProductDetails,reqBody)
+    getCustomerProductDetailsApi(policyNumber:any){
+      const customerProductDetails=this.configService.config.baseUrl + this.configService.config.getCustomerProductDetails+ `=${policyNumber}`;
+      return this.http.post<any>(customerProductDetails,policyNumber)
     }
-    getCustomerInsuredDetailsApi(reqBody:any){
-      const customerInsuredDetails=this.configService.config.baseUrl + this.configService.config.getCustomerInsuredDetails;
-      return this.http.post<any>(customerInsuredDetails,reqBody)
+    getCustomerInsuredDetailsApi(policyNumber:any){
+      const customerInsuredDetails=this.configService.config.baseUrl + this.configService.config.getCustomerInsuredDetails+ `=${policyNumber}`;
+      return this.http.post<any>(customerInsuredDetails,policyNumber)
     }
     getCustomerClaimDetailsApi(reqBody:any){
       const customerClaimDetails=this.configService.config.baseUrl + this.configService.config.getCustomerClaimDetails;
       return this.http.post<any>(customerClaimDetails,reqBody)
     }
-    getCustomerEndorsementDetailsApi(reqBody:any){
-      const customerEndorsementDetails=this.configService.config.baseUrl + this.configService.config.getCustomerEndorsementDetails;
-      return this.http.post<any>(customerEndorsementDetails,reqBody)
+    getCustomerEndorsementDetailsApi(policyNumber:any){
+      const customerEndorsementDetails=this.configService.config.baseUrl + this.configService.config.getCustomerEndorsementDetails+ `=${policyNumber}`;
+      return this.http.post<any>(customerEndorsementDetails,policyNumber)
     }
     
 }
