@@ -1561,6 +1561,8 @@ body {
 }
 
 .main-container .main-subContainer .left-nav .left-navInner {
+    position: fixed;
+    width: 220px;
     background-color: #fff;
     border-radius: 12px;
     padding: 12px 14px 38px 14px;
@@ -2598,6 +2600,20 @@ margin: 0;
         width: 100%;
         justify-content: center;
     }
+    .main-container .right-panel .bottom-section{
+        max-width: initial;
+    width: 90%;
+    left: 5%;
+    }
+    .ah-opcovers.acceptTermsCheck .subButton {
+        margin: 5px 45px;
+    }
+    .main-container .right-panel .ah-opcovers {
+        min-width: 100%;
+    }
+    .main-container .right-panel .paymentBtn.btn-ENach, .main-container .right-panel .paymentBtn.btn-EMandate, .main-container .right-panel .paymentBtn.btn-AutoDebit{
+        background-position: top;
+    }
 }
 
 @media (max-width:912px) {
@@ -2779,6 +2795,9 @@ margin: 0;
 }
 .abhaLabel2{
     width: 100%;
+}
+.main-container .right-panel .paymentBtn.btn-ENach, .main-container .right-panel .paymentBtn.btn-EMandate, .main-container .right-panel .paymentBtn.btn-AutoDebit{
+    background-position: top;
 }
 }
 .main-container .right-panel .next-btn:focus,
