@@ -353,10 +353,10 @@ export class RugDynamicFormComponent {
       let reqData = {
         "partnerId": this.partnerId,
         "productId": this.productId,
-        "formId": formId,
-        "proposalNum": this.leadId != undefined ? this.leadId : "342729568",
+        "formId": 7,
+        "proposalNum": this.leadId != undefined ? this.leadId : "3876785",
         "agentCode": this.agentCode,
-        "currentFormSequence": this.getFormIndexValue().toString()
+        "currentFormSequence": "6"
       }
       console.log(reqData);
       this.yatraService.Getform(reqData).subscribe({
@@ -3166,12 +3166,13 @@ export class RugDynamicFormComponent {
                        "DOB": this.bbdetails?.proposerDob
                               
                       }
+                      console.log(justpayPayload);
                     this.d2cJustPayRedirection(justpayPayload)
-                    // if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                    //   this.incrementIndex();
-                    //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                    if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                      this.incrementIndex();
+                      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
                       
-                    // }
+                    }
           
                   }else{
                     this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
@@ -3417,7 +3418,9 @@ export class RugDynamicFormComponent {
       next: (res: any) => {
         console.log(res);
         if (res.isSuccess == true && res.statusCode == 200) {
-          this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
+          window.location.href = res.data.paymentURL
+          // this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+          // window.open(res.data.paymentURL)
           // if (this.getFormIndexValue() < this.formSequence.length - 1) {
           //   this.incrementIndex();
           //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
