@@ -87,6 +87,7 @@ export class CommissionstatementComponent {
             link.click();
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
+            this.toast.success({ detail: "", summary: 'Commission Statement Downloaded Successfully.', duration: 2000 }); 
           }else{
             this.toast.warning({ detail: "", summary: 'Failed to download commission statement.', duration: 2000 });
           }
