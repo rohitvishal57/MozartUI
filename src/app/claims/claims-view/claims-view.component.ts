@@ -64,6 +64,7 @@ export class ClaimsViewComponent {
   namesVariable: any;
   documentType: any;
   response: any;
+  selectedMemberName:any;
   uploadedFile: any;
   agentCode: any;
   selectMemberData: any = {};
@@ -234,7 +235,6 @@ export class ClaimsViewComponent {
       requestType: [""],
       claimStatus: [""],
       raisedDate: [""],
-      memberId: [""],
       hospitalName: ["", Validators.required],
       isFileUploadRequired: [true],
       claimedAmount: ["", Validators.required],
@@ -968,8 +968,8 @@ export class ClaimsViewComponent {
   }
 
   memberIdChange(event:any){    
-    const selectedMemberName = event.target.value;
-    const selectedMember = this.policyMembersList.find(member => member.memberName === selectedMemberName);
+    this.selectedMemberName = event.target.value;
+    const selectedMember = this.policyMembersList.find(member => member.memberName === this.selectedMemberName);
   
     if (selectedMember) {
       this.form.get('memberId')?.setValue(selectedMember.memberId);  // Assuming 'memberId' is the name of the form control in your form group
@@ -989,7 +989,7 @@ export class ClaimsViewComponent {
       const saveClaimData = { ...this.form.value };
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : null;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : null;
-      saveClaimData.memberName = this.selectedMember;
+      saveClaimData.memberName = this.selectedMemberName;
 
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,

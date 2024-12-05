@@ -96,7 +96,10 @@ export class CaptchaPopupComponent {
           if (this.otpResponse.statusCode == 200 && this.otpResponse.isSuccess == true) {
             this.toast.success({ detail: "SUCCESS", summary: this.otpResponse.message, duration: 3000 });
             this.dialogRef.close(this.otpResponse);
+          }else{
+            this.dialogRef.close(this.otpResponse);
           }
+
         },
         error: (error) => {
           console.log(error);

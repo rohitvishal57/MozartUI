@@ -169,7 +169,7 @@ export class YatraService {
     return this.httpService.post(saveCommonDraftData,reqData);
   }
   bbHalfQuote(reqData:any){
-    const halfQuoteData = "https://usp.monocept.ai/api/v1/HalfQuote";
+    const halfQuoteData = "https://upuat.adityabirlahealth.com/api/v1/HalfQuote";
     return this.httpService.post(halfQuoteData,reqData);
   }
   d2cJustpayRedirection(reqData:any){

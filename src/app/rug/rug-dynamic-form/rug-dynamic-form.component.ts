@@ -3118,7 +3118,7 @@ export class RugDynamicFormComponent {
       });
       dialogRef.afterClosed().subscribe((result: any) => {
         console.log(result);
-        if (result?.statusMessage == "OTP has been validated Successfully.") {
+        if (result?.message == "OTP has been validated Successfully.") {
           const dialogRef = this.dialog.open(PaymentInfoComponent, {
             width: "500px",
             autoFocus: false,
@@ -3413,7 +3413,7 @@ export class RugDynamicFormComponent {
 
   d2cJustPayRedirection(req:any){
     let payload =     {    "agentcode": "4620973",    "proposalNumber": "UPP102810271861",    "paymentMethod": "autoDebit",    "source": "RUG",    "policyType": "New Business",    "policyNumber": "",    "quoteNumber": "",    "OrderId": "",    "Amount": 500000,    "FirstName": "Demojs",    "MiddleName": "",    "LastName": "Person",    "Phone": "9992232551",    "Email": "LHME.SHAH@ARVIND.IN",    "DOB": "10/07/1997"}
-    this.yatraService.d2cJustpayRedirection(payload).subscribe({
+    this.yatraService.d2cJustpayRedirection(req).subscribe({
       next: (res: any) => {
         console.log(res);
         if (res.isSuccess == true && res.statusCode == 200) {

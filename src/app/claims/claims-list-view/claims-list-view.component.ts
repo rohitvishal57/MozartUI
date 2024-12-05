@@ -36,7 +36,7 @@ export class ClaimsListViewComponent implements OnInit {
     approved: 0,
     settled: 0,
     rejected: 0,
-    underDeficiency: 0
+    UnderDeficiency: 0
   };
   toggleSearchdropdown: boolean = false;
   searchInputControl = new FormControl("");
@@ -76,7 +76,7 @@ export class ClaimsListViewComponent implements OnInit {
     this.fetchData(); 
     this.getProducts();
     this.fetchClaimStatusCounts(this.agentCode);
-    this.checkView(); //Screen View check
+    this.checkView(); 
   }
 
   claimsView(view:string){
@@ -112,7 +112,7 @@ export class ClaimsListViewComponent implements OnInit {
         return 'approved';
       case 'Intimated':
         return 'active';
-      case 'underDeficiency':
+      case 'Under deficiency':  
         return 'underDeficiency';
       case 'Rejected':
         return 'rejected';
@@ -260,35 +260,37 @@ applyFilter() {
   this.claimsReqBody.fromDate = this.fromDate;
   this.claimsReqBody.toDate = this.toDate;
 
-  const selectedPolicyTypes = this.StaticRequestTypes 
+  const selectedPolicyTypes = this.StaticRequestTypes
     ? this.StaticRequestTypes.filter((requestType: any) => requestType.selected).map((requestType: any) => requestType.name)
     : [];
 
   if (selectedPolicyTypes.length === this.StaticRequestTypes.length || selectedPolicyTypes.length === 0) {
-    this.claimsReqBody.requestType = "";
-  
+    this.claimsReqBody.requestType = ""; 
   } else {
-    this.claimsReqBody.requestType = selectedPolicyTypes[0];
+    this.claimsReqBody.requestType = selectedPolicyTypes.join(","); 
   }
 
-  // selected products
-  const selectedProducts = this.productsList 
+  const selectedProducts = this.productsList
     ? this.productsList.filter((product: any) => product.selected).map((product: any) => product.productName)
     : [];
 
   if (selectedProducts.length === this.productsList?.length || selectedProducts.length === 0) {
-    this.claimsReqBody.searchType = "";
+    this.claimsReqBody.searchType = ""; 
     this.claimsReqBody.searchString = [""];
   } else {
-    this.claimsReqBody.searchType = "productName";
+    this.claimsReqBody.searchType = "productName"; 
+    this.claimsReqBody.searchString = selectedProducts;
+  }
+
+  if (selectedPolicyTypes.length > 0 && selectedProducts.length > 0) {
+    this.claimsReqBody.requestType = selectedPolicyTypes.join(",");
     this.claimsReqBody.searchString = selectedProducts;
   }
   this.isSearch = true;
   this.first = 0;
   this.fetchData();
-  this.toggeledropdown = false; 
+  this.toggeledropdown = false;
 }
-
 
 clear() {
   if (this.productsList) {
@@ -394,7 +396,7 @@ getPlaceholder(): string {
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.checkView(); //Screen View check
+    this.checkView(); 
   }
   //Screen View check
   checkView() {
@@ -402,7 +404,7 @@ getPlaceholder(): string {
     if (this.isDesktopView) {
       this.selectedView = 'grid'; 
     }else {
-      this.selectedView = 'list'; // Use 'grid' view for desktop
+      this.selectedView = 'list'; 
     }
   }
 }
