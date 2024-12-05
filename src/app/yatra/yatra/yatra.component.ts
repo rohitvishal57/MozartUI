@@ -414,7 +414,7 @@ export class YatraComponent {
       formId: this.formSequence.length == 0 ? "0" : this.formSequence[this.getFormIndexValue()].formId.toString(),
       proposalNum: this.proposalNum,
       agentCode: this.agentCode,
-      leadId: this.quickQuoteRedirect == false ? null : this.leadNumber,
+      leadId: this.quickQuoteRedirect == false ? '' : this.leadNumber,
       isLead: this.quickQuoteRedirect == false ? false : true,
       currentFormSequence: this.getFormIndexValue().toString()
     }
@@ -725,6 +725,15 @@ export class YatraComponent {
               }
               else if (control.options.length === 0 && control.name == 'zoneValue') {
                 control.options = this.formData['upgradableZones'];
+                // this.formData['upgradableZones'].forEach((zoneOption: any) =>
+                // {
+                //   console.log(zoneOption);
+                //   control.options = [];
+                //   control.options.push({
+                //     name: zoneOption.zone.toString(), // Display name
+                //     value: zoneOption.zoneCode.toString() // Corresponding value
+                //   });
+                // });
               }
 
               console.log(this.form, control.value, this.isQuote, control.name);
@@ -745,7 +754,7 @@ export class YatraComponent {
                   await this.resolveMethod(control.methodName, control);
                 }
               }
-              else if (control.value != "" && this.isQuote === true && control.methodName) {
+              else if (control.value != "" && (this.quickQuoteRedirect || this.isQuote === true) && control.methodName) {
                 await this.resolveMethod(control.methodName, control);
                 // if (control.name == 'insuredMembers') {
                 //   //loop the options and see if the option has value true in the insuredMembers in formData and the call the log selection
@@ -2583,7 +2592,7 @@ export class YatraComponent {
           // control.selectCheckboxOptions = res.data.relationShip;
           console.log(this.isQuote, this.isPolicyDetailsFetch, control);
 
-          if (this.isQuote || this.isPolicyDetailsFetch) {
+          if (this.isQuote || this.quickQuoteRedirect || this.isPolicyDetailsFetch) {
 
             // Process formData.insuredMembers for additional relations
             const formDataRelations = Object.keys(this.formData.insuredMembers)
@@ -2794,15 +2803,16 @@ export class YatraComponent {
                 this.kidCount++;
               }
               formsection.visible = true;
-              if (this.isQuote == true && this.isPolicyDetailsFetch) {
+              if ((this.isQuote == true && this.isPolicyDetailsFetch) || this.quickQuoteRedirect == true) {
                 formControl.dynamicControls = formControl.dynamicControls.slice(0, 1);
                 console.log(this.form, this.dynamicFormGroup.value);
                 this.isQuote = false;
+                this.quickQuoteRedirect == false;
               }
               let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
               tempControl[1].value = option.value;
               tempControl[0].value = JSON.stringify(option);
-              if (this.isQuote) {
+              if (this.isQuote || this.quickQuoteRedirect) {
                 tempControl.forEach((temp) => {
                   if (temp.name == 'zoneValue') {
                     temp.options = this.formData['upgradableZones'];

@@ -511,7 +511,7 @@ export class LeadsListComponent {
               sessionStorage.setItem("allJsonForm", this.encryptionService.encrypt(this.allJsonFormData));
             }
             sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
-            localStorage.setItem("formIndex", "0");
+            localStorage.setItem("formIndex", lead.formSequence);
           } catch (err) {
             this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
           }

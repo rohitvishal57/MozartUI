@@ -29,5 +29,6 @@ export interface LeadsList {
     campaignNumber?:string;
     isSelected?:boolean;
     interestedProductName?:string|null;
+    formSequence?:string|null; 
   }
   
