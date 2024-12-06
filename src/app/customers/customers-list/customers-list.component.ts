@@ -95,7 +95,6 @@ export class CustomersListComponent {
     });
     this.getCustomerList();
     this.getProducts();
-
     this.checkView(); 
   }
   onPageChange(event: any) {
@@ -105,7 +104,6 @@ export class CustomersListComponent {
     this.getCustomerList();
     this.moreInfoIndex=null
   }
-
   getCustomerList() {
     this.customerListRequestBody.pageNumber = this.page;
     this.customerListRequestBody.pageSize = this.rows;
@@ -130,7 +128,6 @@ export class CustomersListComponent {
       }
     );
   }
-
   formatDate(dateType: "startDate" | "endDate") {
     if (dateType === "startDate" && this.startDate) {
       this.startDate = this.datePipe.transform(this.startDate, "yyyy-MM-dd");
@@ -309,8 +306,7 @@ resetActivePolicy() {
 toggleMoreInfo(index: number): void {
   this.moreInfoIndex = this.moreInfoIndex === index ? null : index;
 }
-
-  sendCustomerDetails(data:any,policy: any,event:number){        
+ sendCustomerDetails(data:any,policy: any,event:number){        
     const RequestBody = {
       agentcode: this.agentCode, 
       requestType: event,  
