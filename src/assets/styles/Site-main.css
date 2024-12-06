@@ -740,7 +740,7 @@ button {
   overflow-y: auto;
 }
 .siteSidenav .sidenavMenu.sidenavMenu_logout {
-    /* position: absolute; */
+    position: absolute; 
     top: 110%;
     top: auto;
     bottom: 20px;

@@ -125,7 +125,6 @@ export class HeaderComponent implements OnInit ,OnDestroy {
   }
 
   onClickHamburger(ev : any){
-    console.log(this.loginService.getValue())
     this.loginService.toggleSidebar(!this.loginService.getValue());
   }
 

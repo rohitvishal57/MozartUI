@@ -378,4 +378,11 @@ header h3 {
 	color: rgb(29, 26, 26);
 	font-weight: 500;
   }
+
+
+@media (max-width:767px) {
+	.filterWraperForm{
+		padding: 0px;
+	}
+}
   

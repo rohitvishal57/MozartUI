@@ -144,7 +144,6 @@ export class SideNavbarComponent {
     this.router.navigate(['']);
   }
   closeSidebar(){
-    console.log(this.loginService.getValue())
     this.loginService.toggleSidebar(!this.loginService.getValue());
   }
 }
