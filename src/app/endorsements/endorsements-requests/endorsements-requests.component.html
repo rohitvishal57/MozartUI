@@ -24,7 +24,7 @@
                             <div>
                                 <select [(ngModel)]="selected" class="filterSearch" (change)="onSelectChanges($event)" id="filterSearchOption" name="filterSearchOption">
                                     <option value="">{{"Select an option" | translate}}</option>
-                                    <option value="caseId">{{"Request ID" | translate}}</option>
+                                    <option value="caseId">{{"Endorsement Id" | translate}}</option>
                                     <option value="policyNumber">{{"Policy Number" | translate}}</option>
                                     <option value="memberName">{{"Member Name" | translate}}</option>
                                     <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
@@ -37,10 +37,10 @@
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Request Id." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'caseId'">{{"Enter Valid Endorsement Id." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'memberName'">{{"Enter Valid Member Name." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'policyNumber'">{{"Enter Valid Policy Number." | translate}}</small>
-                                    <small *ngIf="searchInputControl.hasError('pattern') && !searchInputControl.hasError('maxlength') && selected === 'mobileNumber'">{{"Enter Valid Mobile Number." | translate}}</small>
+                                    <small *ngIf="searchInputControl.hasError('pattern') && selected === 'mobileNumber'">{{"Enter Valid Mobile Number." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('pattern') && selected === 'emailID'">{{"Enter Valid Email Id." | translate}}</small>
                                 </span>
                             </div>
@@ -115,8 +115,8 @@
                         <table class="table table-borderless table-search">
                           <thead>
                             <tr>
-                                <th scope="col">{{"Request" | translate}}</th>
-                                <th scope="col">{{"Policy No." | translate}}</th>
+                                <th scope="col">{{"Endorsement Id" | translate}}</th>
+                                <th scope="col">{{"Policy Number" | translate}}</th>
                                 <th scope="col">{{"Product Name" | translate}}</th>
                                 <th scope="col">{{"Member Name" | translate}}</th>
                                 <th scope="col">{{"Contact Info" | translate}}</th>
@@ -135,7 +135,7 @@
                                 <td >{{ row?.policyNumber }}</td>
                                 <td><span class="text-break-w100">{{ row?.productName }}</span></td>
                                 <td><span class="text-break-w100">{{ row?.memberName }}</span></td>
-                                <td><span class="text-break-w100">{{ row?.mobileNumber }} {{ row?.email }}</span></td>
+                                <td><span class="text-break-w100">{{ row?.mobileNumber }} {{ row?.emailId }}</span></td>
                                 <!--<td align="center">{{ row?.memberRelation }}</td>-->
                                 <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
                                 <td>{{ row?.status }}</td>
@@ -185,7 +185,7 @@
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Contact Info</div>
                                 <div class="item_value">{{ row?.mobileNumber}}</div>
-                                <div class="item_value">{{ row?.email }}</div>
+                                <div class="item_value">{{ row?.emailId }}</div>
                             </div>
                             <!-- <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">Member Relation</div>

@@ -8,5 +8,5 @@ export interface endorsementDetails {
     requestType: string,
     status: string
     mobileNumber: string,
-    email: string
+    emailId: string
 }

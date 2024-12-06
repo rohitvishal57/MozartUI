@@ -237,7 +237,7 @@ export class LoginComponent implements OnInit {
     .subscribe({  
       next: (res:any)=>{
         if (res.data && res.isSuccess && res.statusCode == '200') {
-          window.open(res.data.redirectUrl, "_blank");
+          window.open(res.data.redirectUrl, "_self");
         } else {
           this.userErrorMsg = res.message;
         }
@@ -290,7 +290,6 @@ export class LoginComponent implements OnInit {
             }else if(res.data.agentCode === "467894"){
               this.router.navigate(['rug/base-caller-upload'])
             }else{
-
               res.data.isSelectionRequired && this.items.length > 0 ? this.openBankBranchDialog() : this.router.navigate(['dashboard']);
             }
           } else {

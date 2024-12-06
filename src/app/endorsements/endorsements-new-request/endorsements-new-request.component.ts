@@ -84,13 +84,17 @@ export class EndorsementsNewRequestComponent implements OnInit {
       value: "nomineeContact"
     },
     {
-      name: "Change in International Contact Number",
-      value: "internationalContactNumber"
+      name: "Change in Address",
+      value: "ChangeinAddress"
     },
-    {
-      name: "Change in International Address",
-      value: "ChangeinInternationalAddress"
-    },
+    // {
+    //   name: "Change in International Contact Number",
+    //   value: "internationalContactNumber"
+    // },
+    // {
+    //   name: "Change in International Address",
+    //   value: "ChangeinInternationalAddress"
+    // },
   ];
   relationships = [
     "Brother",
@@ -314,7 +318,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('aadharNumber').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.aadharCradNo);
     }
-    if (value == 'ChangeinInternationalAddress') {
+    if (value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.caseCreationForm.get("address1").setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$'), Validators.maxLength(250)]);
       this.caseCreationForm.get('address1').updateValueAndValidity();
       this.caseCreationForm.get('address2').setValidators([Validators.required, Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$'), Validators.maxLength(250)]);
@@ -326,15 +330,10 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('alternateContactNumber').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Mobile_Number);
-
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
     }
     if (value == 'internationalContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('internationalContactNumber').setValidators([Validators.required, Validators.pattern("[0-9 ]{10}")]);
       this.caseCreationForm.get("endorsementDetails").get('internationalContactNumber').updateValueAndValidity();
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
     }
     if (value == 'nomineeContact') {
       this.caseCreationForm.get("endorsementDetails").get('nomineeContact').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
@@ -350,22 +349,16 @@ export class EndorsementsNewRequestComponent implements OnInit {
     if (value == 'primaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('primaryContactNumber').updateValueAndValidity();
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.primaryMobile);
     }
     if (value == 'memberPrimaryContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('memberPrimaryContactNumber').updateValueAndValidity();
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();memberMobileNo
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.policyInfoDetails?.policyDetails?.memberMobileNo);
     }
     if (value == 'memberAlternateContactNumber') {
       this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').setValidators([Validators.required, Validators.pattern("^(?!([6-9])\\1{9})[6-9][0-9]{9}$")]);
       this.caseCreationForm.get("endorsementDetails").get('memberAlternateContactNumber').updateValueAndValidity();
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').setValidators([Validators.required, Validators.pattern("[0-9 ]{6}")]);
-      // this.caseCreationForm.get("endorsementDetails").get('otpValue').updateValueAndValidity();
     }
     if (value == 'email') {
       this.caseCreationForm.get("endorsementDetails").get('email').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
@@ -376,7 +369,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.caseCreationForm.get("endorsementDetails").get('alternateEmail').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
       this.caseCreationForm.get("endorsementDetails").get('alternateEmail').updateValueAndValidity();
       this.caseCreationForm.get("currentPolicyDetails").setValue(this.externalPolicyData?.policyData[0]?.alternate_Email_Id);
-
     }
     if (value == 'memberEmail') {
       this.caseCreationForm.get("endorsementDetails").get('memberEmail').setValidators([Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
@@ -403,7 +395,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       this.isDisabled = true;
     }
 
-    if (value === 'nomineeContact' || value == 'ChangeinInternationalAddress') {
+    if (value === 'nomineeContact' || value == 'ChangeinInternationalAddress' || value == 'ChangeinAddress') {
       this.showOtpSection = false;
       this.isDisabled = false;
     }
