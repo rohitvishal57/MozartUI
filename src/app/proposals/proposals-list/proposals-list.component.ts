@@ -315,7 +315,8 @@ export class ProposalsListComponent {
         formId : proposalDetails.formId,
         proposalNum : proposalDetails.proposalNumber,
         agentCode : this.agentCode,
-        currentFormSequence : proposalDetails.formSequence
+        currentFormSequence : proposalDetails.formSequence,
+        leadId : proposalDetails.leadId
       }
       localStorage.setItem("formIndex", proposalDetails.formSequence.toString());
       const encodedEncryptedData = this.encryptionService.encrypt(reqData);

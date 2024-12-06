@@ -193,7 +193,7 @@ export class YatraComponent {
         const decryptedData = this.encryptionService.decrypt(params['data']);
         if (decryptedData) {
           console.log(decryptedData);
-
+          this.leadnumber = decryptedData.leadId;
           this.agentCode = decryptedData.agentCode;
           this.partnerId = decryptedData.partnerId;
           this.productId = decryptedData.productId;
