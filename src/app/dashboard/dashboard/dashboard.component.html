@@ -18,8 +18,8 @@
                     <input type="text" class="filterSearch"
                       [placeholder]="'Search Your Customer, Leads, Claims No and more' | translate" [(ngModel)]="searchedValue" />
                     <img src="assets/Img/icon_magnify_grey.svg" (click)="onSearch()">
-                    <div class="overlay_popupMain overlay_dropdown_w518 overlay_searchResults">
-                      <div class="option_policyType" *ngIf="searchedData && searchedData.length">
+                    <div class="overlay_popupMain overlay_dropdown_w518 overlay_searchResults" *ngIf="searchedData && searchedData.length">
+                      <div class="option_policyType" >
                         <div class="overlay_body insurer_detailsMain">
                           <div class="data_searchResults">
                             <section class="tableMain quoteView block-show">
@@ -222,7 +222,7 @@
                   </div>
                   <div class="card_subitem_content">
                     <header>
-                      <div class="card_item_icon"><img src="assets/Img/icon_new_plan.png"></div>
+                      <div class="card_item_icon"><img src="assets/Img/icon_noise_partnership.png"></div>
                       <h5>Key Insights from Mayank Bathwal</h5>
                       <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
                         class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
@@ -547,17 +547,14 @@
                   <header>
                     <div class="otherSections_head">
                       <h2>{{"Top Selling Products" | translate}}</h2>
-                      <div class="filterfields_input">
-                        <div class="input-block input-block-renew compare_inputblock">
-                              <a (click)="onClickEvents('products')">{{"View All" | translate}}</a>
-                        </div>
-                      </div>
+                      <a (click)="onClickEvents('products')" class="btn_linkText">{{"View All" | translate}}</a>
                     </div>
                   </header>
                   <div class="otherSections_body">
                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                           <div class="carousel-inner">
-                              <div class="card_item body_flex_column knowledgeInfo" *ngFor="let prod of ProductList; let i = index" class="carousel-item" [class.active]="i === 0">
+                            <div *ngFor="let prod of ProductList; let i = index" class="carousel-item" [class.active]="i === 0">
+                              <div class="card_item body_flex_column knowledgeInfo" >
                                 <header class="body_flex_row head_tsp">
                                     <div class="common_ProductInfo">
                                         <div class="common_ppi_img">
@@ -571,8 +568,8 @@
                                       <span class="text-red">₹{{prod.sumInsured}}*</span>{{"/ 1 year" | translate}}
                                     </div>
                                 </header>
-                                <ul class="tick_round" *ngFor="let key of prod.keyFeatures">
-                                  <li><div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{key | translate}} </div></li>
+                                <ul class="tick_round" >
+                                  <li *ngFor="let key of prod.keyFeatures"><div class="tick_round_div" ><img src="assets/Img/icon_tick_whitebg.svg">{{key | translate}} </div></li>
                                 </ul>
                                 <footer>
                                   <button type="button" id="btn-sellingTips" name="btn-sellingTips"
@@ -581,16 +578,17 @@
                                       src="assets/Img/icon_right_arrow_black.svg"></em></button>
                                 </footer>
                               </div>
+                            </div>
                           </div>
                           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                            <!-- <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span> -->
-                            <mat-icon>keyboard_arrow_right</mat-icon>
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                            <!-- <mat-icon>keyboard_arrow_right</mat-icon> -->
                           </button>
                           <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                            <!-- <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span> -->
-                            <mat-icon>keyboard_arrow_left</mat-icon>
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                            <!-- <mat-icon>keyboard_arrow_left</mat-icon> -->
                           </button>
                         </div>
 
@@ -659,15 +657,15 @@
                                 </div>
                               </div>
                             </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                              <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                              <span class="visually-hidden">Next</span>
-                            </button>
                           </div>
+                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                          </button>
+                          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                          </button>
                         </div>
                       </div>
                     </div>

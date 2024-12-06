@@ -5,12 +5,16 @@ import { ActivatedRoute } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { tap } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
+import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { combinedForms } from 'src/assets/styles/renewals-forms/combined_forms';
 import { renewals_lead } from 'src/assets/styles/renewals-forms/lead';
 import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
+import { payment } from 'src/assets/styles/renewals-forms/payment';
 import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
+import { RenewalsService } from '../renewals.service';
+import { active_health_covers } from 'src/assets/styles/renewals-forms/active_Health_covers';
 
 @Component({
   selector: 'app-renewal-journey',
@@ -47,20 +51,32 @@ export class RenewalJourneyComponent {
   expandedItem: string = '';
   selectedItem: string = '';
   expandedCardIndex: number | null = null;
+  bankCode: any;
+  bankCity: any;
+  selectedFile: any;
+  documentId: any;
+  agentCode: any;
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService) {
+  formSequence: any[]=[new_combinedForms,active_health_covers,payment];
+  journeyProcess: any;
+
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService,private renewalService: RenewalsService) {
 
   }
 
   ngOnInit() {
     this.showHtmlContent = false;
     console.log("history.state");
+
+    if (localStorage.getItem('agentCode'))
+      this.agentCode = localStorage.getItem('agentCode');
     if (Object.keys(this.route.snapshot.queryParams).length) {
       this.route.queryParams.subscribe(async params => {
         const decryptedData = this.encryptionService.decrypt(params['formData']);
         this.formData = { ...this.formData, ...decryptedData };
         this.proposalNum = this.encryptionService.decrypt(params['proposalNum']);
         this.policyNumber = this.encryptionService.decrypt(params['policyNumber']);
+        this.journeyProcess = this.encryptionService.decrypt(params['journeyProcess']);
       });
     }
 
@@ -77,10 +93,22 @@ export class RenewalJourneyComponent {
       this.showHtmlContent = false;
     }
 
-    // this.form = renewals_lead;
-    // this.form = combinedForms;
     // this.form = totalPremium;
-    this.form = new_combinedForms;
+    // this.form = new_combinedForms;
+    // this.form = payment;
+    // this.form = active_health_covers;
+
+    this.form = this.formSequence[this.getFormIndexValue()];
+    if(this.journeyProcess == 0){
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((control: any) => {
+          if(control.name == 'back'){
+            control.visible = false;
+          }
+        })
+      })
+    }
+
     this.initializeForm();
   }
 
@@ -127,8 +155,8 @@ export class RenewalJourneyComponent {
       });
     });
 
-    console.log(this.form,this.formData);
-    
+    console.log(this.form, this.formData);
+
 
     if (this.form?.formSections) {
       this.renewalFormGroup = this.fb.group({});
@@ -240,7 +268,8 @@ export class RenewalJourneyComponent {
                       let tempInnerControl = JSON.parse(JSON.stringify(subControl.innerSubControls[0]));
                       console.log(tempInnerControl, member);
 
-                      const tempRelationshipType = JSON.parse(member.relationshipType);
+                      // const tempRelationshipType = JSON.parse(member.relationshipType);
+                      const tempRelationshipType = member.relationshipType;
                       tempInnerControl.label = tempRelationshipType.value;
                       tempInnerControl.name = tempRelationshipType.value;
                       if (subControl.conditionCheck) {
@@ -683,37 +712,54 @@ export class RenewalJourneyComponent {
   //   }
   // }
 
-  async resolveMethod(methodName: string, control: any, ...args: any[]): Promise<any> {
-    console.log(`Resolving method: ${methodName}`);
+  async resolveMethod(methodName: string, ...args: any[]): Promise<void> {
+    console.log(methodName);
 
-    // Filter valid arguments
+    // Filter out undefined and null arguments
     let filteredArgs = args.filter(arg => arg !== undefined && arg !== null);
 
+    // Specific logic for handling certain method names
+    if (methodName === 'addOrRemoveAdditionalInsuredMember') {
+      filteredArgs = filteredArgs.slice(-1);
+    } else if (filteredArgs[filteredArgs.length - 1] === 'add' || filteredArgs[filteredArgs.length - 1] === 'remove') {
+      filteredArgs.pop();
+    }
+
+    console.log(filteredArgs);
+
+    // Resolve the method dynamically
     const method = (this as any)[methodName] as Function;
     if (method && typeof method === 'function') {
       try {
-        const result = method.bind(this)(control, ...filteredArgs);
+        // Call the method with filtered arguments
+        const result = method.bind(this)(...filteredArgs);
+        if (methodName == 'uploadSelectedDocument')
+          console.log("ansjnjasnj");
 
+
+        // If the result is a Promise, await it; otherwise, wrap it in Promise.resolve()
         if (result && typeof result.then === 'function') {
-          await result; // If result is a Promise
+          await result; // It's already a Promise, so await it
         } else {
-          await Promise.resolve(result); // Wrap non-Promise results
+          await Promise.resolve(result); // Wrap non-Promise results into a Promise
         }
 
-        // Return control or updated state
-        return control;
+        // Example logic specific to 'getProposerRelationship'
+        if (methodName === 'getProposerRelationship') {
+          console.log("Proposer Relationship");
+        }
       } catch (error) {
-        console.error(`Error in method ${methodName}`, error);
-        throw error;
+        console.error(`Error in method ${methodName}:`, error);
       }
     } else {
-      console.warn(`Method ${methodName} not found.`);
-      return control;
+      console.error(`Method ${methodName} not found`);
     }
   }
 
 
   async callMethod(methodName: string, control: any, section?: any) {
+    console.log(methodName);
+
     if (control.otherControlName && section != undefined) {
       let otherControl = section.formControls.filter((formControl: IFormControl) => formControl.name == control.otherControlName)[0];
       const method = (this as any)[methodName];
@@ -756,7 +802,16 @@ export class RenewalJourneyComponent {
     console.log('still working');
 
 
-
+    if (control.onChangeMethod != null && control.otherControlName != null) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((formControl: any) => {
+          if (formControl.name == control.otherControlName) {
+            this.callMethodForOtherControls(event, control.onChangeMethod, control, formControl);
+            //this.callMethod(event,control.method, formControl,section);
+          }
+        });
+      });
+    }
 
 
     if (parentControl !== null && parentControl.type == 'combinedCheckbox') {
@@ -765,6 +820,16 @@ export class RenewalJourneyComponent {
       this.changeOverLayDone(control, parentControl, false);
     }
 
+  }
+
+  // otherMethodControl
+  callMethodForOtherControls(event: any, method: string, control: IFormControl, otherControl: IFormControl) {
+    const methodFunction = (this as any)[method] as Function;
+    if (methodFunction && typeof methodFunction === 'function') {
+      (this as any)[method](event, otherControl)
+    } else {
+      console.error(`Method ${method} not found`);
+    }
   }
 
   hasAnyValue(control: IFormControl | IDynamicControl, parentControl: IFormControl | null = null, index: number | null = null): boolean {
@@ -1013,13 +1078,19 @@ export class RenewalJourneyComponent {
           //       control.selectCheckboxOptions.forEach((option: any) => {
           //         if (this.formData.insuredMembers[option.value] === true) {
           //           // Call memberSelected function (pass null for event if not triggering through UI)
-          //           this.memberSelected(null, option, control);
+          //           console.log(this.renewalFormGroup.get('insuredMemberDetails'));
+          //           (this.renewalFormGroup.get('insuredMemberDetails') as FormArray).controls.forEach((member : any)=>{
+          //             if(member.get('relation')== option.value){
+          //               member.get('relationshipType')?.setValue(JSON.stringify(option));
+          //             }
+          //           })
+
           //         }
           //       });
           //     }
           //   });
           // });
-          console.log(this.formData, this.form,this.renewalFormGroup);
+          console.log(this.formData, this.form, this.renewalFormGroup);
 
           this.flattenObject(this.formData);
 
@@ -1046,8 +1117,53 @@ export class RenewalJourneyComponent {
     });
   }
 
-  onSubmit() {
-    console.log(this.renewalFormGroup.value,this.form);
+  async onSubmit() {
+    console.log(this.renewalFormGroup.value, this.form);
+    if (this.renewalFormGroup.valid) {
+
+
+
+      if (this.form.saveBtnFunction) {
+        await this.resolveMethod(this.form.saveBtnFunction);
+      }
+
+      if (this.getFormIndexValue() < this.formSequence.length - 1) {
+        this.incrementIndex();
+        this.getFormDataFromFormSequence();
+      }
+    }
+    else {
+      console.log('Form is invalid', this.renewalFormGroup);
+      Object.keys(this.renewalFormGroup.controls).forEach(field => {
+        const control = this.renewalFormGroup.get(field);
+        if (control instanceof FormArray) {
+          control.controls.forEach(arrayControl => {
+            if (arrayControl instanceof FormGroup) {
+              Object.keys(arrayControl.controls).forEach(nestedField => {
+                const nestedControl = arrayControl.get(nestedField);
+                nestedControl?.markAsTouched({ onlySelf: true });
+              });
+            } else {
+              arrayControl?.markAsTouched({ onlySelf: true });
+            }
+          });
+        }
+        else if (control instanceof FormGroup) {
+          control?.markAsDirty({ onlySelf: true });
+        }
+        else {
+          control?.markAsTouched({ onlySelf: true });
+        }
+      });
+      if (this.renewalFormGroup.invalid) {
+        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+        // if (firstInvalidTabIndex !== null) {
+        //   // Navigate to the first invalid tab
+        //   this.activeMemberTabIndex = firstInvalidTabIndex;
+        //   // this.changeDetectorRef.detectChanges(); // Ensure change detection syncs the tab
+        // }
+      }
+    }
 
   }
 
@@ -1339,7 +1455,7 @@ export class RenewalJourneyComponent {
               // }
               let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
               debugger;
-              
+
               tempControl[1].value = option.value;
               tempControl[0].value = JSON.stringify(option);
               console.log(tempControl);
@@ -1355,8 +1471,8 @@ export class RenewalJourneyComponent {
 
               let formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
               // let formArr;
-              console.log(formArr,formControl.dynamicControls);
-              
+              console.log(formArr, formControl.dynamicControls);
+
 
               if (formArr != null) {
                 formArr = this.renewalFormGroup.get(controls.idProperty) as FormArray;
@@ -2288,17 +2404,17 @@ export class RenewalJourneyComponent {
 
   //tab-view methods
   generateHeader(control: any, i: any) {
-    console.log(control,this.renewalFormGroup);
-    
+    console.log(control, this.renewalFormGroup);
+
     // console.log(this.formData[control.name][i-1].relationshipType,control,i);
     // const imagePath = JSON.parse(this.formData[control.name][i - 1].relationshipType)?.imagePath;
-    console.log((this.renewalFormGroup.get(control.name) as FormArray)?.controls[i-1].value);
-    
-    // const imagePath = JSON.parse((this.renewalFormGroup.get(control.name) as FormArray)?.controls[i-1].value['relationshipType']).imagePath;
-    // console.log(imagePath);
-    
-    // // console.log(this.formData[control.name],control,i,imagePath);
-    // return imagePath;
+    console.log((this.renewalFormGroup.get(control.name) as FormArray)?.controls[i - 1].value);
+
+    const imagePath = JSON.parse((this.renewalFormGroup.get(control.name) as FormArray)?.controls[i - 1].value['relationshipType']).imagePath;
+    console.log(imagePath);
+
+    // console.log(this.formData[control.name],control,i,imagePath);
+    return imagePath;
   }
 
   selectTab(tabName: string) {
@@ -2308,5 +2424,369 @@ export class RenewalJourneyComponent {
 
   toggleContent(index: number): void {
     this.expandedCardIndex = this.expandedCardIndex === index ? null : index;
+  }
+
+  //payment methods
+  onButtonClick(control: any) {
+    this.selectedButton = control.name;
+    console.log(this.selectedButton);
+
+    const paymentModeControl = this.renewalFormGroup.get('paymentMode');
+    if (paymentModeControl) {
+      paymentModeControl.setValue(this.selectedButton);
+    }
+
+    if (this.selectedButton !== 'offline') {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name === 'offline' && controls.dependentControls) {
+            controls.dependentControls.forEach((item: any) => {
+              const controlToHide = this.form.formSections
+                .flatMap((sec: any) => sec.formControls)
+                .find((ctrl: any) => ctrl.name === item);
+              if (controlToHide) {
+                controlToHide.visible = false; // Hide dependent controls for offline
+              }
+            });
+          }
+        });
+      });
+    }
+    // Handle the Juspay redirection for buttons other than Offline
+    // if (this.selectedButton !== 'offline') {
+    //   const reqData = {
+    //     agentcode: this.agentCode,
+    //     proposalNumber: this.proposalNum,
+    //     paymentMethod: this.selectedButton,
+    //     source: 'Retail',
+    //     policyType: 'New Business',
+    //     policyNumber: '',
+    //     quoteNumber: '',
+    //     OrderID: ''
+    //   };
+    //   this.yatraService.justPayRedirection(reqData).subscribe({
+    //     next: (response: any) => {
+    //       console.log('Juspay API Response:', response);
+
+    //       if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
+    //         if (this.selectedButton == 'sendLinkButton') {
+    //           console.log(response);
+    //           this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
+    //           // res = response.data.paymentURL;
+    //         }
+    //         else {
+    //           window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+    //         }
+    //       } else {
+    //         this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+    //         console.error('Invalid payment link received:', response);
+    //       }
+    //     },
+    //     error: (error) => {
+    //       this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+    //       console.error('Error generating payment link:', error);
+    //     }
+    //   });
+    // }
+
+    console.log(control);
+
+
+    // Handle showing dependent controls if any are specified for the clicked button
+    if (control.dependentControls) {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          control.dependentControls.forEach((item: any) => {
+            if (controls.name == item) {
+              controls.visible = true;
+              control.disabled = true;
+              const formControl = this.renewalFormGroup.get(controls.name);
+              if (formControl) {
+                formControl.enable();
+                if (controls.validators) {
+                  const validators = controls.validators.map((val: any) => {
+                    if (val.validatorName === 'required') {
+                      return Validators.required;
+                    }
+                    return null;
+                  }).filter(Boolean);
+                  formControl.setValidators(validators);
+                  formControl.updateValueAndValidity();
+                }
+              }
+            }
+          });
+        });
+      });
+    } else {
+      let list: any = [];
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.dependentControls) {
+            list = controls.dependentControls;
+          }
+          list.forEach((item: any) => {
+            if (controls.name == item) {
+              controls.visible = false;
+              const formControl = this.renewalFormGroup.get(control.name);
+              if (formControl) {
+                formControl.disable();
+                formControl.clearValidators();
+                formControl.updateValueAndValidity();
+              }
+            }
+          });
+        });
+      });
+    }
+  }
+
+  // getall bank details
+  getAllBankDetails(control: any) {
+    if (control.options.length <= 0) {
+
+      // }
+      // else{
+
+      this.yatraService.getAllBankDetails().subscribe({
+        next: (res: any) => {
+          control.options = res.data;
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  getBankCity(event: any, otherControl: any) {
+    otherControl.value = "";
+    otherControl.options = [];
+    const data = JSON.parse(event.target.value);
+    this.bankCode = data.id;
+    const reqData = {
+      "cityCode": "",
+      "bankCode": this.bankCode
+    };
+    this.yatraService.getBankCity(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        otherControl.options = [...res.data]; // Create a new array to trigger change detection
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  getBranchDetails(event: any, otherControl: any) {
+    otherControl.value = "";
+    otherControl.options = []; // Reset options to an empty array
+
+    const data = JSON.parse(event.target.value);
+    console.log(event.target.value, data, data.id);
+    this.bankCity = data.id as string;
+    console.log(this.bankCity);
+
+    const reqData = {
+      "bankCode": this.bankCode,
+      "cityCode": this.bankCity
+    };
+
+    console.log(reqData);
+    this.yatraService.getBranchDetails(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        otherControl.options = [...res.data]; // Create a new array to trigger change detection
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+
+  setIfscCode(event: any, otherControl: any) {
+    const data = JSON.parse(event.target.value);
+    this.renewalFormGroup.get('ifscCode')?.setValue(data.id);
+    this.renewalFormGroup.get('micrCode')?.setValue(data.value);
+  }
+
+  triggerFileInput(controlName: string) {
+    console.log("getting called");
+
+    const fileInputControl = this.document.getElementById(controlName);
+    fileInputControl?.click();
+  }
+
+  onFileSelected(inputName: string, event: any) {
+    const file = event.target.files[0];
+    console.log(file);
+
+    const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
+    const control = this.renewalFormGroup.get(inputName);
+    console.log(control);
+    if (file) {
+      // Clear previous errors
+      control?.setErrors(null);
+
+      // Validate file type
+      if (!allowedFileTypes.includes(file.type)) {
+        console.log(allowedFileTypes);
+        control?.setErrors({ fileType: true });
+      }
+
+      // Validate file size
+      if (file.size > maxSizeInBytes) {
+        control?.setErrors({ fileSize: true });
+      }
+
+      // If no errors, proceed to set the selected file
+      if (!control?.errors) {
+        this.selectedFile = file;
+        control?.setValue(file.name);
+      } else {
+        control?.markAsTouched();
+        this.selectedFile = null;
+      }
+
+
+    }
+  }
+
+  uploadSelectedDocument(): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      if (this.selectedButton) {
+        try {
+          const policyNum = this.proposalNum.replace(/-/g, "");
+          console.log("kjsdajlkda",policyNum);
+
+          const formData = new FormData();
+          formData.append("Files", this.selectedFile);
+          formData.append("UniqueNumber", policyNum);
+
+          console.log(formData, this.selectedFile, this.policyNumber);
+
+          this.commonService.uploadDocument(formData).subscribe(
+            async (res: any) => {
+              if (res.isSuccess) {
+                console.log("response after success", res);
+                console.log("unique id", res.data.uploadResponse[0].globalId);
+                this.documentId = res.data.uploadResponse[0].globalId;
+
+                try {
+                  // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
+                  await this.getFullQuoteViaOfflinePayment();
+                  resolve(); // Resolve the promise once everything completes
+                } catch (error) {
+                  console.error("Error in full quote generation:", error);
+                  reject(error); // Reject the promise to prevent further flow
+                }
+              } else {
+                const errorMessage = "Document upload failed.";
+                console.error(errorMessage, res);
+                this.toast.error({
+                  detail: "ERROR",
+                  summary: errorMessage,
+                  duration: 3000,
+                });
+                reject(new Error(errorMessage));
+              }
+
+            },
+            (err) => {
+              console.error("Error during upload:", err);
+              this.toast.error({
+                detail: "Error",
+                summary: err.message || "Document upload failed.",
+                duration: 1500,
+              });
+              reject(err); // Reject the promise on upload error
+            }
+          );
+        } catch (error) {
+          console.error("Error preparing upload:", error);
+          this.toast.error({
+            detail: "Error",
+            summary: "An unexpected error occurred while preparing the upload.",
+            duration: 3000,
+          });
+          reject(error); // Reject the promise on preparation error
+        }
+      } else {
+        this.toast.warning({
+          detail: "WARNING",
+          summary: "Please select Payment Mode.",
+          duration: 3000,
+        });
+      }
+    });
+  }
+
+  getFormIndexValue() {
+    const formIndex = localStorage.getItem("formIndex") as string;
+    return formIndex ? parseInt(formIndex, 10) : 0;
+  }
+  setFormIndexValue(value: number) {
+    localStorage.setItem("formIndex", value.toString());
+  }
+
+  incrementIndex() {
+    const currentIndex = this.getFormIndexValue();
+    this.setFormIndexValue(currentIndex + 1);
+  }
+  decrementIndex() {
+    const currentIndex = this.getFormIndexValue();
+    this.setFormIndexValue(currentIndex - 1);
+  }
+
+  onPrevious(control: any) {
+    if (this.getFormIndexValue() > 0) {
+      this.decrementIndex()
+      this.getFormDataFromFormSequence();
+    }
+  }
+  async getFullQuoteViaOfflinePayment(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const data = this.renewalFormGroup.value;
+      console.log(data);
+      
+      const offlinePaymentRequestBody = {
+        "policyType": "Renewal",
+        "paymentMethod": "Offline",
+        "source":"Retail",
+        "instrumentType": data.paymentOption,
+        "premiumAmount": data.totalPremium,
+        "instrumentNo": data.chequeNumber,
+        "instrumentDate": data.chequeDate,
+        "policyNumber": this.policyNumber,
+        "proposalNum":this.proposalNum,
+        "agentCode": this.agentCode,
+        "bankName": JSON.parse(data.bankName).value,
+        "ifsc": data.ifscCode,
+        "micrNo":data.micrCode,
+        "documentId": this.documentId
+      };
+      console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
+      this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
+        (res:any)=>{
+          if(res.isSuccess){
+            // this.fullQuoteResponse=res.data;          
+            // this.setSection('thankyou')
+            // this.hideSection=false
+            // this.isFeedBackModalVisible = true;
+            console.log(res.data);
+            
+          }
+          else{
+            this.toast.error({ detail: '',summary:res.message || "Failed to do Payment",duration: 3000});
+          }
+        },
+        (err)=>{
+          this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
+          console.log("error is coming from fullquote api");
+      })
+    });
   }
 }

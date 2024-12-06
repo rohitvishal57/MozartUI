@@ -100,7 +100,9 @@ export class SideNavbarComponent {
   // Handle route redirection
   redirect(route: string): void {
     if (route) {
-      this.loginService.toggleSidebar(!this.loginService.getValue());
+      // this.closeSidebar();
+      console.log(this.loginService.getValue());
+      // this.loginService.toggleSidebar(!this.loginService.getValue());
       this.router.navigate([route]);
     }
   }
@@ -140,5 +142,8 @@ export class SideNavbarComponent {
     this.toast.success({ detail: 'SUCCESS', summary: 'Agent Logout successfully!!', duration: 2000 });
     this.loginService.signOut();
     this.router.navigate(['']);
+  }
+  closeSidebar(){
+    this.loginService.toggleSidebar(!this.loginService.getValue());
   }
 }

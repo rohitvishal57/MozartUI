@@ -226,7 +226,7 @@ export class ClaimsViewComponent {
   createForm(): void {
     this.form = this.fb.group({
       id: localStorage.getItem("agentCode"),
-      policyNumber: ["", Validators.required],
+      policyNumber: ["", [Validators.required, Validators.pattern("^[0-9]+-[0-9]+-[0-9]+-[0-9]+$"), Validators.minLength(16), Validators.maxLength(16)]],
       proposalNumber: [""],
       memberName: [""],
       memberId:[""],
@@ -268,6 +268,15 @@ export class ClaimsViewComponent {
           billAmount: [""]
         }),
       ]),
+      documentsArray: this.fb.array([
+        this.fb.group({
+            documentId: [""],
+            documentName: [""],
+            status: [""],
+            labelName: [""]
+       
+          }),
+        ]),
     });
     this.form.get('coverName')?.valueChanges.subscribe(coverName => {
       this.handleCoverNameValidation(coverName);

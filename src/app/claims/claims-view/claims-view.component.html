@@ -13,20 +13,26 @@
                     <div class="row mb-3">
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">
-                                <input class="form-control input-textBox" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber" (keyup)="filterList($event)" placeholder="Search Policy Number" />
-                                <label for="policyNumber">{{"Search Policy Number" | translate}}</label>
-                                <div *ngIf="form.get('policyNumber')?.invalid && (form.get('policyNumber')?.touched || form.get('policyNumber')?.dirty)">
-                                    <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required') && form.get('policyNumber')?.touched">
-                                    {{"Policy Number is required." | translate}} 
+                              <input class="form-control input-textBox" [matAutocomplete]="auto" id="policyNumber" name="policyNumber" formControlName="policyNumber" (keyup)="filterList($event)" placeholder="Search Policy Number" />
+                              <label for="policyNumber">{{"Search Policy Number" | translate}}</label>
+                              <div *ngIf="form.get('policyNumber')?.invalid && (form.get('policyNumber')?.touched || form.get('policyNumber')?.dirty)">
+                                <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('required')">
+                                  {{"Policy Number is required." | translate}}
                                 </small>
-                                </div>
+                                <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('pattern')">
+                                  {{"Policy Number must be in the expected format." | translate}}
+                                </small>
+                                <small class="ui-error block-show" *ngIf="form.get('policyNumber')?.hasError('minlength') || form.get('policyNumber')?.hasError('maxlength')">
+                                  {{"Policy Number must be 16 characters long." | translate}}
+                                </small>
+                              </div>
                             </div>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="handleDropdownChange($event.option.value)">
-                                <mat-option *ngFor="let policy of filteredPolicyList" [value]="policy.policyNumber">
-                                    {{ policy.policyNumber | translate }}
-                                </mat-option>
+                              <mat-option *ngFor="let policy of filteredPolicyList" [value]="policy.policyNumber">
+                                {{ policy.policyNumber | translate }}
+                              </mat-option>
                             </mat-autocomplete>
-                        </div>
+                          </div>
 
                         <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                             <div class="input-block form-floating input-block-renew">

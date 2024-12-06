@@ -1,5 +1,8 @@
-<nav id="siteSidenav" class="siteSidenav" [ngClass]="{'expand': isExpanded, 'active': isActive}" *ngIf="agentCode != '467899' && agentCode != '467898'">
-    <div class="siteSidenavMain siteSidenavMain_scroll">
+<nav id="siteSidenav" class="siteSidenav" [ngClass]="{'expand': isExpanded, 'active': isActive}" *ngIf="agentCode != '467899' && agentCode != '467898'"
+(click)="closeSidebar()">
+  <div class="sidebar-rapper" >
+    
+  <div class="siteSidenavMain siteSidenavMain_scroll">
       <div class="sidenavMenu sidenavMenu_links">
         <a *ngFor="let item of sideMenuList" 
            [ngClass]="{'active': isRouteActive(item.path)}" 
@@ -14,7 +17,10 @@
         </a>
       </div>
     </div>
+    
     <div class="sidenavMenu sidenavMenu_logout">
       <a title="logout" (mouseenter)="expandSideNav()" (mouseleave)="collapseSideNav()" class="linkLogout" [routerLink]="['']"><span class="img_link"><img src="assets/Img/icon_menu_logout.svg"></span><span>{{"Logout" | translate}}</span></a>      
     </div>
+  </div>  
+
 </nav>
