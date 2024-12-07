@@ -10,6 +10,7 @@ import { LoginService } from 'src/app/login/login/login.service';
 declare var bootstrap: any;
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { SuccessModalComponent } from 'src/app/shared/components/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-endorsements-new-request',
@@ -148,7 +149,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
     private loginservice: LoginService,
     private toast: NgToastService,
     private _router: Router,
-    private dialog: MatDialog, private languageService: LanguageService,
+    private dialog: MatDialog,
+    private languageService: LanguageService,
     private translateService: TranslateService) {
   }
   ngOnInit() {
@@ -562,11 +564,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
                   .subscribe((Respevent: any) => {
                     let event: any = Respevent;
                     if (Respevent?.data && Respevent?.statusCode == "200" && Respevent?.isSuccess) {
-                      this.toast.success({
-                        detail: 'SUCCESS',
-                        summary: `Your request ${resp.data.response.caseId} has been registered`,
-                        duration: 5000,
-                      });
+                      this.openModal(resp);
                     }
                     else if (Respevent?.message) {
                       this.toast.error({
@@ -593,11 +591,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
               }
             }
             else {
-              this.toast.success({
-                detail: 'SUCCESS',
-                summary: `Your request ${resp.data.response.caseId} has been registered`,
-                duration: 5000,
-              });
+              this.openModal(resp);
               this.backToEndorsment();
             }
           }
@@ -618,6 +612,23 @@ export class EndorsementsNewRequestComponent implements OnInit {
   backToEndorsment() {
     this._router.navigate(["endorsements"]);
   }
+  
+  openModal(resp: any) {
+    const dialogRef = this.dialog.open(SuccessModalComponent, {
+      width: '400px',
+      disableClose: true,
+      data: { 
+        title: 'Endorsement',
+        id: `Endorsement Id: ${resp.data.response.caseId}`,
+        navigate: 'endorsements'
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('Modal closed');
+    });
+  }
+
   newfile(e: any) {
     let files;
     let file;
@@ -714,7 +725,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         emailId: this.otpObj.EmailId,
         Mobile: this.otpObj.MobileNumber,
       };
-      this.loginservice.validateOtpRequestApi(modal).subscribe(
+      this.endorsement_service.endorsementValidateOtpApi(modal).subscribe(
         (resp: any) => {
           if (resp && resp?.statusCode == "200" && resp?.isSuccess) {
             if (resp.message) {

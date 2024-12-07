@@ -101,12 +101,13 @@ export class LoginComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result.status === 'Success') {
+      console.log(result);
+      if (result.status == 'Success') {
         this.verifyOtpEnable = true;
         this.enableLoginForm = false;
         this.maskUserCode(result.data);
         this.startTimer();
-      } else if (result.status === 'Failure') {
+      } else {
         this.verifyOtpEnable = false;
         this.enableLoginForm = true;
         this.errorMessage = result.data;
@@ -137,6 +138,7 @@ export class LoginComponent implements OnInit {
           this.startTimer();
         } else {
           this.errorMessage = res.message;
+          res.message.includes("You have Reached Maximum Number of Attempts") ? this.timerOn = false : this.timerOn = true;
         }
       },
       error: (err => {
@@ -214,6 +216,7 @@ export class LoginComponent implements OnInit {
   }
 
   handleOtpLogin() {
+    this.errorMessage = '';
     this.contactDetailsReqBody.userId = this.loginForm.value.userName;
     this.loginService.getContactDetailsByAgentCodeApi(this.contactDetailsReqBody).subscribe({
       next: (res: any) => {

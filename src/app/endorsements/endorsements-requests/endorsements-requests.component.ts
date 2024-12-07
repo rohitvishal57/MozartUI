@@ -322,26 +322,8 @@ export class EndorsementsRequestsComponent implements OnInit {
   applySearch() {
     const searchValue = this.searchInputControl?.value?.trim();
     if(this.searchInputControl.valid) {
-      if (this.selected === "caseId") {
-        this.requestsListRequestBody.searchColumn = "CaseId";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "memberName") {
-        this.requestsListRequestBody.searchColumn = "MemberName";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "policyNumber") {
-        this.requestsListRequestBody.searchColumn = "PolicyNumber";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "mobileNumber") {
-        this.requestsListRequestBody.searchColumn = "MobileNumber";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
-      else if (this.selected === "emailID") {
-        this.requestsListRequestBody.searchColumn = "EmailId";
-        this.requestsListRequestBody.searchString = searchValue;
-      }
+      this.requestsListRequestBody.searchColumn = this.selected;
+      this.requestsListRequestBody.searchString = searchValue;
       this.isSearch = true;
       this.first = 0;
       this.getRequestList();
