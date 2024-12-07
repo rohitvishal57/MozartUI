@@ -3165,7 +3165,8 @@ export class RugDynamicFormComponent {
                        "LastName": this.bbdetails?.customerLastName,
                        "Phone": this.bbdetails?.proposerMobileNumber,
                        "Email": this.bbdetails?.proposerEmailAddress,
-                       "DOB": this.bbdetails?.proposerDob
+                       "DOB": this.bbdetails?.proposerDob,
+                       "appName": "BRANCH_BANKING"
                               
                       }
                       console.log(justpayPayload);
@@ -3445,7 +3446,7 @@ export class RugDynamicFormComponent {
     console.log(this.formSequence);
     console.log(this.formIndexValue);
     console.log(this.getFormIndexValue());
-    if(this.getFormIndexValue() == 0 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
+    if(this.getFormIndexValue() == 0 || this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
       if(this.getFormIndexValue() == 3){
         this.dynamicFormGroup.value.accountNumber = this.bbdetails.accountNumber;
         // this.dynamicFormGroup.get('accountNumber')?.setValue(this.bbdetails.accountNumber);
@@ -3614,12 +3615,6 @@ export class RugDynamicFormComponent {
           console.error(err);
         }
       });
-    }else if(this.getFormIndexValue() == 1){
-      if (this.getFormIndexValue() < this.formSequence.length - 1) {
-        this.incrementIndex();
-        this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-        
-      }
     }
     else{
       //https://usp.monocept.ai/api/v1/SaveBBCommonDraft
