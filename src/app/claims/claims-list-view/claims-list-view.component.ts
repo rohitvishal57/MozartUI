@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
 import { ClaimsInterface } from 'src/app/interface/claims.interface';
 import { ClaimsViewService } from '../claims-view/claims-view.service';
-import { searchValidationConfig }  from 'src/app/interface/common-validation.interface';
+import { searchValidationConfig } from 'src/app/interface/common-validation.interface';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
 
@@ -18,18 +18,22 @@ import { LanguageService } from 'src/app/services/language.service';
 })
 export class ClaimsListViewComponent implements OnInit {
   displayedColumns: string[] = ['request', 'policyNo', 'productName', 'memberName', 'memberRelation', 'requestType', 'status', 'raisedDate', 'download'];
-  allData: ClaimsInterface[] = []; 
+  allData: ClaimsInterface[] = [];
   claims: any[] = [];
   selectedListView: string = '';
   selectedView: string = 'list';
-  viewClaims:boolean=false;
-  gridClaims:any[] = [];
+  viewClaims: boolean = false;
+  gridClaims: any[] = [];
   gridClaimsData: any[] = [];
   first: number = 0;
   totalRecords: number = 0;
   rows: number = 10;
   page: number = 1;
-  selectedStatus = "";
+  activeFilter: any
+  selectedStatus: string = "all";
+  startDate: any;
+  endDate: any;
+  filterType: string = 'totalRecords';
   claimStatusCounts: any = {
     all: 0,
     active: 0,
@@ -50,8 +54,8 @@ export class ClaimsListViewComponent implements OnInit {
   appliedFiltersCount: number = 0;
   requestTypes: any[] = [];
   maxDate: string | undefined;
-  isSearch:boolean = false;
-  productsList:any;
+  isSearch: boolean = false;
+  productsList: any;
   countsList: any = [];
   status: string = "totalRecords";
   isDesktopView: boolean = false;
@@ -61,10 +65,10 @@ export class ClaimsListViewComponent implements OnInit {
     { name: 'Reimbursement', selected: false },
   ];
 
-  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService:ClaimsViewService, private languageService: LanguageService,
-    private translateService: TranslateService){ }
+  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService: ClaimsViewService, private languageService: LanguageService,
+    private translateService: TranslateService) { }
 
-  ngOnInit(){
+  ngOnInit() {
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -73,125 +77,83 @@ export class ClaimsListViewComponent implements OnInit {
       });
     });
 
-    this.fetchData(); 
+    this.fetchData();
     this.getProducts();
-    this.fetchClaimStatusCounts(this.agentCode);
-    this.checkView(); 
+    //this.fetchClaimStatusCounts(this.agentCode);
+    this.checkView();
   }
 
-  claimsView(view:string){
+  claimsView(view: string) {
     this.selectedView = view;
   }
 
   //-------navigate to My-claims-view ----------
-  navigateToCreateClaim(){
+  navigateToCreateClaim() {
     this.viewClaims = true;
     this.router.navigate(['claims/createClaims']);
   }
 
   //-------------filters--------------//
-  claimSatusCount = {
-    "AgentCode": this.agentCode,
-    "claimStatus": ""
+  filterClaims(filter: string, filterRange: string) {
+    this.claimsReqBody.filterType = filter;
+    this.page = 1;
+    this.fetchData();
+    this.selectedStatus = filter;
+    this.filterType = filterRange;
   }
 
-  fetchClaimStatusCounts(agentCode:any) {
-    this.claimSatusCount.claimStatus = this.selectedStatus
-    this.claimsService.getClaimStatusCounts(this.claimSatusCount, agentCode)
-      .subscribe((response:any) => {
-        if (response) {
-          response.data.forEach((item:any) => {
-            this.claimStatusCounts[this.mapStatusName(item.claimStatus)] = item.totalCount;
-          });
-          this.claimStatusCounts.all = response.data.reduce((total:any, item:any) => total + item.totalCount, 0);
-        }
-      });
-  }
-
-  mapStatusName(status: string): string {
-    switch (status) {
-      case 'Approved':
-        return 'approved';
-      case 'Intimated':
-        return 'intimated';
-      case 'Under deficiency':  
-        return 'underDeficiency';
-      case 'Rejected':
-        return 'rejected';
-      case 'Settled':
-        return 'settled';
-      default:
-        return 'all';
-    }
-  }
-
-  filterClaims(status: string) {
-    this.claimsReqBody.status = status;
-    //(status === 'all') ? (this.selectedStatus = '') : (this.selectedStatus = status);
-    // this.selectedStatus = status;
-    this.isSearch = true;
-    this.first = 0;
-    this.fetchClaimStatusCounts(this.agentCode);
-    }
-    // filterClaims(status: string) {
-    //   this.selectedStatus = status === 'all' ? '' : status;
-    //   this.isSearch = true;
-    //   this.first = 0;
-    //   this.claimsReqBody.status = this.selectedStatus;  
-    //   this.fetchClaimStatusCounts(this.agentCode);  
-    // }
-    
-//---------pagination------------//
-onPageChange(event:any) {
+  //---------pagination------------//
+  onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
-    this.page = Math.floor(this.first/this.rows)+1
+    this.page = Math.floor(this.first / this.rows) + 1
     this.isSearch = false;
     this.fetchData();
-}
+  }
 
-getFromDate(event:any){
-  this.fromDate = event.target.value;
-}
+  getFromDate(event: any) {
+    this.fromDate = event.target.value;
+  }
 
-getToDate(event:any){
-  this.toDate = event.target.value;
-}
+  getToDate(event: any) {
+    this.toDate = event.target.value;
+  }
 
-//---------API Call-------//
-claimsReqBody =  {
+  //---------API Call-------//
+  claimsReqBody = {
+    "productVarientName": "",
     "agentCode": this.agentCode,
-    "sortColumn": "ReportedDateTime",
-    "sortdirection": "DESC",
-    "status": "",
+    "requestId": "",
+    "policyNumber": "",
     "requestType": "",
-    "searchType": "",
-    "searchString": [""],
-    "start": 1,
+    "startDate": null as string | null,
+    "endDate": null as string | null,
+    "pageNumber": 1,
     "pageSize": 10,
-    "fromDate": null,
-    "toDate": null
+    "mobileNumber": "",
+    "filterType": "",
+    "memberId": ""
   }
-  
-fetchData(): void {
-  if (!this.isSearch) {
-    this.claimsReqBody.start = (this.page - 1) * this.rows;
-    this.claimsReqBody.pageSize = this.rows;
-  } else {
-    this.claimsReqBody.start = 0;
-  }
-  this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res : any) => { 
-    if (res.data && res.statusCode == "200" && res.isSuccess) {
-    this.claims = res.data.claimDetails;   
-    this.countsList = res.data;   
-    // this.productsList = res.claimDetails     
-    this.gridClaimsData = res.data.claimDetails; 
-    this.totalRecords = res.data.totalRecords;    
-}
-else{
-  console.error("API request was not successful.");
-}
-});
+
+  fetchData(): void {
+    if (!this.isSearch) {
+      this.claimsReqBody.pageNumber = this.page;
+      this.claimsReqBody.pageSize = this.rows;
+    } else {
+      this.claimsReqBody.pageNumber = 1;
+    }
+    this.claimsService.getClaimsList(this.claimsReqBody).subscribe((res: any) => {
+      if (res.data && res.statusCode == "200" && res.isSuccess) {
+        this.claims = res.data.claimDetails;
+        // this.productsList = res.claimDetails     
+        this.gridClaimsData = res.data.claimDetails;
+        this.countsList = res.data;
+        this.totalRecords = res.data[this.filterType];
+      }
+      else {
+        console.error("API request was not successful.");
+      }
+    });
 
   }
 
@@ -201,212 +163,179 @@ else{
     } else if (dateType === "toDate" && this.toDate) {
       this.toDate = this.datePipe.transform(this.toDate, "yyyy-MM-dd");
     }
-    if(this.toDate < this.fromDate) {
+    if (this.toDate < this.fromDate) {
       this.toDate = "";
     }
   }
 
 
   toggleFilterDropdown() {
-    if(this.toggeleSearchdropdown==true)
-    {
-       this.toggeleSearchdropdown=false;
+    if (this.toggeleSearchdropdown == true) {
+      this.toggeleSearchdropdown = false;
     }
-    this.toggeledropdown = !this.toggeledropdown;   
+    this.toggeledropdown = !this.toggeledropdown;
     this.maxDate = new Date().toISOString().split('T')[0];
   }
 
   getProducts() {
-    this.agentCode =  localStorage.getItem("agentCode");
-    const reqData={
+    this.agentCode = localStorage.getItem("agentCode");
+    const reqData = {
       "agentCode": this.agentCode
     }
     this.commonService.Getproductlist(reqData).subscribe({
-      next: (res:any) => {
+      next: (res: any) => {
         this.productsList = res.data;
         const uniqueRequestTypes = Array.from(new Set(this.productsList
-         .map((product:any) => product.familyPlan)))
-         .map((requestType) => ({ name: requestType, selected: false }));
-         this.requestTypes = uniqueRequestTypes;
+          .map((product: any) => product.familyPlan)))
+          .map((requestType) => ({ name: requestType, selected: false }));
+        this.requestTypes = uniqueRequestTypes;
       },
-      error: (err:any) => {
-         console.error(err,"error coming form getproduct list API");
+      error: (err: any) => {
+        console.error(err, "error coming form getproduct list API");
       }
     })
   }
 
+
   calculateAppliedFiltersCount() {
-    const selectedPolicyTypesCount = this.StaticRequestTypes 
-      ? this.StaticRequestTypes.filter((requestType) => requestType.selected).length
-      : 0;
-  
-    const selectedProductsCount = this.productsList 
-      ? this.productsList.filter((product: any) => product.selected).length
-      : 0;
-  
-    let count = selectedPolicyTypesCount + selectedProductsCount;
-  
-    if (this.fromDate && this.toDate) {
+    const selectedProductsCount = this.productsList.filter(
+      (product: any) => product.selected).length;
+    const selectedPolicyTypesCount = this.StaticRequestTypes.filter(
+      (policyType: any) => policyType.selected).length;
+    let count = selectedProductsCount + selectedPolicyTypesCount;
+    if (this.startDate && this.endDate) {
       count++;
     }
-  
-    this.appliedFiltersCount = count || 0;
+    this.appliedFiltersCount = count;
   }
-  
-
-  
-
-cancel() {
-  this.toggeledropdown = false;
-}
-
-applyFilter() {
-  this.selected = "";
-  this.searchInputControl.reset();
-  this.calculateAppliedFiltersCount();
-  this.formatDate("fromDate");
-  this.formatDate("toDate");
-
-  this.claimsReqBody.fromDate = this.fromDate;
-  this.claimsReqBody.toDate = this.toDate;
-
-  const selectedPolicyTypes = this.StaticRequestTypes
-    ? this.StaticRequestTypes.filter((requestType: any) => requestType.selected).map((requestType: any) => requestType.name)
-    : [];
-
-  if (selectedPolicyTypes.length === this.StaticRequestTypes.length || selectedPolicyTypes.length === 0) {
-    this.claimsReqBody.requestType = ""; 
-  } else {
-    this.claimsReqBody.requestType = selectedPolicyTypes.join(","); 
+  applyFilter() {
+    this.calculateAppliedFiltersCount();
+    this.formatDate(this.startDate);
+    this.formatDate(this.endDate);
+    this.claimsReqBody.startDate = this.startDate;
+    console.log("start date taken by request body", this.claimsReqBody.startDate);
+    this.claimsReqBody.endDate = this.endDate;
+    console.log("end date taken by request body", this.claimsReqBody.endDate);
+    const selectedProducts = this.productsList
+      .filter((product: any) => product.selected)
+      .map((product: any) => product.productName);
+    console.log("selectedProducts", selectedProducts);
+    this.claimsReqBody.productVarientName = selectedProducts.join(", ");
+    console.log("product names which are taking by request body", this.claimsReqBody.productVarientName);
+    const selectedPolicyTypes = this.StaticRequestTypes
+      .filter((policyType) => policyType.selected)
+      .map((policyType) => policyType.name);
+    console.log("selected policy types", selectedPolicyTypes);
+    this.claimsReqBody.requestType = selectedPolicyTypes.join(", ");
+    console.log("policy types which are taking by request body", this.claimsReqBody.requestType);
+    this.first = 0;
+    this.page = 1;
+    this.fetchData();
+    this.toggeledropdown = false;
   }
-
-  const selectedProducts = this.productsList
-    ? this.productsList.filter((product: any) => product.selected).map((product: any) => product.productName)
-    : [];
-
-  if (selectedProducts.length === this.productsList?.length || selectedProducts.length === 0) {
-    this.claimsReqBody.searchType = ""; 
-    this.claimsReqBody.searchString = [""];
-  } else {
-    this.claimsReqBody.searchType = "productName"; 
-    this.claimsReqBody.searchString = selectedProducts;
+  cancel() {
+    this.toggeledropdown = false;
   }
-
-  if (selectedPolicyTypes.length > 0 && selectedProducts.length > 0) {
-    this.claimsReqBody.requestType = selectedPolicyTypes.join(",");
-    this.claimsReqBody.searchString = selectedProducts;
-  }
-  this.isSearch = true;
-  this.first = 0;
-  this.fetchData();
-  this.toggeledropdown = false;
-}
-
-clear() {
-  if (this.productsList) {
+  clear() {
     this.productsList.forEach((product: any) => (product.selected = false));
+    this.StaticRequestTypes.forEach((requestType) => (requestType.selected = false));
+    this.startDate = null;
+    this.endDate = null;
+    this.appliedFiltersCount = 0;
+    this.claimsReqBody.productVarientName = "";
+    this.claimsReqBody.requestType = "";
+    this.claimsReqBody.startDate = null;
+    this.claimsReqBody.endDate = null;
+    this.fetchData();
   }
-
-  if (this.StaticRequestTypes) {
-    this.StaticRequestTypes.forEach((requestType: any) => (requestType.selected = false));
-  }
-
-  this.fromDate = null;
-  this.toDate = null;
-  this.appliedFiltersCount = 0;
-
-  // Clear request body filters
-  this.claimsReqBody.requestType = "";
-  this.claimsReqBody.searchType = "";
-  this.claimsReqBody.searchString = [];
-  this.claimsReqBody.fromDate = null;
-  this.claimsReqBody.toDate = null;
-
-  this.fetchData();
-  this.toggeledropdown = false;
-}
-
   onSelectChanges(event: any): void {
+    if (this.selected === "") {
+      this.claimsReqBody.filterType = "";
+      this.claimsReqBody.policyNumber = "";
+      this.claimsReqBody.memberId = "";
+      this.claimsReqBody.requestId = "";
+      this.claimsReqBody.mobileNumber = ""
+      // this.claimsReqBody.searchString = []
+      this.fetchData();
+    }
     this.searchInputControl.reset("");
     this.searchInputControl.clearValidators();
     const selectedValidators = searchValidationConfig[this.selected] || [];
-    if (this.selected === "") {
-      this.claimsReqBody.searchType = "";
-      this.claimsReqBody.searchString = []
-      this.fetchData();
-    }
     this.searchInputControl.setValidators(selectedValidators);
     this.searchInputControl.updateValueAndValidity();
   }
 
   getPlaceholder(): string {
-  if (this.selected === 'policyNumber') {
+    if (this.selected === 'policyNumber') {
       return 'Enter Policy Number';
-    } else if (this.selected === 'claimInfoId') {
+    } else if (this.selected === 'requestId') {
       return 'Enter Claim No.';
     } else if (this.selected === 'memberId') {
       return 'Enter Member ID';
     } else if (this.selected === 'mobileNumber') {
       return 'Enter Mobile Number';
     }
-  else {
+    else {
       return 'Search...';
     }
-  } 
-  resetFilters(): void { 
-    this.claimsReqBody.searchType = '';
-    this.claimsReqBody.searchString = [];
+  }
+  resetFilters(): void {
+    this.claimsReqBody.filterType = '';
+    //this.claimsReqBody.searchString = [];
     this.isSearch = false;
     this.first = 0;
     this.fetchData();
   }
-  
+
   onInputChange(event: any): void {
-    const value = event.target.value;    
+    const value = event.target.value;
     if (value === '') {
       this.applySearch();
     }
   }
 
-  applySearch(): void {
+
+  applySearch() {
+
     let searchValue = this.searchInputControl.value?.trim();
-  
     if (!searchValue) {
-      this.claimsReqBody.searchType = '';
-      this.claimsReqBody.searchString = []; 
+      this.claimsReqBody.memberId = "";
+      this.claimsReqBody.requestId = "";
+      this.claimsReqBody.mobileNumber = "";
+      this.claimsReqBody.policyNumber = "";
       this.isSearch = false;
-      this.first = 0;
+      // this.first = 0
       this.fetchData();
-      return;
     }
-  
     if (searchValue && this.searchInputControl.valid) {
-      this.claimsReqBody.searchType = this.selected;  
-      this.claimsReqBody.searchString = [searchValue];    
-      this.isSearch = true;
+      if (this.selected === "policyNumber") {
+        this.claimsReqBody.policyNumber = searchValue;
+        this.claimsReqBody.memberId = "";
+        this.claimsReqBody.requestId = "";
+        this.claimsReqBody.mobileNumber = ""
+      } else if (this.selected === "memberId") {
+        this.claimsReqBody.memberId = searchValue;
+        this.claimsReqBody.mobileNumber = "";
+        this.claimsReqBody.requestId = "";
+        this.claimsReqBody.policyNumber = ""
+      } else if (this.selected === "requestId") {
+        this.claimsReqBody.requestId = searchValue;
+        this.claimsReqBody.mobileNumber = "";
+        this.claimsReqBody.memberId = "";
+        this.claimsReqBody.policyNumber = ""
+      } else if (this.selected === "mobileNumber") {
+        this.claimsReqBody.mobileNumber = searchValue;
+        this.claimsReqBody.memberId = "";
+        this.claimsReqBody.requestId = "";
+        this.claimsReqBody.policyNumber = ""
+      }
       this.first = 0;
+      this.page = 1;
       this.fetchData();
     }
   }
 
-
-//   applySearch(): void {
-//     let searchValue = this.searchInputControl.value?.trim();
-//     if (!searchValue) {
-//       this.selected = '';
-//       this.fetchData();
-//         return;
-//     }
-//     if (searchValue && this.searchInputControl.valid) {
-//       this.claimsReqBody.searchType = this.selected;
-//       this.claimsReqBody.searchString = [searchValue];    
-//       this.isSearch = true;
-//       this.first = 0;
-//       this.fetchData();
-
-//     }
-//   }
-  navigateToViewClaim(row:any){
+  navigateToViewClaim(row: any) {
     let claimDetailsReqBody = {
       "id": row.id,
       "claimNumber": row.claimInfoId,
@@ -418,21 +347,21 @@ clear() {
       },
       (error) => {
         console.error('Error fetching claim details', error);
-       
+
       }
     );
   }
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.checkView(); 
+    this.checkView();
   }
   //Screen View check
   checkView() {
     this.isDesktopView = window.innerWidth <= 1116;
     if (this.isDesktopView) {
-      this.selectedView = 'grid'; 
-    }else {
-      this.selectedView = 'list'; 
+      this.selectedView = 'grid';
+    } else {
+      this.selectedView = 'list';
     }
   }
 }

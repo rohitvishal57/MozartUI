@@ -10,7 +10,7 @@ export const searchValidationConfig: { [key: string]: ValidatorFn[] } = {
   name: [Validators.required,Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/) ],
   // leadId: [Validators.required,Validators.pattern(/^\s*UPL\d{12}\s*$/) ],
   // proposalNumber: [Validators.required, Validators.pattern(/^\s*UPP\d{12}\s*$/) ],
-  claimInfoId: [Validators.required,Validators.pattern("^\\s*[A-Z0-9-]+\\s*$")],
+  requestId: [Validators.required,Validators.pattern("^\\s*[A-Z0-9-]+\\s*$")],
   memberId: [Validators.required,Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),],
   memberName: [Validators.required,Validators.pattern(/^\s*[a-zA-Z]{1,20}(\s+[a-zA-Z]{1,20}){0,2}\s*$/),],
   caseId: [Validators.required,Validators.pattern("^\\s*[A-Z0-9-]+\\s*$"),],

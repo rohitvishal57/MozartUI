@@ -5,9 +5,24 @@
         <div class="left-nav left-nav-hideMobile">
             <div class="left-navInner">
                 <!--     style="cursor: pointer;"-->
-                <div class="yourProgress">
+                <div class="yourProgress bcl_main">
                     <h1>{{"Your Progress" | translate}}</h1>
-                    <div class="progressDetails">
+                    <div class="processBtnGroup">
+                      <button type="button" id="customisation-primary" name="customisation-primary" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                          <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                          <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Primary" | translate}}
+                      </button>
+                      <button type="button" id="customisation-additional" name="customisation-additional" value="additional" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                          <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['payment', 'policySummary', 'kyc','additional'].includes(activeSection)}">
+                          <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'additional', 'block-hide': activeSection !== 'additional'}">
+                          <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Additional" | translate}}
+                      </button>            
+                      <button type="button" id="customisation-payment" name="customisation-payment" value="payment" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                          <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': !['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
+                          <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Payment" | translate}}
+                      </button>
+                  </div>
+                    <!-- <div class="progressDetails"> -->
                         <!-- <div class="details" *ngFor="let case of formSequence;index as i;">
                     <div class="step-count" >
                       <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
@@ -31,7 +46,7 @@
                     </div>
                     <div class="step-label">{{case.formName | translate}}</div>
                   </div> -->
-                    </div>
+                    <!-- </div> -->
                     <!-- <div class="seperateLine"></div>
                 <div class="emailCustomerMain">
                   <img src="assets/Img/icon_email_orange.svg">
@@ -749,6 +764,19 @@
                                             </ng-container>
                                         </p-tabView>
                                     </ng-container>
+                                </div>
+
+                                <div *ngIf="control.type == 'image'" class="{{control.class}}">
+                                  <div *ngFor="let image of control.images">
+                                    <img class="img1Popup" [src]="image.src" alt="{{image.alt}}" width="{{image.width}}"
+                                      height="{{image.height}}">
+                                  </div>
+                                </div>
+                                <div *ngIf="control.type === 'imageButton'" [class]="control.class">
+                                  <button [name]="control.name | translate" [id]="control.name" type="button" class="image-button"
+                                    (click)="callMethod(control.methodName, control)">
+                                    <img [src]="control.imageUrl" alt="Button Image">
+                                  </button>
                                 </div>
 
 

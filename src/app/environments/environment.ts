@@ -39,7 +39,7 @@ export const environment = {
     addLeadNotes: "api/yatra/addnotes",
     getLeadNotes: "api/yatra/notelist?leadNumber=",
     addfeedback: "api/yatra/feedback",
-    getClaimsList: "api/claims/getclaimlist",
+    getClaimsList: "api/claims/getallclaims",
     getProposalDetails: "api/claims/getproposaldetails?AgentCode",
     saveClaims: "api/claims/saveclaim",
     updateClaim: "api/claims/updateclaimdocument",
