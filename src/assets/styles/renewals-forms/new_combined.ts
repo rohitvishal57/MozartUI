@@ -285,24 +285,12 @@ export const new_combinedForms = {
           {
             "name": "emailId",
             "label": "Email Address",
-            "visible": false,
+            "visible": true,
             "visibleLabel": true,
             "type": "email",
             "value": "",
             "disabled": true,
-            "class": "col-12 col-md-6 col-lg-4",
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Email Id is required field"
-              },
-              {
-                "validatorName": "pattern",
-                "pattern": "^(?!.*[._-]{2})[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
-                "message": "Email Id is not valid"
-              }
-            ]
+            "class": "col-12 col-md-6 col-lg-4"
           },
           {
             "name": "proposerAddress1",
@@ -451,26 +439,7 @@ export const new_combinedForms = {
                 "name": "20L",
                 "value": "2500000"
               }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Annual Income is required field"
-              }
             ]
-          },
-          {
-            "name": "occupation",
-            "label": "Occupation",
-            "visibleLabel": true,
-            "getAllOption": "getAllProposerOccupation",
-            "type": "select",
-            "visible": false,
-            "disabled": true,
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": []
           },
           {
             "name": "maritalStatus",
@@ -511,47 +480,6 @@ export const new_combinedForms = {
                 "id": "L",
                 "value": "Live In",
                 "name": "Live In"
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Marital Status is required field"
-              }
-            ]
-          },
-          {
-            "name": "gstDetails",
-            "label": "GST Details",
-            "visibleLabel": true,
-            "type": "select",
-            "visible": false,
-            "value": "",
-            "disabled": true,
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": [
-              {
-                "value": "Consumers",
-                "name": "Consumers",
-                "selected": true
-              },
-              {
-                "value": "Registered",
-                "name": "Registered",
-                "selected": false
-              },
-              {
-                "value": "Compounding Dealers",
-                "name": "Compounding Dealers",
-                "selected": false
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "GST Details is required field"
               }
             ]
           },
@@ -605,13 +533,6 @@ export const new_combinedForms = {
                 "value": "Other",
                 "name": "Other"
               }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Education is required field"
-              }
             ]
           },
           {
@@ -648,13 +569,6 @@ export const new_combinedForms = {
                 "name": "Person of Indian Origin",
                 "selected": false
               }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Nationality is required field"
-              }
             ]
           },
           {
@@ -682,13 +596,6 @@ export const new_combinedForms = {
                 "name": "MULTI INDIVIDUAL",
                 "value": "Multi Individual",
                 "selected": true
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Policy Type is required field."
               }
             ]
           },
@@ -760,14 +667,7 @@ export const new_combinedForms = {
             "visible": false,
             "type": "text",
             "class": "",
-            "value": 0,
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Select Relationhip"
-              }
-            ]
+            "value": 0
           },
           {
             "name": "insuredMembers",
@@ -933,7 +833,7 @@ export const new_combinedForms = {
                 },
                 {
                   "name": "height",
-                  "label": "Enter Height ft",
+                  "label": "Enter Height(cm)",
                   "visibleLabel": true,
                   "type": "number",
                   "disabled": true,
@@ -944,34 +844,7 @@ export const new_combinedForms = {
                     {
                       "validatorName": "required",
                       "required": true,
-                      "message": "Height(ft) is required field"
-                    },
-                    {
-                      "validatorName": "pattern",
-                      "pattern": "^[1-9]$",
-                      "message": "Only values between 1-9 are allowed."
-                    }
-                  ]
-                },
-                {
-                  "name": "heightInches",
-                  "disabled": true,
-                  "label": "Enter Height in",
-                  "visibleLabel": true,
-                  "visible": true,
-                  "type": "number",
-                  "value": "",
-                  "class": "col-12 col-md-6 col-lg-4",
-                  "validators": [
-                    {
-                      "validatorName": "required",
-                      "required": true,
-                      "message": "Height(Inch) is required field"
-                    },
-                    {
-                      "validatorName": "pattern",
-                      "pattern": "^(?:[0-9]|1[0-1])$",
-                      "message": "Only values between 0-11 are allowed."
+                      "message": "Height(cm) is required field"
                     }
                   ]
                 },
@@ -1025,7 +898,7 @@ export const new_combinedForms = {
                   ]
                 },
                 {
-                  "name": "memberdob",
+                  "name": "memberDob",
                   "label": "Date of Birth",
                   "visible": true,
                   "visibleLabel": true,
@@ -1383,7 +1256,7 @@ export const new_combinedForms = {
             ]
           },
           {
-            "name": "Gender",
+            "name": "gender",
             "label": "Gender",
             "visibleLabel": true,
             "type": "select",
@@ -1400,13 +1273,6 @@ export const new_combinedForms = {
                 "id": 2,
                 "name": "Female",
                 "value": "F"
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Select is a required field."
               }
             ]
           },
@@ -1474,7 +1340,7 @@ export const new_combinedForms = {
             ]
           },
           {
-            "name": "Gender",
+            "name": "gender",
             "label": "Gender",
             "visibleLabel": true,
             "type": "",
