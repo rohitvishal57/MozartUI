@@ -142,6 +142,7 @@ export class RugDynamicFormComponent {
         this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
         console.log(this.formSequence);
         localStorage.setItem('token', this.paramLeadId.token)
+        localStorage.setItem("formIndex", this.paramLeadId.CurrentIndex);
         this.agentCode = this.paramLeadId.AgentCode;
       } else {
         this.formSequence = history.state.formSequence;
