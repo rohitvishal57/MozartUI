@@ -376,6 +376,10 @@
                 </div> -->
 
             <div class="overlay_popupMain overlay_dropdown_w360" *ngIf="selectedDropdown === 'Diseases'">
+              <div class="close-popup">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                          style="font-size: 14px;" (click)="closeCustomDiv()"></button>
+              </div>
               <div class="option_policyType">
                 <div class="overlay_body checkbox_disease_scroll">
                   <div class="input-checkbox-block checkbox_disease">
