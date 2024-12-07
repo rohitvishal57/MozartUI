@@ -554,16 +554,6 @@ export const payment={
             "disabled": true
           },
           {
-            "name": "proposalNumber",
-            "label": "Proposal Number",
-            "visibleLabel": true,
-            "visible": true,
-            "type": "boldtext",
-            "class": "col-12 col-md-6 col-lg-3",
-            "value": "",
-            "disabled": true
-          },
-          {
             "name": "next",
             "label": "Next",
             "visibleLabel": false,

@@ -8,7 +8,7 @@ import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubCont
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
-import { combinedForms } from 'src/assets/styles/renewals-forms/combined_forms';
+import { combinedForms, thankYou } from 'src/assets/styles/renewals-forms/combined_forms';
 import { renewals_lead } from 'src/assets/styles/renewals-forms/lead';
 import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
 import { payment } from 'src/assets/styles/renewals-forms/payment';
@@ -57,8 +57,11 @@ export class RenewalJourneyComponent {
   documentId: any;
   agentCode: any;
 
-  formSequence: any[]=[new_combinedForms,active_health_covers,payment];
+  formSequence: any[]=[new_combinedForms,active_health_covers,payment,thankYou];
   journeyProcess: any;
+
+  activeSection: string = "primary";
+
 
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService,private renewalService: RenewalsService) {
 
@@ -1120,6 +1123,10 @@ export class RenewalJourneyComponent {
   async onSubmit() {
     console.log(this.renewalFormGroup.value, this.form);
     if (this.renewalFormGroup.valid) {
+      this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
+      console.log("formData",this.formData);
+      
+ 
 
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
 
@@ -2455,41 +2462,41 @@ export class RenewalJourneyComponent {
       });
     }
     // Handle the Juspay redirection for buttons other than Offline
-    // if (this.selectedButton !== 'offline') {
-    //   const reqData = {
-    //     agentcode: this.agentCode,
-    //     proposalNumber: this.proposalNum,
-    //     paymentMethod: this.selectedButton,
-    //     source: 'Retail',
-    //     policyType: 'New Business',
-    //     policyNumber: '',
-    //     quoteNumber: '',
-    //     OrderID: ''
-    //   };
-    //   this.yatraService.justPayRedirection(reqData).subscribe({
-    //     next: (response: any) => {
-    //       console.log('Juspay API Response:', response);
+    if (this.selectedButton !== 'offline') {
+      const reqData = {
+        agentcode: this.agentCode,
+        proposalNumber: '',
+        paymentMethod: this.selectedButton,
+        source: 'Retail',
+        policyType: 'Renewal',
+        policyNumber: this.formData.policyNumber,
+        quoteNumber: '',
+        OrderID: ''
+      };
+      this.yatraService.justPayRedirection(reqData).subscribe({
+        next: (response: any) => {
+          console.log('Juspay API Response:', response);
 
-    //       if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-    //         if (this.selectedButton == 'sendLinkButton') {
-    //           console.log(response);
-    //           this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
-    //           // res = response.data.paymentURL;
-    //         }
-    //         else {
-    //           window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
-    //         }
-    //       } else {
-    //         this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
-    //         console.error('Invalid payment link received:', response);
-    //       }
-    //     },
-    //     error: (error) => {
-    //       this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
-    //       console.error('Error generating payment link:', error);
-    //     }
-    //   });
-    // }
+          if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
+            if (this.selectedButton == 'sendLinkButton') {
+              console.log(response);
+              this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
+              // res = response.data.paymentURL;
+            }
+            else {
+              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+            }
+          } else {
+            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+            console.error('Invalid payment link received:', response);
+          }
+        },
+        error: (error) => {
+          this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+          console.error('Error generating payment link:', error);
+        }
+      });
+    }
 
     console.log(control);
 
@@ -2728,6 +2735,7 @@ export class RenewalJourneyComponent {
 
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
+    console.log("getFormIndexValue()",formIndex ? parseInt(formIndex, 10) : 0);  
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
   setFormIndexValue(value: number) {
@@ -2737,6 +2745,8 @@ export class RenewalJourneyComponent {
   incrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex + 1);
+    console.log("currentIndex",currentIndex);
+    
   }
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
@@ -2774,6 +2784,15 @@ export class RenewalJourneyComponent {
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res:any)=>{
           if(res.isSuccess){
+            this.formData.policyNumber = res.data.policyNumber || null;
+            this.formData.policyStatus = res.data.status || null;
+            this.formData.quoteValidFromDate = res.data.policyStartDate || null;
+            this.formData.quoteValidToDate = res.data.policyEndDate || null;
+            this.formData.ReceiptNumber = res.data.receiptID || null;
+            this.formData.customerId = res.data.customerId || null;
+            // this.incrementIndex();
+            // this.getFormDataFromFormSequence();
+            
             // this.fullQuoteResponse=res.data;          
             // this.setSection('thankyou')
             // this.hideSection=false
