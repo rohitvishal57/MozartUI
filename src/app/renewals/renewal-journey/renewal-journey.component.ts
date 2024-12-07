@@ -63,6 +63,11 @@ export class RenewalJourneyComponent {
   activeSection: string = "primary";
 
 
+  QuoteNumber: any = [];
+  tenureAmount: any[] = [0, 0, 0];
+  discountList: number[] = [];
+  displayTaxList: any[] = [];
+
   constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService,private renewalService: RenewalsService) {
 
   }
@@ -81,6 +86,16 @@ export class RenewalJourneyComponent {
         this.policyNumber = this.encryptionService.decrypt(params['policyNumber']);
         this.journeyProcess = this.encryptionService.decrypt(params['journeyProcess']);
       });
+      if(this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length>0){
+        this.formData.insuredMemberDetails.forEach((member:any,index:number)=>{
+          if(member.covers){
+            this.covers[index]= member.covers;
+          }
+        });
+      }
+
+      console.log(this.covers);
+      
     }
 
 
@@ -422,9 +437,9 @@ export class RenewalJourneyComponent {
             //     this.callMethod(control.methodName, control);
             // }
 
-            // if (control.type == 'custom-radio' && control.methodName) {
-            //   this.resolveMethod(control.methodName, control);
-            // }
+            if (control.type == 'custom-radio' && control.methodName) {
+              this.resolveMethod(control.methodName, control);
+            }
             // const radioOptionsControl = this.renewalFormGroup.get('totalPremium');
 
             // if (radioOptionsControl) {
@@ -2775,7 +2790,7 @@ export class RenewalJourneyComponent {
         "policyNumber": this.policyNumber,
         "proposalNum":this.proposalNum,
         "agentCode": this.agentCode,
-        "bankName": JSON.parse(data.bankName).value,
+        "bankName": JSON.parse(data.chequeBankName).value,
         "ifsc": data.ifscCode,
         "micrNo":data.micrCode,
         "documentId": this.documentId
@@ -2816,6 +2831,9 @@ export class RenewalJourneyComponent {
       next: (res: any) => {
         console.log(res);
         control.options = res.data;
+        control.options.forEach((option:any)=>{
+          // if(option.name == this.formData)
+        })
       },
       error: (err) => {
         console.error(err);
@@ -2853,25 +2871,28 @@ export class RenewalJourneyComponent {
 
     console.log(this.renewalFormGroup.getRawValue());
     
-    if (this.changesMade) {
-      this.changeRecalculate(false);
-    }
+    // if (this.changesMade) {
+    //   this.changeRecalculate(false);
+    // }
+    this.changeRecalculate(false);
 
-    const data = this.renewalFormGroup.getRawValue();
+    const data = this.formData;
+    console.log(data);
+    
 
     const requestPayload = {
-      productId: "6212",
+      productId: data.productId,
       agentCode: this.agentCode.toString(), // Fill in agent code manually if available
       proposerPincode: data.proposerPincode || "",
       productCode: data.planCode || "", // Assuming planCode maps to productCode
       memberPolicyType: data.memberPolicyType || "",
       typeOfBusiness: data.typeOfBusiness || "",
-      isEmployee: data.isEmployee || "",
+      isEmployee: data.isEmployee || false,
       sumInsured: data.insuredMemberDetails?.[0]?.sumInsured || "",
       numberOfInsuredMembers: data.numberOfInsuredMembers || "",
-      insuredMemberDetails: data.insuredMemberDetails.map((member: any) => ({
+      insuredMemberDetails: data.insuredMemberDetails.map((member: any,index: number) => ({
         roomCategory: "", // If roomCategory is determined dynamically, set it here
-        memberAge: "", // Calculate age from DOB
+        memberAge: this.calculateAge(member.memberDob), // Calculate age from DOB
         sumInsured: member.sumInsured || "",
         isChronic: member.isChronic || "N", // Assuming default as 'N'
         chronicDiseases: member.chronicDiseases || "",
@@ -2883,19 +2904,19 @@ export class RenewalJourneyComponent {
         natureOfDuty: member.productMemberNatureWork || "",
         riskClass: "", // Risk class not provided in the input data
         designation: member.productMemberDesignation || "",
-        covers: member.covers.map((cover: any) => ({
-          coverId: cover.coverId || "",
-          value: cover.value || ""
-        }))
+        covers: this.covers[index] || []
       }))
     };
-    console.log("fdgfhjkhgg");
+    console.log("fdgfhjkhgg",requestPayload);
 
     let reqData = {
       "agentCode": this.agentCode,
       "productId": this.formData.productId,
       "quoteData": JSON.stringify(requestPayload)
     };
+
+    console.log(reqData);
+    
 
     try {
       const res: any = await new Promise((resolve, reject) => {
@@ -2909,31 +2930,31 @@ export class RenewalJourneyComponent {
       
 
       // Update tenureAmount and discountList after receiving the response
-      // this.QuoteNumber = [];
-      // for (let i = 1; i <= 3; i++) {
-      //   const premiumKey = `tenure${i}Premium`;
-      //   const discountKey = `t${i}DiscountPercentage`;
-      //   const Quote = `tenure${i}QuoteNumber`;
-      //   this.QuoteNumber.push(res.data[Quote]);
+      this.QuoteNumber = [];
+      for (let i = 1; i <= 3; i++) {
+        const premiumKey = `tenure${i}Premium`;
+        const discountKey = `t${i}DiscountPercentage`;
+        const Quote = `tenure${i}QuoteNumber`;
+        this.QuoteNumber.push(res.data[Quote]);
 
-      //   this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
-      //   this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
-      // }
+        this.tenureAmount[i - 1] = Math.round(res.data[premiumKey]);
+        this.discountList[i - 1] = res.data[discountKey] ? res.data[discountKey] : 0;
+      }
 
-      // this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
-      // if (this.form.formTitle === 'Leads') {
-      //   // this.formData.tenureAmount = this.tenureAmount;
-      //   // this.formData.displayTaxList = this.displayTaxList;
-      //   this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
-      //   this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
-      // }
+      this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+      if (this.form.formTitle === 'Leads') {
+        // this.formData.tenureAmount = this.tenureAmount;
+        // this.formData.displayTaxList = this.displayTaxList;
+        this.renewalFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+        this.renewalFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+      }
 
-      // console.log(this.formData, this.form, this.dynamicFormGroup.value);
+      console.log(this.formData, this.form, this.renewalFormGroup.value);
 
-      // sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+      sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
 
-      // // After setting tenureAmount and discountList, call setPremiumAmount()
-      // this.setPremiumAmount();
+      // After setting tenureAmount and discountList, call setPremiumAmount()
+      this.setPremiumAmount();
 
     } catch (error) {
       console.error("Error while fetching product tenure", error);
@@ -3033,11 +3054,11 @@ export class RenewalJourneyComponent {
     //       if (this.form.formTitle === 'Leads') {
     //         // this.formData.tenureAmount = this.tenureAmount;
     //         // this.formData.displayTaxList = this.displayTaxList;
-    //         this.dynamicFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
-    //         this.dynamicFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
+    //         this.renewalFormGroup.get('tenureAmount')?.setValue(this.tenureAmount);
+    //         this.renewalFormGroup.get('displayTaxList')?.setValue(this.displayTaxList);
     //       }
 
-    //       console.log(this.formData, this.form, this.dynamicFormGroup.value);
+    //       console.log(this.formData, this.form, this.renewalFormGroup.value);
 
     //       sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
 
@@ -3051,5 +3072,125 @@ export class RenewalJourneyComponent {
     //     }
     //   }
     // }
+  }
+
+  calculateAge(dob: Date): number | string {
+    const today = new Date();
+    const birthDate = new Date(dob);
+
+    if (birthDate > today) {
+      return 'invalid';
+    }
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    if (age < 1) {
+      const diffInMs = today.getTime() - birthDate.getTime();
+      const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+      if (diffInDays < 91) {
+        return 'invalid'; // Less than 91 days is not valid
+      }
+      return `${diffInDays}days`; // Return age in 'days' format
+    }
+
+    return `${age}`;
+  }
+
+  setPremiumAmount(control?: any) {
+    if(this.form.formTitle == 'Total Premium'){
+      console.log("Hello world");
+      
+    }
+    if (this.formData.tenure) {
+      this.selectedIndex = this.formData.tenure - 1;
+    }
+    console.log(this.renewalFormGroup.value, this.form, this.displayTaxList, this.selectedIndex, this.formData, this.QuoteNumber);
+    this.tenureAmount.forEach(member => {
+      console.log(member);
+
+    })
+    if (this.selectedIndex == -1) {
+      this.selectedIndex = 2;
+    }
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((formControl: any) => {
+        if (formControl.name == 'totalPremium') {
+          if (formControl.radioOptions) {
+            formControl.radioOptions.forEach((option: any, index: number) => {
+              if (index === 0) {
+                // this.totalPremium = this.tenure1Total;
+                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
+                // formControl.value = this.tenureAmount[index];
+                option.year = "1 year"
+                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
+                option.value = this.tenureAmount[index];
+                // if (this.selectedIndex == index) {
+                //   this.renewalFormGroup.value.totalPremium = this.tenureAmount[index];
+                //   this.selectedIndex = index;
+                //   this.formData.tenure = this.selectedIndex + 1;
+                // }
+                console.log(this.selectedIndex);
+              } else if (index === 1) {
+                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
+                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
+                option.value = this.tenureAmount[index];
+                option.year = "2 years"
+                option.discount = "7.5% off"
+                // if (this.selectedIndex == index) {
+                //   this.renewalFormGroup.value.totalPremium = this.tenureAmount[index];
+                //   this.selectedIndex = index;
+                //   this.formData.tenure = this.selectedIndex + 1;
+                // }
+              } else if (index === 2) {
+                option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
+                section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
+                option.value = this.tenureAmount[index];
+                option.year = "3 years"
+                option.discount = "10% off"
+                // if (this.selectedIndex == index) {
+                //   this.renewalFormGroup.value.totalPremium = this.tenureAmount[index];
+                //   this.selectedIndex = index;
+                //   this.formData.tenure = this.selectedIndex + 1;
+                // }
+              }
+              console.log(this.selectedIndex, index);
+
+              if (this.selectedIndex === index) {
+                let radioOptionsControl = this.renewalFormGroup.get('totalPremium');
+                if (!radioOptionsControl) {
+                  // Add control if it doesn't exist
+                  this.renewalFormGroup.addControl(formControl.name, new FormControl(this.tenureAmount[index]));
+                  // radioOptionsControl = this.renewalFormGroup.get('totalPremium');
+                }
+
+                // if (radioOptionsControl) {
+                //   radioOptionsControl.setValue(this.tenureAmount[this.selectedIndex], { emitEvent: true });
+                //   // this.renewalFormGroup.value.totalPremium = this.tenureAmount[this.selectedIndex];
+                // }
+                option.selected = true;
+                if (this.renewalFormGroup.value.totalPremium) {
+
+                  this.renewalFormGroup.value.totalPremium = this.tenureAmount[this.selectedIndex];
+                }
+                console.log(this.renewalFormGroup.value);
+
+                // Update additional data
+                if (this.QuoteNumber.length > 0) {
+                  this.formData.quoteId = this.QuoteNumber[this.selectedIndex];
+                }
+                this.formData.tenure = this.selectedIndex + 1;
+              }
+              else {
+                option.selected = false;
+              }
+            });
+          }
+        }
+      });
+    });
+    console.log(this.renewalFormGroup.value, this.formData);
   }
 }

@@ -373,30 +373,8 @@ export const new_combinedForms = {
                   "label": "Enter Height(cm)",
                   "visibleLabel": true,
                   "type": "number",
-                  "disabled": true,
-                  "visible": false,
-                  "value": "",
-                  "class": "col-12 col-md-6 col-lg-4",
-                  "validators": [
-                    {
-                      "validatorName": "required",
-                      "required": true,
-                      "message": "Height(ft) is required field"
-                    },
-                    {
-                      "validatorName": "pattern",
-                      "pattern": "^[1-9]$",
-                      "message": "Only values between 1-9 are allowed."
-                    }
-                  ]
-                },
-                {
-                  "name": "heightInches",
                   "disabled": false,
-                  "label": "Enter Height in",
-                  "visibleLabel": true,
                   "visible": true,
-                  "type": "number",
                   "value": "",
                   "class": "col-12 col-md-6 col-lg-4",
                   "validators": [
@@ -584,14 +562,7 @@ export const new_combinedForms = {
                   "value": "",
                   "options": [],
                   "disabled": false,
-                  "class": "col-12 col-md-6 col-lg-4",
-                  "validators": [
-                    {
-                      "validatorName": "required",
-                      "required": true,
-                      "message": "Designation Required"
-                    }
-                  ]
+                  "class": "col-12 col-md-6 col-lg-4"
                 },
                 {
                   "name": "productMemberNatureWork",
@@ -603,17 +574,10 @@ export const new_combinedForms = {
                   "value": "",
                   "options": [],
                   "disabled": false,
-                  "class": "col-12 col-md-6 col-lg-4",
-                  // "validators": [
-                  //   {
-                  //     "validatorName": "required",
-                  //     "required": true,
-                  //     "message": "Nature Of Work is Required"
-                  //   }
-                  // ]
+                  "class": "col-12 col-md-6 col-lg-4"
                 },
                 {
-                  "name": "productMemberOccupation",
+                  "name": "occupation",
                   "label": "Occupation",
                   "visible": true,
                   "visibleLabel": true,
@@ -1073,6 +1037,16 @@ export const new_combinedForms = {
             "visible": true,
             "type": "boldtext",
             "class": "col-12 col-md-6 col-lg-3 bottom-total-premium",
+            "value": "",
+            "disabled": true
+          },
+          {
+            "name": "policyNumber",
+            "label": "Policy Number",
+            "visibleLabel": true,
+            "visible": true,
+            "type": "boldtext",
+            "class": "col-12 col-md-6 col-lg-3",
             "value": "",
             "disabled": true
           },

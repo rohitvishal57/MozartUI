@@ -1703,17 +1703,6 @@ export class RenewalListComponent {
   //             journeyProcess: this.encryptionService.encrypt(action === "withmodify" ? 1 : 0)
   //           }
   //         });
-          
-  //   //     }
-  //   //     else {
-  //   //       this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
-  //   //     }
-  //   //   },
-  //   //   (err) => {
-  //   //     console.error("Error from getRenewalInfo API:", err);
-  //   //     this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
-  //   //   }
-  //   // );
   // }
 
   async getProposalNum() {

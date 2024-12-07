@@ -23,23 +23,23 @@ export const active_health_covers={
                     "radioOptions": [
                         {
                             "name": "1yrPremium",
-                            "label": "<b>Rs - 21830</b>",
-                            "value": 21830,
+                            "label": "<b>Rs - </b>",
+                            "value": 1,
                             "selected": false,
                             "year": "1 year"
                         },
                         {
                             "name": "2yrPremium",
-                            "label": "<b>Rs - 40677</b>",
-                            "value": 40677,
+                            "label": "<b>Rs - </b>",
+                            "value": 2,
                             "selected": false,
                             "year": "2 years",
                             "discount": "7.5% off"
                         },
                         {
                             "name": "3yrPremium",
-                            "label": "<b>Rs - 59795</b>",
-                            "value": 59795,
+                            "label": "<b>Rs - </b>",
+                            "value": 3,
                             "selected": true,
                             "year": "3 years",
                             "discount": "10% off"
@@ -3827,8 +3827,8 @@ export const active_health_covers={
                     "text": "Aditya Birla Health Insurance"
                 },
                 {
-                    "name": "proposalNumber",
-                    "label": "Proposal Number",
+                    "name": "policyNumber",
+                    "label": "Policy Number",
                     "visibleLabel": true,
                     "visible": true,
                     "type": "boldtext",
