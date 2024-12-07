@@ -87,8 +87,8 @@ export interface IFormControl {
   button?:any;
   icon?:string;
   imageUrl?:string;
-  maxDateLength?: number;
-  minDateLength?:number;
+  maxDateLength?: any;
+  minDateLength?:any;
 }
 export interface ISubControl {
   name: string;
@@ -114,8 +114,8 @@ export interface ISubControl {
   isButton?:boolean;
   innerArrayControl?:IDynamicControl[][];
   conditionCheck?:boolean;
-  maxDateLength?: number;
-  minDateLength?:number;
+  maxDateLength?: any;
+  minDateLength?:any;
 }
 
 export interface ITab {
@@ -205,16 +205,16 @@ export interface IDynamicControl {
   image?:IImage;
   tabs?:ITab[];
   getAllOption?: string;
-  maxDateLength?: number;
-  minDateLength?:number;
+  maxDateLength?: any;
+  minDateLength?:any;
 }
 export interface IValidator {
   validatorName?: string;
   message?: string;
   required?: boolean;
   pattern?: string | undefined;
-  minLength?: number;
-  maxLength?: number;
+  minLength?: any;
+  maxLength?: any;
   email?: string;
 }
 export interface IOptions {

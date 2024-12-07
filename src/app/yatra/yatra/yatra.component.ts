@@ -2820,6 +2820,11 @@ export class YatraComponent {
                   }
                 })
               }
+              tempControl.forEach((temp) => {
+                if(temp.name == 'memberGender'){
+                  temp.value = option.gender;
+                }
+              })
               formControl.dynamicControls?.push(tempControl);
               console.log(this.formData);
 
@@ -3515,6 +3520,9 @@ export class YatraComponent {
                         let dindexj = dsubControl.at(zindex) as FormGroup;
                         let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
                         if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
+                          if(dinnercontrol instanceof FormControl){
+                            dinnercontrol.setValue(false);
+                          }
                           innerControl.dependentControls.forEach((dependentName: string) => {
                             // Find the dependent control in coreControls
                             const dependentControlIndex = subControl.innerSubControls[controlIndex].coreControls.findIndex(
