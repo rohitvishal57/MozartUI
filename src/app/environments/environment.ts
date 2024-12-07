@@ -78,6 +78,7 @@ export const environment = {
     endorsementfileuploadtoomnidocs: "api/claims/endorsementfileuploadtoomnidocs",
     endorsementcreaterequest: "api/claims/endorsementcreaterequest",
     endorsementGetOTP: "api/claims/endorsementsendotp",
+    endorsementValidateOTP: "api/claims/endorsementvalidateotp",
     getpolicyinfodetails: "api/claims/getpolicyinfodetails",
     endorsementCaseDetails: "api/claims/getcasedetailsbycaseid",
     agentCartDetails: "api/quote/getagentcartdetails",

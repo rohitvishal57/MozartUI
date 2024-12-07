@@ -40,6 +40,11 @@ export class EndorsementsRequestsService {
     return this.httpService.post(endorsementSendOtpApi, formData);
   }
 
+  endorsementValidateOtpApi(formData:any){
+    const endorsementValidateOtpApi = this.configService.config.baseUrl + this.configService.config.endorsementValidateOTP;
+    return this.httpService.post(endorsementValidateOtpApi, formData);
+  }
+
   endorsementCaseDetailsApi(formData:any){
     const endorsementCaseDetailsApi = this.configService.config.baseUrl + this.configService.config.endorsementCaseDetails;
     return this.httpService.post(endorsementCaseDetailsApi, formData);
