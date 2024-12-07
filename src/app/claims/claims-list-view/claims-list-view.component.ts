@@ -122,7 +122,7 @@ export class ClaimsListViewComponent implements OnInit {
   //---------API Call-------//
   claimsReqBody = {
     "productVarientName": "",
-    "agentCode": "5100003",
+    "agentCode": this.agentCode,
     "requestId": "",
     "policyNumber": "",
     "requestType": "",
