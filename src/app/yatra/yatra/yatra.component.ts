@@ -2778,6 +2778,7 @@ export class YatraComponent {
     // console.log(this.kidCount,option);
     if (event != null) {
       this.isQuote = false;
+      this.quickQuoteRedirect = false;
     }
     const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     console.log(checkbox);

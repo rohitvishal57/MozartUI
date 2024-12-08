@@ -177,7 +177,7 @@ export class GetQuoteComponent {
   ];
   constructor(private fb: FormBuilder, private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
-    private translateService: TranslateService, private router: Router) { }
+    private translateService: TranslateService, private router: Router,private quoteService:QuoteService) { }
 
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
@@ -806,6 +806,7 @@ export class GetQuoteComponent {
   //my-changes
 
   onPlanTypeChange(planType: string) {
+    this.getrelationsviapolicytype(planType);
     this.selectedPlan = planType;
     this.selectedRelation = "";
     this.selectedRelationships = [];
@@ -1041,5 +1042,18 @@ export class GetQuoteComponent {
       }
     });
   }
-
+  getrelationsviapolicytype(policyType:any){
+    const reqData = {
+      "policyType": policyType
+    }
+    console.log(reqData);
+    this.quoteService.getquoterelationsviapolicytype(reqData).subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
+  }
 }
