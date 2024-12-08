@@ -288,9 +288,12 @@ h6 {
 .userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo.userPolicyInfo {
 	flex-wrap: wrap;
 	gap: 6px;
+	.menu_morePolicy {
+		gap: 5px;
+	}
 }
 .userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo.userPolicyInfo .userInfoItem {
-	width: 45%;
+	width: 48%;
 }
 .userGridView .cardViewWraper .cardViewItem .cardViewBody .userInfo.userPolicyInfo .userInfoItem-30 {
     width: 30%;

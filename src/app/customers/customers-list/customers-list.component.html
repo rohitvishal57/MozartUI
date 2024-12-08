@@ -170,7 +170,7 @@
                                                     <td>
                                                         <div class="btn_groupAction">
                                                             <button type="button" id="View" name="View" class="btn_action btn_editAction" title="View" (click)="getCustomerInfo(policy.policyNumber, row.customerID)">
-                                                                <img src="assets/Img/icon_profile.svg" />
+                                                                <img src="assets/Img/icon_customer_view.png" />
                                                             </button>
                                                             <button type="button" name="customermore" value="more" title="More" class="btn_action btn_moreAction" aria-label="item-moreaction" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
                                                                 <img src="assets/Img/icon_dots_vertical_grey.svg"></button>
@@ -305,8 +305,8 @@
                                     </span>
                                 </div>
                                 <div class="menu_morePolicy">
-                                    <button type="button" id="View" name="View" class="btn_action btn_editAction" title="View" (click)="getCustomerInfo(policy.policyNumber, row.customerID)">
-                                        <img src="assets/Img/icon_profile.svg" />
+                                    <button type="button" id="View" name="View" class="btn_action btn_moreActionCard" title="View" (click)="getCustomerInfo(policy.policyNumber, row.customerID)">
+                                        <img src="assets/Img/icon_customer_view.png" />
                                     </button>
                                     <button type="button" id="customermoregrid" name="customermoregrid" value="more" title="More" class="btn_action btn_moreActionCard" aria-label="item-moreactionCard" [matMenuTriggerFor]="moreMenu" id="dropdownMenuButtonGrid{{i}}" data-bs-toggle="dropdown"
                                     aria-expanded="false"><img src="assets/Img/icon_dots_vertical_grey.svg"></button>
