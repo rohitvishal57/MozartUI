@@ -173,7 +173,7 @@ export class YatraService {
     return this.httpService.post(halfQuoteData,reqData);
   }
   d2cJustpayRedirection(reqData:any){
-    const saveCommonDraftData = "https://usp.monocept.ai/api/Yatra/JusPayPaymentRedirectRUG";
+    const saveCommonDraftData = "https://upuat.adityabirlahealth.com/api/yatra/JusPayPaymentRedirectRUG";
     return this.httpService.post(saveCommonDraftData,reqData);
   }
   insertFullQuoteJson(reqData:any){

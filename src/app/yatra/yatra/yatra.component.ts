@@ -193,7 +193,7 @@ export class YatraComponent {
         const decryptedData = this.encryptionService.decrypt(params['data']);
         if (decryptedData) {
           console.log(decryptedData);
-
+          this.leadnumber = decryptedData.leadId;
           this.agentCode = decryptedData.agentCode;
           this.partnerId = decryptedData.partnerId;
           this.productId = decryptedData.productId;
@@ -1202,65 +1202,65 @@ export class YatraComponent {
 
   uploadSelectedDocument(): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      if(this.selectedButton){
-      try {
-        const policyNum = this.proposalNum.replace(/-/g, "");
-        const formData = new FormData();
-        formData.append("Files", this.selectedFile);
-        formData.append("UniqueNumber", policyNum);
-        this.commonService.uploadDocument(formData).subscribe(
-          async (res: any) => {
-            if (res.isSuccess) {
-              console.log("response after success", res);
-              console.log("unique id", res.data.uploadResponse[0].globalId);
-              this.documentId = res.data.uploadResponse[0].globalId;
+      if (this.selectedButton) {
+        try {
+          const policyNum = this.proposalNum.replace(/-/g, "");
+          const formData = new FormData();
+          formData.append("Files", this.selectedFile);
+          formData.append("UniqueNumber", policyNum);
+          this.commonService.uploadDocument(formData).subscribe(
+            async (res: any) => {
+              if (res.isSuccess) {
+                console.log("response after success", res);
+                console.log("unique id", res.data.uploadResponse[0].globalId);
+                this.documentId = res.data.uploadResponse[0].globalId;
 
-              try {
-                // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
-                await this.getFullQuoteViaOfflinePayment();
-                resolve(); // Resolve the promise once everything completes
-              } catch (error) {
-                console.error("Error in full quote generation:", error);
-                reject(error); // Reject the promise to prevent further flow
+                try {
+                  // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
+                  await this.getFullQuoteViaOfflinePayment();
+                  resolve(); // Resolve the promise once everything completes
+                } catch (error) {
+                  console.error("Error in full quote generation:", error);
+                  reject(error); // Reject the promise to prevent further flow
+                }
+              } else {
+                const errorMessage = "Document upload failed.";
+                console.error(errorMessage, res);
+                this.toast.error({
+                  detail: "ERROR",
+                  summary: errorMessage,
+                  duration: 3000,
+                });
+                reject(new Error(errorMessage));
               }
-            } else {
-              const errorMessage = "Document upload failed.";
-              console.error(errorMessage, res);
-              this.toast.error({
-                detail: "ERROR",
-                summary: errorMessage,
-                duration: 3000,
-              });
-              reject(new Error(errorMessage));
-            }
 
-          },
-          (err) => {
-            console.error("Error during upload:", err);
-            this.toast.error({
-              detail: "Error",
-              summary: err.message || "Document upload failed.",
-              duration: 1500,
-            });
-            reject(err); // Reject the promise on upload error
-          }
-        );
-      } catch (error) {
-        console.error("Error preparing upload:", error);
-        this.toast.error({
-          detail: "Error",
-          summary: "An unexpected error occurred while preparing the upload.",
+            },
+            (err) => {
+              console.error("Error during upload:", err);
+              this.toast.error({
+                detail: "Error",
+                summary: err.message || "Document upload failed.",
+                duration: 1500,
+              });
+              reject(err); // Reject the promise on upload error
+            }
+          );
+        } catch (error) {
+          console.error("Error preparing upload:", error);
+          this.toast.error({
+            detail: "Error",
+            summary: "An unexpected error occurred while preparing the upload.",
+            duration: 3000,
+          });
+          reject(error); // Reject the promise on preparation error
+        }
+      } else {
+        this.toast.warning({
+          detail: "WARNING",
+          summary: "Please select Payment Mode.",
           duration: 3000,
         });
-        reject(error); // Reject the promise on preparation error
       }
-    }else{
-      this.toast.warning({
-        detail: "WARNING",
-        summary: "Please select Payment Mode.",
-        duration: 3000,
-      });
-    }
     });
   }
 
@@ -2304,12 +2304,14 @@ export class YatraComponent {
 
       this.form.formSections.forEach((section: any) => {
         if (section.sectionTitle == "Insured Member Details") {
-          section.formControls[0].visible = false;
-          section.formControls[1].visible = true;
-          while (section.formControls[0].dynamicControls.length > 1) {
-            section.formControls[0].dynamicControls.pop();
+          if (section.formControls.length > 1) {
+            section.formControls[0].visible = false;
+            section.formControls[1].visible = true;
+            while (section.formControls[0].dynamicControls.length > 1) {
+              section.formControls[0].dynamicControls.pop();
+            }
+            section.visible = false;
           }
-          section.visible = false;
         }
       });
     }
@@ -2545,7 +2547,6 @@ export class YatraComponent {
   // }
 
   getProposerRelationship(control: IFormControl): Promise<any> {
-
     // Wrapping the asynchronous operation in a promise
     return new Promise((resolve, reject) => {
       const reqData = {
@@ -2819,6 +2820,11 @@ export class YatraComponent {
                   }
                 })
               }
+              tempControl.forEach((temp) => {
+                if(temp.name == 'memberGender'){
+                  temp.value = option.gender;
+                }
+              })
               formControl.dynamicControls?.push(tempControl);
               console.log(this.formData);
 
@@ -3116,7 +3122,7 @@ export class YatraComponent {
         section.formControls.forEach((controls: any) => {
           control.dependentControls.forEach((item: any) => {
             if (controls.name == item) {
-              controls.visible = true; 
+              controls.visible = true;
               control.disabled = true;
               const formControl = this.dynamicFormGroup.get(controls.name);
               if (formControl) {
@@ -3514,6 +3520,9 @@ export class YatraComponent {
                         let dindexj = dsubControl.at(zindex) as FormGroup;
                         let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
                         if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
+                          if(dinnercontrol instanceof FormControl){
+                            dinnercontrol.setValue(false);
+                          }
                           innerControl.dependentControls.forEach((dependentName: string) => {
                             // Find the dependent control in coreControls
                             const dependentControlIndex = subControl.innerSubControls[controlIndex].coreControls.findIndex(
@@ -4594,7 +4603,7 @@ export class YatraComponent {
 
 
 
-  
+
 
   //new add On added
   addOnAdded(control: any, parentControl: any = null) {

@@ -407,13 +407,13 @@ export const payment={
             ]
           },
           {
-            "name": "bankName",
+            "name": "chequeBankName",
             "label": "Bank Name",
             "visible": false,
             "visibleLabel": true,
             "getAllOption": "getAllBankDetails",
             "onChangeMethod": "getBankCity",
-            "otherControlName": "bankCity",
+            "otherControlName": "chequeBankCity",
             "type": "select",
             "value": "",
             "class": "col-12 col-md-6 col-lg-4",
@@ -427,12 +427,13 @@ export const payment={
             ]
           },
           {
-            "name": "bankCity",
+            "name": "chequeBankCity",
             "label": "Bank City",
             "visible": false,
             "visibleLabel": true,
+            "getAllOption":"getBankCity",
             "onChangeMethod": "getBranchDetails",
-            "otherControlName": "bankBranch",
+            "otherControlName": "chequeBankBranch",
             "type": "select",
             "value": "",
             "class": "col-12 col-md-6 col-lg-4",
@@ -446,10 +447,11 @@ export const payment={
             ]
           },
           {
-            "name": "bankBranch",
+            "name": "chequeBankBranch",
             "label": "Bank Branch",
             "visible": false,
             "visibleLabel": true,
+            "getAllOption": "getBranchDetails",
             "type": "select",
             "onChangeMethod": "setIfscCode",
             "otherControlName": "ifscCode",
@@ -550,16 +552,6 @@ export const payment={
             "visible": true,
             "type": "boldtext",
             "class": "col-12 col-md-6 col-lg-3 bottom-total-premium",
-            "value": "",
-            "disabled": true
-          },
-          {
-            "name": "proposalNumber",
-            "label": "Proposal Number",
-            "visibleLabel": true,
-            "visible": true,
-            "type": "boldtext",
-            "class": "col-12 col-md-6 col-lg-3",
             "value": "",
             "disabled": true
           },

@@ -129,7 +129,7 @@ export class CommonService {
       this.dialogRef.close()
     }
   }
-  uploadDocument(reqData:FormData){
+  uploadDocument(reqData:any){
     const uploadDocument= this.configService.config.baseUrl1+this.configService.config.uploadDocument;
     return this.http.post(uploadDocument,reqData);
   }

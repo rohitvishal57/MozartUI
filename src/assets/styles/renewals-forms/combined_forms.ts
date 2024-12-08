@@ -2133,16 +2133,6 @@ export const combinedForms = {
             "disabled": true
           },
           {
-            "name": "proposalNumber",
-            "label": "Proposal Number",
-            "visibleLabel": true,
-            "visible": true,
-            "type": "boldtext",
-            "class": "col-12 col-md-6 col-lg-3",
-            "value": "",
-            "disabled": true
-          },
-          {
             "name": "next",
             "label": "Next",
             "visibleLabel": false,
@@ -2671,3 +2661,317 @@ export const combinedForms = {
     ]
   
     }
+
+    export const thankYou = {
+      "formTitle": "Confirmation",
+      "saveBtnTitle": "Save",
+      "prevBtnTitle": "Prev",
+      "resetBtnTitle": "",
+      "themeFile": "ABHI.css",
+      "formSections": [
+        {
+          "sectionTitle": "",
+          "visible": true,
+          "class": "section-title col-md-12 thankyouSection",
+          "formControls": [
+            {
+              "name": "confirmation",
+              "label": "",
+              "class": "col-12 col-md-6 col-lg-10 thankYou",
+              "visibleLabel": false,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/icon_success_green_tick.gif",
+                  "alt": "confirmation image",
+                  "width": "150",
+                  "height": "150",
+                  "label": "confirmation"
+                }
+              ]
+            },
+            {
+              "name": "label1",
+              "label": "Congratulations! Policy Application Renewed Successfully",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph1 button-container"
+            },
+            {
+              "name": "label2",
+              "label": "Thank You for choosing Aditya Birla Health Insurance as your insurance destination",
+              "visibleLabel": true,
+              "visible": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-8 section-paragraph2 button-container"
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Details of Your Proposal",
+          "visible": true,
+          "visibleLabel": true,
+          "class": "section-title proposalDetails",
+          "formControls": [
+            {
+              "name": "policyNumber",
+              "label": "Policy Number",
+              "visibleLabel": true,
+              "type": "summary",
+              "value": "",
+              "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            },
+            {
+              "name": "productName",
+              "label": "Product Name",
+              "visibleLabel": true,
+              "type": "summary",
+              "value": "",
+              "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            },
+            {
+              "name": "totalPremium",
+              "label": "Premium Paid",
+              "visibleLabel": true,
+              "type": "summary",
+              "value": "",
+              "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            },
+            {
+              "name": "quoteValidFromDate",
+              "label": "Policy Start Date",
+              "visibleLabel": true,
+              "type": "summary",
+              "value": "",
+              "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            },
+            {
+              "name": "quoteValidToDate",
+              "label": "Policy End Date",
+              "visibleLabel": true,
+              "type": "summary",
+              "value": "",
+              "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            },
+            {
+              "name": "ReceiptNumber",
+              "label": "Receipt ID",
+              "visibleLabel": true,
+              "type": "summary",
+              "value": "",
+              "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            },
+            {
+              "name": "policyStatus",
+              "label": "Policy Status",
+              "visibleLabel": true,
+              "type": "summary",
+              "value": "",
+              "class": "col-md-3",
+              "visible": true,
+              "disabled": true
+            }
+          ]
+        },
+        {
+          "sectionTitle": "App Advertisement",
+          "visible": true,
+          "class": "section-title advertisementSection",
+          "formControls": [
+            {
+              "name": "confirmation",
+              "label": "",
+              "class": "col-12 col-md-12 col-lg-4 mobileScreen",
+              "visibleLabel": false,
+              "visible": true,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/mobileScreen.png",
+                  "alt": "mobile image",
+                  "width": "170",
+                  "height": "170",
+                  "label": "mobilephone"
+                }
+              ]
+            },
+            {
+              "name": "scannerQR",
+              "label": "",
+              "class": "col-12 col-md-12 col-lg-4 QR-scanner",
+              "visibleLabel": false,
+              "visible": true,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/ScannerQR.png",
+                  "alt": "scanner image",
+                  "width": "170",
+                  "height": "170",
+                  "label": "mobilephone"
+                }
+              ]
+            },
+            {
+              "name": "appStoreButton",
+              "label": "Download on the App Store",
+              "visibleLabel": false,
+              "visible": true,
+              "type": "imageButton",
+              "imageUrl": "assets/Img/apple.svg",
+              "class": "col-12 col-md-6 col-lg-4 app-store-button",
+              "methodName": "redirectToAppStore"
+            },
+            {
+              "name": "googlePlayButton",
+              "label": "Get it on Google Play",
+              "visibleLabel": false,
+              "visible": true,
+              "type": "imageButton",
+              "imageUrl": "assets/Img/google.svg",
+              "class": "col-12 col-md-6 col-lg-4 google-play-button",
+              "methodName": "redirectToGooglePlay"
+            }
+          ]
+        },
+        {
+          "sectionTitle": "Setup Auto-debit Mandate",
+          "visible": true,
+          "class": "section-title autoDebitSection",
+          "formControls": [
+            {
+              "name": "setup",
+              "label": "Setup Auto-debit Mandate",
+              "type": "paragraph",
+              "visibleLabel": true,
+              "visible": true,
+              "class": "col-12 col-md-6 col-lg-6 autoDebitLabel1"
+            },
+            {
+              "name": "autoDebit1",
+              "label": "Setup Auto-debit mandate and worry less about remembering the installments.",
+              "visibleLabel": true,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-12 autoDebitLabel2"
+            },
+            {
+              "name": "declarationLabel2",
+              "label": "I understand that the information provided by me will form the basis of the insurance policy, is subject to the Board approved underwriting policy of the insurer and that the policy will come into force only after full payment of the premium chargeable.",
+              "visibleLabel": false,
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-12 autoDebitLabel3"
+            },
+            {
+              "name": "autoDebitImage",
+              "label": "",
+              "class": "col-12 col-md-6 col-lg-2 imageautodebit",
+              "visibleLabel": false,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/SetUp_AutoDebitImage.png",
+                  "alt": "mobile image",
+                  "width": "600",
+                  "height": "70",
+                  "label": "autodebit"
+                }
+              ]
+            },
+            {
+              "name": "debitButton",
+              "label": "Update to Auto-debit",
+              "visibleLabel": false,
+              "visible": true,
+              "type": "button",
+              "class": "col-12 col-md-6 col-lg-4 debitButton"
+            }
+          ]
+        },
+        {
+          "sectionTitle": "abhaID",
+          "visible": true,
+          "class": "section-title abhaIDSection",
+          "formControls": [
+            {
+              "name": "abhaLabel",
+              "label": "#ABHIseABHA",
+              "type": "paragraph",
+              "visibleLabel": true,
+              "value": "",
+              "visible": true,
+              "class": "col-12 col-md-6 col-lg-3 abhaLabel1"
+            },
+            {
+              "name": "autoDebit1",
+              "label": "Creating Your customers ABHA ID with ABHI.",
+              "visibleLabel": true,
+              "visible": true,
+              "value": "",
+              "type": "paragraph",
+              "class": "col-12 col-md-6 col-lg-2 abhaLabel2"
+            },
+            {
+              "name": "autoDebitLabel1",
+              "label": "Simple, Fast & Easy",
+              "visibleLabel": true,
+              "type": "paragraph",
+              "value": "",
+              "visible": true,
+              "class": "col-12 col-md-6 col-lg-4 simpleEasyStyle"
+            },
+            {
+              "name": "autoDebitImage",
+              "label": "",
+              "class": "col-12 col-md-6 col-lg-6 abhaIDImage",
+              "visibleLabel": false,
+              "type": "image",
+              "images": [
+                {
+                  "id": 1,
+                  "src": "assets/Img/AbhaID_Image.png",
+                  "alt": "mobile image",
+                  "width": "420",
+                  "height": "270",
+                  "label": "autodebit"
+                }
+              ]
+            },
+            {
+              "name": "autoDebitLabel2",
+              "label": "Do you have few minutes? Because that is all it takes to create your ABHA ID on the Aditya Birla Health Insurance website",
+              "visibleLabel": true,
+              "visible": true,
+              "value": "",
+              "type": "paragraph",
+              "class": "col-12 col-md-4 col-lg-6 abhaquestion"
+            },
+            {
+              "name": "debitButton",
+              "label": "Create ABHA ID",
+              "visibleLabel": false,
+              "visible": true,
+              "type": "button",
+              "methodName": "redirectToCreateABHAID",
+              "class": "col-12 col-md-6 col-lg-4 abhaButton"
+            }
+          ]
+        }
+      ]
+    }  

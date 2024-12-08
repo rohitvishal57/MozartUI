@@ -142,6 +142,7 @@ export class RugDynamicFormComponent {
         this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
         console.log(this.formSequence);
         localStorage.setItem('token', this.paramLeadId.token)
+        localStorage.setItem("formIndex", this.paramLeadId.CurrentIndex);
         this.agentCode = this.paramLeadId.AgentCode;
       } else {
         this.formSequence = history.state.formSequence;
@@ -356,7 +357,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": this.leadId != undefined ? this.leadId : "3876785",
+        "proposalNum": this.leadId != undefined ? this.leadId : "300004",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -3165,7 +3166,8 @@ export class RugDynamicFormComponent {
                        "LastName": this.bbdetails?.customerLastName,
                        "Phone": this.bbdetails?.proposerMobileNumber,
                        "Email": this.bbdetails?.proposerEmailAddress,
-                       "DOB": this.bbdetails?.proposerDob
+                       "DOB": this.bbdetails?.proposerDob,
+                       "appName": "BRANCH_BANKING"
                               
                       }
                       console.log(justpayPayload);
@@ -3445,7 +3447,7 @@ export class RugDynamicFormComponent {
     console.log(this.formSequence);
     console.log(this.formIndexValue);
     console.log(this.getFormIndexValue());
-    if(this.getFormIndexValue() == 0 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
+    if(this.getFormIndexValue() == 0 || this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
       if(this.getFormIndexValue() == 3){
         this.dynamicFormGroup.value.accountNumber = this.bbdetails.accountNumber;
         // this.dynamicFormGroup.get('accountNumber')?.setValue(this.bbdetails.accountNumber);
@@ -3462,7 +3464,8 @@ export class RugDynamicFormComponent {
         "jsonForm": JSON.stringify(this.form),
         "formSequence": this.getFormIndexValue(), // index of the form from FormSequence
         "leadNumber": (this.bbdetails.leadId != null || this.bbdetails.leadId != "") ? this.bbdetails.leadId : this.dynamicFormGroup.value.leadNumber, // will be generated in the save of the first form (leads page) and will be sent as response of this API in the incoming requests, u need to pass that response's lead Id here
-        "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""// will be generate in getQuoteForSingleProducts and top selling products
+        "quoteNumber": this.formData.quoteId ? this.formData.quoteId : "",// will be generate in getQuoteForSingleProducts and top selling products,
+        "portalName": "RUG"
     }
       console.log(reqData);
       this.yatraService.Insertorupdateformdata(reqData).subscribe({
@@ -3613,12 +3616,6 @@ export class RugDynamicFormComponent {
           console.error(err);
         }
       });
-    }else if(this.getFormIndexValue() == 1){
-      if (this.getFormIndexValue() < this.formSequence.length - 1) {
-        this.incrementIndex();
-        this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-        
-      }
     }
     else{
       //https://usp.monocept.ai/api/v1/SaveBBCommonDraft
@@ -5850,8 +5847,8 @@ export class RugDynamicFormComponent {
   getBbRelations(control: any){
     this.yatraService.getRelations().subscribe({
       next: (response: any) => {
-        response = JSON.parse(response.data).data
-        this.nomineeRelations = this.aesEncryptService.axisDecrypt(response.encrypted_Response);
+        response = JSON.parse(response.data).data;
+        this.nomineeRelations = response;
         console.log(this.nomineeRelations);
         this.nomineeRelations = this.nomineeRelations.relationShipModels;
         this.nomineeRelations.map((item: any) => {
@@ -6000,6 +5997,7 @@ export class RugDynamicFormComponent {
       }
       await this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
         next: (res: any) => {
+          res = JSON.parse(res.data).data
           res.productSIDetails.map((item: any) => {
             item.value = item.siPlanValue.split('.')[0],
               item.name = item.siPlanValue.split('.')[0]

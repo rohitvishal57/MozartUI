@@ -14,169 +14,15 @@ export const new_combinedForms = {
         "class": "col-md-12 section-title",
         "formControls": [
           {
-            "name": "isPep",
-            "label": "Are you a PEP (Politically Exposed Person) or relative of PEP?",
+            "name": "proposerName",
+            "label": "Name",
             "visibleLabel": true,
-            "class": "radio-button",
-            "value": "N",
+            "type": "text",
+            "value": "",
             "disabled": true,
             "visible": true,
-            "radioOptions": [
-              {
-                "name": "N",
-                "label": "No",
-                "value": "N",
-                "selected": true
-              },
-              {
-                "name": "Y",
-                "label": "Yes",
-                "value": "Y",
-                "selected": false
-              }
-            ],
-            "type": "radio"
-          },
-          {
-            "name": "productVariant",
-            "label": "Product Variant",
-            "visibleLabel": true,
-            "visible": false,
-            "type": "text",
-            "value": "",
             "class": "col-12 col-md-6 col-lg-4"
           },
-          {
-            "name": "tenureAmount",
-            "label": "Tenure Amount",
-            "visible": false,
-            "visibleLabel": false,
-            "type": "text",
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-2"
-          },
-          {
-            "name": "displayTaxList",
-            "label": "Display Tax List",
-            "visible": false,
-            "visibleLabel": false,
-            "type": "text",
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-2"
-          },
-          {
-            "name": "ckycNo",
-            "label": "Customer KYC",
-            "visible": false,
-            "visibleLabel": false,
-            "type": "text",
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-2"
-          },
-          {
-            "name": "isEmployee",
-            "label": "Is Employee",
-            "visibleLabel": true,
-            "visible": false,
-            "type": "text",
-            "value": false,
-            "class": "col-12 col-md-6 col-lg-4"
-          },
-          {
-            "name": "typeOfBusiness",
-            "label": "Business Type",
-            "visibleLabel": true,
-            "visible": false,
-            "type": "text",
-            "value": "REN",
-            "class": "col-12 col-md-6 col-lg-4"
-          },
-          {
-            "name": "memberPlan",
-            "label": "Activ One Max",
-            "visibleLabel": true,
-            "type": "text",
-            "visible": false,
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-4"
-          },
-          {
-            "name": "productName",
-            "label": "Product Name",
-            "visibleLabel": false,
-            "type": "text",
-            "value": "Activ One Max",
-            "class": "",
-            "visible": false
-          },
-          {
-            "name": "planCode",
-            "label": "Product Code",
-            "visibleLabel": false,
-            "type": "text",
-            "value": "",
-            "class": "",
-            "visible": false
-          },
-          {
-            "name": "productId",
-            "label": "Product Id",
-            "visibleLabel": false,
-            "type": "text",
-            "value": "",
-            "class": "",
-            "visible": false
-          },
-          {
-            "name": "preFix",
-            "label": "Salutation",
-            "visibleLabel": true,
-            "visible": false,
-            "value": "",
-            "disabled": true,
-            "type": "select",
-            "options": [
-              {
-                "value": "Mr.",
-                "name": "Mr"
-              },
-              {
-                "value": "Mrs.",
-                "name": "Mrs"
-              },
-              {
-                "value": "Ms.",
-                "name": "Ms"
-              },
-              {
-                "value": "Dr.",
-                "name": "Dr"
-              },
-              {
-                "value": "Mx",
-                "name": "Mx"
-              },
-              {
-                "value": "Miss",
-                "name": "Miss"
-              },
-              {
-                "value": "Others",
-                "name": "Others"
-              }
-            ],
-            "class": "col-12 col-md-6 col-lg-3"
-          },
-        //   {
-        //     "name": "proposerName",
-        //     "label": "Name",
-        //     "visibleLabel": true,
-        //     "type": "text",
-        //     "value": "",
-        //     "disabled": true,
-        //     "visible": true,
-        //     "class": "col-12 col-md-6 col-lg-3"
-        //   },
           {
             "name": "firstName",
             "label": "First Name",
@@ -184,20 +30,8 @@ export const new_combinedForms = {
             "type": "text",
             "value": "",
             "disabled": true,
-            "visible": true,
+            "visible": false,
             "class": "col-12 col-md-6 col-lg-4",
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "First Name is required"
-              },
-              {
-                "validatorName": "pattern",
-                "pattern": "^[a-zA-Z ]*$",
-                "message": "Name should contain only alphabets"
-              }
-            ]
           },
           {
             "name": "middleName",
@@ -205,7 +39,7 @@ export const new_combinedForms = {
             "visibleLabel": true,
             "type": "text",
             "value": "",
-            "visible": true,
+            "visible": false,
             "disabled": false,
             "class": "col-12 col-md-6 col-lg-4"
           },
@@ -215,21 +49,19 @@ export const new_combinedForms = {
             "visibleLabel": true,
             "type": "text",
             "value": "",
-            "visible": true,
+            "visible": false,
             "disabled": false,
-            "class": "col-12 col-md-6 col-lg-4",
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Last Name is required"
-              },
-              {
-                "validatorName": "pattern",
-                "pattern": "^[a-zA-Z ]*$",
-                "message": "Name should contain only alphabets"
-              }
-            ]
+            "class": "col-12 col-md-6 col-lg-4"
+          },
+          {
+            "name": "idNo",
+            "label": "ID Number",
+            "visibleLabel": true,
+            "type": "idnumber",
+            "disabled": true,
+            "visible": true,
+            "value": "",
+            "class": "col-12 col-md-6 col-lg-3",
           },
           {
             "name": "memberDobProposer",
@@ -238,71 +70,8 @@ export const new_combinedForms = {
             "visibleLabel": true,
             "type": "date",
             "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "disabled": true,
-          },
-          {
-            "name": "idNo",
-            "label": "ID Number",
-            "visibleLabel": true,
-            "type": "idnumber",
-            "disabled": true,
-            "visible": false,
-            "value": "",
             "class": "col-12 col-md-6 col-lg-3",
-          },
-          {
-            "name": "proposerGender",
-            "label": "Gender",
-            "visibleLabel": true,
-            "type": "select",
-            "value": "",
             "disabled": true,
-            "class": "col-12 col-md-6 col-lg-4",
-            "visible": false,
-            "options": [
-              {
-                "name": "Male",
-                "value": "M"
-              },
-              {
-                "name": "Female",
-                "value": "F"
-              },
-              {
-                "name": "Others",
-                "value": "O"
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Gender is required field."
-              }
-            ]
-          },
-          {
-            "name": "emailId",
-            "label": "Email Address",
-            "visible": false,
-            "visibleLabel": true,
-            "type": "email",
-            "value": "",
-            "disabled": true,
-            "class": "col-12 col-md-6 col-lg-4",
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Email Id is required field"
-              },
-              {
-                "validatorName": "pattern",
-                "pattern": "^(?!.*[._-]{2})[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
-                "message": "Email Id is not valid"
-              }
-            ]
           },
           {
             "name": "proposerAddress1",
@@ -329,6 +98,35 @@ export const new_combinedForms = {
             "class": "col-12 col-md-6 col-lg-4"
           },
           {
+            "name": "country",
+            "label": "Country",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "visible": false,
+            "class": "col-12 col-md-6 col-lg-4"
+          },
+          {
+            "name": "city",
+            "label": "City",
+            "class": "col-12 col-md-6 col-lg-3",
+            "disabled": false,
+            "visible": true,
+            "visibleLabel": true,
+            "value": "",
+            "type": "text"
+          },
+          {
+            "name": "state",
+            "label": "State",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "visible": true,
+            "disabled": false,
+            "class": "col-12 col-md-6 col-lg-4"
+          },
+          {
             "name": "proposerPincode",
             "label": "Pincode",
             "visibleLabel": true,
@@ -346,314 +144,6 @@ export const new_combinedForms = {
                 "validatorName": "pattern",
                 "pattern": "^[1-9][0-9]{5}$",
                 "message": "Pincode is not valid"
-              }
-            ]
-          },
-          {
-            "name": "city",
-            "label": "City",
-            "visibleLabel": true,
-            "type": "text",
-            "value": "",
-            "visible": false,
-            "class": "col-12 col-md-6 col-lg-4"
-          },
-          {
-            "name": "country",
-            "label": "Country",
-            "visibleLabel": true,
-            "type": "text",
-            "value": "",
-            "visible": false,
-            "class": "col-12 col-md-6 col-lg-4"
-          },
-          {
-            "name": "state",
-            "label": "State",
-            "visibleLabel": true,
-            "type": "text",
-            "value": "",
-            "visible": true,
-            "disabled": true,
-            "class": "col-12 col-md-6 col-lg-4"
-          },
-          {
-            "name": "idProof",
-            "label": "ID Type",
-            "visibleLabel": true,
-            "visible": false,
-            "type": "select",
-            "disabled": true,
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": [
-              {
-                "id": "2",
-                "value": "Aadhar Card",
-                "name": "Aadhar Card"
-              },
-              {
-                "id": "3",
-                "value": "Passport",
-                "name": "Passport"
-              },
-              {
-                "id": "4",
-                "value": "Driving License",
-                "name": "Driving License"
-              },
-              {
-                "id": "5",
-                "value": "Voter ID",
-                "name": "Voter ID"
-              },
-              {
-                "id": "6",
-                "value": "10th (SSC) Mark sheet",
-                "name": "10th (SSC) Mark sheet"
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Id is required field"
-              }
-            ]
-          },
-          {
-            "name": "annualIncome",
-            "label": "Annual Income",
-            "visibleLabel": true,
-            "type": "select",
-            "visible": false,
-            "disabled": true,
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": [
-              {
-                "name": "Upto 5L",
-                "value": "500000"
-              },
-              {
-                "name": "5L to 10L",
-                "value": "1000000"
-              },
-              {
-                "name": "10L to 15L",
-                "value": "1500000"
-              },
-              {
-                "name": "15L to 20L",
-                "value": "2000000"
-              },
-              {
-                "name": "20L",
-                "value": "2500000"
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Annual Income is required field"
-              }
-            ]
-          },
-          {
-            "name": "occupation",
-            "label": "Occupation",
-            "visibleLabel": true,
-            "getAllOption": "getAllProposerOccupation",
-            "type": "select",
-            "visible": false,
-            "disabled": true,
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": []
-          },
-          {
-            "name": "maritalStatus",
-            "label": "Marital Status",
-            "visibleLabel": true,
-            "type": "select",
-            "visible": false,
-            "disabled": true,
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": [
-              {
-                "id": "M",
-                "value": "Married",
-                "name": "Married"
-              },
-              {
-                "id": "S",
-                "value": "Single",
-                "name": "Single"
-              },
-              {
-                "id": "W",
-                "value": "Widow(er)",
-                "name": "Widow(er)"
-              },
-              {
-                "id": "PS",
-                "value": "Separated",
-                "name": "Separated"
-              },
-              {
-                "id": "D",
-                "value": "Divorced",
-                "name": "Divorced"
-              },
-              {
-                "id": "L",
-                "value": "Live In",
-                "name": "Live In"
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Marital Status is required field"
-              }
-            ]
-          },
-          {
-            "name": "gstDetails",
-            "label": "GST Details",
-            "visibleLabel": true,
-            "type": "select",
-            "visible": false,
-            "value": "",
-            "disabled": true,
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": [
-              {
-                "value": "Consumers",
-                "name": "Consumers",
-                "selected": true
-              },
-              {
-                "value": "Registered",
-                "name": "Registered",
-                "selected": false
-              },
-              {
-                "value": "Compounding Dealers",
-                "name": "Compounding Dealers",
-                "selected": false
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "GST Details is required field"
-              }
-            ]
-          },
-          {
-            "name": "educationDetails",
-            "label": "Education",
-            "visibleLabel": true,
-            "visible": false,
-            "disabled": true,
-            "type": "select",
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": [
-              {
-                "id": "2",
-                "value": "Below Metric",
-                "name": "Below Metric"
-              },
-              {
-                "id": "3",
-                "value": "Metric",
-                "name": "Metric"
-              },
-              {
-                "id": "4",
-                "value": "Under Graduate",
-                "name": "Under Graduate"
-              },
-              {
-                "id": "5",
-                "value": "Graduate",
-                "name": "Graduate"
-              },
-              {
-                "id": "6",
-                "value": "Post Graduate",
-                "name": "Post Graduate"
-              },
-              {
-                "id": "7",
-                "value": "Diploma",
-                "name": "Diploma"
-              },
-              {
-                "id": "8",
-                "value": "Professional",
-                "name": "Professional"
-              },
-              {
-                "id": "9",
-                "value": "Other",
-                "name": "Other"
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Education is required field"
-              }
-            ]
-          },
-          {
-            "name": "nationality",
-            "label": "Nationality",
-            "visibleLabel": true,
-            "type": "select",
-            "visible": false,
-            "disabled": true,
-            "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": [
-              {
-                "id": "1",
-                "value": "Indian",
-                "name": "Indian",
-                "selected": true
-              },
-              {
-                "id": "2",
-                "value": "Non Resident Indian",
-                "name": "Non Resident Indian",
-                "selected": false
-              },
-              {
-                "id": "3",
-                "value": "Foreign National with Indian Origin",
-                "name": "Foreign National with Indian Origin",
-                "selected": false
-              },
-              {
-                "id": "4",
-                "value": "Person of Indian Origin",
-                "name": "Person of Indian Origin",
-                "selected": false
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Nationality is required field"
               }
             ]
           },
@@ -683,53 +173,7 @@ export const new_combinedForms = {
                 "value": "Multi Individual",
                 "selected": true
               }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Policy Type is required field."
-              }
             ]
-          },
-          {
-            "name": "city",
-            "label": "City",
-            "class": "col-12 col-md-6 col-lg-3",
-            "disabled": true,
-            "visible": true,
-            "visibleLabel": true,
-            "value": "",
-            "type": "text"
-          },
-          {
-            "name": "zoneValue",
-            "label": "Zone Value",
-            "class": "col-12 col-md-6 col-lg-3",
-            "visible": false,
-            "visibleLabel": true,
-            "value": "",
-            "type": "text"
-          },
-          {
-            "name": "zone",
-            "label": "Zone",
-            "class": "col-12 col-md-6 col-lg-4",
-            "visibleLabel": false,
-            "disabled": true,
-            "visible": false,
-            "value": "",
-            "type": "text"
-          },
-          {
-            "name": "state",
-            "label": "State",
-            "class": "col-md-2",
-            "visibleLabel": true,
-            "disabled": true,
-            "visible": false,
-            "value": "",
-            "type": "text"
           },
           {
             "name": "horizontalLine",
@@ -760,14 +204,7 @@ export const new_combinedForms = {
             "visible": false,
             "type": "text",
             "class": "",
-            "value": 0,
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Select Relationhip"
-              }
-            ]
+            "value": 0
           },
           {
             "name": "insuredMembers",
@@ -847,27 +284,27 @@ export const new_combinedForms = {
                   "disabled": false,
                   "options": [
                     {
-                      "value": "Mr",
+                      "value": "Mr.",
                       "name": "Mr"
                     },
                     {
-                      "value": "Mrs",
+                      "value": "Mrs.",
                       "name": "Mrs"
                     },
                     {
-                      "value": "Ms",
+                      "value": "Ms.",
                       "name": "Ms"
                     },
                     {
-                      "value": "Dr",
+                      "value": "Dr.",
                       "name": "Dr"
                     },
                     {
-                      "value": "Mx",
+                      "value": "Mx.",
                       "name": "Mx"
                     },
                     {
-                      "value": "Miss",
+                      "value": "Miss.",
                       "name": "Miss"
                     },
                     {
@@ -884,7 +321,7 @@ export const new_combinedForms = {
                   "visibleLabel": true,
                   "type": "text",
                   "value": "",
-                  "disabled": true,
+                  "disabled": false,
                   "class": "col-12 col-md-6 col-lg-3",
                   "validators": [
                     {
@@ -906,7 +343,7 @@ export const new_combinedForms = {
                   "visibleLabel": true,
                   "type": "text",
                   "value": "",
-                  "disabled": true,
+                  "disabled": false,
                   "class": "col-12 col-md-6 col-lg-3"
                 },
                 {
@@ -916,7 +353,7 @@ export const new_combinedForms = {
                   "visible": true,
                   "type": "text",
                   "value": "",
-                  "disabled": true,
+                  "disabled": false,
                   "class": "col-12 col-md-6 col-lg-3",
                   "validators": [
                     {
@@ -933,33 +370,11 @@ export const new_combinedForms = {
                 },
                 {
                   "name": "height",
-                  "label": "Enter Height ft",
+                  "label": "Enter Height(cm)",
                   "visibleLabel": true,
                   "type": "number",
-                  "disabled": true,
+                  "disabled": false,
                   "visible": true,
-                  "value": "",
-                  "class": "col-12 col-md-6 col-lg-4",
-                  "validators": [
-                    {
-                      "validatorName": "required",
-                      "required": true,
-                      "message": "Height(ft) is required field"
-                    },
-                    {
-                      "validatorName": "pattern",
-                      "pattern": "^[1-9]$",
-                      "message": "Only values between 1-9 are allowed."
-                    }
-                  ]
-                },
-                {
-                  "name": "heightInches",
-                  "disabled": true,
-                  "label": "Enter Height in",
-                  "visibleLabel": true,
-                  "visible": true,
-                  "type": "number",
                   "value": "",
                   "class": "col-12 col-md-6 col-lg-4",
                   "validators": [
@@ -982,7 +397,7 @@ export const new_combinedForms = {
                   "visibleLabel": true,
                   "type": "number",
                   "value": "",
-                  "disabled": true,
+                  "disabled": false,
                   "class": "col-12 col-md-6 col-lg-4",
                   "validators": [
                     {
@@ -1025,14 +440,14 @@ export const new_combinedForms = {
                   ]
                 },
                 {
-                  "name": "memberdob",
+                  "name": "memberDob",
                   "label": "Date of Birth",
                   "visible": true,
                   "visibleLabel": true,
                   "type": "date",
                   "value": "",
                   "class": "col-12 col-md-6 col-lg-4",
-                  "disabled": true
+                  "disabled": false
                 },
                 {
                   "name": "emailId",
@@ -1041,7 +456,7 @@ export const new_combinedForms = {
                   "visibleLabel": true,
                   "type": "email",
                   "value": "",
-                  "disabled": true,
+                  "disabled": false,
                   "class": "col-12 col-md-6 col-lg-4",
                   "validators": [
                     {
@@ -1063,7 +478,7 @@ export const new_combinedForms = {
                   "visible": true,
                   "type": "phonenumber",
                   "value": "",
-                  "disabled": true,
+                  "disabled": false,
                   "class": "col-12 col-md-6 col-lg-4",
                   "validators": [
                     {
@@ -1137,45 +552,6 @@ export const new_combinedForms = {
                     }
                   ]
                 },
-        {
-          "name": "annualIncome",
-          "label": "Annual Income",
-          "visibleLabel": true,
-          "type": "select",
-          "visible": true,
-          "disabled": false,
-          "value": "",
-          "class": "col-12 col-md-6 col-lg-4",
-          "options": [
-            {
-            "name": "Upto 5L",
-            "value": "500000"
-            },
-            {
-            "name": "5L to 10L",
-            "value": "1000000"
-            },
-            {
-            "name": "10L to 15L",
-            "value": "1500000"
-            },
-            {
-            "name": "15L to 20L",
-            "value": "2000000"
-            },
-            {
-            "name": "20L",
-            "value": "2500000"
-            }
-          ],
-          "validators": [
-            {
-            "validatorName": "required",
-            "required": true,
-            "message": "Annual Income is required field"
-            }
-          ]
-          },
                 {
                   "name": "productMemberDesignation",
                   "label": "Designation",
@@ -1186,14 +562,7 @@ export const new_combinedForms = {
                   "value": "",
                   "options": [],
                   "disabled": false,
-                  "class": "col-12 col-md-6 col-lg-4",
-                  "validators": [
-                    {
-                      "validatorName": "required",
-                      "required": true,
-                      "message": "Designation Required"
-                    }
-                  ]
+                  "class": "col-12 col-md-6 col-lg-4"
                 },
                 {
                   "name": "productMemberNatureWork",
@@ -1205,17 +574,10 @@ export const new_combinedForms = {
                   "value": "",
                   "options": [],
                   "disabled": false,
-                  "class": "col-12 col-md-6 col-lg-4",
-                  "validators": [
-                    {
-                      "validatorName": "required",
-                      "required": true,
-                      "message": "Nature Of Work is Required"
-                    }
-                  ]
+                  "class": "col-12 col-md-6 col-lg-4"
                 },
                 {
-                  "name": "productMemberOccupation",
+                  "name": "occupation",
                   "label": "Occupation",
                   "visible": true,
                   "visibleLabel": true,
@@ -1226,15 +588,6 @@ export const new_combinedForms = {
                   "disabled": false,
                   "options": []
                 },
-                {
-                  "name": "covers",
-                  "label": "Add On Covers",
-                  "visibleLabel": false,
-                  "type": "text",
-                  "value": "",
-                  "class": "",
-                  "visible": false
-                }
               ]
             ]
           }
@@ -1383,7 +736,7 @@ export const new_combinedForms = {
             ]
           },
           {
-            "name": "Gender",
+            "name": "gender",
             "label": "Gender",
             "visibleLabel": true,
             "type": "select",
@@ -1400,13 +753,6 @@ export const new_combinedForms = {
                 "id": 2,
                 "name": "Female",
                 "value": "F"
-              }
-            ],
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Select is a required field."
               }
             ]
           },
@@ -1460,21 +806,9 @@ export const new_combinedForms = {
             "type": "email",
             "value": "",
             "class": "col-12 col-md-6 col-lg-4",
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Email Address is required field"
-              },
-              {
-                "validatorName": "pattern",
-                "pattern": "^(?!.*[._-]{2})[a-zA-Z0-9]+([._-][a-zA-Z0-9]+)*@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$",
-                "message": "Enter Valid email Id."
-              }
-            ]
           },
           {
-            "name": "Gender",
+            "name": "gender",
             "label": "Gender",
             "visibleLabel": true,
             "type": "",
@@ -1707,8 +1041,8 @@ export const new_combinedForms = {
             "disabled": true
           },
           {
-            "name": "proposalNumber",
-            "label": "Proposal Number",
+            "name": "policyNumber",
+            "label": "Policy Number",
             "visibleLabel": true,
             "visible": true,
             "type": "boldtext",
