@@ -216,6 +216,7 @@ export class CreateLeadComponent implements OnInit {
 
     if (this.userValidations.invalid) {
       console.log('userValidations ',this.userValidations.errors)
+      window.scrollTo(0, 0);
       return;
     }
     else {
