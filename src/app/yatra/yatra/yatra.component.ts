@@ -501,7 +501,6 @@ export class YatraComponent {
         if (control.type == 'text' && (typeof value == 'string') && (value.startsWith('{') && value.endsWith('}'))) {
           control.value = JSON.parse(this.formData[control.name]).value;
         }
-
         else {
           if ((this.formData[control.name]) || (this.formData[control.name] && !control.value)) {
             control.value = this.formData[control.name];
@@ -830,7 +829,6 @@ export class YatraComponent {
       // this.showHtmlContent = true;
       console.log(this.form);
       console.log(this.dynamicFormGroup.value, this.formData);
-
 
 
       this.flattenObject(this.formData);
@@ -2228,6 +2226,7 @@ export class YatraComponent {
         }
       } catch (error) {
         console.error(`Error in method ${methodName}:`, error);
+        await Promise.reject(error);
       }
     } else {
       console.error(`Method ${methodName} not found`);
@@ -3330,9 +3329,13 @@ export class YatraComponent {
           //   console.log('Waiting for fullQuote API response before proceeding...');
           //   await this.uploadSelectedDocument();
           // } else {
+          try {
           console.log('Proceeding without waiting for fullQuote API');
           await this.resolveMethod(this.form.saveBtnFunction);
-          // }
+          }catch(error:any){
+            console.error("Process stopped due to error:", error.message);
+            return;
+          }
         }
         console.log(this.formData);
         sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
@@ -4123,6 +4126,7 @@ export class YatraComponent {
           console.error("Error while fetching product tenure", error);
         } finally {
           this.spinner.hide();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
     }

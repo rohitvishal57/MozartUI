@@ -18,10 +18,10 @@
           <div class="progressDetails">
             <div class="details" *ngFor="let case of formSequence;index as i;">
               <div class="step-count">
-                <button *ngIf="i < getFormIndexValue()" class="btn btn-default" class="nav-index">
+                <button *ngIf="i < getFormIndexValue() || formSequence.length-1 == getFormIndexValue()" class="btn btn-default" class="nav-index">
                   {{ i + 1 }}
                 </button>
-                <button *ngIf="i == getFormIndexValue() " class="btn btn-default" class="nav-last">
+                <button *ngIf="i == getFormIndexValue() && formSequence.length-1 != getFormIndexValue()" class="btn btn-default" class="nav-last">
                   {{i+1}}
                 </button>
                 <button *ngIf="i > getFormIndexValue() " class="btn btn-default" class="nav-bottom">
@@ -1178,7 +1178,7 @@
                                                   *ngIf="innerControl.validators"></span></label>
                                             </div>
                                             <small *ngIf="checkValidations(control,subControl,k-1,innerControl)"
-                                              class="text-danger" style="position: relative;">{{
+                                              class="text-danger" style="position: relative; display: flex;">{{
                                               getValidationErrors(innerControl,subControl,k-1,control)?
                                               (getValidationErrors(innerControl,subControl,k-1,control)| translate) :
                                               ''}}
@@ -1205,7 +1205,7 @@
                                               <!-- <label *ngIf="control.visibleLabel">{{ control.label ? (control.label | translate) : '' }}</label> -->
                                             </div>
                                             <small *ngIf="checkValidations(control,subControl,k-1,innerControl)"
-                                              class="text-danger" style="position: relative;">{{
+                                              class="text-danger" style="position: relative; display: flex;">{{
                                               getValidationErrors(innerControl,subControl,k-1,control)?
                                               (getValidationErrors(innerControl,subControl,k-1,control)| translate) :
                                               ''}}
