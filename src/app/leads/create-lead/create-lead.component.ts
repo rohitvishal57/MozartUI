@@ -55,6 +55,8 @@ export class CreateLeadComponent implements OnInit {
   occupationInfo : any;
   zoneCode :any;
   proposalNumber : any = '';
+  submitButton :  Boolean =  false;
+  updateLeadFlag : Boolean =  false;
  
     
   constructor(private formBuilder: FormBuilder,
@@ -87,6 +89,7 @@ export class CreateLeadComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadNumber'];
       this.action = params['action'];
+      this.updateLeadFlag = true;
     });
     this.CreateLead = new CreateLead;
     const storedAgentCode = localStorage.getItem('agentCode');
@@ -115,6 +118,7 @@ export class CreateLeadComponent implements OnInit {
     // this.getReferenceStatus();
      this.fetchActivityTypeInfo();
     this.today = new Date().toISOString().split('T')[0];
+    
   }
 
   inItForm() {
@@ -322,12 +326,12 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
-
     this.zoneCode = this.submittedUser?.zone ?? '';
     this.proposalNumber = this.submittedUser.proposalNumber;
+    if(this.submittedUser?.leadStatus?.includes('In progress')){
+      this.submitButton = true;
+    }
   }
-
-
 
   fetchActivityTypeInfo() {
     let fetchActivityTypeRequest: any = {};
