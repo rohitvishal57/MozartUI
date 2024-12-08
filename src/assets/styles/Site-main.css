@@ -325,6 +325,7 @@ button {
   font-size: 14px;
   line-height: 24px;
   color:var(--text-black-4c);
+  padding: 0;
 }
 
 .data-row .data-item-10 {

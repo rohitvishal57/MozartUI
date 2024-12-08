@@ -343,7 +343,10 @@ h6 {
 :host ::ng-deep .actionItem img,
 :host ::ng-deep .actionItem span {
   vertical-align: unset !important; 
-  color: red;
+}
+.btn_iconText .icon_download {
+	width: 14px;
+	filter: invert(21%) sepia(70%) saturate(7414%) hue-rotate(359deg) brightness(79%) contrast(117%) !important;
 }
 .accordionMain .accordionItem {
     background: var(--white-color);
