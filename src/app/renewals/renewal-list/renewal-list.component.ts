@@ -1460,229 +1460,232 @@ export class RenewalListComponent {
   //     localStorage.setItem('formIndex','2');
   //   }
     
-  //   const tempFormData = {
-  //   "productName": "Activ Health V2",
-  //   "memberDobProposer": "",
-  //   "panNo": "",
-  //   "productVariant": "Platinum - Enhanced",
-  //   "ckycNo": "20084759923752",
-  //   "typeOfBusiness": "REN",
-  //   "memberPlan": "",
-  //   "memberRoomCategory": "Single Private A/c Room",
-  //   "productType": "",
-  //   "planCode": "6212100003",
-  //   "productId": 14,
-  //   "preFix": "Mr.",
-  //   "firstName": "Aniket",
-  //   "middleName": "",
-  //   "lastName": "Birambole",
-  //   "memberAgeProposer": 25,
-  //   "proposerGender": "M",
-  //   "emailId": "sohel.shaikh@qualitykiosk.com",
-  //   "proposerAddress1": "aoisfoinasf",
-  //   "proposerAddress2": "oaisfnoiasf",
-  //   "proposerAddress3": "null",
-  //   "city": "Mumbai",
-  //   "country": "India",
-  //   "state": "MAHARASHTRA",
-  //   "mobileNumber": "9930519086",
-  //   "idProof": "",
-  //   "idNo": "",
-  //   "annualIncome": "1000000",
-  //   "occupation": "O002",
-  //   "maritalStatus": "Single",
-  //   "gstDetails": "",
-  //   "educationDetails": "",
-  //   "nationality": "Indian",
-  //   "sumInsured": "2000000",
-  //   "proposerPincode": "400002",
-  //   "zone": "Zone I",
-  //   "zoneValue": "Z001",
-  //   "numberOfInsuredMembers": 1,
-  //   "planDetails": "",
-  //   "totalPremium": "14264.0",
-  //   "memberPolicyType": "Multi Individual",
-  //   "insuredMembers": {
-  //     "Self": true,
-  //     "Spouse": false,
-  //     "Son1": false,
-  //     "Daughter1": false,
-  //     "Mother": false,
-  //     "Father": false,
-  //     "Mother-In-Law": false,
-  //     "Father-In-Law": false,
-  //     "Brother1": false,
-  //     "Sister1": false,
-  //     "Grand-Father": false,
-  //     "Grand-Mother": false,
-  //     "Grand-Son1": false,
-  //     "Grand-Daughter1": false,
-  //     "Son-In-Law1": false,
-  //     "Daughter-In-Law1": false,
-  //     "Brother-In-Law": false,
-  //     "Sister-In-Law": false,
-  //     "Nephew1": false,
-  //     "Niece1": false,
-  //     "Partnership": false,
-  //     "Proprietorship": false,
-  //     "HUF (Hindu Undivided Family)": false,
-  //     "Employer-Employee": false,
-  //     "Uncle": false,
-  //     "Aunt": false,
-  //     "Live-In-Partner": false
-  //   },
-  //   "insuredMemberDetails": [
-  //     {
-  //       "relation": "Self",
-  //       "firstName": "Aniket",
-  //       "lastName": "Birambole",
-  //       "height": "165.1",
-  //       "weight": "55",
-  //       "memberDob": "1999-11-18",
-  //       "emailId": "sohel.shaikh@qualitykiosk.com",
-  //       "mobileNumber": "9930519086",
-  //       "relationshipType": {
-  //         "id": "R001",
-  //         "relationCode": "24",
-  //         "value": "Self",
-  //         "name": "Self",
-  //         "isIncrement": false,
-  //         "imagePath": "assets/Self.png"
-  //       },
-  //       "memberAge": 0,
-  //       "memberGender": "M",
-  //       "sumInsured": "2000000",
-  //       "preExistingDisease": "No",
-  //       "memberIndex": 0,
-  //       "zone": "Z001",
-  //       "middleName": "",
-  //       "upgradableZones": [],
-  //       "covers": [
-  //         {
-  //           "coverId": "AYSH",
-  //           "value": "2000000"
+  //   const tempFormData =  {
+  //     "productName": "Activ Health V2",
+  //     "memberDobProposer": "1999-11-18",
+  //     "panNo": "",
+  //     "productVariant": "Platinum - Enhanced",
+  //     "ckycNo": "20084759923752",
+  //     "typeOfBusiness": "REN",
+  //     "memberPlan": "",
+  //     "memberRoomCategory": "Single Private A/c Room",
+  //     "productType": "",
+  //     "planCode": "6212100003",
+  //     "productId": 14,
+  //     "preFix": "Mr.",
+  //     "firstName": "Aniket",
+  //     "middleName": "",
+  //     "lastName": "Birambole",
+  //     "memberAgeProposer": 25,
+  //     "proposerGender": "M",
+  //     "emailId": "sohel.shaikh@qualitykiosk.com",
+  //     "proposerAddress1": "aoisfoinasf",
+  //     "proposerAddress2": "oaisfnoiasf",
+  //     "proposerAddress3": "null",
+  //     "city": "Mumbai",
+  //     "country": "India",
+  //     "state": "MAHARASHTRA",
+  //     "mobileNumber": "9930519086",
+  //     "idProof": "",
+  //     "idNo": "",
+  //     "annualIncome": "1000000",
+  //     "occupation": "O002",
+  //     "maritalStatus": "Single",
+  //     "gstDetails": "",
+  //     "educationDetails": "",
+  //     "nationality": "Indian",
+  //     "sumInsured": "2000000",
+  //     "proposerPincode": "400002",
+  //     "zone": "Zone I",
+  //     "zoneValue": "Z001",
+  //     "numberOfInsuredMembers": 1,
+  //     "planDetails": "",
+  //     "totalPremium": "14264.0",
+  //     "memberPolicyType": "Multi Individual",
+  //     "insuredMembers": {
+  //       "Self": true,
+  //       "Spouse": false,
+  //       "Son1": false,
+  //       "Daughter1": false,
+  //       "Mother": false,
+  //       "Father": false,
+  //       "Mother-In-Law": false,
+  //       "Father-In-Law": false,
+  //       "Brother1": false,
+  //       "Sister1": false,
+  //       "Grand-Father": false,
+  //       "Grand-Mother": false,
+  //       "Grand-Son1": false,
+  //       "Grand-Daughter1": false,
+  //       "Son-In-Law1": false,
+  //       "Daughter-In-Law1": false,
+  //       "Brother-In-Law": false,
+  //       "Sister-In-Law": false,
+  //       "Nephew1": false,
+  //       "Niece1": false,
+  //       "Partnership": false,
+  //       "Proprietorship": false,
+  //       "HUF (Hindu Undivided Family)": false,
+  //       "Employer-Employee": false,
+  //       "Uncle": false,
+  //       "Aunt": false,
+  //       "Live-In-Partner": false
+  //     },
+  //     "insuredMemberDetails": [
+  //       {
+  //         "relation": "Self",
+  //         "firstName": "Aniket",
+  //         "lastName": "Birambole",
+  //         "height": "165.1",
+  //         "weight": "55",
+  //         "memberDob": "1999-11-18",
+  //         "emailId": "sohel.shaikh@qualitykiosk.com",
+  //         "mobileNumber": "9930519086",
+  //         "relationshipType": {
+  //           "id": "R001",
+  //           "relationCode": "24",
+  //           "value": "Self",
+  //           "name": "Self",
+  //           "isIncrement": false,
+  //           "imagePath": "assets/Self.png"
   //         },
-  //         {
-  //           "coverId": "CHMP",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "CTHZ",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "DCHS",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "DCOI",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "DCTT",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "DMAS",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "EXHC",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "HLCU",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "HLTHA",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "HLTHRET",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "HMTT",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "IMAS",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "IPTT",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "MITR",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "MTAT",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "OBTR",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "OPDE",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "ORDR",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "PUHM",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "PRHM",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "PWAIV",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "RACV",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "RVBE",
-  //           "value": "2000000"
-  //         },
-  //         {
-  //           "coverId": "SCOP",
-  //           "value": "2000000"
-  //         }
-  //       ],
-  //       "preFix": "Mr.",
-  //       "chronicDiseases": [],
-  //       "roomCategory": "",
-  //       "memberRelationCode": 0
-  //     }
-  //   ],
-  //   "noOfChildren": 0,
-  //   "familySize": "",
-  //   "proposerName": "Aniket Birambole",
-  //   "tenure": 1,
-  //   "personalDetails": "",
-  //   "nomineeFirstName": "Shashank",
-  //   "nomineeMiddleName": "",
-  //   "nomineeLastName": "Shashank",
-  //   "nomineeDob": "",
-  //   "nomineeRelationWithProposer": "Brother",
-  //   "gender": "M",
-  //   "nomineeAddress": "oinas",
-  //   "nomineeContactNo": "8722499266",
-  //   "policyNumber": "21-24-0002891-00",
-  //   "isKYCComplete": true,
-  //   "productCode": "6212"
-  // }
-
+  //         "memberAge": 0,
+  //         "memberGender": "M",
+  //         "sumInsured": "2000000",
+  //         "preExistingDisease": "No",
+  //         "memberIndex": 0,
+  //         "zone": "Z001",
+  //         "middleName": "",
+  //         "upgradableZones": [],
+  //         "covers": [
+  //           {
+  //             "coverId": "AYSH",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "CHMP",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "CTHZ",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "DCHS",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "DCOI",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "DCTT",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "DMAS",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "EXHC",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "HLCU",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "HLTHA",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "HLTHRET",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "HMTT",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "IMAS",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "IPTT",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "MITR",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "MTAT",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "OBTR",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "OPDE",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "ORDR",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "PUHM",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "PRHM",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "PWAIV",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "RACV",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "RVBE",
+  //             "value": "2000000"
+  //           },
+  //           {
+  //             "coverId": "SCOP",
+  //             "value": "2000000"
+  //           }
+  //         ],
+  //         "preFix": "Mr.",
+  //         "chronicDiseases": [],
+  //         "roomCategory": "",
+  //         "memberRelationCode": 0,
+  //         "annualIncome": "1000000",
+  //         "natureOfDuty": "",
+  //         "occupation": "O002",
+  //         "designation": "NA"
+  //       }
+  //     ],
+  //     "noOfChildren": 0,
+  //     "familySize": "",
+  //     "proposerName": "Aniket Birambole",
+  //     "tenure": 1,
+  //     "personalDetails": "",
+  //     "nomineeFirstName": "Shashank",
+  //     "nomineeMiddleName": "",
+  //     "nomineeLastName": "Shashank",
+  //     "nomineeDob": "2000-11-29",
+  //     "nomineeRelationWithProposer": "\u0022R009\u0022",
+  //     "gender": "M",
+  //     "nomineeAddress": "oinas",
+  //     "nomineeContactNo": "8722499266",
+  //     "policyNumber": "21-24-0002891-00",
+  //     "isKYCComplete": true,
+  //     "productCode": "6212"
+  //   }
 
   //   const renewalInfoRequestBody = {
   //     policy_Number: proposerDetail.policyNumber,
@@ -1703,6 +1706,17 @@ export class RenewalListComponent {
   //             journeyProcess: this.encryptionService.encrypt(action === "withmodify" ? 1 : 0)
   //           }
   //         });
+          
+  //   //     }
+  //   //     else {
+  //   //       this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
+  //   //     }
+  //   //   },
+  //   //   (err) => {
+  //   //     console.error("Error from getRenewalInfo API:", err);
+  //   //     this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
+  //   //   }
+  //   // );
   // }
 
   async getProposalNum() {

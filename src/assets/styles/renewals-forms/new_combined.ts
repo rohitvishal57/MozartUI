@@ -80,7 +80,7 @@ export const new_combinedForms = {
             "type": "text",
             "value": "",
             "visible": true,
-            "class": "col-12 col-md-6 col-lg-4",
+            "class": "col-12 col-md-6 col-lg-6",
             "validators": [
               {
                 "validatorName": "required",
@@ -95,7 +95,7 @@ export const new_combinedForms = {
             "type": "text",
             "value": "",
             "visible": true,
-            "class": "col-12 col-md-6 col-lg-4"
+            "class": "col-12 col-md-6 col-lg-6"
           },
           {
             "name": "country",
@@ -109,7 +109,7 @@ export const new_combinedForms = {
           {
             "name": "city",
             "label": "City",
-            "class": "col-12 col-md-6 col-lg-3",
+            "class": "col-12 col-md-6 col-lg-4",
             "disabled": false,
             "visible": true,
             "visibleLabel": true,
@@ -381,15 +381,32 @@ export const new_combinedForms = {
                     {
                       "validatorName": "required",
                       "required": true,
-                      "message": "Height(Inch) is required field"
-                    },
-                    {
-                      "validatorName": "pattern",
-                      "pattern": "^(?:[0-9]|1[0-1])$",
-                      "message": "Only values between 0-11 are allowed."
+                      "message": "Height(ft) is required field"
                     }
                   ]
                 },
+                // {
+                //   "name": "heightInches",
+                //   "disabled": false,
+                //   "label": "Enter Height in",
+                //   "visibleLabel": true,
+                //   "visible": false,
+                //   "type": "number",
+                //   "value": "",
+                //   "class": "col-12 col-md-6 col-lg-4",
+                //   "validators": [
+                //     {
+                //       "validatorName": "required",
+                //       "required": true,
+                //       "message": "Height(Inch) is required field"
+                //     },
+                //     {
+                //       "validatorName": "pattern",
+                //       "pattern": "^(?:[0-9]|1[0-1])$",
+                //       "message": "Only values between 0-11 are allowed."
+                //     }
+                //   ]
+                // },
                 {
                   "name": "weight",
                   "label": "Weight(In Kgs)",
@@ -553,7 +570,7 @@ export const new_combinedForms = {
                   ]
                 },
                 {
-                  "name": "productMemberDesignation",
+                  "name": "designation",
                   "label": "Designation",
                   "visibleLabel": true,
                   "type": "select",
@@ -565,7 +582,7 @@ export const new_combinedForms = {
                   "class": "col-12 col-md-6 col-lg-4"
                 },
                 {
-                  "name": "productMemberNatureWork",
+                  "name": "natureOfDuty",
                   "label": "Nature of Work",
                   "visibleLabel": true,
                   "visible": true,

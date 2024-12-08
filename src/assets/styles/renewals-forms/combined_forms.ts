@@ -2281,7 +2281,7 @@ export const combinedForms = {
                   "disabled": true
                 },
                 {
-                  "name": "memberdob",
+                  "name": "memberDob",
                   "label": "D.O.B",
                   "visible": true,
                   "visibleLabel": true,
@@ -2444,13 +2444,6 @@ export const combinedForms = {
                       "value": 20000000
                     }
                   ],
-                  "validators": [
-                    {
-                      "validatorName": "required",
-                      "required": true,
-                      "message": "Sum Insured is required field"
-                    }
-                  ]
                 },
                 {
                   "name": "preExistingDisease",
@@ -2564,13 +2557,6 @@ export const combinedForms = {
             "label": "I agree to Terms & Conditions",
             "class": "col-12 col-md-6 col-lg-12 nomineeCheck",
             "type": "checkbox",
-            "validators": [
-              {
-                "validatorName": "required",
-                "required": true,
-                "message": "Please tick the condition"
-              }
-            ]
           }
         ]
       },
