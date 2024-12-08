@@ -414,11 +414,13 @@
                                     <label>{{"Status" | translate}}</label>
                                     <h6 class="info_status">{{ customerBasicDetails.policyStatus || "-" }}</h6>
                                 </div>
-                                <div class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(customerBasicDetails.policyNo)">
-                                    <a class="btn_iconText">
-                                        <img src="assets/Img/icon_download_grey.svg" class="icon_download" alt="Download">
-                                        <span>{{"Download Policy Kit" | translate}}</span>
-                                    </a>
+                                <div class="data-item justify-content-center align-items-center">
+                                    <div class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(customerBasicDetails.policyNo)">
+                                        <a class="btn_iconText">
+                                            <img src="assets/Img/icon_download_grey.svg" class="icon_download" alt="Download">
+                                            <span>{{"Download Policy Kit" | translate}}</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
