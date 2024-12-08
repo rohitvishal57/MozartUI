@@ -86,7 +86,7 @@ export class RugDynamicFormComponent {
 
   partnerId: any
   productId: any
-
+  isCustomerJourney: boolean = false;
   displayTaxList: any[] = [];
   currentDate = new Date().toISOString().split('T')[0];
   selectedButton: string | null = null;
@@ -357,7 +357,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": this.leadId != undefined ? this.leadId : "300004",
+        "proposalNum": this.leadId != undefined ? this.leadId : "300022",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -374,6 +374,10 @@ export class RugDynamicFormComponent {
           console.log(this.form);
           console.log(this.d2cDetails);
           console.log(this.bbdetails);
+          console.log(this.formSequence[this.getFormIndexValue()].formName);
+          if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
+            this.isCustomerJourney = false;
+          }
           // this.form.formSections[0].formControls[0].value = "";
           this.initializeForm();
         },
@@ -1175,7 +1179,12 @@ export class RugDynamicFormComponent {
     this.expandedItem = '';
   }
   planSummary(){
-    this.isPlanDetailsVisible = !this.isPlanDetailsVisible; // Toggle the state
+    if(this.isD2C){
+      this.isPlanDetailsVisible = !this.isPlanDetailsVisible; // Toggle the state
+
+    }else{
+      this.isPlanDetailsVisible = false;
+    }
 
   }
   addNavbar(index: number, value: any) {
@@ -2145,7 +2154,7 @@ export class RugDynamicFormComponent {
     // Wrapping the asynchronous operation in a promise
     return new Promise((resolve, reject) => {
       const reqData = {
-        productId: "1",
+        productId: this.productId.toString(),
         policyType: this.dynamicFormGroup.get('memberPolicyType')?.value,
       };
 
@@ -2175,20 +2184,22 @@ export class RugDynamicFormComponent {
             console.log(option);
             console.log(res.data.relationShip)
             console.log(this.bbdetails);
-            if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
-              controlGroup.addControl(option.value, new FormControl((relationCodes.includes(option.id)) ? true : false));
-              if (relationCodes.includes(option.id)) {
-                this.logSelection(null, option, control);
+            // if(option.id == "R001" || option.id == "R002" || option.id == "R003" || option.id == "R004"){
+              if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
+                controlGroup.addControl(option.value, new FormControl((relationCodes.includes(option.id)) ? true : false));
+                if (relationCodes.includes(option.id)) {
+                  this.logSelection(null, option, control);
+                }
+              }else if(this.formSequence[0].formName == "Know Your Premium"){
+                console.log(this.d2cDetails);
+                controlGroup.addControl(option.value, new FormControl((d2cRelationCodes.includes(option.id)) ? true : false));
+                if (d2cRelationCodes.includes(option.id)) {
+                  this.logSelection(null, option, control);
+                }
+              } else {
+                controlGroup.addControl(option.value, new FormControl(false));
               }
-            }else if(this.formSequence[0].formName == "Know Your Premium"){
-              console.log(this.d2cDetails);
-              controlGroup.addControl(option.value, new FormControl((d2cRelationCodes.includes(option.id)) ? true : false));
-              if (d2cRelationCodes.includes(option.id)) {
-                this.logSelection(null, option, control);
-              }
-            } else {
-              controlGroup.addControl(option.value, new FormControl(false));
-            }
+            // }
           });
 
           // Remove previous insuredMembers control
@@ -3152,7 +3163,7 @@ export class RugDynamicFormComponent {
                   if (halfQuoteResponse.isSuccess == true && halfQuoteResponse.statusCode == 200) {
                     this.toast.success({ detail: "SUCCESS", summary: halfQuoteResponse.message, duration: 3000 });
                     let justpayPayload = { 
-                      "agentcode": this.agentCode,
+                       "agentcode": this.agentCode,
                        "proposalNumber": this.bbdetails?.leadId,
                        "paymentMethod": "autoDebit",
                        "source": "RUG",
@@ -3167,7 +3178,7 @@ export class RugDynamicFormComponent {
                        "Phone": this.bbdetails?.proposerMobileNumber,
                        "Email": this.bbdetails?.proposerEmailAddress,
                        "DOB": this.bbdetails?.proposerDob,
-                       "appName": "BRANCH_BANKING"
+                       "appName": "BRANCHBANKING"
                               
                       }
                       console.log(justpayPayload);
@@ -3441,215 +3452,266 @@ export class RugDynamicFormComponent {
   }
 
   onBbSubmit() {
+    this.changesMade = false;
     console.log(this.bbdetails);
     console.log(this.dynamicFormGroup.value);
     console.log(this.dynamicFormGroup.value.insuredMembers);
     console.log(this.formSequence);
     console.log(this.formIndexValue);
     console.log(this.getFormIndexValue());
-    if(this.getFormIndexValue() == 0 || this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
-      if(this.getFormIndexValue() == 3){
-        this.dynamicFormGroup.value.accountNumber = this.bbdetails.accountNumber;
-        // this.dynamicFormGroup.get('accountNumber')?.setValue(this.bbdetails.accountNumber);
+    if(this.dynamicFormGroup.valid){
+      if(this.getFormIndexValue() == 0 || this.getFormIndexValue() == 1 || this.getFormIndexValue() == 2 || this.getFormIndexValue() == 3 || this.getFormIndexValue() == 4){
+        if(this.getFormIndexValue() == 3){
+          this.dynamicFormGroup.value.accountNumber = this.bbdetails.accountNumber;
+          // this.dynamicFormGroup.get('accountNumber')?.setValue(this.bbdetails.accountNumber);
+        }
+        let reqData = {
+          "proposalNum": (this.bbdetails.leadId != null || this.bbdetails.leadId != "") ? this.bbdetails.leadId : this.dynamicFormGroup.value.leadNumber,
+          "partnerId": this.partnerId,
+          "agentCode": this.agentCode,
+          "formData": JSON.stringify(this.dynamicFormGroup.value),
+          "formName": this.formSequence[this.getFormIndexValue()].formName,
+          "formConfig": JSON.stringify(this.formSequence),
+          "productId": this.productId.toString(),
+          "formId": this.formSequence[this.getFormIndexValue()].formId,
+          "jsonForm": JSON.stringify(this.form),
+          "formSequence": this.getFormIndexValue(), // index of the form from FormSequence
+          "leadNumber": (this.bbdetails.leadId != null || this.bbdetails.leadId != "") ? this.bbdetails.leadId : this.dynamicFormGroup.value.leadNumber, // will be generated in the save of the first form (leads page) and will be sent as response of this API in the incoming requests, u need to pass that response's lead Id here
+          "quoteNumber": this.formData.quoteId ? this.formData.quoteId : "",// will be generate in getQuoteForSingleProducts and top selling products,
+          "portalName": "RUG"
       }
-      let reqData = {
-        "proposalNum": (this.bbdetails.leadId != null || this.bbdetails.leadId != "") ? this.bbdetails.leadId : this.dynamicFormGroup.value.leadNumber,
-        "partnerId": this.partnerId,
-        "agentCode": this.agentCode,
-        "formData": JSON.stringify(this.dynamicFormGroup.value),
-        "formName": this.formSequence[this.getFormIndexValue()].formName,
-        "formConfig": JSON.stringify(this.formSequence),
-        "productId": this.productId.toString(),
-        "formId": this.formSequence[this.getFormIndexValue()].formId,
-        "jsonForm": JSON.stringify(this.form),
-        "formSequence": this.getFormIndexValue(), // index of the form from FormSequence
-        "leadNumber": (this.bbdetails.leadId != null || this.bbdetails.leadId != "") ? this.bbdetails.leadId : this.dynamicFormGroup.value.leadNumber, // will be generated in the save of the first form (leads page) and will be sent as response of this API in the incoming requests, u need to pass that response's lead Id here
-        "quoteNumber": this.formData.quoteId ? this.formData.quoteId : "",// will be generate in getQuoteForSingleProducts and top selling products,
-        "portalName": "RUG"
-    }
-      console.log(reqData);
-      this.yatraService.Insertorupdateformdata(reqData).subscribe({
-        next: (res: any) => {
-          // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
-          console.log(res);
-          this.leadnumber = res.data;
-          if (res.isSuccess == true && res.statusCode == 200) {
-            this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
-            if(this.getFormIndexValue() == 4){
-              const payloadObject = {
-                proposerDetails: {
-                  leadId: this.bbdetails.leadId,
-                  customerId: this.bbdetails.customerId,
-                  salutation: "Mr",
-                  customerFirstName: this.bbdetails.customerFirstName,
-                  customerLastName: this.bbdetails.customerLastName,
-                  gender: this.bbdetails.proposerGender,
-                  dob: this.bbdetails.proposerDob,
-                  mobileNumber: this.bbdetails.proposerMobileNumber,
-                  panNumber: this.bbdetails.proposerPanNumber,
-                  emailAddress: this.bbdetails.proposerEmailAddress,
-                  address: this.bbdetails.proposerAddress,
-                  city: this.bbdetails.proposerCity,
-                  state: this.bbdetails.proposerState,
-                  pinCode: this.bbdetails.proposerPincode,
-                  isNRI: this.bbdetails.proposerIsNri,
-                  tenure: 1,
-                  sumInsured: this.bbdetails.sumInsured,
-                  premium: this.bbdetails.totalPremium,
-                  annualIncome: "",
-                  axisProductCode: this.bbdetails.axisProductCode,
-                  axisProductName: this.bbdetails.axisProductName,
-                  familyConstruct: this.bbdetails.familyConstruct,
-                  isAxisBankAccount: this.bbdetails.isAxisBankAccount,
-                  accountNumber: this.bbdetails.accountNumber,
-                  ifscCode: this.bbdetails.ifscCode,
-                  branchName: this.bbdetails.branchName,
-                  branchSolId: this.bbdetails.branchSolId,
-                  amount: "",
-                  isGoGreen: true,
-                  bankName: this.bbdetails.bankName,
-                  debitType: this.bbdetails.debitType || "",
-                  endDate: this.bbdetails.endDate || "",
-                  frequencyOfPayment: this.bbdetails.frequencyOfPayment || "",
-                  maskedAccountNo: "",
-                  paymentMode: this.bbdetails.paymentMode == "no" ? "paymentgateway" : "easyPay",
-                  startDate: this.bbdetails.startDate || "",
-                  idType: this.bbdetails.idType,
-                  idValue: this.bbdetails.idValue,
-                  occupationType: "",
-                  occupation: "",
-                  leadStatus: null,
-                  productCode: this.bbdetails.productCode,
-                  productName: this.bbdetails.productName,
-                  isSubmitted: true,
-                  isPayment: false,
-                  groupCode: this.bbdetails.groupCode,
-                  productPlanName: this.bbdetails.productPlanName,
-                  productPlanCode: this.bbdetails.productPlanCode,
-                  combiId: "10",
-                  combiName: null,
-                  familyConstructId: this.bbdetails.familyConstructId,
-                  ghiPremium: this.bbdetails.ghiPremium,
-                  gpaPremium: null,
-                  gciPremium: null,
-                  deductibleAmount: null,
-                  gpPremium: this.bbdetails.gpPremium,
-                  micrCode: this.bbdetails.micrCode,
-                  accType: this.bbdetails.accType == "primary" ? "Primary" : "Primary",
-                  bankAccountType: this.bbdetails.bankAccountType || "saving"
-                },
-                insuredDetails: this.bbdetails.insuredMemberDetails.map((member: any) => ({
-                  leadId: this.bbdetails.leadId,
-                  salutation: "Mr",
-                  firstName: member.firstName,
-                  lastName: member.lastName,
-                  gender: member.gender,
-                  dob: member.dob,
-                  age: member.age,
-                  ageType: "years",
-                  relationWithProposer: JSON.parse(member.relationshipType)?.name || member.relation,
-                  relationCode: JSON.parse(member.relationshipType)?.id || "",
-                  tenure: null,
-                  height: member.height || 0,
-                  heightInch: member.heightInches || null,
-                  weight: member.weight
-                })),
-                nomineeDetails: {
-                  leadId: this.bbdetails.leadId,
-                  NomineeSalutation: this.bbdetails.nomineeGender == "M" ? "Mr" : this.bbdetails.nomineeGender == "F" ? "Ms" : null, // Assuming not provided
-                  nomineeRelation: this.bbdetails.relationWithProposer || "son",
-                  NomineeRelationCode: "R003",
-                  nomineeFirstname: this.bbdetails.nomineeFirstName,
-                  nomineeLastname: this.bbdetails.nomineeLastName,
-                  nomineeContactNumber: this.bbdetails.nomineeMobileNumber,
-                  nomineeAddress: this.bbdetails.nomineeAddress || null,
-                  appointeeDOB: null,
-                  appointeeName: this.bbdetails.appointeeName || null,
-                  appointeeContactNo: this.bbdetails.appointeeMobileNumber || null,
-                  relationshipOfAppointeeWithNominee: this.bbdetails.relationWithNominee || "",
-                  dateOfBirth: this.bbdetails.nomineeDob,
-                  defaultShare: this.bbdetails.nomineeDefaultShare,
-                  nomineeGender: this.bbdetails.nomineeGender || null
-                }
-              };
-              console.log(payloadObject);
-              let testObj = {
-                "leadId": "155217345435",
-                "requestData": "{\"proposerDetails\":{\"leadId\":\"155217345435\",\"customerId\":\"260618000044\",\"salutation\":\"Mr\",\"customerFirstName\":\"ARNASDA\",\"customerLastName\":\"BANKING\",\"gender\":\"M\",\"dob\":\"1988-12-19\",\"mobileNumber\":\"9823901274\",\"panNumber\":\"DDDDD6456A\",\"emailAddress\":\"atul.shirwadkar1@adityabirlacapital.com\",\"address\":\"Om hrad ntalatiof, holOmshre, talathioficeeachol, OmshreeSada9talathi\",\"city\":\"MUMBAI\",\"state\":\"MAHARASHTRA\",\"pinCode\":\"45102\",\"isNRI\":\"N\",\"tenure\":1,\"sumInsured\":\"500000\",\"premium\":\"16997.00\",\"annualIncome\":\"\",\"axisProductCode\":\"2171\",\"axisProductName\":\"Freedom Plus Plan\",\"familyConstruct\":\"1A\",\"isAxisBankAccount\":true,\"accountNumber\":\"9170100000000329\",\"ifscCode\":\"UTIB0000016\",\"branchName\":\"Banglore\",\"branchSolId\":\"051\",\"amount\":\"\",\"isGoGreen\":true,\"bankName\":\"Axis Bank\",\"debitType\":\"\",\"endDate\":\"\",\"frequencyOfPayment\":\"\",\"maskedAccountNo\":\"\",\"paymentMode\":\"paymentgateway\",\"startDate\":\"\",\"idType\":\"Aadhar Card\",\"idValue\":\"5478-2589-3688\",\"occupationType\":\"\",\"occupation\":\"\",\"leadStatus\":null,\"productCode\":\"R03\",\"productName\":\"Freedom Plus Plan\",\"isSubmitted\":false,\"isPayment\":false,\"groupCode\":\"GRP001\",\"productPlanName\":\"GHI,GP\",\"productPlanCode\":\"22\",\"combiId\":\"10\",\"combiName\":null,\"familyConstructId\":\"1\",\"ghiPremium\":\"15665\",\"gpaPremium\":null,\"gciPremium\":null,\"deductibleAmount\":null,\"gpPremium\":\"1332\",\"micrCode\":\"12345\",\"accType\":\"Primary\",\"bankAccountType\":\"saving\"},\"insuredDetails\":[{\"leadId\":\"155217345435\",\"salutation\":\"Mr\",\"firstName\":\"ARNASDA\",\"lastName\":\"BANKING\",\"gender\":\"M\",\"dob\":\"1988-12-19\",\"age\":\"35\",\"ageType\":\"years\",\"relationWithProposer\":\"Self\",\"relationCode\":\"R001\",\"tenure\":null,\"height\":\"5\",\"heightInch\":\"5\",\"weight\":\"66\"}],\"nomineeDetails\":{\"leadId\":\"155217345435\",\"NomineeSalutation\":\"Ms\",\"nomineeRelation\":\"spouse\",\"NomineeRelationCode\":\"R003\",\"nomineeFirstname\":\"ajsdjsag\",\"nomineeLastname\":\"aksndasd\",\"nomineeContactNumber\":\"9999999999\",\"nomineeAddress\":null,\"appointeeDOB\":null,\"appointeeName\":null,\"appointeeContactNo\":null,\"relationshipOfAppointeeWithNominee\":\"\",\"dateOfBirth\":\"2000-12-12\",\"defaultShare\":\"100\",\"nomineeGender\":\"F\"}}",
-                "isFinalSubmit": true,
-                "leadStatus": "SUBMITTED"
-            } 
-              let commonDraftRequest = {
-                leadId: this.bbdetails.leadId,
-                requestData: JSON.stringify(payloadObject),
-                isFinalSubmit: true,
-                leadStatus: "SUBMITTED"
-              }
-              this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
-                next: (res: any) => {
-                  console.log(res);
-                  let responseData = JSON.parse(res.data);
-                  if (responseData.isSuccess == true && responseData.statusCode == 200) {
-                    this.toast.success({ detail: "SUCCESS", summary: responseData.message, duration: 3000 });
-                    if (this.getFormIndexValue() < this.formSequence.length - 1) {
-                      this.incrementIndex();
-                      this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-                    }
-                  }else{
-                    this.toast.warning({ detail: "WARNING", summary: responseData.message, duration: 3000 });
-
+        console.log(reqData);
+        this.yatraService.Insertorupdateformdata(reqData).subscribe({
+          next: (res: any) => {
+            // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
+            console.log(res);
+            this.leadnumber = res.data;
+            if (res.isSuccess == true && res.statusCode == 200) {
+              this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 3000 });
+              if(this.getFormIndexValue() == 4){
+                const payloadObject = {
+                  proposerDetails: {
+                    leadId: this.bbdetails.leadId,
+                    customerId: this.bbdetails.customerId,
+                    salutation: "Mr",
+                    customerFirstName: this.bbdetails.customerFirstName,
+                    customerLastName: this.bbdetails.customerLastName,
+                    gender: this.bbdetails.proposerGender,
+                    dob: this.bbdetails.proposerDob,
+                    mobileNumber: this.bbdetails.proposerMobileNumber,
+                    panNumber: this.bbdetails.proposerPanNumber,
+                    emailAddress: this.bbdetails.proposerEmailAddress,
+                    address: this.bbdetails.proposerAddress,
+                    city: this.bbdetails.proposerCity,
+                    state: this.bbdetails.proposerState,
+                    pinCode: this.bbdetails.proposerPincode,
+                    isNRI: this.bbdetails.proposerIsNri,
+                    tenure: 1,
+                    sumInsured: this.bbdetails.sumInsured,
+                    premium: this.bbdetails.totalPremium,
+                    annualIncome: "",
+                    axisProductCode: this.bbdetails.axisProductCode,
+                    axisProductName: this.bbdetails.axisProductName,
+                    familyConstruct: this.bbdetails.familyConstruct,
+                    isAxisBankAccount: this.bbdetails.isAxisBankAccount,
+                    accountNumber: this.bbdetails.accountNumber,
+                    ifscCode: this.bbdetails.ifscCode,
+                    branchName: this.bbdetails.branchName,
+                    branchSolId: this.bbdetails.branchSolId,
+                    amount: "",
+                    isGoGreen: true,
+                    bankName: this.bbdetails.bankName,
+                    debitType: this.bbdetails.debitType || "",
+                    endDate: this.bbdetails.endDate || "",
+                    frequencyOfPayment: this.bbdetails.frequencyOfPayment || "",
+                    maskedAccountNo: "",
+                    paymentMode: this.bbdetails.paymentMode == "no" ? "paymentgateway" : "easyPay",
+                    startDate: this.bbdetails.startDate || "",
+                    idType: this.bbdetails.idType,
+                    idValue: this.bbdetails.idValue,
+                    occupationType: "",
+                    occupation: "",
+                    leadStatus: null,
+                    productCode: this.bbdetails.productCode,
+                    productName: this.bbdetails.productName,
+                    isSubmitted: true,
+                    isPayment: false,
+                    groupCode: this.bbdetails.groupCode,
+                    productPlanName: this.bbdetails.productPlanName,
+                    productPlanCode: this.bbdetails.productPlanCode,
+                    combiId: "10",
+                    combiName: null,
+                    familyConstructId: this.bbdetails.familyConstructId,
+                    ghiPremium: this.bbdetails.ghiPremium,
+                    gpaPremium: null,
+                    gciPremium: null,
+                    deductibleAmount: null,
+                    gpPremium: this.bbdetails.gpPremium,
+                    micrCode: this.bbdetails.micrCode,
+                    accType: this.bbdetails.accType == "primary" ? "Primary" : "Primary",
+                    bankAccountType: this.bbdetails.bankAccountType || "saving"
+                  },
+                  insuredDetails: this.bbdetails.insuredMemberDetails.map((member: any) => ({
+                    leadId: this.bbdetails.leadId,
+                    salutation: "Mr",
+                    firstName: member.firstName,
+                    lastName: member.lastName,
+                    gender: member.gender,
+                    dob: member.dob,
+                    age: member.age,
+                    ageType: "years",
+                    relationWithProposer: JSON.parse(member.relationshipType)?.name || member.relation,
+                    relationCode: JSON.parse(member.relationshipType)?.id || "",
+                    tenure: null,
+                    height: member.height || 0,
+                    heightInch: member.heightInches || null,
+                    weight: member.weight
+                  })),
+                  nomineeDetails: {
+                    leadId: this.bbdetails.leadId,
+                    NomineeSalutation: this.bbdetails.nomineeGender == "M" ? "Mr" : this.bbdetails.nomineeGender == "F" ? "Ms" : null, // Assuming not provided
+                    nomineeRelation: this.bbdetails.relationWithProposer || "son",
+                    NomineeRelationCode: "R003",
+                    nomineeFirstname: this.bbdetails.nomineeFirstName,
+                    nomineeLastname: this.bbdetails.nomineeLastName,
+                    nomineeContactNumber: this.bbdetails.nomineeMobileNumber,
+                    nomineeAddress: this.bbdetails.nomineeAddress || null,
+                    appointeeDOB: null,
+                    appointeeName: this.bbdetails.appointeeName || null,
+                    appointeeContactNo: this.bbdetails.appointeeMobileNumber || null,
+                    relationshipOfAppointeeWithNominee: this.bbdetails.relationWithNominee || "",
+                    dateOfBirth: this.bbdetails.nomineeDob,
+                    defaultShare: this.bbdetails.nomineeDefaultShare,
+                    nomineeGender: this.bbdetails.nomineeGender || null
                   }
-                },
-                error: (err) => {
-                  console.error(err);
+                };
+                console.log(payloadObject);
+                let testObj = {
+                  "leadId": "155217345435",
+                  "requestData": "{\"proposerDetails\":{\"leadId\":\"155217345435\",\"customerId\":\"260618000044\",\"salutation\":\"Mr\",\"customerFirstName\":\"ARNASDA\",\"customerLastName\":\"BANKING\",\"gender\":\"M\",\"dob\":\"1988-12-19\",\"mobileNumber\":\"9823901274\",\"panNumber\":\"DDDDD6456A\",\"emailAddress\":\"atul.shirwadkar1@adityabirlacapital.com\",\"address\":\"Om hrad ntalatiof, holOmshre, talathioficeeachol, OmshreeSada9talathi\",\"city\":\"MUMBAI\",\"state\":\"MAHARASHTRA\",\"pinCode\":\"45102\",\"isNRI\":\"N\",\"tenure\":1,\"sumInsured\":\"500000\",\"premium\":\"16997.00\",\"annualIncome\":\"\",\"axisProductCode\":\"2171\",\"axisProductName\":\"Freedom Plus Plan\",\"familyConstruct\":\"1A\",\"isAxisBankAccount\":true,\"accountNumber\":\"9170100000000329\",\"ifscCode\":\"UTIB0000016\",\"branchName\":\"Banglore\",\"branchSolId\":\"051\",\"amount\":\"\",\"isGoGreen\":true,\"bankName\":\"Axis Bank\",\"debitType\":\"\",\"endDate\":\"\",\"frequencyOfPayment\":\"\",\"maskedAccountNo\":\"\",\"paymentMode\":\"paymentgateway\",\"startDate\":\"\",\"idType\":\"Aadhar Card\",\"idValue\":\"5478-2589-3688\",\"occupationType\":\"\",\"occupation\":\"\",\"leadStatus\":null,\"productCode\":\"R03\",\"productName\":\"Freedom Plus Plan\",\"isSubmitted\":false,\"isPayment\":false,\"groupCode\":\"GRP001\",\"productPlanName\":\"GHI,GP\",\"productPlanCode\":\"22\",\"combiId\":\"10\",\"combiName\":null,\"familyConstructId\":\"1\",\"ghiPremium\":\"15665\",\"gpaPremium\":null,\"gciPremium\":null,\"deductibleAmount\":null,\"gpPremium\":\"1332\",\"micrCode\":\"12345\",\"accType\":\"Primary\",\"bankAccountType\":\"saving\"},\"insuredDetails\":[{\"leadId\":\"155217345435\",\"salutation\":\"Mr\",\"firstName\":\"ARNASDA\",\"lastName\":\"BANKING\",\"gender\":\"M\",\"dob\":\"1988-12-19\",\"age\":\"35\",\"ageType\":\"years\",\"relationWithProposer\":\"Self\",\"relationCode\":\"R001\",\"tenure\":null,\"height\":\"5\",\"heightInch\":\"5\",\"weight\":\"66\"}],\"nomineeDetails\":{\"leadId\":\"155217345435\",\"NomineeSalutation\":\"Ms\",\"nomineeRelation\":\"spouse\",\"NomineeRelationCode\":\"R003\",\"nomineeFirstname\":\"ajsdjsag\",\"nomineeLastname\":\"aksndasd\",\"nomineeContactNumber\":\"9999999999\",\"nomineeAddress\":null,\"appointeeDOB\":null,\"appointeeName\":null,\"appointeeContactNo\":null,\"relationshipOfAppointeeWithNominee\":\"\",\"dateOfBirth\":\"2000-12-12\",\"defaultShare\":\"100\",\"nomineeGender\":\"F\"}}",
+                  "isFinalSubmit": true,
+                  "leadStatus": "SUBMITTED"
+              } 
+                let commonDraftRequest = {
+                  leadId: this.bbdetails.leadId,
+                  requestData: JSON.stringify(payloadObject),
+                  isFinalSubmit: true,
+                  leadStatus: "SUBMITTED"
                 }
-              });
-            }else{
+                this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
+                  next: (res: any) => {
+                    console.log(res);
+                    let responseData = JSON.parse(res.data);
+                    if (responseData.isSuccess == true && responseData.statusCode == 200) {
+                      this.toast.success({ detail: "SUCCESS", summary: responseData.message, duration: 3000 });
+                      if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                        this.incrementIndex();
+                        this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                      }
+                    }else{
+                      this.toast.warning({ detail: "WARNING", summary: responseData.message, duration: 3000 });
+  
+                    }
+                  },
+                  error: (err) => {
+                    console.error(err);
+                  }
+                });
+              }else{
+                if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                  this.incrementIndex();
+                  this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                }
+              }
+            }
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+      }
+      else{
+        //https://usp.monocept.ai/api/v1/SaveBBCommonDraft
+        let commonDraftRequest = {
+          leadId: this.yatraService.policyDetails.proposerDetails.leadId,
+          requestData: JSON.stringify({      
+            proposerDetails: this.yatraService.policyDetails.proposerDetails,
+            insuredDetails:this.yatraService.policyDetails.insuredDetails,
+            nomineeDetails:this.yatraService.policyDetails.nomineeDetails
+          }),
+          isFinalSubmit: true,
+          leadStatus: "SUBMITTED"
+        }
+        this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
+          next: (res: any) => {
+            console.log(res);
+            if (res.isSuccess == true && res.statusCode == 200) {
+              this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
               if (this.getFormIndexValue() < this.formSequence.length - 1) {
                 this.incrementIndex();
                 this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                
               }
+    
             }
+    
+          },
+          error: (err) => {
+            console.error(err);
           }
-        },
-        error: (err) => {
-          console.error(err);
-        }
-      });
-    }
-    else{
-      //https://usp.monocept.ai/api/v1/SaveBBCommonDraft
-      let commonDraftRequest = {
-        leadId: this.yatraService.policyDetails.proposerDetails.leadId,
-        requestData: JSON.stringify({      
-          proposerDetails: this.yatraService.policyDetails.proposerDetails,
-          insuredDetails:this.yatraService.policyDetails.insuredDetails,
-          nomineeDetails:this.yatraService.policyDetails.nomineeDetails
-        }),
-        isFinalSubmit: true,
-        leadStatus: "SUBMITTED"
+        });
       }
-      this.yatraService.saveBBCommonDraft(commonDraftRequest).subscribe({
-        next: (res: any) => {
-          console.log(res);
-          if (res.isSuccess == true && res.statusCode == 200) {
-            this.toast.success({ detail: "SUCCESS", summary: res.statusMessage, duration: 3000 });
-            if (this.getFormIndexValue() < this.formSequence.length - 1) {
-              this.incrementIndex();
-              this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
-              
+    }
+    else {
+      console.log('Form is invalid', this.dynamicFormGroup);
+      let firstInvalidTabIndex: number | null = null;
+      if (this.dynamicFormGroup.get('insuredMemberDetails')) {
+        this.form.formSections.forEach(section => {
+          section.formControls.forEach(control => {
+            if (control.dynamicControls) {
+              control.dynamicControls.forEach((tabControls: any, tabIndex: number) => {
+                const formGroup = (this.dynamicFormGroup.get('insuredMemberDetails') as FormArray).controls.at(tabIndex); // Assuming tabIndex maps to form group
+                console.log(formGroup);
+                if (formGroup && formGroup.invalid && firstInvalidTabIndex === null) {
+                  firstInvalidTabIndex = tabIndex; // Capture the first invalid tab
+                }
+              })
             }
-  
-          }
-  
-        },
-        error: (err) => {
-          console.error(err);
+          })
+        })
+      }
+      Object.keys(this.dynamicFormGroup.controls).forEach(field => {
+        const control = this.dynamicFormGroup.get(field);
+        if (control instanceof FormArray) {
+          control.controls.forEach(arrayControl => {
+            if (arrayControl instanceof FormGroup) {
+              Object.keys(arrayControl.controls).forEach(nestedField => {
+                const nestedControl = arrayControl.get(nestedField);
+                nestedControl?.markAsTouched({ onlySelf: true });
+              });
+            } else {
+              arrayControl?.markAsTouched({ onlySelf: true });
+            }
+          });
+        }
+        else if (control instanceof FormGroup) {
+          control?.markAsDirty({ onlySelf: true });
+        }
+        else {
+          control?.markAsTouched({ onlySelf: true });
         }
       });
+      if (this.dynamicFormGroup.invalid) {
+        this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields", duration: 3000 });
+        if (firstInvalidTabIndex !== null) {
+          // Navigate to the first invalid tab
+          this.activeMemberTabIndex = firstInvalidTabIndex;
+          // this.changeDetectorRef.detectChanges(); // Ensure change detection syncs the tab
+        }
+      }
+      else if (this.dynamicFormGroup.get('nationality') && this.dynamicFormGroup.get('nationality')?.value !== 'Indian')
+        this.toast.warning({ detail: "WARNING", summary: "Indian residency is required", duration: 3000 })
     }
- 
-
   }
   filterRelationByName(relationName: string) {
     return this.nomineeRelations.filter((relation: any) => relation.relationName === relationName);
