@@ -64,6 +64,7 @@ export interface Root {
     payerName: string
     paymentBy: string
     PaymentGatewayName: string
+    tenure:string
 }
 
 export interface InsuredMemberDetail {

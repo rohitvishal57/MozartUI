@@ -143,6 +143,33 @@
                                     </div>
                                 </div>
 
+                                <div *ngIf="control.type === 'banner'" [class]="control.class" class="banner-container">
+                                  <ng-container [formArrayName]="control.name">
+                                    <ng-container *ngFor="let allSubForm of control.dynamicControls; index as i">
+                                      <ng-container *ngIf="i > 0">
+                                        <ng-container [formGroupName]="i - 1">
+                                          <div class="col-md-4 banner-card">
+                                            <ng-container *ngFor="let subControl of allSubForm">
+                                              <ng-container *ngIf="subControl.visible !== false">
+                                                <div *ngIf="['text', 'email', 'password', 'number', 'date'].includes(subControl.type)"
+                                                  [class]="subControl.class" class="display-container" [hidden]="!subControl.visible">
+                                                  <label class="display_label" *ngIf="subControl.visibleLabel === true">
+                                                    {{ subControl.label?(subControl.label | translate):'' }}
+                                                    <span *ngIf="subControl.validators">*</span>
+                                                  </label>
+                                                  <input *ngIf="subControl.disabled" class="view_Text"
+                                                    formControlName="{{ subControl.name }}" [name]="subControl.name"
+                                                    [type]="subControl.type" readonly>
+                                                </div>
+                                              </ng-container>
+                                            </ng-container>
+                                          </div>
+                                        </ng-container>
+                                      </ng-container>
+                                    </ng-container>
+                                  </ng-container>
+                                </div>
+
                                 <!--type select/dropdown-->
                                 <div *ngIf="control.type==='select'" [class]="control.class" class="typecss"
                                     [hidden]="!control.visible">

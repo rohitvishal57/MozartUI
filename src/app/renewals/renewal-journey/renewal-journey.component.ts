@@ -8,13 +8,14 @@ import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubCont
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
-import { combinedForms, thankYou } from 'src/assets/styles/renewals-forms/combined_forms';
+import { combinedForms, thankYou,renewals_summary } from 'src/assets/styles/renewals-forms/combined_forms';
 import { renewals_lead } from 'src/assets/styles/renewals-forms/lead';
 import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
 import { payment } from 'src/assets/styles/renewals-forms/payment';
 import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
 import { RenewalsService } from '../renewals.service';
 import { active_health_covers } from 'src/assets/styles/renewals-forms/active_Health_covers';
+import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
 
 @Component({
   selector: 'app-renewal-journey',
@@ -2700,8 +2701,12 @@ export class RenewalJourneyComponent {
                 this.documentId = res.data.uploadResponse[0].globalId;
 
                 try {
+                  console.log(this.journeyProcess ? "await this.fullQuotation()" : "await this.getFullQuoteViaOfflinePayment()");
+                  
+                  this.journeyProcess ? await this.fullQuotation() : await this.getFullQuoteViaOfflinePayment();
+
                   // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
-                  await this.getFullQuoteViaOfflinePayment();
+                  // await this.getFullQuoteViaOfflinePayment();
                   resolve(); // Resolve the promise once everything completes
                 } catch (error) {
                   console.error("Error in full quote generation:", error);
@@ -2799,14 +2804,13 @@ export class RenewalJourneyComponent {
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
         (res:any)=>{
           if(res.isSuccess){
-            this.formData.policyNumber = res.data.policyNumber || null;
             this.formData.policyStatus = res.data.status || null;
             this.formData.quoteValidFromDate = res.data.policyStartDate || null;
             this.formData.quoteValidToDate = res.data.policyEndDate || null;
             this.formData.ReceiptNumber = res.data.receiptID || null;
             this.formData.customerId = res.data.customerId || null;
-            // this.incrementIndex();
-            // this.getFormDataFromFormSequence();
+            this.incrementIndex();
+            this.getFormDataFromFormSequence();
             
             // this.fullQuoteResponse=res.data;          
             // this.setSection('thankyou')
@@ -2824,6 +2828,14 @@ export class RenewalJourneyComponent {
           console.log("error is coming from fullquote api");
       })
     });
+  }
+
+  mergeMember(control: any) {
+    const a = Object.keys(this.formData.insuredMembers).filter(
+      key => this.formData.insuredMembers[key] === true
+    );
+    control.value = a;
+    console.log(control, this.formData, a);
   }
 
   getNomineeRelationShip(control: any) {
@@ -3192,5 +3204,214 @@ export class RenewalJourneyComponent {
       });
     });
     console.log(this.renewalFormGroup.value, this.formData);
+  }
+  jsonParse(string: any, extract: any) {
+    const value = JSON.parse(string);
+    return value[extract];
+  }
+
+  async mappedFormDataFullQuote(formData: any): Promise<Partial<Root>> {
+    const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
+    console.log(formData, this.covers);
+
+    const mappedData: Partial<Root> = {
+      agentCode: this.agentCode || '',
+      productName: formData?.productName || '',
+      productCode: formData?.productId || '',
+      planCode: formData?.planCode || '',
+      planName: formData?.productVariant || '',
+      proposalNum: this.proposalNum || '',
+      policyType: formData?.memberPolicyType || '',
+      businessType: formData?.typeOfBusiness || '',
+      insuredMemberDetails: formData?.insuredMemberDetails?.map((member: any, index: any) => {
+        return {
+          relation: member?.relation || '',
+          // memberrelationCode: this.jsonParse(member.relationshipType, 'id') || '',
+          memberSalutation: member?.preFix || '',
+          firstName: member?.firstName || '',
+          middleName: member?.middleName || '',
+          lastName: member?.lastName || '',
+          height: member?.height || '',
+          heightInInches: member?.heightInches || '',
+          weight: member?.weight || '',
+          memberdob: member?.memberDob || '',
+          emailId: member?.emailId || '',
+          mobileNumber: member?.mobileNumber || '',
+          // memberNationality: this.jsonParse(formData.nationality, 'name') || '',
+          relationshipType: member.relation || '',
+          memberAge: this.calculateAge(member?.memberDob) || '',
+          memberGender: member?.memberGender || '',
+          // memberPincode: member?.pincode || '',
+          // preExistingDisease: member?.preExistingDisease || '',
+          // memberIndex: member.memberIndex || '',
+          // zone: member?.zone || '',
+          // zoneValue: member?.zoneValue || '',
+          // state: member?.state || '',
+          // city: member?.city || '',
+          memberType: member?.memberType || '',
+          memberSumInsured: member?.sumInsured || '',
+          // memberZone: member?.zoneValue || '',
+          memberNatureOfDuty: member?.natureOfDuty || '',
+          memberDesignation: member?.designation || '',
+          memberOccupation: member?.occupation || '',
+          covers: this.covers[index] || [],
+          // memberRoomCategory: member?.memberRoomCategory || ''
+        };
+      }) || [],
+      CKYCNo: this.formData?.ckycNo || '',
+      // QuoteId: formData?.quoteId || '',
+      // LeadId: formData?.leadNumber || '',
+      proposerSalutation: formData?.preFix || '',
+      proposerFirstName: formData?.firstName || '',
+      proposerMiddleName: formData?.middleName || '',
+      proposerLastName: formData?.lastName || '',
+      proposerDob: formData?.memberDobProposer || '',
+      proposerAge: formData?.memberAgeProposer || '',
+      proposerGender: formData?.proposerGender || '',
+      proposerMobileNumber: formData?.mobileNumber || '',
+      proposerWhatsAppNo: formData?.whatsappNo || formData?.mobileNumber,
+      proposerAddress1: formData?.proposerAddress1 || '',
+      proposerAddress2: formData?.proposerAddress2 || '',
+      proposerCity: formData?.city || '',
+      proposerState: formData?.state || '',
+      proposerEmailId: formData?.emailId || '',
+      proposerPincode: formData?.proposerPincode || '',
+      // idProof: this.jsonParse(formData?.idProof, 'value') || '',
+      // idNo: formData?.idNo || '',
+      proposerAnnualIncome: formData?.annualIncome || '',
+      proposerOccupation: formData?.occupation|| '',
+      // proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
+      // proposerPANNo: formData?.panNo || '',
+      // gstDetails: formData?.gstDetails || '',
+      // proposerMaritalStatus: this.jsonParse(formData?.maritalStatus, 'value') || '',
+      // ifPEP: formData?.isPep || '',
+      // proposerNationality: this.jsonParse(formData.nationality, 'name') || '',
+      nomineeFirstName: formData?.nomineeFirstName || '',
+      nomineeMidleName: formData?.nomineeMiddleName || '',
+      nomineeLastName: formData?.nomineeLastName || '',
+      nomineeRelation: formData?.nomineeRelationWithProposer || '',
+      nomineeRelationCode: formData?.nomineeRelationWithProposer || '',
+      nomineeContactNumber: formData?.nomineeContactNo || '',
+      nomineeAddress: formData?.nomineeAddress || '',
+      nomineeDob: formData?.nomineeDob || '',
+      nomineeAge: nomineeAge || '',
+      NameofAccountHolder: formData?.firstName || '',
+      accountNumber: formData?.accountNumber || '',
+      accountType: formData?.accountType || '',
+      bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
+      bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
+      paymentMode: this.selectedButton || '',
+      chequeNumber: formData?.chequeNumber || '',
+      chequeDate: formData?.chequeDate || '',
+      bankName: this.formData?.bankName || '',
+      ifscCode: formData?.ifscCode || '',
+      micrNo: formData?.micrCode || '',
+      premiumAmount: formData?.totalPremium || '',
+      selectedTenure: (parseInt(formData?.tenure)).toString() || '',
+      paymentDate: new Date().toISOString().split("T")[0] as any || '',
+      paymentCollectionMode: formData.paymentOption || '',
+      paymentByRelationship: 'Self',
+      payerName: formData?.accountHolderName || '',
+      paymentBy: 'customer',
+      PaymentGatewayName: formData?.PaymentGatewayName || '',
+      // tenure: formData?.tenure,
+    };
+
+    return mappedData;
+  }
+
+  async fullQuotation(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // this.spinner.show();
+      console.log("beforeMap",this.formData);
+
+      this.mappedFormDataFullQuote(this.formData)
+        .then((data) => {
+          console.log("mapped Data",data);
+
+          const reqData: any = {
+            agentCode: this.agentCode,
+            productId: this.formData.productId,
+            productType: this.formData.productType,
+            fullQuoteRequestJson: JSON.stringify(data)
+          }
+          console.log("reqData",reqData);
+
+
+          this.yatraService.getFullQuote(reqData).subscribe({
+            next: (response: any) => {
+              console.log(response);
+
+              if (response?.isSuccess) {
+                const responseData = response.data;
+
+                // Setting response data to formData
+                // this.formData.policyNumber = responseData.policyNumber || null;
+                this.formData.policyStatus = responseData.policyStatus || null;
+                this.formData.quoteValidFromDate = responseData.policyStartDate || null;
+                this.formData.quoteValidToDate = responseData.policyEndDate || null;
+                this.formData.ReceiptNumber = responseData.receiptNumber || null;
+                this.formData.customerId = responseData.customerId || null;
+
+                console.log(this.renewalFormGroup.value);
+
+                // Merging updated formData with dynamicFormGroup values
+                this.formData = { ...this.formData, ...this.renewalFormGroup.value };
+
+                // Encrypting and saving formData to session storage
+                sessionStorage.setItem("allFormData", this.encryptionService.encrypt(this.formData));
+
+                // Showing success toast
+                this.toast.success({
+                  detail: "SUCCESS",
+                  summary: `Full Quotation Generated Successfully. Customer ID: ${this.formData.customerId}`,
+                  duration: 3000,
+                });
+
+                resolve(); // Allow navigation
+              } else {
+                const errorMessage =
+                  response.message
+                console.log(errorMessage);
+                // Showing error toast
+                this.toast.error({
+                  detail: "ERROR",
+                  summary: errorMessage,
+                  duration: 5000,
+                });
+
+                console.error("Full Quote generation failed:", response);
+                reject(new Error(errorMessage)); // Prevent navigation
+              }
+            },
+            error: (err) => {
+              // this.spinner.hide();
+              console.error(err);
+
+              // Showing generic error toast for API failure
+              this.toast.error({
+                detail: "ERROR",
+                summary: "Something went wrong. Please try again.",
+                duration: 3000,
+              });
+
+              reject(err); // Reject the promise
+            },
+          });
+        })
+        .catch((err) => {
+          // this.spinner.hide();
+
+          // Showing error toast for mapping failure
+          this.toast.error({
+            detail: "ERROR",
+            summary: "Failed to map form data",
+            duration: 3000,
+          });
+
+          reject(err);
+        });      console.log("afterMap",this.formData);
+
+    });
   }
 }
