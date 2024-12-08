@@ -1488,8 +1488,11 @@ h2 {
     width: 30px;
     height: 30px;
     border-radius: 17px;
-    opacity: 0.8 !important;
+    opacity: 0.3 !important;
     top: 40%;
+    &:hover {
+        opacity: 0.8 !important;
+    }
 }
 .carousel-control-prev {
     left: -12px;
