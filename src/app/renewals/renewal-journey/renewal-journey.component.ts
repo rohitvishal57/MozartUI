@@ -251,6 +251,8 @@ export class RenewalJourneyComponent {
               this.renewalFormGroup.addControl(control.name, this.initializeSubControls(control.subControls.slice(2)));
             }
             else if (control.type == 'combinedCheckbox') {
+              console.log(control.name);
+              
               control.subControls.forEach((subControl: ISubControl) => {
                 if (subControl.name == 'addOnDetails') {
                   const addOnId = control.subControls?.find(sub => sub.name === 'addOnId')?.value;
@@ -273,7 +275,9 @@ export class RenewalJourneyComponent {
 
 
                   this.formData['insuredMemberDetails'].forEach((member: any) => {
-                    const matchingCover = member.covers.find((cover: any) => cover.coverId === addOnId);
+                    let matchingCover;
+                    if(member.covers)
+                    matchingCover = member.covers.find((cover: any) => cover.coverId === addOnId);
 
 
                     if (matchingCover) {
@@ -391,14 +395,14 @@ export class RenewalJourneyComponent {
             //   });
             //   this.renewalFormGroup.addControl(control.name, controlGroup);
             // }
-            // if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
-            //   if (control.otherControlName) {
-            //     this.callMethod(control.methodName, control, section)
-            //   }
-            //   else {
-            //     this.resolveMethod(control.methodName, control)
-            //   }
-            // }
+            if (['text', 'email', 'password', 'number', 'date', 'summary'].includes(control.type) && control.methodName) {
+              if (control.otherControlName) {
+                this.callMethod(control.methodName, control, section)
+              }
+              else {
+                this.resolveMethod(control.methodName, control)
+              }
+            }
             if (control.type === 'select' && control.options) {
               // Call the method to get all options if defined and options array is empty
               if (control.getAllOption && control.options.length === 0) {
@@ -817,7 +821,7 @@ export class RenewalJourneyComponent {
     this.collapsedSections[sectionTitle] = !this.collapsedSections[sectionTitle];
   }
 
-  onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
+  async onInputChange(event: any, control: any, parentControl: any = null, index: any = null, subControl: any = null, innerControl: any = null, indexj: any = null) {
     console.log('still working');
 
 
@@ -837,6 +841,68 @@ export class RenewalJourneyComponent {
       console.log(innerControl.dependentControls, event.target.checked, control, parentControl, index, innerControl);
       this.changeMainFormDependentControls(innerControl.dependentControls, event.target.checked, control.name, parentControl.name, index, innerControl.name);
       this.changeOverLayDone(control, parentControl, false);
+    }
+
+    if (parentControl == null && control.name == 'proposerPincode') {
+
+      const pinCodeLength = this.renewalFormGroup.get('proposerPincode')?.value.length || 0;
+
+      if (pinCodeLength === 6) {
+        const reqData = {
+          "pincode": event.target.value
+        }
+
+        this.commonService.getPinCodeByCity(reqData).subscribe({
+          next: (res) => {
+            console.log(res);
+            if (res.isSuccess && res.data) {
+              // Update city and state fields
+              this.renewalFormGroup.get('city')?.setValue(res.data.city || '');
+              this.renewalFormGroup.get('state')?.setValue(res.data.state || '');
+
+              const zoneControl = this.renewalFormGroup.get('zone');
+              const zoneControlValue = this.renewalFormGroup.get('zoneValue');
+              if (zoneControl) {
+                zoneControl.setValue(res.data.zone || '');
+              }
+              // zoneControl.enable();
+              if (zoneControlValue) {
+                zoneControlValue.setValue(res.data.zoneValue);
+                this.form.formSections.forEach((section: any) => {
+                  section.formControls.forEach((control: any) => {
+                    if (control.name === 'zoneValue') {
+                      control.options = [];
+                      res.data.upgradableZones?.forEach((zoneOption: any) => {
+                        control.options.push({
+                          name: zoneOption.zone,
+                          value: zoneOption.zoneCode
+                        });
+                      });
+                      // control.visible = true;
+                    }
+                  });
+                });
+              }
+
+
+            } else {
+              console.error('Failed to fetch zone details.');
+              this.resetZoneAndLocationFields();
+            }
+          },
+          error: (err: any) => {
+            console.error('Error fetching zone details:', err);
+            this.resetZoneAndLocationFields();
+          }
+        });
+      } else {
+        this.resetZoneAndLocationFields();
+      }
+
+    }
+
+    if(control.onChangeMethod && control.type == 'date'){
+      await this.resolveMethod(control.methodName,control,event.target.value);
     }
 
   }
@@ -3413,5 +3479,32 @@ export class RenewalJourneyComponent {
         });      console.log("afterMap",this.formData);
 
     });
+  }
+
+  resetZoneAndLocationFields() {
+    this.renewalFormGroup.get('city')?.setValue('');
+    this.renewalFormGroup.get('state')?.setValue('');
+    this.renewalFormGroup.get('zone')?.disable();
+    this.renewalFormGroup.get('zone')?.setValue('');
+    this.form.formSections.forEach((section: any) => {
+      section.formControls.forEach((control: any) => {
+        if (control.name === 'zoneValue') {
+          control.options = [];
+        }
+      });
+    });
+  }
+
+  checkNomineeAge(control:any,nomineeDob: any = null){
+
+    if(nomineeDob == null){
+      nomineeDob=this.formData.nomineeDob
+    }
+    if (Number(this.calculateAge(nomineeDob)) < 18) {
+      this.changeMainFormDependentControls(control.dependentControls,true);
+    }
+    else{
+      this.changeMainFormDependentControls(control.dependentControls,false);
+    }
   }
 }

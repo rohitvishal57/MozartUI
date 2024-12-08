@@ -61,7 +61,7 @@ export const new_combinedForms = {
             "disabled": true,
             "visible": true,
             "value": "",
-            "class": "col-12 col-md-6 col-lg-3",
+            "class": "col-12 col-md-6 col-lg-4",
           },
           {
             "name": "memberDobProposer",
@@ -70,7 +70,7 @@ export const new_combinedForms = {
             "visibleLabel": true,
             "type": "date",
             "value": "",
-            "class": "col-12 col-md-6 col-lg-3",
+            "class": "col-12 col-md-6 col-lg-4",
             "disabled": true,
           },
           {
@@ -80,7 +80,7 @@ export const new_combinedForms = {
             "type": "text",
             "value": "",
             "visible": true,
-            "class": "col-12 col-md-6 col-lg-6",
+            "class": "col-12 col-md-6 col-lg-4",
             "validators": [
               {
                 "validatorName": "required",
@@ -95,35 +95,6 @@ export const new_combinedForms = {
             "type": "text",
             "value": "",
             "visible": true,
-            "class": "col-12 col-md-6 col-lg-6"
-          },
-          {
-            "name": "country",
-            "label": "Country",
-            "visibleLabel": true,
-            "type": "text",
-            "value": "",
-            "visible": false,
-            "class": "col-12 col-md-6 col-lg-4"
-          },
-          {
-            "name": "city",
-            "label": "City",
-            "class": "col-12 col-md-6 col-lg-4",
-            "disabled": false,
-            "visible": true,
-            "visibleLabel": true,
-            "value": "",
-            "type": "text"
-          },
-          {
-            "name": "state",
-            "label": "State",
-            "visibleLabel": true,
-            "type": "text",
-            "value": "",
-            "visible": true,
-            "disabled": false,
             "class": "col-12 col-md-6 col-lg-4"
           },
           {
@@ -148,32 +119,44 @@ export const new_combinedForms = {
             ]
           },
           {
+            "name": "country",
+            "label": "Country",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "visible": false,
+            "class": "col-12 col-md-6 col-lg-4"
+          },
+          {
+            "name": "city",
+            "label": "City",
+            "class": "col-12 col-md-6 col-lg-4",
+            "disabled": true,
+            "visible": true,
+            "visibleLabel": true,
+            "value": "",
+            "type": "text"
+          },
+          {
+            "name": "state",
+            "label": "State",
+            "visibleLabel": true,
+            "type": "text",
+            "value": "",
+            "visible": true,
+            "disabled": true,
+            "class": "col-12 col-md-6 col-lg-4"
+          },
+          {
             "name": "memberPolicyType",
             "label": "Select Policy Type",
             "visibleLabel": true,
             "visible": false,
-            "type": "select",
-            "dependentControls": [
-              "sumInsured",
-              "zone"
-            ],
-            "onChangeMethod": "handlePolicyTypeChange",
+            "type": "text",
             "methodName": "handlePolicyTypeChange",
             "disabled": true,
             "value": "",
-            "class": "col-12 col-md-6 col-lg-4",
-            "options": [
-              {
-                "name": "FAMILY FLOATER",
-                "value": "Family Floater",
-                "selected": false
-              },
-              {
-                "name": "MULTI INDIVIDUAL",
-                "value": "Multi Individual",
-                "selected": true
-              }
-            ]
+            "class": "col-12 col-md-6 col-lg-4"
           },
           {
             "name": "horizontalLine",
@@ -605,6 +588,15 @@ export const new_combinedForms = {
                   "disabled": false,
                   "options": []
                 },
+                {
+                    "name": "covers",
+                    "label": "Add On Covers",
+                    "visibleLabel": false,
+                    "type": "text",
+                    "value": "",
+                    "class": "",
+                    "visible": false
+                  }
               ]
             ]
           }
@@ -682,6 +674,9 @@ export const new_combinedForms = {
             "visibleLabel": true,
             "visible": true,
             "type": "date",
+            "dependentControls":['appointeeName','appointeeAge'],
+            "methodName": "checkNomineeAge",
+            "onChangeMethod": "checkNomineeAge",
             "value": "",
             "class": "col-12 col-md-6 col-lg-4",
             "validators": [
@@ -865,7 +860,7 @@ export const new_combinedForms = {
         "class": "section-title",
         "formControls": [
           {
-            "name": "firstName",
+            "name": "proposerName",
             "label": "Account Holder Name",
             "visibleLabel": true,
             "type": "text",
