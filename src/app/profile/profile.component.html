@@ -20,17 +20,20 @@
                                                             <div class="userProfilePic">
                                                                 <img src="../../assets/images/img_profile.png" />
                                                             </div>
-                                                          <!-- <div>
-                        My Hierarachy/ Escalation matrics/ Support 
-                        <button type="submit" id="save" name="save" class="btn_red" style="padding: 1px 16px;">{{"L1"}}</button> 
-                        <button type="submit" id="save" name="save" class="btn_red" style="padding: 1px 16px;">{{"L2"}}</button> 
-                      </div> -->
-                  </div>
-                                                       
-               
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                            <div class="userProfile_qrCode">
-                                                                <!--<img src="../../assets/Img/QR_Code_Section.png" />-->
+                                                            <div>
+                                                                <!-- My Hierarachy/ Escalation matrics/ Support
+                                                                <button type="submit" id="save" name="save"
+                                                                    class="btn_red"
+                                                                    style="padding: 1px 16px;">{{"L1"}}</button>
+                                                                <button type="submit" id="save" name="save"
+                                                                    class="btn_red"
+                                                                    style="padding: 1px 16px;">{{"L2"}}</button> -->
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                            <!-- <div class="userProfile_qrCode">
                                                                 <div class="img_qrCode">
                                                                     <img src="../../assets/Img/img_QR_code.png" />
                                                                 </div>
@@ -53,7 +56,17 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            </div> -->
+
+                                                            <div class="language-selector" tabindex="0">
+                                                                <select class="dropdown" [(ngModel)]="selectedLanguage">
+                                                                     <option value="pl">{{"preferred Language" | translate}}</option>
+                                                                  <option value="en">English</option>
+                                                                  <option value="hi">हिंदी</option>
+                                                                  <option value="te">తెలుగు</option>
+                                                                </select>
+                                                                <button class="btn btn-danger btn_slectedLang" (click)="saveLanguage()">{{"Save" | translate}}</button>
+                                                              </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -66,7 +79,7 @@
                                                                             src="../../assets/images/{{pr.icon}}.png" />
                                                                     </div>
                                                                     <div class="details_userProfile">
-                                                                        <label>{{pr.heading}}</label>
+                                                                        <label>{{pr.heading | translate}}</label>
                                                                         <h6><span title={{pr.value}}>{{pr.value}}</span>
                                                                         </h6>
                                                                     </div>
@@ -168,19 +181,19 @@
                                                     <h4 id="lbl_lebel"><span>{{EDetails.level}}</span></h4>
                                                     <ul class="list-detailsInfo">
                                                         <li>
-                                                            <span class="label">First Name :</span>
+                                                            <span class="label">{{"First Name" | translate}} :</span>
                                                             <span class="value membername">{{EDetails.firstName}}</span>
                                                         </li>
                                                         <li>
-                                                            <span class="label">Last Name :</span>
+                                                            <span class="label">{{"Last Name" | translate}} :</span>
                                                             <span class="value">{{EDetails.lastName}}</span>
                                                         </li>
                                                         <li>
-                                                            <span class="label">Email Id :</span>
+                                                            <span class="label">{{"Email Id" | translate}} :</span>
                                                             <span class="value">{{EDetails.emailId}}</span>
                                                         </li>
                                                         <li>
-                                                            <span class="label">Mobile Number :</span>
+                                                            <span class="label">{{"Mobile Number" | translate}} :</span>
                                                             <span class="value">{{EDetails.mobileNumber}}</span>
                                                         </li>
 

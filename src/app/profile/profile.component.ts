@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit {
   profileDetails: any;
   EcalatinDetails: any[] = [];
   showmsg: boolean = false;
-
+  selectedLanguage: string = 'pl';
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
@@ -117,6 +117,11 @@ export class ProfileComponent implements OnInit {
         break;
     }
   }
+  saveLanguage() {
+    localStorage.setItem('selectedLanguage', this.selectedLanguage);
+    console.log("selectedLanguage", this.selectedLanguage);
+  }
+
   getEscalationMatrixDetails() {
     let reqObj = {
       // agentCode: "ABH1162569"

@@ -511,3 +511,30 @@
     color: #db6565;
     font-weight: 500;
 }
+.btn_slectedLang{
+  font-family: "Anek Latin", sans-serif;
+  background-color: #C7222A;
+  color: white;
+  border: none;
+  padding: 3px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-left: 15px;
+  gap:10px;
+  font-weight: 500;
+  font-size: 16px;
+}
+.language-selector{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  padding: 10px 20px;
+  
+}
+.dropdown{
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  padding: 5px 20px;
+  border-radius: 8px;
+}
