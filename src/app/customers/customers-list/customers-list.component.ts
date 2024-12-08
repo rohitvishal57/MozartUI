@@ -52,7 +52,6 @@ export class CustomersListComponent {
   policyNumber: string | null = null;
   customerID: string | null = null;
   customerBasicDetails: any;
-  customerProductDetails: any;
   customerClaimDetails: any[]=[];
   customerEndorsementDetails: any[]=[];
   customerInsuredDetails: any[]=[];
@@ -465,24 +464,6 @@ getCustomerBasicDetails() {
       }
     );
   }
-  getCustomerProductDetails() {
-    this.commonInfo=[];
-    this.customerService.getCustomerProductDetailsApi(this.policyNumber).subscribe(
-      (res: any) => {
-        if (res.isSuccess && res.data) {
-          this.customerProductDetails = res.data;  
-          this.commonInfo=res.data;        
-        } else {
-          this.toast.error({ detail: "", summary: res.message || "Failed to get customer Product Details.", duration: 2000 });
-          this.customerProductDetails = null;
-        }
-      },
-      (err: any) => {
-        this.toast.error({ detail: "", summary: err.message || "Error while getting customer Product Details.", duration: 2000 });
-        this.customerProductDetails = null;
-      }
-    );
-  }
   getCustomerInsuredDetails() {
     this.commonInfo=[];
     this.customerService.getCustomerInsuredDetailsApi(this.policyNumber).subscribe(
@@ -554,9 +535,6 @@ getCustomerBasicDetails() {
   this.selectedFilter=type
   if(type=='basicDetails'){
     this.getCustomerBasicDetails();
-  }
-  else if(type=='productDetails'){
-    this.getCustomerProductDetails();
   }
   else if(type=='insuredDetails'){
     this.getCustomerInsuredDetails();

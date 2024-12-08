@@ -150,7 +150,7 @@
                                             <tbody class="table-group-divider">
                                                 <tr *ngFor="let policy of row.policyDetails">
                                                     <td>{{ policy.policyNumber ? policy.policyNumber : '-' }}</td>
-                                                    <td>{{ policy.productVariantName }}</td>
+                                                    <td>{{ policy.productVariantName }} </td>
                                                     <td>{{ policy.policyType }}</td>
                                                     <td>{{policy.noOfInsured}}</td>
                                                     <td>{{policy.sumInsured}}</td>
@@ -391,300 +391,237 @@
               {{"Customer Policy Details" | translate}}
             </h3>
             <div class="accordionMain" *ngIf="customerBasicDetails">
-                <div class="accordionItem">
-                    <header>{{ customerBasicDetails?.customerName }} ({{ customerBasicDetails?.policyNo }})</header>
-                    <div class="accordionBody">
-                        <div class="accordionBodyRow">
-                            <div class="data-row">
-                                <div class="data-item">
-                                    <label>{{ "Member ID" | translate }}</label>
-                                    <h6>{{ customerBasicDetails.customerID || "-" }}</h6>
-                                </div>
-                                <div class="data-item">
-                                    <label>{{ "Email ID" | translate }}</label>
-                                    <h6>
-                                      {{ customerBasicDetails.emailID || "-" }}
-                                    </h6>
-                                </div>
-                                <div class="data-item">
-                                    <label>{{"Mobile Number" | translate}}</label>
-                                    <h6>{{ customerBasicDetails.mobileNo || "-" }}</h6>
-                                </div>
-                                <div class="data-item">
-                                    <label>{{"Status" | translate}}</label>
-                                    <h6 class="info_status">{{ customerBasicDetails.policyStatus || "-" }}</h6>
-                                </div>
-                                <div class="data-item justify-content-center align-items-center">
-                                    <div class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(customerBasicDetails.policyNo)">
-                                        <a class="btn_iconText">
-                                            <img src="assets/Img/icon_download_grey.svg" class="icon_download" alt="Download">
-                                            <span>{{"Download Policy Kit" | translate}}</span>
-                                        </a>
-                                    </div>
-                                </div>
+              <div class="accordionItem">
+                <header>{{ customerBasicDetails?.customerName }} ({{ customerBasicDetails?.policyNo }})</header>
+                <div class="accordionBody">
+                  <div class="accordionBodyRow">
+                    <div class="data-row">
+                      <div class="data-item">
+                        <label>{{ "Member ID" | translate }}</label>
+                        <h6>{{ customerBasicDetails.customerID || "-" }}</h6>
+                      </div>
+                      <div class="data-item">
+                        <label>{{"Product Name" | translate}}</label>
+                        <h6>{{ customerBasicDetails.productVariantName || '-' }}</h6>
+                      </div>
+                      <div class="data-item">
+                        <label>{{"Sum Insured" | translate}}</label>
+                        <h6>{{ customerBasicDetails.sumInsured || '-' }}</h6>
+                      </div>
+                      <div class="data-item">
+                        <label>{{"Premium" | translate}}</label>
+                        <h6>{{ customerBasicDetails.totalPremium || '-' }}</h6>
+                      </div>
+                      <div class="data-item">
+                        <label>{{"Insured Members" | translate}}</label>
+                        <h6>{{ customerBasicDetails.noOfInsured || '-' }}</h6>
+                      </div>
+                      <div class="userInfoItem userInfoItem-30">
+                        <div class="item_lable">{{"Status" | translate}}</div>
+                        <span
+                          class="info_status"
+                          [ngClass]="{
+                            'info_status_green': customerBasicDetails.policyStatus === 'IF' || customerBasicDetails.policyStatus === 'Inforced',
+                            'info_status_red': customerBasicDetails.policyStatus == 'RJ' || customerBasicDetails.policyStatus === 'Rejected' || customerBasicDetails.policyStatus !=='Inforced'
+                          }"
+                        >
+                          {{ customerBasicDetails.policyStatus }}
+                        </span>
+                      </div>
+                      <div class="data-item justify-content-center align-items-center">
+                        <div class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(customerBasicDetails.policyNo)">
+                            <a class="btn_iconText">
+                                <img src="assets/Img/icon_download_grey.svg" class="icon_download" alt="Download">
+                                <span>{{"Download Policy Kit" | translate}}</span>
+                            </a>
+                        </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <section class="white_container">
+              <div class="quickFilterMain p-0">
+                <div class="quickFilterLeft">
+                  <ul class="quickFilter">
+                    <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
+                    <li>
+                      <button type="button" id="allpolicies" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'basicDetails'}" (click)="fetchDetails('basicDetails')">{{"Basic Details" | translate}}</button>
+                    </li>
+                    <li>
+                      <button type="button" id="30days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'insuredDetails'}" (click)="fetchDetails('insuredDetails')">{{"Insured Details" | translate}}</button>
+                    </li>
+                    <li>
+                      <button type="button" id="60days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'claimDetails'}" (click)="fetchDetails('claimDetails')">{{"Claim Details" | translate}}</button>
+                    </li>
+                    <li>
+                      <button type="button" id="90days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'serviceRequests'}" (click)="fetchDetails('serviceRequests')">{{"Service Requests" | translate}}</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="block_bg_lightGrey memberPoliySummary" *ngIf="selectedFilter === 'basicDetails' && customerBasicDetails">
+                <div class="row mt-2">
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Policy Number" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyNo || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Term" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyTerm || "-"}} Year(s)</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Policy Type" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyType || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Start Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyStartDate || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Renewal Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.renewalDate || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "End Date" | translate }}</label>
+                        <h6>{{ customerBasicDetails.policyEndDate || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Intermediary Name" | translate }}</label>
+                        <h6>{{ customerBasicDetails.intermediaryName || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Intermediary Code" | translate }}</label>
+                        <h6>{{ customerBasicDetails.intermediaryID || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Source" | translate }}</label>
+                        <h6>{{ customerBasicDetails.source || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Branch" | translate }}</label>
+                        <h6>{{ customerBasicDetails.branchofficename || "-"}}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{ "Email ID" | translate }}</label>
+                        <h6>{{ customerBasicDetails.emailID || "-" }}</h6>
+                    </div>
+                    <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
+                        <label>{{"Mobile Number" | translate}}</label>
+                        <h6>{{ customerBasicDetails.mobileNo || "-" }}</h6>
+                    </div>
+                </div>
+              </div>
+              <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'insuredDetails'">
+                <div class="cardViewWraper">
+                    <div class="cardViewItem" *ngFor="let member of customerInsuredDetails">
+                        <div class="cardViewBody">
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"First Name" | translate}}</div>
+                                <div class="item_value">{{ member.firstName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Middle Name" | translate}}</div>
+                                <div class="item_value">{{ member.middleName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Last Name" | translate}}</div>
+                                <div class="item_value">{{ member.lastName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Date Of Birth" | translate}}</div>
+                                <div class="item_value">{{ member.dateOfBirth | date:'dd-mm-yyyy' || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Gender" | translate}}</div>
+                                <div class="item_value">{{ member.gender || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Relation" | translate}}</div>
+                                <div class="item_value">{{ member.relation || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems ">
+                                <div class="item_lable">{{"Member ID" | translate}}</div>
+                                <div class="item_value">{{ member.memberId || '-' }}</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+              </div>
+              <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'claimDetails' && customerClaimDetails.length > 0">
+                <div class="cardViewWraper">
+                    <div class="cardViewItem" *ngFor="let claim of customerClaimDetails">
+                        <div class="cardViewBody">
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Claim Number" | translate}}</div>
+                                <div class="item_value">{{ claim.claimNo || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Member Name" | translate}}</div>
+                                <div class="item_value">{{ claim.memberName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Date" | translate}}</div>
+                                <div class="item_value">{{ claim.dateofClaim | date:'dd-mm-yyyy' || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Claim Amount" | translate}}</div>
+                                <div class="item_value">{{ claim.claimedAmount || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Approved Amount" | translate}}</div>
+                                <div class="item_value">{{ claim.approvedAmount !== null && claim.approvedAmount !== undefined ? claim.approvedAmount : '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems ">
+                                <div class="item_lable">{{"Status" | translate}}</div>
+                                <div class="item_value">{{ claim.claimStatus || '-' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'serviceRequests'">
+                <div class="cardViewWraper">
+                    <div class="cardViewItem" *ngFor="let service of customerEndorsementDetails">
+                        <div class="cardViewBody">
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Case Number" | translate}}</div>
+                                <div class="item_value">{{ service.caseNumber || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Member Name" | translate}}</div>
+                                <div class="item_value">{{ service.memberName || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Case Type" | translate}}</div>
+                                <div class="item_value">{{ service.caseType || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Case Subtype" | translate}}</div>
+                                <div class="item_value">{{ service.caseSubType || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems">
+                                <div class="item_lable">{{"Date" | translate}}</div>
+                                <div class="item_value">{{ service.requestedOn| date:'dd-mm-yyyy' || '-' }}</div>
+                            </div>
+                            <div class="cv_bodyItems ">
+                                <div class="item_lable">{{"Status" | translate}}</div>
+                                <div class="item_value">{{ service.PolicyStatus || '-' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="commonInfo.length == 0">
+                <div class="cardViewWraper">
+                    <div class="no_dataFound">
+                        <img src="assets/Img/img_no_data_found.svg" alt="No data found">
+                        <p>{{"No data found" | translate}}</p>
                     </div>
                 </div>
             </div>
-            <section class="white_container">
-                <!--Tabs start-->
-                <div class="quickFilterMain p-0">
-                    <div class="quickFilterLeft">
-                        <ul class="quickFilter">
-                            <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
-                            <li>
-                                <button type="button" id="allpolicies" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'basicDetails'}" (click)="fetchDetails('basicDetails')">{{"Basic Details" | translate}}</button>
-                            </li>
-                            <li>
-                                <button type="button" id="expired" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'productDetails'}" (click)="fetchDetails('productDetails')">{{"Product Details" | translate}}</button>
-                            </li>
-                            <li>
-                                <button type="button" id="30days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'insuredDetails'}" (click)="fetchDetails('insuredDetails')">{{"Insured Details" | translate}}</button>
-                            </li>
-                            <li>
-                                <button type="button" id="60days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'claimDetails'}" (click)="fetchDetails('claimDetails')">{{"Claim Details" | translate}}</button>
-                            </li>
-                            <li>
-                                <button type="button" id="90days" class="btn_quickFilter" [ngClass]="{'active': selectedFilter === 'serviceRequests'}" (click)="fetchDetails('serviceRequests')">{{"Service Requests" | translate}}</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <!--Tabs end-->
-                <!--Tabs:basicDetails start-->
-                <div class="block_bg_lightGrey memberPoliySummary" *ngIf="selectedFilter === 'basicDetails' && customerBasicDetails">
-                    <div class="row mt-2">
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Policy Number" | translate }}</label>
-                            <h6>{{ customerBasicDetails.policyNo || "-" }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Term" | translate }}</label>
-                            <h6>{{ customerBasicDetails.policyTerm || "-"}} Year(s)</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Policy Type" | translate }}</label>
-                            <h6>{{ customerBasicDetails.policyType || "-"}}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Start Date" | translate }}</label>
-                            <h6>{{ customerBasicDetails.policyStartDate || "-" }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Renewal Date" | translate }}</label>
-                            <h6>{{ customerBasicDetails.renewalDate || "-" }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "End Date" | translate }}</label>
-                            <h6>{{ customerBasicDetails.policyEndDate || "-"}}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Intermediary Name" | translate }}</label>
-                            <h6>{{ customerBasicDetails.intermediaryName || "-"}}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Intermediary Code" | translate }}</label>
-                            <h6>{{ customerBasicDetails.intermediaryID || "-"}}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Source" | translate }}</label>
-                            <h6>{{ customerBasicDetails.source || "-"}}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Branch" | translate }}</label>
-                            <h6>{{ customerBasicDetails.branchofficename || "-"}}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "SP" | translate }}</label>
-                            <h6>{{ customerBasicDetails.specfiedpersonname || '-' }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Ref code 1" | translate }}</label>
-                            <h6>{{ customerBasicDetails.refCode1 || '-' }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Ref Code 2" | translate }}</label>
-                            <h6>{{ customerBasicDetails.refCode2 || '-' }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{ "Employee Code" | translate }}</label>
-                            <h6>{{ customerBasicDetails.employeeCode || '-' }}</h6>
-                        </div>
-                    </div>
-                </div>
-                <!--Tabs:productDetails start-->
-                <div class="block_bg_lightGrey memberPoliySummary" *ngIf="selectedFilter === 'productDetails'&& customerProductDetails ">
-                    <div class="row mt-2">
-                        <header>
-                            <h3>Product Details</h3></header>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{"Product Name" | translate}}</label>
-                            <h6>{{ customerProductDetails.productVariantName || '-' }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{"Policy Type" | translate}}</label>
-                            <h6>{{ customerProductDetails.policyType || '-' }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{"Insured Members" | translate}}</label>
-                            <h6>{{ customerProductDetails.noOfInsured || '-' }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{"Quotation Number" | translate}}</label>
-                            <h6>{{ customerProductDetails.quotationNumber || '-' }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{"Quotation Date" | translate}}</label>
-                            <h6>{{ customerProductDetails.quotationDate  | date:'dd-mm-yyyy' || '-' }}</h6>
-                        </div>
-                        <div class="col-6 col-sm-12 col-md-6 col-lg-2 col-xl-2 data-item">
-                            <label>{{"Quotation Amount" | translate}}</label>
-                            <h6>₹{{ customerProductDetails.quotationAmount || '-' }}</h6>
-                        </div>
-                    </div>
-                </div>
-                <!--Tabs:insuredDetails start-->
-                <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'insuredDetails'">
-                    <div class="cardViewWraper">
-                        <div class="cardViewItem" *ngFor="let member of customerInsuredDetails">
-                            <div class="cardViewBody">
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"First Name" | translate}}</div>
-                                    <div class="item_value">{{ member.firstName || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Middle Name" | translate}}</div>
-                                    <div class="item_value">{{ member.middleName || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Last Name" | translate}}</div>
-                                    <div class="item_value">{{ member.lastName || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Date Of Birth" | translate}}</div>
-                                    <div class="item_value">{{ member.dateOfBirth | date:'dd-mm-yyyy' || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Gender" | translate}}</div>
-                                    <div class="item_value">{{ member.gender || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Relation" | translate}}</div>
-                                    <div class="item_value">{{ member.relation || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems ">
-                                    <div class="item_lable">{{"Member ID" | translate}}</div>
-                                    <div class="item_value">{{ member.memberId || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Is Proposer" | translate}}</div>
-                                    <div class="item_value">{{ member.isProposer }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Is Audit" | translate}}</div>
-                                    <div class="item_value">{{ member.isAdult }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Tabs:claimDetails start-->
-                <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'claimDetails' && customerClaimDetails.length > 0">
-                    <div class="cardViewWraper">
-                        <div class="cardViewItem" *ngFor="let claim of customerClaimDetails">
-                            <div class="cardViewBody">
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Claim Number" | translate}}</div>
-                                    <div class="item_value">{{ claim.claimNo || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Member Name" | translate}}</div>
-                                    <div class="item_value">{{ claim.memberName || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Date" | translate}}</div>
-                                    <div class="item_value">{{ claim.dateofClaim | date:'dd-mm-yyyy' || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Claim Amount" | translate}}</div>
-                                    <div class="item_value">{{ claim.claimedAmount || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Approved Amount" | translate}}</div>
-                                    <div class="item_value">{{ claim.approvedAmount !== null && claim.approvedAmount !== undefined ? claim.approvedAmount : '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems ">
-                                    <div class="item_lable">{{"Status" | translate}}</div>
-                                    <div class="item_value">{{ claim.claimStatus || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Is Proposer" | translate}}</div>
-                                    <div class="item_value">{{ claim.isProposer || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Is Audit" | translate}}</div>
-                                    <div class="item_value">{{ claim.isAudit || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Health Returns" | translate}}</div>
-                                    <div class="item_value">{{ claim.healthReturns || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Active Days" | translate}}</div>
-                                    <div class="item_value">{{ claim.activeDays || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Health Heart Score" | translate}}</div>
-                                    <div class="item_value">{{ claim.healthHeartScore || '-' }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Tabs:serviceRequests start-->
-                <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'serviceRequests'">
-                    <div class="cardViewWraper">
-                        <div class="cardViewItem" *ngFor="let service of customerEndorsementDetails">
-                            <div class="cardViewBody">
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Case Number" | translate}}</div>
-                                    <div class="item_value">{{ service.caseNumber || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Member Name" | translate}}</div>
-                                    <div class="item_value">{{ service.memberName || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Case Type" | translate}}</div>
-                                    <div class="item_value">{{ service.caseType || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Case Subtype" | translate}}</div>
-                                    <div class="item_value">{{ service.caseSubType || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems">
-                                    <div class="item_lable">{{"Date" | translate}}</div>
-                                    <div class="item_value">{{ service.requestedOn || '-' }}</div>
-                                </div>
-                                <div class="cv_bodyItems ">
-                                    <div class="item_lable">{{"Status" | translate}}</div>
-                                    <div class="item_value">{{ service.PolicyStatus || '-' }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--Tabs:No data found start-->
-                <div id="quotes-card" name="quotes-card" class="cardViewMain quoteView mobile-block" *ngIf="commonInfo.length == 0">
-                    <div class="cardViewWraper">
-                        <div class="no_dataFound">
-                            <img src="assets/Img/img_no_data_found.svg" alt="No data found">
-                            <p>{{"No data found" | translate}}</p>
-                        </div>
-                    </div>
-                </div>
             </section>
-        </div>
+          </div> 
     </div>
 </main>

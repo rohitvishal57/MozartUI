@@ -349,7 +349,7 @@ export class RenewalListComponent {
       case 'email':
         const emailRequestBody = {
           agentCode: this.agentCode,
-          emailId: "sona@gmail.com",
+          emailId:item.proposerEmail,
           mobile: item.proposerMobileNumber || "",
           eventName: "sending payment link to email",
           policyHolderFullName: item.proposerFirstName,
@@ -357,25 +357,29 @@ export class RenewalListComponent {
           dateOfRenewed: item.policyEndDate,
           dateOfRenewal: item.policyEndDate,
           grossRenewalPayable: item.renewalPremiumAmount.toString(),
-          renewalPaymentLink: "this is payment link",
+          renewalPaymentLink: "",
           attachment: {
-            flag: "string",
-            details: {
-              document: [
-                {
-                  key: "string",
-                  value: "string"
-                }
-              ]
+            "Flag": "1",
+            "Details": {
+                "Document": [
+                    {
+                        "Key": "2",
+                        "Value": item.policyNumber,
+                    },
+                    {
+                        "Key": "15",
+                        "Value": "RN_Notice"
+                    }
+                ]
             }
           }
         };
         this.renewalService.sendRenewalEmailApi(emailRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: response.message || "Renewal notice shared successfully.", duration: 1500 });
+              this.toast.success({ detail: "", summary: response.data.message || "Renewal notice shared successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "", summary: response.message || "Failed to send renewal notice.", duration: 1500 });
+              this.toast.error({ detail: "", summary: response.data.message || "Failed to send renewal notice.", duration: 1500 });
             }
           },
           (error: any) => {
@@ -409,10 +413,10 @@ export class RenewalListComponent {
           customerName: item.proposerFirstName,
           customerMobileNo: item.proposerMobileNumber || "",
           agentMobileNo: "",
-          eventName: "sending payment link to sms",
+          eventName: "sending payment link via sms",
           dueDate: "",
           dateOfRenewal: item.policyEndDate,
-          renewedPolicyNo: "",
+          renewedPolicyNo: item.policyNumber,
           proposalNumber: "",
           policyNumber: item.policyNumber,
           grossRenewalAmount: item.renewalPremiumAmount.toString(),
@@ -422,27 +426,27 @@ export class RenewalListComponent {
         this.renewalService.sendRenewalsmsApi(smsRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: response.message || "SMS sent successfully.", duration: 1500 });
+              this.toast.success({ detail: "", summary: response.data.message || "SMS sent successfully.", duration: 3000 });
             } else {
-              this.toast.error({ detail: "", summary: response.message || "Failed to send SMS.", duration: 1500 });
+              this.toast.error({ detail: "", summary: response.data.message || "Failed to send SMS.", duration: 3000 });
             }
           },
           (error: any) => {
-            this.toast.error({ detail: "", summary: "Error while sending SMS.", duration: 1500 });
+            this.toast.error({ detail: "", summary: "Error while sending SMS.", duration: 3000 });
           }
         );
         break;
       case 'whatsapp':
         const whatsAppRequestBody = {
-          templateCode: "DUE-CSTMR",
+          templateCode: item.renewalStatus === 'LAPSED' ? "DUE-CSTMR" : "GRC-AGNT",
           policyNumbers: [item.policyNumber]
         };
         this.renewalService.sendRenewalWhatsappApi(whatsAppRequestBody).subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              this.toast.success({ detail: "", summary: response.message || "WhatsApp message sent successfully.", duration: 1500 });
+              this.toast.success({ detail: "", summary: response.data.message || "WhatsApp message sent successfully.", duration: 1500 });
             } else {
-              this.toast.error({ detail: "", summary: response.message || "Failed to send Whasapp message.", duration: 1500 });
+              this.toast.error({ detail: "", summary: response.data.message || "Failed to send Whasapp message.", duration: 1500 });
             }
           },
           (error: any) => {
@@ -450,6 +454,10 @@ export class RenewalListComponent {
           }
         );
         break;
+
+
+
+
       default:
         console.warn('Unknown action:', event);
     }
