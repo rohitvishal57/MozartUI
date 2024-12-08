@@ -416,17 +416,18 @@
                         <label>{{"Insured Members" | translate}}</label>
                         <h6>{{ customerBasicDetails.noOfInsured || '-' }}</h6>
                       </div>
-                      <div class="userInfoItem userInfoItem-30">
-                        <div class="item_lable">{{"Status" | translate}}</div>
-                        <span
-                          class="info_status"
-                          [ngClass]="{
-                            'info_status_green': customerBasicDetails.policyStatus === 'IF' || customerBasicDetails.policyStatus === 'Inforced',
-                            'info_status_red': customerBasicDetails.policyStatus == 'RJ' || customerBasicDetails.policyStatus === 'Rejected' || customerBasicDetails.policyStatus !=='Inforced'
-                          }"
-                        >
-                          {{ customerBasicDetails.policyStatus }}
-                        </span>
+                      <div class="data-item userInfoItem">
+                          <label>{{"Status" | translate}}</label>
+                          <span
+                            class="info_status"
+                            [ngClass]="{
+                              'info_status_green': customerBasicDetails.policyStatus === 'IF' || customerBasicDetails.policyStatus === 'Inforced',
+                              'info_status_red': customerBasicDetails.policyStatus == 'RJ' || customerBasicDetails.policyStatus === 'Rejected' || customerBasicDetails.policyStatus !=='Inforced'
+                            }"
+                          >
+                            {{ customerBasicDetails.policyStatus }}
+                          </span>
+
                       </div>
                       <div class="data-item justify-content-center align-items-center">
                         <div class="actionItem" data-bs-toggle="modal" data-bs-target="#downloadModal" (click)="searchDocument(customerBasicDetails.policyNo)">
@@ -513,7 +514,7 @@
                     </div>
                 </div>
               </div>
-              <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'insuredDetails'">
+              <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'insuredDetails'">
                 <div class="cardViewWraper">
                     <div class="cardViewItem" *ngFor="let member of customerInsuredDetails">
                         <div class="cardViewBody">
@@ -549,7 +550,7 @@
                     </div>
                 </div>
               </div>
-              <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'claimDetails' && customerClaimDetails.length > 0">
+              <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'claimDetails' && customerClaimDetails.length > 0">
                 <div class="cardViewWraper">
                     <div class="cardViewItem" *ngFor="let claim of customerClaimDetails">
                         <div class="cardViewBody">
@@ -581,7 +582,7 @@
                     </div>
                 </div>
               </div>
-              <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'serviceRequests'">
+              <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'serviceRequests'">
                 <div class="cardViewWraper">
                     <div class="cardViewItem" *ngFor="let service of customerEndorsementDetails">
                         <div class="cardViewBody">
