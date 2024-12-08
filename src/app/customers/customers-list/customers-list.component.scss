@@ -356,7 +356,21 @@ h6 {
 	margin-top: 10px;
 	margin-bottom: 40px;
 }
-
+.customerGridView {
+	.cardViewWraper {
+		gap: 12px;
+		.cardViewItem {
+			box-shadow: 0px 4px 4px 0px #0000000A !important;
+			border: 1px solid #f1f3f6 !important;
+			.cardViewBody .cv_bodyItems {
+				line-height: normal;
+				.item_lable {
+					color: #a9aaad;
+				}
+			}
+		}
+	}
+}
 // .quickFilterMain {
 //     padding: 12px 18px;
 //     align-items: center;

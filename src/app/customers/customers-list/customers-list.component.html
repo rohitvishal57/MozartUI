@@ -361,20 +361,19 @@
             <div class="modal-dialog">
                 <div class="modal-content modal-bg-clr">
                     <div class="modal-header">
+                        <h2>Download Kit</h2>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div>
-                            <div>
-                                <h2>Download Kit</h2></div>
-                            <div>Select the data fields you wish to download.</div>
-                        </div>
-                        <div class="input-checkbox-feild" *ngFor="let document of documents">
-                            <input type="checkbox" [id]="'checkbox-' + document.omniDocImageIndex" [name]="'checkbox-' + document.omniDocImageIndex" [value]="document.omniDocImageIndex" [checked]="selectedDocument?.omniDocImageIndex === document.omniDocImageIndex" (change)="onDocumentSelectionChange(document, $event)"
-                            class="input-check" />
-                            <label [for]="'checkbox-' + document.omniDocImageIndex">
-                                {{ document.fileName || '-' }}
-                            </label>
+                            <p>Select the data fields you wish to download.</p>
+                            <div class="input-checkbox-feild" *ngFor="let document of documents">
+                                <input type="checkbox" [id]="'checkbox-' + document.omniDocImageIndex" [name]="'checkbox-' + document.omniDocImageIndex" [value]="document.omniDocImageIndex" [checked]="selectedDocument?.omniDocImageIndex === document.omniDocImageIndex" (change)="onDocumentSelectionChange(document, $event)"
+                                class="input-check" />
+                                <label [for]="'checkbox-' + document.omniDocImageIndex">
+                                    {{ document.fileName || '-' }}
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -428,7 +427,7 @@
             </div>
             <section class="white_container">
                 <!--Tabs start-->
-                <div class="quickFilterMain">
+                <div class="quickFilterMain p-0">
                     <div class="quickFilterLeft">
                         <ul class="quickFilter">
                             <li class="quickFilterHeading block-hide">{{"Quick filter" | translate}}</li>
@@ -544,7 +543,7 @@
                     </div>
                 </div>
                 <!--Tabs:insuredDetails start-->
-                <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'insuredDetails'">
+                <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'insuredDetails'">
                     <div class="cardViewWraper">
                         <div class="cardViewItem" *ngFor="let member of customerInsuredDetails">
                             <div class="cardViewBody">
@@ -589,7 +588,7 @@
                     </div>
                 </div>
                 <!--Tabs:claimDetails start-->
-                <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'claimDetails' && customerClaimDetails.length > 0">
+                <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'claimDetails' && customerClaimDetails.length > 0">
                     <div class="cardViewWraper">
                         <div class="cardViewItem" *ngFor="let claim of customerClaimDetails">
                             <div class="cardViewBody">
@@ -642,7 +641,7 @@
                     </div>
                 </div>
                 <!--Tabs:serviceRequests start-->
-                <div id="quotes-card" class="cardViewMain quoteView userGridView" *ngIf="selectedFilter === 'serviceRequests'">
+                <div id="quotes-card" class="cardViewMain quoteView userGridView customerGridView" *ngIf="selectedFilter === 'serviceRequests'">
                     <div class="cardViewWraper">
                         <div class="cardViewItem" *ngFor="let service of customerEndorsementDetails">
                             <div class="cardViewBody">
