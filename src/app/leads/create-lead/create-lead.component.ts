@@ -53,7 +53,7 @@ export class CreateLeadComponent implements OnInit {
   productsList: any = [];
   productSumInsured: any = [];
   occupationInfo : any;
-  zoneCode :any;
+  pincodeResponse : any='';
   proposalNumber : any = '';
   submitButton :  Boolean =  false;
   updateLeadFlag : Boolean =  false;
@@ -123,7 +123,6 @@ export class CreateLeadComponent implements OnInit {
 
   inItForm() {
     this.userValidations = this.formBuilder.group({
-      // campaignname: ['', Validators.required],
       leadType: [''],
       leadVintage: [''],
       source: [''],
@@ -140,7 +139,6 @@ export class CreateLeadComponent implements OnInit {
       gender: [''],
       maritalStatus: [''],
       numberOfKids: ['', [Validators.pattern('[0-9]*')]],
-      //occupation: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       occupation: [''],
       address1: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       education: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
@@ -149,6 +147,7 @@ export class CreateLeadComponent implements OnInit {
       city: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       state: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       pincode: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
+      zoneCode : [''],
       interestedProductName: [''],
       planType: [''],
       policyEndDate: [''],
@@ -158,7 +157,6 @@ export class CreateLeadComponent implements OnInit {
       familyConstruct: [''],
       policyType: [''],
       policyNumber: [null, [Validators.pattern('^[0-9a-zA-Z ,-./]*$')]],
-      //campaignname:  [''],
       campaignnumber: [''],
       leadnumber: [''],
       leadAssignee: [''],
@@ -249,7 +247,7 @@ export class CreateLeadComponent implements OnInit {
       age = Math.floor((timeDiff / (1000 * 3600 * 24)) / 365.25);
     }
     this.CreateLead.age = age.toString();
-    this.CreateLead.zone =  this.zoneCode;
+    this.CreateLead.zone =  this.userValidations.get('zoneCode')?.value;
     this.CreateLead.leadPriority  =this.userValidations.get('leadSubStatus')?.value;
 
     console.log('req data',this.CreateLead);
@@ -321,13 +319,13 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: this.submittedUser.isUpdate || 1,
       leadStatus : this.submittedUser?.leadStatus??'',
       interestedProductName: this.submittedUser?.interestedProductName??'',
-      leadSubStatus : this.submittedUser?.leadPriority??''
+      leadSubStatus : this.submittedUser?.leadPriority??'',
+      zoneCode : this.submittedUser?.zone??''
     });
     this.userValidations.get('firstname')?.disable();
     this.userValidations.get('mobilenumber')?.disable();
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
-    this.zoneCode = this.submittedUser?.zone ?? '';
     this.proposalNumber = this.submittedUser.proposalNumber;
     if(this.submittedUser?.leadStatus?.includes('In progress')){
       this.submitButton = true;
@@ -346,38 +344,6 @@ export class CreateLeadComponent implements OnInit {
         console.log("Failed to fetch ActivityType information : ", error);
       });
   }
-
-  // getReferenceStatus() {
-  //   this.leadsService.getReferenceStatus().subscribe(
-  //     (response: any) => {
-  //       console.log(response);
-  //       this.referenceStatus = response?.data;
-
-  //       if(this.submittedUser){
-  //         this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === this.submittedUser.leadStatus);
-  //         this.userValidations.patchValue({
-  //           leadSubStatus: this.submittedUser?.leadSubStatus??'',
-  //         });
-  //       }
-    
-  //     },
-  //     (error) => {
-  //       console.error("Error from getMyReportingUsers API:", error);
-  //     }
-  //   );
-  // }
-
-  // changeReferStatus(event: any) {
-  //   if (event) {
-  //     let selectedStatus = typeof (event) == 'string' ? event : event.target.value;
-  //     console.log('selectedStatus', selectedStatus);
-  //     this.referenceSubStatus = this.referenceStatus.find((status: any) => status.name === selectedStatus);
-  //     }
-  //     this.userValidations.patchValue({
-  //       leadSubStatus:'',
-  //     });
-
-  // }
 
   changeSumInsured(event: any) {
     if (event) {
@@ -552,14 +518,24 @@ export class CreateLeadComponent implements OnInit {
   }
 
   getZoneByPinCode(pincode: any) {
-    this.zoneCode ='';
     const reqData = {
       "pincode": pincode
     }
     this.common.getPinCodeByCity(reqData).subscribe(
       (response) => {
+        debugger;
         if(response?.isSuccess){
-         this.zoneCode = response?.data?.zone;
+         this.pincodeResponse = response?.data;         
+         this.userValidations.patchValue({
+          zoneCode: this.pincodeResponse?.zone ?? '',
+          city: this.pincodeResponse?.city ?? '',
+          state: this.pincodeResponse?.state ?? ''
+         });  
+         this.userValidations.get('zoneCode')?.disable();
+         this.userValidations.get('city')?.disable();
+         this.userValidations.get('state')?.disable();
+
+       
         }else{
           this.userValidations.get('pincode')?.setErrors({ incorrect: true  ,message : response?.message});
         }
