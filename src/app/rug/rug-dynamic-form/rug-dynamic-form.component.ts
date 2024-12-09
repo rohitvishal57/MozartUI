@@ -123,6 +123,7 @@ export class RugDynamicFormComponent {
   paramLeadId: any;
   policyDetails: any;
   filteredPolicies: any;
+  premiumArray:any = [];
   constructor(private dialog: MatDialog, private renderer: Renderer2, private el: ElementRef, private aesEncryptionService: AesEncryptionService,
     public commonService: CommonService, private yatraService: YatraService, private router: Router, private spinner: LoadingService,
     private toast: NgToastService, private changeDetectorRef: ChangeDetectorRef, private aesEncryptService: AesEncryptionService,
@@ -162,6 +163,43 @@ export class RugDynamicFormComponent {
           }
           console.log(this.formSequence[this.getFormIndexValue()].formName)
           console.log(this.paramLeadId.CurrentIndex)
+          if(this.paramLeadId.CurrentIndex == 4 && this.formSequence[this.getFormIndexValue()].formName == "Policy Details"){
+            let reqObj = {
+              "leadId": this.leadId
+            }
+            this.yatraService.getd2cPolicyInfoByLeadId(reqObj).subscribe({
+              next: (res: any) => {
+                console.log(res);
+                res = JSON.parse(res.data).data
+                console.log(res);
+                this.policyDetails = res;
+                console.log(this.policyDetails);
+                // this.filteredPolicies = this.policyDetails.policyDetails.filter(
+                //   (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
+                // );
+                
+                // console.log(this.filteredPolicies);
+
+                // console.log(this.dynamicFormGroup.value);
+                
+                // this.formData.members = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+                // this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
+                // this.formData.productName = this.filteredPolicies[0]?.productName || null;
+                // this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+                // this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
+                // this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
+                // // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
+                // this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+                
+                // console.log(this.dynamicFormGroup.value);
+
+                // Merging updated formData with dynamicFormGroup values
+              },
+              error: (err) => {
+                console.error(err);
+              }
+            });
+          }
           this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
           if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
             let reqObj = {
@@ -205,6 +243,7 @@ export class RugDynamicFormComponent {
           console.error(err);
         }
       } else {
+        this.leadId = localStorage.getItem('leadId');
         this.formSequence = history.state.formSequence;
         console.log(this.formSequence);
         if (history.state.productData.productId)
@@ -422,7 +461,7 @@ export class RugDynamicFormComponent {
         "partnerId": this.partnerId,
         "productId": this.productId,
         "formId": formId,
-        "proposalNum": this.leadId != undefined ? this.leadId : "300022",
+        "proposalNum": this.leadId != undefined ? this.leadId : "587263492",
         "agentCode": this.agentCode,
         "currentFormSequence": this.getFormIndexValue().toString()
       }
@@ -774,7 +813,7 @@ export class RugDynamicFormComponent {
       const insuredMemberDetailsArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
 
       // Iterate over bbdetails keys to patch the form
-      if(this.productId == 7){
+      if(this.productId == 7 || this.productId == 8){
         Object.keys(this.d2cDetails).forEach((key) => {
           if (key !== 'insuredMemberDetails') {
             // Check if the control exists and update its value
@@ -783,6 +822,17 @@ export class RugDynamicFormComponent {
             }
           }
         });
+        if(this.policyDetails)
+          this.policyDetails.policyDetails.forEach((item:any)=>{
+            Object.keys(item).forEach((key) => {
+                // Check if the control exists and update its value
+                if (this.dynamicFormGroup.contains(key)) {
+                  this.dynamicFormGroup.get(key)?.setValue(item[key]);
+                }
+              
+            });
+        })
+        
         // if(this.getFormIndexValue() == 0){
         //   this.d2cDetails.insuredMemberDetails.forEach((item: any, index: any) => {
         //     // const selfResult = this.centimetersToFeetAndInches(item.height);
@@ -944,7 +994,7 @@ export class RugDynamicFormComponent {
       if(this.formSequence[this.getFormIndexValue()].formId == 5 && this.formSequence[this.getFormIndexValue()].formName == "Health Declaration"){
         this.dynamicFormGroup.get('totalPremium')?.setValue(this.bbdetails.totalPremium);
       }
-      this.flattenObject(this.formData);
+      // this.flattenObject(this.formData);
       
     }
   }
@@ -3326,7 +3376,7 @@ export class RugDynamicFormComponent {
       let reqData = {
         "proposalNum": this.leadId,
         "partnerId": this.partnerId,
-        "agentCode": this.agentCode,
+        "agentCode": this.agentCode,        
         "formData": JSON.stringify(this.dynamicFormGroup.value),
         "formName": this.formSequence[this.getFormIndexValue()].formName,
         "formConfig": JSON.stringify(this.formSequence),
@@ -3335,7 +3385,8 @@ export class RugDynamicFormComponent {
         "jsonForm": JSON.stringify(this.form),
         "formSequence": this.getFormIndexValue(), // index of the form from FormSequence
         "leadNumber": this.leadId, // will be generated in the save of the first form (leads page) and will be sent as response of this API in the incoming requests, u need to pass that response's lead Id here
-        "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""// will be generate in getQuoteForSingleProducts and top selling products
+        "quoteNumber": this.formData.quoteId ? this.formData.quoteId : "",// will be generate in getQuoteForSingleProducts and top selling products
+        "portalName": "RUG",
     }
       console.log(reqData);
       this.yatraService.Insertorupdateformdata(reqData).subscribe({
@@ -3446,7 +3497,7 @@ export class RugDynamicFormComponent {
                 },
                 insuredDetails: this.d2cDetails.insuredMemberDetails.map((member: any) => ({
                   leadId: this.d2cDetails.leadId,
-                  name: member.name + member.lastName,
+                  name: member.name,
                   dob: member.dob,
                   relationName: null,
                   relationCode: JSON.parse(member.relationshipType)?.id || "",
@@ -3456,7 +3507,7 @@ export class RugDynamicFormComponent {
                 })),
                 nomineeDetails: {
                   leadId: this.d2cDetails.leadId,
-                  nomineeName: this.d2cDetails.nomineeName,
+                  nomineeName: this.d2cDetails.firstName,
                   nomineeRelation: this.d2cDetails.nomineeRelation,
                   nomineeRelationCode: "R002",
                   nomineeDOB: "11-11-1999",
@@ -3494,13 +3545,14 @@ export class RugDynamicFormComponent {
                        "policyNumber": "", 
                        "quoteNumber": "",
                        "OrderId": "",
-                       "Amount": this.d2cDetails.totalPremium,
-                       "FirstName": this.d2cDetails.insuredMemberDetails[0].name,
+                       "Amount": Number(this.d2cDetails.totalPremium),
+                       "FirstName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[0],
                        "MiddleName": "",
-                       "LastName": "Person",
+                       "LastName": this.d2cDetails.insuredMemberDetails[0].name.split(' ')?.[1],
                        "Phone": this.d2cDetails.proposerMobileNumber,
                        "Email": "LHME.SHAH@ARVIND.IN",
-                       "DOB": "10/07/1997" 
+                       "DOB": "10/07/1997",                       
+                       "appName":"D2C"
                               
                       }
                     this.d2cJustPayRedirection(justpayPayload)
@@ -3873,7 +3925,7 @@ export class RugDynamicFormComponent {
     const totalCentimeters = feetToCentimeters + inchesToCentimeters;
     return totalCentimeters;
   }
-  returnAgeRange(familyConstructDetails: any, spouseDob: any, selfDob: any) {
+  returnAgeRange(familyConstructDetails: any, spouseDob: any=0, selfDob: any) {
     if (familyConstructDetails == '2' || familyConstructDetails == '4' || familyConstructDetails == '3') {
       spouseDob = this.getAgeFromDOB(spouseDob);
       selfDob = this.getAgeFromDOB(selfDob);
@@ -6084,7 +6136,7 @@ export class RugDynamicFormComponent {
   }
   getD2CSumInsured(control: any) {
     let sumInsuredObj = {
-      ProductCode: this.productId == '7' ?  "D01" : this.productId == '9' ? "D02" : "D03"
+      ProductCode: this.productId == '7' ?  "D01" : this.productId == '8' ? "D02" : "D03"
     }
     this.yatraService.getSumInsuredDetails(sumInsuredObj).subscribe({
       next: (res: any) => {
@@ -6217,6 +6269,7 @@ export class RugDynamicFormComponent {
   }
 
   calculateD2CPremium() {
+    this.premiumArray = []
     let memberDob: any;
     let premiumObj;
     let memberRelation;
@@ -6229,14 +6282,14 @@ export class RugDynamicFormComponent {
       const memberGroup = sinsuredMembersArray.at(i) as FormGroup;
 
       console.log(memberGroup);
-      memberDob = memberGroup.value.memberdob
+      // memberDob = memberGroup.value.dob
       memberRelation = memberGroup.value.relation
       if (memberRelation == "Self") {
-        selfDob = memberGroup.value.memberdob
+        selfDob = memberGroup.value.dob
       }
       if (memberRelation == "Spouse") {
         familyConstruct = 2
-        spouseDob = memberGroup.value.memberdob
+        spouseDob = memberGroup.value.dob
       }
       console.log('member Relationship Type:', memberRelation);
       console.log('member dob:', memberDob);
@@ -6267,30 +6320,30 @@ export class RugDynamicFormComponent {
     let filteredFamilyConstruct = this.familyConstructsData.filter((item: any) => item.familyConstructID === familyConstruct.toString());
     console.log(filteredFamilyConstruct);
     // this.yatraService.policyDetails.familyConstruct = filteredFamilyConstruct[0].displayText;
-    let ageRange = this.returnAgeRange(familyConstruct, selfDob, selfDob)
+    let ageRange = this.returnAgeRange(familyConstruct, spouseDob, selfDob)
     console.log(ageRange);
     console.log(this.dynamicFormGroup.value, this.dynamicFormGroup, this.form);
     console.log(this.bbPremiumData)
     this.familyConstruct = familyConstruct;
-    premiumObj = this.bbPremiumData.filter((ele: any) => {
-      return (ele.familyConstructId == this.familyConstruct)
-    })
     // premiumObj = this.bbPremiumData.filter((ele: any) => {
-    //   return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
+    //   return (ele.familyConstructId == this.familyConstruct)
     // })
-    // let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
-    // for(let i = 0; i <= orderOfPremium.length; i++){
+    premiumObj = this.bbPremiumData.filter((ele: any) => {
+      return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
+    })
+    let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
+    for(let i = 0; i <= orderOfPremium.length; i++){
 
-    //   premiumObj.forEach((ele: any) => {
-    //     if(ele.combinationName == orderOfPremium[i]){
-    //       sortedArray.push(ele)
-    //     }
-    //   })
-    // }
+      premiumObj.forEach((ele: any) => {
+        if(ele.combinationName == orderOfPremium[i]){
+          this.premiumArray.push(ele)
+        }
+      })
+    }
     console.log(premiumObj);
     // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
     // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
-    this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium).toFixed(2);
+    this.dynamicFormGroup.value.totalPremium = (this.premiumArray[0].premium + this.premiumArray[1].premium).toFixed(2);
     this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);

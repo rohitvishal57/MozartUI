@@ -85,6 +85,10 @@ export class CommonService {
     // const singleProductQuote = 'https://localhost:7188/getquoteforsingleproduct';
     return this.http.post<any>(singleProductQuote, reqData);
   }
+  UpdateAgentAllFormData(reqData:any){
+    const saveCommonDraftData = "https://usp.monocept.ai/api/rug/UpdateAgentAllFormData";
+    return this.http.post<any>(saveCommonDraftData,reqData);
+  }
 
 
   // storeToken(token: string) {

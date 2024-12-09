@@ -148,6 +148,10 @@ export class YatraService {
     const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId";
     return this.httpService.post(suminsuredDetails,reqData);
   }
+  getd2cPolicyInfoByLeadId(reqData:any){
+    const suminsuredDetails = this.configService.config.baseUrl1 + this.configService.config.getd2cPolicyInfoByLeadId;
+    return this.httpService.post(suminsuredDetails,reqData);
+  }
   getPremiumData(reqData:any){
     const premiumData = this.configService.config.baseUrl + this.configService.config.getRUGPremium;
     return this.httpService.post(premiumData,reqData);

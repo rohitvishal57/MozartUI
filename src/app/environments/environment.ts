@@ -147,6 +147,7 @@ export const environment = {
     fetchCommmission:"api/renewal/DocumentSearch",
     downloadCommmissionStatement:"api/renewal/DocumentDownload",
     getquoterelationsviapolicytype:"api/quote/getquoterelationsviapolicytype",
-    getTopProducts:"api/quote/GetTopSellingProduct"
-
+    getTopProducts:"api/quote/GetTopSellingProduct",
+    updateAgentAllFormData : "api/rug/UpdateAgentAllFormData",
+    getd2cPolicyInfoByLeadId: "api/rug/GetD2CPolicyInfoByLeadId"
   }

@@ -43,6 +43,8 @@ export class ProductsComponent implements OnInit {
   displayNoProductsMessage: boolean = false;
   showSpecialForm: boolean = false;
   state: any;
+  paramLeadId: any;
+  leadId: any;
 
 
   constructor(private router: Router, private toast: NgToastService,
@@ -54,6 +56,83 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
+    console.log(this.paramLeadId)
+    this.route.params.subscribe(async (params) => {
+      if (Object.keys(this.route.snapshot.params).length > 0) {
+        console.log('Route has parameters:', params);
+        this.paramLeadId = this.aesEncryptService.decryptUrlData(this.paramLeadId);
+        console.log(this.paramLeadId)
+        this.paramLeadId = JSON.parse(this.paramLeadId)
+        this.leadId = this.paramLeadId.LeadId;
+        this.partnerId = this.paramLeadId.PartnerId;
+        this.productId = this.paramLeadId.ProductId;
+        // this.formSequence = JSON.parse(this.paramLeadId.FormSequence);
+        console.log(this.formSequence);
+        localStorage.setItem('token', this.paramLeadId.token)
+        localStorage.setItem('agentCode', this.paramLeadId.AgentCode)
+        localStorage.setItem('leadId', this.paramLeadId.LeadId)
+        this.agentCode = this.paramLeadId.AgentCode;
+      }
+
+      try {
+        const reqData = {
+          partnerId: this.partnerId,
+          productId: this.productId,
+        };
+        const res = await firstValueFrom(this.common.Getformsequence(reqData));
+        console.log(res);
+        this.formSequence = JSON.parse(res.data.formSequence);
+        console.log(this.formSequence);
+        // if(this.agentCode != "467898"){
+        //   this.isD2C = false;
+        // }
+        // console.log(this.formSequence[this.getFormIndexValue()].formName)
+        // console.log(this.paramLeadId.CurrentIndex)
+        // this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+        // if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
+        //   let reqObj = {
+        //     "leadId": this.leadId
+        //   }
+        //   this.yatraService.getBBPolicyInfoByLeadId(reqObj).subscribe({
+        //     next: (res: any) => {
+        //       console.log(res);
+        //       res = JSON.parse(res.data).data
+        //       console.log(res);
+        //       this.policyDetails = res;
+        //       console.log(this.policyDetails);
+        //       this.filteredPolicies = this.policyDetails.policyDetails.filter(
+        //         (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
+        //       );
+              
+        //       console.log(this.filteredPolicies);
+
+        //       console.log(this.dynamicFormGroup.value);
+              
+        //       this.formData.members = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+        //       this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
+        //       this.formData.productName = this.filteredPolicies[0]?.productName || null;
+        //       this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+        //       this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
+        //       this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
+        //       // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
+        //       this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+              
+        //       console.log(this.dynamicFormGroup.value);
+
+        //       // Merging updated formData with dynamicFormGroup values
+        //     },
+        //     error: (err) => {
+        //       console.error(err);
+        //     }
+        //   });
+        // }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+    
+
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -184,9 +263,40 @@ export class ProductsComponent implements OnInit {
       // }
    
         if (this.formSequence != null && this.formSequence.length > 0 && (this.agentCode == "467899" || this.agentCode == "467898")) {
-          this.router.navigate(['rug'], {
-             state: { productData: productData, formSequence: this.formSequence }
-          });
+          if(this.agentCode == "467898"){
+            let reqObj = {
+              "leadId": this.leadId,
+              "agentCode": this.agentCode,
+              "partnerId": item.partnerId,
+              "productId": item.productId
+            }
+            this.common.UpdateAgentAllFormData(reqObj).subscribe({
+              next: (res: any) => {
+                res = JSON.parse(res.data)
+                console.log(res);
+                if (res.isSuccess == true && res.statusCode == 200) {
+                  this.router.navigate(['rug'], {
+                    state: { productData: productData, formSequence: this.formSequence }
+                 });
+                  // if (this.getFormIndexValue() < this.formSequence.length - 1) {
+                  //   this.incrementIndex();
+                  //   this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
+                    
+                  // }
+        
+                }
+        
+              },
+              error: (err:any) => {
+                console.error(err);
+              }
+            });
+          }else{
+            this.router.navigate(['rug'], {
+               state: { productData: productData, formSequence: this.formSequence }
+            });
+
+          }
         }else{
           this.router.navigate(['yatra'], {
             state: { productData: productData, formSequence: this.formSequence }

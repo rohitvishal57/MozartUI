@@ -29,8 +29,13 @@ export class EncryptionInterceptor implements HttpInterceptor {
     'https://usp.monocept.ai/api/rug/GetPremium',
     'https://usp.monocept.ai/api/rug/GetProposerRelations',
     'https://usp.monocept.ai/api/v1/GetBBPolicyInfoByLeadId',
-    'https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId'
-
+    'https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId',
+    'https://usp.monocept.ai/api/rug/UpdateAgentAllFormData',
+    'https://upuat.adityabirlahealth.com/api/rug/GetFamilyConstructByProductCode',
+    'https://upuat.adityabirlahealth.com/api/rug/GetSumInsuredList',
+    'https://upuat.adityabirlahealth.com/api/rug/GetPremium',
+    'https://usp.monocept.ai/api/rug/GetD2CPolicyInfoByLeadId',
+    'https://upuat.adityabirlahealth.com/api/rug/GetD2CPolicyInfoByLeadId'
   ];
 
   constructor(private aesEncryptService: AesEncryptionService, private router: Router, private loadingService: LoadingService) { }
