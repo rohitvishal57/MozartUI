@@ -74,7 +74,7 @@ export class HeaderComponent implements OnInit ,OnDestroy {
 
   setLanguage(event: any) {
     const selectedLanguage = event.target.value;
-    this.languageService.setLanguage(selectedLanguage); // Update language through the service
+    this.languageService.setLanguage(selectedLanguage); 
     window.location.reload()
   }
 

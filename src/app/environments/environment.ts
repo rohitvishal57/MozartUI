@@ -109,6 +109,7 @@ export const environment = {
     getPolicyNumberDetails: "api/yatra/getcustomerpolicydetailsviapolicynum",
     profileDetails: "api/auth/GetAgentProfileDetails",
     escalationMatrixDetails:"api/yatra/GetEscalationMatrixDetails",
+    updateagentlanguagepreference:"api/yatra/updateagentlanguagepreference",
     fetchPolicyDetailsFromFile: "api/yatra/getcustomerpolicydetailsfrompolicydocument",
     justPayRedirection: "api/yatra/Payment/JuspayOrder",
     insertfullquotejson: "api/yatra/insertfullquotejson",

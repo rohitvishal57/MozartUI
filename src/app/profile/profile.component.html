@@ -59,14 +59,15 @@
                                                             </div> -->
 
                                                             <div class="language-selector" tabindex="0">
+                                                                <label for="" class="lbl_preferredLang">{{'Preferred Language' | translate}}:</label>
                                                                 <select class="dropdown" [(ngModel)]="selectedLanguage">
-                                                                     <option value="pl">{{"preferred Language" | translate}}</option>
-                                                                  <option value="en">English</option>
-                                                                  <option value="hi">हिंदी</option>
-                                                                  <option value="te">తెలుగు</option>
+                                                                    <option value="English">English</option>
+                                                                    <option value="Hindi">हिंदी</option>
+                                                                    <option value="Telugu">తెలుగు</option>
                                                                 </select>
-                                                                <button class="btn btn-danger btn_slectedLang" (click)="saveLanguage()">{{"Save" | translate}}</button>
-                                                              </div>
+                                                                <button class="btn btn-danger btn_slectedLang"
+                                                                    (click)="updatePreferredLanguage()">{{"Save" | translate}}</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
