@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { YatraService } from './yatra.service';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
+import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 import { LoadingService } from 'src/app/services/loading.service';
 import { LanguageService } from 'src/app/services/language.service';
 declare var bootstrap: any;
@@ -5632,11 +5632,11 @@ export class YatraComponent {
   }
 
 
-  async mappedFormDataFullQuote(formData: any): Promise<Partial<Root>> {
+  async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     console.log(formData, this.covers);
 
-    const mappedData: Partial<Root> = {
+    const mappedData: Partial<IFullQuoteMapping> = {
       agentCode: this.agentCode || '',
       productName: formData?.productName || '',
       productCode: formData?.productId || '',
@@ -5674,8 +5674,8 @@ export class YatraComponent {
           memberSumInsured: member?.sumInsured || '',
           // memberZone: member?.zoneValue || '',
           memberNatureOfDuty: member?.memberNatureOfDuty || '',
-          memberDesignation: formData[`insuredMemberDetails.${index}.productMemberDesignation`] || '',
-          memberOccupation: formData[`insuredMemberDetails.${index}.productMemberOccupation`] || '',
+          memberDesignation: member?.productMemberDesignation || '',
+          memberOccupation: member?.productMemberOccupation || '',
           covers: this.covers[index] || [],
           productQuestionnaire: formData[`insuredMemberDetails.${index}.productQuestionnaire`] || '',
           memberRoomCategory: member?.memberRoomCategory || ''
@@ -5720,7 +5720,8 @@ export class YatraComponent {
       nomineeAge: nomineeAge || '',
       NameofAccountHolder: formData?.firstName || '',
       accountNumber: formData?.accountNumber || '',
-      accountType: formData?.accountType || '',
+      accountType: this.jsonParse(formData?.accountType,'value') || '',
+      bankAccountType:this.jsonParse(formData?.accountType,'name') || '',      
       bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
       bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
       paymentMode: this.selectedButton || '',
