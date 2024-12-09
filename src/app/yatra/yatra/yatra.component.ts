@@ -1636,10 +1636,6 @@ export class YatraComponent {
   }
 
   isSequential(enteredNumber: string): boolean {
-    if (!/^\d{6}$/.test(enteredNumber)) {
-      return false;
-    }
-
     const digits = enteredNumber.split('').map(Number);
     const allSame = digits.every(digit => digit === digits[0]);
     if (allSame) {
@@ -1666,29 +1662,35 @@ export class YatraComponent {
 
     this.changesMade = true;
     let eventValue = event.target.value;
+    const filteredValue = eventValue.replace(/[_-]/g, '');
     if (["chequeNumber", "demandDraftNumber", "payOrderNumber"].includes(control.name)) {
-      const enteredNumber = event.target.value;
 
-      // Check if the cheque number is longer than 6 digits
-      if (enteredNumber.length > 6) {
-        event.target.value = enteredNumber.slice(0, 6);
-        this.dynamicFormGroup.get(control.name)?.setValue(enteredNumber.slice(0, 6));
-        this.toast.error({ detail: "ERROR", summary: "Number cannot exceed 6 digits", duration: 3000 });
-      }
-
-      // Check if the cheque number is less than 6 digits
-      else if (enteredNumber.length < 6) {
-        this.toast.error({ detail: "ERROR", summary: "Number must be exactly 6 digits", duration: 3000 });
-      }
-
-      // Check if the cheque number is sequential
-      else if (this.isSequential(enteredNumber)) {
+      if (!/^\d{6}$/.test(filteredValue)) {
         this.toast.error({
           detail: "ERROR",
-          summary: "Sequential or repetitive numbers are not allowed",
+          summary: "Number must contain exactly 6 digits.",
+          duration: 3000
+        });
+        return;
+      }
+
+      if (/^[_-]/.test(eventValue) || /[_-]$/.test(eventValue)) {
+        this.toast.error({
+          detail: "ERROR",
+          summary: "Underscores or dashes cannot be at the start or end.",
+          duration: 3000
+        });
+        return;
+      }
+
+      if (this.isSequential(filteredValue)) {
+        this.toast.error({
+          detail: "ERROR",
+          summary: "Sequential or repetitive numbers are not allowed.",
           duration: 3000
         });
         this.dynamicFormGroup.get(control.name)?.setValue('');
+        return;
       }
     }
 
@@ -1698,6 +1700,7 @@ export class YatraComponent {
       this.idProofType = idProof.value;
 
       const idNumberControl = this.dynamicFormGroup.get('idNo');
+      idNumberControl?.setValue('');
 
       switch (this.idProofType) {
         case 'Aadhar Card':
@@ -1793,10 +1796,17 @@ export class YatraComponent {
     }
 
     if (parentControl == null && control.name == 'ifscCode') {
-      const ifscCodeDetails = this.dynamicFormGroup.get('ifscCode')?.value.length || 0;
+      const ifscCodeDetails = this.dynamicFormGroup.get('ifscCode')?.value || '';
       console.log(ifscCodeDetails);
 
-      if (ifscCodeDetails == 11) {
+      if (!ifscCodeDetails) {
+        // Clear the bankName and micrCode fields
+        this.dynamicFormGroup.get('bankName')?.setValue('');
+        this.dynamicFormGroup.get('micrCode')?.setValue('');
+        return; // Exit the function
+      }
+
+      if (ifscCodeDetails.length == 11) {
         const reqData = {
           "ifscCode": event.target.value
         }
@@ -2118,6 +2128,20 @@ export class YatraComponent {
           }
         });
       });
+    }
+
+    if (parentControl == null && control.name === 'preFix') {
+      const selectedPrefix = event.target.value;
+      console.log(selectedPrefix);
+      if (selectedPrefix === 'Mr') {
+        this.dynamicFormGroup.get('proposerGender')?.setValue('M');
+      }
+      else if (selectedPrefix === 'Mrs') {
+        this.dynamicFormGroup.get('proposerGender')?.setValue('F');
+      }
+      else {
+        this.dynamicFormGroup.get('proposerGender')?.setValue('O');
+      }
     }
   }
 
@@ -2778,6 +2802,7 @@ export class YatraComponent {
     // console.log(this.kidCount,option);
     if (event != null) {
       this.isQuote = false;
+      this.quickQuoteRedirect = false;
     }
     const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     console.log(checkbox);
@@ -2820,7 +2845,7 @@ export class YatraComponent {
                 })
               }
               tempControl.forEach((temp) => {
-                if(temp.name == 'memberGender'){
+                if (temp.name == 'memberGender') {
                   temp.value = option.gender;
                 }
               })
@@ -3130,6 +3155,8 @@ export class YatraComponent {
                   const validators = controls.validators.map((val: any) => {
                     if (val.validatorName === 'required') {
                       return Validators.required;
+                    } else if (val.validatorName === 'pattern' && val.pattern) {
+                      return Validators.pattern(val.pattern);
                     }
                     return null;
                   }).filter(Boolean);
@@ -3523,7 +3550,7 @@ export class YatraComponent {
                         let dindexj = dsubControl.at(zindex) as FormGroup;
                         let dinnercontrol = dindexj.get(innerControl.name) as FormGroup;
                         if (innerControl.visible == false && innerControl.dependentControls && innerControl.dependentControls.length > 0) {
-                          if(dinnercontrol instanceof FormControl){
+                          if (dinnercontrol instanceof FormControl) {
                             dinnercontrol.setValue(false);
                           }
                           innerControl.dependentControls.forEach((dependentName: string) => {

@@ -31,4 +31,8 @@ export class QuoteService {
     const  getproductdetailsandfeatures = this.configService.config.baseUrl + this.configService.config.getProductDetailsAndFeatures;
     return this.httpService.post(getproductdetailsandfeatures,reqData)
   }
+  getquoterelationsviapolicytype(reqData:any){
+    const  getquoterelationsviapolicytype = this.configService.config.baseUrl + this.configService.config.getquoterelationsviapolicytype;
+    return this.httpService.post(getquoterelationsviapolicytype,reqData)
+  }
 }

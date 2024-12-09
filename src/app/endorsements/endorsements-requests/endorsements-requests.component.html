@@ -11,10 +11,10 @@
             <section class="quickFilterMain">
                 <div class="quickFilterLeft" #filterSection>
                     <ul class="quickFilter">
-                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All')">{{"All" | translate}}</button></li>
-                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active')">{{"Active" | translate}}</button></li>
-                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved')">{{"Resolved" | translate}} </button></li>
-                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled')">{{"Cancelled" | translate}} </button></li>
+                        <li><button type="button" id="endors-all" name="endors-all" value="all" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'All'}" (click)="statusFilter('All')">{{"All" | translate}} ({{totalRecords}})</button></li>
+                        <li><button type="button" id="endors-active" name="endors-active" value="active" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Active'}" (click)="statusFilter('Active')">{{"Active" | translate}} ({{activeCount}})</button></li>
+                        <li><button type="button" id="endors-resolved" name="endors-resolved" value="resolved" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Resolved'}" (click)="statusFilter('Resolved')">{{"Resolved" | translate}} ({{resolvedCount}})</button></li>
+                        <li><button type="button" id="endors-cancelled" name="endors-cancelled" value="cancelled" class="btn_quickFilter btn_quickFilterClaim"  [ngClass]="{'active': activeFilter === 'Cancelled'}" (click)="statusFilter('Cancelled')">{{"Cancelled" | translate}} ({{cancelledCount}})</button></li>
                     </ul>
                 </div>
                 <div class="quickFilterRight" >
@@ -105,6 +105,9 @@
                         </div>
                     </div>
                     <!--Search section end-->
+                    <button type="button" class="btn_grid mobile-hide jsBtnClickQuote" (click)="downloadAll()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
+                        <img src="assets/Img/icon_download_grey.svg" alt="Download">
+                    </button>
                     <button type="button" id="gridlist" name="gridlist" value="gridlist" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-list" [ngClass]="{'active': selectedView === 'list'}" (click)="quotesViews('list')"><img src="assets/Img/icon_grid_list_grey.svg" alt="Grid List"></button>
                     <button type="button" id="gridcard" name="gridcard" value="gridcard" class="btn_grid mobile-hide jsBtnClickQuote"  aria-label="quotes-card" [ngClass]="{'active': selectedView === 'grid'}" (click)="quotesViews('grid')"><img src="assets/Img/icon_grid_box_grey.svg" alt="Grid Card"></button>
                 </div>
@@ -125,7 +128,6 @@
                                 <th scope="col">{{"Status" | translate}}</th>
                                 <th scope="col">{{"Raised Date" | translate}} <div><small class="text-secondary">{{'(dd-mm-yyyy)' | translate}}</small></div></th>
                                 <th scope="col">{{"Action" | translate}}</th>
-                                <!--<th scope="col">Download</th>-->
                             </tr>
                           </thead>
                           <tbody class="table-group-divider" >
@@ -140,14 +142,17 @@
                                 <td><span class="text-break-w100">{{ row?.requestType }}</span></td>
                                 <td>{{ row?.status }}</td>
                                 <td>{{ row?.raisedOn }}</td>
-                                <td>
+                                <td class="d-flex">
                                     <button type="button" id="viewdetails" name="viewdetails" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                    <button
+                                        type="button"
+                                        class="btn_action btn_renewalAction"
+                                        (click)="downloadSingleItem(row)"
+                                        id="Download" name="Download" value="Download" title="Download"
+                                    >
+                                        <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
+                                    </button>
                                 </td>
-                                <!--<td>
-                                    <button type="button" class="btn_icon" (click)="downloadRequest(row)">
-                                        <img src="assets/Img/icon_download_grey.svg" width="9" height="9">
-                                    </button> 
-                                </td>-->
                             </tr>
                           </tbody>
                         </table>
@@ -165,9 +170,9 @@
                                 <div class="item_productName">{{ row?.caseId }}</div>
                             </div>
                             <button type="button" id="viewdetails-grid" name="viewdetails-grid" value="View Details" title="View Details" class="btn_action btn_renewalAction" (click)="getEndorsementCaseDetails(row)"><img src="assets/Img/icon_renewable_energy_grey.svg"></button>
-                            <!-- <div class="card_btnGroup">
-                                <button type="button" class="btn_iconGrey btn_cardDownload" (click)="downloadRequest(row)"><img src="assets/Img/icon_download_grey.svg"></button>
-                            </div> -->
+                            <button type="button" class="btn_action btn_renewalAction" (click)="downloadSingleItem(row)" id="Download" name="Download" value="Download" title="Download">
+                                <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
+                            </button>
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">

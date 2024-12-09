@@ -1685,8 +1685,8 @@ export class RenewalListComponent {
   //     "nomineeFirstName": "Shashank",
   //     "nomineeMiddleName": "",
   //     "nomineeLastName": "Shashank",
-  //     "nomineeDob": "2000-11-29",
-  //     "nomineeRelationWithProposer": "\u0022R009\u0022",
+  //     "nomineeDob": "2023-11-29",
+  //     "nomineeRelationWithProposer": "{\u0022id\u0022:\u00229\u0022,\u0022value\u0022:\u0022R009\u0022,\u0022name\u0022:\u0022Brother\u0022,\u0022gender\u0022:\u0022M\u0022}",
   //     "gender": "M",
   //     "nomineeAddress": "oinas",
   //     "nomineeContactNo": "8722499266",
@@ -1715,15 +1715,15 @@ export class RenewalListComponent {
   //           }
   //         });
           
-  //   //     }
-  //   //     else {
-  //   //       this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
-  //   //     }
-  //   //   },
-  //   //   (err) => {
-  //   //     console.error("Error from getRenewalInfo API:", err);
-  //   //     this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
-  //   //   }
+  //     //   }
+  //     //   else {
+  //     //     this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
+  //     //   }
+  //     // },
+  //     // (err) => {
+  //     //   console.error("Error from getRenewalInfo API:", err);
+  //     //   this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
+  //     // }
   //   // );
   // }
 
