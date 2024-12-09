@@ -51,7 +51,7 @@ export class DashboardComponent {
   ];
 
   sectionList: any = [
-    'QuickAction', 'ABHI', 'Performance', 'Business', 'Customer', 'Others'
+    'QuickAction', 'ABHI', 'Performance', 'Business', 'Renewals', 'Customer', 'Others'
   ];
 
   otherSection: any = [];
@@ -113,6 +113,10 @@ export class DashboardComponent {
 
   dropTabs(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
+  }
+
+  dropRenewal(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.renewalDetail, event.previousIndex, event.currentIndex);
   }
 
   dropCharts(event: CdkDragDrop<any[]>) {
@@ -368,7 +372,7 @@ export class DashboardComponent {
     this.renderChart();
     this.renderPropChart();
     this.renderEXPropChart();
-    this.renderPersistencyChart();
+    // this.renderPersistencyChart();
     this.renderCustomerChart();
     this.renderServiceChart();
     this.createHorizontalBarChart();
@@ -622,68 +626,68 @@ export class DashboardComponent {
     }
   }
 
-  createPersistencyChartData(): ChartData<'pie' | 'doughnut'> {
-    const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Persistency')
-    const labels = categories[0].category.map((item: any) => item.name);
-    const data = categories[0].category.map((item: any) => item.count);
-    return {
-      labels: labels,
-      datasets: [{
-        data: data,
-        backgroundColor: ['#e74c3c',
-          '#9b59b6',
-          '#3498db',
-          '#f39c12',
-          '#1abc9c'], // Dynamic colors
-        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
-      }]
-    };
-  }
+  // createPersistencyChartData(): ChartData<'pie' | 'doughnut'> {
+  //   const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Persistency')
+  //   const labels = categories[0].category.map((item: any) => item.name);
+  //   const data = categories[0].category.map((item: any) => item.count);
+  //   return {
+  //     labels: labels,
+  //     datasets: [{
+  //       data: data,
+  //       backgroundColor: ['#e74c3c',
+  //         '#9b59b6',
+  //         '#3498db',
+  //         '#f39c12',
+  //         '#1abc9c'], // Dynamic colors
+  //       //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+  //     }]
+  //   };
+  // }
 
-  renderPersistencyChart(): void {
-    if (this.chartPersistencyCanvas && this.chartPersistencyCanvas.nativeElement) {
-      const canvas = this.chartPersistencyCanvas.nativeElement;
-      const ctx = canvas.getContext('2d');
+  // renderPersistencyChart(): void {
+  //   if (this.chartPersistencyCanvas && this.chartPersistencyCanvas.nativeElement) {
+  //     const canvas = this.chartPersistencyCanvas.nativeElement;
+  //     const ctx = canvas.getContext('2d');
 
-      if (!ctx) {
-        console.error('Failed to get context from canvas.');
-        return;
-      }
+  //     if (!ctx) {
+  //       console.error('Failed to get context from canvas.');
+  //       return;
+  //     }
 
-      // Create the chart using Chart.js
-      this.renewChart = new Chart(ctx, {
-        type: 'pie', // 'pie' or 'doughnut'
-        data: this.createPersistencyChartData(), // Dynamic chart data
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom',  // Move legend to the side (right or left)
-              labels: {
-                font: {
-                  size: 11,  // Reduce the font size of the legend labels
-                  weight: 'normal',  // Adjust the weight of the legend text
-                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
-                },
-                boxWidth: 10,  // Set the width of the colored box (legend symbol)
-                boxHeight: 10,  // Set the height of the colored box (legend symbol)
-                padding: 5  // Adjust the padding around each legend item
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: (tooltipItem) => {
-                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
-                },
-              },
-            },
-          },
-        }
-      });
-    } else {
-      console.error('Chart canvas element is not found.');
-    }
-  }
+  //     // Create the chart using Chart.js
+  //     this.renewChart = new Chart(ctx, {
+  //       type: 'pie', // 'pie' or 'doughnut'
+  //       data: this.createPersistencyChartData(), // Dynamic chart data
+  //       options: {
+  //         responsive: true,
+  //         plugins: {
+  //           legend: {
+  //             position: 'bottom',  // Move legend to the side (right or left)
+  //             labels: {
+  //               font: {
+  //                 size: 11,  // Reduce the font size of the legend labels
+  //                 weight: 'normal',  // Adjust the weight of the legend text
+  //                 family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+  //               },
+  //               boxWidth: 10,  // Set the width of the colored box (legend symbol)
+  //               boxHeight: 10,  // Set the height of the colored box (legend symbol)
+  //               padding: 5  // Adjust the padding around each legend item
+  //             }
+  //           },
+  //           tooltip: {
+  //             callbacks: {
+  //               label: (tooltipItem) => {
+  //                 return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+  //               },
+  //             },
+  //           },
+  //         },
+  //       }
+  //     });
+  //   } else {
+  //     console.error('Chart canvas element is not found.');
+  //   }
+  // }
 
   createRenewChart() {
     const reqData = {

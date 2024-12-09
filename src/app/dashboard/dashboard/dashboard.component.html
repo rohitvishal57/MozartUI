@@ -394,7 +394,7 @@
 
             <!-- Renewal -->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
-              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Business'">
+              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Renewals'">
               <div class="body_flex_row justify-content-between align-items-center">
                 <h3>{{"Renewal Summary" | translate}}</h3>
                 <div class="filter_performanceOverview">
@@ -414,7 +414,7 @@
                 </div>
               </div>
               <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
-                (cdkDropListDropped)="dropTabs($event)">
+                (cdkDropListDropped)="dropRenewal($event)">
                 <ng-container *ngFor="let tab of renewalDetail">
                   <div *ngIf="renewalDetail.length" cdkDrag [cdkDragDisabled]="isDesktopView"
                     class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
