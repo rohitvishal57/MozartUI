@@ -3195,14 +3195,14 @@ export class RugDynamicFormComponent {
       const memberGroup = sinsuredMembersArray.at(i) as FormGroup;
 
       console.log(memberGroup);
-      memberDob = memberGroup.value.memberdob
+      memberDob = memberGroup.value.dob
       memberRelation = memberGroup.value.relation
       if (memberRelation == "Self") {
-        selfDob = memberGroup.value.memberdob
+        selfDob = memberGroup.value.dob
       }
       if (memberRelation == "Spouse") {
         familyConstruct = 2
-        spouseDob = memberGroup.value.memberdob
+        spouseDob = memberGroup.value.dob
       }
       console.log('member Relationship Type:', memberRelation);
       console.log('member dob:', memberDob);
@@ -3244,27 +3244,52 @@ export class RugDynamicFormComponent {
     premiumObj = this.bbPremiumData.filter((ele: any) => {
       return (ele.familyConstructId == this.familyConstruct)
     })
-    // premiumObj = this.bbPremiumData.filter((ele: any) => {
-    //   return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
-    // })
-    // let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
-    // for(let i = 0; i <= orderOfPremium.length; i++){
 
-    //   premiumObj.forEach((ele: any) => {
-    //     if(ele.combinationName == orderOfPremium[i]){
-    //       sortedArray.push(ele)
-    //     }
-    //   })
-    // }
+    premiumObj = this.bbPremiumData.filter((ele: any) => {
+      return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
+    })
+    let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
+    for(let i = 0; i <= orderOfPremium.length; i++){
+
+      premiumObj.forEach((ele: any) => {
+        if(ele.combinationName == orderOfPremium[i]){
+          sortedArray.push(ele)
+        }
+      })
+    }
     console.log(premiumObj);
-    this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());
+    console.log(this.dynamicFormGroup.get('planAvailable')?.value)
+    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    }
+    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA" || item.combinationName === "GCI"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
+      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    }else{
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());
 
-    // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
-    // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
-    this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj[1].premium.toString());
+      // this.yatraService.policyDetails.ghiPremium = premiumObj[0].premium.toString();
+      // this.yatraService.policyDetails.gpPremium = premiumObj[1].premium.toString();
+      this.dynamicFormGroup.get('gpPremium')?.setValue(premiumObj[1].premium.toString());
+  
+      this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    }
 
-    this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
-    this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
   }
@@ -6213,7 +6238,6 @@ export class RugDynamicFormComponent {
       });
     }
   }
-  
   async changeBbSumInsured(event: any) {
     console.log(this.sumInsuredData);
     console.log(this.dynamicFormGroup.value.sumInsured);
