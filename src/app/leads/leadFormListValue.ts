@@ -84,7 +84,7 @@ export class LeadFormListValue {
     salutations = ["Mr", "Mrs","Ms","Dr","Mx","Miss","Others"];
     educationLevels = [ "Below Metric","Metric","Under Graduate","Graduate","Post Graduate", "Diploma","Professional","Other"];
       
-    leadStatus  = ['Open','In progress','Won','Lost'];
+    leadStatus  = ['Open','In progress','Won','Lost','Lead Aged'];
     LeadPriority  = ['Hot','Warm','Cold']; 
 
 }

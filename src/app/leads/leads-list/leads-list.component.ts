@@ -72,7 +72,8 @@ export class LeadsListComponent {
     { "name": "Open", "selected": false },
     { "name": "In progress", "selected": false },
     { "name": "Won", "selected": false },
-    { "name": "Lost", "selected": false }
+    { "name": "Lost", "selected": false },
+    { "name": "Lead Aged", "selected": false }
   ];
   private allJsonFormData: any[] = [];
   formData: any = {};
