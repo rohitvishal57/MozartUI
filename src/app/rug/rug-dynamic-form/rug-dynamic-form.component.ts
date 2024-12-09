@@ -147,6 +147,7 @@ export class RugDynamicFormComponent {
         localStorage.setItem('token', this.paramLeadId.token)
         localStorage.setItem("formIndex", this.paramLeadId.CurrentIndex);
         this.agentCode = this.paramLeadId.AgentCode;
+        localStorage.setItem("agentCode", this.agentCode);
         try {
           const reqData = {
             partnerId: this.partnerId,
@@ -187,6 +188,7 @@ export class RugDynamicFormComponent {
                 this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
                 this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
                 this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
+                this.formData.totalPremium = this.policyDetails.proposerDetails.proposerDetails.premium || null;
                 // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
                 this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
                 
@@ -814,8 +816,49 @@ export class RugDynamicFormComponent {
         });
         console.log(this.getFormIndexValue());
         console.log(this.formSequence[0].formName);
+        console.log(this.paramLeadId.CurrentIndex);
+        console.log(this.formSequence[this.getFormIndexValue()].formName);
+        if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
+          let reqObj = {
+            "leadId": this.leadId
+          }
+          this.yatraService.getBBPolicyInfoByLeadId(reqObj).subscribe({
+            next: (res: any) => {
+              console.log(res);
+              res = JSON.parse(res.data).data
+              console.log(res);
+              this.policyDetails = res;
+              console.log(this.policyDetails);
+              this.filteredPolicies = this.policyDetails.policyDetails.filter(
+                (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
+              );
+              
+              console.log(this.filteredPolicies);
 
+              console.log(this.dynamicFormGroup.value);
+              
+              this.formData.members = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+              this.formData.policyNumber = this.filteredPolicies[0]?.policyNumber || null;
+              this.formData.productName = this.filteredPolicies[0]?.productName || null;
+              this.formData.secondMembers = this.policyDetails.proposerDetails.insuredDetails[0]?.relationWithProposer;
+              this.formData.secondPolicyNumber = this.filteredPolicies[1]?.policyNumber || null
+              this.formData.secondProductName = this.filteredPolicies[1]?.productName || null;
+              // this.formData.totalPremium = this.policyDetails.proposerDetails.proposerDetails.premium || null;
+              // this.dynamicFormGroup.get('policyNumber')?.setValue(this.filteredPolicies[0].policyNumber)
+              // this.formData = { ...this.formData, ...this.dynamicFormGroup.value };
+              
+              console.log(this.formData);
+              console.log(this.dynamicFormGroup.value);
 
+              // Merging updated formData with dynamicFormGroup values
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });
+          // console.log(this.policyDetails);
+          // console.log(this.filteredPolicies)
+        }
         if(this.getFormIndexValue() == 0 && (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness")){
           console.log(this.bbdetails)
           this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
