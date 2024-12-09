@@ -599,6 +599,22 @@ export class DashboardComponent {
               },
             },
           },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.renewChart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.renewChart.data.labels[index];  // Access labels via `this.chart`
+
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/renewal/renewalList/'], {
+                queryParams: { status: label },
+              });
+            }
+          }
         }
       });
     } else {
@@ -831,6 +847,22 @@ export class DashboardComponent {
               },
             },
           },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.customerchart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.customerchart.data.labels[index];  // Access labels via `this.chart`
+
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/customers/customersList/'], {
+                queryParams: { status: label },
+              });
+            }
+          }
         }
       });
     } else {
@@ -899,6 +931,22 @@ export class DashboardComponent {
               },
             },
           },
+          onClick: (event, activeElements) => {
+            if (activeElements.length > 0) {
+              // Using the correct context (chart instance) within the onClick handler
+              const datasetIndex = activeElements[0].datasetIndex;
+              const index = activeElements[0].index;
+              const value = this.servicingchart.data.datasets[datasetIndex].data[index];  // Access data via `this.chart`
+              const label = this.servicingchart.data.labels[index];  // Access labels via `this.chart`
+
+              console.log(`Clicked on: ${label} with value ${value}`);
+              //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
+
+              this.route.navigate(['/claims/claimsList/'], {
+                queryParams: { status: label },
+              });
+            }
+          }
         }
       });
     } else {

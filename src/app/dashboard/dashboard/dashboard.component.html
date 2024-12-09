@@ -359,7 +359,7 @@
                           <ng-container *ngFor="let buz of tab.category">
                             <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
                               <div *ngSwitchCase="'Leads'">
-                                <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'">
+                                <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name}">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
@@ -367,7 +367,7 @@
                                 </div>
                               </div>
                               <div *ngSwitchCase="'Proposals'">
-                                <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'">
+                                <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
@@ -428,7 +428,7 @@
                           <ng-container *ngFor="let buz of tab.category">
                             <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
                               <div *ngSwitchCase="'Renewal'">
-                                <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'">
+                                <div class="leads_item leads_open" [routerLink]="'/renewal/renewalList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
@@ -436,7 +436,7 @@
                                 </div>
                               </div>
                               <div *ngSwitchCase="'Persistency'">
-                                <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'">
+                                <div class="leads_item leads_open">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
@@ -477,7 +477,7 @@
                           <ng-container *ngFor="let buz of tab.category">
                             <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
                               <div *ngSwitchCase="'Customer'">
-                                <div class="leads_item leads_open" [routerLink]="'/customers/customersList'">
+                                <div class="leads_item leads_open" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
@@ -493,7 +493,7 @@
                           </div>
                         </div> -->
                               <div *ngSwitchCase="'Claims'">
-                                <div class="leads_item leads_open">
+                                <div class="leads_item leads_open" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count }">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>
