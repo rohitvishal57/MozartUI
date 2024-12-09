@@ -280,6 +280,9 @@ li {
     align-items: flex-start;
     gap: 10px;
   }
+  .buttons_div {
+    margin-top: 15px;
+  }
 }
 @media (max-width: 480px) {
   .week-grid {
