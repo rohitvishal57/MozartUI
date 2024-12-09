@@ -372,7 +372,8 @@
     width: 100%;
     height: 100%;
     border-radius: 12px;
-    background: radial-gradient(69.17% 98.17% at 25.83% 93.56%, rgba(244, 251, 255, 0) 90%, #ef0a0a 160%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+    /* background: radial-gradient(69.17% 98.17% at 25.83% 93.56%, rgba(244, 251, 255, 0) 90%, #ef0a0a 160%) ; */
+    background: radial-gradient(69.17% 98.17% at 25.83% 93.56%, rgba(244, 251, 255, 0) 90%, #DBB3F3 160%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
   }
   .claims_matTabs {
     .uploadDocument_head {
