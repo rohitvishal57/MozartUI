@@ -118,6 +118,7 @@ export const environment = {
     getProductCombination: "api/rug/GetProductCombination",
     getBBProposalDetails: "/BranchBanking/GetBBProposalDetailsV2",
     getSumInsuredDetails: "api/rug/GetSumInsuredList",
+    getBBPolicyInfoByLeadId: "api/v1/GetBBPolicyInfoByLeadId",
     getPremiumDetaiks: "/Product/GetPremium",
     getRUGPremium: "api/rug/GetPremium",
     getFamilyConstruct: "api/rug/GetFamilyConstructByProductCode",

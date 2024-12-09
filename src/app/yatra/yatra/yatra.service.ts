@@ -144,6 +144,10 @@ export class YatraService {
     const suminsuredDetails = this.configService.config.baseUrl + this.configService.config.getSumInsuredDetails;
     return this.httpService.post(suminsuredDetails,reqData);
   }
+  getBBPolicyInfoByLeadId(reqData:any){
+    const suminsuredDetails = this.configService.config.baseUrl + this.configService.config.getBBPolicyInfoByLeadId;
+    return this.httpService.post(suminsuredDetails,reqData);
+  }
   getPremiumData(reqData:any){
     const premiumData = this.configService.config.baseUrl + this.configService.config.getRUGPremium;
     return this.httpService.post(premiumData,reqData);
