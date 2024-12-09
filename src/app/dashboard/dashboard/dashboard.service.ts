@@ -49,4 +49,9 @@ export class DashboardService {
     const url = this.configService.config.baseUrl + this.configService.config.GetDueRenewals;
     return this.httpService.post(url, payload);
   }
+  
+  Getproductlist(){
+    const productList = this.configService.config.baseUrl + this.configService.config.getTopProducts;
+    return this.httpService.get(productList)
+  }
 }

@@ -146,5 +146,7 @@ export const environment = {
     getCustomerEndorsementDetails:"api/yatra/customerservice?PolicyNumber",
     fetchCommmission:"api/renewal/DocumentSearch",
     downloadCommmissionStatement:"api/renewal/DocumentDownload",
-    getquoterelationsviapolicytype:"api/quote/getquoterelationsviapolicytype"
+    getquoterelationsviapolicytype:"api/quote/getquoterelationsviapolicytype",
+    getTopProducts:"api/quote/GetTopSellingProduct"
+
   }
