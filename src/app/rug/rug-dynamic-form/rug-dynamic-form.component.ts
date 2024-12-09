@@ -174,6 +174,7 @@ export class RugDynamicFormComponent {
                 console.log(res);
                 this.policyDetails = res;
                 console.log(this.policyDetails);
+                this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
                 // this.filteredPolicies = this.policyDetails.policyDetails.filter(
                 //   (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
                 // );
@@ -199,8 +200,9 @@ export class RugDynamicFormComponent {
                 console.error(err);
               }
             });
+          }else{
+            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
           }
-          this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
           if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
             let reqObj = {
               "leadId": this.leadId
@@ -469,7 +471,7 @@ export class RugDynamicFormComponent {
       this.yatraService.Getform(reqData).subscribe({
         next: (res: any) => {
           console.log(res);
-          this.form = JSON.parse(res.data.jsonFormData);
+          this.form = JSON.parse(res.data.jsonFormData);          
           this.bbdetails = JSON.parse(res.data.formData);
           this.d2cDetails = JSON.parse(res.data.formData);
           this.leadId = this.bbdetails.leadId;
