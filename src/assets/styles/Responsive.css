@@ -511,7 +511,7 @@
         bottom: 0;
         top: auto;
         position: absolute; */
-        margin: 0;
+        margin: 5% auto;
     }
     .popupModalMain .modal-content {
         /* border-radius: 16px 16px 0 0; */
