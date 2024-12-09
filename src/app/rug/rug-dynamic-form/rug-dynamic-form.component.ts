@@ -200,10 +200,8 @@ export class RugDynamicFormComponent {
                 console.error(err);
               }
             });
-          }else{
-            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
           }
-          if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
+          else if(this.paramLeadId.CurrentIndex == 7 && this.formSequence[this.getFormIndexValue()].formName == "Policy Summary"){
             let reqObj = {
               "leadId": this.leadId
             }
@@ -217,6 +215,7 @@ export class RugDynamicFormComponent {
                 this.filteredPolicies = this.policyDetails.policyDetails.filter(
                   (policy: any) => policy.certificateNumber && policy.quoteType === "FULLQUOTE"
                 );
+            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
                 
                 console.log(this.filteredPolicies);
 
@@ -240,6 +239,9 @@ export class RugDynamicFormComponent {
                 console.error(err);
               }
             });
+          }
+          else{
+            this.getFormDataFromFormSequence(this.formSequence[this.getFormIndexValue()].formId);
           }
         } catch (err) {
           console.error(err);
