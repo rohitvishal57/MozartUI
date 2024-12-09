@@ -145,7 +145,7 @@ export class YatraService {
     return this.httpService.post(suminsuredDetails,reqData);
   }
   getBBPolicyInfoByLeadId(reqData:any){
-    const suminsuredDetails = this.configService.config.baseUrl + this.configService.config.getBBPolicyInfoByLeadId;
+    const suminsuredDetails = "https://upuat.adityabirlahealth.com/api/v1/GetBBPolicyInfoByLeadId";
     return this.httpService.post(suminsuredDetails,reqData);
   }
   getPremiumData(reqData:any){
