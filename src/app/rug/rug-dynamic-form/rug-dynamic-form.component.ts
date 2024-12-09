@@ -8,7 +8,7 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, tap } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
+import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -5678,11 +5678,11 @@ export class RugDynamicFormComponent {
   }
 
 
-  async mappedFormDataFullQuote(formData: any): Promise<Partial<Root>> {
+  async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     console.log(formData);
 
-    const mappedData: Partial<Root> = {
+    const mappedData: Partial<IFullQuoteMapping> = {
       agentCode: this.agentCode || '',
       productName: formData?.productName || '',
       productCode: formData?.productId || '',

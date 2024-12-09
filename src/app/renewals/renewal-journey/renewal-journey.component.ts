@@ -15,7 +15,7 @@ import { payment } from 'src/assets/styles/renewals-forms/payment';
 import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
 import { RenewalsService } from '../renewals.service';
 import { active_health_covers } from 'src/assets/styles/renewals-forms/active_Health_covers';
-import { Root } from 'src/app/interface/FullQuote_Mapping.interface';
+import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
 
 @Component({
   selector: 'app-renewal-journey',
@@ -3276,11 +3276,11 @@ export class RenewalJourneyComponent {
     return value[extract];
   }
 
-  async mappedFormDataFullQuote(formData: any): Promise<Partial<Root>> {
+  async mappedFormDataFullQuote(formData: any): Promise<Partial<IFullQuoteMapping>> {
     const nomineeAge: any = await this.calculateAge(formData?.nomineeDob);
     console.log(formData, this.covers);
 
-    const mappedData: Partial<Root> = {
+    const mappedData: Partial<IFullQuoteMapping> = {
       agentCode: this.agentCode || '',
       productName: formData?.productName || '',
       productCode: formData?.productId || '',
