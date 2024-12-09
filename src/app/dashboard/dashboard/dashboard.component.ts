@@ -55,6 +55,7 @@ export class DashboardComponent {
 
   otherSection: any = [];
   ProductList: any;
+  isDesktopView = false;
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef, private productService: ProductsService) {
@@ -359,7 +360,7 @@ export class DashboardComponent {
     // Ensure that the canvas is available before rendering the chart
     setTimeout(() => {
       this.fetchCharts();
-    }, 15000); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
+    }, this.calculateDelay()); // Use setTimeout to ensure DOM is fully rendered before accessing the canvas
   }
 
   fetchCharts() {
@@ -838,6 +839,8 @@ export class DashboardComponent {
       this.route.navigate(['events/eventsList'])
     } else if (event == 'birthday') {
       this.route.navigate(['events/birthdaysList'])
+    } else if (event == 'products') {
+      this.route.navigate(['products'])
     } else {
       const url = 'notifications' + '?agentCode=' + localStorage.getItem('agentCode');
       this.route.navigateByUrl(url)
@@ -895,9 +898,6 @@ export class DashboardComponent {
     });
   }
 
-  getCondition(d : any){
-    return ( d == 'Total Assessments' ||  d == 'Total Users')? true :false;
-  }
 
   getPoductList() {
     const reqData = {
@@ -922,4 +922,27 @@ export class DashboardComponent {
     })
 
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isDesktopView = window.innerWidth <= 728 ? true : false;
+  }
+
+  calculateDelay(): number {
+    const totalSectionsLength = this.otherSection.length;
+    const totalTabsLength = this.tabsInfo.length;
+    const totalCardsLength = this.dhaCard.length;
+    const totalActionsLength = this.quickActionDetails.length;
+
+    const delay = (totalSectionsLength * 500) +
+      (totalTabsLength * 300) +
+      (totalCardsLength * 200) +
+      (totalActionsLength * 100);
+
+    const minDelay = 5000;
+    const maxDelay = 30000;
+
+    return Math.max(minDelay, Math.min(delay, maxDelay));
+  }
+
 }

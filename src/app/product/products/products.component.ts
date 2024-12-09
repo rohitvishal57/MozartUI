@@ -204,7 +204,6 @@ export class ProductsComponent implements OnInit {
       const reqData = {
         "partnerId": item.partnerId,
         "productId": item.productId
-
       }
       console.log(reqData);
       const res = await firstValueFrom(this.common.Getformsequence(reqData));

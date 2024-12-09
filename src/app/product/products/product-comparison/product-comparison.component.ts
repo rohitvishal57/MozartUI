@@ -76,7 +76,8 @@ export class ProductComparisonComponent {
           const productData = {
             partnerId: comparisonItem.partnerId,
             productId: comparisonItem.productId,
-            productComparison:true
+            productComparison:true,
+            proposalNum : ' '
 
           }
             this.router.navigate(['yatra'], {

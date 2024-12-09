@@ -77,13 +77,13 @@
         (cdkDropListDropped)="dropSections($event)">
         <ng-container *ngFor="let section of sectionList">
         <!--Important Tasks New design start-->
-        <section cdkDrag class="commonSection dashboard_LPR_main dashboard_importantEvents " *ngIf="section == 'QuickAction' && quickActionDetails">
+        <section cdkDrag [cdkDragDisabled]="isDesktopView" class="commonSection dashboard_LPR_main dashboard_importantEvents " *ngIf="section == 'QuickAction' && quickActionDetails">
           <h3>{{"Important Tasks" | translate}}</h3>
           <div class="body_flex_row body_importantEvents mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropQuickAct($event)">
             <ng-conatiner class="width_taskCard" *ngFor="let qucikAction of quickActionDetails">
               <ng-conatiner [ngSwitch]="qucikAction.name">
-                  <div cdkDrag *ngSwitchCase="'eventDetails'" class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
+                  <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'eventDetails'" class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notification_list_products.svg">
@@ -106,7 +106,7 @@
                       <a (click)="onClickEvents('events')">{{"View all" | translate}}</a>
                     </footer>
                   </div>
-                  <div cdkDrag *ngSwitchCase="'birthdayDetails'" class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
+                  <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'birthdayDetails'" class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notification_list_birthday.svg">
@@ -125,7 +125,7 @@
                       <a (click)="onClickEvents('birthday')">{{"View all" | translate}}</a>
                     </footer>
                   </div>
-                  <div cdkDrag *ngSwitchCase="'notifications'" class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
+                  <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'notifications'" class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
                     <header class="body_flex_row align-items-center">
                       <figure>
                         <img src="./assets/Img/icon_notifications.svg">
@@ -153,7 +153,7 @@
           </div>
         </section>
         <!--Important Tasks New design end-->
-        <section cdkDrag class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section == 'ABHI'">
+        <section cdkDrag [cdkDragDisabled]="isDesktopView" class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section == 'ABHI'">
           <div class="body_flex_row justify-content-between">
             <h6>{{"Latest from ABHI" | translate}}</h6>
             <button type="button" id="btn-exploreMore" name="btn-exploreMore"
@@ -237,7 +237,7 @@
           </div>
         </section>
         <!-- performance -->
-        <div cdkDrag class="contentBody dashboard_contentContainer" *ngIf="section == 'Performance'">
+        <div cdkDrag [cdkDragDisabled]="isDesktopView" class="contentBody dashboard_contentContainer" *ngIf="section == 'Performance'">
           <div class="performance-overview">
             <div class="body_flex_row justify-content-between align-items-center">
               <h2>{{"Performance Overview" | translate}}</h2>
@@ -265,14 +265,14 @@
                 (cdkDropListDropped)="dropPerformance($event)">
                 <ng-container *ngFor="let perform of performanceCard">
                   <ng-container [ngSwitch]="perform.type">
-                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'" cdkDrag>
+                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'" cdkDrag [cdkDragDisabled]="isDesktopView">
                       <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
                       </header>
                       <div class="value">{{perform.value}}</div>
                       <div class="card-tip" *ngIf="perform.description"><img
                           [src]="perform.subIcon">{{perform.description | translate}}</div>
                     </div>
-                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'progress'" cdkDrag>
+                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'progress'" cdkDrag [cdkDragDisabled]="isDesktopView">
                       <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
                       </header>
                       <div class="value">₹ {{perform.value}}</div>
@@ -281,7 +281,7 @@
                         <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
                       </div>
                     </div>
-                    <div [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag>
+                    <div [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="isDesktopView">
                       <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
                       </header>
                       <div class="value">₹ {{perform.value}}</div>
@@ -289,7 +289,7 @@
                           src="assets/Img/icon_rupee.svg">{{perform.description | translate}}
                       </div>
                     </div>
-                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'" cdkDrag>
+                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'" cdkDrag [cdkDragDisabled]="isDesktopView">
                       <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
                       </header>
                       <div class="gauge">
@@ -303,7 +303,7 @@
           </div>
         </div>
         <!-- Business -->
-        <section cdkDrag class="commonSection dashboard_LPR_main " *ngIf="section == 'Business'">
+        <section cdkDrag [cdkDragDisabled]="isDesktopView" class="commonSection dashboard_LPR_main " *ngIf="section == 'Business'">
           <div class="body_flex_row justify-content-between align-items-center">
             <h3>{{"Business Summary" | translate}}</h3>
             <div class="filter_performanceOverview">
@@ -323,7 +323,7 @@
           <div *ngIf="businessSummary && tabsInfo.length" class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropTabs($event)">
             <ng-container *ngFor="let tab of tabsInfo">
-              <div cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+              <div cdkDrag [cdkDragDisabled]="isDesktopView" class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
                 <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }"><span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
                 <div class="leads_content leads_contentDashboard">
                   <div class="scroll_contentDashboard">
@@ -382,11 +382,11 @@
           </div>
         </section>
         <!-- Other Section -->
-        <section cdkDrag class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Customer'">
+        <section cdkDrag [cdkDragDisabled]="isDesktopView" class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Customer'">
           <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
           (cdkDropListDropped)="dropCharts($event)">
           <ng-container *ngFor="let tab of otherSection">
-            <div *ngIf="tab.isShow" cdkDrag class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+            <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="isDesktopView" class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
               <header  class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
                 <span >{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
               <div class="leads_content leads_contentDashboard leads_newService">
@@ -598,7 +598,7 @@
               </div>
               <!--Top Selling Products end-->
               <!--Participate in challenge to start-->
-              <div class="item_otherSections">
+              <div class="item_otherSections" style="display: none;">
                 <div class="otherSections_wraper">
                   <header>
                     <div class="otherSections_head otherSections_head_column">
@@ -658,11 +658,11 @@
                               </div>
                             </div>
                           </div>
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                           </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                           </button>
@@ -675,7 +675,7 @@
               <!--Participate in challenge to end-->
 
               <!--My Goals start-->
-              <div class="item_otherSections">
+              <div class="item_otherSections" style="display: none;">
                 <div class="otherSections_wraper">
                   <header>
                     <div class="otherSections_head">
