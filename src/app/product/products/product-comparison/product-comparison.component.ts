@@ -58,8 +58,7 @@ export class ProductComparisonComponent {
           try {
             const reqData = {
               "partnerId": comparisonItem.partnerId,
-              "productId": comparisonItem.productId,
-              "proposalNum": ''
+              "productId": comparisonItem.productId
             }
             const res = await firstValueFrom(this.common.Getformsequence(reqData));
             this.formSequence = JSON.parse(res.data.formSequence);
@@ -77,7 +76,8 @@ export class ProductComparisonComponent {
           const productData = {
             partnerId: comparisonItem.partnerId,
             productId: comparisonItem.productId,
-            productComparison:true
+            productComparison:true,
+            proposalNum : ' '
 
           }
             this.router.navigate(['yatra'], {
