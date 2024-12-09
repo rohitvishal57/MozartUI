@@ -3,6 +3,7 @@ import { ProfileService } from './profile.service';
 import { PerformanceService } from 'src/app/performance/performance.service';
 import { LanguageService } from '../services/language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NgToastService } from 'ng-angular-popup';
 
 
 
@@ -27,11 +28,11 @@ export class ProfileComponent implements OnInit {
   profileDetails: any;
   EcalatinDetails: any[] = [];
   showmsg: boolean = false;
-  selectedLanguage: string = 'pl';
+  selectedLanguage: string = 'English';
 
   constructor(
     private performanceService: PerformanceService, private languageService: LanguageService,
-    private translateService: TranslateService, private profileService: ProfileService
+    private translateService: TranslateService, private profileService: ProfileService, private toast: NgToastService
 
   ) { }
   ngOnInit(): void {
@@ -50,6 +51,7 @@ export class ProfileComponent implements OnInit {
     this.getPerformanceDetailedViewCount();
     this.getPerformanceDetailedList();
     this.getEscalationMatrixDetails();
+    
 
     const reqData = {
       "agentCode": localStorage.getItem('agentCode')
@@ -117,14 +119,24 @@ export class ProfileComponent implements OnInit {
         break;
     }
   }
-  saveLanguage() {
-    localStorage.setItem('selectedLanguage', this.selectedLanguage);
-    console.log("selectedLanguage", this.selectedLanguage);
+  updatePreferredLanguage() {
+    const reqData = {
+      AgentCode: this.agentCode,
+      LanguagePreference: this.selectedLanguage,
+    };
+    console.log('Request Data:', reqData);
+    this.profileService.updatePreferredLanguage(reqData).subscribe({
+      next: (response : any) => {
+        console.log('Language preference updated successfully:', response);
+        this.toast.success({ detail: "SUCCESS", summary: response.message, duration: 3000 });
+      },
+      error: (error) => {
+        console.error('Error updating language preference:', error);
+      },
+    });
   }
-
   getEscalationMatrixDetails() {
     let reqObj = {
-      // agentCode: "ABH1162569"
       agentCode: this.agentCode
     };
     this.profileService.getEscalationMatrixDetails(reqObj).subscribe((res) => {

@@ -43,7 +43,7 @@
                                 </select> -->
                                 <select class="form-select input-selectBox" id="memberName" name="memberName" (change)="memberIdChange($event)" formControlName="memberId" [ngClass]="{'has-value': true}">
                                     <option class="dropdown-options" value="" disabled selected>{{"Select Member" | translate}}</option>
-                                    <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }}</option>
+                                    <option class="dropdown-options" *ngFor="let member of memberNames" [value]="member.memberId">{{ member.memberName | translate }} ({{member.relationWithProposer}})</option>
                                   </select>
                                 <label for="member">{{"Select Member" | translate}}</label>
                                 <small class="ui-error block-show" *ngIf="form.get('memberName')?.hasError('required') && form.get('memberName')?.touched">
@@ -77,18 +77,25 @@
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <input class="form-control input-textBox" id="claimedAmount" name="claimedAmount" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
-                                        <label for="claimamount">{{"Claim Amount" | translate}}</label>
-                                        <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
-                                    {{"Claim amount is required" | translate}}
-                                </small>
+                                      <input class="form-control input-textBox" id="claimedAmount" name="claimedAmount" formControlName="claimedAmount" type="number" id="claimedamount" placeholder="Claim Amount" (keyup)="onInput($event)" maxlength="12" [attr.max]="999999999999">
+                                      <label for="claimamount">{{"Claim Amount" | translate}}</label>
+                                      <div *ngIf="form.get('claimedAmount')?.invalid && (form.get('claimedAmount')?.touched || form.get('claimedAmount')?.dirty)">
+                                        <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required')">
+                                          {{"Claim amount is required." | translate}}
+                                        </small>
+                                        <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('minlength')">
+                                          {{"Claim amount must be at least 4 digits." | translate}}
+                                        </small>
+                                        <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('maxlength')">
+                                          {{"Claim amount must not exceed 12 digits." | translate}}
+                                        </small>
+                                      </div>
                                     </div>
                                 </div>
-
-
+                        
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <input type="date" class="form-control input-textBox" id="admissionDate" name="admissionDate" formControlName="admissionDate" [(ngModel)]="fromDate" (change)="dateFormat('fromDate')" placeholder="Date of Admission" [max]="maxDate" />
+                                        <input type="date" class="form-control input-textBox" id="admissionDate" name="admissionDate" formControlName="admissionDate" [(ngModel)]="fromDate" (change)="dateFormat('fromDate')" placeholder="Date of Admission" />
                                         <label for="admissionDate">{{"Date of Admission" | translate}}</label>
                                         <small class="ui-error block-show" *ngIf="form.get('admissionDate')?.hasError('required') && form.get('admissionDate')?.touched">
                                     {{"Date of Admission is required" | translate}}
@@ -145,10 +152,24 @@
 
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <select class="form-select input-selectBox" id="hospitalName" name="hospitalName" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
+                                        <!-- <select class="form-select input-selectBox" id="hospitalName" name="hospitalName" formControlName="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
                                             <option class="dropdown-options" value="" disabled selected>{{"Select Hospitals" | translate}}</option>
                                             <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName | translate }}</option>
-                                        </select>
+                                        </select> -->
+                                        <select class="form-select input-selectBox" 
+                                                id="hospitalName" 
+                                                name="hospitalName" 
+                                                formControlName="hospitalName" 
+                                                [disabled]="!selectedCity" 
+                                                (change)="fetchBlackListedHsp($event)">
+                                            <option class="dropdown-options" value="" disabled selected>
+                                                {{"Select Hospitals" | translate}}
+                                            </option>
+                                            <option *ngFor="let hospital of hospitals" 
+                                                    [value]="hospital.hospitalId">
+                                                {{ hospital.hospitalName | translate }}
+                                            </option>
+                                        </select>       
                                         <label for="city">{{"Select Hospital" | translate}}</label>
                                         <small class="ui-error block-show" *ngIf="form.get('hospitalName')?.invalid && form.get('hospitalName')?.touched">
                                             {{"Hospital Name is required" | translate}}
@@ -170,7 +191,7 @@
                         <!-- Reimbursement Fields -->
                         <div class="col-12" *ngIf="showReimbursementFields">
                             <div class="row mb-3">
-                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <!-- <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
                                         <select class="form-select input-selectBox" id="coverName" name="coverName" formControlName="coverName" (change)="onCoverNameChange($event)">
                                             <option value="" disabled selected>{{"Select Cover Name" | translate}}</option>
@@ -178,32 +199,64 @@
                                         </select>
                                         <label for="coverName">{{"Cover Name" | translate}}</label>
                                     </div>
-                                </div>
-
+                                </div> -->
+                                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                    <div class="input-block form-floating input-block-renew">
+                                      <select 
+                                        class="form-select input-selectBox" 
+                                        id="coverName" 
+                                        name="coverName" 
+                                        formControlName="coverName" 
+                                        (change)="onCoverNameChange($event)">
+                                        <option value="" disabled selected>{{"Select Cover Name" | translate}}</option>
+                                        <option *ngFor="let cover of coverNames" [value]="cover.cover_Name">
+                                          {{ cover.cover_Name | translate }}
+                                        </option>
+                                      </select>
+                                      <label for="coverName">{{"Cover Name" | translate}}</label>
+                                    </div>
+                                    
+                                    <input type="hidden" formControlName="coverCode">
+                                  </div>
                                 <div *ngIf="showFirstScenario " class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <input class="form-control input-textBox" id="claimedAmount" name="claimedAmount" formControlName="claimedAmount" type="number" id="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
+                                        <input class="form-control input-textBox" id="claimedAmount" name="claimedAmount" formControlName="claimedAmount" type="number" id="claimedamount" placeholder="Claim Amount" (keyup)="onInput($event)" maxlength="12" [attr.max]="999999999999">
                                         <label for="claimamount">{{"Claim Amount" | translate}}</label>
-                                        <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
-                                                 {{"Claim amount is required" | translate}}
-                                </small>
-                                    </div>
+                                        <div *ngIf="form.get('claimedAmount')?.invalid && (form.get('claimedAmount')?.touched || form.get('claimedAmount')?.dirty)">
+                                          <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required')">
+                                            {{"Claim amount is required." | translate}}
+                                          </small>
+                                          <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('minlength')">
+                                            {{"Claim amount must be at least 4 digits." | translate}}
+                                          </small>
+                                          <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('maxlength')">
+                                            {{"Claim amount must not exceed 12 digits." | translate}}
+                                          </small>
+                                        </div>
+                                      </div>
                                 </div>
                                 
                                 <div *ngIf="showSecondScenario " class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <input class="form-control input-textBox" formControlName="claimedAmount" type="number" id="claimamount" name="claimamount" placeholder="Claim Amount" (keydown)="onInput($event)">
-                                        <label for="claimamount">Claim Amount</label>
-                                        <!-- <span class="ui-error">Please enter claim amount</span> -->
-                                        <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required') && form.get('claimedAmount')?.touched">
-                                        Claim amount is required
-                                    </small>
-                                    </div>
+                                        <input class="form-control input-textBox" id="claimedAmount" name="claimedAmount" formControlName="claimedAmount" type="number" id="claimedamount" placeholder="Claim Amount" (keyup)="onInput($event)" maxlength="12" [attr.max]="999999999999">
+                                        <label for="claimamount">{{"Claim Amount" | translate}}</label>
+                                        <div *ngIf="form.get('claimedAmount')?.invalid && (form.get('claimedAmount')?.touched || form.get('claimedAmount')?.dirty)">
+                                          <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('required')">
+                                            {{"Claim amount is required." | translate}}
+                                          </small>
+                                          <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('minlength')">
+                                            {{"Claim amount must be at least 4 digits." | translate}}
+                                          </small>
+                                          <small class="ui-error block-show" *ngIf="form.get('claimedAmount')?.hasError('maxlength')">
+                                            {{"Claim amount must not exceed 12 digits." | translate}}
+                                          </small>
+                                        </div>
+                                      </div>
                                 </div>
 
                                 <div *ngIf="showSecondScenario" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <input type="date" class="form-control input-textBox" formControlName="admissionDate" id="admissionDate" name="admissionDate" placeholder="Date of Admission" [(ngModel)]="fromDate" (dateChange)="dateFormat('fromDate')" [max]="maxDate" />
+                                        <input type="date" class="form-control input-textBox" formControlName="admissionDate" id="admissionDate" name="admissionDate" placeholder="Date of Admission" [(ngModel)]="fromDate" (dateChange)="dateFormat('fromDate')" />
                                         <label for="admissionDate">Date of Admission</label>
                                     </div>
                                 </div>
@@ -225,15 +278,26 @@
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-3 col-lg-3 col-xl-3">
                                             <div class="input-block form-floating input-block-renew">
-                                                <input type="date" class="form-control input-textBox" formControlName="billDate" id="billDate" name="billDate" [max]="maxDate" />
+                                                <input type="date" class="form-control input-textBox" formControlName="billDate" id="billDate" name="billDate" />
                                                 <label for="addnotes">Date</label>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                             <div class="input-block form-floating input-block-renew">
-                                                <input class="form-control input-textBox" formControlName="billAmount" type="number" id="billamount" placeholder="Bill Amount" (keydown)="onInput($event)">
+                                                <input class="form-control input-textBox" formControlName="billAmount" type="number" id="billAmount" name="billAmount" placeholder="Bill Amount" (keyup)="onInput($event)">
                                                 <label for="billamount">Bill Amount</label>
-                                            </div>
+                                                <div *ngIf="form.get('billAmount')?.invalid && (form.get('billAmount')?.touched || form.get('billAmount')?.dirty)">
+                                                  <small class="ui-error block-show" *ngIf="form.get('billAmount')?.hasError('required')">
+                                                    {{"Bill amount is required." | translate}}
+                                                  </small>
+                                                  <small class="ui-error block-show" *ngIf="form.get('billAmount')?.hasError('minlength')">
+                                                    {{"Bill amount must be at least 4 digits." | translate}}
+                                                  </small>
+                                                  <small class="ui-error block-show" *ngIf="form.get('billAmount')?.hasError('maxlength')">
+                                                    {{"Bill amount must not exceed 12 digits." | translate}}
+                                                  </small>
+                                                </div>
+                                              </div>
                                         </div>
 
                                         <div class="col-2 col-sm-12 col-md-1 col-lg-1 col-xl-1 text-center">
@@ -332,7 +396,7 @@
                         </div>
 
                     </div>
-                    <div class="body_flex_column gap-32" *ngIf="hideDocument === true">
+                    <div class="body_flex_column gap-32" >
                         <div class="uploadDocument_head body_flex_column gap-2">
                             <h3 class="heading-20-black">{{"Upload Documents" | translate}}</h3>
                             <p>{{"Please upload the documents mentioned below. The files should be in .png / .jpg / .pdf with less than 2 MB size per image." | translate}}</p>
@@ -428,8 +492,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="headInfo_item">
-                                                        <!-- <div class="upload-success" *ngIf="uploadSuccess"><img src="assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
-                                                        <div class="upload-fail" *ngIf="!uploadSuccess"><img src="assets/Img/icon_failure.svg"><span class="failed-text">Success</span></div> -->
+                                                        <div class="upload-success" *ngIf="uploadSuccess"><img src="assets/Img/icon_check_circle.svg"><span class="success-text">Success</span></div>
+                                                        <div class="upload-fail" *ngIf="!uploadSuccess"><img src="assets/Img/icon_failure.svg"><span class="failed-text">Success</span></div>
                                                         <div *ngIf="file.uploadDateTime">
                                                             <span class="date-time">{{ file.formattedUploadDateTime }}</span>
                                                         </div>
