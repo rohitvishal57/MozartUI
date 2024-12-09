@@ -16,10 +16,12 @@
                 <div class="cardItem_headerSearch">
                   <div class="field_searchMain">
                     <input type="text" class="filterSearch"
-                      [placeholder]="'Search Your Customer, Leads, Claims No and more' | translate" [(ngModel)]="searchedValue" />
+                      [placeholder]="'Search Your Customer, Leads, Claims No and more' | translate"
+                      [(ngModel)]="searchedValue" />
                     <img src="assets/Img/icon_magnify_grey.svg" (click)="onSearch()">
-                    <div class="overlay_popupMain overlay_dropdown_w518 overlay_searchResults" *ngIf="searchedData && searchedData.length">
-                      <div class="option_policyType" >
+                    <div class="overlay_popupMain overlay_dropdown_w518 overlay_searchResults"
+                      *ngIf="searchedData && searchedData.length">
+                      <div class="option_policyType">
                         <div class="overlay_body insurer_detailsMain">
                           <div class="data_searchResults">
                             <section class="tableMain quoteView block-show">
@@ -54,7 +56,7 @@
                         <span>No Data Found</span>
                     </ng-template> -->
                     </div>
-                    
+
                     <!--Search Results section end-->
                   </div>
                 </div>
@@ -74,335 +76,415 @@
           </div>
         </div>
         <ng-conatiner class="body_flex_column" cdkDropListOrientation="vertical" cdkDropList
-        (cdkDropListDropped)="dropSections($event)">
-        <ng-container *ngFor="let section of sectionList">
-        <!--Important Tasks New design start-->
-        <section cdkDrag [cdkDragDisabled]="isDesktopView" class="commonSection dashboard_LPR_main dashboard_importantEvents " *ngIf="section == 'QuickAction' && quickActionDetails">
-          <h3>{{"Important Tasks" | translate}}</h3>
-          <div class="body_flex_row body_importantEvents mt-3" cdkDropListOrientation="horizontal" cdkDropList
-          (cdkDropListDropped)="dropQuickAct($event)">
-            <ng-conatiner class="width_taskCard" *ngFor="let qucikAction of quickActionDetails">
-              <ng-conatiner [ngSwitch]="qucikAction.name">
-                  <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'eventDetails'" class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
-                    <header class="body_flex_row align-items-center">
-                      <figure>
-                        <img src="./assets/Img/icon_notification_list_products.svg">
-                      </figure>
-                      <div>
-                        <h5>{{"Events" | translate}}</h5>
-                      </div>
-                    </header>
-                    <main class="body_flex_column">
-                      <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
-                        <!-- <ng-container *ngIf="tasks.includes('No') ? true : template">
+          (cdkDropListDropped)="dropSections($event)">
+          <ng-container *ngFor="let section of sectionList">
+            <!--Important Tasks New design start-->
+            <section cdkDrag [cdkDragDisabled]="isDesktopView"
+              class="commonSection dashboard_LPR_main dashboard_importantEvents "
+              *ngIf="section == 'QuickAction' && quickActionDetails">
+              <h3>{{"Important Tasks" | translate}}</h3>
+              <div class="body_flex_row body_importantEvents mt-3" cdkDropListOrientation="horizontal" cdkDropList
+                (cdkDropListDropped)="dropQuickAct($event)">
+                <ng-conatiner class="width_taskCard" *ngFor="let qucikAction of quickActionDetails">
+                  <ng-conatiner [ngSwitch]="qucikAction.name">
+                    <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'eventDetails'"
+                      class="white_container blue_color_bg taskCard taskCardEvents body_flex_column">
+                      <header class="body_flex_row align-items-center">
+                        <figure>
+                          <img src="./assets/Img/icon_notification_list_products.svg">
+                        </figure>
+                        <div>
+                          <h5>{{"Events" | translate}}</h5>
+                        </div>
+                      </header>
+                      <main class="body_flex_column">
+                        <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
+                          <!-- <ng-container *ngIf="tasks.includes('No') ? true : template">
                           <h6><span title={{tasks?.activityTitle}}>{{tasks?.activityTitle}}</span></h6>
                         </ng-container> -->
                           <h6><span title={{tasks?.activityTitle}}>{{tasks?.activityTitle}}</span></h6>
                           <!-- <small>{{tasks?.note}}</small> -->
                           <small>{{tasks?.startTime}}</small>
-                      </div>
-                  </main>
-                    <footer>
-                      <a (click)="onClickEvents('events')">{{"View all" | translate}}</a>
-                    </footer>
-                  </div>
-                  <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'birthdayDetails'" class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
-                    <header class="body_flex_row align-items-center">
-                      <figure>
-                        <img src="./assets/Img/icon_notification_list_birthday.svg">
-                      </figure>
-                      <div>
-                        <h5>{{"Birthdays" | translate}}</h5>
-                      </div>
-                    </header>
-                    <main class="body_flex_column">
+                        </div>
+                      </main>
+                      <footer>
+                        <a (click)="onClickEvents('events')">{{"View all" | translate}}</a>
+                      </footer>
+                    </div>
+                    <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'birthdayDetails'"
+                      class="white_container org_color_bg taskCard taskCardBirthday body_flex_column">
+                      <header class="body_flex_row align-items-center">
+                        <figure>
+                          <img src="./assets/Img/icon_notification_list_birthday.svg">
+                        </figure>
+                        <div>
+                          <h5>{{"Birthdays" | translate}}</h5>
+                        </div>
+                      </header>
+                      <main class="body_flex_column">
                         <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
                           <h6><span title={{tasks.firstName}}>{{tasks.firstName}}</span></h6>
                           <!-- <small>{{tasks.dob | date:'dd-MM-yy'}}</small> -->
                         </div>
-                    </main>
-                    <footer>
-                      <a (click)="onClickEvents('birthday')">{{"View all" | translate}}</a>
-                    </footer>
-                  </div>
-                  <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'notifications'" class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
-                    <header class="body_flex_row align-items-center">
-                      <figure>
-                        <img src="./assets/Img/icon_notifications.svg">
-                      </figure>
-                      <div>
-                        <h5>{{"Notifications" | translate}}</h5>
-                      </div>
-                    </header>
-                    <main class="body_flex_column">
+                      </main>
+                      <footer>
+                        <a (click)="onClickEvents('birthday')">{{"View all" | translate}}</a>
+                      </footer>
+                    </div>
+                    <div cdkDrag [cdkDragDisabled]="isDesktopView" *ngSwitchCase="'notifications'"
+                      class="white_container green_color_bg taskCard taskCardNotifications body_flex_column">
+                      <header class="body_flex_row align-items-center">
+                        <figure>
+                          <img src="./assets/Img/icon_notifications.svg">
+                        </figure>
+                        <div>
+                          <h5>{{"Notifications" | translate}}</h5>
+                        </div>
+                      </header>
+                      <main class="body_flex_column">
                         <div class="content_taskCard" *ngFor="let tasks of qucikAction?.value">
                           <ng-container *ngIf="tasks?.description.includes('No notifications') ? true : template">
                             <h6><span title={{tasks?.description}}>{{tasks?.description}}</span></h6>
                           </ng-container>
                           <ng-template #template>
-                          <small>{{tasks?.description}}</small>
+                            <small>{{tasks?.description}}</small>
                           </ng-template>
                         </div>
-                    </main>
-                    <footer>
-                      <a (click)="onClickEvents('notification')">{{"View all" | translate}}</a>
-                    </footer>
-                  </div>
-              </ng-conatiner>
-            </ng-conatiner>            
-          </div>
-        </section>
-        <!--Important Tasks New design end-->
-        <section cdkDrag [cdkDragDisabled]="isDesktopView" class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section == 'ABHI'">
-          <div class="body_flex_row justify-content-between">
-            <h6>{{"Latest from ABHI" | translate}}</h6>
-            <button type="button" id="btn-exploreMore" name="btn-exploreMore"
-              class="btn_iconText btn_exploreMore">{{"Explore More" | translate}} <img
-                src="assets/Img/icon_red_downarrow.svg"> </button>
-          </div>
+                      </main>
+                      <footer>
+                        <a (click)="onClickEvents('notification')">{{"View all" | translate}}</a>
+                      </footer>
+                    </div>
+                  </ng-conatiner>
+                </ng-conatiner>
+              </div>
+            </section>
+            <!--Important Tasks New design end-->
+            <section cdkDrag [cdkDragDisabled]="isDesktopView"
+              class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section == 'ABHI'">
+              <div class="body_flex_row justify-content-between">
+                <h6>{{"Latest from ABHI" | translate}}</h6>
+                <button type="button" id="btn-exploreMore" name="btn-exploreMore"
+                  class="btn_iconText btn_exploreMore">{{"Explore More" | translate}} <img
+                    src="assets/Img/icon_red_downarrow.svg"> </button>
+              </div>
 
-          <div class="card_wraper latestFromABHI">
-            <div class="cardsub_wraper">
+              <div class="card_wraper latestFromABHI">
+                <div class="cardsub_wraper">
 
-              <div class="card_item ">
-                <div class="card_subitem">
-                  <div class="card_subitem_img">
-                    <img src="assets/Img/img_latest_abhi.png">
-                  </div>
-                  <div class="card_subitem_content">
-                    <header>
-                      <div class="card_item_icon"><img src="assets/Img/icon_noise_partnership.png"></div>
-                      <h5>Noise partnership</h5>
-                      <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
-                        class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
-                    </header>
-                    <h5>Noise partnership</h5>
-                    <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="card_item ">
-                <div class="card_subitem">
-                  <div class="card_subitem_img">
-                    <img src="assets/Img/img_latest_abhi.png">
-                  </div>
-                  <div class="card_subitem_content">
-                    <header>
-                      <div class="card_item_icon"><img src="assets/Img/icon_pharmacy_partnership.png"></div>
-                      <h5>Pharmacy partnership</h5>
-                      <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
-                        class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
-                    </header>
-                    <h5>Pharmacy partnership</h5>
-                    <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="card_item ">
-                <div class="card_subitem">
-                  <div class="card_subitem_img">
-                    <img src="assets/Img/img_latest_abhi.png">
-                  </div>
-                  <div class="card_subitem_content">
-                    <header>
-                      <div class="card_item_icon"><img src="assets/Img/icon_new_plan.png"></div>
-                      <h5>New plan</h5>
-                      <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
-                        class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
-                    </header>
-                    <h5>New plan</h5>
-                    <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="card_item">
-                <div class="card_subitem">
-                  <div class="card_subitem_img">
-                    <img src="assets/Img/img_latest_abhi.png">
-                  </div>
-                  <div class="card_subitem_content">
-                    <header>
-                      <div class="card_item_icon"><img src="assets/Img/icon_noise_partnership.png"></div>
-                      <h5>Key Insights from Mayank Bathwal</h5>
-                      <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
-                        class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
-                    </header>
-                    <h5>Key Insights from Mayank Bathwal</h5>
-                    <p>Mayank has been responsible for setting up the latest venture of Aditya Birla Capital Limited in
-                      the health insurance space. With his expertise and </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <!-- performance -->
-        <div cdkDrag [cdkDragDisabled]="isDesktopView" class="contentBody dashboard_contentContainer" *ngIf="section == 'Performance'">
-          <div class="performance-overview">
-            <div class="body_flex_row justify-content-between align-items-center">
-              <h2>{{"Performance Overview" | translate}}</h2>
-              <div class="filter_performanceOverview">
-                <div class="filterfields_PO">
-                  <div class="filterfields_input">
-                    <div class="input-block input-block-renew compare_inputblock">
-                      <select id="filter-annually" name="filter-annually" class="form-select input-selectBox" [(ngModel)]='performanceFilter' (change)="onSelectFilter('Performance', performanceFilter)" id="performanceFilter" name="performanceFilter">
-                        <option *ngFor="let opt of performanceFilterList" [value]="opt">
-                            {{ opt | translate }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="subHeader">
-              <div class="notification">
-                <img src="assets/Img/icon_tips.svg">{{"You've converted 10% more people this month compared to last month" | translate}}
-              </div>
-            </div>
-            <div *ngIf="performanceCard.length">
-              <div class="cardWraper-container" cdkDropListOrientation="horizontal" cdkDropList
-                (cdkDropListDropped)="dropPerformance($event)">
-                <ng-container *ngFor="let perform of performanceCard">
-                  <ng-container [ngSwitch]="perform.type">
-                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'text'" cdkDrag [cdkDragDisabled]="isDesktopView">
-                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
-                      </header>
-                      <div class="value">{{perform.value}}</div>
-                      <div class="card-tip" *ngIf="perform.description"><img
-                          [src]="perform.subIcon">{{perform.description | translate}}</div>
-                    </div>
-                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'progress'" cdkDrag [cdkDragDisabled]="isDesktopView">
-                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
-                      </header>
-                      <div class="value">₹ {{perform.value}}</div>
-                      <div class="progress-barMain">
-                        <p>{{perform.description | translate}}</p>
-                        <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
+                  <div class="card_item ">
+                    <div class="card_subitem">
+                      <div class="card_subitem_img">
+                        <img src="assets/Img/img_latest_abhi.png">
                       </div>
-                    </div>
-                    <div [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="isDesktopView">
-                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
-                      </header>
-                      <div class="value">₹ {{perform.value}}</div>
-                      <div class="card-tip" *ngIf="perform.description"><img
-                          src="assets/Img/icon_rupee.svg">{{perform.description | translate}}
-                      </div>
-                    </div>
-                    <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class" *ngSwitchCase="'gauge'" cdkDrag [cdkDragDisabled]="isDesktopView">
-                      <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title | translate}}
-                      </header>
-                      <div class="gauge">
-                        <app-guage [halfProgress]="perform.progress" [guageType]="'half-moon'"></app-guage>
-                      </div>
-                    </div>
-                  </ng-container>
-                </ng-container>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Business -->
-        <section cdkDrag [cdkDragDisabled]="isDesktopView" class="commonSection dashboard_LPR_main " *ngIf="section == 'Business'">
-          <div class="body_flex_row justify-content-between align-items-center">
-            <h3>{{"Business Summary" | translate}}</h3>
-            <div class="filter_performanceOverview">
-              <div class="filterfields_PO">
-                <div class="filterfields_input">
-                  <div class="input-block input-block-renew compare_inputblock">
-                    <select id="filter-annually" name="filter-annually" class="form-select input-selectBox" [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter" (change)="onSelectFilter('Business', businessFilter)">
-                      <option *ngFor="let opt of busninessFilterList" [value]="opt">
-                          {{ opt | translate }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div *ngIf="businessSummary && tabsInfo.length" class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
-          (cdkDropListDropped)="dropTabs($event)">
-            <ng-container *ngFor="let tab of tabsInfo">
-              <div cdkDrag [cdkDragDisabled]="isDesktopView" class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-                <header class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }"><span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
-                <div class="leads_content leads_contentDashboard">
-                  <div class="scroll_contentDashboard">
-                  <ng-container *ngFor="let buz of tab.category">
-                    <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
-                    <div  *ngSwitchCase="'Leads'">
-                      <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'">
+                      <div class="card_subitem_content">
                         <header>
-                          <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                          <label>{{buz.count}}</label>
+                          <div class="card_item_icon"><img src="assets/Img/icon_noise_partnership.png"></div>
+                          <h5>Noise partnership</h5>
+                          <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
+                            class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
                         </header>
+                        <h5>Noise partnership</h5>
+                        <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
                       </div>
                     </div>
-                    <div *ngSwitchCase="'Proposals'">
-                      <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'">
+                  </div>
+                  <div class="card_item ">
+                    <div class="card_subitem">
+                      <div class="card_subitem_img">
+                        <img src="assets/Img/img_latest_abhi.png">
+                      </div>
+                      <div class="card_subitem_content">
                         <header>
-                          <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                          <label>{{buz.count}}</label>
+                          <div class="card_item_icon"><img src="assets/Img/icon_pharmacy_partnership.png"></div>
+                          <h5>Pharmacy partnership</h5>
+                          <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
+                            class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
                         </header>
+                        <h5>Pharmacy partnership</h5>
+                        <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
                       </div>
                     </div>
                   </div>
-                  </ng-container>
-                </div>
-                  <div [ngSwitch]="tab.chart">
-                    <div *ngSwitchCase="'Leads'" class="chart-container" style="position: relative; width:100%">
-                      <canvas #chartCanvas style="margin: auto;  width:100%"></canvas>
+                  <div class="card_item ">
+                    <div class="card_subitem">
+                      <div class="card_subitem_img">
+                        <img src="assets/Img/img_latest_abhi.png">
+                      </div>
+                      <div class="card_subitem_content">
+                        <header>
+                          <div class="card_item_icon"><img src="assets/Img/icon_new_plan.png"></div>
+                          <h5>New plan</h5>
+                          <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
+                            class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
+                        </header>
+                        <h5>New plan</h5>
+                        <p>Partner with us to silence noise and create peaceful communities worldwide.</p>
+                      </div>
                     </div>
-                    <div *ngSwitchCase="'Proposals'" class="chart-container" style="position: relative; width:100%">
-                      <canvas #chartPropCanvas style="margin: auto;  width:100%"></canvas>
+                  </div>
+                  <div class="card_item">
+                    <div class="card_subitem">
+                      <div class="card_subitem_img">
+                        <img src="assets/Img/img_latest_abhi.png">
+                      </div>
+                      <div class="card_subitem_content">
+                        <header>
+                          <div class="card_item_icon"><img src="assets/Img/icon_noise_partnership.png"></div>
+                          <h5>Key Insights from Mayank Bathwal</h5>
+                          <button type="button" id="latest-abhi-btn-1" name="latest-abhi-btn-1"
+                            class="btn_icon_cardArrow"><img src="assets/Img/icon_red_downarrow.svg"></button>
+                        </header>
+                        <h5>Key Insights from Mayank Bathwal</h5>
+                        <p>Mayank has been responsible for setting up the latest venture of Aditya Birla Capital Limited
+                          in
+                          the health insurance space. With his expertise and </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </ng-container>
-            <div class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-              <header class="leads_itemHeader leads_itemHeaderRenewal" ><span>{{"Total Renewals" | translate}}</span><label>{{renewalDetail && renewalDetail[0]?.totalCount}}</label></header>
-              <div class="leads_content leads_contentDashboard scroll_contentDashboard">
-                <ng-container *ngFor="let buz of renewalDetail">
-                  <div class="leads_item_contentDashboard">
-                    <div class="leads_item leads_open" [routerLink]="'/renewal/renewalList'">
-                      <header>
-                        <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                        <label>{{buz.count}}</label>
-                      </header>
+            </section>
+            <!-- performance -->
+            <div cdkDrag [cdkDragDisabled]="isDesktopView" class="contentBody dashboard_contentContainer"
+              *ngIf="section == 'Performance'">
+              <div class="performance-overview">
+                <div class="body_flex_row justify-content-between align-items-center">
+                  <h2>{{"Performance Overview" | translate}}</h2>
+                  <div class="filter_performanceOverview">
+                    <div class="filterfields_PO">
+                      <div class="filterfields_input">
+                        <div class="input-block input-block-renew compare_inputblock">
+                          <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
+                            [(ngModel)]='performanceFilter' (change)="onSelectFilter('Performance', performanceFilter)"
+                            id="performanceFilter" name="performanceFilter">
+                            <option *ngFor="let opt of performanceFilterList" [value]="opt">
+                              {{ opt | translate }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
                   </div>
-               </ng-container>
-              </div>
-              <div class="cardWraper-container">
-                <div class="chart-container"  style="position: relative; width:100%">
-                  <canvas #chartRenewCanvas style="margin: auto;  width:100%"></canvas>
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <!-- Other Section -->
-        <section cdkDrag [cdkDragDisabled]="isDesktopView" class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Customer'">
-          <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
-          (cdkDropListDropped)="dropCharts($event)">
-          <ng-container *ngFor="let tab of otherSection">
-            <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="isDesktopView" class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-              <header  class="leads_itemHeader" [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
-                <span >{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label></header>
-              <div class="leads_content leads_contentDashboard leads_newService">
-                <div class="scroll_contentDashboard">
-                  <div class="data_inscroll">
-                    <ng-container *ngFor="let buz of tab.category">
-                      <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
-                        <div *ngSwitchCase="'Customer'">
-                          <div class="leads_item leads_open" [routerLink]="'/customers/customersList'">
-                            <header>
-                              <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                              <label>{{buz.count}}</label>
-                            </header>
+                <!-- <div class="subHeader">
+                  <div class="notification">
+                    <img src="assets/Img/icon_tips.svg">{{"You've converted 10% more people this month compared to last month" | translate}}
+                  </div>
+                </div> -->
+                <div *ngIf="performanceCard.length">
+                  <div class="cardWraper-container" cdkDropListOrientation="horizontal" cdkDropList
+                    (cdkDropListDropped)="dropPerformance($event)">
+                    <ng-container *ngFor="let perform of performanceCard">
+                      <ng-container [ngSwitch]="perform.type">
+                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                          *ngSwitchCase="'text'" cdkDrag [cdkDragDisabled]="isDesktopView">
+                          <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
+                            translate}}
+                          </header>
+                          <div class="value">{{perform.value}}</div>
+                          <div class="card-tip" *ngIf="perform.description"><img
+                              [src]="perform.subIcon">{{perform.description | translate}}</div>
+                        </div>
+                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                          *ngSwitchCase="'progress'" cdkDrag [cdkDragDisabled]="isDesktopView">
+                          <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
+                            translate}}
+                          </header>
+                          <div class="value">₹ {{perform.value}}</div>
+                          <div class="progress-barMain">
+                            <p>{{perform.description | translate}}</p>
+                            <app-guage [progress]="perform.value" [guageType]="'linear'"></app-guage>
                           </div>
                         </div>
-                        <!-- <div *ngSwitchCase="'Wellness'">
+                        <div [routerLink]="'/mycommissions'" [ngClass]="'cardItem ' + perform.class"
+                          *ngSwitchCase="'action'" cdkDrag [cdkDragDisabled]="isDesktopView">
+                          <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
+                            translate}}
+                          </header>
+                          <div class="value">₹ {{perform.value}}</div>
+                          <div class="card-tip" *ngIf="perform.description"><img
+                              src="assets/Img/icon_rupee.svg">{{perform.description | translate}}
+                          </div>
+                        </div>
+                        <div [routerLink]="'/performance/my-performance'" [ngClass]="'cardItem ' + perform.class"
+                          *ngSwitchCase="'gauge'" cdkDrag [cdkDragDisabled]="isDesktopView">
+                          <header><span class="cardItem_icon"><img [src]="perform.icon"></span>{{perform.title |
+                            translate}}
+                          </header>
+                          <div class="gauge">
+                            <app-guage [halfProgress]="perform.progress" [guageType]="'half-moon'"></app-guage>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Business -->
+            <section cdkDrag [cdkDragDisabled]="isDesktopView"
+              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Business'">
+              <div class="body_flex_row justify-content-between align-items-center">
+                <h3>{{"Business Summary" | translate}}</h3>
+                <div class="filter_performanceOverview">
+                  <div class="filterfields_PO">
+                    <div class="filterfields_input">
+                      <div class="input-block input-block-renew compare_inputblock">
+                        <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
+                          [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter"
+                          (change)="onSelectFilter('Business', businessFilter)">
+                          <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                            {{ opt | translate }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
+                (cdkDropListDropped)="dropTabs($event)">
+                <ng-container *ngFor="let tab of tabsInfo">
+                  <div *ngIf="businessSummary && tabsInfo.length" cdkDrag [cdkDragDisabled]="isDesktopView"
+                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+                    <header class="leads_itemHeader"
+                      [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
+                      <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label>
+                    </header>
+                    <div class="leads_content leads_contentDashboard leads_newService">
+                      <div class="scroll_contentDashboard">
+                        <div class="data_inscroll">
+                          <ng-container *ngFor="let buz of tab.category">
+                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
+                              <div *ngSwitchCase="'Leads'">
+                                <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'">
+                                  <header>
+                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                    <label>{{buz.count}}</label>
+                                  </header>
+                                </div>
+                              </div>
+                              <div *ngSwitchCase="'Proposals'">
+                                <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'">
+                                  <header>
+                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                    <label>{{buz.count}}</label>
+                                  </header>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                      <div [ngSwitch]="tab.chart">
+                        <div *ngSwitchCase="'Leads'" class="chart-container" style="position: relative; width:100%">
+                          <canvas #chartCanvas style="margin: auto;  width:100%"></canvas>
+                        </div>
+                        <div *ngSwitchCase="'Proposals'" class="chart-container" style="position: relative; width:100%">
+                          <canvas #chartPropCanvas style="margin: auto;  width:100%"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </section>
+
+            <!-- Renewal -->
+            <section cdkDrag [cdkDragDisabled]="isDesktopView"
+              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Business'">
+              <div class="body_flex_row justify-content-between align-items-center">
+                <h3>{{"Renewal Summary" | translate}}</h3>
+                <div class="filter_performanceOverview">
+                  <div class="filterfields_PO">
+                    <div class="filterfields_input">
+                      <div class="input-block input-block-renew compare_inputblock">
+                        <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
+                          [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter"
+                          (change)="onSelectFilter('Business', businessFilter)">
+                          <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                            {{ opt | translate }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
+                (cdkDropListDropped)="dropTabs($event)">
+                <ng-container *ngFor="let tab of renewalDetail">
+                  <div *ngIf="renewalDetail.length" cdkDrag [cdkDragDisabled]="isDesktopView"
+                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+                    <header class="leads_itemHeader"
+                      [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
+                      <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label>
+                    </header>
+                    <div class="leads_content leads_contentDashboard leads_newService">
+                      <div class="scroll_contentDashboard">
+                        <div class="data_inscroll">
+                          <ng-container *ngFor="let buz of tab.category">
+                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
+                              <div *ngSwitchCase="'Renewal'">
+                                <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'">
+                                  <header>
+                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                    <label>{{buz.count}}</label>
+                                  </header>
+                                </div>
+                              </div>
+                              <div *ngSwitchCase="'Persistency'">
+                                <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'">
+                                  <header>
+                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                    <label>{{buz.count}}</label>
+                                  </header>
+                                </div>
+                                <app-guage [progress]="tab.totalCount" style="margin: auto;  width:100%" [guageType]="'circular'"></app-guage>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                      <div [ngSwitch]="tab.chart">
+                        <div *ngSwitchCase="'Renewal'" class="chart-container" style="position: relative; width:100%">
+                          <canvas #chartRenewCanvas style="margin: auto;  width:100%"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+            </section>
+
+            <!-- Claim and customer -->
+            <section cdkDrag [cdkDragDisabled]="isDesktopView"
+              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Customer'">
+              <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
+                (cdkDropListDropped)="dropCharts($event)">
+                <ng-container *ngFor="let tab of otherSection">
+                  <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="isDesktopView"
+                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+                    <header class="leads_itemHeader"
+                      [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
+                      <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label>
+                    </header>
+                    <div class="leads_content leads_contentDashboard leads_newService">
+                      <div class="scroll_contentDashboard">
+                        <div class="data_inscroll">
+                          <ng-container *ngFor="let buz of tab.category">
+                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
+                              <div *ngSwitchCase="'Customer'">
+                                <div class="leads_item leads_open" [routerLink]="'/customers/customersList'">
+                                  <header>
+                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                    <label>{{buz.count}}</label>
+                                  </header>
+                                </div>
+                              </div>
+                              <!-- <div *ngSwitchCase="'Wellness'">
                           <div class="leads_item leads_open">
                             <header>
                               <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
@@ -410,57 +492,63 @@
                             </header>
                           </div>
                         </div> -->
-                      <div *ngSwitchCase="'Claims'">
-                        <div class="leads_item leads_open">
-                          <header>
-                            <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                            <label>{{buz.count}}</label>
-                          </header>
+                              <div *ngSwitchCase="'Claims'">
+                                <div class="leads_item leads_open">
+                                  <header>
+                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                    <label>{{buz.count}}</label>
+                                  </header>
+                                </div>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </div>
+                      <div class="leads_newChart" [ngSwitch]="tab.chart">
+                        <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
+                          <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
+                        </div>
+                        <!-- <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
+                    <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
+                  </div> -->
+                        <div *ngSwitchCase="'Claims'" class="chart-container" style="position: relative; width:100%">
+                          <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
                         </div>
                       </div>
                     </div>
-                  </ng-container>
-                </div>
-                </div>
-                <div class="leads_newChart" [ngSwitch]="tab.chart">
-                  <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
-                    <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
                   </div>
-                  <!-- <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
-                    <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
-                  </div> -->
-                  <div *ngSwitchCase="'Claims'" class="chart-container" style="position: relative; width:100%">
-                    <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
-                  </div>
-                </div>
+                </ng-container>
               </div>
-            </div>
-          </ng-container>
-          </div>
-        </section>
+            </section>
 
-        <section class="dashboard_otherSections commonSection" *ngIf="section == 'Others'">
-          <div class="board_otherSections">
-              <!--Knowledge Centre start-->
-              <div class="item_otherSections" style="display: none;">
-                <div class="otherSections_wraper">
-                  <header>
-                    <div class="otherSections_head">
-                      <h2>{{"Knowledge Centre" | translate}}</h2>
-                      <button type="button" id="btn-view-all-courses" name="btn-view-all-courses" class="btn_iconText btn_exploreMore">
-                        {{"View All Courses" | translate}} <img src="assets/Img/icon_red_downarrow.svg"></button>
-                    </div>
-                  </header>
-                  <div class="otherSections_body">
-                    <ul class="inlineFilter">
-                      <li><button type="button" id="kc-completed" name="kc-completed" class="btn_quickFilter btn_quickFilterClaim active">{{"Completed" | translate}} </button></li>
-                      <li><button type="button" id="kc-inprogress" name="kc-inprogress" class="btn_quickFilter btn_quickFilterClaim ">{{"In Progress" | translate}} </button></li>
-                      <li><button type="button" id="kc-pending" name="kc-pending" class="btn_quickFilter btn_quickFilterClaim ">{{"Pending" | translate}} </button></li>
-                    </ul>
-                    <div class="card_wraper">
-                      <div class="cardsub_wraper">
+            <!-- others -->
+            <section class="dashboard_otherSections commonSection" *ngIf="section == 'Others'">
+              <div class="board_otherSections">
+                <!--Knowledge Centre start-->
+                <div class="item_otherSections" style="display: none;">
+                  <div class="otherSections_wraper">
+                    <header>
+                      <div class="otherSections_head">
+                        <h2>{{"Knowledge Centre" | translate}}</h2>
+                        <button type="button" id="btn-view-all-courses" name="btn-view-all-courses"
+                          class="btn_iconText btn_exploreMore">
+                          {{"View All Courses" | translate}} <img src="assets/Img/icon_red_downarrow.svg"></button>
+                      </div>
+                    </header>
+                    <div class="otherSections_body">
+                      <ul class="inlineFilter">
+                        <li><button type="button" id="kc-completed" name="kc-completed"
+                            class="btn_quickFilter btn_quickFilterClaim active">{{"Completed" | translate}} </button>
+                        </li>
+                        <li><button type="button" id="kc-inprogress" name="kc-inprogress"
+                            class="btn_quickFilter btn_quickFilterClaim ">{{"In Progress" | translate}} </button></li>
+                        <li><button type="button" id="kc-pending" name="kc-pending"
+                            class="btn_quickFilter btn_quickFilterClaim ">{{"Pending" | translate}} </button></li>
+                      </ul>
+                      <div class="card_wraper">
+                        <div class="cardsub_wraper">
 
-                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="card_item body_flex_column knowledgeInfo">
                             <div class="video_knowledgeInfo">
                               <img src="assets/Img/img_knowledge.png">
                             </div>
@@ -470,178 +558,167 @@
                                 class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
                                   src="assets/Img/icon_red_downarrow.svg"></button>
                             </div>
-                        </div>
-                        <div class="card_item body_flex_column knowledgeInfo">
-                          <div class="video_knowledgeInfo">
-                            <img src="assets/Img/img_knowledge.png">
                           </div>
-                          <div class="content_knowledgeInfo body_flex_row">
-                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
-                            <button type="button" id="btn-resume" name="btn-resume"
-                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
-                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          <div class="card_item body_flex_column knowledgeInfo">
+                            <div class="video_knowledgeInfo">
+                              <img src="assets/Img/img_knowledge.png">
+                            </div>
+                            <div class="content_knowledgeInfo body_flex_row">
+                              <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                              <button type="button" id="btn-resume" name="btn-resume"
+                                class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
                           </div>
-                        </div>
-                        <div class="card_item body_flex_column knowledgeInfo">
-                          <div class="video_knowledgeInfo">
-                            <img src="assets/Img/img_knowledge.png">
+                          <div class="card_item body_flex_column knowledgeInfo">
+                            <div class="video_knowledgeInfo">
+                              <img src="assets/Img/img_knowledge.png">
+                            </div>
+                            <div class="content_knowledgeInfo body_flex_row">
+                              <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                              <button type="button" id="btn-resume" name="btn-resume"
+                                class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                  src="assets/Img/icon_red_downarrow.svg"></button>
+                            </div>
                           </div>
-                          <div class="content_knowledgeInfo body_flex_row">
-                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
-                            <button type="button" id="btn-resume" name="btn-resume"
-                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
-                                src="assets/Img/icon_red_downarrow.svg"></button>
-                          </div>
-                        </div>
 
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+                <!--Knowledge Centre end-->
+                <!--DHA & HR Portfolio start-->
+                <div class="item_otherSections">
+                  <div class="otherSections_wraper">
+                    <header>
+                      <div class="otherSections_head">
+                        <h2>{{"DHA & HR Portfolio" | translate}}</h2>
+                      </div>
+                    </header>
+                    <div class="otherSections_body">
+                      <div class="card_wraper">
+                        <div class="cardsub_wraper">
+                          <ng-container *ngFor="let cat of dhaCard">
+                            <div class="cardItem" *ngIf="cat.name == 'Total Assessments'">
+                              <header><span class="cardItem_icon"><img
+                                    src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{cat.name | translate}}
+                              </header>
+                              <div class="value">₹ {{cat.count}}</div>
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_currency.svg">
+                                {{"Nudge your users to actively participate to save more" | translate}}
+                              </div>
+                            </div>
+                            <div class="cardItem" *ngIf="cat.name == 'Total Health Returns Amount'">
+                              <header><span class="cardItem_icon"><img
+                                    src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Records" |
+                                translate}}
+                              </header>
+                              <div class="value">₹ {{cat.count}}</div>
+                              <div class="card-tip">
+                                <img src="assets/Img/icon_currency.svg">
+                                {{"Nudge your users to actively participate to save more" | translate}}
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
-
-              </div>
-              <!--Knowledge Centre end-->
-              <!--DHA & HR Portfolio start-->
-              <div class="item_otherSections">
-                <div class="otherSections_wraper">
-                  <header>
-                    <div class="otherSections_head">
-                      <h2>{{"DHA & HR Portfolio" | translate}}</h2>
-                    </div>
-                  </header>
-                  <div class="otherSections_body">
-                    <div class="card_wraper">
-                      <div class="cardsub_wraper">
-                        <ng-container *ngFor="let cat of dhaCard">
-                                <div class="cardItem" *ngIf="cat.name == 'Total Assessments'">
-                                  <header><span class="cardItem_icon"><img
-                                        src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{cat.name | translate}}
-                                  </header>
-                                  <div class="value">₹ {{cat.count}}</div>
-                                  <div class="card-tip">
-                                    <img src="assets/Img/icon_currency.svg">
-                                    {{"Nudge your users to actively participate to save more" | translate}}
+                <!--DHA & HR Portfolio end-->
+                <!--Top Selling Products start-->
+                <div class="item_otherSections">
+                  <div class="otherSections_wraper">
+                    <header>
+                      <div class="otherSections_head">
+                        <h2>{{"Top Selling Products" | translate}}</h2>
+                        <a (click)="onClickEvents('products')" class="btn_linkText">{{"View All" | translate}}</a>
+                      </div>
+                    </header>
+                    <div class="otherSections_body">
+                      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                          <div *ngFor="let prod of ProductList; let i = index" class="carousel-item"
+                            [class.active]="i === 0">
+                            <div class="card_item body_flex_column knowledgeInfo">
+                              <header class="body_flex_row head_tsp">
+                                <div class="common_ProductInfo">
+                                  <div class="common_ppi_img">
+                                    <img src="assets/Img/icon_activeone.svg">
+                                  </div>
+                                  <div class="common_ppi_info">
+                                    <h4>{{prod.productName | translate}}</h4>
                                   </div>
                                 </div>
-                                <div class="cardItem" *ngIf="cat.name == 'Total Health Returns Amount'">
-                                  <header><span class="cardItem_icon"><img
-                                        src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Records" | translate}}
-                                  </header>
-                                  <div class="value">₹ {{cat.count}}</div>
-                                  <div class="card-tip">
-                                    <img src="assets/Img/icon_currency.svg">
-                                    {{"Nudge your users to actively participate to save more" | translate}}
-                                  </div>
-                              </div>
-                        </ng-container>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!--DHA & HR Portfolio end-->
-              <!--Top Selling Products start-->
-              <div class="item_otherSections">
-                <div class="otherSections_wraper">
-                  <header>
-                    <div class="otherSections_head">
-                      <h2>{{"Top Selling Products" | translate}}</h2>
-                      <a (click)="onClickEvents('products')" class="btn_linkText">{{"View All" | translate}}</a>
-                    </div>
-                  </header>
-                  <div class="otherSections_body">
-                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                          <div class="carousel-inner">
-                            <div *ngFor="let prod of ProductList; let i = index" class="carousel-item" [class.active]="i === 0">
-                              <div class="card_item body_flex_column knowledgeInfo" >
-                                <header class="body_flex_row head_tsp">
-                                    <div class="common_ProductInfo">
-                                        <div class="common_ppi_img">
-                                          <img src="assets/Img/icon_activeone.svg">
-                                        </div>
-                                        <div class="common_ppi_info">
-                                          <h4>{{prod.productName | translate}}</h4>
-                                        </div>
-                                    </div>
-                                    <div class="common_ProductPrice">
-                                      <span class="text-red">₹{{prod.sumInsured}}*</span>{{"/ 1 year" | translate}}
-                                    </div>
-                                </header>
-                                <ul class="tick_round" >
-                                  <li *ngFor="let key of prod.keyFeatures"><div class="tick_round_div" ><img src="assets/Img/icon_tick_whitebg.svg">{{key | translate}} </div></li>
-                                </ul>
-                                <footer>
-                                  <button type="button" id="btn-sellingTips" name="btn-sellingTips"
-                                    class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span class="body_flex_row"><img
-                                    src="assets/Img/icon_lightbulb2.svg">{{"Show selling tips for me" | translate}}</span> <em><img
+                                <!-- <div class="common_ProductPrice">
+                                  <span class="text-red">₹{{prod.sumInsured}}*</span>{{"/ 1 year" | translate}}
+                                </div> -->
+                              </header>
+                              <ul class="tick_round">
+                                <li *ngFor="let key of prod.keyFeatures">
+                                  <div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{key |
+                                    translate}} </div>
+                                </li>
+                              </ul>
+                              <footer>
+                                <button type="button" id="btn-sellingTips" name="btn-sellingTips"
+                                  class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span
+                                    class="body_flex_row"><img src="assets/Img/icon_lightbulb2.svg">{{"Show selling tips for me" | translate}}</span> <em><img
                                       src="assets/Img/icon_right_arrow_black.svg"></em></button>
-                                </footer>
-                              </div>
+                              </footer>
                             </div>
                           </div>
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                            <!-- <mat-icon>keyboard_arrow_right</mat-icon> -->
-                          </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                            <!-- <mat-icon>keyboard_arrow_left</mat-icon> -->
-                          </button>
                         </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                          data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                          <!-- <mat-icon>keyboard_arrow_right</mat-icon> -->
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                          data-bs-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                          <!-- <mat-icon>keyboard_arrow_left</mat-icon> -->
+                        </button>
+                      </div>
 
-                        
+
+                    </div>
                   </div>
                 </div>
-              </div>
-              <!--Top Selling Products end-->
-              <!--Participate in challenge to start-->
-              <div class="item_otherSections" style="display: none;">
-                <div class="otherSections_wraper">
-                  <header>
-                    <div class="otherSections_head otherSections_head_column">
-                      <h2>{{"Participate in challenge to" | translate}}</h2>
-                      <div class="body_flex_row">
-                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_hityourdailygoal.svg">{{"Hit your daily goal" | translate}}</span>
-                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_competewithpeer.svg">{{"Compete with peers" | translate}}</span>
-                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_earnbadge.svg">{{"Earn badges" | translate}}</span>
+                <!--Top Selling Products end-->
+                <!--Participate in challenge to start-->
+                <div class="item_otherSections" style="display: none;">
+                  <div class="otherSections_wraper">
+                    <header>
+                      <div class="otherSections_head otherSections_head_column">
+                        <h2>{{"Participate in challenge to" | translate}}</h2>
+                        <div class="body_flex_row">
+                          <span class="common_iconText"><img src="assets/Img/icon_dashboard_hityourdailygoal.svg">{{"Hit your daily goal" | translate}}</span>
+                          <span class="common_iconText"><img
+                              src="assets/Img/icon_dashboard_competewithpeer.svg">{{"Compete with peers" |
+                            translate}}</span>
+                          <span class="common_iconText"><img src="assets/Img/icon_dashboard_earnbadge.svg">{{"Earn badges" | translate}}</span>
+                        </div>
                       </div>
-                    </div>
-                  </header>
-                  <div class="otherSections_body">
-                    <div class="card_wraper topSellingProducts participateChallenge">
-                      <div class="cardsub_wraper">
+                    </header>
+                    <div class="otherSections_body">
+                      <div class="card_wraper topSellingProducts participateChallenge">
+                        <div class="cardsub_wraper">
 
-                        <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                          <div class="carousel-inner">
-                            <div class="carousel-item active">
-                              <div class="card_item body_flex_row knowledgeInfo">
-                                <div class="left_PC block_bg_blue">
-                                  {{"#95k Steps in 15 Days" | translate}}
-                                </div>
-                                <div class="right_PC">
-                                    <div class="body_flex_column">
-                                      <div class="PC_information">
-                                        <div class="PC_head">
-                                          <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}                                  </div>
-                                        <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
-                                        <div class="PC_dateInfo">
-                                          <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" | translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
-                                        </div>
-                                      </div>
-                                      <button type="button" id="btn-knowmore" name="btn-knowmore" class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
-                                    </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="carousel-item">
-                              <div class="card_item body_flex_row knowledgeInfo">
-                                <div class="left_PC block_bg_green">
-                                  {{"#1200 Calorie Burn" | translate}}
-                                </div>
-                                <div class="right_PC">
+                          <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                              <div class="carousel-item active">
+                                <div class="card_item body_flex_row knowledgeInfo">
+                                  <div class="left_PC block_bg_blue">
+                                    {{"#95k Steps in 15 Days" | translate}}
+                                  </div>
+                                  <div class="right_PC">
                                     <div class="body_flex_column">
                                       <div class="PC_information">
                                         <div class="PC_head">
@@ -649,59 +726,87 @@
                                         </div>
                                         <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
                                         <div class="PC_dateInfo">
-                                          <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" | translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
+                                          <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" |
+                                            translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
                                         </div>
                                       </div>
-                                      <button type="button" id="btn-knowmore" name="btn-knowmore" class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
+                                      <button type="button" id="btn-knowmore" name="btn-knowmore"
+                                        class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
                                     </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="carousel-item">
+                                <div class="card_item body_flex_row knowledgeInfo">
+                                  <div class="left_PC block_bg_green">
+                                    {{"#1200 Calorie Burn" | translate}}
+                                  </div>
+                                  <div class="right_PC">
+                                    <div class="body_flex_column">
+                                      <div class="PC_information">
+                                        <div class="PC_head">
+                                          <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}
+                                        </div>
+                                        <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
+                                        <div class="PC_dateInfo">
+                                          <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" |
+                                            translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
+                                        </div>
+                                      </div>
+                                      <button type="button" id="btn-knowmore" name="btn-knowmore"
+                                        class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
+                            <button class="carousel-control-prev" type="button"
+                              data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                              data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
                           </div>
-                          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                          </button>
-                          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <!--Participate in challenge to end-->
+                <!--Participate in challenge to end-->
 
-              <!--My Goals start-->
-              <div class="item_otherSections" style="display: none;">
-                <div class="otherSections_wraper">
-                  <header>
-                    <div class="otherSections_head">
-                      <h2>{{"My Goals" | translate}}</h2>
-                      <div class="filterfields_input">
-                        <div class="input-block input-block-renew compare_inputblock">
-                          <select id="filter-annually" name="filter-annually" class="form-select input-selectBox" [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter">
-                            <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                <!--My Goals start-->
+                <div class="item_otherSections" style="display: none;">
+                  <div class="otherSections_wraper">
+                    <header>
+                      <div class="otherSections_head">
+                        <h2>{{"My Goals" | translate}}</h2>
+                        <div class="filterfields_input">
+                          <div class="input-block input-block-renew compare_inputblock">
+                            <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
+                              [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter">
+                              <option *ngFor="let opt of busninessFilterList" [value]="opt">
                                 {{ opt | translate }}
-                            </option>
-                          </select>
+                              </option>
+                            </select>
+                          </div>
                         </div>
                       </div>
+                    </header>
+                    <div class="otherSections_body">
+                      <canvas id="horizontalBarChart"></canvas>
                     </div>
-                  </header>
-                  <div class="otherSections_body">
-                    <canvas id="horizontalBarChart"></canvas>
                   </div>
                 </div>
+                <!--My Goals end-->
               </div>
-              <!--My Goals end-->
-          </div>
-        </section>
+            </section>
 
-      </ng-container>
-    </ng-conatiner>
+          </ng-container>
+        </ng-conatiner>
       </div>
     </div>
   </div>

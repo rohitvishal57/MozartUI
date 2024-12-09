@@ -1460,6 +1460,9 @@ h2 {
     gap: 10px !important;
     .scroll_contentDashboard, .leads_newChart {
         width: 50%;
+        @media (max-width:767px) {
+            width: 100%;
+        }
     }
     .scroll_contentDashboard{
         max-height: none;
@@ -1480,7 +1483,9 @@ h2 {
                 }
             }
         }
-        
+        @media (max-width:767px) {
+            width: 100%;
+        }
     }
 }
 .carousel-control-next, .carousel-control-prev {
