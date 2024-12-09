@@ -133,7 +133,7 @@ export class CreateLeadComponent implements OnInit {
       firstname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
       MiddleName: ['', [Validators.pattern('[a-zA-Z ]*')]],
       lastname: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
-      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9_.+\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-.]+$')]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       isWhatsapp: false,
       dob: [''],
       age: ['', [Validators.pattern('[0-9]*')]],
@@ -221,6 +221,7 @@ export class CreateLeadComponent implements OnInit {
     if (this.userValidations.invalid) {
       console.log('userValidations ',this.userValidations.errors)
       window.scrollTo(0, 0);
+      this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields.", duration: 5000 });
       return;
     }
     else {
