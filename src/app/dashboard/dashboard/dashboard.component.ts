@@ -22,7 +22,7 @@ export class DashboardComponent {
   showSearchedResults = false;
   performanceCard: any = [];
   tabsInfo: any = [];
-  renewalDetail: any;
+  renewalDetail: any = [];
   quickActionDetails: any = [];
   businessSummary: any;
 
@@ -37,6 +37,7 @@ export class DashboardComponent {
   @ViewChild('chartCanvas') chartCanvas: ElementRef | undefined;
   @ViewChild('chartPropCanvas') chartPropCanvas: ElementRef | undefined;
   @ViewChild('chartRenewCanvas') chartRenewCanvas: ElementRef | undefined;
+  @ViewChild('chartPersistencyCanvas') chartPersistencyCanvas: ElementRef | undefined;
   @ViewChild('chartDHACanvas') chartDHACanvas: ElementRef | undefined;
   @ViewChild('chartCustomerCanvas') chartCustomerCanvas: ElementRef | undefined;
   @ViewChild('chartServicingCanvas') chartServicingCanvas: ElementRef | undefined;
@@ -58,7 +59,7 @@ export class DashboardComponent {
   isDesktopView = false;
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
-    private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef, private productService: ProductsService) {
+    private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
 
   }
 
@@ -367,7 +368,7 @@ export class DashboardComponent {
     this.renderChart();
     this.renderPropChart();
     this.renderEXPropChart();
-    // this.renderDHAChart();
+    this.renderPersistencyChart();
     this.renderCustomerChart();
     this.renderServiceChart();
     this.createHorizontalBarChart();
@@ -543,10 +544,9 @@ export class DashboardComponent {
   }
 
   createEXChartData(): ChartData<'pie' | 'doughnut'> {
-    const categories = this.renewalDetail;
-    const labels = categories.map((item: any) => item.name);
-    const data = categories.map((item: any) => item.count);
-
+    const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Renewal')
+    const labels = categories[0].category.map((item: any) => item.name);
+    const data = categories[0].category.map((item: any) => item.count);
     return {
       labels: labels,
       datasets: [{
@@ -606,27 +606,100 @@ export class DashboardComponent {
     }
   }
 
+  createPersistencyChartData(): ChartData<'pie' | 'doughnut'> {
+    const categories = this.renewalDetail.filter((k: any) => k.tabName == 'Persistency')
+    const labels = categories[0].category.map((item: any) => item.name);
+    const data = categories[0].category.map((item: any) => item.count);
+    return {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#e74c3c',
+          '#9b59b6',
+          '#3498db',
+          '#f39c12',
+          '#1abc9c'], // Dynamic colors
+        //hoverBackgroundColor: ['#FF4D4D', '#4D4DFF', '#66FF66', '#FFCC00'], // Hover effect colors
+      }]
+    };
+  }
+
+  renderPersistencyChart(): void {
+    if (this.chartPersistencyCanvas && this.chartPersistencyCanvas.nativeElement) {
+      const canvas = this.chartPersistencyCanvas.nativeElement;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get context from canvas.');
+        return;
+      }
+
+      // Create the chart using Chart.js
+      this.renewChart = new Chart(ctx, {
+        type: 'pie', // 'pie' or 'doughnut'
+        data: this.createPersistencyChartData(), // Dynamic chart data
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',  // Move legend to the side (right or left)
+              labels: {
+                font: {
+                  size: 11,  // Reduce the font size of the legend labels
+                  weight: 'normal',  // Adjust the weight of the legend text
+                  family: "'Anek Latin', 'Helvetica', 'Arial', sans-serif"  // Adjust the font family if necessary
+                },
+                boxWidth: 10,  // Set the width of the colored box (legend symbol)
+                boxHeight: 10,  // Set the height of the colored box (legend symbol)
+                padding: 5  // Adjust the padding around each legend item
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: (tooltipItem) => {
+                  return `${tooltipItem.label}: ${tooltipItem.raw}`; // Custom tooltip label
+                },
+              },
+            },
+          },
+        }
+      });
+    } else {
+      console.error('Chart canvas element is not found.');
+    }
+  }
+
   createRenewChart() {
     const reqData = {
       "agentCode": localStorage.getItem('agentCode')
     }
 
     this.dashboardService.fetchDueRenewals(reqData).subscribe(res => {
-      this.renewalDetail = res.data.map((item: any) => ({
-        totalCount: res.data.reduce((sum: any, item: any) => sum + item.customerCount, 0),
-        name: item.dueStatus,
-        count: item.customerCount
-      }))
+      this.renewalDetail.push(
+        {
+          tabName: 'Renewal',
+          chart: 'Renewal',
+          totalCount: res.data.reduce((sum: any, item: any) => sum + item.customerCount, 0),
+          category: res.data.map((item: any) => ({
+            name: item.dueStatus,
+            count: item.customerCount
+          }))
+        }
+      );
     });
-
-    this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(data => {
-      this.renewalDetail.push({
-        name: 'Persistency %',
-        count: data.data[0].persistencyPercentage
-      })
+    this.dashboardService.fetchPersistencyPercentage(reqData).subscribe(res => {
+      this.renewalDetail.push(
+        {
+          tabName: 'Persistency',
+          chart: 'Persistency',
+          totalCount: res.data[0].persistencyPercentage,
+          category: res.data.map((item: any) => ({
+            name: 'Persistency',
+            count: res.data[0].persistencyPercentage
+          }))
+        }
+      );
     });
-
-
   }
 
   // createDHAChartData(): ChartData<'pie' | 'doughnut'> {
@@ -766,7 +839,6 @@ export class DashboardComponent {
   }
 
   createServiceChartData(): ChartData<'pie' | 'doughnut'> {
-
     return {
       labels: [
         'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
@@ -903,7 +975,7 @@ export class DashboardComponent {
     const reqData = {
       "agentCode": localStorage.getItem('agentCode')
     }
-    this.productService.Getproductlist(reqData).subscribe({
+    this.dashboardService.Getproductlist().subscribe({
       next: (res: any) => {
         this.ProductList = res.data.slice(0, 2).map((item: any) => ({
           productName: item.productName,

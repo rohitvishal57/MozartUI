@@ -2,7 +2,7 @@
 <header class="siteHeader" *ngIf="agentCode != '467898'">
 
   <!--ABC Links start-->
-  <div class="abcLinksMain">
+  <div class="abcLinksMain" *ngIf="agentCode != '467899'">
     <div class="abcTopLinks">
       <div class="abcHome" tabindex="0">
         <a target="_blank"><img src="assets/Img/icon_home_white.svg">ABC Home<img
@@ -33,8 +33,7 @@
       </div>
 
       <div class="logoRightNav">
-
-        <nav class="navbar navbar-expand-lg navbar-light top_mainNavBar" *ngIf="isLoggedIn">
+        <nav class="navbar navbar-expand-lg navbar-light top_mainNavBar" *ngIf="isLoggedIn && agentCode != '467899'">
           <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#supported_NavBar" aria-controls="supported_NavBar" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon block-hide"></span>Services
