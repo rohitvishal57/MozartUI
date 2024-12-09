@@ -58,7 +58,8 @@ export class ProductComparisonComponent {
           try {
             const reqData = {
               "partnerId": comparisonItem.partnerId,
-              "productId": comparisonItem.productId
+              "productId": comparisonItem.productId,
+              "proposalNum": ''
             }
             const res = await firstValueFrom(this.common.Getformsequence(reqData));
             this.formSequence = JSON.parse(res.data.formSequence);
