@@ -47,7 +47,7 @@ export class ProductsComponent implements OnInit {
   state: any;
   paramLeadId: any;
   leadId: any;
-  quickQuoteRedirection : Boolean = false;
+  quickQuoteRedirect : Boolean = false;
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
@@ -62,7 +62,7 @@ export class ProductsComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.leadId = params['leadnumber'];
       if(this.leadId){
-        this.quickQuoteRedirection = true;
+        this.quickQuoteRedirect = true;
       }
     });
 
@@ -264,10 +264,10 @@ export class ProductsComponent implements OnInit {
         applicableZones:item.applicableZones
       }
 
-      if(this.quickQuoteRedirection){
+      if(this.quickQuoteRedirect){
         await this.getLeadInformationByLeadNumber(item.productName)
         productData.leadId = this.leadId;
-        productData.quickQuoteRedirect = this.quickQuoteRedirection
+        productData.quickQuoteRedirect = this.quickQuoteRedirect
       }
 
       console.log(productData)
@@ -349,7 +349,7 @@ export class ProductsComponent implements OnInit {
   }
   productsDetail(item: any) {
     this.router.navigate(['quote/productDetails'], {
-      state: { item: item  , leadnumber:this.leadId  , quickQuoteRedirect : this.quickQuoteRedirection}
+      state: { item: item  , leadnumber:this.leadId  , quickQuoteRedirect : this.quickQuoteRedirect}
     });
   }
 
