@@ -355,6 +355,17 @@ export class RugDynamicFormComponent {
         }
       });
     }
+    this.yatraService.getProductCombinations().subscribe({
+      next: (res: any) => {
+        res = JSON.parse(res.data).data
+        console.log(res);
+        this.productCombinationData = res.productCombinationModel
+        console.log(this.productCombinationData);
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
   initializeRequiredData() {
     if (sessionStorage.getItem('allFormData') != null)
@@ -3267,6 +3278,13 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI");
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+          return ele;
+        }
+        });
+        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
     }
     else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
       const filteredData = premiumObj.filter(
@@ -3277,6 +3295,14 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA");
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+      if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+        return ele;
+      }
+      });
+      this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+
     }
     else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
       const filteredData = premiumObj.filter(
@@ -3288,6 +3314,14 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GPA,GCI");
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+          return ele;
+        }
+        });
+        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+
     }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-5L"){
       const filteredData = premiumObj.filter(
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
@@ -3297,6 +3331,14 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium - filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-5L");
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+          return ele;
+        }
+        });
+        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
+
     }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-10L"){
       const filteredData = premiumObj.filter(
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-10L"
@@ -3306,6 +3348,13 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium - filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI-10L");
+      let selectedCombiID = this.productCombinationData?.filter((ele: any) => {
+        if((ele.productCombination).replace(/\+/g, ",") == this.dynamicFormGroup.get('productPlanName')?.value && ele.productCode == this.bbdetails.productCode){
+          return ele;
+        }
+        });
+        this.dynamicFormGroup.get('combiId')?.setValue(selectedCombiID[0]?.combiId?.toString())
     }else{
       this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());
 
@@ -3316,7 +3365,14 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (premiumObj[0].premium + premiumObj[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     }
-
+    if(this.bbdetails.productCode == "R10"){
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GCI");
+      this.dynamicFormGroup.get('combiId')?.setValue('8');
+    }    
+    if(this.bbdetails.productCode == "R03"){
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GP");
+      this.dynamicFormGroup.get('combiId')?.setValue('10');
+    }
     console.log(this.dynamicFormGroup.value.totalPremium);
     console.log(this.bbdetails);
   }
@@ -6295,12 +6351,8 @@ export class RugDynamicFormComponent {
       this.getBbPremium(filterArr);
     }
     this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
-    // this.yatraService.policyDetails.groupCode = filterArr[0].groupCode;
     this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
-    // this.yatraService.policyDetails.productPlanName = "GHI,GP";
     this.dynamicFormGroup.get('productPlanCode')?.setValue(filterArr[0].siPlanId.toString());
-    // this.yatraService.policyDetails.productPlanCode = filterArr[0].siPlanId.toString();
-
   }
   getBbPremium(filterArr: any){
     // if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-
+import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-bb-test-page',
   templateUrl: './bb-test-page.component.html',
@@ -9,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 export class BbTestPageComponent implements OnInit{
   encryptedString : string  = '';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private toast: NgToastService,) {
 
   }
   ngOnInit(): void {
@@ -18,24 +18,21 @@ export class BbTestPageComponent implements OnInit{
 
 
   postData() {
-    const data = { Request: this.encryptedString.trim() }; 
-    console.log(data);
-
+    // const data = { Request: this.encryptedString.trim() }; 
+    // console.log(data);
+    const data = new FormData();
+    data.append('Request', this.encryptedString.trim())
     
     this.http.post<any>('https://usp.monocept.ai/api/v1/RedirectAxisBranchBankingRequest', data)
       .subscribe(response => {
         console.log(response);
-        if(response.response){
-          // this.router.navigateByUrl('/landingPage/'+ encodeURIComponent(response.response));
-          
-          // this.router.navigateByUrl('/landingPage/'+ response.response);
+        response = JSON.parse(response.data)
+        console.log(response);
+        if(response.isSuccess == true && response.statusCode == 200){
+        //  window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
-          // this.toast.warning({ detail: "SUCCESS", summary: responseData.message, duration: 3000 });
-
-          // this.toastr.warning(response.errorMessages.join(', '),'',
-          // { timeOut: 5000 }
-          // );
+          this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
         }
       }, error => {
         // Handle errors here
