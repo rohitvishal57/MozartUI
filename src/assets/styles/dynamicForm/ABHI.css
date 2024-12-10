@@ -2788,7 +2788,7 @@ margin: 0;
         left: 150px;
     }
     .add-disease-popup{
-        height: 350px !important;
+        /* height: 350px !important; */
     }
     input#sendLink, input#sendOTPBtn, input#verifyLink,input#verifyOTP {
         width: 30%;
