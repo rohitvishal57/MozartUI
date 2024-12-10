@@ -408,6 +408,7 @@ export class YatraComponent {
     // }
     console.log(this.formData);
     console.log(this.partnerId, this.productId, this.formSequence);
+    debugger;
     const reqData = {
       partnerId: this.partnerId.toString(),
       productId: this.productId.toString(),
@@ -5720,8 +5721,8 @@ export class YatraComponent {
       nomineeAge: nomineeAge || '',
       NameofAccountHolder: formData?.firstName || '',
       accountNumber: formData?.accountNumber || '',
-      accountType: this.jsonParse(formData?.accountType,'value') || '',
-      bankAccountType:this.jsonParse(formData?.accountType,'name') || '',      
+      accountType: formData?.accountType || '',
+      bankAccountType:formData?.accountType || '',      
       bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
       bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
       paymentMode: this.selectedButton || '',

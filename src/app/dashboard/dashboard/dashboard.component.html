@@ -76,7 +76,7 @@
           </div>
         </div>
         <ng-conatiner class="body_flex_column" cdkDropListOrientation="vertical" cdkDropList
-          (cdkDropListDropped)="dropSections($event)">
+        [cdkDragDisabled]="isDesktopView">
           <ng-container *ngFor="let section of sectionList">
             <!--Important Tasks New design start-->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
