@@ -3845,15 +3845,15 @@ export const active_health_covers={
                     "class": "col-12 col-md-6 col-lg-2 next-btn",
                     "methodName": "onSubmit"
                 },
-                // {
-                //     "name": "recalculate",
-                //     "label": "Re-calculate",
-                //     "visibleLabel": false,
-                //     "visible": false,
-                //     "type": "button",
-                //     "class": "col-12 col-md-6 col-lg-2 next-btn",
-                //     "methodName": "getPremiumAmount"
-                // },
+                {
+                    "name": "recalculate",
+                    "label": "Re-calculate",
+                    "visibleLabel": false,
+                    "visible": false,
+                    "type": "button",
+                    "class": "col-12 col-md-6 col-lg-2 next-btn",
+                    "methodName": "getPremiumAmount"
+                },
                 {
                     "name": "back",
                     "label": "Back",
