@@ -3,6 +3,8 @@ import { RouterModule, Routes } from "@angular/router";
 import { RugDynamicFormComponent } from "./rug-dynamic-form/rug-dynamic-form.component";
 import { ViewLeadsComponent } from "./components/view-leads/view-leads.component";
 import { ProductDownloadComponent } from "./components/product-download/product-download.component";
+import { BbTestPageComponent } from "./bb-test-page/bb-test-page.component";
+import { D2cTestPageComponent } from "./d2c-test-page/d2c-test-page.component";
 
 const routes: Routes = [
     { path:'', component: RugDynamicFormComponent },
@@ -18,6 +20,8 @@ const routes: Routes = [
     { path:'extract-base-agent', component: ProductDownloadComponent },
     { path:'manage-LOB', component: ProductDownloadComponent },
     { path:'policy-view-details', component: ProductDownloadComponent },
+    { path:'d2c-test-page', component: D2cTestPageComponent },
+    { path:'bb-test-page', component: BbTestPageComponent }
 ];
 
 @NgModule({
