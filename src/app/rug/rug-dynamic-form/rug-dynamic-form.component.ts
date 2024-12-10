@@ -3370,6 +3370,13 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     }
     if(this.bbdetails.productCode == "R10"){
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GPA" || item.combinationName === "GCI"
+      );
+      this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(null);
+      this.dynamicFormGroup.get('gpPremium')?.setValue(null);
       this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GCI");
       this.dynamicFormGroup.get('combiId')?.setValue('8');
     }    
