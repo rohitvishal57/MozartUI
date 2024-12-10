@@ -3259,7 +3259,16 @@ export class RugDynamicFormComponent {
     }
     console.log(premiumObj);
     console.log(this.dynamicFormGroup.get('planAvailable')?.value)
-    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
+    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI"){
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GHI"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    }
+    else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA"){
       const filteredData = premiumObj.filter(
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA"
       );
@@ -3269,7 +3278,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     }
-    if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
+    else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI+GPA+GCI"){
       const filteredData = premiumObj.filter(
         (item: any) => item.combinationName === "GHI" || item.combinationName === "GPA" || item.combinationName === "GCI"
       );
@@ -3278,6 +3287,24 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('gciPremium')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.get('gpaPremium')?.setValue(filteredData[2].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium + filteredData[1].premium + filteredData[2].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-5L"){
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-5L"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium - filteredData[1].premium).toFixed(2);
+      this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
+    }else if(this.dynamicFormGroup.get('planAvailable')?.value == "GHI-10L"){
+      const filteredData = premiumObj.filter(
+        (item: any) => item.combinationName === "GHI" || item.combinationName === "GHI-10L"
+      );
+      console.log(filteredData);
+      this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
+      this.dynamicFormGroup.value.totalPremium = (filteredData[0].premium - filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
     }else{
       this.dynamicFormGroup.get('ghiPremium')?.setValue(premiumObj[0].premium.toString());

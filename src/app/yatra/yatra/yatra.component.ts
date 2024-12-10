@@ -5397,6 +5397,9 @@ export class YatraComponent {
                       if (key == 'proposerPincode') {
                         control.get('pincode')?.setValue(fieldValue);
                       }
+                      if(key== 'memberDobProposer'){
+                        control.get('memberdob')?.setValue(fieldValue);
+                      }
                       else
                         control.get(key)?.setValue(fieldValue);
 
@@ -5719,8 +5722,8 @@ export class YatraComponent {
       nomineeAge: nomineeAge || '',
       NameofAccountHolder: formData?.firstName || '',
       accountNumber: formData?.accountNumber || '',
-      accountType: this.jsonParse(formData?.accountType,'value') || '',
-      bankAccountType:this.jsonParse(formData?.accountType,'name') || '',      
+      accountType: formData?.accountType || '',
+      bankAccountType:formData?.accountType || '',      
       bankCity: this.jsonParse(formData?.bankCity, 'name') || '',
       bankBranch: this.jsonParse(formData?.bankBranch, 'name') || '',
       paymentMode: this.selectedButton || '',

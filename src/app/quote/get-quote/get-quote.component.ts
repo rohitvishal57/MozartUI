@@ -175,6 +175,7 @@ export class GetQuoteComponent {
     ["R003", 0],
     ["R004", 0],
   ];
+  checkGender:boolean=false;
   constructor(private fb: FormBuilder, private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
     private translateService: TranslateService, private router: Router,private quoteService:QuoteService) { }
@@ -204,6 +205,7 @@ export class GetQuoteComponent {
       proposerPincode: [null, [Validators.required, Validators.pattern('^[0-9]{6}$'), Validators.maxLength(6)]],
       proposerName: [null, [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(30)]],
       mobileNumber: [null, [Validators.required, Validators.pattern('^[6-9][0-9]{9}$'), Validators.maxLength(10)]],
+      proposerGender: [null, [Validators.required]],
       typeOfBusiness: ["NB"],
       zoneValue: [this.proposerZoneValue],
       currentZone: [this.currentZone],
@@ -219,6 +221,7 @@ export class GetQuoteComponent {
       insuredMembers: this.fb.group({}),
       insuredMemberDetails: this.fb.array([]), // This will be initialized with dynamic members
     });
+    this.onPlanTypeChange(this.selectedPlan)
     if (formData) {
       this.quoteFormGroup.patchValue(formData);
       console.log(formData);
@@ -811,9 +814,10 @@ export class GetQuoteComponent {
     this.selectedRelation = "";
     this.selectedRelationships = [];
     this.quoteFormGroup.get('memberPolicyType')?.setValue(planType);
-    this.relations = JSON.parse(this.anotherRelations);
-    console.log(this.anotherRelationCountMap);
-    this.relationCountMap = new Map(this.anotherRelationCountMap);
+    // this.relations = JSON.parse(this.anotherRelations);
+    // console.log(this.anotherRelationCountMap);
+    // this.relationCountMap = new Map(this.anotherRelationCountMap);
+    console.log(this.relations,this.relationCountMap);
     this.numberOfChild = 0;
     this.addHide = false;
     this.activeDropdown = null;
@@ -1048,12 +1052,38 @@ export class GetQuoteComponent {
     }
     console.log(reqData);
     this.quoteService.getquoterelationsviapolicytype(reqData).subscribe({
-      next: (res) => {
+      next: (res:any) => {
         console.log(res);
+        this.relations = res.data;
+        this.relationCountMap.clear();
+
+        // Populate the relationCountMap based on isIncrement property
+        this.relations.forEach(relation => {
+          if (relation.isIncrement) {
+            // Set initial count to 0 for each incremental relation
+            this.relationCountMap.set(relation.id, 0);
+          }
+        });
+        console.log(this.relationCountMap,this.relations);
       },
       error: (err) => {
         console.error(err);
       }
     })
+  }
+  onGenderChange(event: any) {
+    console.log(event, event.target.value);
+    this.relations.forEach(relation => {
+      if (relation.id === "R001") {
+        // Update gender and imagePath for "Self"
+        relation.gender = this.quoteFormGroup.get('proposerGender')?.value;
+        relation.imagePath = this.quoteFormGroup.get('proposerGender')?.value === "M" ? "assets/Self.png" : "assets/Spouse.png";
+      } else if (relation.id === "R002" || relation.id === "110") {
+        // Swap imagePath for "Spouse"
+        relation.gender = this.quoteFormGroup.get('proposerGender')?.value === "M" ? "F" : "M";
+        relation.imagePath = this.quoteFormGroup.get('proposerGender')?.value === "M" ? "assets/Spouse.png" : "assets/Self.png";
+      }
+    });
+    this.checkGender = true;
   }
 }
