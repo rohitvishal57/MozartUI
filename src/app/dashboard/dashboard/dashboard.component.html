@@ -367,7 +367,7 @@
                                 </div>
                               </div>
                               <div *ngSwitchCase="'Proposals'">
-                                <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                                <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, filter: businessFilter }">
                                   <header>
                                     <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                     <label>{{buz.count}}</label>

@@ -7,6 +7,7 @@ import { ProfileService } from 'src/app/profile/profile.service';
 import { DashboardService } from './dashboard.service';
 import Chart, { ChartData } from 'chart.js/auto';
 import { ProductsService } from 'src/app/product/products/products.service';
+import { count, filter } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -536,7 +537,7 @@ export class DashboardComponent {
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/proposals/proposalsList/'], {
-                queryParams: { status: label },
+                queryParams: { status: label, filter : this.businessFilter },
               });
             }
           }
@@ -615,7 +616,7 @@ export class DashboardComponent {
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/renewal/renewalList/'], {
-                queryParams: { status: label },
+                queryParams: { filter: label },
               });
             }
           }

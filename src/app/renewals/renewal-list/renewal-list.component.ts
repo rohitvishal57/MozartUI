@@ -78,14 +78,57 @@ export class RenewalListComponent {
         }
       });
     });
+    // this.activatedRoute.queryParams.subscribe((params: any) => {
+    //   const filter = params['filter'];
+    //   if (filter) {
+    //     console.log("route filter", filter);
+    //     const currentDate = new Date();
+    
+    //     switch (filter) {
+    //       case 'Due Today':
+    //         // Start and end date should be the current date
+    //         this.startDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    //         this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    //         break;
+    
+    //       case 'End of Grace Period Today':
+    //         // Assuming grace period is 15 days before today
+    //         const gracePeriodDate = new Date(currentDate.setDate(currentDate.getDate() - 15));
+    //         this.startDate = this.datePipe.transform(gracePeriodDate, 'yyyy-MM-dd');
+    //         this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    //         break;
+    
+    //         case 'Due in 30 Days':
+    //           // Start date: 30 days ago, end date: today
+    //           this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    //           const startDate30DaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 30));
+    //           this.startDate = this.datePipe.transform(startDate30DaysAgo, 'yyyy-MM-dd');
+    //           break;
+      
+    //         case 'Due in 60 Days':
+    //           // Start date: 60 days ago, end date: today
+    //           this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    //           const startDate60DaysAgo = new Date(currentDate.setDate(currentDate.getDate() - 60));
+    //           this.startDate = this.datePipe.transform(startDate60DaysAgo, 'yyyy-MM-dd');
+    //           break;
+    
+    //       default:
+    //         console.log("Unknown filter:", filter);
+    //         break;
+    //     }
+    
+    //     console.log("Start Date:", this.startDate);
+    //     console.log("End Date:", this.endDate);
+    
+    //     // Call applyFilter() after setting the dates
+    //     this.applyFilter();
+    //   }
+    // });
+    
     
     this.getRenewalsList();
     this.getProducts();
-
     this.checkView(); //Screen View check
-    this.activatedRoute.queryParams.subscribe((params : any) => {
-      let routeStatus  = params['status'];
-    });
   }
   onPageChange(event: any) {
     this.first = event.first;

@@ -52,7 +52,7 @@ export class ProposalsListComponent {
     "proposalNumber": "", 
     "agentCode": this.agentCode, 
     "policyType": "", 
-    "policyStatus": "", 
+    "proposalStatus": "", 
     "startDate": null as string | null,
     "endDate": null as string | null, 
     "pageNumber": this.page,
@@ -62,8 +62,6 @@ export class ProposalsListComponent {
     "email": "",  
     "leadId": ""
  } 
-
- routeStatus : any;
  
   constructor(
     private proposalService: ProposalsService,
@@ -85,11 +83,59 @@ export class ProposalsListComponent {
       });
     });
     this.activatedRoute.queryParams.subscribe((params : any) => {
-      this.routeStatus  = params['status'];
+      let routeStatus  = params['status'];
+      const filter = params['filter'];
+      if(routeStatus){
+        console.log("route status",routeStatus);
+        this.selected = "proposalStatus"
+        this.searchInputControl.setValue(routeStatus); 
+        this.applySearch();
+      }
+      if (filter) {
+        console.log("route filter", filter);
+        const currentDate = new Date();
+        switch (filter) {
+          case 'Last7Days':
+            this.startDate = this.datePipe.transform(
+              new Date(currentDate.setDate(currentDate.getDate() - 7)),
+              'yyyy-MM-dd'
+            );
+            this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+            break;
+    
+          case 'LastMonth':
+            const lastMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+            const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+            this.startDate = this.datePipe.transform(lastMonthStart, 'yyyy-MM-dd');
+            this.endDate = this.datePipe.transform(lastMonthEnd, 'yyyy-MM-dd');
+            break;
+    
+          case 'QuarterWise':
+            const currentMonth = currentDate.getMonth();
+            const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
+            const quarterStartDate = new Date(currentDate.getFullYear(), quarterStartMonth, 1);
+            const quarterEndDate = new Date(currentDate.getFullYear(), quarterStartMonth + 3, 0);
+            this.startDate = this.datePipe.transform(quarterStartDate, 'yyyy-MM-dd');
+            this.endDate = this.datePipe.transform(quarterEndDate, 'yyyy-MM-dd');
+            break;
+    
+          case 'FinancialYear':
+            const year = currentDate.getMonth() >= 3 ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
+            const financialYearStartDate = new Date(year, 3, 1); // April 1st
+            const financialYearEndDate = new Date(year + 1, 2, 31); // March 31st
+            this.startDate = this.datePipe.transform(financialYearStartDate, 'yyyy-MM-dd');
+            this.endDate = this.datePipe.transform(financialYearEndDate, 'yyyy-MM-dd');
+            break;
+    
+          default:
+            console.log("Unknown filter:", filter);
+            break;
+        }    
+        this.applyFilter();
+      }
     });
     this.getProposalList();
     this.getProducts();
-
     this.checkView(); //Screen View check
   }
   onPageChange(event: any) {
@@ -104,23 +150,12 @@ export class ProposalsListComponent {
     this.proposalService.getProposalListApi(this.proposalListRequestBody).subscribe(
       (response) => { 
         if (response.isSuccess) {
-
-          if(this.routeStatus){
-            this.proposalList = response.data.proposalList.map((item: any) => ({
-              ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
-            })).filter((k: any) => {
-              return k.proposalStatus == this.routeStatus;
-            });
-            this.countsList = this.proposalList.length;
-            this.totalRecords = response.data[this.filterType]; 
-          } else {
-            this.proposalList = response.data.proposalList.map((item: any) => ({
-              ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
-            }));
-            console.log("proposal List",this.proposalList);
-            this.countsList = response.data;
-            this.totalRecords = response.data[this.filterType]; 
-          }
+          this.proposalList = response.data.proposalList.map((item: any) => ({
+            ...item,policyStartDate: this.formatStartDate(item.policyStartDate)
+          }));
+          console.log("proposal List",this.proposalList);
+          this.countsList = response.data;
+          this.totalRecords = response.data[this.filterType]; 
         } 
         else {
           console.error("API request was not successful.");
@@ -248,6 +283,8 @@ export class ProposalsListComponent {
       return "Enter Proposal Number";
     } else if (this.selected === "leadId") {
       return "Enter Lead ID";
+    } else if (this.selected === "proposalStatus") {
+      return "Enter Proposal Status";
     }
     else {
       return "Search...";
@@ -259,6 +296,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposer = "";
     this.proposalListRequestBody.leadId = "";
     this.proposalListRequestBody.proposalNumber ="",
+    this.proposalListRequestBody.proposalStatus ="",
     this.searchInputControl.reset();
     this.getProposalList();
   }
@@ -270,21 +308,33 @@ export class ProposalsListComponent {
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
+        this.proposalListRequestBody.proposalStatus="";
       } else if (this.selected === "proposerName") {
         this.proposalListRequestBody.proposer = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.leadId = "";
         this.proposalListRequestBody.proposalNumber =""
+        this.proposalListRequestBody.proposalStatus="";
       } else if (this.selected === "leadId") {
         this.proposalListRequestBody.leadId = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.proposalNumber =""
+        this.proposalListRequestBody.proposalStatus="";
       }else if (this.selected === "proposalNumber") {                
         this.proposalListRequestBody.proposalNumber = trimmedValue || "";
         this.proposalListRequestBody.mobileNumber = "";
         this.proposalListRequestBody.proposer = "";
         this.proposalListRequestBody.leadId = "";
+        this.proposalListRequestBody.proposalStatus="";
+      }
+      else if (this.selected === "proposalStatus") {  
+        console.log("seleted",this.selected);
+        this.proposalListRequestBody.proposalStatus = trimmedValue || "";
+        this.proposalListRequestBody.mobileNumber = "";
+        this.proposalListRequestBody.proposer = "";
+        this.proposalListRequestBody.leadId = "";
+        this.proposalListRequestBody.proposalNumber =""
       }
       this.first = 0;
       this.page = 1;
