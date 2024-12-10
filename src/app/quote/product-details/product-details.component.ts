@@ -112,7 +112,7 @@ export class ProductDetailsComponent {
       const productData = {
         partnerId: item.partnerId,
         productId: item.productId,
-        proposalNum: ' '
+        proposalNum: this.proposalNum
       }
       console.log(productData)
       if (this.formSequence != null && this.formSequence.length > 0) {
