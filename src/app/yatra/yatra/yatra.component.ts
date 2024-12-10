@@ -843,9 +843,7 @@ export class YatraComponent {
       this.isFeedBackModalVisible = true;
     }
 
-    // if (this.quickQuoteRedirect) {
-    //   this.getLeadInformation();
-    // }
+
 
   }
 
@@ -6078,52 +6076,6 @@ export class YatraComponent {
       });
     }
   }
-
-  getLeadInformation() {
-    this.leadsService.getLeadInformationByLeadID(this.leadNumber).subscribe(
-      (response) => {
-        console.log(response);
-        if (response?.data?.leadList) {
-          this.quoteLeadInformation = response.data.leadList[0];
-          this.dynamicFormGroup.patchValue({
-            proposalNumber: this.proposalNum,
-            productName: this.quoteLeadInformation.interestedProductName,
-            memberDobProposer: this.datepipe.transform(this.quoteLeadInformation.dob, 'yyyy-MM-dd'),
-            firstName: this.quoteLeadInformation.firstName,
-            middleName: this.quoteLeadInformation.middleName,
-            lastName: this.quoteLeadInformation.lastName,
-            memberAgeProposer: this.quoteLeadInformation.age,
-            emailId: this.quoteLeadInformation.email,
-            proposerAddress1: this.quoteLeadInformation.address1,
-            proposerAddress2: this.quoteLeadInformation.address2,
-            proposerAddress3: this.quoteLeadInformation.address3,
-            city: this.quoteLeadInformation.city,
-            state: this.quoteLeadInformation.state,
-            mobileNumber: this.quoteLeadInformation.phoneNumber,
-            educationDetails: this.quoteLeadInformation.education,
-            memberPolicyType: this.quoteLeadInformation.policyType,
-            occupation: this.quoteLeadInformation.occupation,
-            proposerPincode: this.quoteLeadInformation.pincode,
-            zoneValue: this.quoteLeadInformation.zone
-
-          });
-          this.patchDropDownValues();
-
-          // Object.keys(this.dynamicFormGroup.controls).forEach(controlName => {
-          //   const control = this.dynamicFormGroup.get(controlName);
-          //   if (control?.value) {
-          //     control.disable();
-          //   }
-          // });
-        }
-        else { console.error("API request was not successful."); }
-      },
-      (error) => {
-        console.error("Error from getRenewalsList API:", error);
-      }
-    );
-  }
-
 
   patchDropDownValues() {
     let personalDetailsSection: any = this.form.formSections.find((formSection: any) => formSection.sectionTitle === 'Personal Details');
