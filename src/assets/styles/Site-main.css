@@ -5802,6 +5802,7 @@ background: var(--white-color);
 }
 .bottom_planDetails_sub {
   max-height: 400px;
+  overflow: hidden;
   overflow-y: auto;
 }
 .bottom_planDetails_sub::-webkit-scrollbar-button {
@@ -6505,3 +6506,47 @@ position: relative;
 }
 
 /*----Axis D2C Header end----*/
+/*----yatra popup start----*/
+.popupModalMain.yatra-modal {
+  padding: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  height: auto !important;
+  max-width: 700px;
+  width: 100% !important;
+}
+.popupModalMain.yatra-modal .modal-header {
+  justify-content: space-between;
+}
+.popupModalMain.yatra-modal .modal-content {
+  background: #ffffff;
+}
+.popupModalMain.yatra-modal .input-container {
+  margin-bottom: 10px;
+}
+.margin_selectMember {
+  margin: 0 0 15px;
+}
+.details-elementDisease {
+   border: 1px solid #ccc !important;
+    padding: 25px 5px 0px !important;
+    margin-bottom: 10px !important;
+    border-radius: 10px !important;
+    position: relative;
+}
+.btn_iconRemove{
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -5px;
+  left: 47%;
+  border: 1px solid #d34528;
+}
+.details-elementDisease hr {
+  display: none;
+}
+.details-elementDisease .typecss {
+  padding-bottom: 15px !important;
+}
+/*----yatra popup end----*/
