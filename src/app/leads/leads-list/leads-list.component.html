@@ -43,6 +43,8 @@
                                 <option value="mobileNumber">{{"Mobile Number" | translate}}</option>
                                 <option value="name">{{"Name" | translate}}</option>
                                 <option value="emailID">{{"Email ID" | translate}}</option>
+                                <option value="AssignedTo">{{"Assigned To" | translate}}</option>
+
                             </select>
                             <div class="filterFieldGroup">
                                 <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" [placeholder]="getPlaceholder()" (keypress)="restrictInput($event)">
@@ -167,7 +169,7 @@
                                     <th>{{"Lead ID" | translate}}</th>
                                     <th>{{"Name" | translate}}</th>
                                     <th>{{"Product Name" | translate}}</th>
-                                    <th>{{" Contact Info" | translate}}</th>
+                                    <th>{{"Contact Info" | translate}}</th>
                                     <!-- <th nowrap>{{"Mobile Number" | translate}}</th> -->
                                     <th>{{"Assigned To" |  translate}}</th>
                                     <th>{{"Lead Status"}}</th>
@@ -317,12 +319,13 @@
                         </header>
                         <div class="cardViewBody">
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Mobile Number" | translate}}</div>
+                                <div class="item_lable">{{"Contact Info" | translate}}</div>
                                 <div class="item_value">{{ row.phoneNumber }}</div>
+                                <div class="item_value">{{ row.email }}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
-                                <div class="item_lable">{{"Email ID" | translate}}</div>
-                                <div class="item_value">{{ row.email }}</div>
+                                <div class="item_lable">{{"Assigned To" | translate}}</div>
+                                <div class="item_value">{{row?.leadAssignee||'-'}}</div>
                             </div>
 
                             <div class="cv_bodyItems cv_bodyItems_45">

@@ -2,24 +2,24 @@
 
     <div class="main-subContainer">
 
-        <div class="left-nav left-nav-hideMobile">
-            <div class="left-navInner">
+        <div class="left-nav left-nav-hideMobile" *ngIf="formIndex != 3">
+            <div class="left-navInner left-main-cnt">
                 <!--     style="cursor: pointer;"-->
                 <div class="yourProgress bcl_main">
                     <h1>{{"Your Progress" | translate}}</h1>
                     <div class="processBtnGroup">
-                      <button type="button" id="customisation-primary" name="customisation-primary" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': activeSection === 'primary','complete': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
-                          <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">
-                          <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': activeSection === 'primary', 'block-show': ['additional', 'payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Primary" | translate}}
+                      <button type="button" id="customisation-primary" name="customisation-primary" value="primary" class="btn_process btn_p_primary" [ngClass]="{'active': formIndex === 0,'complete': [1,2].includes(formIndex)}">
+                          <img src="assets/Img/icon_container_primary.svg" class="icon_red" [ngClass]="{'block-show': formIndex === 0, 'block-hide': [1,2].includes(formIndex)}">
+                          <img src="assets/Img/icon_container_primary_green.svg" class="icon_green" [ngClass]="{'block-hide': formIndex === 0, 'block-show': [1,2].includes(formIndex)}">{{"Primary" | translate}}
                       </button>
-                      <button type="button" id="customisation-additional" name="customisation-additional" value="additional" class="btn_process btn_additional" [ngClass]="{'active': activeSection === 'additional', 'complete': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
-                          <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'primary', 'block-hide': ['payment', 'policySummary', 'kyc','additional'].includes(activeSection)}">
-                          <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': activeSection === 'additional', 'block-hide': activeSection !== 'additional'}">
-                          <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Additional" | translate}}
+                      <button type="button" id="customisation-additional" name="customisation-additional" value="additional" class="btn_process btn_additional" [ngClass]="{'active': formIndex === 1, 'complete': [2].includes(formIndex)}">
+                          <img src="assets/Img/icon_container_additional.svg" class="icon_grey" [ngClass]="{'block-show': formIndex === 0, 'block-hide': [1,2].includes(formIndex)}">
+                          <img src="assets/Img/icon_container_additional_red.svg" class="icon_grey" [ngClass]="{'block-show': formIndex === 1, 'block-hide': formIndex !== 1}">
+                          <img src="assets/Img/icon_container_additional_green.svg" class="icon_green" [ngClass]="{'block-show': [2].includes(formIndex), 'block-hide': ![2].includes(formIndex)}">{{"Additional" | translate}}
                       </button>            
-                      <button type="button" id="customisation-payment" name="customisation-payment" value="payment" class="btn_process btn_payment" [ngClass]="{'active': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
-                          <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': !['payment', 'policySummary', 'kyc'].includes(activeSection), 'block-hide': ['payment', 'policySummary', 'kyc'].includes(activeSection)}">
-                          <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': ['payment', 'policySummary', 'kyc'].includes(activeSection) , 'block-hide': !['payment', 'policySummary', 'kyc'].includes(activeSection)}">{{"Payment" | translate}}
+                      <button type="button" id="customisation-payment" name="customisation-payment" value="payment" class="btn_process btn_payment" [ngClass]="{'active': [2].includes(formIndex)}">
+                          <img src="assets/Img/icon_container_payment.svg" class="icon_grey" [ngClass]="{'block-show': ![2].includes(formIndex), 'block-hide': [2].includes(formIndex)}">
+                          <img src="assets/Img/icon_container_payment_red.svg" class="icon_red" [ngClass]="{'block-show': [2].includes(formIndex) , 'block-hide': ![2].includes(formIndex)}">{{"Payment" | translate}}
                       </button>
                   </div>
                     <!-- <div class="progressDetails"> -->
