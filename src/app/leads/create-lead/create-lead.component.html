@@ -575,6 +575,14 @@
                                 <label for="familyConstruct">{{"Lead Priority " | translate}}</label>
                             </div>
                         </div>
+
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                            <div class="input-block form-floating input-block-renew">
+                                <input class="form-control input-textBox" id="AssignedTo" name="AssignedTo"   [value]="submittedUser?.leadAssignee || '-'"  type="text" disabled >
+                                <label for="state">{{"AssignedTo" | translate}}</label>
+                            </div>
+                        </div>
+                        
                     </div>
                     <div class="row mb-0">
                         <h4 class="mrg-btm-0 impText font-weight-bold"><span class="heading-16-red">{{"Important" | translate}} :</span>
