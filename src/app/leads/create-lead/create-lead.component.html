@@ -412,9 +412,11 @@
                                 <input class="form-control input-textBox" id="pincode" name="pincode" placeholder=""
                                     formControlName="pincode" type="text" maxlength="6" (blur)="getZoneByPinCode(userValidations.get('pincode')?.value)" (keypress)="isNumber($event)">
                                 <label for="pincode">{{"Pincode" | translate}}</label>
-                                <span class="ui-error block-show"
-                                    *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
+                                <span class="ui-error block-show" *ngIf="submitted && userValidations.get('pincode')?.errors?.['pattern']">{{"Please enter proper value." | translate}}</span>
 
+                                <span class="ui-error block-show"
+                                    *ngIf="submitted && userValidations.get('pincode')?.hasError('required')">{{"Pincode cannot be blank." | translate}}</span>
+                               
                                 <span class="ui-error block-show"
                                     *ngIf="userValidations.get('pincode')?.errors?.['incorrect']">
                                     {{ userValidations.get('pincode')?.errors?.['message'] }}</span>

@@ -30,5 +30,6 @@ export interface LeadsList {
     isSelected?:boolean;
     interestedProductName?:string|null;
     formSequence?:string|null; 
+    leadAssignee?:string|null;
   }
   

@@ -146,7 +146,7 @@ export class CreateLeadComponent implements OnInit {
       address3: ['', [Validators.pattern('^[0-9a-zA-Z .,\'-/@#]*$')]],
       city: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       state: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
-      pincode: ['', [Validators.pattern('^[0-9a-zA-Z ,]*$')]],
+      pincode: ['', [Validators.required,Validators.pattern('^[0-9a-zA-Z ,]*$')]],
       zoneCode : [''],
       interestedProductName: [''],
       planType: [''],
