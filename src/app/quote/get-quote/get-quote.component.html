@@ -211,9 +211,27 @@
                         </span>
                       </div>
                     </div>
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                      <div class="input-block input-block-renew input-filed-white">
+                        
+                        <select id="proposerGender" name="proposerGender" formControlName="proposerGender" class="input-textBox" 
+                        [class.input-havevalue]="quoteFormGroup.get('proposerGender')?.value"  (change)="onGenderChange($event)">
+                        <option value="" disabled selected>{{"Select Gender" | translate}}</option>
+                          <option value="M">{{ "Male" | translate }}</option>
+                          <option value="F">{{ "Female" | translate }}</option>
+                        </select>
+                        <label for="proposerGender" class="get-quote-label">
+                          {{"Select Gender" | translate}} <span class="required">*</span>
+                        </label>
+                        <span class="ui-error"
+                          *ngIf="quoteFormGroup.get('proposerGender')?.invalid && (quoteFormGroup.get('proposerGender')?.touched || showErrors)">
+                          {{"Select Gender" | translate}}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                   <h3>{{"Member details" | translate}}</h3>
-                  <div class="insurer_memberDetails">
+                  <div class="insurer_memberDetails" *ngIf="checkGender">
                     <div class="input-checkbox-block input-checkbox-withIcon">
                       <!-- <div class="input-checkbox-feild">
                                 <input type="checkbox" id="self" value="self" class="input-check">
