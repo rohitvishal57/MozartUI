@@ -69,30 +69,8 @@
                                     </button>-->
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="toggleSearchDropdown()"></button>
                                 </div>
-                                <div class="fw_formBody">
-                                    <div class="fw_formRow">
-                                        <h6>{{"Products" | translate}}</h6>
-                                        <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
-                                                <div class="input-checkbox-feild">
-                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()"> 
-                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="fw_formRow">
-                                        <h6>{{"Policy Type" | translate}}</h6>
-                                        <div class="fw_checkboxWraper">
-                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
-                                                <div class="input-checkbox-feild">
-                                                  <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
-                                                  <label for="policytype{{i}}">{{policyType.name | translate}}</label>
-                                                </div>
-                                              </div>                                              
-                                        </div>
-                                    </div>
 
+                                <div class="fw_formBody">
                                     <div class="fw_formRow">
                                         <h6>{{"Lead Status" | translate}}</h6>
                                         <div class="fw_checkboxWraper">
@@ -104,6 +82,7 @@
                                               </div>                                              
                                         </div>
                                     </div>
+
                                     <div class="fw_formRow">
                                         <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
@@ -119,6 +98,28 @@
                                                     <input type="date" [min]="startDate" [max]="today" id="enddate" name="enddate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="endDate" (dateChange)="formatDate('endDate')">
                                                     <label for="enddate">{{"End Date" | translate}}</label>
                                                     <span class="ui-error">{{"Please enter date of birth" | translate}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>{{"Policy Type" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let policyType of StaticPolicyTypes; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                  <input type="checkbox" id="policytype{{i}}" name="policytype{{i}}" value="policytype" class="input-check" [(ngModel)]="policyType.selected" (change)="calculateAppliedFiltersCount()">
+                                                  <label for="policytype{{i}}">{{policyType.name | translate}}</label>
+                                                </div>
+                                              </div>                                              
+                                        </div>
+                                    </div>
+                                    <div class="fw_formRow">
+                                        <h6>{{"Products" | translate}}</h6>
+                                        <div class="fw_checkboxWraper">
+                                            <div class="input-checkbox-block" *ngFor="let product of productsList; let i = index">
+                                                <div class="input-checkbox-feild">
+                                                    <input type="checkbox" id="product{{i}}" name="product{{i}}" value="products" class="input-check" [(ngModel)]="product.selected" (change)="calculateAppliedFiltersCount()"> 
+                                                    <label for="product{{i}}">{{product.productName | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -166,8 +167,9 @@
                                     <th>{{"Lead ID" | translate}}</th>
                                     <th>{{"Name" | translate}}</th>
                                     <th>{{"Product Name" | translate}}</th>
-                                    <th nowrap>{{"Mobile Number" | translate}}</th>
-                                    <th>{{"Email ID" |  translate}}</th>
+                                    <th>{{" Contact Info" | translate}}</th>
+                                    <!-- <th nowrap>{{"Mobile Number" | translate}}</th> -->
+                                    <th>{{"Assigned To" |  translate}}</th>
                                     <th>{{"Lead Status"}}</th>
                                     <th nowrap>{{"Created Date" | translate}}<div><small>{{"(dd-mm-yyyy)" | translate}}</small></div></th>
                                     <th class="text-center">{{"Notice" | translate}}</th>
@@ -185,8 +187,8 @@
                                     <td>{{row.leadNumber}}</td>
                                     <td><span class="text-break-w200">{{ row.firstName }} {{ row.middleName }} {{ row.lastName }}</span></td>
                                     <td><span class="text-break-w200">{{row.interestedProductName}}</span></td> 
-                                    <td>{{ row.phoneNumber }}</td>
-                                    <td><span class="text-break-w200" title="{{row.email}}">{{row.email}}</span></td>
+                                    <td>{{row?.phoneNumber}}<br /><span class="text-break-w200" title="{{row.email}}">{{row.email}}</span></td>
+                                    <td> {{row?.leadAssignee||'-'}}</td>
                                     <td>{{row.leadStatus ? row.leadStatus : '-'}}</td>
                                     <td>{{formatCreatedOn(row.createdon)}}</td>
                                     <td>
