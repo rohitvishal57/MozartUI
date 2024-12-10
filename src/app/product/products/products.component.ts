@@ -254,12 +254,7 @@ export class ProductsComponent implements OnInit {
       await this.getFormSequence(item);
       console.log(item)
       console.log(this.formData);
-      
-      if(this.quickQuoteRedirection){
-        await this.getLeadInformationByLeadNumber(this.leadId , item.productName)
-      }
 
-        
       const productData :any = {
         partnerId: item.partnerId,
         productId: item.productId,
@@ -268,9 +263,11 @@ export class ProductsComponent implements OnInit {
       }
 
       if(this.quickQuoteRedirection){
+        await this.getLeadInformationByLeadNumber(item.productName)
         productData.leadId = this.leadId;
         productData.quickQuoteRedirect = true
       }
+
       console.log(productData)
       // if (this.formSequence != null && this.formSequence.length > 0) {
       //   this.router.navigate(['yatra'], {
@@ -414,10 +411,9 @@ donwloadBrowcher(productName : any){
  
 }
 
-  async getLeadInformationByLeadNumber(leadNumber: any, productName: any) {
+  async getLeadInformationByLeadNumber( productName: any) {
     try {
-      const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(leadNumber));
-
+      const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(this.leadId));
       const leadInformation = response?.data?.leadList[0];
       leadInformation.interestedProductName = productName;
       leadInformation.isUpdate = 1;
