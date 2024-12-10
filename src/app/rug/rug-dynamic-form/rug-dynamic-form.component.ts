@@ -3757,7 +3757,6 @@ export class RugDynamicFormComponent {
         console.log(reqData);
         this.yatraService.Insertorupdateformdata(reqData).subscribe({
           next: (res: any) => {
-            // this.toast.success({ detail: "SUCCESS", summary: "Form Data Saved Successfully.", duration: 3000 });
             console.log(res);
             this.leadnumber = res.data;
             if (res.isSuccess == true && res.statusCode == 200) {
@@ -3817,9 +3816,9 @@ export class RugDynamicFormComponent {
                     combiName: null,
                     familyConstructId: this.bbdetails.familyConstructId,
                     ghiPremium: this.bbdetails.ghiPremium,
-                    gpaPremium: null,
-                    gciPremium: null,
-                    deductibleAmount: null,
+                    gpaPremium: this.bbdetails.gpaPremium,
+                    gciPremium: this.bbdetails.gciPremium,
+                    deductibleAmount: this.bbdetails.deductibleAmount,
                     gpPremium: this.bbdetails.gpPremium,
                     micrCode: this.bbdetails.micrCode,
                     accType: this.bbdetails.accType == "primary" ? "Primary" : "Primary",
