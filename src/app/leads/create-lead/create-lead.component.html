@@ -2,7 +2,7 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>  {{ updateLeadFlag == false ? ("CreateLead" | translate) : ("Update Lead" | translate) }}
+                <h2 class="icon_withHeading"> <a class="btn_backPage" (click)="backToleads()" title="Back To List"></a>  {{ action !== 'updateStatus' ? ("CreateLead" | translate) : ("Update Lead" | translate) }}
                 </h2>
             </div>
             <div *ngIf="isAUuser && !this.dataToDisplay">
@@ -590,7 +590,7 @@
 
                 <div class="row mt-4" *ngIf="action!='addNotes'">
                     <div class="col-12">
-                        <button type="submit" id="save" name="save" class="btn_red" [disabled]="submitButton" >{{"Save" | translate}}</button>
+                        <button type="submit" id="save" name="save" class="btn_red" [disabled]="userValidations.get('leadStatus')?.value === 'In progress'" >{{"Save" | translate}}</button>
                     </div>
                 </div>
 

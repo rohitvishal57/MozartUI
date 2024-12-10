@@ -55,29 +55,14 @@ export class CreateLeadComponent implements OnInit {
   occupationInfo : any;
   pincodeResponse : any='';
   proposalNumber : any = '';
-  submitButton :  Boolean =  false;
-  updateLeadFlag : Boolean =  false;
  
-    
-  constructor(private formBuilder: FormBuilder,
-    private toast: NgToastService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private leadsService: LeadsService,
-    private datePipe: DatePipe,
-    public CreateLead: CreateLead,
-    public CreateLeadList: LeadFormListValue,
-    private cdr: ChangeDetectorRef,
-    private datepipe: DatePipe,
-    private commonService: CommonService,
-    private languageService: LanguageService,
-    private translateService: TranslateService,
-    private common: CommonService
-  ) {
-
-  }
+  constructor(private formBuilder: FormBuilder,private toast: NgToastService, private router: Router,private route: ActivatedRoute,private leadsService: LeadsService,
+    private datePipe: DatePipe,public CreateLead: CreateLead, public CreateLeadList: LeadFormListValue,private cdr: ChangeDetectorRef,private datepipe: DatePipe,
+    private commonService: CommonService, private languageService: LanguageService, private translateService: TranslateService,private common: CommonService) {}
 
   async ngOnInit() {
+
+      // Subscribe to language changes and update the translation service
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -85,43 +70,37 @@ export class CreateLeadComponent implements OnInit {
         }
       });
     });
+
+      // Initialize the form
     this.inItForm();
+
+    this.CreateLead = new CreateLead;
+    const storedAgentCode = localStorage.getItem('agentCode') || '';
+    this.agentCode = storedAgentCode;
+
+      // Handle query parameters
     this.route.queryParams.subscribe(params => {
       this.leadNumber = params['leadNumber'];
       this.action = params['action'];
-      this.updateLeadFlag = true;
     });
-    this.CreateLead = new CreateLead;
-    const storedAgentCode = localStorage.getItem('agentCode');
-    this.agentCode = storedAgentCode;
-    if (storedAgentCode) {
-      this.CreateLead.AgentCode = storedAgentCode.toString();
-    }
-    else {
-      console.log("agent code is not present in local storege");
-    }
 
-    let obj = {
-      "id": 0,
-      "agent": storedAgentCode
-    }
-    this.agentCode = obj.agent;
-
-    if (this.leadNumber && this.action) {
+    // Fetch lead information if leadNumber and action are provided
+    if (this.action) {
       await this.getLeadInformationByLeadNumber(this.leadNumber);
       if (this.action === 'addNotes') {
         this.getLeadNotes(this.leadNumber);
       }
     }
-     this.getProducts();
-     this.fetchOccupationInfo();
-    // this.getReferenceStatus();
-     this.fetchActivityTypeInfo();
-    this.today = new Date().toISOString().split('T')[0];
-    
+
+    // Fetch additional data
+    this.getProducts();
+    this.fetchOccupationInfo();
+    this.fetchActivityTypeInfo();
   }
 
   inItForm() {
+
+      // Initialize userValidations form group
     this.userValidations = this.formBuilder.group({
       leadType: [''],
       leadVintage: [''],
@@ -163,24 +142,25 @@ export class CreateLeadComponent implements OnInit {
       isUpdate: 0,
       leadStatus: [''],
       leadSubStatus: ['']
-    }
-    );
+    });
+
+      // Disable the age control
     this.userValidations.get('age')?.disable();
 
+      // Initialize addNoteForm form group
     this.addNoteForm = this.formBuilder.group({
       activityTitle: ['', [Validators.required, Validators.pattern('^[0-9a-zA-Z ,]*$')]],
-      activityStartDate: ['', Validators.required], // Start date is required
-      activityStartTime: ['', Validators.required], // Start time is required
-      activityEndDate: ['', Validators.required], // Use null if control is not available  
+      activityStartDate: ['', Validators.required], 
+      activityStartTime: ['', Validators.required], 
+      activityEndDate: ['', Validators.required],  
       activityEndTime: ['', Validators.required],
-      activityType: ['', Validators.required], // Activity type is required
-      notes: ['', Validators.required] // Notes can be optional
+      activityType: ['', Validators.required], 
+      notes: ['', Validators.required] 
     });
   }
 
 
   changeDob(event: any) {
-    console.log("date", event.target.value);
     if (event.target.value == '') {
       this.userValidations.get('age')?.setValue(0)
     } else {
@@ -217,7 +197,6 @@ export class CreateLeadComponent implements OnInit {
     this.submitted = true;
 
     if (this.userValidations.invalid) {
-      console.log('userValidations ',this.userValidations.errors)
       window.scrollTo(0, 0);
       this.toast.warning({ detail: "WARNING", summary: "Please fill the mandatory fields.", duration: 5000 });
       return;
@@ -250,18 +229,15 @@ export class CreateLeadComponent implements OnInit {
     this.CreateLead.zone =  this.userValidations.get('zoneCode')?.value;
     this.CreateLead.leadPriority  =this.userValidations.get('leadSubStatus')?.value;
 
-    console.log('req data',this.CreateLead);
     
     this.leadsService.saveLeadData(this.CreateLead).subscribe(
       (response) => {
-        console.log(response);
         if (response.message == 'Success') {
           if (this.action == 'updateStatus') {
             this.toast.success({ detail: "", summary: 'Lead is updated successfully.', duration: 5000 });
           } else {
             this.toast.success({ detail: "", summary: 'Lead is created successfully.', duration: 5000 });
           }
-          console.log(response);
           this.router.navigate(['leads/leadsList'])
         }
         else { console.error("API request was not successful."); }
@@ -280,7 +256,7 @@ export class CreateLeadComponent implements OnInit {
       this.updateleadInformation();
     } 
     catch(error) {
-        console.log("Failed to fetch lead Information!")
+        console.log("Failed to fetch lead Information!",error)
       }
   }
 
@@ -327,9 +303,6 @@ export class CreateLeadComponent implements OnInit {
     this.userValidations.get('lastname')?.disable();
     this.userValidations.get('email')?.disable();
     this.proposalNumber = this.submittedUser.proposalNumber;
-    if(this.submittedUser?.leadStatus?.includes('In progress')){
-      this.submitButton = true;
-    }
   }
 
   fetchActivityTypeInfo() {
@@ -357,7 +330,6 @@ export class CreateLeadComponent implements OnInit {
 
   addNotesSubmit() {
     let addNotesRequestBody: any = {};
-    console.log('activityType', this.addNoteForm.errors);
     this.notesSubmitted = true;
     if (this.addNoteForm.valid) {
       addNotesRequestBody.activitystartdate = this.addNoteForm.value.activityStartDate,
@@ -371,8 +343,6 @@ export class CreateLeadComponent implements OnInit {
         addNotesRequestBody.mobilenumber = this.submittedUser.phoneNumber,
         addNotesRequestBody.leadnumber = this.leadNumber,
         addNotesRequestBody.isupdate = 0
-
-      console.log('addNoteForm', this.addNoteForm.errors);
 
       this.leadsService.addLeadNotes(addNotesRequestBody).subscribe(
         (response) => {
@@ -429,7 +399,6 @@ export class CreateLeadComponent implements OnInit {
         const endTimeInMinutes = this.convertToMinutes(this.addNoteForm.get('activityEndTime')?.value);
         if (endTimeInMinutes < startTimeInMinutes) {
           this.addNoteForm.get('activityEndTime')?.setErrors({ incorrect: true });
-          console.log('activityEndTime',this.addNoteForm.get('activityEndTime')?.getError )
         } else {
           this.addNoteForm.get('activityEndTime')?.setErrors(null); 
         }
@@ -460,7 +429,7 @@ export class CreateLeadComponent implements OnInit {
       this.notes = response.data;
     },
       (error) => {
-        console.log("Failed to fetch lead Information!")
+        console.log("Failed to fetch lead Information!",error)
       }
     );
   }
@@ -489,13 +458,12 @@ export class CreateLeadComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.log("error coming form getproduct list API");
+        console.log("error coming form getproduct list API",err);
       }
     });
   }
 
   fetchOccupationInfo() {
-    console.log('this.submittedUser fetchOccupationInfo',this.submittedUser?.occupation);
     this.leadsService.getOccupationInfo().subscribe(
       (response) => {
         if(response?.isSuccess){
@@ -523,7 +491,6 @@ export class CreateLeadComponent implements OnInit {
     }
     this.common.getPinCodeByCity(reqData).subscribe(
       (response) => {
-        debugger;
         if(response?.isSuccess){
          this.pincodeResponse = response?.data;         
          this.userValidations.patchValue({
