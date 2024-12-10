@@ -2729,7 +2729,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .tableSubMain .table tbody tr:hover {
-  cursor: pointer;
+  /* cursor: pointer; */
   background: var(--site-table-pink);
 }
 

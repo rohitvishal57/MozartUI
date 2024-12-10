@@ -5399,6 +5399,9 @@ export class YatraComponent {
                       if (key == 'proposerPincode') {
                         control.get('pincode')?.setValue(fieldValue);
                       }
+                      if(key== 'memberDobProposer'){
+                        control.get('memberdob')?.setValue(fieldValue);
+                      }
                       else
                         control.get(key)?.setValue(fieldValue);
 
