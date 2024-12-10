@@ -7,6 +7,7 @@ import { EncryptionService } from 'src/app/services/encryption.service';
 import { QuoteService } from '../quote.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { LeadsService } from 'src/app/leads/leads.service';
 
 @Component({
   selector: 'app-product-details',
@@ -28,10 +29,11 @@ export class ProductDetailsComponent {
   displayInfo : string ='Health Add On';
   private allJsonFormData: any[] = []
   proposalNum : any = '';
-
+  leadId : string  = '';
+  quickQuoteRedirect : boolean = false;
   constructor(private quoteservices: QuoteService, private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, private commonService: CommonService, private languageService: LanguageService,
-    private translateService: TranslateService,private common: CommonService
+    private translateService: TranslateService,private common: CommonService,private leadsService: LeadsService  
   ) {
 
   }
@@ -44,9 +46,12 @@ export class ProductDetailsComponent {
         }
       });
     });
+    debugger;
     this.productId = history.state.item.productId
     this.partnerId = history.state.item.partnerId;
     this.state = history.state.item
+    this.leadId = history.state.leadnumber;
+    this.quickQuoteRedirect = history.state.quickQuoteRedirect;
     console.log(this.productId, this.state);
     this.productdetails();
   }
@@ -109,11 +114,18 @@ export class ProductDetailsComponent {
 
       await this.getFormSequence(item);
       console.log(item)
-      const productData = {
+      const productData : any = {
         partnerId: item.partnerId,
         productId: item.productId,
         proposalNum: this.proposalNum
       }
+      
+      if(this.quickQuoteRedirect){
+        await this.getLeadInformationByLeadNumber(item.productName)
+        productData.leadId = this.leadId;
+        productData.quickQuoteRedirect = this.quickQuoteRedirect
+      }
+
       console.log(productData)
       if (this.formSequence != null && this.formSequence.length > 0) {
         this.router.navigate(['yatra'], {
@@ -148,6 +160,26 @@ export class ProductDetailsComponent {
       localStorage.setItem("formIndex", "0");
     } catch (err) {
       this.toast.warning({ detail: "WARNING", summary: "Form Configuration not found!!", duration: 2000 });
+    }
+  }
+
+  async getLeadInformationByLeadNumber( productName: any) {
+    try {
+      const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(this.leadId));
+      const leadInformation = response?.data?.leadList[0];
+      leadInformation.interestedProductName = productName;
+      leadInformation.isUpdate = 1;
+
+      this.leadsService.saveLeadData(leadInformation).subscribe(
+        (response) => {
+          console.log("Lead has been Successfully Updated", response);
+        }, (error) => {
+          console.log("Failed to update Lead Infomation", error);
+        });
+
+    }
+    catch (error) {
+      console.log("Failed to fetch lead Information!", error)
     }
   }
   

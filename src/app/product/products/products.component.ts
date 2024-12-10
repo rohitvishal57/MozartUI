@@ -61,7 +61,9 @@ export class ProductsComponent implements OnInit {
 
     this.route.queryParams.subscribe(params => {
       this.leadId = params['leadnumber'];
-      this.quickQuoteRedirection = true;
+      if(this.leadId){
+        this.quickQuoteRedirection = true;
+      }
     });
 
     this.route.params.subscribe(async (params) => {
@@ -265,7 +267,7 @@ export class ProductsComponent implements OnInit {
       if(this.quickQuoteRedirection){
         await this.getLeadInformationByLeadNumber(item.productName)
         productData.leadId = this.leadId;
-        productData.quickQuoteRedirect = true
+        productData.quickQuoteRedirect = this.quickQuoteRedirection
       }
 
       console.log(productData)
@@ -347,7 +349,7 @@ export class ProductsComponent implements OnInit {
   }
   productsDetail(item: any) {
     this.router.navigate(['quote/productDetails'], {
-      state: { item: item }
+      state: { item: item  , leadnumber:this.leadId  , quickQuoteRedirect : this.quickQuoteRedirection}
     });
   }
 
