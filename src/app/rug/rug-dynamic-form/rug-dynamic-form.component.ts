@@ -3371,7 +3371,7 @@ export class RugDynamicFormComponent {
       this.dynamicFormGroup.get('combiId')?.setValue('8');
     }    
     if(this.bbdetails.productCode == "R03"){
-      this.dynamicFormGroup.get('productPlanName')?.setValue("GPA,GP");
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
       this.dynamicFormGroup.get('combiId')?.setValue('10');
     }
     console.log(this.dynamicFormGroup.value.totalPremium);
