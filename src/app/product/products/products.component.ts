@@ -11,6 +11,8 @@ import { AesEncryptionService } from 'src/app/services/AESEncrypt.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import HeaderInformation from 'src/app/layout/headerInfo';
+import { LeadsService } from 'src/app/leads/leads.service';
+import { error } from 'jquery';
 
 @Component({
   selector: 'app-products',
@@ -45,19 +47,23 @@ export class ProductsComponent implements OnInit {
   state: any;
   paramLeadId: any;
   leadId: any;
-
+  quickQuoteRedirection : Boolean = false;
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
    private quoteservices: QuoteService,private aesEncryptService: AesEncryptionService,
    private route: ActivatedRoute, private languageService: LanguageService,
-   private translateService: TranslateService,public headerInformation : HeaderInformation) {
-
-  }
+   private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService  ) {}
 
   ngOnInit(): void {
     this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
     console.log(this.paramLeadId)
+
+    this.route.queryParams.subscribe(params => {
+      this.leadId = params['leadnumber'];
+      this.quickQuoteRedirection = true;
+    });
+
     this.route.params.subscribe(async (params) => {
       if (Object.keys(this.route.snapshot.params).length > 0) {
         console.log('Route has parameters:', params);
@@ -74,7 +80,7 @@ export class ProductsComponent implements OnInit {
         localStorage.setItem('leadId', this.paramLeadId.LeadId)
         this.agentCode = this.paramLeadId.AgentCode;
       }
-
+    
       try {
         const reqData = {
           partnerId: this.partnerId,
@@ -249,11 +255,21 @@ export class ProductsComponent implements OnInit {
       console.log(item)
       console.log(this.formData);
       
-      const productData = {
+      if(this.quickQuoteRedirection){
+        await this.getLeadInformationByLeadNumber(this.leadId , item.productName)
+      }
+
+        
+      const productData :any = {
         partnerId: item.partnerId,
         productId: item.productId,
         proposalNum: this.proposalNum,
         applicableZones:item.applicableZones
+      }
+
+      if(this.quickQuoteRedirection){
+        productData.leadId = this.leadId;
+        productData.quickQuoteRedirect = true
       }
       console.log(productData)
       // if (this.formSequence != null && this.formSequence.length > 0) {
@@ -398,5 +414,25 @@ donwloadBrowcher(productName : any){
  
 }
 
+  async getLeadInformationByLeadNumber(leadNumber: any, productName: any) {
+    try {
+      const response = await firstValueFrom(this.leadsService.getLeadInformationByLeadID(leadNumber));
+
+      const leadInformation = response?.data?.leadList[0];
+      leadInformation.interestedProductName = productName;
+      leadInformation.isUpdate = 1;
+
+      this.leadsService.saveLeadData(leadInformation).subscribe(
+        (response) => {
+          console.log("Lead has been Successfully Updated", response);
+        }, (error) => {
+          console.log("Failed to update Lead Infomation", error);
+        });
+
+    }
+    catch (error) {
+      console.log("Failed to fetch lead Information!", error)
+    }
+  }
 
 }

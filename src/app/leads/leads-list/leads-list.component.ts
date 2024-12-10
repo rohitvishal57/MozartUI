@@ -550,6 +550,7 @@ export class LeadsListComponent {
       });
     } else {
       this.router.navigate(['/products'], {
+        queryParams: { leadnumber:lead.leadNumber },
       });
     }
   }
