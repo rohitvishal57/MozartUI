@@ -55,6 +55,25 @@
                                     <button type="button" id="filterclose" name="filterclose" value="cancel" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()"></button>
                                 </div> 
                                 <div class="fw_formBody"> 
+                                    <div class="fw_formRow">
+                                        <h6>{{"Date Range" | translate}}</h6>
+                                        <div class="row">
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob m-0">
+                                                    <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
+                                                    <label for="fromDate">{{"From Date" | translate}}</label>
+                                                    <span class="ui-error">{{"Please enter start date" | translate}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                <div class="input-block form-floating input-block-dob m-0">
+                                                    <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
+                                                    <label for="toDate">{{"To Date" | translate}}</label>
+                                                    <span class="ui-error">Please enter end date</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="fw_formRow" *ngIf="productsList && productsList.length > 0">
                                         <h6>Products</h6>
                                         <div class="fw_checkboxWraper">
@@ -78,22 +97,7 @@
                                         </div>
                                     </div> -->
                                     <div class="fw_formRow">
-                                        <h6>{{"Date Range" | translate}}</h6>
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="fromDate" name="fromDate" value="" placeholder="Select Start Date" class="input-textBox input-date" [(ngModel)]="fromDate" (dateChange)="formatDate('fromDate')"  [max]="maxDate">
-                                                    <label for="fromDate">{{"From Date" | translate}}</label>
-                                                    <span class="ui-error">{{"Please enter start date" | translate}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <div class="input-block form-floating input-block-dob">
-                                                    <input type="date" id="toDate" name="toDate" value="" placeholder="Select End Date" class="input-textBox input-date" [(ngModel)]="toDate" (dateChange)="formatDate('toDate')" [max]="maxDate" [min]="fromDate">
-                                                    <label for="toDate">{{"To Date" | translate}}</label>
-                                                    <span class="ui-error">Please enter end date</span>
-                                                </div>
-                                            </div>
                                             <footer>
                                                 <button type="button" value="cancel" id="filterClear" name="filterClear" class="btn_white btn_fullWidth" (click)="clear()">{{"Clear" | translate}}</button>
                                                 <button type="button" value="apply" id="filterApply" name="filterApply" class="btn_red btn_fullWidth" (click)="applyFilter()">{{"Apply" | translate}}</button>
