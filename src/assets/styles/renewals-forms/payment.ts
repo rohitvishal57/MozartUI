@@ -4,7 +4,7 @@ export const payment={
   "prevBtnTitle": "Back",
   "resetBtnTitle": "",
   "calculateBtnTitle": "",
-  "saveBtnFunction": "",
+  "saveBtnFunction": "uploadSelectedDocument",
   "themeFile": "ABHI.css",
   "formSections": [
     {
@@ -40,7 +40,7 @@ export const payment={
           "class": "send-link-btn send-btn",
           "disabled": false,
           "visible": true,
-          "methodName": "sendPaymentLink",
+          "methodName": "onButtonClick",
           "dependentControls": [
             "copyLink"
           ]
@@ -82,7 +82,6 @@ export const payment={
           "visibleLabel": false,
           "visible": true,
           "type": "button",
-          "dependentControls": ["nextOnline"],
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-ENach",
           "methodName": "onButtonClick"
         },
@@ -92,7 +91,6 @@ export const payment={
           "visibleLabel": false,
           "visible": true,
           "type": "button",
-          "dependentControls": ["nextOnline"],
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-EMandate",
           "methodName": "onButtonClick"
         },
@@ -102,7 +100,6 @@ export const payment={
           "visibleLabel": false,
           "visible": true,
           "type": "button",
-          "dependentControls": ["nextOnline"],
           "class": "col-12 col-md-6 col-lg-2 paymentBtn btn-AutoDebit",
           "methodName": "onButtonClick"
         },
@@ -120,13 +117,12 @@ export const payment={
             "chequeNumber",
             "chequeDate",
             "ifscCode",
-            "paymentBankName",
+            "bankName",
             "chequeCopy",
             "documentProofUpload",
-            "paymentBankCity",
-            "paymentBankBranch",
-            "micrCode",
-            "nextOffline"
+            "bankCity",
+            "bankBranch",
+            "micrCode"
           ]
         },
         {
@@ -411,13 +407,13 @@ export const payment={
           ]
         },
         {
-          "name": "paymentBankName",
+          "name": "bankName",
           "label": "Bank Name",
           "visible": false,
           "visibleLabel": true,
           "getAllOption": "getAllBankDetails",
           "onChangeMethod": "getBankCity",
-          "otherControlName": "paymentBankCity",
+          "otherControlName": "bankCity",
           "type": "select",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
@@ -431,12 +427,12 @@ export const payment={
           ]
         },
         {
-          "name": "paymentBankCity",
+          "name": "bankCity",
           "label": "Bank City",
           "visible": false,
           "visibleLabel": true,
           "onChangeMethod": "getBranchDetails",
-          "otherControlName": "paymentBankBranch",
+          "otherControlName": "bankBranch",
           "type": "select",
           "value": "",
           "class": "col-12 col-md-6 col-lg-4",
@@ -450,7 +446,7 @@ export const payment={
           ]
         },
         {
-          "name": "paymentBankBranch",
+          "name": "bankBranch",
           "label": "Bank Branch",
           "visible": false,
           "visibleLabel": true,
@@ -558,24 +554,13 @@ export const payment={
           "disabled": true
         },
         {
-          "name": "nextOffline",
+          "name": "next",
           "label": "Next",
           "visibleLabel": false,
           "visible": true,
           "type": "button",
           "class": "col-12 col-md-6 col-lg-2 next-btn",
-          "methodName": "onSubmit",
-          "onClickMethod": "uploadSelectedDocument"
-        },
-        {
-            "name": "nextOnline",
-            "label": "Next",
-            "visibleLabel": false,
-            "visible": false,
-            "type": "button",
-            "class": "col-12 col-md-6 col-lg-2 next-btn",
-            "methodName": "onSubmit",
-            "onClickMethod": "redirectToJustPay"
+          "methodName": "onSubmit"
         },
         {
           "name": "back",
