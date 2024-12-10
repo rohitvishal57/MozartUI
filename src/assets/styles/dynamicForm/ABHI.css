@@ -2952,3 +2952,8 @@ margin: 0;
     border-style: solid;
     border-color: #333 transparent transparent transparent;
 }
+
+.main-container .main-subContainer .left-nav .left-main-cnt{
+ background-color: transparent;
+ padding-top: 0px;
+}
