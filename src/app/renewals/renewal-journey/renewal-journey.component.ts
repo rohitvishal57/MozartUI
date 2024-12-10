@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject, inject, Renderer2 } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { tap } from 'rxjs';
 import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubControl, IValidator } from 'src/app/interface/form.interface';
@@ -16,6 +16,7 @@ import { totalPremium } from 'src/assets/styles/renewals-forms/totalPremium';
 import { RenewalsService } from '../renewals.service';
 import { active_health_covers } from 'src/assets/styles/renewals-forms/active_Health_covers';
 import { IFullQuoteMapping } from 'src/app/interface/FullQuote_Mapping.interface';
+import { customer_payment } from 'src/assets/styles/renewals-forms/customer_payment';
 
 @Component({
   selector: 'app-renewal-journey',
@@ -63,13 +64,16 @@ export class RenewalJourneyComponent {
 
   activeSection: string = "primary";
 
+  // activeSection: string = "primary";
+  formIndex:number=0;
+
 
   QuoteNumber: any = [];
   tenureAmount: any[] = [0, 0, 0];
   discountList: number[] = [];
   displayTaxList: any[] = [];
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService,private renewalService: RenewalsService) {
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService,private renewalService: RenewalsService,private router:Router) {
 
   }
 
@@ -432,6 +436,9 @@ export class RenewalJourneyComponent {
                 await this.resolveMethod(control.methodName, control);
                 // this.handlePolicyTypeChange(control,control.value);
               }
+            }
+            if(control.type == 'button' && control.methodName == "checkKycDetail"){
+                this.resolveMethod(control.methodName, control);
             }
 
             // if (control.type == 'radio') {
@@ -1202,7 +1209,7 @@ export class RenewalJourneyComponent {
     });
   }
 
-  async onSubmit() {
+  async onSubmit(control:any) {
     console.log(this.renewalFormGroup.value, this.form);
     if (this.renewalFormGroup.valid) {
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
@@ -1214,6 +1221,8 @@ export class RenewalJourneyComponent {
 
       if (this.form.saveBtnFunction) {
         await this.resolveMethod(this.form.saveBtnFunction);
+      } else if(control!=null && control.onClickMethod){
+        await this.resolveMethod(control.onClickMethod);
       }
 
       if (this.getFormIndexValue() < this.formSequence.length - 1) {
@@ -2543,43 +2552,6 @@ export class RenewalJourneyComponent {
         });
       });
     }
-    // Handle the Juspay redirection for buttons other than Offline
-    if (this.selectedButton !== 'offline') {
-      const reqData = {
-        agentcode: this.agentCode,
-        proposalNumber: '',
-        paymentMethod: this.selectedButton,
-        source: 'Retail',
-        policyType: 'Renewal',
-        policyNumber: this.formData.policyNumber,
-        quoteNumber: '',
-        OrderID: ''
-      };
-      this.yatraService.justPayRedirection(reqData).subscribe({
-        next: (response: any) => {
-          console.log('Juspay API Response:', response);
-
-          if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
-            if (this.selectedButton == 'sendLinkButton') {
-              console.log(response);
-              this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
-              // res = response.data.paymentURL;
-            }
-            else {
-              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
-            }
-          } else {
-            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
-            console.error('Invalid payment link received:', response);
-          }
-        },
-        error: (error) => {
-          this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
-          console.error('Error generating payment link:', error);
-        }
-      });
-    }
-
     console.log(control);
 
 
@@ -2822,6 +2794,7 @@ export class RenewalJourneyComponent {
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
     console.log("getFormIndexValue()",formIndex ? parseInt(formIndex, 10) : 0);  
+    this.formIndex=formIndex ? parseInt(formIndex, 10) : 0;
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
   setFormIndexValue(value: number) {
@@ -2832,7 +2805,6 @@ export class RenewalJourneyComponent {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex + 1);
     console.log("currentIndex",currentIndex);
-    
   }
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
@@ -2861,7 +2833,7 @@ export class RenewalJourneyComponent {
         "policyNumber": this.policyNumber,
         "proposalNum":this.proposalNum,
         "agentCode": this.agentCode,
-        "bankName": JSON.parse(data.chequeBankName).value,
+        "bankName": JSON.parse(data.paymentBankName).value,
         "ifsc": data.ifscCode,
         "micrNo":data.micrCode,
         "documentId": this.documentId
@@ -3507,4 +3479,73 @@ export class RenewalJourneyComponent {
       this.changeMainFormDependentControls(control.dependentControls,false);
     }
   }
+
+  sendPaymentLink(){
+    console.log("inside sendPaymentLink");
+    
+    this.router.navigate(['renewal/customerRenewalJourney'], {
+      queryParams: {
+        formData: this.encryptionService.encrypt(this.formData),
+        proposalNum: this.encryptionService.encrypt(this.proposalNum),
+        policyNumber: this.encryptionService.encrypt(this.policyNumber),
+        journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
+        formSequence: this.encryptionService.encrypt([customer_payment,thankYou]),
+        formIndex: this.encryptionService.encrypt("0")
+      }
+    });
+  }
+
+  redirectToJustPay(control:any){
+    console.log(control,"redirectToJustPay");
+    
+    // Handle the Juspay redirection for buttons other than Offline
+    if (this.selectedButton !== 'offline') {
+      const reqData = {
+        agentcode: this.agentCode,
+        proposalNumber: '',
+        paymentMethod: this.selectedButton,
+        source: 'Retail',
+        policyType: 'Renewal',
+        policyNumber: this.formData.policyNumber,
+        quoteNumber: '',
+        OrderID: ''
+      };
+      this.yatraService.justPayRedirection(reqData).subscribe({
+        next: (response: any) => {
+          console.log('Juspay API Response:', response);
+
+          if (response.data.paymentURL && response.data.paymentURL !== null && response.data.paymentURL !== '') {
+            if (this.selectedButton == 'sendLinkButton') {
+              console.log(response);
+              this.renewalFormGroup.get(control.dependentControls[0])?.setValue(response.data.paymentURL);
+              // res = response.data.paymentURL;
+            }
+            else {
+              window.location.href = response.data.paymentURL; // Redirect to Juspay Payment URL
+            }
+          } else {
+            this.toast.warning({ detail: "WARNING", summary: "Invalid payment link received", duration: 3000 });
+            console.error('Invalid payment link received:', response);
+          }
+        },
+        error: (error) => {
+          this.toast.error({ detail: "ERROR", summary: "Failed to generate payment link", duration: 3000 });
+          console.error('Error generating payment link:', error);
+        }
+      });
+    }
+  }
+   checkKycDetail(control: any): void {
+    const isVisible = !(this.formData.ckycNo !== "" || this.formData.isKYCComplete);
+    
+    this.form.formSections.forEach((section) => {
+      section.formControls.forEach((formControl: IFormControl) => {
+        if (formControl.name === control.name) {
+          section.visible = isVisible;
+          this.form.formSections[1].visible = !isVisible;
+        }
+      });
+    });
+  }
+  
 }
