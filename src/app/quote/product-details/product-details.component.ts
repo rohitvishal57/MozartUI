@@ -27,12 +27,11 @@ export class ProductDetailsComponent {
   formSequence: any[] = [];
   displayInfo : string ='Health Add On';
   private allJsonFormData: any[] = []
-
-
+  proposalNum : any = '';
 
   constructor(private quoteservices: QuoteService, private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, private commonService: CommonService, private languageService: LanguageService,
-    private translateService: TranslateService
+    private translateService: TranslateService,private common: CommonService
   ) {
 
   }
@@ -90,10 +89,24 @@ export class ProductDetailsComponent {
     }
   }
 
+  async getProposalNum() {
+    try {
+      const res = await firstValueFrom(this.common.getProposalNumber());
+      console.log(res);
+      this.proposalNum = res.data.proposalNumber;
+      console.log(this.proposalNum);
+      
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 
   async buyNow(item: any) {
     this.formData = { ...this.formData, productName: item.productName }
     try {
+      await this.getProposalNum();
+
       await this.getFormSequence(item);
       console.log(item)
       const productData = {
