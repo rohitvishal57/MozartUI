@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,11 +12,8 @@ import { LoginService } from './login.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from 'src/app/services/auth.service';
-
-interface Item {
-  firstName: string;
-  agentCode: string;
-}
+import { BankbranchModalComponent } from 'src/app/shared/components/bankbranch-modal/bankbranch-modal.component';
+import { Item } from 'src/app/interface/modal-popup.interface';
 
 @Component({
   selector: 'app-login',
@@ -40,15 +37,12 @@ export class LoginComponent implements OnInit {
   captchaErrorMsg = '';
   captchaCode = '';
   isSubmitted = false;
-  searchQuery: string = '';
-  @ViewChild('BankBranchDialog') BankBranchDialog!: TemplateRef<any>;
 
   sendOtpReqBody: any = { agentCode: '', eventName: '', requestId: '', otpNumber: '', mobileNumber: '', eMailId: '' };
   contactDetailsReqBody: any = { userId: '' };
   loginResetReqBody: any = { userName: '' };
   validateOtpReqBody: any = { agentCode: '', eventName: '', requestId: '', otpNumber: '', mobileNumber: '', eMailId: '' };
   items: Item[] = [];
-  filteredList: Item[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -201,7 +195,6 @@ export class LoginComponent implements OnInit {
     this.loginService.sendAgentLoginRequestApi(this.loginResetReqBody).subscribe({
       next: (res: any) => {
         if (res.data && res.isSuccess && res.statusCode == '200') {
-          localStorage.setItem('agentCode', this.loginForm.value.userName);
           window.open(res.data.redirectUrl, "_self");
         } else {
           this.userErrorMsg = res.message;
@@ -222,7 +215,7 @@ export class LoginComponent implements OnInit {
       next: (res: any) => {
         if (res?.data?.contactInfo?.length > 0) {
           this.contactInfoData = res?.data?.contactInfo?.map((obj: any) => obj.communicationValue);
-          localStorage.setItem("agentCode", this.loginForm.value.userName);
+          localStorage.setItem('agentCode', res.data.agentId);
           this.openModal(this.contactInfoData);
         } else {
           this.userErrorMsg = res.message;
@@ -363,31 +356,19 @@ export class LoginComponent implements OnInit {
   }
 
   openBankBranchDialog() {
-    this.filteredList = [...this.items]
-    this.dialog.open(this.BankBranchDialog, {
+    const dialogRef = this.dialog.open(BankbranchModalComponent, {
       width: '600px',
       height: 'auto',
+      disableClose: true,
+      data: {
+        itemsList: this.items,
+      },
     });
-  }
 
-  filterList() {
-    this.filteredList = this.items.filter(
-      (item) =>
-        item.firstName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        item.agentCode.includes(this.searchQuery)
-    );
-  }
-
-  selectItem(item: any) {
-    localStorage.setItem('agentCode', item.agentCode);
-    this.dialog.closeAll();
-    this.router.navigate(['dashboard']);
-  }
-
-  closeDialogAndRedirect(): void {
-    this.dialog.closeAll();
-    this.enableLoginForm = true;
-    this.verifyOtpEnable = false;
+    dialogRef.afterClosed().subscribe(() => {
+      this.enableLoginForm = true;
+      this.verifyOtpEnable = false;
+    });
   }
 
   updatePreferredLanguage() {

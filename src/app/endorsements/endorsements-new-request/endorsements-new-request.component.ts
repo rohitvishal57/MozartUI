@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { interval, map, Observable, startWith, take } from 'rxjs';
+import { debounceTime, interval, map, Observable, startWith, Subject, take } from 'rxjs';
 import { Helper } from 'src/app/utilities/helper/helper';
 import { MatDialog } from '@angular/material/dialog';
 import { EndorsementsRequestsService } from '../endorsements-requests/endorsements-requests.service';
@@ -143,6 +143,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
   otpErrorMsge: boolean = false;
   errorMessage: string | undefined;
   policyMembersList: [] = [];
+  policyNoChangeSubject = new Subject<string>();
 
   constructor(private formBuilder: FormBuilder,
     private endorsement_service: EndorsementsRequestsService,
@@ -152,6 +153,11 @@ export class EndorsementsNewRequestComponent implements OnInit {
     private dialog: MatDialog,
     private languageService: LanguageService,
     private translateService: TranslateService) {
+      this.policyNoChangeSubject.pipe(
+        debounceTime(300), // wait for 300ms after the last keyup event
+      ).subscribe(value => {
+        this.onChange(value);
+      });
   }
   ngOnInit() {
     this.languageService.language$.subscribe(lang => {
@@ -223,12 +229,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
   }
 
-  onPolicyNoChange(event:any) {
+  onPolicyNoChange(event: any) {
     const inputValue = (event.target as HTMLInputElement).value.trim();
     this.caseCreationForm.get('member').setValue('');
     this.MemberIdList = [];
-    if(event.target.value.length >= 16){
-      this.onChange(event.target.value);
+    if (inputValue.length >= 16) {
+      this.policyNoChangeSubject.next(inputValue);
     }
   }
 
