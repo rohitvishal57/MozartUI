@@ -47,8 +47,8 @@
 
                             </select>
                             <div class="filterFieldGroup">
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" [placeholder]="getPlaceholder()" (keypress)="restrictInput($event)">
-                                <button  type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl" type="text" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" [placeholder]="getPlaceholder()" (keypress)="restrictInput($event)" (keydown.enter)="applySearch()">
+                                <button  type="submit" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click) ="applySearch()" ><img src="assets/Img/icon_magnify_grey.svg"></button>
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>
                                     <small *ngIf="searchInputControl.hasError('required')">{{"This field is required." | translate}}</small>
