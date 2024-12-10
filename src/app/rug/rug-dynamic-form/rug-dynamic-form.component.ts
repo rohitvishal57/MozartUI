@@ -3255,10 +3255,11 @@ export class RugDynamicFormComponent {
     premiumObj = this.bbPremiumData.filter((ele: any) => {
       return (ele.familyConstructId == this.familyConstruct)
     })
-
+    if(this.bbdetails.productCode != "R03"){
     premiumObj = this.bbPremiumData.filter((ele: any) => {
       return ((ele.ageRange == ageRange && ele.familyConstructId == this.familyConstruct) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.combinationName == 'GPA')) || (ele.familyConstructId == (this.familyConstruct == "6" || this.familyConstruct == "5" || this.familyConstruct == "1" ? "1" : "2") && ele.ageRange == ageRange && ele.combinationName == 'GCI') || (ele.familyConstructId == this.familyConstruct && ele.combinationName == 'GP')
     })
+  }
     let orderOfPremium = ['GHI', 'GPA', 'GCI', 'GHI-5L', 'GHI-10L', 'GP']
     for(let i = 0; i <= orderOfPremium.length; i++){
 
@@ -3812,7 +3813,7 @@ export class RugDynamicFormComponent {
                     groupCode: this.bbdetails.groupCode,
                     productPlanName: this.bbdetails.productPlanName,
                     productPlanCode: this.bbdetails.productPlanCode,
-                    combiId: "10",
+                    combiId: this.bbdetails.combiId,
                     combiName: null,
                     familyConstructId: this.bbdetails.familyConstructId,
                     ghiPremium: this.bbdetails.ghiPremium,
@@ -6340,6 +6341,9 @@ export class RugDynamicFormComponent {
           filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
           console.log(filterArr);
           this.getBbPremium(filterArr);
+          this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
+          this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
+          this.dynamicFormGroup.get('productPlanCode')?.setValue(filterArr[0].siPlanId.toString());
         },
         error: (err) => {
           console.error(err);
@@ -6349,10 +6353,11 @@ export class RugDynamicFormComponent {
       filterArr = this.sumInsuredData.filter((obj: any) => obj.value == this.dynamicFormGroup.value.sumInsured)
       console.log(filterArr);
       this.getBbPremium(filterArr);
+      this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
+      this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
+      this.dynamicFormGroup.get('productPlanCode')?.setValue(filterArr[0].siPlanId.toString());
     }
-    this.dynamicFormGroup.get('groupCode')?.setValue(filterArr[0].groupCode);
-    this.dynamicFormGroup.get('productPlanName')?.setValue("GHI,GP");
-    this.dynamicFormGroup.get('productPlanCode')?.setValue(filterArr[0].siPlanId.toString());
+
   }
   getBbPremium(filterArr: any){
     // if (this.formSequence[0].formName == "Group Health Insurance + Group Protect") {

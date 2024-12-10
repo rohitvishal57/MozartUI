@@ -29,7 +29,7 @@ export class BbTestPageComponent implements OnInit{
         response = JSON.parse(response.data)
         console.log(response);
         if(response.isSuccess == true && response.statusCode == 200){
-        //  window.location.href = response.message;
+         window.location.href = response.message;
         }
         if(response.isSuccess == false && response.statusCode == 500){
           this.toast.warning({ detail: "SUCCESS", summary: response.message, duration: 3000 });
