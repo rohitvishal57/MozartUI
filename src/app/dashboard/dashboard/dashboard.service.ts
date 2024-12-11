@@ -49,6 +49,16 @@ export class DashboardService {
     const url = this.configService.config.baseUrl + this.configService.config.GetDueRenewals;
     return this.httpService.post(url, payload);
   }
+
+  getPreferences(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.fetchDashboardPreferences;
+    return this.httpService.post(url, payload);
+  }
+
+  submitPreferenceData(payload: any): Observable<any> {
+    const url = this.configService.config.baseUrl + this.configService.config.SubmitDashboardPreferences;
+    return this.httpService.post(url, payload);
+  }
   
   Getproductlist(){
     const productList = this.configService.config.baseUrl + this.configService.config.getTopProducts;

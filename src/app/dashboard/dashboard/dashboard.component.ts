@@ -6,8 +6,6 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ProfileService } from 'src/app/profile/profile.service';
 import { DashboardService } from './dashboard.service';
 import Chart, { ChartData } from 'chart.js/auto';
-import { ProductsService } from 'src/app/product/products/products.service';
-import { count, filter } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -59,9 +57,164 @@ export class DashboardComponent {
   ProductList: any;
   isDesktopView = false;
 
+  newSectionList: any;
+  newCustomerList: any;
+  newRenewalList: any;
+  newBusinessList: any;
+  newQuickActionList: any;
+  newPerformanceList: any;
+  actualDashboardPrefereces: any;
+
+  performanceFilter = 'Quarterly';
+  performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
+  businessFilter = 'Last7Days';
+  busninessFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
+  widgetArr = [
+    {
+      name: 'QuickAction', isFilter: false
+    },
+    {
+      name: 'Performance', isFilter: true, filterType: this.performanceFilter
+    },
+    {
+      name: 'Business', isFilter: true, filterType: this.businessFilter
+    },
+    {
+      name: 'Customer', isFilter: false
+    },
+    {
+      name: 'Servicing', isFilter: false
+    },
+    {
+      name: 'Wellness', isFilter: false
+    }
+  ];
+
+  newOrderList: any = [
+    {
+      "tabName": "QuickAction",
+      "priority": 1,
+      "isFilter": false,
+      "category": [
+        {
+          "catName": "birthdayDetails",
+          "subpriority": 1
+        },
+        {
+          "catName": "eventDetails",
+          "subpriority": 2
+        },
+        {
+          "catName": "notifications",
+          "subpriority": 3
+        }
+      ]
+    },
+    {
+      "tabName": "ABHI",
+      "priority": 2,
+      "category": [
+        {
+          "catName": "birthdayDetails",
+          "subpriority": 1
+        },
+        {
+          "catName": "eventDetails",
+          "subpriority": 2
+        },
+        {
+          "catName": "notifications",
+          "subpriority": 3
+        }
+      ]
+    },
+    {
+      "tabName": "Performance",
+      "priority": 3,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "My goals",
+          "subpriority": 1
+        },
+        {
+          "catName": "Policies Sold",
+          "subpriority": 2
+        },
+        {
+          "catName": "Premium",
+          "subpriority": 3
+        },
+        {
+          "catName": "commisions",
+          "subpriority": 4
+        }
+      ]
+    },
+    {
+      "tabName": "Business",
+      "priority": 4,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "Leads",
+          "subpriority": 1
+        },
+        {
+          "catName": "Proposals",
+          "subpriority": 2
+        }
+      ]
+    },
+    {
+      "tabName": "Renewals",
+      "priority": 5,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "Renewals",
+          "subpriority": 1
+        },
+        {
+          "catName": "Persistency",
+          "subpriority": 2
+        }
+      ]
+    },
+    {
+      "tabName": "Servicing",
+      "priority": 6,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "Claims",
+          "subpriority": 1
+        },
+        {
+          "catName": "Customers",
+          "subpriority": 2
+        }
+      ]
+    },
+    {
+      "tabName": "Wellness",
+      "priority": 7,
+      "isFilter": true,
+      "category": [
+        {
+          "catName": "Dha",
+          "subpriority": 1
+        },
+        {
+          "catName": "sellingProducts",
+          "subpriority": 2
+        }
+      ]
+    }
+  ];
+
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
-
   }
 
   ngOnInit() {
@@ -78,6 +231,11 @@ export class DashboardComponent {
     this.profileService.getProfileDetails(reqData).subscribe((res: any) => {
       if (res.isSuccess) {
         this.profileDetails = res.data;
+      }
+    });
+    this.dashboardService.getPreferences(reqData).subscribe((res: any) => {
+      if (res.isSuccess) {
+        this.actualDashboardPrefereces = res;
       }
     });
     this.fetchWidgets();
@@ -100,32 +258,80 @@ export class DashboardComponent {
     }
   }
 
-  dropTasks(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.quickActionDetails?.eventDetails, event.previousIndex, event.currentIndex);
-  }
-
   dropPerformance(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.performanceCard, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.performanceCard, 'Performance')
   }
 
   dropQuickAct(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.quickActionDetails, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.quickActionDetails, 'QuickAction')
   }
 
   dropTabs(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.tabsInfo, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.tabsInfo, 'Business')
   }
 
   dropRenewal(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.renewalDetail, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.renewalDetail, 'Renewal')
   }
 
   dropCharts(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.otherSection, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.otherSection, 'Customer')
   }
 
   dropSections(event: CdkDragDrop<any[]>) {
-    moveItemInArray(this.sectionList, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.newOrderList, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.newOrderList, 'section')
+  }
+
+  getOrderBy(widget: any, key: any) {
+    switch (key) {
+      case 'section':
+        this.newSectionList = widget.map((item: any, index: any) => {
+          return { name: item, order: index + 1};
+        });
+        console.log(this.newSectionList)
+        break;
+      case 'Customer':
+        this.newCustomerList = widget.map((item: any, index: any) => {
+          return { main: 'Customer', name: item, order: index + 1};
+        });
+        console.log(this.newCustomerList)
+        break;
+      case 'Renewal':
+        this.newRenewalList = widget.map((item: any, index: any) => {
+          return { main: 'Renewal', name: item, order: index + 1};
+        });
+        console.log(this.newRenewalList)
+        break;
+      case 'Business':
+        this.newBusinessList = widget.map((item: any, index: any) => {
+          return { main: 'Business', name: item, order: index + 1};
+        });
+        console.log(this.newBusinessList)
+        break;
+      case 'QuickAction':
+        this.newQuickActionList = widget.map((item: any, index: any) => {
+          return { main: 'QuickAction', name: item, order: index + 1};
+        });
+        console.log(this.newQuickActionList)
+        break;
+
+      case 'Performance':
+        this.newPerformanceList = widget.map((item: any, index: any) => {
+          return { main: 'Performance', name: item, order: index + 1};
+        });
+        console.log(this.newPerformanceList)
+        break;
+
+      default:
+        break;
+    }
+
   }
 
   getQuote() {
@@ -172,34 +378,10 @@ export class DashboardComponent {
     }
   }
 
-  performanceFilter = 'Quarterly';
-  performanceFilterList = ['Monthly', 'Quarterly', 'Yearly']
-  businessFilter = 'Last7Days';
-  busninessFilterList = ['Last7Days', 'LastMonth', 'QuarterWise', 'FinancialYear'];
-  widgetArr = [
-    {
-      name: 'QuickAction', isFilter: false
-    },
-    {
-      name: 'Performance', isFilter: true, filterType: this.performanceFilter
-    },
-    {
-      name: 'Business', isFilter: true, filterType: this.businessFilter
-    },
-    {
-      name: 'Customer', isFilter: false
-    },
-    {
-      name: 'Servicing', isFilter: false
-    },
-    {
-      name: 'Wellness', isFilter: false
-    }
-  ];
+
+
   fetchWidgets() {
-
     this.widgetArr.forEach(element => {
-
       const obj = {
         "WidgetName": element.name,
         "FilterType": element.isFilter ? element.filterType : '',
@@ -208,7 +390,6 @@ export class DashboardComponent {
 
       switch (element.name) {
         case 'Performance':
-
           this.dashboardService.fetchPerformanceDetails(obj).subscribe(res => {
             console.log('performance', res.data);
             res.data.length && Object.keys(res.data[0]).forEach(el => {
@@ -359,6 +540,7 @@ export class DashboardComponent {
           break;
       }
 
+
     });
   }
 
@@ -376,7 +558,6 @@ export class DashboardComponent {
     // this.renderPersistencyChart();
     this.renderCustomerChart();
     this.renderServiceChart();
-    this.createHorizontalBarChart();
   }
 
   createChartData(): ChartData<'pie' | 'doughnut'> {
@@ -537,7 +718,7 @@ export class DashboardComponent {
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/proposals/proposalsList/'], {
-                queryParams: { status: label, filter : this.businessFilter },
+                queryParams: { status: label, filter: this.businessFilter },
               });
             }
           }
@@ -878,10 +1059,10 @@ export class DashboardComponent {
   createServiceChartData(): ChartData<'pie' | 'doughnut'> {
     return {
       labels: [
-        'Claim Rejecteded', 'Claim Settled', 'Open Endoresements', 'Open Claims', 'Open Complaints', 'Cancellation Request'
+        'Claim Rejecteded', 'Claim Settled', 'Open Claims', 'Open Endorsements'
       ],
       datasets: [{
-        data: [this.serviceInfo.claimRejectedCount, this.serviceInfo.claimSettledLessAmountCount, this.serviceInfo.claimsOpenCount, this.serviceInfo.complaintsOpenCount, this.serviceInfo.endorsementsOpenCount, this.serviceInfo.policyCancellationRequestsCount],
+        data: [this.serviceInfo?.rejectedClaimsCount, this.serviceInfo?.settledLessAmountClaimsCount, this.serviceInfo?.openClaimsCount, this.serviceInfo?.openEndorsementsCount],
         backgroundColor: ['#e74c3c',
           '#9b59b6',
           '#3498db',
@@ -988,42 +1169,6 @@ export class DashboardComponent {
     this.ngAfterViewInit();
   }
 
-  createHorizontalBarChart(): void {
-    new Chart('horizontalBarChart', {
-      type: 'bar',  // Chart type
-      data: {
-        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4'],  // X-axis labels
-        datasets: [{
-          label: 'Dataset 1',
-          data: [65, 59, 80, 81],  // Data for the bars
-          backgroundColor: '#42A5F5',
-        }, {
-          label: 'Dataset 2',
-          data: [28, 48, 40, 19],
-          backgroundColor: '#FF7043',
-        }]
-      },
-      options: {
-        responsive: true,
-        indexAxis: 'y',  // This makes the chart horizontal
-        scales: {
-          x: {
-            beginAtZero: true,  // Ensure the x-axis starts at zero
-          },
-          y: {
-            beginAtZero: true,
-          }
-        },
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-        }
-      }
-    });
-  }
-
-
   getPoductList() {
     const reqData = {
       "agentCode": localStorage.getItem('agentCode')
@@ -1050,7 +1195,7 @@ export class DashboardComponent {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    this.isDesktopView = window.innerWidth <= 728 ? true : false;
+    this.isDesktopView = screen.width <= 728 ? true : false;
   }
 
   calculateDelay(): number {
@@ -1059,15 +1204,17 @@ export class DashboardComponent {
     const totalCardsLength = this.dhaCard.length;
     const totalActionsLength = this.quickActionDetails.length;
 
-    const delay = (totalSectionsLength * 500) +
-      (totalTabsLength * 300) +
-      (totalCardsLength * 200) +
-      (totalActionsLength * 100);
-
+    const delay = (totalSectionsLength * 500) + (totalTabsLength * 300) + (totalCardsLength * 200) + (totalActionsLength * 100);
     const minDelay = 5000;
     const maxDelay = 30000;
 
     return Math.max(minDelay, Math.min(delay, maxDelay));
+  }
+
+  onSubmit() {
+    this.dashboardService.submitPreferenceData({}).subscribe((response: any) => {
+      console.log('Data submitted successfully', response);
+    });
   }
 
 }

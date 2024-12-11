@@ -75,13 +75,14 @@
             </div>
           </div>
         </div>
+        <!-- <button (click)="onSubmit()">Customize</button> -->
         <ng-conatiner class="body_flex_column" cdkDropListOrientation="vertical" cdkDropList
-        [cdkDragDisabled]="isDesktopView">
-          <ng-container *ngFor="let section of sectionList">
+        [cdkDragDisabled]="isDesktopView" (cdkDropListDropped)="dropSections($event)">
+          <ng-container *ngFor="let section of newOrderList">
             <!--Important Tasks New design start-->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
               class="commonSection dashboard_LPR_main dashboard_importantEvents "
-              *ngIf="section == 'QuickAction' && quickActionDetails">
+              *ngIf="section.tabName == 'QuickAction' && quickActionDetails">
               <h3>{{"Important Tasks" | translate}}</h3>
               <div class="body_flex_row body_importantEvents mt-3" cdkDropListOrientation="horizontal" cdkDropList
                 (cdkDropListDropped)="dropQuickAct($event)">
@@ -159,9 +160,10 @@
                 </ng-conatiner>
               </div>
             </section>
-            <!--Important Tasks New design end-->
+
+            <!-- ABHI -->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
-              class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section == 'ABHI'">
+              class="body_flex_column dashboard_latestABHI commonSection " *ngIf="section.tabName == 'ABHI'">
               <div class="body_flex_row justify-content-between">
                 <h6>{{"Latest from ABHI" | translate}}</h6>
                 <button type="button" id="btn-exploreMore" name="btn-exploreMore"
@@ -245,9 +247,10 @@
                 </div>
               </div>
             </section>
+
             <!-- performance -->
             <div cdkDrag [cdkDragDisabled]="isDesktopView" class="contentBody dashboard_contentContainer"
-              *ngIf="section == 'Performance'">
+              *ngIf="section.tabName == 'Performance'">
               <div class="performance-overview">
                 <div class="body_flex_row justify-content-between align-items-center">
                   <h2>{{"Performance Overview" | translate}}</h2>
@@ -323,78 +326,78 @@
               </div>
             </div>
 
-            <!-- Business -->
-            <section cdkDrag [cdkDragDisabled]="isDesktopView"
-              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Business'">
-              <div class="body_flex_row justify-content-between align-items-center">
-                <h3>{{"Business Summary" | translate}}</h3>
-                <div class="filter_performanceOverview">
-                  <div class="filterfields_PO">
-                    <div class="filterfields_input">
-                      <div class="input-block input-block-renew compare_inputblock">
-                        <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
-                          [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter"
-                          (change)="onSelectFilter('Business', businessFilter)">
-                          <option *ngFor="let opt of busninessFilterList" [value]="opt">
-                            {{ opt | translate }}
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
-                (cdkDropListDropped)="dropTabs($event)">
-                <ng-container *ngFor="let tab of tabsInfo">
-                  <div *ngIf="businessSummary && tabsInfo.length" cdkDrag [cdkDragDisabled]="isDesktopView"
-                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-                    <header class="leads_itemHeader"
-                      [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
-                      <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label>
-                    </header>
-                    <div class="leads_content leads_contentDashboard leads_newService">
-                      <div class="scroll_contentDashboard">
-                        <div class="data_inscroll">
-                          <ng-container *ngFor="let buz of tab.category">
-                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
-                              <div *ngSwitchCase="'Leads'">
-                                <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name}">
-                                  <header>
-                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                                    <label>{{buz.count}}</label>
-                                  </header>
-                                </div>
-                              </div>
-                              <div *ngSwitchCase="'Proposals'">
-                                <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, filter: businessFilter }">
-                                  <header>
-                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                                    <label>{{buz.count}}</label>
-                                  </header>
-                                </div>
-                              </div>
-                            </div>
-                          </ng-container>
-                        </div>
-                      </div>
-                      <div [ngSwitch]="tab.chart">
-                        <div *ngSwitchCase="'Leads'" class="chart-container" style="position: relative; width:100%">
-                          <canvas #chartCanvas style="margin: auto;  width:100%"></canvas>
-                        </div>
-                        <div *ngSwitchCase="'Proposals'" class="chart-container" style="position: relative; width:100%">
-                          <canvas #chartPropCanvas style="margin: auto;  width:100%"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
-            </section>
+             <!-- Business -->
+             <section cdkDrag [cdkDragDisabled]="isDesktopView"
+             class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.tabName == 'Business'">
+             <div class="body_flex_row justify-content-between align-items-center">
+               <h3>{{"Business Summary" | translate}}</h3>
+               <div class="filter_performanceOverview">
+                 <div class="filterfields_PO">
+                   <div class="filterfields_input">
+                     <div class="input-block input-block-renew compare_inputblock">
+                       <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
+                         [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter"
+                         (change)="onSelectFilter('Business', businessFilter)">
+                         <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                           {{ opt | translate }}
+                         </option>
+                       </select>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
+               (cdkDropListDropped)="dropTabs($event)">
+               <ng-container *ngFor="let tab of tabsInfo">
+                 <div *ngIf="businessSummary && tabsInfo.length" cdkDrag [cdkDragDisabled]="isDesktopView"
+                   class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+                   <header class="leads_itemHeader"
+                     [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
+                     <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label>
+                   </header>
+                   <div class="leads_content leads_contentDashboard leads_newService">
+                     <div class="scroll_contentDashboard">
+                       <div class="data_inscroll">
+                         <ng-container *ngFor="let buz of tab.category">
+                           <div class="leads_item_contentDashboard tiles" [ngSwitch]="tab.tabName">
+                             <div *ngSwitchCase="'Leads'">
+                               <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name}">
+                                 <header>
+                                   <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                   <label>{{buz.count}}</label>
+                                 </header>
+                               </div>
+                             </div>
+                             <div *ngSwitchCase="'Proposals'">
+                               <div class="leads_item leads_open" [routerLink]="'/proposals/proposalsList'" [queryParams]="{ status: buz.name, filter: businessFilter }">
+                                 <header>
+                                   <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                   <label>{{buz.count}}</label>
+                                 </header>
+                               </div>
+                             </div>
+                           </div>
+                         </ng-container>
+                       </div>
+                     </div>
+                     <div [ngSwitch]="tab.chart">
+                       <div *ngSwitchCase="'Leads'" class="chart-container" style="position: relative; width:100%">
+                         <canvas #chartCanvas style="margin: auto;  width:100%"></canvas>
+                       </div>
+                       <div *ngSwitchCase="'Proposals'" class="chart-container" style="position: relative; width:100%">
+                         <canvas #chartPropCanvas style="margin: auto;  width:100%"></canvas>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </ng-container>
+             </div>
+           </section>
 
             <!-- Renewal -->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
-              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Renewals'">
+              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.tabName == 'Renewals'">
               <div class="body_flex_row justify-content-between align-items-center">
                 <h3>{{"Renewal Summary" | translate}}</h3>
                 <div class="filter_performanceOverview">
@@ -459,70 +462,63 @@
               </div>
             </section>
 
-            <!-- Claim and customer -->
-            <section cdkDrag [cdkDragDisabled]="isDesktopView"
-              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section == 'Customer'">
-              <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
-                (cdkDropListDropped)="dropCharts($event)">
-                <ng-container *ngFor="let tab of otherSection">
-                  <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="isDesktopView"
-                    class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
-                    <header class="leads_itemHeader"
-                      [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
-                      <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label>
-                    </header>
-                    <div class="leads_content leads_contentDashboard leads_newService">
-                      <div class="scroll_contentDashboard">
-                        <div class="data_inscroll">
-                          <ng-container *ngFor="let buz of tab.category">
-                            <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
-                              <div *ngSwitchCase="'Customer'">
-                                <div class="leads_item leads_open" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
-                                  <header>
-                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                                    <label>{{buz.count}}</label>
-                                  </header>
-                                </div>
-                              </div>
-                              <!-- <div *ngSwitchCase="'Wellness'">
-                          <div class="leads_item leads_open">
-                            <header>
-                              <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                              <label>{{buz.count}}</label>
-                            </header>
-                          </div>
-                        </div> -->
-                              <div *ngSwitchCase="'Claims'">
-                                <div class="leads_item leads_open" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count }">
-                                  <header>
-                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
-                                    <label>{{buz.count}}</label>
-                                  </header>
-                                </div>
-                              </div>
-                            </div>
-                          </ng-container>
-                        </div>
-                      </div>
-                      <div class="leads_newChart" [ngSwitch]="tab.chart">
-                        <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
-                          <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
-                        </div>
-                        <!-- <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
-                    <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
-                  </div> -->
-                        <div *ngSwitchCase="'Claims'" class="chart-container" style="position: relative; width:100%">
-                          <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
-            </section>
+             <!-- Claim and customer -->
+             <section cdkDrag [cdkDragDisabled]="isDesktopView"
+             class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.tabName == 'Servicing'">
+             <div class="body_flex_row body_LPR_main mt-3" cdkDropListOrientation="horizontal" cdkDropList
+               (cdkDropListDropped)="dropCharts($event)">
+               <ng-container *ngFor="let tab of otherSection">
+                 <div *ngIf="tab.isShow" cdkDrag [cdkDragDisabled]="isDesktopView"
+                   class="white_container dashboard_productTabs body_flex_column dashboard_leadsMain">
+                   <header class="leads_itemHeader"
+                     [ngClass]="{'leads_itemHeaderProposal': tab.tabName == 'Proposals' }">
+                     <span>{{"Total" | translate}} {{tab.tabName | translate}}</span><label>{{tab.totalCount}}</label>
+                   </header>
+                   <div class="leads_content leads_contentDashboard leads_newService">
+                     <div class="scroll_contentDashboard">
+                       <div class="data_inscroll">
+                         <ng-container *ngFor="let buz of tab.category">
+                           <div class="leads_item_contentDashboard " [ngSwitch]="tab.tabName">
+                             <div *ngSwitchCase="'Customer'">
+                               <div class="leads_item leads_open" [routerLink]="'/customers/customersList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                                 <header>
+                                   <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                   <label>{{buz.count}}</label>
+                                 </header>
+                               </div>
+                             </div>
+                            
+                             <div *ngSwitchCase="'Claims'">
+                               <div class="leads_item leads_open" [routerLink]="'/claims/claimsList'" [queryParams]="{ status: buz.name, count: buz.count }">
+                                 <header>
+                                   <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
+                                   <label>{{buz.count}}</label>
+                                 </header>
+                               </div>
+                             </div>
+                           </div>
+                         </ng-container>
+                       </div>
+                     </div>
+                     <div class="leads_newChart" [ngSwitch]="tab.chart">
+                       <div *ngSwitchCase="'Customer'" class="chart-container" style="position: relative; width:100%">
+                         <canvas #chartCustomerCanvas style="margin: auto;  width:100%"></canvas>
+                       </div>
+                       <!-- <div *ngSwitchCase="'Wellness'" class="chart-container" style="position: relative; width:100%">
+                   <canvas #chartDHACanvas style="margin: auto;  width:100%"></canvas>
+                 </div> -->
+                       <div *ngSwitchCase="'Claims'" class="chart-container" style="position: relative; width:100%">
+                         <canvas #chartServicingCanvas style="margin: auto;  width:100%"></canvas>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </ng-container>
+             </div>
+           </section>
 
             <!-- others -->
-            <section class="dashboard_otherSections commonSection" *ngIf="section == 'Others'">
+            <section class="dashboard_otherSections commonSection" *ngIf="section.tabName == 'Wellness'">
               <div class="board_otherSections">
                 <!--Knowledge Centre start-->
                 <div class="item_otherSections" style="display: none;">
@@ -804,7 +800,7 @@
                 <!--My Goals end-->
               </div>
             </section>
-
+            
           </ng-container>
         </ng-conatiner>
       </div>

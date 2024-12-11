@@ -150,5 +150,7 @@ export const environment = {
     getquoterelationsviapolicytype:"api/quote/getquoterelationsviapolicytype",
     getTopProducts:"api/quote/GetTopSellingProduct",
     updateAgentAllFormData : "api/rug/UpdateAgentAllFormData",
-    getd2cPolicyInfoByLeadId: "api/rug/GetD2CPolicyInfoByLeadId"
+    getd2cPolicyInfoByLeadId: "api/rug/GetD2CPolicyInfoByLeadId",
+    fetchDashboardPreferences: "api/quote/AddDashboardPreference",
+    SubmitDashboardPreferences: "api/quote/AddDashboardPreference"
   }
