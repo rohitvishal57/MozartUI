@@ -20,7 +20,7 @@ const routes: Routes = [
     { path:'extract-base-agent', component: ProductDownloadComponent },
     { path:'manage-LOB', component: ProductDownloadComponent },
     { path:'policy-view-details', component: ProductDownloadComponent },
-    { path:'d2c-test-page', component: D2cTestPageComponent },
+    { path:'test-page', component: BbTestPageComponent },
     { path:'bb-test-page', component: BbTestPageComponent }
 ];
 
