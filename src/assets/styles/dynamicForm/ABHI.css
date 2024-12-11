@@ -1028,7 +1028,7 @@ body {
 
 .main-container .right-panel .boldtext_input {
     font-size: 19px;
-    width: 220px;
+    width: 200px;
     border: none;
 }
 
@@ -1902,7 +1902,7 @@ body {
     border: none;
     border-radius: 12px;
     width: auto;
-    margin: 0px 0 0 24px;
+    margin: 0px 0 0 5px;
     font-family: Anek Latin;
     font-size: 18px;
     font-weight: 500;
@@ -1917,7 +1917,7 @@ body {
     border: none;
     border-radius: 12px;
     width: auto;
-    margin: 0px 0 0 24px;
+    margin: 0px 0 0 5px;
     font-family: Anek Latin;
     font-size: 18px;
     font-weight: 500;
@@ -2594,10 +2594,19 @@ margin: 0;
 .search-bar .form-control::-ms-input-placeholder { /* Edge 12-18 */
     color: #979CAE;
   }
-  
+  /* bottom bar aligment css */
   .search-bar .form-control::placeholder {
-    color: #979CAE;
-  }
+        color: #979CAE;
+    }
+  .typecss.bottom-total-premium {
+    width: 135px !important;
+    }
+    input#totalPremium {
+        width: 110px;
+    }
+    input#productName {
+        text-overflow: ellipsis;
+    }
 /*===AUGUST 16th styles start===*/
 @media (max-width:1024px) {
     .main-container .right-panel .case-referred {
