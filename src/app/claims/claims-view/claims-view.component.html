@@ -178,7 +178,7 @@
                                 </div>
                                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                     <div class="input-block form-floating input-block-renew">
-                                        <input type="text" class="form-control input-textBox" id="hospitalAddress" name="hospitalAddress" formControlName="hospitalAddress" placeholder="Hospital Address" readonly/>
+                                        <input type="text" class="form-control input-textBox" id="hospitalAddress" name="hospitalAddress" formControlName="hospitalAddress" placeholder="Hospital Address" />
                                         <label for="addnotes">{{"Hospital Address" | translate }}</label>
                                         <small class="ui-error block-show" *ngIf="form.get('hospitalAddress')?.invalid && form.get('hospitalAddress')?.touched">
                                             {{"Hospital Address is required" | translate}}
@@ -356,7 +356,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <select class="form-select input-selectBox" formControlName="hospitalName" id="hospitalName" name="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
                                                 <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
-                                                <option *ngFor="let hospital of hospitals" [value]="">{{ hospital.hospitalName }}</option>
+                                                <option *ngFor="let hospital of hospitals"  [value]="hospital.hospitalName">{{ hospital.hospitalName }}</option>
                                             </select>
                                             <label for="city">Select Hospital</label>
                                             <small class="ui-error block-show" *ngIf="form.get('hospitalName')?.invalid && form.get('hospitalName')?.touched">
@@ -367,7 +367,7 @@
 
                                     <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="input-block form-floating input-block-renew">
-                                            <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" id="hospitalAddress" name="hospitalAddress" placeholder="Hospital Address" readonly/>
+                                            <input type="text" class="form-control input-textBox" formControlName="hospitalAddress" id="hospitalAddress" name="hospitalAddress" placeholder="{ 'Hospital Address' | translate }" readonly/>
                                             <label for="addnotes">Hospital Address</label>
                                             <small class="ui-error block-show" *ngIf="form.get('hospitalAddress')?.invalid && form.get('hospitalAddress')?.touched">
                                                 {{"Hospital Address is required" | translate}}
@@ -436,7 +436,7 @@
                                 </div>
                                 <input type="file" #fileInput (change)="onFileSelected($event)" style="display:none;" multiple accept=".jpg, .jpeg, .pdf, .bmp, .png" />
                             </div>
-                            <!-- <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span> -->
+                            <span *ngIf="isFilenotSelected" class="ui-error block-show"> Please select a file to continue. </span>
                             <span class="ui-error block-show" *ngIf="uploadValidFormat">
                             {{"File format not supported! Please upload .Pdf, .jpeg, .bmp and .png files." | translate}}
                           </span>
