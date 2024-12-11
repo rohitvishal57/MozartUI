@@ -613,10 +613,10 @@ export class ClaimsViewComponent {
       this.selectedCoverCode = selectedCover.cover_Code;
 
       const specialCovers = [
-        "AYUSH Treatment",
-        "Day Care Treatment",
-        "In-patient Hospitalization",
-        "Mental Illness Hospitalization"
+        "AYUS Treatment",
+        "Day Cae Treatment",
+        "In-patent Hospitalization",
+        "Mental Ilness Hospitalization"
       ];
 
       if (specialCovers.includes(selectedCoverName)) {
