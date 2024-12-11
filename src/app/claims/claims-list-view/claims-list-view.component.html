@@ -2,8 +2,9 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2>{{"My Claims" | translate}} <span class="heading-16-red">({{"Raised by:" | translate}} {{ designationName | translate }})</span>
+                <h2>{{"My Claims" | translate}}
                 </h2 >
+                <!-- <span class="heading-16-red">({{"Raised by:" | translate}} {{ designationName | translate }})</span> -->
                 <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest"
                     (click)="navigateToCreateClaim()">
                     <img src="assets/Img/icon_plus_red.svg">{{"Raise New Claim" | translate}}
