@@ -3,7 +3,7 @@ import { FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DatePipe } from "@angular/common";
 import { RenewalList } from "src/app/interface/renewal-list.interface";
-import { firstValueFrom, Subject } from "rxjs";
+import { empty, firstValueFrom, Subject } from "rxjs";
 import { CommonService } from 'src/app/services/common.service';
 import { RenewalsService } from '../renewals.service';
 import { NgToastService } from 'ng-angular-popup';
@@ -1533,8 +1533,8 @@ export class RenewalListComponent {
       };
       this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
         (res: any) => {
-          if (res.isSuccess) {
-            console.log(res.data);
+          // if (res.isSuccess && res.data && Object.keys(res.data).length > 0) {
+          //   console.log(res.data);
             // if(action === "withmodify"){
             // const payload = {
             //   policyNumber: "31-24-0005455-00",//res.data.policyNumber,
@@ -1552,7 +1552,21 @@ export class RenewalListComponent {
             //   }
             // );
             // } 
+
+            // const convertedData = this.encryptionService.encrypt(res.data);
+            // this.router.navigate(['renewal/renewalJourney'], {
+            //   queryParams: {
+            //     formData: convertedData,
+            //     proposalNum: this.encryptionService.encrypt(this.proposalNum),
+            //     policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
+            //     journeyProcess: this.encryptionService.encrypt(0)
+            //   }
+            // });
+          // } else 
+          if (action == 'withoutmodify' && res.data && Object.keys(res.data).length > 0) {
             const convertedData = this.encryptionService.encrypt(res.data);
+
+            console.log(convertedData, this.proposalNum);
             this.router.navigate(['renewal/renewalJourney'], {
               queryParams: {
                 formData: convertedData,
@@ -1561,24 +1575,13 @@ export class RenewalListComponent {
                 journeyProcess: this.encryptionService.encrypt(0)
               }
             });
-          } 
-          else if(action == 'withoutmodify'){         
-          const convertedData = this.encryptionService.encrypt(res.data);
-
-          console.log(convertedData,this.proposalNum);
-          this.router.navigate(['renewal/renewalJourney'], {
-            queryParams: {
-              formData: convertedData,
-              proposalNum: this.encryptionService.encrypt(this.proposalNum),
-              policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
-              journeyProcess: this.encryptionService.encrypt(0)
-            }
-          });
-            }
+          } else {
+            this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
+          }
         },
         (err) => {
           console.error("Error from getRenewalInfo API:", err);
-          this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
+          this.toast.error({ detail: "", summary: "Error while getting renewal Information.", duration: 3000 });
         }
       );
     }
