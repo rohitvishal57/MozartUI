@@ -1150,7 +1150,7 @@ export class ClaimsViewComponent {
       disableClose: true,
       data: {
         title: 'Claims',
-        id: `Claims Id: ${resp.data.claimNumber}`,
+        id: `Claims Id: ${resp.data.Claim_Number}`,
         navigate: 'claims/claimsList'
       },
     });
@@ -1236,8 +1236,16 @@ export class ClaimsViewComponent {
         (response: any) => {
           if (response?.isSuccess) {
             this.uploadSuccess = true;
-          
-            this.openModal(response);
+            if(response.data.Claim_Number !== ""){
+              this.openModal(response);
+            } else {
+              this.toast.error({
+                detail: 'ERROR',
+                summary: response.data.message,
+                duration: 5000,
+              });
+              // this.toast.error({ response.data.message: "Failed to submit claims" });
+            }
           //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
             this.router.navigate(["claims/claimsList"]);
           } else {
