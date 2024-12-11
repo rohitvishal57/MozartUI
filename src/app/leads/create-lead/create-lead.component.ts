@@ -320,12 +320,34 @@ export class CreateLeadComponent implements OnInit {
 
   changeSumInsured(event: any) {
     if (event) {
-      let selectedValue = typeof (event) == 'string' ? event : event.target.value;
-      this.productSumInsured = this.productsList.find((product: any) => product.productName === selectedValue)?.sumInsured.split(",");
+      const selectedValue = typeof (event) === 'string' ? event : event.target.value;  
+      this.productSumInsured = this.productsList.find(
+        (product: any) => product.productName === selectedValue
+      )?.sumInsured.split(",");  
+      this.userValidations.patchValue({
+        sumInsured: ''
+      });  
+      this.setPolicyType(selectedValue);
     }
-    this.userValidations.patchValue({
-      sumInsured:  ''
-    });
+  }
+
+  setPolicyType(selectedProduct: string) {
+    if (selectedProduct === 'Global Health Secure') {
+      this.userValidations.patchValue({
+        policyType: 'Multi Individual'
+      });
+      this.CreateLeadList.PolicyType=["Multi Individual"]
+    } else if (selectedProduct === 'Activ Fit Preferred') {
+      this.userValidations.patchValue({
+        policyType: 'Family Floater'
+      });
+      this.CreateLeadList.PolicyType=["Family Floater"]
+    } else {
+      this.userValidations.patchValue({
+        policyType: ''
+      });
+      this.CreateLeadList.PolicyType=["Multi Individual","Family Floater"]
+    }
   }
 
   addNotesSubmit() {
