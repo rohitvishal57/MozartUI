@@ -9,6 +9,7 @@ import { ClaimsViewService } from '../claims-view/claims-view.service';
 import { searchValidationConfig } from 'src/app/interface/common-validation.interface';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'src/app/services/language.service';
+import { ExcelExportService } from 'src/app/services/excel-export.service';
 
 
 @Component({
@@ -60,15 +61,26 @@ export class ClaimsListViewComponent implements OnInit {
   status: string = "totalRecords";
   isDesktopView: boolean = false;
   agentCode = localStorage.getItem('agentCode')
+  designationName: string | any;
   StaticRequestTypes = [
     { name: 'Cashless', selected: false },
     { name: 'Reimbursement', selected: false },
   ];
 
-  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private datePipe: DatePipe, private claimsService: ClaimsViewService, private languageService: LanguageService,
-    private translateService: TranslateService) { }
+  constructor(private http: HttpClient, 
+     private router: Router,
+     private commonService: CommonService, 
+     private datePipe: DatePipe, 
+     private claimsService: ClaimsViewService, 
+     private languageService: LanguageService, 
+     private excelExportService: ExcelExportService,
+     private translateService: TranslateService) { }
 
   ngOnInit() {
+    this.designationName = localStorage.getItem('designation')
+    if(this.designationName === 'DIRECT'){
+      this.designationName = 'Agent'
+    }
     this.languageService.language$.subscribe(lang => {
       this.translateService.use(lang).subscribe({
         error: () => {
@@ -294,6 +306,16 @@ export class ClaimsListViewComponent implements OnInit {
     }
   }
 
+  downloadSingleItem(item: any): void {
+    this.excelExportService.exportToExcel([item], `Claims_${item.caseId}`);
+  }
+
+  downloadAll(): void {
+    this.excelExportService.exportToExcel(
+      this.claims,
+      'My_Claims'
+    );
+  }
 
   applySearch() {
 

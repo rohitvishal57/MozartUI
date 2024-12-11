@@ -463,6 +463,14 @@ body {
     color: #000;
 }
 
+.no-border {
+    border: none;
+  }
+  
+  .no-background {
+    background: none;
+  }
+
 /* .main-container .right-panel .inputField_Text[readonly]+label,
 .main-container .right-panel .inputField_Select[disabled]+label {
     background-color: rgba(255, 255, 255,0.8);

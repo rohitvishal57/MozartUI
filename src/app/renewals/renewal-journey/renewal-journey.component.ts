@@ -8,7 +8,7 @@ import { IDynamicControl, IForm, IFormControl, IFormSections, IOptions, ISubCont
 import { CommonService } from 'src/app/services/common.service';
 import { EncryptionService } from 'src/app/services/encryption.service';
 import { YatraService } from 'src/app/yatra/yatra/yatra.service';
-import { combinedForms, thankYou,renewals_summary } from 'src/assets/styles/renewals-forms/combined_forms';
+import { combinedForms, thankYou, renewals_summary } from 'src/assets/styles/renewals-forms/combined_forms';
 import { renewals_lead } from 'src/assets/styles/renewals-forms/lead';
 import { new_combinedForms } from 'src/assets/styles/renewals-forms/new_combined';
 import { payment } from 'src/assets/styles/renewals-forms/payment';
@@ -59,13 +59,15 @@ export class RenewalJourneyComponent {
   documentId: any;
   agentCode: any;
 
-  formSequence: any[]=[new_combinedForms,active_health_covers,payment,thankYou];
+  formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
   journeyProcess: any;
 
   activeSection: string = "primary";
 
   // activeSection: string = "primary";
-  formIndex:number=0;
+  formIndex: number = 0;
+
+  existingRelations: any [] = [];
 
 
   QuoteNumber: any = [];
@@ -73,7 +75,7 @@ export class RenewalJourneyComponent {
   discountList: number[] = [];
   displayTaxList: any[] = [];
 
-  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService,private renewalService: RenewalsService,private router:Router) {
+  constructor(private route: ActivatedRoute, private encryptionService: EncryptionService, private renderer: Renderer2, @Inject(DOCUMENT) private document: Document, private yatraService: YatraService, private toast: NgToastService, public commonService: CommonService, private renewalService: RenewalsService, private router: Router) {
 
   }
 
@@ -90,17 +92,29 @@ export class RenewalJourneyComponent {
         this.proposalNum = this.encryptionService.decrypt(params['proposalNum']);
         this.policyNumber = this.encryptionService.decrypt(params['policyNumber']);
         this.journeyProcess = this.encryptionService.decrypt(params['journeyProcess']);
+        // Check and set formSequence if it exists in queryParams
+        if (params['formSequence']) {
+          this.formSequence = this.encryptionService.decrypt(params['formSequence']); // Set to component variable
+        }
+
+        // Check and set formIndex in localStorage if it exists in queryParams
+        if (params['formIndex']) {
+          localStorage.setItem('formIndex', this.encryptionService.decrypt(params['formIndex']));
+        }
       });
-      if(this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length>0){
-        this.formData.insuredMemberDetails.forEach((member:any,index:number)=>{
-          if(member.covers){
-            this.covers[index]= member.covers;
+      if (this.formData.insuredMemberDetails && this.formData.insuredMemberDetails.length > 0) {
+        this.formData.insuredMemberDetails.forEach((member: any, index: number) => {
+          if (member.covers) {
+            this.covers[index] = member.covers;
+          }
+          if(member.relation){
+            this.existingRelations.push(member.relation);
           }
         });
       }
 
       console.log(this.covers);
-      
+
     }
 
 
@@ -110,6 +124,8 @@ export class RenewalJourneyComponent {
   }
 
   async getFormDataFromFormSequence() {
+    console.log(this.formSequence,this.getFormIndexValue(),this.form);
+    debugger;
     this.showHtmlContent = false;
     if (this.dynamicStyle) {
       this.renderer.removeChild(this.document.head, this.dynamicStyle)
@@ -122,10 +138,10 @@ export class RenewalJourneyComponent {
     // this.form = active_health_covers;
 
     this.form = this.formSequence[this.getFormIndexValue()];
-    if(this.journeyProcess == 0){
+    if (this.journeyProcess == 0) {
       this.form.formSections.forEach((section: any) => {
         section.formControls.forEach((control: any) => {
-          if(control.name == 'back'){
+          if (control.name == 'back') {
             control.visible = false;
           }
         })
@@ -256,7 +272,7 @@ export class RenewalJourneyComponent {
             }
             else if (control.type == 'combinedCheckbox') {
               console.log(control.name);
-              
+
               control.subControls.forEach((subControl: ISubControl) => {
                 if (subControl.name == 'addOnDetails') {
                   const addOnId = control.subControls?.find(sub => sub.name === 'addOnId')?.value;
@@ -280,8 +296,8 @@ export class RenewalJourneyComponent {
 
                   this.formData['insuredMemberDetails'].forEach((member: any) => {
                     let matchingCover;
-                    if(member.covers)
-                    matchingCover = member.covers.find((cover: any) => cover.coverId === addOnId);
+                    if (member.covers)
+                      matchingCover = member.covers.find((cover: any) => cover.coverId === addOnId);
 
 
                     if (matchingCover) {
@@ -437,8 +453,8 @@ export class RenewalJourneyComponent {
                 // this.handlePolicyTypeChange(control,control.value);
               }
             }
-            if(control.type == 'button' && control.methodName == "checkKycDetail"){
-                this.resolveMethod(control.methodName, control);
+            if (control.type == 'button' && control.methodName == "checkKycDetail") {
+              this.resolveMethod(control.methodName, control);
             }
 
             // if (control.type == 'radio') {
@@ -908,8 +924,8 @@ export class RenewalJourneyComponent {
 
     }
 
-    if(control.onChangeMethod && control.type == 'date'){
-      await this.resolveMethod(control.methodName,control,event.target.value);
+    if (control.onChangeMethod && control.type == 'date') {
+      await this.resolveMethod(control.methodName, control, event.target.value);
     }
 
   }
@@ -1209,19 +1225,19 @@ export class RenewalJourneyComponent {
     });
   }
 
-  async onSubmit(control:any) {
+  async onSubmit(control: any) {
     console.log(this.renewalFormGroup.value, this.form);
     if (this.renewalFormGroup.valid) {
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
-      console.log("formData",this.formData);
-      
- 
+      console.log("formData", this.formData);
+
+
 
       this.formData = { ...this.formData, ...this.renewalFormGroup.getRawValue() };
 
       if (this.form.saveBtnFunction) {
         await this.resolveMethod(this.form.saveBtnFunction);
-      } else if(control!=null && control.onClickMethod){
+      } else if (control != null && control.onClickMethod) {
         await this.resolveMethod(control.onClickMethod);
       }
 
@@ -1522,8 +1538,16 @@ export class RenewalJourneyComponent {
     // if (event != null) {
     //   this.isQuote = false;
     // }
-    console.log(option);
-    
+    console.log(option,this.existingRelations);
+
+    if(event !=null){
+      if(this.existingRelations.some(relation => relation.includes(option.value))){
+        const selectedCheckbox = event.target as HTMLInputElement;
+        selectedCheckbox.checked = true;
+        return;
+      }
+    }
+
     const checkbox = event ? (event.target as HTMLInputElement) : { checked: true };
     // console.log(checkbox);
     // this.kidCount >= 4 &&
@@ -2551,7 +2575,24 @@ export class RenewalJourneyComponent {
           }
         });
       });
+    } else {
+      this.form.formSections.forEach((section: any) => {
+        section.formControls.forEach((controls: any) => {
+          if (controls.name !== 'offline' && controls.dependentControls) {
+            controls.dependentControls.forEach((item: any) => {
+              const controlToHide = this.form.formSections
+                .flatMap((sec: any) => sec.formControls)
+                .find((ctrl: any) => ctrl.name === item);
+              if (controlToHide) {
+                controlToHide.visible = false; // Hide dependent controls for other buttons
+              }
+            });
+          }
+        });
+      });
     }
+
+
     console.log(control);
 
 
@@ -2723,7 +2764,7 @@ export class RenewalJourneyComponent {
       if (this.selectedButton) {
         try {
           const policyNum = this.proposalNum.replace(/-/g, "");
-          console.log("kjsdajlkda",policyNum);
+          console.log("kjsdajlkda", policyNum);
 
           const formData = new FormData();
           formData.append("Files", this.selectedFile);
@@ -2740,7 +2781,7 @@ export class RenewalJourneyComponent {
 
                 try {
                   console.log(this.journeyProcess ? "await this.fullQuotation()" : "await this.getFullQuoteViaOfflinePayment()");
-                  
+
                   this.journeyProcess ? await this.fullQuotation() : await this.getFullQuoteViaOfflinePayment();
 
                   // Await the getFullQuoteViaOfflinePayment call to ensure completion before resolving
@@ -2793,8 +2834,8 @@ export class RenewalJourneyComponent {
 
   getFormIndexValue() {
     const formIndex = localStorage.getItem("formIndex") as string;
-    console.log("getFormIndexValue()",formIndex ? parseInt(formIndex, 10) : 0);  
-    this.formIndex=formIndex ? parseInt(formIndex, 10) : 0;
+    console.log("getFormIndexValue()", formIndex ? parseInt(formIndex, 10) : 0);
+    this.formIndex = formIndex ? parseInt(formIndex, 10) : 0;
     return formIndex ? parseInt(formIndex, 10) : 0;
   }
   setFormIndexValue(value: number) {
@@ -2804,7 +2845,7 @@ export class RenewalJourneyComponent {
   incrementIndex() {
     const currentIndex = this.getFormIndexValue();
     this.setFormIndexValue(currentIndex + 1);
-    console.log("currentIndex",currentIndex);
+    console.log("currentIndex", currentIndex);
   }
   decrementIndex() {
     const currentIndex = this.getFormIndexValue();
@@ -2821,27 +2862,27 @@ export class RenewalJourneyComponent {
     return new Promise((resolve, reject) => {
       const data = this.renewalFormGroup.value;
       console.log(data);
-      
+
       const offlinePaymentRequestBody = {
         "policyType": "Renewal",
         "paymentMethod": "Offline",
-        "source":"Retail",
+        "source": "Retail",
         "instrumentType": data.paymentOption,
         "premiumAmount": data.totalPremium,
         "instrumentNo": data.chequeNumber,
         "instrumentDate": data.chequeDate,
         "policyNumber": this.policyNumber,
-        "proposalNum":this.proposalNum,
+        "proposalNum": this.proposalNum,
         "agentCode": this.agentCode,
         "bankName": JSON.parse(data.paymentBankName).value,
         "ifsc": data.ifscCode,
-        "micrNo":data.micrCode,
+        "micrNo": data.micrCode,
         "documentId": this.documentId
       };
-      console.log("offlinePaymentRequestBody",offlinePaymentRequestBody);
+      console.log("offlinePaymentRequestBody", offlinePaymentRequestBody);
       this.renewalService.getFullQuoteApi(offlinePaymentRequestBody).subscribe(
-        (res:any)=>{
-          if(res.isSuccess){
+        (res: any) => {
+          if (res.isSuccess) {
             this.formData.policyStatus = res.data.status || null;
             this.formData.quoteValidFromDate = res.data.policyStartDate || null;
             this.formData.quoteValidToDate = res.data.policyEndDate || null;
@@ -2849,22 +2890,22 @@ export class RenewalJourneyComponent {
             this.formData.customerId = res.data.customerId || null;
             this.incrementIndex();
             this.getFormDataFromFormSequence();
-            
+
             // this.fullQuoteResponse=res.data;          
             // this.setSection('thankyou')
             // this.hideSection=false
             // this.isFeedBackModalVisible = true;
             console.log(res.data);
-            
+
           }
-          else{
-            this.toast.error({ detail: '',summary:res.message || "Failed to do Payment",duration: 3000});
+          else {
+            this.toast.error({ detail: '', summary: res.message || "Failed to do Payment", duration: 3000 });
           }
         },
-        (err)=>{
-          this.toast.error({ detail: '',summary: 'Failed to do offline payment.',duration: 3000});
+        (err) => {
+          this.toast.error({ detail: '', summary: 'Failed to do offline payment.', duration: 3000 });
           console.log("error is coming from fullquote api");
-      })
+        })
     });
   }
 
@@ -2881,7 +2922,7 @@ export class RenewalJourneyComponent {
       next: (res: any) => {
         console.log(res);
         control.options = res.data;
-        control.options.forEach((option:any)=>{
+        control.options.forEach((option: any) => {
           // if(option.name == this.formData)
         })
       },
@@ -2920,7 +2961,7 @@ export class RenewalJourneyComponent {
     // console.log(this.tenureAmount, this.formData.insuredMemberDetails, this.isQuote, Object.keys(this.formData).length);
 
     console.log(this.renewalFormGroup.getRawValue());
-    
+
     // if (this.changesMade) {
     //   this.changeRecalculate(false);
     // }
@@ -2928,7 +2969,7 @@ export class RenewalJourneyComponent {
 
     const data = this.formData;
     console.log(data);
-    
+
 
     const requestPayload = {
       productId: data.productId,
@@ -2940,7 +2981,7 @@ export class RenewalJourneyComponent {
       isEmployee: data.isEmployee || false,
       sumInsured: data.insuredMemberDetails?.[0]?.sumInsured || "",
       numberOfInsuredMembers: data.numberOfInsuredMembers || "",
-      insuredMemberDetails: data.insuredMemberDetails.map((member: any,index: number) => ({
+      insuredMemberDetails: data.insuredMemberDetails.map((member: any, index: number) => ({
         roomCategory: "", // If roomCategory is determined dynamically, set it here
         memberAge: this.calculateAge(member.memberDob), // Calculate age from DOB
         sumInsured: member.sumInsured || "",
@@ -2957,7 +2998,7 @@ export class RenewalJourneyComponent {
         covers: this.covers[index] || []
       }))
     };
-    console.log("fdgfhjkhgg",requestPayload);
+    console.log("fdgfhjkhgg", requestPayload);
 
     let reqData = {
       "agentCode": this.agentCode,
@@ -2966,7 +3007,7 @@ export class RenewalJourneyComponent {
     };
 
     console.log(reqData);
-    
+
 
     try {
       const res: any = await new Promise((resolve, reject) => {
@@ -2975,9 +3016,9 @@ export class RenewalJourneyComponent {
           error: (error) => reject(error)
         });
       });
-      
+
       console.log(res);
-      
+
 
       // Update tenureAmount and discountList after receiving the response
       this.QuoteNumber = [];
@@ -3150,9 +3191,9 @@ export class RenewalJourneyComponent {
   }
 
   setPremiumAmount(control?: any) {
-    if(this.form.formTitle == 'Total Premium'){
+    if (this.form.formTitle == 'Total Premium') {
       console.log("Hello world");
-      
+
     }
     if (this.formData.tenure) {
       this.selectedIndex = this.formData.tenure - 1;
@@ -3317,7 +3358,7 @@ export class RenewalJourneyComponent {
       // idProof: this.jsonParse(formData?.idProof, 'value') || '',
       // idNo: formData?.idNo || '',
       proposerAnnualIncome: formData?.annualIncome || '',
-      proposerOccupation: formData?.occupation|| '',
+      proposerOccupation: formData?.occupation || '',
       // proposerEducation: this.jsonParse(formData?.educationDetails, 'id') || '',
       // proposerPANNo: formData?.panNo || '',
       // gstDetails: formData?.gstDetails || '',
@@ -3361,11 +3402,11 @@ export class RenewalJourneyComponent {
   async fullQuotation(): Promise<void> {
     return new Promise((resolve, reject) => {
       // this.spinner.show();
-      console.log("beforeMap",this.formData);
+      console.log("beforeMap", this.formData);
 
       this.mappedFormDataFullQuote(this.formData)
         .then((data) => {
-          console.log("mapped Data",data);
+          console.log("mapped Data", data);
 
           const reqData: any = {
             agentCode: this.agentCode,
@@ -3373,7 +3414,7 @@ export class RenewalJourneyComponent {
             productType: this.formData.productType,
             fullQuoteRequestJson: JSON.stringify(data)
           }
-          console.log("reqData",reqData);
+          console.log("reqData", reqData);
 
 
           this.yatraService.getFullQuote(reqData).subscribe({
@@ -3448,7 +3489,7 @@ export class RenewalJourneyComponent {
           });
 
           reject(err);
-        });      console.log("afterMap",this.formData);
+        }); console.log("afterMap", this.formData);
 
     });
   }
@@ -3467,37 +3508,37 @@ export class RenewalJourneyComponent {
     });
   }
 
-  checkNomineeAge(control:any,nomineeDob: any = null){
+  checkNomineeAge(control: any, nomineeDob: any = null) {
 
-    if(nomineeDob == null){
-      nomineeDob=this.formData.nomineeDob
+    if (nomineeDob == null) {
+      nomineeDob = this.formData.nomineeDob
     }
     if (Number(this.calculateAge(nomineeDob)) < 18) {
-      this.changeMainFormDependentControls(control.dependentControls,true);
+      this.changeMainFormDependentControls(control.dependentControls, true);
     }
-    else{
-      this.changeMainFormDependentControls(control.dependentControls,false);
+    else {
+      this.changeMainFormDependentControls(control.dependentControls, false);
     }
   }
 
-  sendPaymentLink(){
+  sendPaymentLink() {
     console.log("inside sendPaymentLink");
-    
+
     this.router.navigate(['renewal/customerRenewalJourney'], {
       queryParams: {
         formData: this.encryptionService.encrypt(this.formData),
         proposalNum: this.encryptionService.encrypt(this.proposalNum),
         policyNumber: this.encryptionService.encrypt(this.policyNumber),
         journeyProcess: this.encryptionService.encrypt(this.journeyProcess),
-        formSequence: this.encryptionService.encrypt([customer_payment,thankYou]),
+        formSequence: this.encryptionService.encrypt([customer_payment, thankYou]),
         formIndex: this.encryptionService.encrypt("0")
       }
     });
   }
 
-  redirectToJustPay(control:any){
-    console.log(control,"redirectToJustPay");
-    
+  redirectToJustPay(control: any) {
+    console.log(control, "redirectToJustPay");
+
     // Handle the Juspay redirection for buttons other than Offline
     if (this.selectedButton !== 'offline') {
       const reqData = {
@@ -3535,9 +3576,9 @@ export class RenewalJourneyComponent {
       });
     }
   }
-   checkKycDetail(control: any): void {
+  checkKycDetail(control: any): void {
     const isVisible = !(this.formData.ckycNo !== "" || this.formData.isKYCComplete);
-    
+
     this.form.formSections.forEach((section) => {
       section.formControls.forEach((formControl: IFormControl) => {
         if (formControl.name === control.name) {
@@ -3547,5 +3588,5 @@ export class RenewalJourneyComponent {
       });
     });
   }
-  
+
 }

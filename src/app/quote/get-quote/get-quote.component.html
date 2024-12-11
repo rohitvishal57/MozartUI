@@ -24,7 +24,7 @@
           </div>
         </div> -->
 
-    <div class="insurance_optionHUB" [formGroup]="quoteFormGroup">
+    <div class="insurance_optionHUB" #scrollTarget [formGroup]="quoteFormGroup">
       <div class="dropdown-container ">
         <div class="dropdown_backdrop" [ngClass]="activeDropdown ? 'block-show' : 'block-hide'"></div>
         <div class="field_div" *ngFor="let dropdown of dropdownOptions; let i = index">

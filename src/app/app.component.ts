@@ -48,6 +48,12 @@ export class AppComponent {
       '/performance',
       '/mycommissions'
     ];
+    const explicitInvalidPaths = [
+      '/renewal/customerRenewalJourney', // Add more paths that should always hide the navbar
+    ];
+    if (explicitInvalidPaths.some((path) => url.startsWith(path))) {
+      return true;
+    }
     return !validPaths.some((path) => url.startsWith(path));
   }
 }

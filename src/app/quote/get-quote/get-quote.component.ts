@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './get-quote.component.html',
   styleUrls: ['./get-quote.component.scss']
 })
-export class GetQuoteComponent {
+export class GetQuoteComponent implements AfterViewChecked {
 
   quoteFormGroup!: FormGroup;
   selectedOptions: string[] = [];
@@ -176,6 +176,7 @@ export class GetQuoteComponent {
     ["R004", 0],
   ];
   checkGender:boolean=false;
+  pageName: string | undefined;
   constructor(private fb: FormBuilder, private encryptionService: EncryptionService,
     private route: Router, private snackBar: MatSnackBar, public service: CommonService, private toast: NgToastService, private languageService: LanguageService,
     private translateService: TranslateService, private router: Router,private quoteService:QuoteService) { }
@@ -821,7 +822,8 @@ export class GetQuoteComponent {
     this.numberOfChild = 0;
     this.addHide = false;
     this.activeDropdown = null;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    //window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.getQuoteFocusScroll();
   }
 
   onSumInsuredChange(eventValue: any) {
@@ -955,7 +957,8 @@ export class GetQuoteComponent {
         duration: 3000
       });
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    //window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.getQuoteFocusScroll();
     console.log(this.quoteFormGroup.value);
   }
 
@@ -1085,5 +1088,43 @@ export class GetQuoteComponent {
       }
     });
     this.checkGender = true;
+  }
+
+  //GET QUOTE FOCUS CODE
+  @ViewChild('scrollTarget') scrollTarget: ElementRef | undefined;
+  ngAfterViewChecked() {
+    if (this.activeDropdown && this.scrollTarget) {
+      // Option 1: Scroll to an element using scrollIntoView
+      //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // Option 2: Scroll to a specific position on the page
+      // window.scrollTo(0, this.scrollTarget.nativeElement.offsetTop);
+      //window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 100, behavior: 'smooth' });
+      const currentUrl = window.location.href;
+      this.pageName = currentUrl.split('/').pop(); // Get last part of the URL
+      //console.log('Full URL:', currentUrl);
+      //console.log('Page Name:', this.pageName);
+      if (this.pageName === 'dashboard')
+      {
+        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 100, behavior: 'smooth' });
+      }else {
+        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
+      }
+    }
+  }
+  //GET QUOTE FOCUS CODE FUNCTION
+  getQuoteFocusScroll() {
+    if (!this.activeDropdown && this.scrollTarget) {
+      const currentUrl = window.location.href;
+      this.pageName = currentUrl.split('/').pop(); // Get last part of the URL
+      //console.log('Full URL:', currentUrl);
+      //console.log('Page Name:', this.pageName);
+      if (this.pageName === 'dashboard')
+      {
+        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 100, behavior: 'smooth' });
+      }else {
+        window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop - 100, behavior: 'smooth' });
+      }
+    }
   }
 }
