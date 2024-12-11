@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Options } from '@angular-slider/ngx-slider';
@@ -15,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './get-quote.component.html',
   styleUrls: ['./get-quote.component.scss']
 })
-export class GetQuoteComponent {
+export class GetQuoteComponent implements AfterViewChecked {
 
   quoteFormGroup!: FormGroup;
   selectedOptions: string[] = [];
@@ -1085,5 +1085,18 @@ export class GetQuoteComponent {
       }
     });
     this.checkGender = true;
+  }
+
+  @ViewChild('scrollTarget') scrollTarget: ElementRef | undefined;
+  ngAfterViewChecked() {
+    if (this.activeDropdown && this.scrollTarget) {
+      // Option 1: Scroll to an element using scrollIntoView
+      //this.scrollTarget.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // Option 2: Scroll to a specific position on the page
+      // window.scrollTo(0, this.scrollTarget.nativeElement.offsetTop);
+      //window.scrollTo({ top: this.scrollTarget.nativeElement.offsetTop + 100, behavior: 'smooth' });
+      console.log(this.activeDropdown)
+    }
   }
 }
