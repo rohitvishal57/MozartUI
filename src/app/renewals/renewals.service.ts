@@ -121,8 +121,8 @@ export class RenewalsService {
     return this.httpService.post(fullquote, reqBody);
   }
   cpRedirectionApi(reqBody:any){
-    const fullquote = this.configService.config.baseUrl + this.configService.config.cpRedirectionApi;
-    return this.httpService.post(fullquote, reqBody);
+    const reDirectionLink = this.configService.config.baseUrl + this.configService.config.cpRedirectionApi;
+    return this.httpService.post(reDirectionLink, reqBody);
   }
 
 }
