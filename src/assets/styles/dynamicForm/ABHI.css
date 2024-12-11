@@ -1766,7 +1766,7 @@ body {
 
 .main-container .right-panel .text-danger {
     font-family: Anek Latin;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     line-height: 12px;
     letter-spacing: 0.3199999928474426px;
@@ -1774,6 +1774,7 @@ body {
     color: #C91429;
     position: absolute;
     margin-top: 5px;
+    margin-left: 5px;
 }
 
 .main-container .right-panel .inputField_Select {
@@ -2601,7 +2602,7 @@ margin: 0;
   .typecss.bottom-total-premium {
     width: 135px !important;
     }
-    input#totalPremium {
+    .bottom-total-premium input#totalPremium {
         width: 110px;
     }
     input#productName {
