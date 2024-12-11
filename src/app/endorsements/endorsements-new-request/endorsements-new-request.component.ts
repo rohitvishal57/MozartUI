@@ -42,60 +42,72 @@ export class EndorsementsNewRequestComponent implements OnInit {
   endorsementTypes = [
     {
       name: "Aadhar Card Update",
-      value: "aadharNumber"
+      value: "aadharNumber",
+      CtstID:"ABHI_Endorsement_Request5"
     },
     {
       name: "Pancard Update",
-      value: "panNumber"
+      value: "panNumber",
+      CtstID:"ABHI_Endorsement_Request4"
     },
     {
       name: "Change my Primary Registered Number",
-      value: "primaryContactNumber"
+      value: "primaryContactNumber",
+      CtstID:"ABHI_Endorsement_Request15"
     },
     {
       name: "Change my Alternate number",
-      value: "alternateContactNumber"
+      value: "alternateContactNumber",
+      CtstID:"ABHI_Endorsement_Request8"
     },
     {
       name: "Change in my Email ID",
-      value: "email"
+      value: "email",
+      CtstID:"ABHI_Endorsement_Request10"
     },
     {
       name: "Change my Alternate Email ID",
-      value: "alternateEmail"
+      value: "alternateEmail",
+      CtstID:"ABHI_Endorsement_Request6"
     },
-    {
+    /* {
       name: "Change my Primary Registered Number- Member",
-      value: "memberPrimaryContactNumber"
+      value: "memberPrimaryContactNumber",
+      CtstID:"ABHI_Endorsement_Request16"
     },
     {
       name: "Change my Alternate number- member",
-      value: "memberAlternateContactNumber"
+      value: "memberAlternateContactNumber",
+      CtstID:"ABHI_Endorsement_Request9"
     },
     {
       name: "Change in my Email ID- member",
-      value: "memberEmail"
+      value: "memberEmail",
+      CtstID:"ABHI_Endorsement_Request11"
     },
     {
       name: "Change my Alternate Email ID - member",
-      value: "memberAlternateEmail"
-    },
+      value: "memberAlternateEmail",
+      CtstID:"ABHI_Endorsement_Request7"
+    }, */
     {
       name: "Change of Nominee",
-      value: "nomineeContact"
+      value: "nomineeContact",
+      CtstID:"ABHI_Endorsement_Request2"
     },
     {
       name: "Change in Address",
-      value: "ChangeinAddress"
+      value: "ChangeinAddress",
+      CtstID:"ABHI_Endorsement_Request21"
     },
-    // {
-    //   name: "Change in International Contact Number",
-    //   value: "internationalContactNumber"
-    // },
-    // {
-    //   name: "Change in International Address",
-    //   value: "ChangeinInternationalAddress"
-    // },
+    /* {
+      name: "Change in International Contact Number",
+      value: "internationalContactNumber"
+    },
+    {
+      name: "Change in International Address",
+      value: "ChangeinInternationalAddress"
+    }, */
   ];
   relationships = [
     "Brother",
@@ -188,7 +200,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
         aadharNumber: [''],
         alternateContactNumber: [''],
         email: [''],
-        internationalAddress: [''],
         internationalContactNumber: [''],
         nomineeName: [''],
         nomineeRelationship: [''],
@@ -506,6 +517,8 @@ export class EndorsementsNewRequestComponent implements OnInit {
         AttachmentName: null,
         AttachmentType: null,
         CaseSubSubType: this.CaseSubSubTypeValue.name,
+        CtstID: this.CaseSubSubTypeValue.CtstID,
+        Source:'Customer Portal',
         CaseSubType: "Endorsement",
         CaseTitle: null,
         CaseType: "Endorsement",
@@ -528,21 +541,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
         CreateAttachment: null,
         EndorsementDetails: {
           AadharCardNo: this.caseCreationForm.get("endorsementDetails").get("aadharNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("aadharNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("aadharNumber").value,
+          PanCardNo: this.caseCreationForm.get("endorsementDetails").get("panNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("panNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("panNumber").value,
           PrimaryContactNumber: this.caseCreationForm.get("endorsementDetails").get("primaryContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("primaryContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("primaryContactNumber").value,
           AlternateContactNumber: this.caseCreationForm.get("endorsementDetails").get("alternateContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("alternateContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("alternateContactNumber").value,
-          MemberPrimaryContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value,
-          MemberAlternateContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value,
-          InternationalContactNumber: this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value,
           Email: this.caseCreationForm.get("endorsementDetails").get("email").value,
           AlternateEmail: this.caseCreationForm.get("endorsementDetails").get("alternateEmail").value,
-          MemberEmail: this.caseCreationForm.get('endorsementDetails').get('memberEmail').value,
-          MemberAlternateEmail: this.caseCreationForm.get('endorsementDetails').get('memberAlternateEmail').value,
-          InternationalAddress: this.caseCreationForm.get("endorsementDetails").get("internationalAddress").value,
           NomineeName: this.caseCreationForm.get("endorsementDetails").get("nomineeName").value,
           NomineeRelationship: this.caseCreationForm.get("endorsementDetails").get("nomineeRelationship").value,
           NomineeContact: this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value != null ? this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value.toString() : this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value,
+          Address: `${this.caseCreationForm.get("address1")?.value}, ${this.caseCreationForm.get("address2")?.value}, ${this.caseCreationForm.get("pincode")?.value}`,
+
+          MemberPrimaryContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value,
+          MemberAlternateContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value,
+          InternationalContactNumber: this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("internationalContactNumber").value,
+          MemberEmail: this.caseCreationForm.get('endorsementDetails').get('memberEmail').value,
+          MemberAlternateEmail: this.caseCreationForm.get('endorsementDetails').get('memberAlternateEmail').value,
           Country: null,
-          PanCardNo: this.caseCreationForm.get("endorsementDetails").get("panNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("panNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("panNumber").value,
         }
       }
     }
