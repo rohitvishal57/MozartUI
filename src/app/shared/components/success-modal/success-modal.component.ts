@@ -15,7 +15,7 @@ export class SuccessModalComponent {
   ) {}
 
   navigateToList(): void {
-    this._router.navigate([this.data.path]);
     this.dialogRef.close();
+    this._router.navigate([this.data.path]);
   }
 }
