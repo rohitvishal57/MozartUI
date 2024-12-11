@@ -169,7 +169,7 @@ export class ProductComparisonComponent {
   }
 
   backToProducts(){
-    this.router.navigate(['/products'], {
+    this.router.navigate(['/quote/quoteProducts'], {
     });
   }
 

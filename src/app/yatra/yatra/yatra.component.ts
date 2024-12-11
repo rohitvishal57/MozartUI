@@ -408,7 +408,6 @@ export class YatraComponent {
     // }
     console.log(this.formData);
     console.log(this.partnerId, this.productId, this.formSequence);
-    debugger;
     const reqData = {
       partnerId: this.partnerId.toString(),
       productId: this.productId.toString(),
@@ -2452,20 +2451,30 @@ export class YatraComponent {
     if ((index <= 4 && this.dynamicFormGroup.get('memberPolicyType')?.value == 'Family Floater') || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Multi Individual' || this.dynamicFormGroup.get('memberPolicyType')?.value == 'Individual') {
       const baseName = option.value.replace(/\d+$/, '');
       const newControlName = baseName + index;
-
+      console.log(option,baseName,index);
       // Add the new control with a unique name
       formGroup.addControl(newControlName, new FormControl(false));
 
       this.form.formSections.forEach((section) => {
         section.formControls.forEach((formControl: IFormControl) => {
           if (formControl.name === control.name) {
+            // formControl.selectCheckboxOptions?.push({
+            //   label: option.label,
+            //   value: newControlName,
+            //   isIncrement: option.isIncrement,
+            //   imagePath: option.imagePath,
+            //   name: option.name
+            // });
             formControl.selectCheckboxOptions?.push({
-              label: option.label,
-              value: newControlName,
+              gender : option.gender,
+              id: option.id,
+              imagePath: option.imagePath,
               isIncrement: option.isIncrement,
-              imagePath: option.imagePath
+              memberRelationCode:option.memberRelationCode,
+              name: newControlName,
+              productId:option.productId,
+              value: newControlName
             });
-
             // Disable the button for the current option
             formControl.selectCheckboxOptions?.forEach((checkOption) => {
               if (checkOption.value === option.value) {
@@ -5477,7 +5486,7 @@ export class YatraComponent {
                   });
                 });
               }
-
+              console.log(this.form,this.dynamicFormGroup.value)
             }
           }
           else {
@@ -5888,6 +5897,32 @@ export class YatraComponent {
   }
 
   closeIsFeedBackModalVisible() {
+    let reqData = {
+      "proposalNum": this?.formData?.proposalNumber,
+      "partnerId": this.partnerId,
+      "agentCode": this.agentCode,
+      "formData": JSON.stringify(this.dynamicFormGroup.value),
+      "formName": this.formSequence[this.getFormIndexValue()].formName,
+      "formConfig": JSON.stringify(this.formSequence),
+      "productId": this.productId.toString(),
+      "formId": this.formSequence[this.getFormIndexValue()].formId,
+      "jsonForm": JSON.stringify(this.form),
+      "formSequence": this.getFormIndexValue(),
+      "leadNumber": this.leadnumber,
+      "quoteNumber": this.formData.quoteId ? this.formData.quoteId : ""
+    };
+
+    console.log(reqData, this.dynamicFormGroup.value);
+
+    this.yatraService.Insertorupdateformdata(reqData).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.leadnumber = res.data;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
     this.isFeedBackModalVisible = false;
   }
 

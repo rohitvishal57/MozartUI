@@ -150,6 +150,10 @@ export interface ISelectCheckboxOption {
   isIncrement?: boolean;
   name?:string;
   dependentControls?: any;
+  gender?:any;
+  id?:any;
+  memberRelationCode?:any;
+  productId?:any;
 }
 
 export interface IImage {
