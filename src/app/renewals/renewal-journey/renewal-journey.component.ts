@@ -3577,6 +3577,16 @@ export class RenewalJourneyComponent {
           console.error('Error generating payment link:', error);
         }
       });
+    
+      // this.router.navigate(['/renewal/paymentstatus'],{
+      //   queryParams: {
+      //     orderid: 'UP_241209_ef1cf656',
+      //     token: 'aa59deee594c4c90abd5737929d0302e'
+      //     // ,
+      //     // agentCode: '500013'
+      //   }
+      // });
+    
     }
   }
   checkKycDetail(control: any): void {

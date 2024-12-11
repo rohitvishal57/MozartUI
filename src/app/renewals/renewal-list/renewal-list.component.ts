@@ -1764,6 +1764,8 @@ export class RenewalListComponent {
           } 
           else if(action == 'withoutmodify'){         
           const convertedData = this.encryptionService.encrypt(res.data);
+
+          console.log(convertedData,this.proposalNum);
           this.router.navigate(['renewal/renewalJourney'], {
             queryParams: {
               formData: convertedData,
