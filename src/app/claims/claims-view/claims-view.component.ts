@@ -94,7 +94,7 @@ export class ClaimsViewComponent {
   fromDate: any;
   hospitalId:any;
   toDate: any;
-  maxDate = new Date().toISOString().split('T')[0];
+  // maxDate = new Date().toISOString().split('T')[0];
   isFilenotSelected: boolean = false;
   policyMembersList: any[] = [];
   MemberIdList: any;
@@ -143,7 +143,8 @@ export class ClaimsViewComponent {
   documentId: any;
   filteredPolicyList: any[] = [];
   hospitalCode: any;
-  selectedHospitalObj: any;
+  selectedHospitalObj: any ;
+  formattedDate:any
 
   constructor(
     private fb: FormBuilder,
@@ -174,6 +175,17 @@ export class ClaimsViewComponent {
   }
 
   ngOnInit(): void {
+    const currentDate = new Date();
+
+    // Get the month, day, and year
+    const month = currentDate.getMonth() + 1;  // getMonth() is zero-based, so add 1
+    const day = currentDate.getDate();
+    const year = currentDate.getFullYear();
+    
+    // Format to "MM/dd/yyyy"
+     this.formattedDate = `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}/${year}`;
+    
+    console.log(this.formattedDate);
     this.documentLabelForm = this.fb.group({
       documentLabel: [''],
       customLabel: ['']
@@ -613,10 +625,10 @@ export class ClaimsViewComponent {
       this.selectedCoverCode = selectedCover.cover_Code;
 
       const specialCovers = [
-        "AYUS Treatment",
-        "Day Cae Treatment",
-        "In-patent Hospitalization",
-        "Mental Ilness Hospitalization"
+        "AYUSH Treatment",
+        "Day Care Treatment",
+        "In-patient Hospitalization",
+        "Mental Illness Hospitalization"
       ];
 
       if (specialCovers.includes(selectedCoverName)) {
@@ -624,6 +636,8 @@ export class ClaimsViewComponent {
         this.billsArray.clear();
         this.addBillRow();
         this.showFirstScenario = true;
+        let coverName = this.form.get('coverName')?.value;
+        this.handleCoverNameValidation(coverName);
       } else {
         this.showFirstScenario = false;
         this.showSecondScenario = true;
@@ -1148,13 +1162,15 @@ export class ClaimsViewComponent {
   submitRequest(): void {
     if (this.saveForm.valid || this.form.valid) {
       const saveClaimData = { ...this.form.value };
-      saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.maxDate;
-      saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : this.maxDate;
+      saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.formattedDate;
+      saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : this.formattedDate;
+      saveClaimData.admissionTime = saveClaimData.admissionTime ? saveClaimData.admissionTime : "6:00";
+      saveClaimData.dischargeTime = saveClaimData.dischargeTime ? saveClaimData.dischargeTime : "7:00";
+
      saveClaimData.memberId = this.form.get('memberId')?.value;  
      saveClaimData.memberName = this.form.get('memberName')?.value;
      saveClaimData.hospitalCode = this.selectedHospital;
-     saveClaimData.hospitalName = this.selectedHospitalObj.hospitalName;
-  
+     saveClaimData.hospitalName =this.selectedHospitalObj?.hospitalName ? this.selectedHospitalObj.hospitalName : '';
      const coverNames = this.form.get('coverName')?.value;
      const coverCode = this.form.get('coverCode')?.value;
      if (coverNames && coverCode) {
