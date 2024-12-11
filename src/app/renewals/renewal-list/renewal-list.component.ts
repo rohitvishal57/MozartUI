@@ -505,987 +505,1277 @@ export class RenewalListComponent {
         console.warn('Unknown action:', event);
     }
   }
-  renewalJourney(proposerDetail : RenewalList, action:string) {
-    sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
+  // renewalJourney(proposerDetail : RenewalList, action:string) {
+  //   sessionStorage.setItem("policyNumberRen", this.encryptionService.encrypt(proposerDetail.policyNumber));
+  //   const renewalInfoRequestBody = {
+  //     policy_Number: proposerDetail.policyNumber,
+  //   };
+  //   const tempData={
+  //     "error": [
+  //       {
+  //         "ErrorCode": "00",
+  //         "ErrorMessage": "Success"
+  //       }
+  //     ],
+  //     "response": {
+  //       "policyData": [
+  //         {
+  //           "Tenure2": "",
+  //           "Tenure3": "",
+  //           "V3Indicator": "V4",
+  //           "salutation": "Mr.",
+  //           "educationalQualification": "C",
+  //           "SourceCode": "CUSTPORT",
+  //           "uidNo": "",
+  //           "occupation": "O002",
+  //           "familyMobileNo": "9930519086",
+  //           "familyEmailID": "sohel.shaikh@qualitykiosk.com",
+  //           "panNo": "",
+  //           "passportNumber": "",
+  //           "contactPerson": "",
+  //           "annualIncome": "1000000",
+  //           "remarks": "",
+  //           "IdProof": "",
+  //           "ageProof": "",
+  //           "residenceProof": "",
+  //           "others": "",
+  //           "Policy_number": "21-24-0002891-00",
+  //           "AutoDebitFlag": "N",
+  //           "Alternate_Mobile_Number": "",
+  //           "Alternate_Email_Id": "",
+  //           "Combi_Reference_Number": "",
+  //           "RegistrationStatus": "PEN",
+  //           "OverwriteAutoDebit": "",
+  //           "DebitDate": "",
+  //           "healthReturn": ".00",
+  //           "HealthReturn": "Y",
+  //           "ProductCode": "6212",
+  //           "PolicyStatus": "01",
+  //           "Policy_Sub_Status": "110",
+  //           "UWDependentEntitlement": "",
+  //           "ApplicationDate": "31/10/2024",
+  //           "ValidFrom": "31/10/2024",
+  //           "ValidTo": "30/10/2025",
+  //           "Tenure": "1",
+  //           "sameAsHomeAddress": "1",
+  //           "BusinessType": "REN",
+  //           "ApplicationNo": "QE0006758802410",
+  //           "NumberofAdults": "0",
+  //           "NumberofChildren": "0",
+  //           "PolicyOwnerName": "Aniket  Birambole",
+  //           "PolicyOwnerFirstName": "Aniket",
+  //           "PolicyOwnerMiddleName": "",
+  //           "PolicyOwnerLastName": "Birambole",
+  //           "CustomerCode": "PT87708188",
+  //           "ifAML": "",
+  //           "ifFaceMatch": "",
+  //           "ifPEP": "N",
+  //           "Hyper_verge_OPD_Status": "N",
+  //           "Digi_Locker_Verified": "N",
+  //           "CKYC_Flag": "Y",
+  //           "KYC_Transition_Id": "",
+  //           "DateOfBirth": "18/11/1999",
+  //           "ProposarAge": "18/11/1999",
+  //           "Gender1": "M",
+  //           "MaritalStatus": "Single",
+  //           "Nationality": "IN",
+  //           "NonIndian": "",
+  //           "Mobile": "9930519086",
+  //           "Email": "sohel.shaikh@qualitykiosk.com",
+  //           "internationalcontactno": "",
+  //           "WhatsAppNo": "9930519086",
+  //           "EmergencyContactNo": "",
+  //           "SumInsured": "2000000",
+  //           "sumInsuredtype": "IND",
+  //           "BasicPremium": "12088.0",
+  //           "RiderAmount": "0.0",
+  //           "BasePremium": "0.0",
+  //           "UWLoading": "0",
+  //           "PremiumWaiverFlag": "0",
+  //           "Discounts": "0.0",
+  //           "NetPremium": "14264.0",
+  //           "TAXDetails": "2176.0",
+  //           "AnnualPremium": "14264.0",
+  //           "agentCode": "",
+  //           "agentName": "Direct",
+  //           "agentPhoneNo": "5164688713",
+  //           "agentEmail": "test_325380@abhi.com",
+  //           "channel": "DOT",
+  //           "Intermediary_Name": "Direct",
+  //           "Intermediary_Code": "5100003",
+  //           "smCode": "382800",
+  //           "smName": "Namita Singh",
+  //           "smPhoneNo": "2855648350",
+  //           "Policy_Expired": "Yes",
+  //           "Sum_insured_type": "Individual",
+  //           "Policy_start_date": "10/31/2023",
+  //           "Policy_renewal_date": "10/30/2025",
+  //           "Policy_expiry_date": "10/30/2024",
+  //           "Policy_lapsed_flag": "No",
+  //           "RefCode1": "",
+  //           "RefCode2": "",
+  //           "Upsell_Flag": "No",
+  //           "Renewable_Flag": "Yes",
+  //           "enumIsEmployeeDiscount": "N",
+  //           "EnumIsMandate": "",
+  //           "Renewed_Flag": "No",
+  //           "Combi_Flag": "No",
+  //           "Combi_Policy_Number": "",
+  //           "IsModified": "",
+  //           "quoteDate": "04/10/2024",
+  //           "NSTP_flag": "No",
+  //           "Name_of_the_proposer": "Aniket Birambole",
+  //           "Name_of_product": "Activ Health V2",
+  //           "Plan_name": "Platinum - Enhanced",
+  //           "IsEmployeeDiscount": "0",
+  //           "optionalCoverages": [],
+  //           "Discount_Amount": "0.0",
+  //           "PolicyproductComponents": null,
+  //           "premium": {
+  //             "PA_Net": "0.0000",
+  //             "CI_Net": "0.0000",
+  //             "CA_Net": "0.0000",
+  //             "HCB_Net": "0.0000",
+  //             "Renewal_Net_Premium": 12088,
+  //             "Renewal_Gross_Premium": 14264,
+  //             "Renewal_Tax_Details": [
+  //               {
+  //                 "Tax_Type": "CGST",
+  //                 "TaxRate": "9.00",
+  //                 "Tax_Amount": "1088.0"
+  //               },
+  //               {
+  //                 "Tax_Type": "SGST",
+  //                 "TaxRate": "9.00",
+  //                 "Tax_Amount": "1088.0"
+  //               },
+  //               {
+  //                 "Tax_Type": "UTGST",
+  //                 "TaxRate": "",
+  //                 "Tax_Amount": "0.0"
+  //               },
+  //               {
+  //                 "Tax_Type": "IGST",
+  //                 "TaxRate": "",
+  //                 "Tax_Amount": "0.0"
+  //               }
+  //             ],
+  //             "PA_NetU": "",
+  //             "CI_NetU": "",
+  //             "CA_NetU": "",
+  //             "HCB_NetU": "",
+  //             "Upsell_Net_Premium": 0,
+  //             "Upsell_Gross_Premium": 0,
+  //             "Upsell_Tax_Details": [
+  //               {
+  //                 "Tax_Type": "",
+  //                 "TaxRate": "",
+  //                 "Tax_Amount": ""
+  //               }
+  //             ]
+  //           },
+  //           "uwRules": [
+  //             {
+  //               "Member_Name": "",
+  //               "PED": ""
+  //             }
+  //           ],
+  //           "Members": [
+  //             {
+  //               "MemberproductComponents": [
+  //                 {
+  //                   "PlanCode": "6212100003",
+  //                   "CB": "",
+  //                   "productComponent": [
+  //                     {
+  //                       "productComponentName": "RoomCategory",
+  //                       "productComponentValue": "Single Private A/c Room"
+  //                     },
+  //                     {
+  //                       "productComponentName": "zone",
+  //                       "productComponentValue": "Zone I"
+  //                     },
+  //                     {
+  //                       "productComponentName": "SumInsured",
+  //                       "productComponentValue": "2000000"
+  //                     }
+  //                   ]
+  //                 }
+  //               ],
+  //               "Title": "Mr.",
+  //               "PremiumWaiverFlag": "",
+  //               "PremiumWaiverBenefit": "",
+  //               "PPN_Discount": "",
+  //               "Alternate_Mobile_Number": "",
+  //               "Alternate_Email_Id": "",
+  //               "Name": "Aniket Birambole",
+  //               "FirstName": "Aniket",
+  //               "MiddleName": "",
+  //               "LastName": "Birambole",
+  //               "GHDApplicable": "",
+  //               "GHDRemarks": "",
+  //               "Age": "24",
+  //               "salutation": "Mr.",
+  //               "marital_status": "",
+  //               "AnnualIncome": "1000000",
+  //               "IdProofNumber": "",
+  //               "IdProof": "",
+  //               "exactDiagnosis": "",
+  //               "LoanAccountNumber": "",
+  //               "EMI": "",
+  //               "LoanPrincipalOutstanding": "",
+  //               "Designation": "NA",
+  //               "PrimaryMember": "Y",
+  //               "NatureOfDuty": "",
+  //               "height": "165.1",
+  //               "weight": "55",
+  //               "occupation": "O002",
+  //               "Gender": "M",
+  //               "DeductibleAmount": "0",
+  //               "SumInsuredPerUnit": "2000000",
+  //               "MobilePhone": "9930519086",
+  //               "WellnessPartyId": "",
+  //               "PreExistingDiseasesApplicable": "No",
+  //               "ChronicManagementApplicable": "No",
+  //               "Policy_Type": "IND",
+  //               "HealthReturn": "Y",
+  //               "FitnessAssessment": "Y",
+  //               "WellnesCoach": "Y",
+  //               "DRM": "N",
+  //               "HealthAssessment": "Y",
+  //               "PanNo": "AWSPD7297N",
+  //               "AadharCradNo": "",
+  //               "AlternateMobile": "",
+  //               "SumInsured": "2000000",
+  //               "Upsell_SumInsured": "",
+  //               "healthReturn": ".00",
+  //               "DoB": "1999-11-18T00:00:00",
+  //               "Email": "sohel.shaikh@qualitykiosk.com",
+  //               "Mobile_Number": "9930519086",
+  //               "Relation": "Self",
+  //               "Chronic": "",
+  //               "CB": "1000000",
+  //               "MemberId": "PT87708188",
+  //               "memberquestiondetails": [
+  //                 {
+  //                   "Qcode": "285362129042021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "285298529042021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q228",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q502",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "142839518042022",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "142839618042022",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "285298729042021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "285299729042021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162015801022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162016501022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162017201022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162020001022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162020701022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "184887110022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "184887810022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162009201022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162010201022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162010901022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162011601022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162012301022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162013001022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162013701022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162014401022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162015101022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "285362529042021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q266",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q249",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q246",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q247",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q248",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q555",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q501",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q526",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q576",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "148055125012021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "148055025012021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "285295429042021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "148055225012021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "148055227012021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q209",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4176439420042020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q208",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q205",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4176441220042020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q212",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q202",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q206",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q211",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q207",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q105",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q241",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4176438520042020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q240",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q213",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q015",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q101",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q014",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q204",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q552",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "466151925072021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q250",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q557",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q556",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q047",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q054",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q044",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q046",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q045",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q222",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q223",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q221",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q220",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q219",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q578",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4252180319082020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4252180919082020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4252180619082020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162015901022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162016601022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162017301022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162020101022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162020801022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "184887210022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "184887910022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162009601022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162010301022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162011001022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162011701022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162012401022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162013101022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162013801022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162014501022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "162015201022021",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "Q553",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4252219319082020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4176449420042020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 },
+  //                 {
+  //                   "Qcode": "4176443320042020",
+  //                   "ans": "0",
+  //                   "remarks": ""
+  //                 }
+  //               ],
+  //               "optionalCoverages": [
+  //                 {
+  //                   "plancode": "1PLATINUMV2",
+  //                   "coverCode": "62124110",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "2PLATINUMV2",
+  //                   "coverCode": "62124124",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "3PLATINUMV2",
+  //                   "coverCode": "62124135",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "4PLATINUMV2",
+  //                   "coverCode": "62124105",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "5PLATINUMV2",
+  //                   "coverCode": "62124121",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "6PLATINUMV2",
+  //                   "coverCode": "62124104",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "7PLATINUMV2",
+  //                   "coverCode": "62124115",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "8PLATINUMV2",
+  //                   "coverCode": "62124127",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "9PLATINUMV2",
+  //                   "coverCode": "62124122",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "10PLATINUMV2",
+  //                   "coverCode": "62124125",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "11PLATINUMV2",
+  //                   "coverCode": "62124126",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "12PLATINUMV2",
+  //                   "coverCode": "62124113",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "13PLATINUMV2",
+  //                   "coverCode": "62124116",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "14PLATINUMV2",
+  //                   "coverCode": "62124101",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "15PLATINUMV2",
+  //                   "coverCode": "62124111",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "16PLATINUMV2",
+  //                   "coverCode": "62124114",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "17PLATINUMV2",
+  //                   "coverCode": "62124112",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "18PLATINUMV2",
+  //                   "coverCode": "62124117",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "19PLATINUMV2",
+  //                   "coverCode": "62124107",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "20PLATINUMV2",
+  //                   "coverCode": "62124103",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "21PLATINUMV2",
+  //                   "coverCode": "62124102",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "22PLATINUMV2",
+  //                   "coverCode": "62124119",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "23PLATINUMV2",
+  //                   "coverCode": "62124106",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "24PLATINUMV2",
+  //                   "coverCode": "62124137",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 },
+  //                 {
+  //                   "plancode": "25PLATINUMV2",
+  //                   "coverCode": "62124123",
+  //                   "coverSi": "2000000",
+  //                   "coverPartCode": ""
+  //                 }
+  //               ],
+  //               "Zone": "Z001",
+  //               "activpolicydetails": {
+  //                 "InsurerName": "",
+  //                 "policyNo": "",
+  //                 "Policy_expiry_Date": "",
+  //                 "sum_Insured": "",
+  //                 "Claim_in_Policy": "",
+  //                 "Policy_status": ""
+  //               },
+  //               "upsellPropensityDetails": [
+  //                 {
+  //                   "upsellSumInsured": "",
+  //                   "upsellNetPremium": "",
+  //                   "upsellGrossPremium": "",
+  //                   "zone": "",
+  //                   "tenure": "",
+  //                   "recommended": "",
+  //                   "withRenewalModification": "",
+  //                   "upsellBucket": "",
+  //                   "upsellSI1": "",
+  //                   "upsellSI2": "",
+  //                   "upsellSI3": "",
+  //                   "upsellSI4": "",
+  //                   "upsellSI5": "",
+  //                   "maxUpsell": "",
+  //                   "processed": "",
+  //                   "processedDate": "",
+  //                   "upsellCGSTAmount": "",
+  //                   "upsellSGSTAmount": "",
+  //                   "upsellUTGSTAmount": "",
+  //                   "upsellIGSTAmount": "",
+  //                   "upsellTAXAmount": ""
+  //                 }
+  //               ],
+  //               "UpsellPropensityDetails": [
+  //                 null
+  //               ]
+  //             }
+  //           ],
+  //           "Nominee_Details": {
+  //             "nominee_first_name": "Shashank",
+  //             "nominee_last_name": "Shashank",
+  //             "nominee_dob": "29/11/2000",
+  //             "nominee_relationship_code": "Brother",
+  //             "Nominee_Name": "Shashank",
+  //             "Nominee_Address": "oinas",
+  //             "Nominee_Contact_No": "8722499266",
+  //             "Relationship": "Brother"
+  //           },
+  //           "Nominee_DetailsList": null,
+  //           "HomeAddress": {
+  //             "Home_Address_1": "aoisfoinasf",
+  //             "Home_Address_2": "oaisfnoiasf",
+  //             "Home_Address_3": "null",
+  //             "Home_State": "MAHARASHTRA",
+  //             "Home_District": "Mumbai",
+  //             "Home_City": "Mumbai",
+  //             "Home_Pincode": "400002"
+  //           },
+  //           "MailingAddress": {
+  //             "Mailing_Address_1": "aoisfoinasf",
+  //             "Mailing_Address_2": "oaisfnoiasf",
+  //             "Mailing_Address_3": "",
+  //             "Mailing_State": "MAHARASHTRA",
+  //             "Mailing_City": "Mumbai",
+  //             "mailingArea": "Mumbai",
+  //             "mailingContactMobileNo": "9930519086",
+  //             "mailingContactMobileNo2": "9930519086",
+  //             "Mailing_PinCode": "400002"
+  //           },
+  //           "CKYC_Number": "20084759923752"
+  //         }
+  //       ]
+  //     },
+  //     "Renew_Info": [
+  //       {
+  //         "Renewed_Policy_Number": "",
+  //         "Renewed_Policy_Proposal_Number": "240000664975",
+  //         "Renewed_Policy_Start_Date": "",
+  //         "Renewed_Policy_Expiry_Date": ""
+  //       }
+  //     ]
+  //   }
+  //   this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
+  //     (res: any) => {
+  //       if (res.isSuccess) {          
+  //         sessionStorage.setItem("renewalData", this.encryptionService.encrypt(tempData));
+  //         sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
+  //         this.router.navigate(['renewal/payment']);
+  //       }
+  //        else {
+  //         this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
+  //       }
+  //     },
+  //     (err) => {
+  //       console.error("Error from getRenewalInfo API:", err);
+  //       this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
+  //     }
+  //   );
+  // }
+
+  async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
+
+    console.log(proposerDetail);
+
+    await this.getProposalNum();
+
+    console.log(this.proposalNum,action);
+    
+    if(action=='withmodify'){
+      localStorage.setItem('formIndex','0');
+    }
+    else{
+      localStorage.setItem('formIndex','2');
+    }
+    
+    // const tempFormData =  {
+    //   "productName": "Activ Health V2",
+    //   "memberDobProposer": "1999-11-18",
+    //   "panNo": "",
+    //   "productVariant": "Platinum - Enhanced",
+    //   "ckycNo": "20084759923752",
+    //   "typeOfBusiness": "REN",
+    //   "memberPlan": "",
+    //   "memberRoomCategory": "Single Private A/c Room",
+    //   "productType": "",
+    //   "planCode": "6212100003",
+    //   "productId": 14,
+    //   "preFix": "Mr.",
+    //   "firstName": "Aniket",
+    //   "middleName": "",
+    //   "lastName": "Birambole",
+    //   "memberAgeProposer": 25,
+    //   "proposerGender": "M",
+    //   "emailId": "sohel.shaikh@qualitykiosk.com",
+    //   "proposerAddress1": "aoisfoinasf",
+    //   "proposerAddress2": "oaisfnoiasf",
+    //   "proposerAddress3": "null",
+    //   "city": "Mumbai",
+    //   "country": "India",
+    //   "state": "MAHARASHTRA",
+    //   "mobileNumber": "9930519086",
+    //   "idProof": "",
+    //   "idNo": "",
+    //   "annualIncome": "1000000",
+    //   "occupation": "O002",
+    //   "maritalStatus": "Single",
+    //   "gstDetails": "",
+    //   "educationDetails": "",
+    //   "nationality": "Indian",
+    //   "sumInsured": "2000000",
+    //   "proposerPincode": "400002",
+    //   "zone": "Zone I",
+    //   "zoneValue": "Z001",
+    //   "numberOfInsuredMembers": 1,
+    //   "planDetails": "",
+    //   "totalPremium": "14264.0",
+    //   "memberPolicyType": "Multi Individual",
+    //   "insuredMembers": {
+    //     "Self": true,
+    //     "Spouse": false,
+    //     "Son1": false,
+    //     "Daughter1": false,
+    //     "Mother": false,
+    //     "Father": false,
+    //     "Mother-In-Law": false,
+    //     "Father-In-Law": false,
+    //     "Brother1": false,
+    //     "Sister1": false,
+    //     "Grand-Father": false,
+    //     "Grand-Mother": false,
+    //     "Grand-Son1": false,
+    //     "Grand-Daughter1": false,
+    //     "Son-In-Law1": false,
+    //     "Daughter-In-Law1": false,
+    //     "Brother-In-Law": false,
+    //     "Sister-In-Law": false,
+    //     "Nephew1": false,
+    //     "Niece1": false,
+    //     "Partnership": false,
+    //     "Proprietorship": false,
+    //     "HUF (Hindu Undivided Family)": false,
+    //     "Employer-Employee": false,
+    //     "Uncle": false,
+    //     "Aunt": false,
+    //     "Live-In-Partner": false
+    //   },
+    //   "insuredMemberDetails": [
+    //     {
+    //       "relation": "Self",
+    //       "firstName": "Aniket",
+    //       "lastName": "Birambole",
+    //       "height": "165.1",
+    //       "weight": "55",
+    //       "memberDob": "1999-11-18",
+    //       "emailId": "sohel.shaikh@qualitykiosk.com",
+    //       "mobileNumber": "9930519086",
+    //       "relationshipType": {
+    //         "id": "R001",
+    //         "relationCode": "24",
+    //         "value": "Self",
+    //         "name": "Self",
+    //         "isIncrement": false,
+    //         "imagePath": "assets/Self.png"
+    //       },
+    //       "memberAge": 0,
+    //       "memberGender": "M",
+    //       "sumInsured": "2000000",
+    //       "preExistingDisease": "No",
+    //       "memberIndex": 0,
+    //       "zone": "Z001",
+    //       "middleName": "",
+    //       "upgradableZones": [],
+    //       "covers": [
+    //         {
+    //           "coverId": "AYSH",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "CHMP",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "CTHZ",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "DCHS",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "DCOI",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "DCTT",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "DMAS",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "EXHC",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "HLCU",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "HLTHA",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "HLTHRET",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "HMTT",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "IMAS",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "IPTT",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "MITR",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "MTAT",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "OBTR",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "OPDE",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "ORDR",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "PUHM",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "PRHM",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "PWAIV",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "RACV",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "RVBE",
+    //           "value": "2000000"
+    //         },
+    //         {
+    //           "coverId": "SCOP",
+    //           "value": "2000000"
+    //         }
+    //       ],
+    //       "preFix": "Mr.",
+    //       "chronicDiseases": [],
+    //       "roomCategory": "",
+    //       "memberRelationCode": 0,
+    //       "annualIncome": "1000000",
+    //       "natureOfDuty": "",
+    //       "occupation": "O002",
+    //       "designation": "NA"
+    //     }
+    //   ],
+    //   "noOfChildren": 0,
+    //   "familySize": "",
+    //   "proposerName": "Aniket Birambole",
+    //   "tenure": 1,
+    //   "personalDetails": "",
+    //   "nomineeFirstName": "Shashank",
+    //   "nomineeMiddleName": "",
+    //   "nomineeLastName": "Shashank",
+    //   "nomineeDob": "1999-11-29",
+    //   "nomineeRelationWithProposer": "{\u0022id\u0022:\u00229\u0022,\u0022value\u0022:\u0022R009\u0022,\u0022name\u0022:\u0022Brother\u0022,\u0022gender\u0022:\u0022M\u0022}",
+    //   "gender": "M",
+    //   "nomineeAddress": "oinas",
+    //   "nomineeContactNo": "8722499266",
+    //   "policyNumber": "21-24-0002891-00",
+    //   "isKYCComplete": true,
+    //   "productCode": "6212"
+    // }
+
     const renewalInfoRequestBody = {
       policy_Number: proposerDetail.policyNumber,
     };
-    const tempData={
-      "error": [
-        {
-          "ErrorCode": "00",
-          "ErrorMessage": "Success"
-        }
-      ],
-      "response": {
-        "policyData": [
-          {
-            "Tenure2": "",
-            "Tenure3": "",
-            "V3Indicator": "V4",
-            "salutation": "Mr.",
-            "educationalQualification": "C",
-            "SourceCode": "CUSTPORT",
-            "uidNo": "",
-            "occupation": "O002",
-            "familyMobileNo": "9930519086",
-            "familyEmailID": "sohel.shaikh@qualitykiosk.com",
-            "panNo": "",
-            "passportNumber": "",
-            "contactPerson": "",
-            "annualIncome": "1000000",
-            "remarks": "",
-            "IdProof": "",
-            "ageProof": "",
-            "residenceProof": "",
-            "others": "",
-            "Policy_number": "21-24-0002891-00",
-            "AutoDebitFlag": "N",
-            "Alternate_Mobile_Number": "",
-            "Alternate_Email_Id": "",
-            "Combi_Reference_Number": "",
-            "RegistrationStatus": "PEN",
-            "OverwriteAutoDebit": "",
-            "DebitDate": "",
-            "healthReturn": ".00",
-            "HealthReturn": "Y",
-            "ProductCode": "6212",
-            "PolicyStatus": "01",
-            "Policy_Sub_Status": "110",
-            "UWDependentEntitlement": "",
-            "ApplicationDate": "31/10/2024",
-            "ValidFrom": "31/10/2024",
-            "ValidTo": "30/10/2025",
-            "Tenure": "1",
-            "sameAsHomeAddress": "1",
-            "BusinessType": "REN",
-            "ApplicationNo": "QE0006758802410",
-            "NumberofAdults": "0",
-            "NumberofChildren": "0",
-            "PolicyOwnerName": "Aniket  Birambole",
-            "PolicyOwnerFirstName": "Aniket",
-            "PolicyOwnerMiddleName": "",
-            "PolicyOwnerLastName": "Birambole",
-            "CustomerCode": "PT87708188",
-            "ifAML": "",
-            "ifFaceMatch": "",
-            "ifPEP": "N",
-            "Hyper_verge_OPD_Status": "N",
-            "Digi_Locker_Verified": "N",
-            "CKYC_Flag": "Y",
-            "KYC_Transition_Id": "",
-            "DateOfBirth": "18/11/1999",
-            "ProposarAge": "18/11/1999",
-            "Gender1": "M",
-            "MaritalStatus": "Single",
-            "Nationality": "IN",
-            "NonIndian": "",
-            "Mobile": "9930519086",
-            "Email": "sohel.shaikh@qualitykiosk.com",
-            "internationalcontactno": "",
-            "WhatsAppNo": "9930519086",
-            "EmergencyContactNo": "",
-            "SumInsured": "2000000",
-            "sumInsuredtype": "IND",
-            "BasicPremium": "12088.0",
-            "RiderAmount": "0.0",
-            "BasePremium": "0.0",
-            "UWLoading": "0",
-            "PremiumWaiverFlag": "0",
-            "Discounts": "0.0",
-            "NetPremium": "14264.0",
-            "TAXDetails": "2176.0",
-            "AnnualPremium": "14264.0",
-            "agentCode": "",
-            "agentName": "Direct",
-            "agentPhoneNo": "5164688713",
-            "agentEmail": "test_325380@abhi.com",
-            "channel": "DOT",
-            "Intermediary_Name": "Direct",
-            "Intermediary_Code": "5100003",
-            "smCode": "382800",
-            "smName": "Namita Singh",
-            "smPhoneNo": "2855648350",
-            "Policy_Expired": "Yes",
-            "Sum_insured_type": "Individual",
-            "Policy_start_date": "10/31/2023",
-            "Policy_renewal_date": "10/30/2025",
-            "Policy_expiry_date": "10/30/2024",
-            "Policy_lapsed_flag": "No",
-            "RefCode1": "",
-            "RefCode2": "",
-            "Upsell_Flag": "No",
-            "Renewable_Flag": "Yes",
-            "enumIsEmployeeDiscount": "N",
-            "EnumIsMandate": "",
-            "Renewed_Flag": "No",
-            "Combi_Flag": "No",
-            "Combi_Policy_Number": "",
-            "IsModified": "",
-            "quoteDate": "04/10/2024",
-            "NSTP_flag": "No",
-            "Name_of_the_proposer": "Aniket Birambole",
-            "Name_of_product": "Activ Health V2",
-            "Plan_name": "Platinum - Enhanced",
-            "IsEmployeeDiscount": "0",
-            "optionalCoverages": [],
-            "Discount_Amount": "0.0",
-            "PolicyproductComponents": null,
-            "premium": {
-              "PA_Net": "0.0000",
-              "CI_Net": "0.0000",
-              "CA_Net": "0.0000",
-              "HCB_Net": "0.0000",
-              "Renewal_Net_Premium": 12088,
-              "Renewal_Gross_Premium": 14264,
-              "Renewal_Tax_Details": [
-                {
-                  "Tax_Type": "CGST",
-                  "TaxRate": "9.00",
-                  "Tax_Amount": "1088.0"
-                },
-                {
-                  "Tax_Type": "SGST",
-                  "TaxRate": "9.00",
-                  "Tax_Amount": "1088.0"
-                },
-                {
-                  "Tax_Type": "UTGST",
-                  "TaxRate": "",
-                  "Tax_Amount": "0.0"
-                },
-                {
-                  "Tax_Type": "IGST",
-                  "TaxRate": "",
-                  "Tax_Amount": "0.0"
-                }
-              ],
-              "PA_NetU": "",
-              "CI_NetU": "",
-              "CA_NetU": "",
-              "HCB_NetU": "",
-              "Upsell_Net_Premium": 0,
-              "Upsell_Gross_Premium": 0,
-              "Upsell_Tax_Details": [
-                {
-                  "Tax_Type": "",
-                  "TaxRate": "",
-                  "Tax_Amount": ""
-                }
-              ]
-            },
-            "uwRules": [
-              {
-                "Member_Name": "",
-                "PED": ""
-              }
-            ],
-            "Members": [
-              {
-                "MemberproductComponents": [
-                  {
-                    "PlanCode": "6212100003",
-                    "CB": "",
-                    "productComponent": [
-                      {
-                        "productComponentName": "RoomCategory",
-                        "productComponentValue": "Single Private A/c Room"
-                      },
-                      {
-                        "productComponentName": "zone",
-                        "productComponentValue": "Zone I"
-                      },
-                      {
-                        "productComponentName": "SumInsured",
-                        "productComponentValue": "2000000"
-                      }
-                    ]
-                  }
-                ],
-                "Title": "Mr.",
-                "PremiumWaiverFlag": "",
-                "PremiumWaiverBenefit": "",
-                "PPN_Discount": "",
-                "Alternate_Mobile_Number": "",
-                "Alternate_Email_Id": "",
-                "Name": "Aniket Birambole",
-                "FirstName": "Aniket",
-                "MiddleName": "",
-                "LastName": "Birambole",
-                "GHDApplicable": "",
-                "GHDRemarks": "",
-                "Age": "24",
-                "salutation": "Mr.",
-                "marital_status": "",
-                "AnnualIncome": "1000000",
-                "IdProofNumber": "",
-                "IdProof": "",
-                "exactDiagnosis": "",
-                "LoanAccountNumber": "",
-                "EMI": "",
-                "LoanPrincipalOutstanding": "",
-                "Designation": "NA",
-                "PrimaryMember": "Y",
-                "NatureOfDuty": "",
-                "height": "165.1",
-                "weight": "55",
-                "occupation": "O002",
-                "Gender": "M",
-                "DeductibleAmount": "0",
-                "SumInsuredPerUnit": "2000000",
-                "MobilePhone": "9930519086",
-                "WellnessPartyId": "",
-                "PreExistingDiseasesApplicable": "No",
-                "ChronicManagementApplicable": "No",
-                "Policy_Type": "IND",
-                "HealthReturn": "Y",
-                "FitnessAssessment": "Y",
-                "WellnesCoach": "Y",
-                "DRM": "N",
-                "HealthAssessment": "Y",
-                "PanNo": "AWSPD7297N",
-                "AadharCradNo": "",
-                "AlternateMobile": "",
-                "SumInsured": "2000000",
-                "Upsell_SumInsured": "",
-                "healthReturn": ".00",
-                "DoB": "1999-11-18T00:00:00",
-                "Email": "sohel.shaikh@qualitykiosk.com",
-                "Mobile_Number": "9930519086",
-                "Relation": "Self",
-                "Chronic": "",
-                "CB": "1000000",
-                "MemberId": "PT87708188",
-                "memberquestiondetails": [
-                  {
-                    "Qcode": "285362129042021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "285298529042021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q228",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q502",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "142839518042022",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "142839618042022",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "285298729042021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "285299729042021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162015801022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162016501022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162017201022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162020001022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162020701022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "184887110022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "184887810022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162009201022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162010201022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162010901022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162011601022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162012301022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162013001022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162013701022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162014401022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162015101022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "285362529042021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q266",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q249",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q246",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q247",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q248",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q555",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q501",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q526",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q576",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "148055125012021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "148055025012021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "285295429042021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "148055225012021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "148055227012021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q209",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4176439420042020",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q208",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q205",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4176441220042020",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q212",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q202",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q206",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q211",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q207",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q105",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q241",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4176438520042020",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q240",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q213",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q015",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q101",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q014",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q204",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q552",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "466151925072021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q250",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q557",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q556",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q047",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q054",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q044",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q046",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q045",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q222",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q223",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q221",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q220",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q219",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q578",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4252180319082020",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4252180919082020",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4252180619082020",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162015901022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162016601022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162017301022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162020101022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162020801022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "184887210022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "184887910022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162009601022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162010301022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162011001022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162011701022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162012401022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162013101022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162013801022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162014501022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "162015201022021",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "Q553",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4252219319082020",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4176449420042020",
-                    "ans": "0",
-                    "remarks": ""
-                  },
-                  {
-                    "Qcode": "4176443320042020",
-                    "ans": "0",
-                    "remarks": ""
-                  }
-                ],
-                "optionalCoverages": [
-                  {
-                    "plancode": "1PLATINUMV2",
-                    "coverCode": "62124110",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "2PLATINUMV2",
-                    "coverCode": "62124124",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "3PLATINUMV2",
-                    "coverCode": "62124135",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "4PLATINUMV2",
-                    "coverCode": "62124105",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "5PLATINUMV2",
-                    "coverCode": "62124121",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "6PLATINUMV2",
-                    "coverCode": "62124104",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "7PLATINUMV2",
-                    "coverCode": "62124115",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "8PLATINUMV2",
-                    "coverCode": "62124127",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "9PLATINUMV2",
-                    "coverCode": "62124122",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "10PLATINUMV2",
-                    "coverCode": "62124125",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "11PLATINUMV2",
-                    "coverCode": "62124126",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "12PLATINUMV2",
-                    "coverCode": "62124113",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "13PLATINUMV2",
-                    "coverCode": "62124116",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "14PLATINUMV2",
-                    "coverCode": "62124101",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "15PLATINUMV2",
-                    "coverCode": "62124111",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "16PLATINUMV2",
-                    "coverCode": "62124114",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "17PLATINUMV2",
-                    "coverCode": "62124112",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "18PLATINUMV2",
-                    "coverCode": "62124117",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "19PLATINUMV2",
-                    "coverCode": "62124107",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "20PLATINUMV2",
-                    "coverCode": "62124103",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "21PLATINUMV2",
-                    "coverCode": "62124102",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "22PLATINUMV2",
-                    "coverCode": "62124119",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "23PLATINUMV2",
-                    "coverCode": "62124106",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "24PLATINUMV2",
-                    "coverCode": "62124137",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  },
-                  {
-                    "plancode": "25PLATINUMV2",
-                    "coverCode": "62124123",
-                    "coverSi": "2000000",
-                    "coverPartCode": ""
-                  }
-                ],
-                "Zone": "Z001",
-                "activpolicydetails": {
-                  "InsurerName": "",
-                  "policyNo": "",
-                  "Policy_expiry_Date": "",
-                  "sum_Insured": "",
-                  "Claim_in_Policy": "",
-                  "Policy_status": ""
-                },
-                "upsellPropensityDetails": [
-                  {
-                    "upsellSumInsured": "",
-                    "upsellNetPremium": "",
-                    "upsellGrossPremium": "",
-                    "zone": "",
-                    "tenure": "",
-                    "recommended": "",
-                    "withRenewalModification": "",
-                    "upsellBucket": "",
-                    "upsellSI1": "",
-                    "upsellSI2": "",
-                    "upsellSI3": "",
-                    "upsellSI4": "",
-                    "upsellSI5": "",
-                    "maxUpsell": "",
-                    "processed": "",
-                    "processedDate": "",
-                    "upsellCGSTAmount": "",
-                    "upsellSGSTAmount": "",
-                    "upsellUTGSTAmount": "",
-                    "upsellIGSTAmount": "",
-                    "upsellTAXAmount": ""
-                  }
-                ],
-                "UpsellPropensityDetails": [
-                  null
-                ]
-              }
-            ],
-            "Nominee_Details": {
-              "nominee_first_name": "Shashank",
-              "nominee_last_name": "Shashank",
-              "nominee_dob": "29/11/2000",
-              "nominee_relationship_code": "Brother",
-              "Nominee_Name": "Shashank",
-              "Nominee_Address": "oinas",
-              "Nominee_Contact_No": "8722499266",
-              "Relationship": "Brother"
-            },
-            "Nominee_DetailsList": null,
-            "HomeAddress": {
-              "Home_Address_1": "aoisfoinasf",
-              "Home_Address_2": "oaisfnoiasf",
-              "Home_Address_3": "null",
-              "Home_State": "MAHARASHTRA",
-              "Home_District": "Mumbai",
-              "Home_City": "Mumbai",
-              "Home_Pincode": "400002"
-            },
-            "MailingAddress": {
-              "Mailing_Address_1": "aoisfoinasf",
-              "Mailing_Address_2": "oaisfnoiasf",
-              "Mailing_Address_3": "",
-              "Mailing_State": "MAHARASHTRA",
-              "Mailing_City": "Mumbai",
-              "mailingArea": "Mumbai",
-              "mailingContactMobileNo": "9930519086",
-              "mailingContactMobileNo2": "9930519086",
-              "Mailing_PinCode": "400002"
-            },
-            "CKYC_Number": "20084759923752"
-          }
-        ]
-      },
-      "Renew_Info": [
-        {
-          "Renewed_Policy_Number": "",
-          "Renewed_Policy_Proposal_Number": "240000664975",
-          "Renewed_Policy_Start_Date": "",
-          "Renewed_Policy_Expiry_Date": ""
-        }
-      ]
-    }
     this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
       (res: any) => {
-        if (res.isSuccess) {          
-          sessionStorage.setItem("renewalData", this.encryptionService.encrypt(tempData));
-          sessionStorage.setItem("policyActionRen", this.encryptionService.encrypt(action));
-          this.router.navigate(['renewal/payment']);
+        if (res.isSuccess) {
+          console.log(res.data);
+          if(action === "withmodify"){
+            const payload = {
+              policyNumber: res.data.policyNumber,
+              mobileNumber: res.data.mobileNumber, 
+              dateOfBirth: "18/11/1999",
+            };
+            this.renewalService.cpRedirectionApi(payload).subscribe(
+              (res: any) => {
+                const encryptedUrl = res.data;   
+                window.open(encryptedUrl, '_blank');
+              },
+              (err) => {
+                console.error("Error from renewal re-direction API:", err);
+                this.toast.error({ detail: "", summary: "Error from re-direction", duration: 3000 });
+              }
+            );
+          } 
+          else if(action == 'withoutmodify'){         
+          const convertedData = this.encryptionService.encrypt(res.data);
+          this.router.navigate(['renewal/renewalJourney'], {
+            queryParams: {
+              formData: convertedData,
+              proposalNum: this.encryptionService.encrypt(this.proposalNum),
+              policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
+              journeyProcess: this.encryptionService.encrypt(0)
+            }
+          });
         }
-         else {
+          
+        }
+        else {
           this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
         }
       },
@@ -1495,280 +1785,6 @@ export class RenewalListComponent {
       }
     );
   }
-
-  // async renewalJourney(proposerDetail: RenewalList, action: string | null = null) {
-
-  //   console.log(proposerDetail);
-
-  //   await this.getProposalNum();
-
-  //   console.log(this.proposalNum,action);
-    
-  //   if(action=='withmodify'){
-  //     localStorage.setItem('formIndex','0');
-  //   }
-  //   else{
-  //     localStorage.setItem('formIndex','2');
-  //   }
-    
-  //   const tempFormData =  {
-  //     "productName": "Activ Health V2",
-  //     "memberDobProposer": "1999-11-18",
-  //     "panNo": "",
-  //     "productVariant": "Platinum - Enhanced",
-  //     "ckycNo": "20084759923752",
-  //     "typeOfBusiness": "REN",
-  //     "memberPlan": "",
-  //     "memberRoomCategory": "Single Private A/c Room",
-  //     "productType": "",
-  //     "planCode": "6212100003",
-  //     "productId": 14,
-  //     "preFix": "Mr.",
-  //     "firstName": "Aniket",
-  //     "middleName": "",
-  //     "lastName": "Birambole",
-  //     "memberAgeProposer": 25,
-  //     "proposerGender": "M",
-  //     "emailId": "sohel.shaikh@qualitykiosk.com",
-  //     "proposerAddress1": "aoisfoinasf",
-  //     "proposerAddress2": "oaisfnoiasf",
-  //     "proposerAddress3": "null",
-  //     "city": "Mumbai",
-  //     "country": "India",
-  //     "state": "MAHARASHTRA",
-  //     "mobileNumber": "9930519086",
-  //     "idProof": "",
-  //     "idNo": "",
-  //     "annualIncome": "1000000",
-  //     "occupation": "O002",
-  //     "maritalStatus": "Single",
-  //     "gstDetails": "",
-  //     "educationDetails": "",
-  //     "nationality": "Indian",
-  //     "sumInsured": "2000000",
-  //     "proposerPincode": "400002",
-  //     "zone": "Zone I",
-  //     "zoneValue": "Z001",
-  //     "numberOfInsuredMembers": 1,
-  //     "planDetails": "",
-  //     "totalPremium": "14264.0",
-  //     "memberPolicyType": "Multi Individual",
-  //     "insuredMembers": {
-  //       "Self": true,
-  //       "Spouse": false,
-  //       "Son1": false,
-  //       "Daughter1": false,
-  //       "Mother": false,
-  //       "Father": false,
-  //       "Mother-In-Law": false,
-  //       "Father-In-Law": false,
-  //       "Brother1": false,
-  //       "Sister1": false,
-  //       "Grand-Father": false,
-  //       "Grand-Mother": false,
-  //       "Grand-Son1": false,
-  //       "Grand-Daughter1": false,
-  //       "Son-In-Law1": false,
-  //       "Daughter-In-Law1": false,
-  //       "Brother-In-Law": false,
-  //       "Sister-In-Law": false,
-  //       "Nephew1": false,
-  //       "Niece1": false,
-  //       "Partnership": false,
-  //       "Proprietorship": false,
-  //       "HUF (Hindu Undivided Family)": false,
-  //       "Employer-Employee": false,
-  //       "Uncle": false,
-  //       "Aunt": false,
-  //       "Live-In-Partner": false
-  //     },
-  //     "insuredMemberDetails": [
-  //       {
-  //         "relation": "Self",
-  //         "firstName": "Aniket",
-  //         "lastName": "Birambole",
-  //         "height": "165.1",
-  //         "weight": "55",
-  //         "memberDob": "1999-11-18",
-  //         "emailId": "sohel.shaikh@qualitykiosk.com",
-  //         "mobileNumber": "9930519086",
-  //         "relationshipType": {
-  //           "id": "R001",
-  //           "relationCode": "24",
-  //           "value": "Self",
-  //           "name": "Self",
-  //           "isIncrement": false,
-  //           "imagePath": "assets/Self.png"
-  //         },
-  //         "memberAge": 0,
-  //         "memberGender": "M",
-  //         "sumInsured": "2000000",
-  //         "preExistingDisease": "No",
-  //         "memberIndex": 0,
-  //         "zone": "Z001",
-  //         "middleName": "",
-  //         "upgradableZones": [],
-  //         "covers": [
-  //           {
-  //             "coverId": "AYSH",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "CHMP",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "CTHZ",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "DCHS",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "DCOI",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "DCTT",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "DMAS",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "EXHC",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "HLCU",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "HLTHA",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "HLTHRET",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "HMTT",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "IMAS",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "IPTT",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "MITR",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "MTAT",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "OBTR",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "OPDE",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "ORDR",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "PUHM",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "PRHM",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "PWAIV",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "RACV",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "RVBE",
-  //             "value": "2000000"
-  //           },
-  //           {
-  //             "coverId": "SCOP",
-  //             "value": "2000000"
-  //           }
-  //         ],
-  //         "preFix": "Mr.",
-  //         "chronicDiseases": [],
-  //         "roomCategory": "",
-  //         "memberRelationCode": 0,
-  //         "annualIncome": "1000000",
-  //         "natureOfDuty": "",
-  //         "occupation": "O002",
-  //         "designation": "NA"
-  //       }
-  //     ],
-  //     "noOfChildren": 0,
-  //     "familySize": "",
-  //     "proposerName": "Aniket Birambole",
-  //     "tenure": 1,
-  //     "personalDetails": "",
-  //     "nomineeFirstName": "Shashank",
-  //     "nomineeMiddleName": "",
-  //     "nomineeLastName": "Shashank",
-  //     "nomineeDob": "1999-11-29",
-  //     "nomineeRelationWithProposer": "{\u0022id\u0022:\u00229\u0022,\u0022value\u0022:\u0022R009\u0022,\u0022name\u0022:\u0022Brother\u0022,\u0022gender\u0022:\u0022M\u0022}",
-  //     "gender": "M",
-  //     "nomineeAddress": "oinas",
-  //     "nomineeContactNo": "8722499266",
-  //     "policyNumber": "21-24-0002891-00",
-  //     "isKYCComplete": true,
-  //     "productCode": "6212"
-  //   }
-
-  //   const renewalInfoRequestBody = {
-  //     policy_Number: proposerDetail.policyNumber,
-  //   };
-  //   // this.renewalService.getRenewalInfoApi(renewalInfoRequestBody).subscribe(
-  //   //   (res: any) => {
-  //   //     if (res.isSuccess) {
-  //   //       console.log(res.data);
-          
-  //            const convertedData = this.encryptionService.encrypt(tempFormData);
-
-  //         console.log(convertedData,this.proposalNum);
-  //         this.router.navigate(['renewal/renewalJourney'], {
-  //           queryParams: {
-  //             formData: convertedData,
-  //             proposalNum: this.encryptionService.encrypt(this.proposalNum),
-  //             policyNumber: this.encryptionService.encrypt(proposerDetail.policyNumber),
-  //             journeyProcess: this.encryptionService.encrypt(action === "withmodify" ? 1 : 0)
-  //           }
-  //         });
-          
-  //     //   }
-  //     //   else {
-  //     //     this.toast.error({ detail: "", summary: res.message || "Failed to get Renewal Information", duration: 3000 });
-  //     //   }
-  //     // },
-  //     // (err) => {
-  //     //   console.error("Error from getRenewalInfo API:", err);
-  //     //   this.toast.error({ detail: "", summary: "Error while getiiong renwal Information.", duration: 3000 });
-  //     // }
-  //   // );
-  // }
 
   async getProposalNum() {
     try {

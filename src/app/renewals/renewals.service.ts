@@ -115,5 +115,9 @@ export class RenewalsService {
     const fullquote = this.configService.config.baseUrl1 + this.configService.config.fullQuote;
     return this.httpService.post(fullquote, reqBody);
   }
+  cpRedirectionApi(reqBody:any){
+    const fullquote = this.configService.config.baseUrl + this.configService.config.cpRedirectionApi;
+    return this.httpService.post(fullquote, reqBody);
+  }
 
 }

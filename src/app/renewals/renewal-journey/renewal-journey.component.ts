@@ -61,6 +61,9 @@ export class RenewalJourneyComponent {
 
   formSequence: any[] = [new_combinedForms, active_health_covers, payment, thankYou];
   journeyProcess: any;
+  currentDate = new Date().toISOString().split('T')[0];
+  futureDate = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toISOString().split('T')[0];
+  
 
   activeSection: string = "primary";
 
@@ -3589,4 +3592,15 @@ export class RenewalJourneyComponent {
     });
   }
 
+  getDate(dateType: any): string {
+    if (dateType === 'currentDate') {
+      return this.currentDate;
+    } else if (dateType === 'futureDate') {
+      return this.futureDate;
+    } else if (dateType === 'pastDate') {
+      // return this.pastDate;
+    }
+    return '';  // Default return if no valid date type is found
+  }
+  
 }

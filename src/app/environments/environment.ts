@@ -17,6 +17,7 @@ export const environment = {
     updateMemberDetails: "api/renewal/UpdateMemberDetails",
     kycUpdate: "api/renewal/kycUpdate",
     fullQuote: "api/yatra/offlinePayment",
+    cpRedirectionApi:"api/renewal/cp-redirection",
     getkycURL: "api/quote/getkycURL",
     getLeadsListApi: "api/yatra/getleaddetailslist",
     getActiveCampaignDetails: "api/yatra/getactivecampaignsdetails",
