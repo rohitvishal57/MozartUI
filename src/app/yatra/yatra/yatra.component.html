@@ -1166,7 +1166,7 @@
                                           <!-- {{ innerControl | json }} {{ question }} -->
                                           <!-- <hr> -->
                                           <div
-                                            *ngIf="['text', 'email', 'password', 'number', 'date'].includes(innerControl.type)"
+                                            *ngIf="['text', 'email', 'password', 'number'].includes(innerControl.type)"
                                             [class]="innerControl.class" class="typecss col-12"
                                             [hidden]="!innerControl.visible">
                                             <div class="input-container">
@@ -1174,7 +1174,8 @@
                                                 [type]="innerControl.type" [name]="innerControl.name"
                                                 [id]="innerControl.name"
                                                 [ngClass]="{'has-value': hasInnerValue(control,subControl,innerControl,k-1)}"
-                                                (change)="onInputChange($event, innerControl,control,k-1)">
+                                                (change)="onInputChange($event, innerControl,control,k-1)"
+                                                [maxlength]="['text','number'].includes(innerControl.type) ? innerControl.maxLength : null">
                                               <label class="inputField_Label" *ngIf="innerControl.visibleLabel">{{
                                                 innerControl.label ?
                                                 (innerControl.label | translate) : '' }}<span
@@ -1187,6 +1188,29 @@
                                               ''}}
                                             </small>
 
+                                          </div>
+                                          <div *ngIf="innerControl.type==='date'" [class]="innerControl.class" class="typecss col-12" [hidden]="!innerControl.visible">
+                                            <div class="input-container">
+                                              <input *ngIf="!innerControl.disabled" class="inputField_Text" [formControlName]="innerControl.name"
+                                                [type]="innerControl.type" [name]="innerControl.name" [id]="innerControl.name"
+                                                [ngClass]="{'has-value': hasInnerValue(control,subControl,innerControl,k-1)}"
+                                                (change)="onInputChange($event, innerControl,control,k-1)" [min]="getDate(innerControl.minDateLength)"
+                                                [max]="getDate(innerControl.maxDateLength)">
+                                              <input *ngIf="innerControl.disabled" class="inputField_Text" [formControlName]="innerControl.name"
+                                                [type]="innerControl.type" [name]="innerControl.name" [id]="innerControl.name"
+                                                [ngClass]="{'has-value': hasInnerValue(control,subControl,innerControl,k-1)}"
+                                                (change)="onInputChange($event, innerControl,control,k-1)" [min]="getDate(innerControl.minDateLength)"
+                                                [max]="getDate(innerControl.maxDateLength)" readonly>
+                                              <label class="inputField_Label" *ngIf="innerControl.visibleLabel">{{
+                                                innerControl.label ?
+                                                (innerControl.label | translate) : '' }}<span *ngIf="innerControl.validators"></span></label>
+                                            </div>
+                                              <small *ngIf="checkValidations(control,subControl,k-1,innerControl)"
+                                                class="text-danger" style="position: relative; display: flex;">{{
+                                                getValidationErrors(innerControl,subControl,k-1,control)?
+                                                (getValidationErrors(innerControl,subControl,k-1,control)| translate) :
+                                                ''}}
+                                              </small>
                                           </div>
                                           <div *ngIf="innerControl.type==='select'" [class]="innerControl.class"
                                             class="typecss col-12" [hidden]="!innerControl.visible">

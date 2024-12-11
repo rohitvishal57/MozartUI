@@ -530,18 +530,34 @@ export class LeadsListComponent {
           //   proposalNumber = lead?.proposalNumber??'';
           // }
 
-          const productData = {
-            partnerId: interestedProductItem.partnerId,
-            productId: interestedProductItem.productId,
-            quickQuoteRedirect : true,
-            leadId :  lead.leadNumber,
-            proposalNum: lead?.proposalNumber??''
-          }
+          // const productData = {
+          //   partnerId: interestedProductItem.partnerId,
+          //   productId: interestedProductItem.productId,
+          //   quickQuoteRedirect : true,
+          //   leadId :  lead.leadNumber,
+          //   proposalNum: lead?.proposalNumber??''
+          // }
         
 
-            this.router.navigate(['yatra'], {
-              state: { productData: productData, formSequence: formSequence }
-           });
+          //   this.router.navigate(['yatra'], {
+          //     state: { productData: productData, formSequence: formSequence }
+          //  });
+          const reqData = {
+            partnerId : interestedProductItem.partnerId,
+            productId : interestedProductItem.productId,
+            proposalNum : lead.proposalNumber,
+            agentCode : this.agentCode,
+            isLead : true,
+            currentFormSequence : lead.formSequence,
+            leadId : lead.leadNumber
+          }
+          console.log(reqData);
+          localStorage.setItem("formIndex", lead.formSequence.toString());
+          const encodedEncryptedData = this.encryptionService.encrypt(reqData);
+    
+          this.router.navigate(['yatra'], {
+            queryParams: { data: encodedEncryptedData }
+          });
           
         },
         error: (err) => {
