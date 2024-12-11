@@ -476,6 +476,22 @@ export class EndorsementsNewRequestComponent implements OnInit {
     this.caseCreationForm.get("endorsementDetails").get('panNumber').clearValidators();
     this.caseCreationForm.get("endorsementDetails").get('panNumber').updateValueAndValidity();
   }
+  getAddress() {
+    let addressParts: string[] = [];
+    if (this.caseCreationForm.get("address1")?.value) {
+        addressParts.push(this.caseCreationForm.get("address1")?.value);
+    }
+    if (this.caseCreationForm.get("address2")?.value) {
+        addressParts.push(this.caseCreationForm.get("address2")?.value);
+    }
+    if (this.caseCreationForm.get("pincode")?.value) {
+        addressParts.push(this.caseCreationForm.get("pincode")?.value);
+    }
+    const address = addressParts.join(', ');
+    const finalAddress = address.trim().length > 0 ? address : null;
+    return finalAddress;
+  }
+
   onSubmit() {
     this.submitted = true;
     if (!this.caseCreationForm.valid) {
@@ -503,6 +519,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
       });
       console.log("Case Sub sub type:", this.CaseSubSubTypeValue)
     }
+
     let payloadObj: any = {
       AgentCode: this.agentCode,
       MemberName: this.selectedMember.memberName,
@@ -530,7 +547,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
         CustomerType: "Retail Customer",
         IsClosed: "Yes",
         ModifiedOn: null,
-        NotesDescription: null,
+        NotesDescription: this.caseCreationForm.get("addNotes").value,
         NotesTitle: null,
         Origin: "USP-ABHICONNECT",
         Policy: this.caseCreationForm.get("policyNumber").value,
@@ -549,7 +566,7 @@ export class EndorsementsNewRequestComponent implements OnInit {
           NomineeName: this.caseCreationForm.get("endorsementDetails").get("nomineeName").value,
           NomineeRelationship: this.caseCreationForm.get("endorsementDetails").get("nomineeRelationship").value,
           NomineeContact: this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value != null ? this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value.toString() : this.caseCreationForm.get("endorsementDetails").get("nomineeContact").value,
-          Address: `${this.caseCreationForm.get("address1")?.value}, ${this.caseCreationForm.get("address2")?.value}, ${this.caseCreationForm.get("pincode")?.value}`,
+          Address: this.getAddress(),
 
           MemberPrimaryContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberPrimaryContactNumber").value,
           MemberAlternateContactNumber: this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value != null ? this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value.toString() : this.caseCreationForm.get("endorsementDetails").get("memberAlternateContactNumber").value,
@@ -592,14 +609,15 @@ export class EndorsementsNewRequestComponent implements OnInit {
                         summary: Respevent.message,
                         duration: 5000,
                       });
+                      this.backToEndorsment();
                     }  else if (Respevent == null || Respevent?.message == undefined) {
                       this.toast.error({
                         detail: 'ERROR',
                         summary: "File upload was not successfull. Try again later!",
                         duration: 5000,
                       });
+                      this.backToEndorsment();
                     }
-                    this.backToEndorsment();
                   }, (error: any) => {
                     console.log(error);
                     this.toast.error({
@@ -612,7 +630,6 @@ export class EndorsementsNewRequestComponent implements OnInit {
             }
             else {
               this.openModal(resp);
-              this.backToEndorsment();
             }
           }
           else {
@@ -639,13 +656,12 @@ export class EndorsementsNewRequestComponent implements OnInit {
       disableClose: true,
       data: { 
         title: 'Endorsement',
-        id: `Endorsement Id: ${resp.data.response.caseId}`,
-        navigate: 'endorsements'
+        id: `Endorsement Id: ${resp.data.response.caseId}`
       },
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      console.log('Modal closed');
+        this.backToEndorsment();
     });
   }
 

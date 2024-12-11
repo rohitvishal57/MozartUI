@@ -156,6 +156,7 @@ export class ClaimsViewComponent {
     private datePipe: DatePipe,
     private languageService: LanguageService,
     private translateService: TranslateService,
+    private _router: Router,
     private dialog : MatDialog
   ) {
     this.billsForm = this.fb.group({
@@ -1151,12 +1152,11 @@ export class ClaimsViewComponent {
       data: {
         title: 'Claims',
         id: `Claims Id: ${resp.data.Claim_Number}`,
-        navigate: 'claims/claimsList'
       },
     });
  
     dialogRef.afterClosed().subscribe(() => {
-      console.log('Modal closed');
+      this.navigateToListClaim();
     });
   }
   submitRequest(): void {
@@ -1247,7 +1247,6 @@ export class ClaimsViewComponent {
               // this.toast.error({ response.data.message: "Failed to submit claims" });
             }
           //  this.toast.success({ detail: "Claims submitted successfully", duration:0, sticky: true });
-            this.router.navigate(["claims/claimsList"]);
           } else {
             this.toast.error({ detail: "Failed to submit claims" });
           }

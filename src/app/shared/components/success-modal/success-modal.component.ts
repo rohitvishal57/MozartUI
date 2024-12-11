@@ -11,11 +11,10 @@ export class SuccessModalComponent {
   constructor(
     private _router: Router,
     public dialogRef: MatDialogRef<SuccessModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; id: string, path: string }
+    @Inject(MAT_DIALOG_DATA) public data: { title: string; id: string }
   ) {}
 
   navigateToList(): void {
     this.dialogRef.close();
-    this._router.navigate([this.data.path]);
   }
 }
