@@ -480,4 +480,9 @@ export class QuoteProductsComponent implements OnInit {
       }
     });
   }
+
+  backToProducts(){
+    this.router.navigate(['/dashboard'], {
+    });
+  }
 }
