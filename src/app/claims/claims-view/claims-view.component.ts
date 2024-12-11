@@ -1151,7 +1151,7 @@ export class ClaimsViewComponent {
       disableClose: true,
       data: {
         title: 'Claims',
-        id: `Claims Id: ${resp.data.Claim_Number}`,
+        id: `Claims Id: ${resp.data.claim_Number}`,
       },
     });
  
@@ -1236,7 +1236,7 @@ export class ClaimsViewComponent {
         (response: any) => {
           if (response?.isSuccess) {
             this.uploadSuccess = true;
-            if(response.data.Claim_Number !== ""){
+            if(response.data.claim_Number !== ""){
               this.openModal(response);
             } else {
               this.toast.error({
