@@ -20,7 +20,7 @@ export const environment = {
     fullQuote: "api/yatra/offlinePayment",
     cpRedirectionApi:"api/renewal/cp-redirection",
     getkycURL: "api/quote/getkycURL",
-    getLeadsListApi: "api/yatra/getleaddetailslist",
+    getLeadsListApi: "api/yatra/getLeadList",
     getActiveCampaignDetails: "api/yatra/getactivecampaignsdetails",
     saveLeadData: "api/yatra/createlead",
     getLeadInfoByLeadNumber: "api/yatra/leadbyleadnumber?leadNumber=",
