@@ -42,7 +42,9 @@ export class TokenInterceptor implements HttpInterceptor {
     'https://usp.monocept.ai/api/rug/GetD2CPolicyInfoByLeadId',
     'https://upuat.adityabirlahealth.com/api/rug/GetD2CPolicyInfoByLeadId',
     'https://usp.monocept.ai/api/v1/RedirectAxisBranchBankingRequest',
-    'https://usp.monocept.ai/api/rug/GetProductCombination'
+    'https://usp.monocept.ai/api/rug/GetProductCombination',
+    'https://usp.monocept.ai/api/v1/',
+    'https://upuat.adityabirlahealth.com/api/v1/'
   ];
 
   intercept(

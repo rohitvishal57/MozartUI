@@ -21,7 +21,7 @@ export class EventsNewComponent implements OnInit {
     { value: 'Demo', label: 'Demo' },
     { value: 'Other', label: 'Other' },
     { value: 'Meeting', label: 'Meeting' },
-    { value: 'BirthdayReminder', label: 'BirthdayReminder' },
+    { value: 'Birthday', label: 'Birthday' },
     { value: 'Follow-up', label: 'Follow-up' },
     { value: 'Training', label: 'Training' },
     { value: 'Webinar', label: 'Webinar' },
