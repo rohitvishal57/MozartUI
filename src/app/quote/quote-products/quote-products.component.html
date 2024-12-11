@@ -16,7 +16,7 @@
                     <div class="item_productList left_productList">
                         <div class="main_listProducts">
                            <!--Policy list start-->
-                           <div class="cardViewMain" *ngIf="ProductList.length > 0; else noProducts">
+                           <div class="cardViewMain" #targetElement *ngIf="ProductList.length > 0; else noProducts">
                                 <div class="cardViewWraper">
                                     <div class="cardViewItem" *ngFor="let item of ProductList; let i = index">
                                         <header class="head_cardViewItem">
