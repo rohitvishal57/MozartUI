@@ -463,7 +463,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" id="interestedProductName" name="interestedProductName" formControlName="interestedProductName"
                                     (change)="changeSumInsured($event)">
-                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option value=""  selected>{{"Choose Option" | translate}}</option>
                                     <option *ngFor="let opt of productsList" [value]="opt.productName">
                                         {{ opt.productName | translate}}
                                     </option>
@@ -522,7 +522,7 @@
                             <div class="input-block form-floating input-block-renew">
                                 <select class="form-select input-selectBox" id="policyType" name="policyType" formControlName="policyType"
                                     (selectionChange)="campnoSelected()">
-                                    <option value="" disabled selected>{{"Choose Option" | translate}}</option>
+                                    <option value=""  selected>{{"Choose Option" | translate}}</option>
                                     <option *ngFor="let opt of CreateLeadList.PolicyType" [value]="opt">
                                         {{ opt | translate }}
                                     </option>
