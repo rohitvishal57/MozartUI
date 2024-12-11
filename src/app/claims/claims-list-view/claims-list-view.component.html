@@ -2,7 +2,8 @@
     <div class="contentBody bodyColumns-1">
         <div class="bodyColumn body_flex_column">
             <div class="body_flex_row justify-content-between">
-                <h2>{{"My Claims" | translate}}</h2>
+                <h2>{{"My Claims" | translate}} <span class="heading-16-red">({{"Raised by:" | translate}} {{ designationName | translate }})</span>
+                </h2 >
                 <button type="button" id="newrequests" name="newrequests" class="btn_white btn_newRequest"
                     (click)="navigateToCreateClaim()">
                     <img src="assets/Img/icon_plus_red.svg">{{"Raise New Claim" | translate}}
@@ -159,7 +160,9 @@
                                 </div>
                             </div>
                         </div>
-
+                        <button type="button" class="btn_grid mobile-hide jsBtnClickQuote" (click)="downloadAll()" id="downloadAll" name="downloadAll" value="DownloadAll" title="DownloadAll">
+                            <img src="assets/Img/icon_download_grey.svg" alt="Download">
+                        </button>
                         <button type="button" id="claimgridlist" name="claimgridlist" value="gridlist"
                             class="btn_grid mobile-hide jsBtnClickQuote" aria-label="quotes-list"
                             [ngClass]="{'active': selectedView === 'list'}" (click)="claimsView('list')"><img
@@ -228,7 +231,7 @@
                                 <tr>
                                     <th scope="col">{{"Claim No." | translate}}</th>
                                     <th scope="col">{{"Policy No." | translate}}</th>
-                                    <!-- <th scope="col" nowrap>{{"Product Name" | translate}}</th> -->
+                                    <th scope="col" nowrap>{{"Product Name" | translate}}</th>
                                     <th scope="col" nowrap>{{"Contact Info" | translate}}</th>
                                     <th scope="col" nowrap>{{"Member Id" | translate}}</th>
                                     <th scope="col" nowrap>{{"Claim Type" | translate}}</th>
@@ -244,8 +247,8 @@
                                     <tr class="table-values" *ngFor="let row of claims;let i = index">
                                         <td class="card_insureInfo">{{ row?.claimInfoId | translate}}</td>
                                         <td>{{ row?.policyNumber }}</td>
+                                        <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td>
                                         <td>{{row?.mobileNumber}}<br />{{row?.email}}</td>
-                                        <!-- <td><span class="text-break-w100">{{ row?.productName | translate}}</span></td> -->
                                         <td>{{ row?.memberId }}</td>
                                         <td>{{ row?.requestType }}</td>
                                         <td><span class="text-break-w100">{{ row?.claimStatus | translate}}</span></td>
@@ -256,6 +259,14 @@
                                                     title="View-Claim" class="btn_action btn_claimAction"
                                                     (click)="navigateToViewClaim(row)"><img
                                                         src="assets/Img/icon_renewable_energy_grey.svg"></button>
+                                                <button
+                                                        type="button"
+                                                        class="btn_action btn_renewalAction"
+                                                        (click)="downloadSingleItem(row)"
+                                                        id="Download" name="Download" value="Download" title="Download"
+                                                    >
+                                                        <img src="assets/Img/icon_download_grey.svg" width="9" height="9" alt="Download">
+                                                    </button>        
                                             </div>
                                         </td>
                                     </tr>
@@ -289,6 +300,10 @@
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Product Name" | translate}}</div>
                                 <div class="item_value">{{ gridClaims.productName | translate}}</div>
+                            </div>
+                            <div class="cv_bodyItems cv_bodyItems_45">
+                                <div class="item_lable">{{"Contact Info" | translate}}</div>
+                                <div class="item_value">{{ gridClaims.mobileNumber | translate}}<br/> {{gridClaims.email  | translate}}</div>
                             </div>
                             <div class="cv_bodyItems cv_bodyItems_45">
                                 <div class="item_lable">{{"Member Id" | translate}}</div>
