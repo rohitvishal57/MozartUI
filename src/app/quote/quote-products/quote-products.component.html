@@ -240,15 +240,22 @@
                                                         <hr>
                                                         <!-- <div class="add-tag">Selected Addons</div> -->
                                                         <div class="add-container">
-                                                            <ng-container *ngFor="let addon of item.selectedAddons">
+                                                            <!-- <ng-container *ngFor="let addon of item.selectedAddons">
                                                                 <div class="add-box">
                                                                     <img src="assets/logo/greenpoint.svg" alt="">
                                                                     <div class="add-text">
                                                                         {{addon | translate}}
                                                                     </div>
                                                                 </div>
-                                                            </ng-container>
+                                                            </ng-container> -->
+                                                            <ul class="tick_round">
+                                                                <li *ngFor="let addon of item.selectedAddons">
+                                                                    <img src="assets/Img/icon_tick_green_bg.svg">
+                                                                    {{addon | translate}}
+                                                                </li>
+                                                            </ul>
                                                         </div>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="tipInfo_org tipInfo_quick  mt-4">

@@ -5034,7 +5034,7 @@ export class YatraComponent {
                 // this.totalPremium = this.tenure1Total;
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 // formControl.value = this.tenureAmount[index];
-                option.year = "1 year"
+                option.year = "1year"
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
                 // if (this.selectedIndex == index) {
@@ -5047,7 +5047,7 @@ export class YatraComponent {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
-                option.year = "2 years"
+                option.year = "2years"
                 option.discount = "7.5% off"
                 // if (this.selectedIndex == index) {
                 //   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];
@@ -5058,7 +5058,7 @@ export class YatraComponent {
                 option.label = `<b>Rs - ${this.tenureAmount[index]}</b>`;
                 section.toolTipText = `Tax: Rs ${this.displayTaxList[0]}`;
                 option.value = this.tenureAmount[index];
-                option.year = "3 years"
+                option.year = "3years"
                 option.discount = "10% off"
                 // if (this.selectedIndex == index) {
                 //   this.dynamicFormGroup.value.totalPremium = this.tenureAmount[index];

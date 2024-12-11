@@ -4340,6 +4340,7 @@ input[type="search"]::-webkit-search-results-decoration {
   flex-direction: row;
   align-items: center;
   gap:8px;
+  cursor:initial;
 }
 .tick_round li img {
   width: 18px;
