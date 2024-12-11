@@ -150,10 +150,11 @@ body {
 
 .disable{
 
-    background-color: #c7222a !important;
+    /* background-color: #c7222a !important; */
+    background: #AFB3C0 !important;
     color: #fff !important;
     cursor: not-allowed !important;
-    opacity: 0.5 !important;
+    /* opacity: 0.5 !important; */
 }
 
 /* .main-container .right-panel .inputField_Text,
