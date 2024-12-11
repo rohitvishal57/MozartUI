@@ -233,11 +233,11 @@ export class DashboardComponent {
         this.profileDetails = res.data;
       }
     });
-    this.dashboardService.getPreferences(reqData).subscribe((res: any) => {
-      if (res.isSuccess) {
-        this.actualDashboardPrefereces = res;
-      }
-    });
+    // this.dashboardService.getPreferences(reqData).subscribe((res: any) => {
+    //   if (res.isSuccess) {
+    //     this.actualDashboardPrefereces = res;
+    //   }
+    // });
     this.fetchWidgets();
     this.createRenewChart();
     this.getPoductList();
