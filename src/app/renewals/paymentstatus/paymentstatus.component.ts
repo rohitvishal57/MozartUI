@@ -44,7 +44,7 @@ export class PaymentstatusComponent {
       const params = this.route.snapshot.queryParams;
       this.orderId = params['orderid'];
       if (params['token']) {
-        localStorage.setItem('token', params['token']);
+        localStorage.setItem('token', 'aa59deee594c4c90abd5737929d0302e');
       }
     }
     
@@ -89,7 +89,7 @@ export class PaymentstatusComponent {
   // }
 
   getPaymentStatus() {
-    this.spinner.show();
+    // this.spinner.show();
 
     // setTimeout(() => {
     //   this.spinner.hide();
