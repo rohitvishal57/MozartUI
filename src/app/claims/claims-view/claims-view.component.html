@@ -356,7 +356,7 @@
                                         <div class="input-block form-floating input-block-renew">
                                             <select class="form-select input-selectBox" formControlName="hospitalName" id="hospitalName" name="hospitalName" [disabled]="!selectedCity" (change)="fetchBlackListedHsp($event)">
                                                 <option class="dropdown-options" value="" disabled selected>Select Hospitals</option>
-                                                <option *ngFor="let hospital of hospitals"  [value]="hospital.hospitalName">{{ hospital.hospitalName }}</option>
+                                                <option *ngFor="let hospital of hospitals"  [value]="hospital.hospitalId">{{ hospital.hospitalName }}</option>
                                             </select>
                                             <label for="city">Select Hospital</label>
                                             <small class="ui-error block-show" *ngIf="form.get('hospitalName')?.invalid && form.get('hospitalName')?.touched">

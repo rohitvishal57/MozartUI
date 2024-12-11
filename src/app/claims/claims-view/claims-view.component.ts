@@ -143,6 +143,7 @@ export class ClaimsViewComponent {
   documentId: any;
   filteredPolicyList: any[] = [];
   hospitalCode: any;
+  selectedHospitalObj: any;
 
   constructor(
     private fb: FormBuilder,
@@ -251,7 +252,6 @@ export class ClaimsViewComponent {
       raisedDate: [""],
       coverCode: [""],
       hospitalName: ["", Validators.required],
-      hospitalCode: [''],
       isFileUploadRequired: [true],
       claimedAmount: ["", Validators.required],
       proposerName: [""],
@@ -752,16 +752,13 @@ export class ClaimsViewComponent {
 
   fetchBlackListedHsp(event: any) {
     this.selectedHospital = event.target.value;
-    let selectedHospitalObj;
-
     if (this.selectedHospital) {
-      selectedHospitalObj = this.hospitals.find(h => h.hospitalId === this.selectedHospital);
+      this.selectedHospitalObj = this.hospitals.find(h => h.hospitalId === this.selectedHospital);
       
-      if (selectedHospitalObj) {
-        this.hospitalAddress = selectedHospitalObj.hospitalAddress;
-        this.hospitalId = selectedHospitalObj.hospitalId;
-       // this.hospitalCode selectedHospitalObj.hospitalCode,
-        
+      if (this.selectedHospitalObj) {
+        this.hospitalAddress = this.selectedHospitalObj.hospitalAddress;
+        this.hospitalId = this.selectedHospitalObj.hospitalId;
+        this.hospitalCode = this.selectedHospitalObj.hospitalCode;      
       } else {
         this.hospitalAddress = '';
         this.hospitalId = '';
@@ -789,7 +786,7 @@ export class ClaimsViewComponent {
       category: "string",
       branchCode: "string",
       city: this.selectedCity,
-      hospitalName: selectedHospitalObj.hospitalName,
+      hospitalName: this.selectedHospitalObj.hospitalName,
       hospitalAddress: "string",
     };
     this.claimsService
@@ -801,6 +798,10 @@ export class ClaimsViewComponent {
       });
   }
   //-------------- Method to handle file upload------------------//
+  
+  
+  
+  
   formatDate(date: Date): string {
     return formatDate(date, "d MMMM yyyy, hh:mma", "en-US");
   }
@@ -1150,7 +1151,10 @@ export class ClaimsViewComponent {
       saveClaimData.admissionDate = saveClaimData.admissionDate ? saveClaimData.admissionDate : this.maxDate;
       saveClaimData.dischargeDate = saveClaimData.dischargeDate ? saveClaimData.dischargeDate : this.maxDate;
      saveClaimData.memberId = this.form.get('memberId')?.value;  
-     saveClaimData.memberName = this.form.get('memberName')?.value;  
+     saveClaimData.memberName = this.form.get('memberName')?.value;
+     saveClaimData.hospitalCode = this.selectedHospital;
+     saveClaimData.hospitalName = this.selectedHospitalObj.hospitalName;
+  
      const coverNames = this.form.get('coverName')?.value;
      const coverCode = this.form.get('coverCode')?.value;
      if (coverNames && coverCode) {
