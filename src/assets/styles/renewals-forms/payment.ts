@@ -616,8 +616,7 @@ export const payment={
             "visible": false,
             "type": "button",
             "class": "col-12 col-md-6 col-lg-2 next-btn",
-            "methodName": "onSubmit",
-            "onClickMethod": "redirectToJustPay"
+            "methodName": "redirectToJustPay"
         },
         {
           "name": "back",
