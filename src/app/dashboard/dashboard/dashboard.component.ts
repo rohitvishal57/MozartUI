@@ -657,7 +657,7 @@ export class DashboardComponent {
               //this.route.navigate(['/leads/leadsList/' + `${label}?=${value}`])
 
               this.route.navigate(['/leads/leadsList/'], {
-                queryParams: { status: label },
+                queryParams: { status: label, filter: this.businessFilter},
               });
             }
           }

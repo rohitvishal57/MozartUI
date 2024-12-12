@@ -128,12 +128,54 @@ export class LeadsListComponent {
 
     this.activatedRoute.queryParams.subscribe((params : any) => {
       let routeLeadStatus  = params['status'];
-      if(routeLeadStatus){
+      const filter = params['filter'];
+      if(routeLeadStatus && filter){
         this.leadFilterStatus.map((leadStatus:any)=>{
          if(leadStatus.name == routeLeadStatus){
           leadStatus.selected = true;
          } 
         });
+        if (filter) {
+          console.log("route filter", filter);
+          const currentDate = new Date();
+          switch (filter) {
+            case 'Last7Days':
+              this.startDate = this.datePipe.transform(
+                new Date(currentDate.setDate(currentDate.getDate() - 7)),
+                'yyyy-MM-dd'
+              );
+              this.endDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+              break;
+      
+            case 'LastMonth':
+              const lastMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+              const lastMonthEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+              this.startDate = this.datePipe.transform(lastMonthStart, 'yyyy-MM-dd');
+              this.endDate = this.datePipe.transform(lastMonthEnd, 'yyyy-MM-dd');
+              break;
+      
+            case 'QuarterWise':
+              const currentMonth = currentDate.getMonth();
+              const quarterStartMonth = Math.floor(currentMonth / 3) * 3;
+              const quarterStartDate = new Date(currentDate.getFullYear(), quarterStartMonth, 1);
+              const quarterEndDate = new Date(currentDate.getFullYear(), quarterStartMonth + 3, 0);
+              this.startDate = this.datePipe.transform(quarterStartDate, 'yyyy-MM-dd');
+              this.endDate = this.datePipe.transform(quarterEndDate, 'yyyy-MM-dd');
+              break;
+      
+            case 'FinancialYear':
+              const year = currentDate.getMonth() >= 3 ? currentDate.getFullYear() : currentDate.getFullYear() - 1;
+              const financialYearStartDate = new Date(year, 3, 1); // April 1st
+              const financialYearEndDate = new Date(year + 1, 2, 31); // March 31st
+              this.startDate = this.datePipe.transform(financialYearStartDate, 'yyyy-MM-dd');
+              this.endDate = this.datePipe.transform(financialYearEndDate, 'yyyy-MM-dd');
+              break;
+      
+            default:
+              console.log("Unknown filter:", filter);
+              break;
+          }
+        }
         this.applyFilter();
       }
     });
