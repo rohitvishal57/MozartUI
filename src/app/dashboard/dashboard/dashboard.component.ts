@@ -45,15 +45,9 @@ export class DashboardComponent {
   wellnessInfo: any;
   dhaCard: any = [];
 
-  chartsArray: any = [
-    'customer', 'claim', 'dha'
-  ];
-
-  sectionList: any = [
-    'QuickAction', 'ABHI', 'Performance', 'Business', 'Renewals', 'Customer', 'Others'
-  ];
-
   otherSection: any = [];
+  dhaSection: any = [];
+
   ProductList: any;
   isDesktopView = false;
 
@@ -63,6 +57,7 @@ export class DashboardComponent {
   newBusinessList: any;
   newQuickActionList: any;
   newPerformanceList: any;
+
   actualDashboardPrefereces: any;
 
   performanceFilter = 'Quarterly';
@@ -93,128 +88,124 @@ export class DashboardComponent {
   newOrderList: any = [
     {
       "tabName": "QuickAction",
-      "priority": 1,
-      "isFilter": false,
+      "order": 1,
       "category": [
         {
           "catName": "birthdayDetails",
-          "subpriority": 1
+          "subOrder": 1
         },
         {
           "catName": "eventDetails",
-          "subpriority": 2
+          "subOrder": 2
         },
         {
           "catName": "notifications",
-          "subpriority": 3
+          "subOrder": 3
         }
       ]
     },
     {
       "tabName": "ABHI",
-      "priority": 2,
+      "order": 2,
       "category": [
         {
           "catName": "birthdayDetails",
-          "subpriority": 1
+          "subOrder": 1
         },
         {
           "catName": "eventDetails",
-          "subpriority": 2
+          "subOrder": 2
         },
         {
           "catName": "notifications",
-          "subpriority": 3
+          "subOrder": 3
         }
       ]
     },
     {
       "tabName": "Performance",
-      "priority": 3,
-      "isFilter": true,
+      "order": 3,
       "category": [
         {
-          "catName": "My goals",
-          "subpriority": 1
+          "catName": "My Goals",
+          "subOrder": 1
         },
         {
           "catName": "Policies Sold",
-          "subpriority": 2
+          "subOrder": 2
         },
         {
           "catName": "Premium",
-          "subpriority": 3
+          "subOrder": 3
         },
         {
-          "catName": "commisions",
-          "subpriority": 4
+          "catName": "Commission Earned",
+          "subOrder": 4
         }
       ]
     },
     {
       "tabName": "Business",
-      "priority": 4,
-      "isFilter": true,
+      "order": 4,
       "category": [
         {
           "catName": "Leads",
-          "subpriority": 1
+          "subOrder": 1
         },
         {
           "catName": "Proposals",
-          "subpriority": 2
+          "subOrder": 2
         }
       ]
     },
     {
-      "tabName": "Renewals",
-      "priority": 5,
-      "isFilter": true,
+      "tabName": "Renewal",
+      "order": 5,
       "category": [
         {
-          "catName": "Renewals",
-          "subpriority": 1
+          "catName": "Renewal",
+          "subOrder": 1
         },
         {
           "catName": "Persistency",
-          "subpriority": 2
+          "subOrder": 2
         }
       ]
     },
     {
       "tabName": "Servicing",
-      "priority": 6,
-      "isFilter": true,
+      "order": 6,
       "category": [
         {
           "catName": "Claims",
-          "subpriority": 1
+          "subOrder": 1
         },
         {
-          "catName": "Customers",
-          "subpriority": 2
+          "catName": "Customer",
+          "subOrder": 2
         }
       ]
     },
     {
       "tabName": "Wellness",
-      "priority": 7,
-      "isFilter": true,
+      "order": 7,
       "category": [
         {
-          "catName": "Dha",
-          "subpriority": 1
+          "catName": "DHA",
+          "subOrder": 1
         },
         {
-          "catName": "sellingProducts",
-          "subpriority": 2
+          "catName": "TopSellingProducts",
+          "subOrder": 2
         }
       ]
     }
   ];
+  newWellnessList: any;
 
   constructor(private route: Router, private languageService: LanguageService, private profileService: ProfileService,
     private translateService: TranslateService, private dashboardService: DashboardService, private el: ElementRef) {
+
   }
 
   ngOnInit() {
@@ -233,11 +224,15 @@ export class DashboardComponent {
         this.profileDetails = res.data;
       }
     });
-    // this.dashboardService.getPreferences(reqData).subscribe((res: any) => {
-    //   if (res.isSuccess) {
-    //     this.actualDashboardPrefereces = res;
-    //   }
-    // });
+    this.dashboardService.getPreferences(localStorage.getItem('agentCode')).subscribe((res: any) => {
+      if (res.isSuccess) {
+        // this.actualDashboardPrefereces = res;
+        debugger
+        this.newOrderList.sort((a: any, b: any) => a.order - b.order).map((item: any) => {
+          item.category.sort((c: any, d: any) => c.subOrder - d.subOrder);
+        });
+      }
+    });
     this.fetchWidgets();
     this.createRenewChart();
     this.getPoductList();
@@ -288,44 +283,56 @@ export class DashboardComponent {
     this.getOrderBy(this.newOrderList, 'section')
   }
 
+  dropWellness(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.dhaSection, event.previousIndex, event.currentIndex);
+    this.getOrderBy(this.dhaSection, 'Wellness')
+  }
+
   getOrderBy(widget: any, key: any) {
     switch (key) {
       case 'section':
         this.newSectionList = widget.map((item: any, index: any) => {
-          return { name: item, order: index + 1};
+          return { name: item, order: index + 1 };
         });
         console.log(this.newSectionList)
         break;
       case 'Customer':
         this.newCustomerList = widget.map((item: any, index: any) => {
-          return { main: 'Customer', name: item, order: index + 1};
+          return { main: 'Customer', name: item, order: index + 1 };
         });
         console.log(this.newCustomerList)
         break;
       case 'Renewal':
         this.newRenewalList = widget.map((item: any, index: any) => {
-          return { main: 'Renewal', name: item, order: index + 1};
+          return { main: 'Renewal', name: item, order: index + 1 };
         });
         console.log(this.newRenewalList)
         break;
       case 'Business':
         this.newBusinessList = widget.map((item: any, index: any) => {
-          return { main: 'Business', name: item, order: index + 1};
+          return { main: 'Business', name: item, order: index + 1 };
         });
         console.log(this.newBusinessList)
         break;
       case 'QuickAction':
         this.newQuickActionList = widget.map((item: any, index: any) => {
-          return { main: 'QuickAction', name: item, order: index + 1};
+          return { main: 'QuickAction', name: item, order: index + 1 };
         });
         console.log(this.newQuickActionList)
         break;
 
       case 'Performance':
         this.newPerformanceList = widget.map((item: any, index: any) => {
-          return { main: 'Performance', name: item, order: index + 1};
+          return { main: 'Performance', name: item, order: index + 1 };
         });
         console.log(this.newPerformanceList)
+        break;
+
+      case 'Wellness':
+        this.newWellnessList = widget.map((item: any, index: any) => {
+          return { main: 'Wellness', name: item, order: index + 1 };
+        });
+        console.log(this.newWellnessList)
         break;
 
       default:
@@ -491,9 +498,9 @@ export class DashboardComponent {
             this.dhaCard = Object.entries(res.data[0]).map(([name, count]) => ({
               name: name.replace("Count", "").replace(/([a-z])([A-Z])/g, '$1 $2').replace(/^./, str => str.toUpperCase()), // Capitalize heading
               count: count,
-
             }))
-            console.log(this.dhaCard)
+            console.log(this.dhaCard);
+            this.dhaSection.push({ name: 'DHA', value: this.dhaCard })
           })
           break;
 
@@ -1181,8 +1188,7 @@ export class DashboardComponent {
           keyFeatures: item.keyFeatures && JSON.parse(item.keyFeatures).slice(0, 3),
           sumInsured: item.sumInsured && item.sumInsured.split(",")[0]
         }));
-        console.log(this.ProductList)
-
+        this.dhaSection.push({ name: 'TopSellingProducts', value: this.ProductList })
       },
       error: (err) => {
         console.error(err);
@@ -1212,7 +1218,74 @@ export class DashboardComponent {
   }
 
   onSubmit() {
-    this.dashboardService.submitPreferenceData({}).subscribe((response: any) => {
+    this.newOrderList.map((tab: any, index: any) => {
+      switch (tab.tabName) {
+        case "QuickAction":
+          this.newQuickActionList && this.newQuickActionList.length && this.newQuickActionList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.catName == category.name.name) {
+                k['subOrder'] = index
+              }
+            })
+          });
+          break;
+        case 'Servicing':
+        case 'Customer':
+          this.newCustomerList && this.newCustomerList.length && this.newCustomerList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.catName == category?.name?.tabName) {
+                k['subOrder'] = index
+              }
+            })
+          });
+          break;
+        case 'Renewal':
+          this.newRenewalList && this.newRenewalList.length && this.newRenewalList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.catName == category?.name?.tabName) {
+                k['subOrder'] = index
+              }
+            })
+          });
+          break;
+        case 'Business':
+          this.newBusinessList && this.newBusinessList.length && this.newBusinessList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.catName == category?.name?.tabName) {
+                k['subOrder'] = index
+              }
+            })
+          });
+          break;
+        case 'Performance':
+          this.newPerformanceList && this.newPerformanceList.length && this.newPerformanceList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.catName == category?.name?.title) {
+                k['subOrder'] = index
+              }
+            })
+          });
+          break;
+        case 'Wellness':
+          this.newWellnessList && this.newWellnessList.length && this.newWellnessList.map((category: any, index: any) => {
+            tab.category.map((k: any) => {
+              if (k.catName == category?.name?.name) {
+                k['subOrder'] = index
+              }
+            })
+          });
+          break;
+      }
+    });
+
+    const obj = {
+      agentCode: localStorage.getItem('agentCode'),
+      preferences: this.newOrderList
+    }
+
+    console.log('final', obj)
+
+    this.dashboardService.submitPreferenceData(obj).subscribe((response: any) => {
       console.log('Data submitted successfully', response);
     });
   }

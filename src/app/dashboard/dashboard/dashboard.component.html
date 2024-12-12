@@ -397,7 +397,7 @@
 
             <!-- Renewal -->
             <section cdkDrag [cdkDragDisabled]="isDesktopView"
-              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.tabName == 'Renewals'">
+              class="dashboard_LPR_main dashboard_LPR_submain commonSection " *ngIf="section.tabName == 'Renewal'">
               <div class="body_flex_row justify-content-between align-items-center">
                 <h3>{{"Renewal Summary" | translate}}</h3>
                 <div class="filter_performanceOverview">
@@ -518,287 +518,293 @@
            </section>
 
             <!-- others -->
-            <section class="dashboard_otherSections commonSection" *ngIf="section.tabName == 'Wellness'">
-              <div class="board_otherSections">
-                <!--Knowledge Centre start-->
-                <div class="item_otherSections" style="display: none;">
-                  <div class="otherSections_wraper">
-                    <header>
-                      <div class="otherSections_head">
-                        <h2>{{"Knowledge Centre" | translate}}</h2>
-                        <button type="button" id="btn-view-all-courses" name="btn-view-all-courses"
-                          class="btn_iconText btn_exploreMore">
-                          {{"View All Courses" | translate}} <img src="assets/Img/icon_red_downarrow.svg"></button>
-                      </div>
-                    </header>
-                    <div class="otherSections_body">
-                      <ul class="inlineFilter">
-                        <li><button type="button" id="kc-completed" name="kc-completed"
-                            class="btn_quickFilter btn_quickFilterClaim active">{{"Completed" | translate}} </button>
-                        </li>
-                        <li><button type="button" id="kc-inprogress" name="kc-inprogress"
-                            class="btn_quickFilter btn_quickFilterClaim ">{{"In Progress" | translate}} </button></li>
-                        <li><button type="button" id="kc-pending" name="kc-pending"
-                            class="btn_quickFilter btn_quickFilterClaim ">{{"Pending" | translate}} </button></li>
-                      </ul>
-                      <div class="card_wraper">
-                        <div class="cardsub_wraper">
+            <section cdkDrag class="dashboard_otherSections commonSection" cdkDropListOrientation="horizontal" cdkDropList
+            (cdkDropListDropped)="dropWellness($event)" *ngIf="section.tabName == 'Wellness'">
+              <div  class="board_otherSections">
+            <ng-container *ngFor="let tab of dhaSection">
 
-                          <div class="card_item body_flex_column knowledgeInfo">
-                            <div class="video_knowledgeInfo">
-                              <img src="assets/Img/img_knowledge.png">
-                            </div>
-                            <div class="content_knowledgeInfo body_flex_row">
-                              <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
-                              <button type="button" id="btn-resume" name="btn-resume"
-                                class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
-                                  src="assets/Img/icon_red_downarrow.svg"></button>
-                            </div>
-                          </div>
-                          <div class="card_item body_flex_column knowledgeInfo">
-                            <div class="video_knowledgeInfo">
-                              <img src="assets/Img/img_knowledge.png">
-                            </div>
-                            <div class="content_knowledgeInfo body_flex_row">
-                              <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
-                              <button type="button" id="btn-resume" name="btn-resume"
-                                class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
-                                  src="assets/Img/icon_red_downarrow.svg"></button>
-                            </div>
-                          </div>
-                          <div class="card_item body_flex_column knowledgeInfo">
-                            <div class="video_knowledgeInfo">
-                              <img src="assets/Img/img_knowledge.png">
-                            </div>
-                            <div class="content_knowledgeInfo body_flex_row">
-                              <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
-                              <button type="button" id="btn-resume" name="btn-resume"
-                                class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
-                                  src="assets/Img/icon_red_downarrow.svg"></button>
-                            </div>
-                          </div>
-
-                        </div>
-                      </div>
-
+              <!--Knowledge Centre start-->
+              <div class="item_otherSections" style="display: none;">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"Knowledge Centre" | translate}}</h2>
+                      <button type="button" id="btn-view-all-courses" name="btn-view-all-courses"
+                        class="btn_iconText btn_exploreMore">
+                        {{"View All Courses" | translate}} <img src="assets/Img/icon_red_downarrow.svg"></button>
                     </div>
-                  </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <ul class="inlineFilter">
+                      <li><button type="button" id="kc-completed" name="kc-completed"
+                          class="btn_quickFilter btn_quickFilterClaim active">{{"Completed" | translate}} </button>
+                      </li>
+                      <li><button type="button" id="kc-inprogress" name="kc-inprogress"
+                          class="btn_quickFilter btn_quickFilterClaim ">{{"In Progress" | translate}} </button></li>
+                      <li><button type="button" id="kc-pending" name="kc-pending"
+                          class="btn_quickFilter btn_quickFilterClaim ">{{"Pending" | translate}} </button></li>
+                    </ul>
+                    <div class="card_wraper">
+                      <div class="cardsub_wraper">
 
-                </div>
-                <!--Knowledge Centre end-->
-                <!--DHA & HR Portfolio start-->
-                <div class="item_otherSections">
-                  <div class="otherSections_wraper">
-                    <header>
-                      <div class="otherSections_head">
-                        <h2>{{"DHA & HR Portfolio" | translate}}</h2>
-                      </div>
-                    </header>
-                    <div class="otherSections_body">
-                      <div class="card_wraper">
-                        <div class="cardsub_wraper">
-                          <ng-container *ngFor="let cat of dhaCard">
-                            <div class="cardItem" *ngIf="cat.name == 'Total Assessments'">
-                              <header><span class="cardItem_icon"><img
-                                    src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{cat.name | translate}}
-                              </header>
-                              <div class="value">₹ {{cat.count}}</div>
-                              <div class="card-tip">
-                                <img src="assets/Img/icon_currency.svg">
-                                {{"Nudge your users to actively participate to save more" | translate}}
-                              </div>
-                            </div>
-                            <div class="cardItem" *ngIf="cat.name == 'Total Health Returns Amount'">
-                              <header><span class="cardItem_icon"><img
-                                    src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Records" |
-                                translate}}
-                              </header>
-                              <div class="value">₹ {{cat.count}}</div>
-                              <div class="card-tip">
-                                <img src="assets/Img/icon_currency.svg">
-                                {{"Nudge your users to actively participate to save more" | translate}}
-                              </div>
-                            </div>
-                          </ng-container>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
                         </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
+                        </div>
+                        <div class="card_item body_flex_column knowledgeInfo">
+                          <div class="video_knowledgeInfo">
+                            <img src="assets/Img/img_knowledge.png">
+                          </div>
+                          <div class="content_knowledgeInfo body_flex_row">
+                            <h6>{{"Insurance Selling Masterclass" | translate}}</h6>
+                            <button type="button" id="btn-resume" name="btn-resume"
+                              class="btn_iconText btn_exploreMore">{{"Resume" | translate}} <img
+                                src="assets/Img/icon_red_downarrow.svg"></button>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
+
                   </div>
                 </div>
-                <!--DHA & HR Portfolio end-->
-                <!--Top Selling Products start-->
-                <div class="item_otherSections">
-                  <div class="otherSections_wraper">
-                    <header>
-                      <div class="otherSections_head">
-                        <h2>{{"Top Selling Products" | translate}}</h2>
-                        <a (click)="onClickEvents('products')" class="btn_linkText">{{"View All" | translate}}</a>
-                      </div>
-                    </header>
-                    <div class="otherSections_body">
-                      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                          <div *ngFor="let prod of ProductList; let i = index" class="carousel-item"
-                            [class.active]="i === 0">
-                            <div class="card_item body_flex_column knowledgeInfo">
-                              <header class="body_flex_row head_tsp">
-                                <div class="common_ProductInfo">
-                                  <div class="common_ppi_img">
-                                    <img src="assets/Img/icon_activeone.svg">
-                                  </div>
-                                  <div class="common_ppi_info">
-                                    <h4>{{prod.productName | translate}}</h4>
-                                  </div>
-                                </div>
-                                <!-- <div class="common_ProductPrice">
-                                  <span class="text-red">₹{{prod.sumInsured}}*</span>{{"/ 1 year" | translate}}
-                                </div> -->
-                              </header>
-                              <ul class="tick_round">
-                                <li *ngFor="let key of prod.keyFeatures">
-                                  <div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{key |
-                                    translate}} </div>
-                                </li>
-                              </ul>
-                              <footer>
-                                <button type="button" id="btn-sellingTips" name="btn-sellingTips"
-                                  class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span
-                                    class="body_flex_row"><img src="assets/Img/icon_lightbulb2.svg">{{"Show selling tips for me" | translate}}</span> <em><img
-                                      src="assets/Img/icon_right_arrow_black.svg"></em></button>
-                              </footer>
-                            </div>
-                          </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-                          data-bs-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="visually-hidden">Previous</span>
-                          <!-- <mat-icon>keyboard_arrow_right</mat-icon> -->
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-                          data-bs-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="visually-hidden">Next</span>
-                          <!-- <mat-icon>keyboard_arrow_left</mat-icon> -->
-                        </button>
-                      </div>
 
-
-                    </div>
-                  </div>
-                </div>
-                <!--Top Selling Products end-->
-                <!--Participate in challenge to start-->
-                <div class="item_otherSections" style="display: none;">
-                  <div class="otherSections_wraper">
-                    <header>
-                      <div class="otherSections_head otherSections_head_column">
-                        <h2>{{"Participate in challenge to" | translate}}</h2>
-                        <div class="body_flex_row">
-                          <span class="common_iconText"><img src="assets/Img/icon_dashboard_hityourdailygoal.svg">{{"Hit your daily goal" | translate}}</span>
-                          <span class="common_iconText"><img
-                              src="assets/Img/icon_dashboard_competewithpeer.svg">{{"Compete with peers" |
-                            translate}}</span>
-                          <span class="common_iconText"><img src="assets/Img/icon_dashboard_earnbadge.svg">{{"Earn badges" | translate}}</span>
-                        </div>
-                      </div>
-                    </header>
-                    <div class="otherSections_body">
-                      <div class="card_wraper topSellingProducts participateChallenge">
-                        <div class="cardsub_wraper">
-
-                          <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner">
-                              <div class="carousel-item active">
-                                <div class="card_item body_flex_row knowledgeInfo">
-                                  <div class="left_PC block_bg_blue">
-                                    {{"#95k Steps in 15 Days" | translate}}
-                                  </div>
-                                  <div class="right_PC">
-                                    <div class="body_flex_column">
-                                      <div class="PC_information">
-                                        <div class="PC_head">
-                                          <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}
-                                        </div>
-                                        <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
-                                        <div class="PC_dateInfo">
-                                          <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" |
-                                            translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
-                                        </div>
-                                      </div>
-                                      <button type="button" id="btn-knowmore" name="btn-knowmore"
-                                        class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="carousel-item">
-                                <div class="card_item body_flex_row knowledgeInfo">
-                                  <div class="left_PC block_bg_green">
-                                    {{"#1200 Calorie Burn" | translate}}
-                                  </div>
-                                  <div class="right_PC">
-                                    <div class="body_flex_column">
-                                      <div class="PC_information">
-                                        <div class="PC_head">
-                                          <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}
-                                        </div>
-                                        <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
-                                        <div class="PC_dateInfo">
-                                          <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" |
-                                            translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
-                                        </div>
-                                      </div>
-                                      <button type="button" id="btn-knowmore" name="btn-knowmore"
-                                        class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button"
-                              data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
-                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                              <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button"
-                              data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
-                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                              <span class="visually-hidden">Next</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!--Participate in challenge to end-->
-
-                <!--My Goals start-->
-                <div class="item_otherSections" style="display: none;">
-                  <div class="otherSections_wraper">
-                    <header>
-                      <div class="otherSections_head">
-                        <h2>{{"My Goals" | translate}}</h2>
-                        <div class="filterfields_input">
-                          <div class="input-block input-block-renew compare_inputblock">
-                            <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
-                              [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter">
-                              <option *ngFor="let opt of busninessFilterList" [value]="opt">
-                                {{ opt | translate }}
-                              </option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </header>
-                    <div class="otherSections_body">
-                      <canvas id="horizontalBarChart"></canvas>
-                    </div>
-                  </div>
-                </div>
-                <!--My Goals end-->
               </div>
+              <!--Knowledge Centre end-->
+              <!--DHA & HR Portfolio start-->
+              <div *ngIf="tab.name == 'DHA'" cdkDrag class="item_otherSections">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"DHA & HR Portfolio" | translate}}</h2>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper">
+                      <div class="cardsub_wraper">
+                        <ng-container *ngFor="let cat of dhaCard">
+                          <div class="cardItem" *ngIf="cat.name == 'Total Assessments'">
+                            <header><span class="cardItem_icon"><img
+                                  src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{cat.name | translate}}
+                            </header>
+                            <div class="value">₹ {{cat.count}}</div>
+                            <div class="card-tip">
+                              <img src="assets/Img/icon_currency.svg">
+                              {{"Nudge your users to actively participate to save more" | translate}}
+                            </div>
+                          </div>
+                          <div class="cardItem" *ngIf="cat.name == 'Total Health Returns Amount'">
+                            <header><span class="cardItem_icon"><img
+                                  src="assets/Img/icon_dashboard_healthreturn.svg"></span>{{"Health Records" |
+                              translate}}
+                            </header>
+                            <div class="value">₹ {{cat.count}}</div>
+                            <div class="card-tip">
+                              <img src="assets/Img/icon_currency.svg">
+                              {{"Nudge your users to actively participate to save more" | translate}}
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--DHA & HR Portfolio end-->
+              <!--Top Selling Products start-->
+              <div class="item_otherSections" cdkDrag *ngIf="tab.name == 'TopSellingProducts'">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"Top Selling Products" | translate}}</h2>
+                      <a (click)="onClickEvents('products')" class="btn_linkText">{{"View All" | translate}}</a>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                      <div class="carousel-inner">
+                        <div *ngFor="let prod of ProductList; let i = index" class="carousel-item"
+                          [class.active]="i === 0">
+                          <div class="card_item body_flex_column knowledgeInfo">
+                            <header class="body_flex_row head_tsp">
+                              <div class="common_ProductInfo">
+                                <div class="common_ppi_img">
+                                  <img src="assets/Img/icon_activeone.svg">
+                                </div>
+                                <div class="common_ppi_info">
+                                  <h4>{{prod.productName | translate}}</h4>
+                                </div>
+                              </div>
+                              <!-- <div class="common_ProductPrice">
+                                <span class="text-red">₹{{prod.sumInsured}}*</span>{{"/ 1 year" | translate}}
+                              </div> -->
+                            </header>
+                            <ul class="tick_round">
+                              <li *ngFor="let key of prod.keyFeatures">
+                                <div class="tick_round_div"><img src="assets/Img/icon_tick_whitebg.svg">{{key |
+                                  translate}} </div>
+                              </li>
+                            </ul>
+                            <footer>
+                              <button type="button" id="btn-sellingTips" name="btn-sellingTips"
+                                class="btn_iconText btn_sellingTips btn_fullWidth justify-content-between"><span
+                                  class="body_flex_row"><img src="assets/Img/icon_lightbulb2.svg">{{"Show selling tips for me" | translate}}</span> <em><img
+                                    src="assets/Img/icon_right_arrow_black.svg"></em></button>
+                            </footer>
+                          </div>
+                        </div>
+                      </div>
+                      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                        <!-- <mat-icon>keyboard_arrow_right</mat-icon> -->
+                      </button>
+                      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                        <!-- <mat-icon>keyboard_arrow_left</mat-icon> -->
+                      </button>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+              <!--Top Selling Products end-->
+              <!--Participate in challenge to start-->
+              <div class="item_otherSections" style="display: none;">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head otherSections_head_column">
+                      <h2>{{"Participate in challenge to" | translate}}</h2>
+                      <div class="body_flex_row">
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_hityourdailygoal.svg">{{"Hit your daily goal" | translate}}</span>
+                        <span class="common_iconText"><img
+                            src="assets/Img/icon_dashboard_competewithpeer.svg">{{"Compete with peers" |
+                          translate}}</span>
+                        <span class="common_iconText"><img src="assets/Img/icon_dashboard_earnbadge.svg">{{"Earn badges" | translate}}</span>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <div class="card_wraper topSellingProducts participateChallenge">
+                      <div class="cardsub_wraper">
+
+                        <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                          <div class="carousel-inner">
+                            <div class="carousel-item active">
+                              <div class="card_item body_flex_row knowledgeInfo">
+                                <div class="left_PC block_bg_blue">
+                                  {{"#95k Steps in 15 Days" | translate}}
+                                </div>
+                                <div class="right_PC">
+                                  <div class="body_flex_column">
+                                    <div class="PC_information">
+                                      <div class="PC_head">
+                                        <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}
+                                      </div>
+                                      <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
+                                      <div class="PC_dateInfo">
+                                        <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" |
+                                          translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
+                                      </div>
+                                    </div>
+                                    <button type="button" id="btn-knowmore" name="btn-knowmore"
+                                      class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="carousel-item">
+                              <div class="card_item body_flex_row knowledgeInfo">
+                                <div class="left_PC block_bg_green">
+                                  {{"#1200 Calorie Burn" | translate}}
+                                </div>
+                                <div class="right_PC">
+                                  <div class="body_flex_column">
+                                    <div class="PC_information">
+                                      <div class="PC_head">
+                                        <img src="assets/Img/icon_dashboard_totalparticipants.svg">{{"Total 34,000 Participants" | translate}}
+                                      </div>
+                                      <h5>{{"Join the steps challenges & win an iPhone 13" | translate}}</h5>
+                                      <div class="PC_dateInfo">
+                                        <span>{{"05 days left" | translate}}</span><span>•</span><span>{{"Ending on" |
+                                          translate}} <b>{{"29th Jun’ 24" | translate}}</b></span>
+                                      </div>
+                                    </div>
+                                    <button type="button" id="btn-knowmore" name="btn-knowmore"
+                                      class="btn_pink btn_knowMore">{{"Know More" | translate}}</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <button class="carousel-control-prev" type="button"
+                            data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                          </button>
+                          <button class="carousel-control-next" type="button"
+                            data-bs-target="#carouselExampleSlidesOnly" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Participate in challenge to end-->
+
+              <!--My Goals start-->
+              <div class="item_otherSections" style="display: none;">
+                <div class="otherSections_wraper">
+                  <header>
+                    <div class="otherSections_head">
+                      <h2>{{"My Goals" | translate}}</h2>
+                      <div class="filterfields_input">
+                        <div class="input-block input-block-renew compare_inputblock">
+                          <select id="filter-annually" name="filter-annually" class="form-select input-selectBox"
+                            [(ngModel)]='businessFilter' id="businessFilter" name="businessFilter">
+                            <option *ngFor="let opt of busninessFilterList" [value]="opt">
+                              {{ opt | translate }}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="otherSections_body">
+                    <canvas id="horizontalBarChart"></canvas>
+                  </div>
+                </div>
+              </div>
+              <!--My Goals end-->
+            </ng-container>
+
+              </div>
+
             </section>
             
           </ng-container>
