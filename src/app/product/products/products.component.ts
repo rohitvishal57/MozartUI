@@ -48,8 +48,8 @@ export class ProductsComponent implements OnInit {
   paramLeadId: any;
   leadId: any;
   quickQuoteRedirect : Boolean = false;
-  inputProductName : any ;
-  productResponse: any;
+  searchProductName : any ;
+  productsInformation  : any[] =[];
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
@@ -126,7 +126,7 @@ export class ProductsComponent implements OnInit {
     }
     this.productService.Getproductlist(reqData).subscribe({
       next: (res: any) => {
-        this.ProductList = res.data;
+        this.ProductList = this.productsInformation = res.data;
         console.log(this.ProductList)
       },
       error: (err) => {
@@ -395,25 +395,11 @@ donwloadBrowcher(productName : any){
     }
   }
 
-  async productSearch() {
-    await this.getProductList(); 
-    this.ProductList = this.productResponse?.data;
+  productSearch() {
+    this.ProductList = this.productsInformation;
     this.ProductList = this.ProductList.filter(product =>
-      product.productName.toLowerCase().includes(this.inputProductName.toLowerCase())
+      product.productName.toLowerCase().includes(this.searchProductName.toLowerCase())
     );
-  }
-
-  async getProductList() {
-    try {
-      const reqData = {
-        "agentCode": this.agentCode
-      }
-      const response = await firstValueFrom(this.productService.Getproductlist(reqData));
-      this.productResponse   = response;
-    }
-    catch (error) {
-      console.log("Failed to fetch Product Information!", error)
-    }
   }
 
 }

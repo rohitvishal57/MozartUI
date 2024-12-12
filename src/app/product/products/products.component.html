@@ -6,7 +6,7 @@
                     <h2 class="mb-2">{{ "Products" | translate }}</h2>
                     <p>{{ "Discover our products to insure your health" | translate }}</p>
                     <div class="filter-container">
-                        <input  class="filter-search"  id="filterSearch" name="filterSearch"  type="text" [(ngModel)]="inputProductName" 
+                        <input  class="filter-search"  id="filterSearch" name="filterSearch"  type="text" [(ngModel)]="searchProductName" 
                             placeholder="Enter Product Name To Search..." (keyup)="productSearch()"/>
                     </div>
                 </div>
