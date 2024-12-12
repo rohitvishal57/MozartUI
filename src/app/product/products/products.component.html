@@ -3,9 +3,15 @@
         <div class="bodyColumn body_flex_column">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="mb-2">{{"Products" | translate}}</h2>
-                    <p>{{"Discover our products to insure your health" | translate}}</p>
+                    <h2 class="mb-2">{{ "Products" | translate }}</h2>
+                    <p>{{ "Discover our products to insure your health" | translate }}</p>
+                    <div class="filter-container">
+                        <input  class="filter-search"  id="filterSearch" name="filterSearch"  type="text" [(ngModel)]="inputProductName" 
+                            placeholder="Enter Product Name To Search..." (keyup)="productSearch()"/>
+                    </div>
                 </div>
+                
+                
             </div>
             <div class="row" *ngIf="ProductList.length > 0; else noProducts">
                 <div class="col-12">
@@ -116,9 +122,9 @@
     <div class="left-panel-product">
         <div class="r-p-header" style="display: none;">
             <div class="product-heading">Products</div>
-            <div class="prod-head-desc">Discover our products to insure your health
-            </div>
+            <div class="prod-head-desc">Discover our products to insure your health</div> 
         </div>
+     
 
         <div class="product-list-container">
         <div *ngIf="ProductList.length > 0; else noProducts">

@@ -48,6 +48,8 @@ export class ProductsComponent implements OnInit {
   paramLeadId: any;
   leadId: any;
   quickQuoteRedirect : Boolean = false;
+  inputProductName : any ;
+  productResponse: any;
 
   constructor(private router: Router, private toast: NgToastService,
     private encryptionService: EncryptionService, public common: CommonService, private productService: ProductsService,
@@ -136,6 +138,7 @@ export class ProductsComponent implements OnInit {
     })
     
   }
+
   // async insurenow(item: any) {
   //   this.removeFromCart(item);
   //   this.formData = { ...this.formData, productName: item.productName }
@@ -389,6 +392,27 @@ donwloadBrowcher(productName : any){
     }
     catch (error) {
       console.log("Failed to fetch lead Information!", error)
+    }
+  }
+
+  async productSearch() {
+    await this.getProductList(); 
+    this.ProductList = this.productResponse?.data;
+    this.ProductList = this.ProductList.filter(product =>
+      product.productName.toLowerCase().includes(this.inputProductName.toLowerCase())
+    );
+  }
+
+  async getProductList() {
+    try {
+      const reqData = {
+        "agentCode": this.agentCode
+      }
+      const response = await firstValueFrom(this.productService.Getproductlist(reqData));
+      this.productResponse   = response;
+    }
+    catch (error) {
+      console.log("Failed to fetch Product Information!", error)
     }
   }
 
