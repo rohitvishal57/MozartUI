@@ -594,4 +594,19 @@ export class LeadsListComponent {
     }
 
   }
+
+
+  exportleadInformation(leadNumber: any) {
+
+
+    this.leadsService.exportLead(leadNumber).subscribe(
+      (response) => {
+        debugger;
+console.log("exportleadInformation",response);
+      },
+      (error) => {
+
+      });
+
+  }
 }
