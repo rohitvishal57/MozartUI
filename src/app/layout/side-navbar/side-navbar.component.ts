@@ -25,7 +25,7 @@ export class SideNavbarComponent {
     { id: 9, displayName: 'My Performance', path: 'performance/my-performance', imagePath: 'assets/Img/icon_menu_performance.png' },
     // { id: 10, displayName: 'Upload Report', path: 'performance/upload-performance', imagePath: 'assets/Img/icon_menu_uploadreports.png' },
     { id: 11, displayName: 'Events', path: 'events/eventsList', imagePath: 'assets/Img/icon_menu_events.png' },
-    { id: 12, displayName: 'My Commissions', path: '/mycommissions', imagePath: 'assets/Img/icon_menu_commissionstatment.png' }
+   // { id: 12, displayName: 'My Commissions', path: '/mycommissions', imagePath: 'assets/Img/icon_menu_commissionstatment.png' }
 
   ];
 
