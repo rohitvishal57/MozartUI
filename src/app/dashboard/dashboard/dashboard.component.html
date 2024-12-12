@@ -362,7 +362,7 @@
                          <ng-container *ngFor="let buz of tab.category">
                            <div class="leads_item_contentDashboard tiles" [ngSwitch]="tab.tabName">
                              <div *ngSwitchCase="'Leads'">
-                               <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name}">
+                               <div class="leads_item leads_open" [routerLink]="'/leads/leadsList'" [queryParams]="{ status: buz.name, filter: businessFilter}">
                                  <header>
                                    <span>{{(buz.name == '' || buz.name == null) ? 'Anonymous' : buz.name }}</span>
                                    <label>{{buz.count}}</label>

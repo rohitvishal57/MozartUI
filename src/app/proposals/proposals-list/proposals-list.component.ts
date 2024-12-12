@@ -62,6 +62,7 @@ export class ProposalsListComponent {
     "email": "",  
     "leadId": ""
  } 
+  searchApplied: boolean=false;
  
   constructor(
     private proposalService: ProposalsService,
@@ -298,6 +299,7 @@ export class ProposalsListComponent {
     this.proposalListRequestBody.proposalNumber ="",
     this.proposalListRequestBody.proposalStatus ="",
     this.searchInputControl.reset();
+    this.searchApplied=false;
     this.getProposalList();
   }
   applySearch() {    
@@ -339,6 +341,15 @@ export class ProposalsListComponent {
       this.first = 0;
       this.page = 1;
       this.getProposalList();
+    }
+  }
+  triggerSearch(): void {
+    if (!this.searchApplied) {
+      this.applySearch(); 
+      this.searchApplied=true;
+    } else {
+      this.cancelSearch(); 
+      this.searchApplied=false;
     }
   }
   customerListView(view: string) {

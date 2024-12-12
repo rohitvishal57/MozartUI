@@ -25,10 +25,8 @@
                                 </select>
                             </div>
                             <div class="filterFieldGroup">
-                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)" (keyup.enter)="applySearch()">
-                                <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="applySearch()"><img src="assets/Img/icon_magnify_grey.svg"></button>
-                                <!--SEARCH CLEAR BUTTON-->
-                                <button  type="button" id="clearsearchbtn" name="clearsearchbtn" class="btn_text btn_clearSearch" ><img src="assets/Img/icon_search_clear.svg"></button>
+                                <input class="filterSearch" id="filterSearch" name="filterSearch" [formControl]="searchInputControl"  [type]="selected === 'mobileNumber' ? 'tel' : 'text'"  [placeholder]="getPlaceholder()" [attr.maxlength]="selected === 'mobileNumber' ? 10 : null" (keypress)="restrictInput($event)" (keyup.enter)="triggerSearch()">
+                                <button type="button" id="filtersearchbtn" name="filtersearchbtn" class="btn_text" (click)="triggerSearch()"><img *ngIf="!searchApplied" src="assets/Img/icon_magnify_grey.svg" alt="Search"><img *ngIf="searchApplied" src="assets/Img/icon_search_clear.svg" alt="Clear"></button>
                                 <!-- <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show"><small>{{ getErrorMessage() }}</small></span> -->
                                 <span *ngIf="searchInputControl.invalid && searchInputControl.touched || searchInputControl.dirty" class="ui-error ui-error-proposal block-show">
                                     <small *ngIf="searchInputControl.dirty && selected === '' ">{{"Select an option and enter." | translate}}</small>

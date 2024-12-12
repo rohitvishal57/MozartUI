@@ -48,6 +48,7 @@ export class RenewalListComponent {
   proposalNum: string = '';
   documents: any[] = [];
   selectedDocument: any = null;
+  searchApplied: boolean = false;
 
   constructor(
     private renewalService: RenewalsService, private router: Router, private datePipe: DatePipe,
@@ -249,6 +250,7 @@ export class RenewalListComponent {
     this.renewalListRequestBody.proposer = "";
     this.renewalListRequestBody.policyNumber = "";
     this.searchInputControl.reset();
+    this.searchApplied=false;
     this.getRenewalsList();
   }
   getPlaceholder(): string {
@@ -287,6 +289,15 @@ export class RenewalListComponent {
       this.first = 0;
       this.page = 1;
       this.getRenewalsList();
+    }
+  }
+  triggerSearch(): void {
+    if (!this.searchApplied) {
+      this.applySearch(); 
+      this.searchApplied=true;
+    } else {
+      this.cancelSearch(); 
+      this.searchApplied=false;
     }
   }
   renewalListView(view: string) {
