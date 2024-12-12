@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgToastService } from 'ng-angular-popup';
+import { ConfigService } from 'src/app/services/config.service';
 @Component({
   selector: 'app-bb-test-page',
   templateUrl: './bb-test-page.component.html',
@@ -9,7 +10,7 @@ import { NgToastService } from 'ng-angular-popup';
 export class BbTestPageComponent implements OnInit{
   encryptedString : string  = '';
 
-  constructor(private http: HttpClient, private toast: NgToastService,) {
+  constructor(private http: HttpClient, private toast: NgToastService,private configService: ConfigService) {
 
   }
   ngOnInit(): void {
@@ -23,7 +24,7 @@ export class BbTestPageComponent implements OnInit{
     const data = new FormData();
     data.append('Request', this.encryptedString.trim())
     
-    this.http.post<any>('https://upuat.adityabirlahealth.com/api/v1/RedirectAxisBranchBankingRequest', data)
+    this.http.post<any>(this.configService.config.baseUrl + this.configService.config.bbAxisRedirection, data)
       .subscribe(response => {
         console.log(response);
         response = JSON.parse(response.data)

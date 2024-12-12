@@ -125,6 +125,7 @@ export const environment = {
     getPremiumDetaiks: "/Product/GetPremium",
     getRUGPremium: "api/rug/GetPremium",
     getFamilyConstruct: "api/rug/GetFamilyConstructByProductCode",
+    bbAxisRedirection: "api/v1/RedirectAxisBranchBankingRequest",
     saveBBCommonDraft: "api/v1/SaveBBCommonDraft",
     getLeadStatusCount: "GetLeadStatusCount",
     getProposalStatusCount: "GetProposalStatusCount",
