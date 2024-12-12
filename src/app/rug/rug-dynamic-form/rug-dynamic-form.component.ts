@@ -3353,6 +3353,8 @@ export class RugDynamicFormComponent {
       );
       console.log(filteredData);
       this.dynamicFormGroup.get('ghiPremium')?.setValue(filteredData[0].premium.toString());
+      this.dynamicFormGroup.get('gpaPremium')?.setValue(null);
+
       this.dynamicFormGroup.get('deductibleAmount')?.setValue(filteredData[1].premium.toString());
       this.dynamicFormGroup.value.totalPremium = (filteredData[1].premium).toFixed(2);
       this.dynamicFormGroup.get('totalPremium')?.setValue(this.dynamicFormGroup.value.totalPremium);
