@@ -36,6 +36,7 @@ export const environment = {
     getMyReportingUsers: "api/yatra/getmyreportingusers",
     fetchActivityType: "api/yatra/fetchactivitytype",
     getProposalListApi: "api/yatra/getproposallist",
+    getQuoteListApi : "/api/quote/getcartlist",
     getCustomerList: "api/yatra/getCustomerList",
     sendCustomerDetails: "/api/yatra/sendcustomerdetails",
     download: "api/yatra/downloadcustomer",
