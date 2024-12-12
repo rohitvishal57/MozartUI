@@ -56,9 +56,7 @@ export class ProductsComponent implements OnInit {
    private translateService: TranslateService,public headerInformation : HeaderInformation,private leadsService: LeadsService  ) {}
 
   ngOnInit(): void {
-    this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
-    console.log(this.paramLeadId)
-
+    
     this.route.queryParams.subscribe(params => {
       this.leadId = params['leadnumber'];
       if(this.leadId){
@@ -67,6 +65,8 @@ export class ProductsComponent implements OnInit {
     });
 
     this.route.params.subscribe(async (params) => {
+        this.paramLeadId = decodeURIComponent(this.route.snapshot.params['leadId'])
+        console.log(this.paramLeadId)
       if (Object.keys(this.route.snapshot.params).length > 0) {
         console.log('Route has parameters:', params);
         this.paramLeadId = this.aesEncryptService.decryptUrlData(this.paramLeadId);
