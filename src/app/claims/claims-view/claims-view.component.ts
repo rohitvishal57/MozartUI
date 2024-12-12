@@ -94,7 +94,7 @@ export class ClaimsViewComponent {
   fromDate: any;
   hospitalId:any;
   toDate: any;
-  // maxDate = new Date().toISOString().split('T')[0];
+  maxDate = new Date().toISOString().split('T')[0];
   isFilenotSelected: boolean = false;
   policyMembersList: any[] = [];
   MemberIdList: any;
@@ -1151,7 +1151,7 @@ export class ClaimsViewComponent {
       disableClose: true,
       data: {
         title: 'Claims',
-        id: `Claims Id: ${resp.data.claim_Number}`,
+        id: `Claim Id: ${resp.data.claim_Number}`,
       },
     });
  
@@ -1177,8 +1177,6 @@ export class ClaimsViewComponent {
        saveClaimData.coverName = coverNames;
        saveClaimData.coverCode = coverCode;
      }
-
- 
       saveClaimData.billsArray = saveClaimData.billsArray.map((bill: any) => ({
         ...bill,
         billAmount: bill.billAmount ? bill.billAmount.toString() : ""
@@ -1255,7 +1253,8 @@ export class ClaimsViewComponent {
         (_error: any) => {
           this.toast.error({
             detail: "Error occurred during claims submission",
-            duration: 3000,
+            duration:0, 
+            sticky: true
           });
         }
       );
