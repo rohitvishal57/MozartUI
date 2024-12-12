@@ -2648,13 +2648,15 @@ export class RugDynamicFormComponent {
 
 
     if (this.formSequence[0].formName == "Group Health Insurance + Group Protect" || this.formSequence[0].formName == "Group Health Insurance + Group Personal Accident" || this.formSequence[0].formName == "Group Health Insurance" || this.formSequence[0].formName == "Group Personal Accident + Group Critical Illness") {
-      console.log(this.dynamicFormGroup.value);
-      console.log(this.bbdetails);
-      // this.dynamicFormGroup.patchValue(this.bbdetails);
-      this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
-        // const selfResult = this.centimetersToFeetAndInches(item.height);
+      // console.log(this.dynamicFormGroup.value);
+      // console.log(this.bbdetails);
+      // // this.dynamicFormGroup.patchValue(this.bbdetails);
         const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
         console.log(insuredMembersArray.value);
+      if(insuredMembersArray.value.length === this.bbdetails.insuredMemberDetails.length){
+              this.bbdetails.insuredMemberDetails.forEach((item: any, index: any) => {
+        // const selfResult = this.centimetersToFeetAndInches(item.height);
+
         if(insuredMembersArray.value[index].relation = item.relation){
           insuredMembersArray.at(index).patchValue({
             firstName: item.firstName,
@@ -2670,6 +2672,14 @@ export class RugDynamicFormComponent {
           });
         }
       });
+      console.log(this.formSequence[this.getFormIndexValue()].formName);
+      if(this.formSequence[this.getFormIndexValue()].formName == "Customer Summary"){
+        this.dynamicFormGroup.get('insuredMembers')?.disable();
+      }
+      }
+
+
+      
       // let selfResult = this.centimetersToFeetAndInches(this.bbdetails.insuredMemberDetails[0].height)
       // const insuredMembersArray = this.dynamicFormGroup.get('insuredMemberDetails') as FormArray;
       // insuredMembersArray.at(0).patchValue({
