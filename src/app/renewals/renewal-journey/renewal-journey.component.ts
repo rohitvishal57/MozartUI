@@ -128,7 +128,6 @@ export class RenewalJourneyComponent {
 
   async getFormDataFromFormSequence() {
     console.log(this.formSequence,this.getFormIndexValue(),this.form);
-    debugger;
     this.showHtmlContent = false;
     if (this.dynamicStyle) {
       this.renderer.removeChild(this.document.head, this.dynamicStyle)
@@ -1581,7 +1580,6 @@ export class RenewalJourneyComponent {
               //   this.isQuote = false;
               // }
               let tempControl = formControl.dynamicControls[0].map((element: any) => ({ ...element }));
-              debugger;
 
               tempControl[1].value = option.value;
               tempControl[0].value = option;

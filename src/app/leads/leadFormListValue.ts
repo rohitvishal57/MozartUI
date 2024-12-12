@@ -6,7 +6,7 @@ export class LeadFormListValue {
     Source: string[] = ["Self", "Campaign", "Referral"];
     IsWhatsApp: boolean[] = [true, false];
     Gender: string[] = ["Male", "Female", "Other"];
-    MaritalStatus: string[] = ["Married", "Single", "Widowed", "Separated", "Divorced"];
+    MaritalStatus: string[] = ["Married", "Single", "Widow(er)", "Separated", "Divorced","Live In"];
     // ProductName: string[] = [
     //     "Active Assure",
     //     "Activ Health",
